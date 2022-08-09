@@ -1,19 +1,27 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
-require "cli_spec"
+require "spec_helper"
 
 module Tapioca
-  class VersionSpec < CliSpec
-    describe("#version") do
+  class VersionSpec < SpecWithProject
+    describe("cli::version") do
+      before(:all) do
+        project.bundle_install
+      end
+
       it "must display the version when passing --version" do
-        output = tapioca("--version")
-        assert_equal("Tapioca v#{Tapioca::VERSION}", output.strip)
+        result = @project.tapioca("--version")
+        assert_equal("Tapioca v#{Tapioca::VERSION}", result.out.strip)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
 
       it "must display the version when passing -v" do
-        output = tapioca("-v")
-        assert_equal("Tapioca v#{Tapioca::VERSION}", output.strip)
+        result = @project.tapioca("-v")
+        assert_equal("Tapioca v#{Tapioca::VERSION}", result.out.strip)
+        assert_empty_stderr(result)
+        assert_success_status(result)
       end
     end
   end

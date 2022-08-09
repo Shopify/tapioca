@@ -1,8 +1,6 @@
 # typed: strict
 # frozen_string_literal: true
 
-require "fileutils"
-
 module Tapioca
   module Helpers
     module Test
@@ -41,6 +39,7 @@ module Tapioca
         def add_content_file(name, content)
           file_name = tmp_path("lib/#{name}")
           raise ArgumentError, "a file named '#{name}' was already added; cannot overwrite." if File.exist?(file_name)
+
           FileUtils.mkdir_p(File.dirname(file_name))
           File.write(file_name, content)
           file_name

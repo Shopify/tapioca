@@ -1,4 +1,3 @@
 # typed: strict
 
-module GeneratedPathHelpersModule
-end
+module GeneratedPathHelpersModule; end

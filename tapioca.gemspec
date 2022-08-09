@@ -19,18 +19,19 @@ Gem::Specification.new do |spec|
   spec.executables   = ["tapioca"]
   spec.require_paths = ["lib"]
 
-  spec.files         = Dir.glob("lib/**/*.rb") + ["README.md", "Gemfile", "Rakefile"]
+  spec.files         = Dir.glob("lib/**/*.rb") + ["README.md", "LICENSE.txt"]
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.add_dependency("bundler", ">= 1.17.3")
+  spec.add_dependency("netrc", ">= 0.11.0")
+  spec.add_dependency("parallel", ">= 1.21.0")
   spec.add_dependency("pry", ">= 0.12.2")
-  spec.add_dependency("rbi", ">= 0.0.6")
-  spec.add_dependency("sorbet-static", ">= 0.5.9204")
-  spec.add_dependency("sorbet-runtime", ">= 0.5.9204")
-  spec.add_dependency("spoom", ">= 1.1.4")
-  spec.add_dependency("thor", ">= 0.19.2")
+  spec.add_dependency("rbi", "~> 0.0.0", ">= 0.0.14")
+  spec.add_dependency("sorbet-static-and-runtime", ">= 0.5.9204")
+  spec.add_dependency("spoom", "~> 1.1.0", ">= 1.1.11")
+  spec.add_dependency("thor", ">= 1.2.0")
   spec.add_dependency("yard-sorbet")
 
-  spec.required_ruby_version = ">= 2.6"
+  spec.required_ruby_version = ">= 2.7"
 end

@@ -1,0 +1,16 @@
+{
+  "devTestRunner.command": "bin/test",
+  "ruby.lint": {
+    "rubocop": false
+  },
+  "ruby.codeCompletion": false,
+  "ruby.intellisense": false,
+  "ruby.format": false,
+  "byesig.opacity": 0.4,
+  "byesig.fold": false,
+  "byesig.showIcon": false,
+  "[ruby]": {
+    "editor.defaultFormatter": "Shopify.ruby-lsp",
+    "editor.formatOnSave": true
+  }
+}

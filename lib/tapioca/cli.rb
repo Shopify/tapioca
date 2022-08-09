@@ -1,76 +1,98 @@
 # typed: true
 # frozen_string_literal: true
 
-require "thor"
-
 module Tapioca
   class Cli < Thor
-    class_option :outdir,
-      aliases: ["--out", "-o"],
-      banner: "directory",
-      desc: "The output directory for generated RBI files"
-    class_option :generate_command,
-      aliases: ["--cmd", "-c"],
-      banner: "command",
-      desc: "The command to run to regenerate RBI files"
-    class_option :file_header,
-      type: :boolean,
-      default: true,
-      desc: "Add a \"This file is generated\" header on top of each generated RBI file"
+    include CliHelper
+    include ConfigHelper
+    include EnvHelper
+
+    FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
+
+    class_option :config,
+      aliases: ["-c"],
+      banner: "<config file path>",
+      type: :string,
+      desc: "Path to the Tapioca configuration file",
+      default: TAPIOCA_CONFIG_FILE
     class_option :verbose,
       aliases: ["-V"],
       type: :boolean,
-      default: false,
-      desc: "Verbose output for debugging purposes"
+      desc: "Verbose output for debugging purposes",
+      default: false
 
-    map T.unsafe(["--version", "-v"] => :__print_version)
-
-    desc "init", "initializes folder structure"
+    desc "init", "get project ready for type checking"
     def init
-      generator = Generators::Init.new(
-        sorbet_config: Config::SORBET_CONFIG,
-        default_postrequire: Config::DEFAULT_POSTREQUIRE,
-        default_command: Config::DEFAULT_COMMAND
+      invoke(:configure)
+      invoke(:annotations)
+      invoke(:gem)
+      invoke(:todo)
+
+      print_init_next_steps
+    end
+
+    desc "configure", "initialize folder structure and type checking configuration"
+    option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
+    def configure
+      command = Commands::Configure.new(
+        sorbet_config: SORBET_CONFIG_FILE,
+        tapioca_config: options[:config],
+        default_postrequire: options[:postrequire]
       )
-      generator.generate
+      command.execute
     end
 
     desc "require", "generate the list of files to be required by tapioca"
+    option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def require
-      generator = Generators::Require.new(
-        requires_path: ConfigBuilder.from_options(:require, options).postrequire,
-        sorbet_config_path: Config::SORBET_CONFIG,
-        default_command: Config::DEFAULT_COMMAND
+      command = Commands::Require.new(
+        requires_path: options[:postrequire],
+        sorbet_config_path: SORBET_CONFIG_FILE
       )
       Tapioca.silence_warnings do
-        generator.generate
+        command.execute
       end
     end
 
     desc "todo", "generate the list of unresolved constants"
+    option :todo_file,
+      type: :string,
+      desc: "Path to the generated todo RBI file",
+      default: DEFAULT_TODO_FILE
+    option :file_header,
+      type: :boolean,
+      desc: FILE_HEADER_OPTION_DESC,
+      default: true
     def todo
-      current_command = T.must(current_command_chain.first)
-      config = ConfigBuilder.from_options(current_command, options)
-      generator = Generators::Todo.new(
-        todos_path: config.todos_path,
-        file_header: config.file_header,
-        default_command: Config::DEFAULT_COMMAND
+      command = Commands::Todo.new(
+        todo_file: options[:todo_file],
+        file_header: options[:file_header]
       )
       Tapioca.silence_warnings do
-        generator.generate
+        command.execute
       end
     end
 
     desc "dsl [constant...]", "generate RBIs for dynamic methods"
-    option :generators,
+    option :outdir,
+      aliases: ["--out", "-o"],
+      banner: "directory",
+      desc: "The output directory for generated DSL RBI files",
+      default: DEFAULT_DSL_DIR
+    option :file_header,
+      type: :boolean,
+      desc: FILE_HEADER_OPTION_DESC,
+      default: true
+    option :only,
       type: :array,
-      aliases: ["--gen", "-g"],
-      banner: "generator [generator ...]",
-      desc: "Only run supplied DSL generators"
-    option :exclude_generators,
+      banner: "compiler [compiler ...]",
+      desc: "Only run supplied DSL compiler(s)",
+      default: []
+    option :exclude,
       type: :array,
-      banner: "generator [generator ...]",
-      desc: "Exclude supplied DSL generators"
+      banner: "compiler [compiler ...]",
+      desc: "Exclude supplied DSL compiler(s)",
+      default: []
     option :verify,
       type: :boolean,
       default: false,
@@ -78,86 +100,139 @@ module Tapioca
     option :quiet,
       aliases: ["-q"],
       type: :boolean,
-      desc: "Supresses file creation output"
+      desc: "Suppresses file creation output",
+      default: false
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      default: nil,
-      desc: "Number of parallel workers to use when generating RBIs"
+      desc: "Number of parallel workers to use when generating RBIs (default: auto)"
+    option :rbi_max_line_length,
+      type: :numeric,
+      desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
+      default: DEFAULT_RBI_MAX_LINE_LENGTH
+    option :environment,
+      aliases: ["-e"],
+      type: :string,
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: DEFAULT_ENVIRONMENT
     def dsl(*constants)
-      current_command = T.must(current_command_chain.first)
-      config = ConfigBuilder.from_options(current_command, options)
-      generator = Generators::Dsl.new(
+      set_environment(options)
+
+      command = Commands::Dsl.new(
         requested_constants: constants,
-        outpath: config.outpath,
-        generators: config.generators,
-        exclude_generators: config.exclude_generators,
-        file_header: config.file_header,
-        compiler_path: Tapioca::Compilers::Dsl::COMPILERS_PATH,
-        tapioca_path: Config::TAPIOCA_PATH,
-        default_command: Config::DEFAULT_COMMAND,
+        outpath: Pathname.new(options[:outdir]),
+        only: options[:only],
+        exclude: options[:exclude],
+        file_header: options[:file_header],
+        tapioca_path: TAPIOCA_DIR,
         should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
-        number_of_workers: config.workers
+        number_of_workers: options[:workers],
+        rbi_formatter: rbi_formatter(options)
       )
+
       Tapioca.silence_warnings do
-        generator.generate
+        command.execute
       end
     end
 
     desc "gem [gem...]", "generate RBIs from gems"
+    option :outdir,
+      aliases: ["--out", "-o"],
+      banner: "directory",
+      desc: "The output directory for generated gem RBI files",
+      default: DEFAULT_GEM_DIR
+    option :file_header,
+      type: :boolean,
+      desc: FILE_HEADER_OPTION_DESC,
+      default: true
     option :all,
       type: :boolean,
-      default: false,
-      desc: "Regenerate RBI files for all gems"
+      desc: "Regenerate RBI files for all gems",
+      default: false
     option :prerequire,
       aliases: ["--pre", "-b"],
       banner: "file",
-      desc: "A file to be required before Bundler.require is called"
+      desc: "A file to be required before Bundler.require is called",
+      default: nil
     option :postrequire,
       aliases: ["--post", "-a"],
       banner: "file",
-      desc: "A file to be required after Bundler.require is called"
+      desc: "A file to be required after Bundler.require is called",
+      default: DEFAULT_POSTREQUIRE_FILE
     option :exclude,
       aliases: ["-x"],
       type: :array,
       banner: "gem [gem ...]",
-      desc: "Excludes the given gem(s) from RBI generation"
+      desc: "Exclude the given gem(s) from RBI generation",
+      default: []
     option :typed_overrides,
       aliases: ["--typed", "-t"],
       type: :hash,
       banner: "gem:level [gem:level ...]",
-      desc: "Overrides for typed sigils for generated gem RBIs"
+      desc: "Override for typed sigils for generated gem RBIs",
+      default: DEFAULT_OVERRIDES
     option :verify,
       type: :boolean,
-      default: false,
-      desc: "Verifies RBIs are up-to-date"
+      desc: "Verify RBIs are up-to-date",
+      default: false
     option :doc,
       type: :boolean,
-      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow"
+      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
+      default: true
+    option :loc,
+      type: :boolean,
+      desc: "Include comments with source location when generating RBIs",
+      default: true
+    option :exported_gem_rbis,
+      type: :boolean,
+      desc: "Include RBIs found in the `rbi/` directory of the gem",
+      default: true
     option :workers,
       aliases: ["-w"],
       type: :numeric,
-      default: nil,
-      desc: "Number of parallel workers to use when generating RBIs"
+      desc: "Number of parallel workers to use when generating RBIs (default: auto)"
+    option :auto_strictness,
+      type: :boolean,
+      desc: "Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs",
+      default: true
+    option :dsl_dir,
+      aliases: ["--dsl-dir"],
+      banner: "directory",
+      desc: "The DSL directory used to correct gems strictnesses",
+      default: DEFAULT_DSL_DIR
+    option :rbi_max_line_length,
+      type: :numeric,
+      desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
+      default: DEFAULT_RBI_MAX_LINE_LENGTH
+    option :environment,
+      aliases: ["-e"],
+      type: :string,
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: DEFAULT_ENVIRONMENT
     def gem(*gems)
       Tapioca.silence_warnings do
+        set_environment(options)
+
         all = options[:all]
         verify = options[:verify]
-        current_command = T.must(current_command_chain.first)
-        config = ConfigBuilder.from_options(current_command, options)
-        generator = Generators::Gem.new(
+
+        command = Commands::Gem.new(
           gem_names: all ? [] : gems,
-          gem_excludes: config.exclude,
-          prerequire: config.prerequire,
-          postrequire: config.postrequire,
-          typed_overrides: config.typed_overrides,
-          default_command: Config::DEFAULT_COMMAND,
-          outpath: config.outpath,
-          file_header: config.file_header,
-          doc: config.doc,
-          number_of_workers: config.workers
+          exclude: options[:exclude],
+          prerequire: options[:prerequire],
+          postrequire: options[:postrequire],
+          typed_overrides: options[:typed_overrides],
+          outpath: Pathname.new(options[:outdir]),
+          file_header: options[:file_header],
+          include_doc: options[:doc],
+          include_loc: options[:loc],
+          include_exported_rbis: options[:exported_gem_rbis],
+          number_of_workers: options[:workers],
+          auto_strictness: options[:auto_strictness],
+          dsl_dir: options[:dsl_dir],
+          rbi_formatter: rbi_formatter(options)
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
@@ -168,12 +243,64 @@ module Tapioca
         end
 
         if gems.empty? && !all
-          generator.sync(should_verify: verify)
+          command.sync(should_verify: verify, exclude: options[:exclude])
         else
-          generator.generate
+          command.execute
         end
       end
     end
+    map "gems" => :gem
+
+    desc "check-shims", "check duplicated definitions in shim RBIs"
+    option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
+    option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
+    option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
+    option :annotations_rbi_dir, type: :string, desc: "Path to annotations RBIs", default: DEFAULT_ANNOTATIONS_DIR
+    option :todo_rbi_file, type: :string, desc: "Path to the generated todo RBI file", default: DEFAULT_TODO_FILE
+    option :payload, type: :boolean, desc: "Check shims against Sorbet's payload", default: true
+    option :workers, aliases: ["-w"], type: :numeric, desc: "Number of parallel workers (default: auto)"
+    def check_shims
+      Tapioca.disable_traces
+
+      command = Commands::CheckShims.new(
+        gem_rbi_dir: options[:gem_rbi_dir],
+        dsl_rbi_dir: options[:dsl_rbi_dir],
+        shim_rbi_dir: options[:shim_rbi_dir],
+        annotations_rbi_dir: options[:annotations_rbi_dir],
+        todo_rbi_file: options[:todo_rbi_file],
+        payload: options[:payload],
+        number_of_workers: options[:workers]
+      )
+      command.execute
+    end
+
+    desc "annotations", "Pull gem RBI annotations from remote sources"
+    option :sources, type: :array, default: [CENTRAL_REPO_ROOT_URI],
+      desc: "URIs of the sources to pull gem RBI annotations from"
+    option :netrc, type: :boolean, default: true, desc: "Use .netrc to authenticate to private sources"
+    option :netrc_file, type: :string, desc: "Path to .netrc file"
+    option :auth, type: :string, default: nil, desc: "HTTP authorization header for private sources"
+    option :typed_overrides,
+      aliases: ["--typed", "-t"],
+      type: :hash,
+      banner: "gem:level [gem:level ...]",
+      desc: "Override for typed sigils for pulled annotations",
+      default: {}
+    def annotations
+      if !options[:netrc] && options[:netrc_file]
+        raise Thor::Error, set_color("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
+      end
+
+      command = Commands::Annotations.new(
+        central_repo_root_uris: options[:sources],
+        auth: options[:auth],
+        netrc_file: netrc_file(options),
+        typed_overrides: options[:typed_overrides]
+      )
+      command.execute
+    end
+
+    map ["--version", "-v"] => :__print_version
 
     desc "--version, -v", "show version"
     def __print_version
@@ -184,6 +311,62 @@ module Tapioca
       def self.exit_on_failure?
         true
       end
+    end
+
+    private
+
+    def print_init_next_steps
+      say(<<~OUTPUT)
+        #{set_color("This project is now set up for use with Sorbet and Tapioca", :bold)}
+
+        The sorbet/ folder should exist and look something like this:
+
+        ├── config             # Default options to be passed to Sorbet on every run
+        └── rbi/
+          ├── annotations/     # Type definitions pulled from the rbi-central repository
+          ├── gems/            # Autogenerated type definitions for your gems
+          └── todo.rbi         # Constants which were still missing after RBI generation
+        └── tapioca/
+          ├── config.yml       # Default options to be passed to Tapioca
+          └── require.rb       # A file where you can make requires from gems that might be needed for gem RBI generation
+
+        Please check this folder into version control.
+
+        #{set_color("🤔 What's next", :bold)}
+
+        1. Many Ruby applications use metaprogramming DSLs to dynamically generate constants and methods.
+          To generate type definitions for any DSLs in your application, run:
+
+          #{set_color("bin/tapioca dsl", :cyan)}
+
+        2. Check whether the constants in the #{set_color("sorbet/rbi/todo.rbi", :cyan)} file actually exist in your project.
+          It is possible that some of these constants are typos, and leaving them in #{set_color("todo.rbi", :cyan)} will
+          hide errors in your application. Ideally, you should be able to remove all definitions
+          from this file and delete it.
+
+        3. Typecheck your project:
+
+          #{set_color("bundle exec srb tc", :cyan)}
+
+          There should not be any typechecking errors.
+
+        4. Upgrade a file marked "#{set_color("# typed: false", :cyan)}" to "#{set_color("# typed: true", :cyan)}".
+          Then, run: #{set_color("bundle exec srb tc", :cyan)} and try to fix any errors.
+
+          You can use Spoom to bump files for you:
+
+          #{set_color("spoom bump --from false --to true", :cyan)}
+
+          To learn more about Spoom, visit: #{set_color("https://github.com/Shopify/spoom", :cyan)}
+
+        5. Add signatures to your methods with #{set_color("sig", :cyan)}. To learn how, read: #{set_color("https://sorbet.org/docs/sigs", :cyan)}
+
+        #{set_color("Documentation", :bold)}
+        We recommend skimming these docs to get a feel for how to use Sorbet:
+        - Gradual Type Checking: #{set_color("https://sorbet.org/docs/gradual", :cyan)}
+        - Enabling Static Checks: #{set_color("https://sorbet.org/docs/static", :cyan)}
+        - RBI Files: #{set_color("https://sorbet.org/docs/rbi", :cyan)}
+      OUTPUT
     end
   end
 end

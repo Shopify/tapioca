@@ -1,13 +1,32 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "sorbet-runtime"
 
 module Tapioca
+  extend T::Sig
+
+  @traces = T.let([], T::Array[TracePoint])
+
+  sig { params(trace_name: Symbol, block: T.proc.params(arg0: TracePoint).void).void }
+  def self.register_trace(trace_name, &block)
+    @traces << TracePoint.trace(trace_name, &block)
+  end
+
+  sig { void }
+  def self.disable_traces
+    @traces.each(&:disable)
+  end
+
+  sig do
+    type_parameters(:Result)
+      .params(blk: T.proc.returns(T.type_parameter(:Result)))
+      .returns(T.type_parameter(:Result))
+  end
   def self.silence_warnings(&blk)
     original_verbosity = $VERBOSE
     $VERBOSE = nil
-    Gem::DefaultUserInteraction.use_ui(Gem::SilentUI.new) do
+    ::Gem::DefaultUserInteraction.use_ui(::Gem::SilentUI.new) do
       blk.call
     end
   ensure
@@ -15,12 +34,33 @@ module Tapioca
   end
 
   class Error < StandardError; end
+
+  SORBET_DIR = T.let("sorbet", String)
+  SORBET_CONFIG_FILE = T.let("#{SORBET_DIR}/config", String)
+  TAPIOCA_DIR = T.let("#{SORBET_DIR}/tapioca", String)
+  TAPIOCA_CONFIG_FILE = T.let("#{TAPIOCA_DIR}/config.yml", String)
+
+  BINARY_FILE = T.let("bin/tapioca", String)
+  DEFAULT_POSTREQUIRE_FILE = T.let("#{TAPIOCA_DIR}/require.rb", String)
+  DEFAULT_RBI_DIR = T.let("#{SORBET_DIR}/rbi", String)
+  DEFAULT_DSL_DIR = T.let("#{DEFAULT_RBI_DIR}/dsl", String)
+  DEFAULT_GEM_DIR = T.let("#{DEFAULT_RBI_DIR}/gems", String)
+  DEFAULT_SHIM_DIR = T.let("#{DEFAULT_RBI_DIR}/shims", String)
+  DEFAULT_TODO_FILE = T.let("#{DEFAULT_RBI_DIR}/todo.rbi", String)
+  DEFAULT_ANNOTATIONS_DIR = T.let("#{DEFAULT_RBI_DIR}/annotations", String)
+
+  DEFAULT_OVERRIDES = T.let({
+    # ActiveSupport overrides some core methods with different signatures
+    # so we generate a typed: false RBI for it to suppress errors
+    "activesupport" => "false",
+  }.freeze, T::Hash[String, String])
+
+  DEFAULT_RBI_MAX_LINE_LENGTH = 120
+  DEFAULT_ENVIRONMENT = "development"
+
+  CENTRAL_REPO_ROOT_URI = "https://raw.githubusercontent.com/Shopify/rbi-central/main"
+  CENTRAL_REPO_INDEX_PATH = "index.json"
+  CENTRAL_REPO_ANNOTATIONS_DIR = "rbi/annotations"
 end
 
-require "tapioca/reflection"
-require "tapioca/constant_locator"
-require "tapioca/mixin_tracker"
-require "tapioca/compilers/dsl/base"
-require "tapioca/compilers/dynamic_mixin_compiler"
-require "tapioca/helpers/active_record_column_type_helper"
 require "tapioca/version"

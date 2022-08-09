@@ -5,24 +5,35 @@ inherit_gem:
 
 require:
  - rubocop-sorbet
+ - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 2.6
-  NewCops: enable
+  TargetRubyVersion: 2.7
+  NewCops: disable
   SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
-  - "spec/support/repo/bin/tapioca"
+  Include:
+  - "sorbet/rbi/shims/**/*.rbi"
 
-Style/CaseEquality:
+Naming/InclusiveLanguage:
+  Exclude:
+  - "lib/tapioca/dsl/compilers/protobuf.rb"
+
+RSpec/BeforeAfterAll:
   Enabled: false
 
-Style/ClassAndModuleChildren:
-  Exclude:
-  - "spec/tapioca/**/*"
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false
 
 Sorbet:
   Enabled: true
+
+Sorbet/ConstantsFromStrings:
+  Enabled: false
 
 Sorbet/FalseSigil:
   Enabled: false
@@ -30,7 +41,12 @@ Sorbet/FalseSigil:
 Sorbet/TrueSigil:
   Enabled: true
   Include:
-  - "**/*.rb"
+    - "**/*.rb"
+    - "**/*.rake"
 
-Sorbet/ConstantsFromStrings:
+Style/CaseEquality:
   Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+  - "spec/tapioca/**/*"

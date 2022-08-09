@@ -1,13 +1,25 @@
 # typed: true
 # frozen_string_literal: true
 
-require "cli_spec"
+require "spec_helper"
+require "tapioca/helpers/test/template"
 
 module Tapioca
-  class GemSpec < CliSpec
+  class GemSpec < SpecWithProject
     include Tapioca::Helpers::Test::Template
 
-    FOO_RBI = <<~CONTENTS
+    FOO_RB = <<~RB
+      module Foo
+        PI = 3.1415
+
+        def self.bar(a = 1, b: 2, **opts)
+          number = opts[:number] || 0
+          39 + a + b + number
+        end
+      end
+    RB
+
+    FOO_RBI = <<~RBI
       # typed: true
 
       # DO NOT EDIT MANUALLY
@@ -21,9 +33,20 @@ module Tapioca
       end
 
       Foo::PI = T.let(T.unsafe(nil), Float)
-    CONTENTS
+    RBI
 
-    BAR_RBI = <<~CONTENTS
+    BAR_RB = <<~RB
+      module Bar
+        PI = 3.1415
+
+        def self.bar(a = 1, b: 2, **opts)
+          number = opts[:number] || 0
+          39 + a + b + number
+        end
+      end
+    RB
+
+    BAR_RBI = <<~RBI
       # typed: true
 
       # DO NOT EDIT MANUALLY
@@ -37,9 +60,19 @@ module Tapioca
       end
 
       Bar::PI = T.let(T.unsafe(nil), Float)
-    CONTENTS
+    RBI
 
-    BAZ_RBI = <<~CONTENTS
+    BAZ_RB = <<~RB
+      module Baz
+        class Test
+          def fizz
+            "abc" * 10
+          end
+        end
+      end
+    RB
+
+    BAZ_RBI = <<~RBI
       # typed: true
 
       # DO NOT EDIT MANUALLY
@@ -48,498 +81,1899 @@ module Tapioca
 
       module Baz; end
 
-      class Baz::Role
-        include ::SmartProperties
-        extend ::SmartProperties::ClassMethods
-      end
-
       class Baz::Test
         def fizz; end
       end
-    CONTENTS
+    RBI
 
-    describe("#gem") do
-      describe("flags") do
+    TYPE_VARIABLE_RB = <<~RB
+      # typed: true
+
+      class ComplexGenericType
+        extend T::Generic
+
+        A = type_template(:in)
+        B = type_template(:out)
+        C = type_template
+        # The constants below are using the old type variable syntax specifically,
+        # so that we can be certain that we handle the old syntax properly.
+        D = type_member(fixed: Integer)
+        E = type_member(fixed: Integer, upper: Numeric)
+        F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
+        G = type_member(:in, fixed: Integer)
+        H = type_member(:in, fixed: Integer, upper: Numeric)
+        I = type_member(:in, fixed: Integer, lower: Complex, upper: Numeric)
+
+        class << self
+          extend T::Generic
+
+          A = type_template(:in)
+          B = type_template(:out)
+          C = type_template
+
+          D = type_member { { fixed: Integer } }
+          E = type_member { { fixed: Integer, upper: Numeric } }
+          F = type_member { { fixed: Integer, lower: Complex, upper: Numeric } }
+          G = type_member(:in) { { fixed: Integer } }
+          H = type_member(:in) { { fixed: Integer, upper: Numeric } }
+          I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
+        end
+      end
+    RB
+
+    describe "cli::gem" do
+      before(:all) do
+        @project.bundle_install
+      end
+
+      before do
+        @project.reset_bundler_version
+      end
+
+      it "must support 'gems' as an alias to the command" do
+        foo = mock_gem("foo", "0.0.1") do
+          write("lib/foo.rb", FOO_RB)
+        end
+
+        @project.require_mock_gem(foo)
+        @project.bundle_install
+
+        result = @project.tapioca("gems foo")
+
+        assert_includes(result.out, <<~OUT)
+          Compiled foo
+                create  sorbet/rbi/gems/foo@0.0.1.rbi
+        OUT
+
+        assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+
+        assert_empty_stderr(result)
+        assert_success_status(result)
+      end
+
+      describe "flags" do
         it "must show an error if --all is supplied with arguments" do
-          output = tapioca("gem --all foo")
+          result = @project.tapioca("gem --all foo")
 
-          assert_equal(<<~OUTPUT, output)
+          assert_equal(<<~ERR, result.err)
             Option '--all' must be provided without any other arguments
-          OUTPUT
+          ERR
+
+          assert_empty_stdout(result)
+          refute_success_status(result)
         end
 
         it "must show an error if --verify is supplied with arguments" do
-          output = tapioca("gem --all foo")
+          result = @project.tapioca("gem --verify foo")
 
-          assert_equal(<<~OUTPUT, output)
-            Option '--all' must be provided without any other arguments
-          OUTPUT
+          assert_equal(<<~ERR, result.err)
+            Option '--verify' must be provided without any other arguments
+          ERR
+
+          assert_empty_stdout(result)
+          refute_success_status(result)
         end
 
         it "must show an error if both --all and --verify are supplied" do
-          output = tapioca("gem --all --verify")
+          result = @project.tapioca("gem --all --verify")
 
-          assert_equal(<<~OUTPUT, output)
+          assert_equal(<<~ERR, result.err)
             Options '--all' and '--verify' are mutually exclusive
-          OUTPUT
+          ERR
+
+          assert_empty_stdout(result)
+          refute_success_status(result)
         end
       end
 
-      describe("generate") do
-        before do
-          tapioca("init")
+      describe "generate" do
+        before(:all) do
+          @project.tapioca("configure")
+        end
+
+        after do
+          project.gemfile(project.tapioca_gemfile)
+          project.remove("sorbet/rbi")
+          project.remove("../gems")
+          project.remove("sorbet/tapioca/require.rb")
         end
 
         it "must generate a single gem RBI" do
-          output = tapioca("gem foo")
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
 
-          assert_includes(output, <<~OUTPUT)
+          bar = mock_gem("bar", "0.3.0") do
+            write("lib/bar.rb", BAR_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.out, <<~OUT)
             Compiled foo
-                  create  #{outdir}/foo@0.0.1.rbi
-          OUTPUT
+                  create  sorbet/rbi/gems/foo@0.0.1.rbi
+          OUT
 
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+          refute_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
 
-          refute_path_exists("#{outdir}/bar@0.3.0.rbi")
-          refute_path_exists("#{outdir}/baz@0.0.2.rbi")
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
         it "must generate RBI for a default gem" do
-          output = tapioca("gem did_you_mean")
+          gem_name = "ostruct"
+          gem_top_level_constant = "class OpenStruct"
 
-          assert_includes(output, <<~OUTPUT)
-            Compiled did_you_mean
-                  create  #{outdir}/did_you_mean@1.5.0.rbi
-          OUTPUT
+          gem_spec = ::Gem::Specification.default_stubs("*.gemspec").find do |spec|
+            spec.name == gem_name && spec.default_gem?
+          end
+          assert(gem_spec, "Cannot find default '#{gem_name}' gem")
 
-          did_you_mean_rbi_file = T.must(Dir.glob("#{outdir}/did_you_mean@*.rbi").first)
-          assert_includes(File.read(did_you_mean_rbi_file), "module DidYouMean")
+          gem_version = gem_spec.version.to_s
+
+          @project.require_real_gem(gem_name, gem_version)
+          @project.bundle_install
+
+          result = @project.tapioca("gem #{gem_name}")
+
+          assert_includes(result.out, <<~OUT)
+            Compiled #{gem_name}
+                  create  sorbet/rbi/gems/#{gem_name}@#{gem_version}.rbi
+          OUT
+
+          rbi_contents = @project.read("sorbet/rbi/gems/#{gem_name}@#{gem_version}.rbi")
+          assert_includes(rbi_contents, gem_top_level_constant)
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
         it "must generate gem RBI in correct output directory" do
-          output = tapioca("gem foo", use_default_outdir: true)
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
 
-          assert_includes(output, <<~OUTPUT)
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo --outdir rbis/")
+
+          assert_includes(result.out, <<~OUT)
             Compiled foo
-          OUTPUT
+          OUT
 
-          assert_path_exists("#{repo_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
-          assert_equal(FOO_RBI, File.read("#{repo_path}/sorbet/rbi/gems/foo@0.0.1.rbi"))
+          assert_project_file_equal("rbis/foo@0.0.1.rbi", FOO_RBI)
 
-          refute_path_exists("#{repo_path}/sorbet/rbi/gems/bar@0.3.0.rbi")
-          refute_path_exists("#{repo_path}/sorbet/rbi/gems/baz@0.0.2.rbi")
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          @project.remove("rbis/")
         end
 
-        it "must perform postrequire properly" do
-          output = tapioca("gem foo --postrequire #{repo_path / "postrequire.rb"}")
+        it "must generate a gem RBI with the ones exported from the gem by default" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
 
-          assert_includes(output, <<~OUTPUT)
-            Compiled foo
-          OUTPUT
+            write("rbi/foo.rbi", <<~RBI)
+              module Foo
+                sig { params(a: String, b: Integer, opts: T.untyped).void }
+                def self.bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+              end
+            RBI
 
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_equal(template(<<~CONTENTS), File.read("#{outdir}/foo@0.0.1.rbi"))
-            #{FOO_RBI.rstrip}
-            class Foo::Secret; end
-            <% if ruby_version(">= 2.4.0") %>
-            Foo::Secret::VALUE = T.let(T.unsafe(nil), Integer)
-            <% else %>
-            Foo::Secret::VALUE = T.let(T.unsafe(nil), Fixnum)
-            <% end %>
-          CONTENTS
+            write("rbi/foo/bar.rbi", <<~RBI)
+              module Foo
+                def foo; end
+              end
+            RBI
 
-          refute_path_exists("#{outdir}/bar@0.3.0.rbi")
-          refute_path_exists("#{outdir}/baz@0.0.2.rbi")
-        end
+            write("rbi/foo/bar/baz.rbi", <<~RBI)
+              module Foo:: Bar
+                def bar; end
+              end
+            RBI
+          end
 
-        it "explains what went wrong when it can't load the postrequire properly" do
-          output = tapioca("gem foo --postrequire #{repo_path / "postrequire_faulty.rb"}")
+          @project.require_mock_gem(foo)
+          @project.bundle_install
 
-          output.sub!(%r{/.*/postrequire_faulty\.rb}, "/postrequire_faulty.rb")
-          assert_includes(output, <<~OUTPUT)
-            Requiring all gems to prepare for compiling... \n
-            LoadError: cannot load such file -- foo/will_fail
+          result = @project.tapioca("gem foo")
 
-            Tapioca could not load all the gems required by your application.
-            If you populated /postrequire_faulty.rb with `bin/tapioca require`
-            you should probably review it and remove the faulty line.
-          OUTPUT
-        end
+          assert_includes(result.out, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
 
-        it "must not include `rbi` definitions into `tapioca` RBI" do
-          output = tapioca("gem")
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled tapioca
-          OUTPUT
-
-          tapioca_rbi_file = T.must(Dir.glob("#{outdir}/tapioca@*.rbi").first)
-          refute_includes(File.read(tapioca_rbi_file), "class RBI::Module")
-        end
-
-        it "must generate multiple gem RBIs" do
-          output = tapioca("gem foo bar")
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled foo
-          OUTPUT
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled bar
-          OUTPUT
-
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-
-          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
-          assert_equal(BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
-
-          refute_path_exists("#{outdir}/baz@0.0.2.rbi")
-        end
-
-        it "must generate RBIs for all gems in the Gemfile" do
-          output = tapioca("gem --all")
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled bar
-          OUTPUT
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled baz
-          OUTPUT
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled foo
-          OUTPUT
-
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
-
-          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
-          assert_equal(BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
-          assert_equal(BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
-        end
-
-        it "must not generate RBIs for missing gem specs" do
-          output = tapioca("gem")
-
-          missing_spec = "    completed with missing specs:   minitest-excludes (2.0.1)"
-          assert_includes(output, missing_spec)
-
-          compiling_spec = "  Compiling minitest-excludes, this may take a few seconds"
-          refute_includes(output, compiling_spec)
-        end
-
-        it "must generate git gem RBIs with source revision numbers" do
-          output = tapioca("gem ast")
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled ast
-          OUTPUT
-
-          assert_path_exists("#{outdir}/ast@2.4.1-e07a4f66e05ac7972643a8841e336d327ea78ae1.rbi")
-        end
-
-        it "must respect exclude option" do
-          output = tapioca("gem --all --exclude foo bar")
-
-          refute_includes(output, <<~OUTPUT)
-            Compiled bar
-          OUTPUT
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled baz
-          OUTPUT
-
-          refute_includes(output, <<~OUTPUT)
-            Compiled foo
-          OUTPUT
-
-          refute_path_exists("#{outdir}/foo@0.0.1.rbi")
-          refute_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
-
-          assert_equal(BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
-        end
-
-        it "does not crash when the extras gem is loaded" do
-          File.write(repo_path / "sorbet/tapioca/require.rb", 'require "extras/shell"')
-          output = tapioca("gem foo")
-
-          assert_includes(output, <<~OUTPUT)
-            Compiled foo
-          OUTPUT
-
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
-
-          File.delete(repo_path / "sorbet/tapioca/require.rb")
-        end
-      end
-
-      describe("sync") do
-        it "must perform no operations if everything is up-to-date" do
-          tapioca("gem")
-
-          output = tapioca("gem")
-
-          refute_includes(output, "      remove")
-          refute_includes(output, "      create")
-          refute_includes(output, "-> Moving:")
-
-          assert_includes(output, <<~OUTPUT)
-            Removing RBI files of gems that have been removed:
-
-              Nothing to do.
-          OUTPUT
-          assert_includes(output, <<~OUTPUT)
-            Generating RBI files of gems that are added or updated:
-
-              Nothing to do.
-          OUTPUT
-
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
-        end
-
-        it "generate an empty RBI file" do
-          output = tapioca("gem")
-
-          assert_includes(output, "      create  #{outdir}/qux@0.5.0.rbi\n")
-          assert_includes(output, <<~OUTPUT)
-            Compiled qux (empty output)
-          OUTPUT
-
-          assert_equal(<<~CONTENTS.chomp, File.read("#{outdir}/qux@0.5.0.rbi"))
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
             # typed: true
 
             # DO NOT EDIT MANUALLY
-            # This is an autogenerated file for types exported from the `qux` gem.
-            # Please instead update this file by running `bin/tapioca gem qux`.
+            # This is an autogenerated file for types exported from the `foo` gem.
+            # Please instead update this file by running `bin/tapioca gem foo`.
 
-            # THIS IS AN EMPTY RBI FILE.
-            # see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires
+            module Foo
+              def foo; end
 
-          CONTENTS
+              class << self
+                sig { params(a: String, b: Integer, opts: T.untyped).void }
+                def bar(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
+              end
+            end
+
+            module Foo::Bar
+              def bar; end
+            end
+
+            Foo::PI = T.let(T.unsafe(nil), Float)
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
-        it "generate an empty RBI file without header" do
-          tapioca("gem --no-file-header")
+        it "must generate a gem RBI without the ones exported from the gem when called with `--no-exported-gem-rbis`" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
 
-          assert_equal(<<~CONTENTS.chomp, File.read("#{outdir}/qux@0.5.0.rbi"))
-            # typed: true
+            write("rbi/foo.rbi", <<~RBI)
+              module RBI::Foo
+                sig { void }
+                def foo; end
+              end
+            RBI
 
-            # THIS IS AN EMPTY RBI FILE.
-            # see https://github.com/Shopify/tapioca/wiki/Manual-Gem-Requires
+            write("rbi/foo/bar.rbi", <<~RBI)
+              module RBI::Bar
+                def bar; end
+              end
+            RBI
 
-          CONTENTS
+            write("rbi/foo/bar/baz.rbi", <<~RBI)
+              module RBI::Bar::Baz
+                def baz; end
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo --no-exported-gem-rbis")
+
+          assert_includes(result.out, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
-        it "must respect exclude option" do
-          tapioca("gem")
+        it "must generate a gem RBI and skip exported gem RBIs if they contain errors" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
 
-          output = tapioca("gem --exclude foo bar")
+            write("rbi/foo.rbi", <<~RBI)
+              module Foo # Syntax error
+            RBI
+          end
 
-          assert_includes(output, "      remove  #{outdir}/foo@0.0.1.rbi\n")
-          assert_includes(output, "      remove  #{outdir}/bar@0.3.0.rbi\n")
-          refute_includes(output, "      remove  #{outdir}/baz@0.0.2.rbi\n")
-          refute_includes(output, "      create")
-          refute_includes(output, "-> Moving:")
+          @project.require_mock_gem(foo)
+          @project.bundle_install
 
-          refute_includes(output, <<~OUTPUT)
-            Removing RBI files of gems that have been removed:
+          result = @project.tapioca("gem foo")
 
-              Nothing to do.
-          OUTPUT
-          assert_includes(output, <<~OUTPUT)
-            Generating RBI files of gems that are added or updated:
+          assert_includes(result.out, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
 
-              Nothing to do.
-          OUTPUT
+          assert_includes(result.err, "RBIs exported by `foo` contain errors and can't be used:")
+          assert_includes(result.err, "Cause: unexpected token $end")
+          assert_includes(result.err, "foo/rbi/foo.rbi:2:0-2:0")
 
-          refute_path_exists("#{outdir}/foo@0.0.1.rbi")
-          refute_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+
+          assert_success_status(result)
+        end
+
+        it "must generate a gem RBI and skip exported gem RBIs if they contain conflicts" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+
+            write("rbi/foo.rbi", <<~RBI)
+              module RBI::Foo
+                def foo(x); end
+              end
+            RBI
+
+            write("rbi/bar.rbi", <<~RBI)
+              module RBI::Foo
+                def foo(a, b, c); end
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.out, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+
+          assert_includes(result.err, "RBIs exported by `foo` contain conflicts and can't be used:")
+          assert_includes(result.err, "Conflicting definitions for `::RBI::Foo#foo(a, b, c)`")
+          assert_includes(result.err, "Found at:")
+          assert_includes(result.err, "foo/rbi/bar.rbi:2:2-2:23")
+          assert_includes(result.err, "foo/rbi/foo.rbi:2:2-2:17")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+
+          assert_success_status(result)
+        end
+
+        it "must generate a gem RBI and resolves conflicts with exported gem RBIs by keeping the generated RBI" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+
+            write("rbi/foo.rbi", <<~RBI)
+              module Foo
+                class << self
+                  def bar; end
+                end
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.out, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
         it "must remove outdated RBIs" do
-          tapioca("gem")
-          FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.require_mock_gem(mock_gem("baz", "0.0.2"))
+          @project.bundle_install
 
-          output = tapioca("gem")
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/bar@0.3.0.rbi")
+          @project.write("sorbet/rbi/gems/baz@0.0.2.rbi")
+          @project.write("sorbet/rbi/gems/outdated@5.0.0.rbi")
 
-          assert_includes(output, "      remove  #{outdir}/outdated@5.0.0.rbi\n")
-          refute_includes(output, "      create")
-          refute_includes(output, "-> Moving:")
+          result = @project.tapioca("gem --all")
 
-          assert_includes(output, <<~OUTPUT)
-            Generating RBI files of gems that are added or updated:
+          assert_includes(result.out, "remove  sorbet/rbi/gems/outdated@5.0.0.rbi\n")
+          refute_includes(result.out, "create sorbet/rbi/gems/foo@0.0.1.rbi")
+          refute_includes(result.out, "create sorbet/rbi/gems/bar@0.3.0.rbi")
+          refute_includes(result.out, "create sorbet/rbi/gems/baz@0.0.2.rbi")
+          refute_includes(result.out, "-> Moving:")
 
-              Nothing to do.
-          OUTPUT
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
 
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
-          refute_path_exists("#{outdir}/outdated@5.0.0.rbi")
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
-        it "must add missing RBIs" do
-          ["foo@0.0.1.rbi"].each do |rbi|
-            FileUtils.touch("#{outdir}/#{rbi}")
+        it "must perform postrequire properly" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+            write("lib/foo/secret.rb", "class Foo::Secret; end")
           end
 
-          output = tapioca("gem")
+          @project.require_mock_gem(foo)
+          @project.bundle_install
 
-          assert_includes(output, "      create  #{outdir}/bar@0.3.0.rbi\n")
-          assert_includes(output, "      create  #{outdir}/baz@0.0.2.rbi\n")
-          refute_includes(output, "      remove")
-          refute_includes(output, "-> Moving:")
+          @project.write("sorbet/tapioca/require.rb", <<~RB)
+            require "foo/secret"
+          RB
 
-          assert_includes(output, <<~OUTPUT)
-            Removing RBI files of gems that have been removed:
+          result = @project.tapioca("gem foo")
 
-              Nothing to do.
-          OUTPUT
+          assert_includes(result.out, <<~OUT)
+            Compiled foo
+          OUT
 
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", template(<<~RBI))
+            #{FOO_RBI.rstrip}
+            class Foo::Secret; end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
-        it "must move outdated RBIs" do
-          ["foo@0.0.1.rbi", "bar@0.0.1.rbi", "baz@0.0.1.rbi"].each do |rbi|
-            FileUtils.touch("#{outdir}/#{rbi}")
+        it "loads gems that are marked `require: false`" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+            write("lib/foo/secret.rb", "class Foo::Secret; end")
           end
 
-          output = tapioca("gem")
+          bar = mock_gem("bar", "1.0.0") do
+            write("lib/bar.rb", <<~RUBY)
+              module Foo
+                MY_CONSTANT = 42
+              end
+            RUBY
+          end
 
-          assert_includes(output, "-> Moving: #{outdir}/bar@0.0.1.rbi to #{outdir}/bar@0.3.0.rbi\n")
-          assert_includes(output, "force  #{outdir}/bar@0.3.0.rbi\n")
-          assert_includes(output, "-> Moving: #{outdir}/baz@0.0.1.rbi to #{outdir}/baz@0.0.2.rbi\n")
-          assert_includes(output, "force  #{outdir}/baz@0.0.2.rbi\n")
-          refute_includes(output, "      remove")
+          @project.require_mock_gem(foo, require: false)
+          @project.require_mock_gem(bar, require: false)
+          @project.bundle_install
 
-          assert_includes(output, <<~OUTPUT)
-            Removing RBI files of gems that have been removed:
+          @project.write("sorbet/tapioca/require.rb", <<~RB)
+            require "foo/secret"
+          RB
 
-              Nothing to do.
-          OUTPUT
+          result = @project.tapioca("gem --exclude bar")
 
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
+          refute_includes(result.out, <<~OUT)
+            Compiled bar
+          OUT
 
-          refute_path_exists("#{outdir}/bar@0.0.1.rbi")
-          refute_path_exists("#{outdir}/baz@0.0.1.rbi")
+          assert_includes(result.out, <<~OUT)
+            Compiled foo
+          OUT
+
+          refute_project_file_exist("sorbet/rbi/gems/bar@1.0.0.rbi")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", template(<<~RBI))
+            #{FOO_RBI.rstrip}
+            class Foo::Secret; end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          @project.remove("sorbet/tapioca/require.rb")
+        end
+
+        it "explains what went wrong when it can't load the postrequire properly" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          @project.write("sorbet/tapioca/require.rb", <<~RB)
+            require "foo/will_fail"
+          RB
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.err, <<~ERR)
+            LoadError: cannot load such file -- foo/will_fail
+
+            Tapioca could not load all the gems required by your application.
+            If you populated sorbet/tapioca/require.rb with `bin/tapioca require`
+            you should probably review it and remove the faulty line.
+          ERR
+
+          refute_success_status(result)
+
+          @project.remove("sorbet/tapioca/require.rb")
+        end
+
+        it "must not include `rbi` definitions into `tapioca` RBI" do
+          result = @project.tapioca("gem tapioca")
+
+          assert_includes(result.out, <<~OUT)
+            Compiled tapioca
+          OUT
+
+          tapioca_rbi_file = T.must(Dir.glob("#{@project.path}/sorbet/rbi/gems/tapioca@*.rbi").first)
+          refute_includes(File.read(tapioca_rbi_file), "class RBI::Module")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must generate multiple gem RBIs" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
+
+          bar = mock_gem("bar", "0.3.0") do
+            write("lib/bar.rb", BAR_RB)
+          end
+
+          baz = mock_gem("baz", "0.0.2") do
+            write("lib/baz.rb", BAZ_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(baz)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo bar")
+
+          assert_includes(result.out, "Compiled foo")
+          assert_includes(result.out, "Compiled bar")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+          assert_project_file_equal("sorbet/rbi/gems/bar@0.3.0.rbi", BAR_RBI)
+          refute_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must generate RBIs for all gems in the Gemfile" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
+
+          bar = mock_gem("bar", "0.3.0") do
+            write("lib/bar.rb", BAR_RB)
+          end
+
+          baz = mock_gem("baz", "0.0.2") do
+            write("lib/baz.rb", BAZ_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(baz)
+          @project.bundle_install
+
+          result = @project.tapioca("gem --all")
+
+          assert_includes(result.out, "Compiled bar")
+          assert_includes(result.out, "Compiled baz")
+          assert_includes(result.out, "Compiled foo")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+          assert_project_file_equal("sorbet/rbi/gems/bar@0.3.0.rbi", BAR_RBI)
+          assert_project_file_equal("sorbet/rbi/gems/baz@0.0.2.rbi", BAZ_RBI)
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must not generate RBIs for missing gem specs" do
+          @project.gemfile(<<~GEMFILE, append: true)
+            platform :rbx do
+              gem "ruby2_keywords", "0.0.5"
+            end
+          GEMFILE
+
+          @project.bundle_install
+
+          result = @project.tapioca("gem --all")
+
+          assert_includes(result.out, "completed with missing specs: ruby2_keywords (0.0.5)")
+          refute_includes(result.out, "Compiled ruby2_keywords")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must not generate RBIs for missing gem specs on Bundler 2.2.22" do
+          @project.gemfile(<<~GEMFILE, append: true)
+            platform :rbx do
+              gem "ruby2_keywords", "0.0.5"
+            end
+          GEMFILE
+
+          @project.bundle_install(version: "2.2.22")
+
+          result = @project.tapioca("gem --all")
+
+          assert_includes(result.out, "completed with missing specs: ruby2_keywords (0.0.5)")
+          refute_includes(result.out, "Compiled ruby2_keywords")
+
+          # StdErr will have some messages about incompatibilities, so we don't check for clean err
+          assert_success_status(result)
+        end
+
+        it "must generate git gem RBIs with source revision numbers" do
+          @project.gemfile(<<~GEMFILE, append: true)
+            gem("faraday", git: "https://github.com/lostisland/faraday", ref: "23e249563613971ced8f851230c46b9eeeefe931")
+          GEMFILE
+
+          @project.bundle_install
+
+          result = @project.tapioca("gem faraday")
+
+          assert_includes(result.out, "Compiled faraday")
+
+          assert_project_file_exist(
+            "sorbet/rbi/gems/faraday@2.0.0.alpha.pre.4-23e249563613971ced8f851230c46b9eeeefe931.rbi"
+          )
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must respect exclude option" do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.require_mock_gem(mock_gem("baz", "0.0.2"))
+          @project.bundle_install
+
+          result = @project.tapioca("gem --all --exclude foo bar")
+
+          refute_includes(result.out, "Compiled bar")
+          assert_includes(result.out, "Compiled baz")
+          refute_includes(result.out, "Compiled foo")
+
+          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "does not crash when the extras gem is loaded" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
+
+          @project.require_real_gem("extras")
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          @project.write("sorbet/tapioca/require.rb", <<~RB)
+            require "extras/shell"
+          RB
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.out, "Compiled foo")
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "generate an empty RBI file" do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.out, "Compiled foo (empty output)")
+          assert_includes(result.out, "create  sorbet/rbi/gems/foo@0.0.1.rbi\n")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `foo` gem.
+            # Please instead update this file by running `bin/tapioca gem foo`.
+
+            # THIS IS AN EMPTY RBI FILE.
+            # see https://github.com/Shopify/tapioca#manually-requiring-parts-of-a-gem
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "generate an empty RBI file without header" do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo --no-file-header")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            # THIS IS AN EMPTY RBI FILE.
+            # see https://github.com/Shopify/tapioca#manually-requiring-parts-of-a-gem
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
         it "generates the correct RBIs when running generate in parallel" do
-          tapioca("gem --all", number_of_workers: 3)
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.require_mock_gem(mock_gem("baz", "0.0.2"))
+          @project.bundle_install
 
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
+          result = @project.tapioca("gem --all --workers 3")
 
-          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
-          assert_equal(BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
-          assert_equal(BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
         end
 
-        it "generates the correct RBIs when running sync in parallel" do
-          refute_path_exists("#{outdir}/foo@0.0.1.rbi")
-          refute_path_exists("#{outdir}/bar@0.3.0.rbi")
-          refute_path_exists("#{outdir}/baz@0.0.2.rbi")
+        it "eagerly loads autoloaded constants" do
+          # Let's recreate the autoload situation that was happening with
+          # Yard and Rake here.
+          #
+          # Yard registers an autoload for `YardocTask``, which, when loaded
+          # ends up requiring the optional "rake/tasklib" file, which
+          # in turn loads `Rake::TaskLib`. Thus, `Rake::TaskLib` would only
+          # get loaded if we generated an RBI for Yard first and then we
+          # generated it for Rake.
+          #
+          # If we do eagerloading properly, then we should be loading `YardocTask`
+          # early, so that even if we only generate an RBI for Rake only, we should
+          # get `Rake::TaskLib` in the output.
+          fake_yard = mock_gem("fake_yard", "0.0.1") do
+            # Top-level autoloads `FakeYard::Rake` module.
+            write("lib/fake_yard.rb", <<~RB)
+              module FakeYard
+                autoload :Rake, __dir__ + "/fake_yard/rake.rb"
+              end
+            RB
 
-          tapioca("gem", number_of_workers: 3)
+            # `FakeYard::Rake` module autoloads `FakeYard::Rake::YardocTask` class.
+            #
+            # This file is mostly here to make sure that we handle autoloads
+            # inside autoloaded files properly.
+            write("lib/fake_yard/rake.rb", <<~RB)
+              module FakeYard
+                module Rake
+                  autoload :YardocTask, __dir__ + "/yardoc_task.rb"
+                end
+              end
+            RB
 
-          assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-          assert_path_exists("#{outdir}/bar@0.3.0.rbi")
-          assert_path_exists("#{outdir}/baz@0.0.2.rbi")
+            # Finally `FakeYard::Rake::YardocTask` requires a non-default path from
+            # `fake_rake` gem, `fake_rake/tasklib`, and subclasses from `FakeRake::TaskLib`
+            write("lib/fake_yard/yardoc_task.rb", <<~RB)
+              require 'fake_rake'
+              require 'fake_rake/tasklib'
 
-          assert_equal(FOO_RBI, File.read("#{outdir}/foo@0.0.1.rbi"))
-          assert_equal(BAR_RBI, File.read("#{outdir}/bar@0.3.0.rbi"))
-          assert_equal(BAZ_RBI, File.read("#{outdir}/baz@0.0.2.rbi"))
+              module FakeYard
+                module Rake
+                  class YardocTask < ::FakeRake::TaskLib
+                  end
+                end
+              end
+            RB
+          end
+
+          fake_rake = mock_gem("fake_rake", "0.0.1") do
+            # The default require does nothing but define the gem namespace.
+            write("lib/fake_rake.rb", <<~RB)
+              module FakeRake
+              end
+            RB
+
+            # The non-default require defines `FakeRake::TaskLib`
+            write("lib/fake_rake/tasklib.rb", <<~RB)
+              module FakeRake
+                class TaskLib
+                end
+              end
+            RB
+          end
+
+          @project.require_mock_gem(fake_yard)
+          @project.require_mock_gem(fake_rake)
+          @project.bundle_install
+
+          result = @project.tapioca("gem fake_rake")
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          # We expect to see both `FakeRake` (coming from the default require of `fake_rake`)
+          # and `FakeRake::TaskLib` in the RBI file. The latter should be loaded as part
+          # of the eagerloading we have for autoloads, otherwise, nothing else would have
+          # required the non-default `fake_rake/task_lib.rb` file.
+          assert_project_file_equal("sorbet/rbi/gems/fake_rake@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `fake_rake` gem.
+            # Please instead update this file by running `bin/tapioca gem fake_rake`.
+
+            module FakeRake; end
+            class FakeRake::TaskLib; end
+          RBI
+        end
+
+        it "uses the correct autoload, even when a gem redefines it via alias-method-chain" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              class Module
+                alias_method :autoload_without_foo, :autoload
+
+                def autoload(const, path)
+                  autoload_without_foo(const, path)
+                end
+              end
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "uses ignores `abort` and `exit` calls inside autoloaded files" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              module Foo
+                autoload :Bar, __dir__ + "/foo/bar.rb"
+                autoload :Baz, __dir__ + "/foo/baz.rb"
+              end
+            RB
+
+            write("lib/foo/bar.rb", <<~RB)
+              begin
+                abort("Cannot continue")
+              rescue
+                # To make sure that we handle errors in our Kernel hooks
+                Process.exit(1)
+              end
+            RB
+
+            write("lib/foo/baz.rb", <<~RB)
+              begin
+                exit 2
+              rescue
+                # To make sure that we handle errors in our Kernel hooks
+                Process.exit(1)
+              end
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          # We know RDoc is problematic with respect to calling `abort` in an autoload
+          @project.require_real_gem("rdoc")
+          # Just so that we have something else we can generate for.
+          @project.require_real_gem("json")
+          @project.bundle_install
+
+          result = @project.tapioca("gem json")
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must wrap long signatures to 120 chars by default" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RBI)
+              module Foo
+                extend T::Sig
+
+                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
+                def bar(a, b, c, d, e, f, g); end
+
+                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped, h: T.untyped).void }
+                def foo(a, b, c, d, e, f, g, h); end
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `foo` gem.
+            # Please instead update this file by running `bin/tapioca gem foo`.
+
+            module Foo
+              sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
+              def bar(a, b, c, d, e, f, g); end
+
+              sig do
+                params(
+                  a: T.untyped,
+                  b: T.untyped,
+                  c: T.untyped,
+                  d: T.untyped,
+                  e: T.untyped,
+                  f: T.untyped,
+                  g: T.untyped,
+                  h: T.untyped
+                ).void
+              end
+              def foo(a, b, c, d, e, f, g, h); end
+            end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must wrap long signatures to specified chars" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RBI)
+              module Foo
+                extend T::Sig
+
+                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
+                def bar(a, b, c, d, e, f, g); end
+
+                sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped, h: T.untyped).void }
+                def foo(a, b, c, d, e, f, g, h); end
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo --rbi-max-line-length 80")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `foo` gem.
+            # Please instead update this file by running `bin/tapioca gem foo`.
+
+            module Foo
+              sig do
+                params(
+                  a: T.untyped,
+                  b: T.untyped,
+                  c: T.untyped,
+                  d: T.untyped,
+                  e: T.untyped,
+                  f: T.untyped,
+                  g: T.untyped
+                ).void
+              end
+              def bar(a, b, c, d, e, f, g); end
+
+              sig do
+                params(
+                  a: T.untyped,
+                  b: T.untyped,
+                  c: T.untyped,
+                  d: T.untyped,
+                  e: T.untyped,
+                  f: T.untyped,
+                  g: T.untyped,
+                  h: T.untyped
+                ).void
+              end
+              def foo(a, b, c, d, e, f, g, h); end
+            end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must do mixin attribution properly" do
+          # This is pattern is taken from the private `typed_parameters` gem.
+          typed_parameters = mock_gem("typed_parameters", "0.3.0") do
+            write("lib/typed_parameters.rb", <<~RUBY)
+              require "action_controller"
+              module TypedParameters
+              end
+              # This dynamic mixin should be generated in the gem RBI
+              ActionController::Parameters.include(TypedParameters)
+            RUBY
+          end
+
+          @project.require_real_gem("actionpack", "6.1.4.4")
+          @project.require_mock_gem(typed_parameters)
+
+          @project.bundle_install
+
+          response = @project.tapioca("gem actionpack typed_parameters")
+
+          assert_includes(response.out, "Compiled actionpack")
+          assert_includes(response.out, "Compiled typed_parameters")
+
+          actionpack_rbi = @project.read("sorbet/rbi/gems/actionpack@6.1.4.4.rbi")
+          # actionpack RBI should have nothing in it about `TypedParameters`
+          refute_includes(actionpack_rbi, "TypedParameters")
+
+          assert_project_file_equal("sorbet/rbi/gems/typed_parameters@0.3.0.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `typed_parameters` gem.
+            # Please instead update this file by running `bin/tapioca gem typed_parameters`.
+
+            class ActionController::Parameters
+              include ::TypedParameters
+            end
+
+            module TypedParameters; end
+          RBI
+        end
+
+        it "must do mixin attribution properly when include occurs in other gem" do
+          some_engine = mock_gem("some_engine", "0.0.2") do
+            write("lib/some_engine.rb", <<~RUBY)
+              require "action_controller"
+
+              module SomeEngine
+                class SomeController < ActionController::Base
+                  # This method triggers a dynamic mixin which should be attributed to this gem
+                  # and not actionpack, even though the real `include` happens inside actionpack
+                  helper_method :foo
+                end
+              end
+            RUBY
+          end
+
+          @project.require_real_gem("actionpack", "6.1.4.4")
+          @project.require_mock_gem(some_engine)
+          @project.bundle_install
+
+          response = @project.tapioca("gem actionpack some_engine")
+
+          assert_includes(response.out, "Compiled actionpack")
+          assert_includes(response.out, "Compiled some_engine")
+
+          actionpack_rbi = @project.read("sorbet/rbi/gems/actionpack@6.1.4.4.rbi")
+          # actionpack RBI should have nothing in it about `SomeEngine`
+          refute_includes(actionpack_rbi, "SomeEngine")
+
+          expected = template(<<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `some_engine` gem.
+            # Please instead update this file by running `bin/tapioca gem some_engine`.
+
+            module SomeEngine; end
+
+            class SomeEngine::SomeController < ::ActionController::Base
+              private
+
+              def _layout(lookup_context, formats); end
+
+              class << self
+                def _helper_methods; end
+                def middleware_stack; end
+              end
+            end
+
+            module SomeEngine::SomeController::HelperMethods
+              include ::ActionController::Base::HelperMethods
+
+            <% if ruby_version(">= 3.1") %>
+              def foo(*args, **_arg1, &block); end
+            <% else %>
+              def foo(*args, &block); end
+            <% end %>
+            end
+          RBI
+
+          assert_project_file_equal("sorbet/rbi/gems/some_engine@0.0.2.rbi", expected)
+        end
+
+        it "must generate RBIs for constants defined in a different gem but with mixins in this gem" do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RBI)
+              class Foo
+                def baz; end
+                def buzz; end
+              end
+            RBI
+          end
+
+          bar = mock_gem("bar", "0.0.2") do
+            write("lib/bar.rb", <<~RBI)
+              module Bar; end
+
+              Foo.prepend(Bar)
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.bundle_install
+
+          @project.tapioca("gem bar")
+
+          assert_project_file_equal("sorbet/rbi/gems/bar@0.0.2.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `bar` gem.
+            # Please instead update this file by running `bin/tapioca gem bar`.
+
+            module Bar; end
+
+            class Foo
+              include ::Bar
+            end
+          RBI
+        end
+
+        it "must not generate RBIs for constants that have dynamic mixins performed in other gems" do
+          bar = mock_gem("bar", "0.0.2") do
+            write("lib/bar.rb", <<~RBI)
+              module Bar; end
+            RBI
+          end
+
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RBI)
+              class Foo; end
+              String.prepend(Bar)
+            RBI
+          end
+
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          @project.tapioca("gem bar")
+
+          assert_project_file_equal("sorbet/rbi/gems/bar@0.0.2.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `bar` gem.
+            # Please instead update this file by running `bin/tapioca gem bar`.
+
+            module Bar; end
+          RBI
+        end
+
+        it "must generate RBIs for constants that have dynamic mixins performed in the gem" do
+          bar = mock_gem("bar", "0.0.2") do
+            write("lib/bar.rb", <<~RBI)
+              class Bar
+                def bar; end
+              end
+            RBI
+          end
+
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RBI)
+              module Foo; end
+              class Baz < Bar; end
+
+              Bar.prepend(Foo)
+            RBI
+          end
+
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          @project.tapioca("gem bar foo")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `foo` gem.
+            # Please instead update this file by running `bin/tapioca gem foo`.
+
+            class Bar
+              include ::Foo
+            end
+
+            class Baz < ::Bar; end
+            module Foo; end
+          RBI
+        end
+
+        it "must not load engines in the application" do
+          @project.write("config/application.rb", <<~RB)
+            require "rails"
+
+            module ModuleTest
+              class Application < Rails::Application
+                attr_reader :config
+
+                def initialize
+                  super
+                  root = Pathname.new("#{@project.path}")
+                  @config = Rails::Application::Configuration.new(root)
+                end
+              end
+
+              def self.application
+                Application.new
+              end
+            end
+
+            lib_dir = File.expand_path("../lib/", __dir__)
+
+            # Add lib directory to load path
+            $LOAD_PATH << lib_dir
+
+            # Require files from lib directory
+            Dir.glob("**/*.rb", base: lib_dir).sort.each do |file|
+              require(file)
+            end
+          RB
+
+          @project.write("config/environment.rb", <<~RB)
+            require_relative "application.rb"
+          RB
+
+          @project.write("foo/app/models/foo.rb", <<~RB)
+            raise NotImplementedError, "This file should not be loaded"
+          RB
+
+          @project.write("foo/lib/foo.rb", <<~RB)
+            module Foo
+              class Engine < ::Rails::Engine
+                isolate_namespace Foo
+              end
+            end
+          RB
+
+          @project.write("foo/foo.gemspec", <<~GEMSPEC)
+            Gem::Specification.new do |spec|
+              spec.name        = "foo"
+              spec.version     = "0.0.1"
+              spec.authors     = ["Maple Ong"]
+              spec.email       = ["maple.ong@shopify.com"]
+              spec.summary     = "Summary of Foo."
+              spec.description = "Description of Foo."
+              spec.files = Dir.chdir(File.expand_path(__dir__)) do
+                Dir["{app,lib}/**/*"]
+              end
+              spec.add_dependency "rails", ">= 7.0.3"
+            end
+          GEMSPEC
+
+          @project.require_real_gem("rails")
+          @project.gemfile(<<~GEMFILE, append: true)
+            gem 'foo', path: 'foo'
+          GEMFILE
+
+          @project.bundle_install
+          res = @project.tapioca("gem activesupport")
+
+          refute_includes(res.err, "This file should not be loaded")
+          assert_success_status(res)
+        end
+
+        it "must generate top-level and namespaced constants from engines" do
+          foo = mock_gem("foo", "0.0.2") do
+            write("lib/foo.rb", <<~RB)
+              require "rails"
+
+              module Foo
+                class Engine < ::Rails::Engine
+                end
+              end
+            RB
+
+            write("app/models/user.rb", <<~RB)
+              class User
+              end
+            RB
+
+            write("app/models/post.rb", <<~RB)
+              module Foo
+                class Post
+                end
+              end
+            RB
+          end
+
+          @project.require_real_gem("rails")
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          res = @project.tapioca("gem foo")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.2.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `foo` gem.
+            # Please instead update this file by running `bin/tapioca gem foo`.
+
+            module Foo; end
+            class Foo::Engine < ::Rails::Engine; end
+            class Foo::Post; end
+            class User; end
+          RBI
+
+          assert_success_status(res)
+        end
+
+        it "does not crash while tracking `rbtrace` constants" do
+          @project.require_real_gem("rbtrace", "0.4.14")
+          @project.bundle_install
+          result = @project.tapioca("gem")
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
       end
 
-      describe("verify") do
+      describe "sync" do
+        before(:all) do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.require_mock_gem(mock_gem("baz", "0.0.2"))
+          @project.bundle_install
+        end
+
+        after do
+          @project.remove("sorbet/rbi/gems")
+        end
+
+        after(:all) do
+          @project.remove("../gems")
+        end
+
+        it "must perform no operations if everything is up-to-date" do
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/bar@0.3.0.rbi")
+          @project.write("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          result = @project.tapioca("gem")
+
+          refute_includes(result.out, "remove ")
+          refute_includes(result.out, "create sorbet/rbi/gems/foo@0.0.1.rb")
+          refute_includes(result.out, "create sorbet/rbi/gems/bar@0.3.0.rb")
+          refute_includes(result.out, "create sorbet/rbi/gems/baz@0.0.2.rb")
+          refute_includes(result.out, "-> Moving:")
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must respect exclude option" do
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/bar@0.3.0.rbi")
+          @project.write("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          result = @project.tapioca("gem --exclude foo bar")
+
+          assert_includes(result.out, "remove  sorbet/rbi/gems/foo@0.0.1.rbi\n")
+          assert_includes(result.out, "remove  sorbet/rbi/gems/bar@0.3.0.rbi\n")
+          refute_includes(result.out, "remove  sorbet/rbi/gems/baz@0.0.2.rbi\n")
+          refute_includes(result.out, "create sorbet/rbi/gems/foo@0.0.1.rbi")
+          refute_includes(result.out, "create sorbet/rbi/gems/bar@0.3.0.rbi")
+          refute_includes(result.out, "create sorbet/rbi/gems/baz@0.0.2.rbi")
+          refute_includes(result.out, "-> Moving:")
+
+          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must remove outdated RBIs" do
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/bar@0.3.0.rbi")
+          @project.write("sorbet/rbi/gems/baz@0.0.2.rbi")
+          @project.write("sorbet/rbi/gems/outdated@5.0.0.rbi")
+
+          result = @project.tapioca("gem")
+
+          assert_includes(result.out, "remove  sorbet/rbi/gems/outdated@5.0.0.rbi\n")
+          refute_includes(result.out, "create sorbet/rbi/gems/foo@0.0.1.rbi")
+          refute_includes(result.out, "create sorbet/rbi/gems/bar@0.3.0.rbi")
+          refute_includes(result.out, "create sorbet/rbi/gems/baz@0.0.2.rbi")
+          refute_includes(result.out, "-> Moving:")
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must add missing RBIs" do
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi")
+
+          result = @project.tapioca("gem")
+
+          assert_includes(result.out, "create  sorbet/rbi/gems/bar@0.3.0.rbi\n")
+          assert_includes(result.out, "create  sorbet/rbi/gems/baz@0.0.2.rbi\n")
+          refute_includes(result.out, "remove ")
+          refute_includes(result.out, "-> Moving:")
+
+          assert_includes(result.out, <<~OUT)
+            Removing RBI files of gems that have been removed:
+
+              Nothing to do.
+          OUT
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must move outdated RBIs" do
+          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/bar@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/baz@0.0.1.rbi")
+
+          result = @project.tapioca("gem")
+
+          assert_includes(result.out, "-> Moving: sorbet/rbi/gems/bar@0.0.1.rbi to sorbet/rbi/gems/bar@0.3.0.rbi\n")
+          assert_includes(result.out, "force  sorbet/rbi/gems/bar@0.3.0.rbi\n")
+          assert_includes(result.out, "-> Moving: sorbet/rbi/gems/baz@0.0.1.rbi to sorbet/rbi/gems/baz@0.0.2.rbi\n")
+          assert_includes(result.out, "force  sorbet/rbi/gems/baz@0.0.2.rbi\n")
+          refute_includes(result.out, "remove ")
+
+          assert_includes(result.out, <<~OUT)
+            Removing RBI files of gems that have been removed:
+
+              Nothing to do.
+          OUT
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          refute_project_file_exist("sorbet/rbi/gems/bar@0.0.1.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/baz@0.0.1.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "generates the correct RBIs when running sync in parallel" do
+          result = @project.tapioca("gem --workers 3")
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+      end
+
+      describe "verify" do
+        before(:all) do
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.bundle_install
+        end
+
+        after(:all) do
+          @project.remove("../gems")
+        end
+
+        it "does nothing and returns exit_status 0 when nothing changes" do
+          @project.tapioca("gem")
+
+          result = @project.tapioca("gem --verify")
+
+          assert_equal(<<~OUT, result.out)
+            Checking for out-of-date RBIs...
+
+            Nothing to do, all RBIs are up-to-date.
+          OUT
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "is aware of exclude option and does not error due to removed files" do
+          @project.tapioca("gem")
+
+          result = @project.tapioca("gem --verify --exclude foo bar")
+
+          assert_equal(<<~OUT, result.out)
+            Checking for out-of-date RBIs...
+
+            Nothing to do, all RBIs are up-to-date.
+          OUT
+
+          # Does not actually modify anything
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "advises of added/removed/changed file(s) and returns exit_status 1" do
+          @project.tapioca("gem")
+
+          @project.remove("sorbet/rbi/gems/foo@0.0.1.rbi")
+          @project.write("sorbet/rbi/gems/outdated@5.0.0.rbi")
+          @project.move("sorbet/rbi/gems/bar@0.3.0.rbi", "sorbet/rbi/gems/bar@0.2.0.rbi")
+
+          result = @project.tapioca("gem --verify")
+
+          assert_equal(<<~OUT, result.out)
+            Checking for out-of-date RBIs...
+
+          OUT
+
+          # Does not actually modify anything
+          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.2.0.rbi")
+
+          assert_equal(<<~ERROR, result.err)
+            RBI files are out-of-date. In your development environment, please run:
+              `bin/tapioca gem`
+            Once it is complete, be sure to commit and push any changes
+
+            Reason:
+              File(s) added:
+              - sorbet/rbi/gems/foo@0.0.1.rbi
+              File(s) changed:
+              - sorbet/rbi/gems/bar@0.3.0.rbi
+              File(s) removed:
+              - sorbet/rbi/gems/outdated@5.0.0.rbi
+          ERROR
+
+          refute_success_status(result)
+        end
+      end
+
+      describe "strictness" do
+        before(:all) do
+          @project.tapioca("configure")
+
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              module Foo
+                def foo(a, b, c); end
+              end
+            RB
+          end
+
+          bar = mock_gem("bar", "0.3.0") do
+            write("lib/bar.rb", <<~RB)
+              module Bar
+                def bar(a, b, c); end
+              end
+            RB
+          end
+
+          baz = mock_gem("baz", "1.0.0") do
+            write("lib/baz.rb", <<~RB)
+              module Baz
+                def baz(a, b, c); end
+              end
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(baz)
+          @project.bundle_install
+
+          @project.write("sorbet/rbi/dsl/foo.rbi", <<~RBI)
+            # typed: true
+
+            module Foo
+              def foo(a, b, c); end
+            end
+
+            module Bar
+              def bar(a, b); end
+            end
+
+            module Baz
+              def baz; end
+            end
+
+            module Quux
+              def quux; end
+              def quux(x); end
+            end
+          RBI
+        end
+
+        after do
+          project.remove("sorbet/rbi/gems")
+        end
+
+        it "must turn the strictness of files with errors to false" do
+          result = @project.tapioca("gem --all")
+
+          assert_includes(result.out, <<~OUT)
+            Checking generated RBI files...  Done
+
+              Changed strictness of sorbet/rbi/gems/bar@0.3.0.rbi to `typed: false` (conflicting with DSL files)
+
+              Changed strictness of sorbet/rbi/gems/baz@1.0.0.rbi to `typed: false` (conflicting with DSL files)
+          OUT
+
+          assert_file_strictness("true", "sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_file_strictness("false", "sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_file_strictness("false", "sorbet/rbi/gems/baz@1.0.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/dsl/foo.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must turn the strictness of files with error to false with a custom dir" do
+          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+            # typed: true
+
+            module Foo
+              def foo; end
+            end
+          RBI
+
+          result = @project.tapioca("gem --dsl-dir sorbet/rbi/shims")
+
+          assert_includes(result.out, <<~OUT)
+            Checking generated RBI files...  Done
+
+              Changed strictness of sorbet/rbi/gems/foo@0.0.1.rbi to `typed: false` (conflicting with DSL files)
+          OUT
+
+          assert_file_strictness("false", "sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_file_strictness("true", "sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/gems/baz@1.0.0.rbi")
+          assert_file_strictness("true", "sorbet/rbi/dsl/foo.rbi")
+          assert_file_strictness("true", "sorbet/rbi/shims/foo.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          @project.remove("sorbet/rbi/shims/foo.rbi")
+        end
+      end
+
+      describe "sanity" do
+        before(:all) do
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", FOO_RB)
+          end
+
+          bar = mock_gem("bar", "1.0.0") do
+            write("lib/bar.rb", BAR_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.bundle_install
+          @project.tapioca("configure")
+        end
+
+        after do
+          project.remove("sorbet/rbi/gems")
+          project.remove("sorbet/rbi/dsl")
+        end
+
+        it "must display an error message when a generated gem RBI file contains a parse error" do
+          @project.write("sorbet/rbi/gems/bar@1.0.0.rbi", <<~RBI)
+            # typed: true
+
+            module Bar
+              # This method is missing a `)`
+              sig { params(block: T.proc.params(x: T.any(String, Integer).void).void }
+              def bar(&block); end
+            end
+          RBI
+
+          result = @project.tapioca("gem foo")
+
+          assert_includes(result.err, <<~ERR)
+            ##### INTERNAL ERROR #####
+
+            There are parse errors in the generated RBI files.
+
+            This seems related to a bug in Tapioca.
+            Please open an issue at https://github.com/Shopify/tapioca/issues/new with the following information:
+
+            Tapioca v#{Tapioca::VERSION}
+
+            Command:
+              bin/tapioca gem foo
+
+            Gems:
+          ERR
+
+          assert_includes(result.err, "foo (0.0.1)")
+
+          assert_includes(result.err, <<~ERR)
+            Errors:
+              sorbet/rbi/gems/bar@1.0.0.rbi:5: unexpected token tRCURLY (2001)
+              sorbet/rbi/gems/bar@1.0.0.rbi:6: unexpected token "end" (2001)
+
+            ##########################
+          ERR
+
+          refute_success_status(result)
+        end
+      end
+
+      describe "type variable syntax" do
         before do
-          tapioca("gem")
+          @project = mock_project(sorbet_dependency: false)
         end
 
-        describe("with no changes") do
-          it "does nothing and returns exit_status 0" do
-            output = tapioca("gem --verify")
-
-            assert_equal(output, <<~OUTPUT)
-              Checking for out-of-date RBIs...
-
-              Nothing to do, all RBIs are up-to-date.
-            OUTPUT
-            assert_includes($?.to_s, "exit 0") # rubocop:disable Style/SpecialGlobalVars
-          end
+        after do
+          @project.destroy
         end
 
-        describe("with excluded files") do
-          it "advises of removed file(s) and returns exit_status 1" do
-            output = tapioca("gem --verify --exclude foo bar")
-
-            assert_equal(output, <<~OUTPUT)
-              Checking for out-of-date RBIs...
-
-              RBI files are out-of-date. In your development environment, please run:
-                `bin/tapioca gem`
-              Once it is complete, be sure to commit and push any changes
-
-              Reason:
-                File(s) removed:
-                - #{outdir}/bar@0.3.0.rbi
-                - #{outdir}/foo@0.0.1.rbi
-            OUTPUT
-            assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
-
-            # Does not actually modify anything
-            assert_path_exists("#{outdir}/foo@0.0.1.rbi")
-            assert_path_exists("#{outdir}/bar@0.3.0.rbi")
+        it "must generate old type variable syntax on old Sorbet versions" do
+          type_variable = mock_gem("type_variable", "0.0.1") do
+            write("lib/type_variable.rb", TYPE_VARIABLE_RB)
           end
+
+          @project.require_real_gem("sorbet-static-and-runtime", "=0.5.9874")
+          @project.require_mock_gem(type_variable)
+          @project.bundle_install
+
+          result = @project.tapioca("gem")
+
+          assert_includes(result.out, <<~OUT)
+            Compiled type_variable
+                  create  sorbet/rbi/gems/type_variable@0.0.1.rbi
+          OUT
+
+          assert_project_file_equal("sorbet/rbi/gems/type_variable@0.0.1.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `type_variable` gem.
+            # Please instead update this file by running `bin/tapioca gem type_variable`.
+
+            class ComplexGenericType
+              extend T::Generic
+
+              A = type_template(:in)
+              B = type_template(:out)
+              C = type_template
+              D = type_member(fixed: Integer)
+              E = type_member(fixed: Integer, upper: Numeric)
+              F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
+              G = type_member(:in, fixed: Integer)
+              H = type_member(:in, fixed: Integer, upper: Numeric)
+              I = type_member(:in, fixed: Integer, lower: Complex, upper: Numeric)
+
+              class << self
+                extend T::Generic
+
+                A = type_template(:in)
+                B = type_template(:out)
+                C = type_template
+                D = type_member(fixed: Integer)
+                E = type_member(fixed: Integer, upper: Numeric)
+                F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
+                G = type_member(:in, fixed: Integer)
+                H = type_member(:in, fixed: Integer, upper: Numeric)
+                I = type_member(:in, fixed: Integer, lower: Complex, upper: Numeric)
+              end
+            end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
-        describe("with added/removed/changed files") do
-          before do
-            FileUtils.rm("#{outdir}/foo@0.0.1.rbi")
-            FileUtils.touch("#{outdir}/outdated@5.0.0.rbi")
-            FileUtils.mv("#{outdir}/bar@0.3.0.rbi", "#{outdir}/bar@0.2.0.rbi")
+        it "must generate new type variable syntax on new Sorbet versions" do
+          type_variable = mock_gem("type_variable", "0.0.1") do
+            write("lib/type_variable.rb", TYPE_VARIABLE_RB)
           end
 
-          it "advises of added/removed/changed file(s) and returns exit_status 1" do
-            output = tapioca("gem --verify")
+          @project.require_real_gem("sorbet-static-and-runtime", "=0.5.9896")
+          @project.require_mock_gem(type_variable)
+          @project.bundle_install
 
-            assert_equal(output, <<~OUTPUT)
-              Checking for out-of-date RBIs...
+          result = @project.tapioca("gem")
 
-              RBI files are out-of-date. In your development environment, please run:
-                `bin/tapioca gem`
-              Once it is complete, be sure to commit and push any changes
+          assert_includes(result.out, <<~OUT)
+            Compiled type_variable
+                  create  sorbet/rbi/gems/type_variable@0.0.1.rbi
+          OUT
 
-              Reason:
-                File(s) added:
-                - #{outdir}/foo@0.0.1.rbi
-                File(s) changed:
-                - #{outdir}/bar@0.3.0.rbi
-                File(s) removed:
-                - #{outdir}/outdated@5.0.0.rbi
-            OUTPUT
-            assert_includes($?.to_s, "exit 1") # rubocop:disable Style/SpecialGlobalVars
+          assert_project_file_equal("sorbet/rbi/gems/type_variable@0.0.1.rbi", <<~RBI)
+            # typed: true
 
-            # Does not actually modify anything
-            refute_path_exists("#{outdir}/foo@0.0.1.rbi")
-            assert_path_exists("#{outdir}/outdated@5.0.0.rbi")
-            assert_path_exists("#{outdir}/bar@0.2.0.rbi")
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for types exported from the `type_variable` gem.
+            # Please instead update this file by running `bin/tapioca gem type_variable`.
+
+            class ComplexGenericType
+              extend T::Generic
+
+              A = type_template(:in)
+              B = type_template(:out)
+              C = type_template
+              D = type_member { { fixed: Integer } }
+              E = type_member { { fixed: Integer, upper: Numeric } }
+              F = type_member { { fixed: Integer, lower: Complex, upper: Numeric } }
+              G = type_member(:in) { { fixed: Integer } }
+              H = type_member(:in) { { fixed: Integer, upper: Numeric } }
+              I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
+
+              class << self
+                extend T::Generic
+
+                A = type_template(:in)
+                B = type_template(:out)
+                C = type_template
+                D = type_member { { fixed: Integer } }
+                E = type_member { { fixed: Integer, upper: Numeric } }
+                F = type_member { { fixed: Integer, lower: Complex, upper: Numeric } }
+                G = type_member(:in) { { fixed: Integer } }
+                H = type_member(:in) { { fixed: Integer, upper: Numeric } }
+                I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
+              end
+            end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+      end
+
+      describe "environment" do
+        before(:all) do
+          @project.tapioca("configure")
+
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RB)
+              $stderr.puts "RAILS ENVIRONMENT: \#{ENV["RAILS_ENV"]}"
+              $stderr.puts "RACK ENVIRONMENT: \#{ENV["RACK_ENV"]}"
+            RB
           end
+
+          @project.require_mock_gem(foo, require: false)
+          @project.bundle_install
+        end
+
+        it "must default to `development` as environment" do
+          result = @project.tapioca("gem foo")
+
+          assert_success_status(result)
+
+          assert_equal(<<~OUT, result.err)
+            RAILS ENVIRONMENT: development
+            RACK ENVIRONMENT: development
+          OUT
+        end
+
+        it "must accept another value for environment" do
+          result = @project.tapioca("gem foo --environment staging")
+
+          assert_success_status(result)
+
+          assert_equal(<<~OUT, result.err)
+            RAILS ENVIRONMENT: staging
+            RACK ENVIRONMENT: staging
+          OUT
         end
       end
     end

@@ -1,14 +1,16 @@
+# typed: true
 # frozen_string_literal: true
 
 require "yard"
 require "tapioca"
+require "tapioca/runtime/reflection"
 
 YARD::Rake::YardocTask.new(:yard_for_generate_documentation) do |task|
-  task.files = ["lib/tapioca/compilers/dsl/**/*.rb"]
+  task.files = ["lib/tapioca/dsl/compilers/**/*.rb"]
   task.options = ["--no-output"]
 end
 
-desc("Generate docs of all DSL generators")
+desc("Generate docs of all DSL compilers")
 task generate_dsl_documentation: :yard_for_generate_documentation do
   def assert_manual_synchronized
     # Do not print diff and yield whether exit code was zero
@@ -37,59 +39,55 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
   end
 
   def print_table_of_contents(registry)
-    path = "#{Dir.pwd}/manual/generators.md"
+    path = "#{Dir.pwd}/manual/compilers.md"
     original = File.read(path)
-    content = +"<!-- START_GENERATOR_LIST -->\n"
+    content = +"<!-- START_COMPILER_LIST -->\n"
 
     content << table_contents(registry)
 
-    content << "\n<!-- END_GENERATOR_LIST -->"
+    content << "\n<!-- END_COMPILER_LIST -->"
 
     content = if original.empty?
       content
     else
       original.sub(
-        /<!-- START_GENERATOR_LIST -->.+<!-- END_GENERATOR_LIST -->/m, content
+        /<!-- START_COMPILER_LIST -->.+<!-- END_COMPILER_LIST -->/m, content
       )
     end
     File.write(path, content)
   end
 
-  def generator_body(registry_entry)
+  def compiler_body(registry_entry)
     content = +"## #{registry_entry.name}\n"
     content << "\n"
     content << "#{registry_entry.description}\n"
     content
   end
 
-  def print_generators(registry)
+  def print_compilers(registry)
     registry.each do |entry|
-      File.write(entry.filename, generator_body(entry))
+      File.write(entry.filename, compiler_body(entry))
     end
   end
 
   def load_registry
     Dir.glob([
-      "lib/tapioca/compilers/dsl/*.rb",
-    ]).each do |generator|
-      require File.expand_path(generator)
+      "lib/tapioca/dsl/compilers/*.rb",
+    ]).each do |compiler|
+      require File.expand_path(compiler)
     end
 
-    skipped_classes = ["Tapioca::Compilers::Dsl::Base"]
-
-    Tapioca::Compilers::Dsl::Base
-      .descendants
-      .reject { |generator| skipped_classes.include?(generator.name) }
-      .map do |generator|
-        code_object = YARD::Registry.at(generator.name)
-        RegistryEntry.new(code_object.name.to_s, generator, code_object)
+    Tapioca::Runtime::Reflection.descendants_of(Tapioca::Dsl::Compiler)
+      .map do |compiler|
+        code_object = YARD::Registry.at(compiler.name)
+        RegistryEntry.new(code_object.name.to_s, compiler, code_object)
       end
       .sort_by(&:name)
   end
 
-  RegistryEntry = Struct.new(:name, :generator, :code_object) do
+  RegistryEntry = Struct.new(:name, :compiler, :code_object) do
     def filename
-      "#{Dir.pwd}/manual/generator_#{name.downcase}.md"
+      "#{Dir.pwd}/manual/compiler_#{name.downcase}.md"
     end
 
     def filebasename
@@ -114,7 +112,7 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
     registry = load_registry
 
     print_table_of_contents(registry)
-    print_generators(registry)
+    print_compilers(registry)
 
     assert_manual_synchronized if ENV["CI"] == "true"
   end

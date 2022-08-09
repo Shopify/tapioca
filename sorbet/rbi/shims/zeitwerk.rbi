@@ -1,9 +1,7 @@
 # typed: true
 
-module Zeitwerk
-  class Loader
-    class << self
-      def for_gem; end
-    end
+class Zeitwerk::Loader
+  class << self
+    def for_gem; end
   end
 end

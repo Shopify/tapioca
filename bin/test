@@ -1,9 +1,13 @@
-#!/usr/bin/env bash
-if [[ 2 -eq $# ]]; then
-  bundle exec rake TEST="$1" TESTOPTS="-n='/$2/'"
-elif [[ 1 -eq $# ]]; then
-  bundle exec rake TEST="$1"
-else
-  bundle exec rake "$@"
-fi
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
+$LOAD_PATH << File.expand_path("../spec", __dir__)
+ENV["DEFAULT_TEST"] = "spec/**/*_spec.rb"
+
+require "bundler/setup"
+
+require "active_support" # Remove this when we drop support to Rails 6.
+require "rails/test_unit/runner"
+
+Rails::TestUnit::Runner.parse_options(ARGV)
+Rails::TestUnit::Runner.run(ARGV)
