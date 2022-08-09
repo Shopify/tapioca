@@ -10,13 +10,6 @@
 # source://yard-0.9.28/lib/yard.rb:62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
-# --
-# Defines the standard inflection rules. These are the starting point for
-# new projects and are not considered complete. The current set of inflection
-# rules is frozen. This means, we do not change them to become more complete.
-# This is a safety measure to keep existing applications from breaking.
-# ++
-#
 # source://activesupport-7.0.3.1/lib/active_support/lazy_load_hooks.rb:3
 module ActiveSupport
   extend ::ActiveSupport::LazyLoadHooks
@@ -15749,63 +15742,63 @@ HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
 # source://activesupport-7.0.3.1/lib/active_support/i18n_railtie.rb:8
 module I18n
   class << self
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/cache.rb:64
+    # source://i18n-1.12.0/lib/i18n/backend/cache.rb:64
     def cache_key_digest; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/cache.rb:68
+    # source://i18n-1.12.0/lib/i18n/backend/cache.rb:68
     def cache_key_digest=(key_digest); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/cache.rb:56
+    # source://i18n-1.12.0/lib/i18n/backend/cache.rb:56
     def cache_namespace; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/cache.rb:60
+    # source://i18n-1.12.0/lib/i18n/backend/cache.rb:60
     def cache_namespace=(namespace); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/cache.rb:48
+    # source://i18n-1.12.0/lib/i18n/backend/cache.rb:48
     def cache_store; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/cache.rb:52
+    # source://i18n-1.12.0/lib/i18n/backend/cache.rb:52
     def cache_store=(store); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/fallbacks.rb:17
+    # source://i18n-1.12.0/lib/i18n/backend/fallbacks.rb:17
     def fallbacks; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/fallbacks.rb:23
+    # source://i18n-1.12.0/lib/i18n/backend/fallbacks.rb:23
     def fallbacks=(fallbacks); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/interpolate/ruby.rb:16
+    # source://i18n-1.12.0/lib/i18n/interpolate/ruby.rb:16
     def interpolate(string, values); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/interpolate/ruby.rb:22
+    # source://i18n-1.12.0/lib/i18n/interpolate/ruby.rb:22
     def interpolate_hash(string, values); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n.rb:37
+    # source://i18n-1.12.0/lib/i18n.rb:37
     def new_double_nested_cache; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/cache.rb:72
+    # source://i18n-1.12.0/lib/i18n/backend/cache.rb:72
     def perform_caching?; end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n.rb:45
+    # source://i18n-1.12.0/lib/i18n.rb:45
     def reserve_key(key); end
 
-    # source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n.rb:50
+    # source://i18n-1.12.0/lib/i18n.rb:50
     def reserved_keys_pattern; end
   end
 end
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/interpolate/ruby.rb:5
+# source://i18n-1.12.0/lib/i18n/interpolate/ruby.rb:5
 I18n::DEFAULT_INTERPOLATION_PATTERNS = T.let(T.unsafe(nil), Array)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n.rb:35
+# source://i18n-1.12.0/lib/i18n.rb:35
 I18n::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/interpolate/ruby.rb:10
+# source://i18n-1.12.0/lib/i18n/interpolate/ruby.rb:10
 I18n::INTERPOLATION_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/backend/key_value.rb:21
+# source://i18n-1.12.0/lib/i18n/backend/key_value.rb:21
 I18n::JSON = ActiveSupport::JSON
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n.rb:19
+# source://i18n-1.12.0/lib/i18n.rb:19
 I18n::RESERVED_KEYS = T.let(T.unsafe(nil), Array)
 
 # source://activesupport-7.0.3.1/lib/active_support/i18n_railtie.rb:9
@@ -15833,7 +15826,7 @@ class I18n::Railtie < ::Rails::Railtie
   end
 end
 
-# source:///opt/rubies/ruby-2.7.6/lib/ruby/gems/2.7.0/gems/i18n-1.12.0/lib/i18n/version.rb:4
+# source://i18n-1.12.0/lib/i18n/version.rb:4
 I18n::VERSION = T.let(T.unsafe(nil), String)
 
 # source://activesupport-7.0.3.1/lib/active_support/core_ext/object/json.rb:145
@@ -16023,17 +16016,11 @@ class Method
   def duplicable?; end
 end
 
-# == Attribute Accessors per Thread
+# == Attribute Accessors
 #
 # Extends the module object with class/module and instance accessors for
 # class/module attributes, just like the native attr* accessors for instance
-# attributes, but does so on a per-thread basis.
-#
-# So the values are scoped within the Thread.current space under the class name
-# of the module.
-#
-# Note that it can also be scoped per-fiber if +Rails.application.config.active_support.isolation_level+
-# is set to +:fiber+.
+# attributes.
 #
 # source://activesupport-7.0.3.1/lib/active_support/core_ext/module/attribute_accessors.rb:8
 class Module
@@ -17728,8 +17715,6 @@ module Process
   end
 end
 
-Process::CLOCK_TAI = T.let(T.unsafe(nil), Integer)
-
 # source://activesupport-7.0.3.1/lib/active_support/core_ext/object/json.rb:234
 class Process::Status
   # source://activesupport-7.0.3.1/lib/active_support/core_ext/object/json.rb:235
@@ -18552,19 +18537,10 @@ class Struct
   def as_json(options = T.unsafe(nil)); end
 end
 
-# source://RUBY_ROOT/reline/line_editor.rb:50
-Struct::CompletionJourneyData = Struct
-
 Struct::Group = Etc::Group
 
-# source://nokogiri-1.13.8-x86_64-linux/lib/nokogiri/html4/element_description_defaults.rb:11
+# source://nokogiri-1.13.8-arm64-darwin/lib/nokogiri/html4/element_description_defaults.rb:11
 Struct::HTMLElementDescription = Struct
-
-# source://RUBY_ROOT/reline.rb:16
-Struct::Key = Struct
-
-# source://RUBY_ROOT/reline/line_editor.rb:51
-Struct::MenuInfo = Struct
 
 Struct::Passwd = Etc::Passwd
 Struct::Tms = Process::Tms
