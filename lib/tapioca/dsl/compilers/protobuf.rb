@@ -90,14 +90,14 @@ module Tapioca
             elsif constant == Google::Protobuf::Map
               create_type_members(klass, "Key", "Value")
             else
-              descriptor = T.let(T.unsafe(constant).descriptor,
-                T.any(Google::Protobuf::Descriptor, Google::Protobuf::EnumDescriptor))
+              descriptor = T.unsafe(constant).descriptor
 
-              if descriptor.is_a?(Google::Protobuf::EnumDescriptor)
+              case descriptor
+              when Google::Protobuf::EnumDescriptor
                 descriptor.to_h.each do |sym, val|
                   klass.create_constant(sym.to_s, value: val.to_s)
                 end
-              else
+              when Google::Protobuf::Descriptor
                 descriptor.each_oneof { |oneof| create_oneof_method(klass, oneof) }
                 fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
                 fields.sort_by!(&:name)
@@ -115,6 +115,8 @@ module Tapioca
                   kwargs_parameter = create_kw_rest_param("fields", type: "T.untyped")
                   klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
                 end
+              else
+                raise TypeError, "Unexpected descriptor class: #{descriptor.class.name}"
               end
             end
           end
