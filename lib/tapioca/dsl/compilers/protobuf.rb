@@ -97,6 +97,24 @@ module Tapioca
                 descriptor.to_h.each do |sym, val|
                   klass.create_constant(sym.to_s, value: val.to_s)
                 end
+
+                klass.create_method(
+                  "lookup",
+                  parameters: [create_param("number", type: "Integer")],
+                  return_type: "T.nilable(Symbol)",
+                  class_method: true,
+                )
+                klass.create_method(
+                  "resolve",
+                  parameters: [create_param("symbol", type: "Symbol")],
+                  return_type: "T.nilable(Integer)",
+                  class_method: true,
+                )
+                klass.create_method(
+                  "descriptor",
+                  return_type: "Google::Protobuf::EnumDescriptor",
+                  class_method: true,
+                )
               when Google::Protobuf::Descriptor
                 descriptor.each_oneof { |oneof| create_oneof_method(klass, oneof) }
                 fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
