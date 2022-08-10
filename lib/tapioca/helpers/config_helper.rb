@@ -100,7 +100,7 @@ module Tapioca
       ).returns(T::Array[ConfigError])
     end
     def validate_config_options(command_options, config_key, config_options)
-      config_options.map do |config_option_key, config_option_value|
+      config_options.filter_map do |config_option_key, config_option_value|
         command_option = command_options[config_option_key.to_sym]
         error_msg = "unknown option `#{config_option_key}` for key `#{config_key}`"
         next build_error(error_msg) unless command_option
@@ -135,7 +135,7 @@ module Tapioca
           all_strings = (config_option_value.keys + config_option_value.values).all? { |v| v.is_a?(String) }
           next build_error(error_msg) unless all_strings
         end
-      end.compact
+      end
     end
 
     class ConfigErrorMessagePart < T::Struct

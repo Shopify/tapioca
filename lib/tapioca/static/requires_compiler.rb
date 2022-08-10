@@ -42,10 +42,9 @@ module Tapioca
 
       sig { params(file_path: String).returns(T::Enumerable[String]) }
       def collect_requires(file_path)
-        File.binread(file_path).lines.map do |line|
+        File.binread(file_path).lines.filter_map do |line|
           /^\s*require\s*(\(\s*)?['"](?<name>[^'"]+)['"](\s*\))?/.match(line) { |m| m["name"] }
-        end.compact
-          .reject { |require| require.include?('#{') } # ignore interpolation
+        end.reject { |require| require.include?('#{') } # ignore interpolation
       end
 
       sig { params(config: Spoom::Sorbet::Config, file_path: Pathname).returns(T::Boolean) }
