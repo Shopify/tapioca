@@ -608,13 +608,6 @@ module Tapioca
             end
           end
         end
-
-        private
-
-        sig { params(selector: String).returns(T::Boolean) }
-        def rails_version(selector)
-          ::Gem::Requirement.new(selector).satisfied_by?(ActiveSupport.gem_version)
-        end
       end
     end
   end
