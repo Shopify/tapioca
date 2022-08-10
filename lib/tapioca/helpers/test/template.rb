@@ -19,6 +19,11 @@ module Tapioca
           ::Gem::Requirement.new(selector).satisfied_by?(::Gem::Version.new(RUBY_VERSION))
         end
 
+        sig { params(selector: String).returns(T::Boolean) }
+        def rails_version(selector)
+          ::Gem::Requirement.new(selector).satisfied_by?(ActiveSupport.gem_version)
+        end
+
         sig { params(src: String).returns(String) }
         def template(src)
           erb = if ERB_SUPPORTS_KVARGS
