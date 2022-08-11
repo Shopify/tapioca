@@ -5,23 +5,25 @@
 # Please instead update this file by running `bin/tapioca gem net-pop`.
 
 # This class is equivalent to POP3, except that it uses APOP authentication.
+#
+# source://net-pop//lib/net/pop.rb#727
 class Net::APOP < ::Net::POP3
   # Always returns true.
   #
   # @return [Boolean]
   #
-  # source://RUBY_ROOT/net/pop.rb:728
+  # source://net-pop//lib/net/pop.rb#728
   def apop?; end
 end
 
 # class aliases
 #
-# source://RUBY_ROOT/net/pop.rb:734
+# source://net-pop//lib/net/pop.rb#734
 Net::APOPSession = Net::APOP
 
 # class aliases
 #
-# source://RUBY_ROOT/net/pop.rb:719
+# source://net-pop//lib/net/pop.rb#719
 Net::POP = Net::POP3
 
 # == What is This Library?
@@ -173,6 +175,8 @@ Net::POP = Net::POP3
 #
 # The POPMail#unique_id() method returns the unique-id of the message as a
 # String. Normally the unique-id is a hash of the message.
+#
+# source://net-pop//lib/net/pop.rb#197
 class Net::POP3 < ::Net::Protocol
   # Creates a new POP3 object.
   #
@@ -187,26 +191,26 @@ class Net::POP3 < ::Net::Protocol
   #
   # @return [POP3] a new instance of POP3
   #
-  # source://RUBY_ROOT/net/pop.rb:417
+  # source://net-pop//lib/net/pop.rb#417
   def initialize(addr, port = T.unsafe(nil), isapop = T.unsafe(nil)); end
 
   # +true+ if the POP3 session has started.
   #
   # @return [Boolean]
   #
-  # source://RUBY_ROOT/net/pop.rb:514
+  # source://net-pop//lib/net/pop.rb#514
   def active?; end
 
   # The address to connect to.
   #
-  # source://RUBY_ROOT/net/pop.rb:490
+  # source://net-pop//lib/net/pop.rb#490
   def address; end
 
   # Does this instance use APOP authentication?
   #
   # @return [Boolean]
   #
-  # source://RUBY_ROOT/net/pop.rb:436
+  # source://net-pop//lib/net/pop.rb#436
   def apop?; end
 
   # Starts a pop3 session, attempts authentication, and quits.
@@ -215,7 +219,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # @raise [IOError]
   #
-  # source://RUBY_ROOT/net/pop.rb:314
+  # source://net-pop//lib/net/pop.rb#314
   def auth_only(account, password); end
 
   # Deletes all messages on the server.
@@ -234,12 +238,12 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:687
+  # source://net-pop//lib/net/pop.rb#687
   def delete_all; end
 
   # Disable SSL for all new instances.
   #
-  # source://RUBY_ROOT/net/pop.rb:463
+  # source://net-pop//lib/net/pop.rb#463
   def disable_ssl; end
 
   # Yields each message to the passed-in block in turn.
@@ -251,7 +255,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:665
+  # source://net-pop//lib/net/pop.rb#665
   def each(&block); end
 
   # Yields each message to the passed-in block in turn.
@@ -263,7 +267,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:665
+  # source://net-pop//lib/net/pop.rb#665
   def each_mail(&block); end
 
   # :call-seq:
@@ -274,24 +278,24 @@ class Net::POP3 < ::Net::Protocol
   # +params[:port]+ is port to establish the SSL connection on; Defaults to 995.
   # +params+ (except :port) is passed to OpenSSL::SSLContext#set_params.
   #
-  # source://RUBY_ROOT/net/pop.rb:452
+  # source://net-pop//lib/net/pop.rb#452
   def enable_ssl(verify_or_params = T.unsafe(nil), certs = T.unsafe(nil), port = T.unsafe(nil)); end
 
   # Finishes a POP3 session and closes TCP connection.
   #
   # @raise [IOError]
   #
-  # source://RUBY_ROOT/net/pop.rb:586
+  # source://net-pop//lib/net/pop.rb#586
   def finish; end
 
   # Provide human-readable stringification of class state.
   #
-  # source://RUBY_ROOT/net/pop.rb:468
+  # source://net-pop//lib/net/pop.rb#468
   def inspect; end
 
   # debugging output for +msg+
   #
-  # source://RUBY_ROOT/net/pop.rb:712
+  # source://net-pop//lib/net/pop.rb#712
   def logging(msg); end
 
   # Returns an array of Net::POPMail objects, representing all the
@@ -301,58 +305,58 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:643
+  # source://net-pop//lib/net/pop.rb#643
   def mails; end
 
   # Returns the total size in bytes of all the messages on the POP server.
   #
-  # source://RUBY_ROOT/net/pop.rb:631
+  # source://net-pop//lib/net/pop.rb#631
   def n_bytes; end
 
   # Returns the number of messages on the POP server.
   #
-  # source://RUBY_ROOT/net/pop.rb:624
+  # source://net-pop//lib/net/pop.rb#624
   def n_mails; end
 
   # Seconds to wait until a connection is opened.
   # If the POP3 object cannot open a connection within this time,
   # it raises a Net::OpenTimeout exception. The default value is 30 seconds.
   #
-  # source://RUBY_ROOT/net/pop.rb:500
+  # source://net-pop//lib/net/pop.rb#500
   def open_timeout; end
 
   # Seconds to wait until a connection is opened.
   # If the POP3 object cannot open a connection within this time,
   # it raises a Net::OpenTimeout exception. The default value is 30 seconds.
   #
-  # source://RUBY_ROOT/net/pop.rb:500
+  # source://net-pop//lib/net/pop.rb#500
   def open_timeout=(_arg0); end
 
   # The port number to connect to.
   #
-  # source://RUBY_ROOT/net/pop.rb:493
+  # source://net-pop//lib/net/pop.rb#493
   def port; end
 
   # Seconds to wait until reading one block (by one read(1) call).
   # If the POP3 object cannot complete a read() within this time,
   # it raises a Net::ReadTimeout exception. The default value is 60 seconds.
   #
-  # source://RUBY_ROOT/net/pop.rb:505
+  # source://net-pop//lib/net/pop.rb#505
   def read_timeout; end
 
   # Set the read timeout.
   #
-  # source://RUBY_ROOT/net/pop.rb:508
+  # source://net-pop//lib/net/pop.rb#508
   def read_timeout=(sec); end
 
   # Resets the session.  This clears all "deleted" marks from messages.
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:697
+  # source://net-pop//lib/net/pop.rb#697
   def reset; end
 
-  # source://RUBY_ROOT/net/pop.rb:706
+  # source://net-pop//lib/net/pop.rb#706
   def set_all_uids; end
 
   # *WARNING*: This method causes a serious security hole.
@@ -368,7 +372,7 @@ class Net::POP3 < ::Net::Protocol
   #     ....
   #   end
   #
-  # source://RUBY_ROOT/net/pop.rb:485
+  # source://net-pop//lib/net/pop.rb#485
   def set_debug_output(arg); end
 
   # Starts a POP3 session.
@@ -380,21 +384,21 @@ class Net::POP3 < ::Net::Protocol
   #
   # @raise [IOError]
   #
-  # source://RUBY_ROOT/net/pop.rb:526
+  # source://net-pop//lib/net/pop.rb#526
   def start(account, password); end
 
   # +true+ if the POP3 session has started.
   #
   # @return [Boolean]
   #
-  # source://RUBY_ROOT/net/pop.rb:514
+  # source://net-pop//lib/net/pop.rb#514
   def started?; end
 
   # does this instance use SSL?
   #
   # @return [Boolean]
   #
-  # source://RUBY_ROOT/net/pop.rb:441
+  # source://net-pop//lib/net/pop.rb#441
   def use_ssl?; end
 
   private
@@ -405,7 +409,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # @raise [IOError]
   #
-  # source://RUBY_ROOT/net/pop.rb:612
+  # source://net-pop//lib/net/pop.rb#612
   def command; end
 
   # nil's out the:
@@ -414,17 +418,17 @@ class Net::POP3 < ::Net::Protocol
   # - number counter for bytes
   # - quits the current command, if any
   #
-  # source://RUBY_ROOT/net/pop.rb:596
+  # source://net-pop//lib/net/pop.rb#596
   def do_finish; end
 
   # internal method for Net::POP3.start
   #
-  # source://RUBY_ROOT/net/pop.rb:542
+  # source://net-pop//lib/net/pop.rb#542
   def do_start(account, password); end
 
   # Does nothing
   #
-  # source://RUBY_ROOT/net/pop.rb:581
+  # source://net-pop//lib/net/pop.rb#581
   def on_connect; end
 
   class << self
@@ -439,7 +443,7 @@ class Net::POP3 < ::Net::Protocol
     #       ....
     #     end
     #
-    # source://RUBY_ROOT/net/pop.rb:238
+    # source://net-pop//lib/net/pop.rb#238
     def APOP(isapop); end
 
     # Opens a POP3 session, attempts authentication, and quits.
@@ -456,32 +460,32 @@ class Net::POP3 < ::Net::Protocol
     #     Net::POP3.auth_only('pop.example.com', 110,
     #                         'YourAccount', 'YourPassword', true)
     #
-    # source://RUBY_ROOT/net/pop.rb:305
+    # source://net-pop//lib/net/pop.rb#305
     def auth_only(address, port = T.unsafe(nil), account = T.unsafe(nil), password = T.unsafe(nil), isapop = T.unsafe(nil)); end
 
     # returns the :ca_file or :ca_path from POP3.ssl_params
     #
-    # source://RUBY_ROOT/net/pop.rb:377
+    # source://net-pop//lib/net/pop.rb#377
     def certs; end
 
     # Constructs proper parameters from arguments
     #
-    # source://RUBY_ROOT/net/pop.rb:337
+    # source://net-pop//lib/net/pop.rb#337
     def create_ssl_params(verify_or_params = T.unsafe(nil), certs = T.unsafe(nil)); end
 
     # The default port for POP3 connections, port 110
     #
-    # source://RUBY_ROOT/net/pop.rb:210
+    # source://net-pop//lib/net/pop.rb#210
     def default_pop3_port; end
 
     # The default port for POP3S connections, port 995
     #
-    # source://RUBY_ROOT/net/pop.rb:215
+    # source://net-pop//lib/net/pop.rb#215
     def default_pop3s_port; end
 
     # returns the port for POP3
     #
-    # source://RUBY_ROOT/net/pop.rb:205
+    # source://net-pop//lib/net/pop.rb#205
     def default_port; end
 
     # Starts a POP3 session and deletes all messages on the server.
@@ -497,12 +501,12 @@ class Net::POP3 < ::Net::Protocol
     #       file.write m.pop
     #     end
     #
-    # source://RUBY_ROOT/net/pop.rb:283
+    # source://net-pop//lib/net/pop.rb#283
     def delete_all(address, port = T.unsafe(nil), account = T.unsafe(nil), password = T.unsafe(nil), isapop = T.unsafe(nil), &block); end
 
     # Disable SSL for all new instances.
     #
-    # source://RUBY_ROOT/net/pop.rb:355
+    # source://net-pop//lib/net/pop.rb#355
     def disable_ssl; end
 
     # :call-seq:
@@ -511,7 +515,7 @@ class Net::POP3 < ::Net::Protocol
     # Enable SSL for all new instances.
     # +params+ is passed to OpenSSL::SSLContext#set_params.
     #
-    # source://RUBY_ROOT/net/pop.rb:332
+    # source://net-pop//lib/net/pop.rb#332
     def enable_ssl(*args); end
 
     # Starts a POP3 session and iterates over each POPMail object,
@@ -534,17 +538,17 @@ class Net::POP3 < ::Net::Protocol
     #       m.delete if $DELETE
     #     end
     #
-    # source://RUBY_ROOT/net/pop.rb:262
+    # source://net-pop//lib/net/pop.rb#262
     def foreach(address, port = T.unsafe(nil), account = T.unsafe(nil), password = T.unsafe(nil), isapop = T.unsafe(nil), &block); end
 
-    # source://RUBY_ROOT/net/pop.rb:219
+    # source://net-pop//lib/net/pop.rb#219
     def socket_type; end
 
     # returns the SSL Parameters
     #
     # see also POP3.enable_ssl
     #
-    # source://RUBY_ROOT/net/pop.rb:362
+    # source://net-pop//lib/net/pop.rb#362
     def ssl_params; end
 
     # Creates a new POP3 object and open the connection.  Equivalent to
@@ -563,119 +567,128 @@ class Net::POP3 < ::Net::Protocol
     #      end
     #    end
     #
-    # source://RUBY_ROOT/net/pop.rb:401
+    # source://net-pop//lib/net/pop.rb#401
     def start(address, port = T.unsafe(nil), account = T.unsafe(nil), password = T.unsafe(nil), isapop = T.unsafe(nil), &block); end
 
     # returns +true+ if POP3.ssl_params is set
     #
     # @return [Boolean]
     #
-    # source://RUBY_ROOT/net/pop.rb:367
+    # source://net-pop//lib/net/pop.rb#367
     def use_ssl?; end
 
     # returns whether verify_mode is enable from POP3.ssl_params
     #
-    # source://RUBY_ROOT/net/pop.rb:372
+    # source://net-pop//lib/net/pop.rb#372
     def verify; end
   end
 end
 
 # version of this library
 #
-# source://RUBY_ROOT/net/pop.rb:198
+# source://net-pop//lib/net/pop.rb#198
 Net::POP3::VERSION = T.let(T.unsafe(nil), String)
 
+# source://net-pop//lib/net/pop.rb#889
 class Net::POP3Command
   # @return [POP3Command] a new instance of POP3Command
   #
-  # source://RUBY_ROOT/net/pop.rb:891
+  # source://net-pop//lib/net/pop.rb#891
   def initialize(sock); end
 
   # @raise [POPAuthenticationError]
   #
-  # source://RUBY_ROOT/net/pop.rb:911
+  # source://net-pop//lib/net/pop.rb#911
   def apop(account, password); end
 
-  # source://RUBY_ROOT/net/pop.rb:904
+  # source://net-pop//lib/net/pop.rb#904
   def auth(account, password); end
 
-  # source://RUBY_ROOT/net/pop.rb:959
+  # source://net-pop//lib/net/pop.rb#959
   def dele(num); end
 
-  # source://RUBY_ROOT/net/pop.rb:900
+  # source://net-pop//lib/net/pop.rb#900
   def inspect; end
 
-  # source://RUBY_ROOT/net/pop.rb:921
+  # source://net-pop//lib/net/pop.rb#921
   def list; end
 
-  # source://RUBY_ROOT/net/pop.rb:980
+  # source://net-pop//lib/net/pop.rb#980
   def quit; end
 
-  # source://RUBY_ROOT/net/pop.rb:952
+  # source://net-pop//lib/net/pop.rb#952
   def retr(num, &block); end
 
-  # source://RUBY_ROOT/net/pop.rb:941
+  # source://net-pop//lib/net/pop.rb#941
   def rset; end
 
   # Returns the value of attribute socket.
   #
-  # source://RUBY_ROOT/net/pop.rb:898
+  # source://net-pop//lib/net/pop.rb#898
   def socket; end
 
-  # source://RUBY_ROOT/net/pop.rb:934
+  # source://net-pop//lib/net/pop.rb#934
   def stat; end
 
-  # source://RUBY_ROOT/net/pop.rb:945
+  # source://net-pop//lib/net/pop.rb#945
   def top(num, lines = T.unsafe(nil), &block); end
 
-  # source://RUBY_ROOT/net/pop.rb:963
+  # source://net-pop//lib/net/pop.rb#963
   def uidl(num = T.unsafe(nil)); end
 
   private
 
   # @raise [POPError]
   #
-  # source://RUBY_ROOT/net/pop.rb:1000
+  # source://net-pop//lib/net/pop.rb#1000
   def check_response(res); end
 
   # @raise [POPAuthenticationError]
   #
-  # source://RUBY_ROOT/net/pop.rb:1005
+  # source://net-pop//lib/net/pop.rb#1005
   def check_response_auth(res); end
 
-  # source://RUBY_ROOT/net/pop.rb:1010
+  # source://net-pop//lib/net/pop.rb#1010
   def critical; end
 
-  # source://RUBY_ROOT/net/pop.rb:991
+  # source://net-pop//lib/net/pop.rb#991
   def get_response(fmt, *fargs); end
 
-  # source://RUBY_ROOT/net/pop.rb:986
+  # source://net-pop//lib/net/pop.rb#986
   def getok(fmt, *fargs); end
 
-  # source://RUBY_ROOT/net/pop.rb:996
+  # source://net-pop//lib/net/pop.rb#996
   def recv_response; end
 end
 
-# source://RUBY_ROOT/net/pop.rb:721
+# source://net-pop//lib/net/pop.rb#721
 Net::POP3Session = Net::POP3
 
 # POP3 authentication error.
+#
+# source://net-pop//lib/net/pop.rb#40
 class Net::POPAuthenticationError < ::Net::ProtoAuthError; end
 
 # Unexpected response from the server.
+#
+# source://net-pop//lib/net/pop.rb#43
 class Net::POPBadResponse < ::Net::POPError; end
 
 # Non-authentication POP3 protocol error
 # (reply code "-ERR", except authentication).
+#
+# source://net-pop//lib/net/pop.rb#37
 class Net::POPError < ::Net::ProtocolError; end
 
 # This class represents a message which exists on the POP server.
 # Instances of this class are created by the POP3 class; they should
 # not be directly created by the user.
+#
+# source://net-pop//lib/net/pop.rb#741
 class Net::POPMail
   # @return [POPMail] a new instance of POPMail
   #
-  # source://RUBY_ROOT/net/pop.rb:743
+  # source://net-pop//lib/net/pop.rb#743
   def initialize(num, len, pop, cmd); end
 
   # This method fetches the message.  If called with a block, the
@@ -715,7 +728,7 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:802
+  # source://net-pop//lib/net/pop.rb#802
   def all(dest = T.unsafe(nil), &block); end
 
   # Marks a message for deletion on the server.  Deletion does not
@@ -738,7 +751,7 @@ class Net::POPMail
   #       end
   #     end
   #
-  # source://RUBY_ROOT/net/pop.rb:858
+  # source://net-pop//lib/net/pop.rb#858
   def delete; end
 
   # Marks a message for deletion on the server.  Deletion does not
@@ -761,14 +774,14 @@ class Net::POPMail
   #       end
   #     end
   #
-  # source://RUBY_ROOT/net/pop.rb:858
+  # source://net-pop//lib/net/pop.rb#858
   def delete!; end
 
   # True if the mail has been deleted.
   #
   # @return [Boolean]
   #
-  # source://RUBY_ROOT/net/pop.rb:866
+  # source://net-pop//lib/net/pop.rb#866
   def deleted?; end
 
   # Fetches the message header.
@@ -777,17 +790,17 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:834
+  # source://net-pop//lib/net/pop.rb#834
   def header(dest = T.unsafe(nil)); end
 
   # Provide human-readable stringification of class state.
   #
-  # source://RUBY_ROOT/net/pop.rb:760
+  # source://net-pop//lib/net/pop.rb#760
   def inspect; end
 
   # The length of the message in octets.
   #
-  # source://RUBY_ROOT/net/pop.rb:756
+  # source://net-pop//lib/net/pop.rb#756
   def length; end
 
   # This method fetches the message.  If called with a block, the
@@ -827,12 +840,12 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:802
+  # source://net-pop//lib/net/pop.rb#802
   def mail(dest = T.unsafe(nil), &block); end
 
   # The sequence number of the message on the server.
   #
-  # source://RUBY_ROOT/net/pop.rb:753
+  # source://net-pop//lib/net/pop.rb#753
   def number; end
 
   # This method fetches the message.  If called with a block, the
@@ -872,12 +885,12 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:802
+  # source://net-pop//lib/net/pop.rb#802
   def pop(dest = T.unsafe(nil), &block); end
 
   # The length of the message in octets.
   #
-  # source://RUBY_ROOT/net/pop.rb:756
+  # source://net-pop//lib/net/pop.rb#756
   def size; end
 
   # Fetches the message header and +lines+ lines of body.
@@ -886,10 +899,10 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:822
+  # source://net-pop//lib/net/pop.rb#822
   def top(lines, dest = T.unsafe(nil)); end
 
-  # source://RUBY_ROOT/net/pop.rb:882
+  # source://net-pop//lib/net/pop.rb#882
   def uid=(uid); end
 
   # Returns the unique-id of the message.
@@ -897,7 +910,7 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:874
+  # source://net-pop//lib/net/pop.rb#874
   def uidl; end
 
   # Returns the unique-id of the message.
@@ -905,9 +918,9 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://RUBY_ROOT/net/pop.rb:874
+  # source://net-pop//lib/net/pop.rb#874
   def unique_id; end
 end
 
-# source://RUBY_ROOT/net/pop.rb:720
+# source://net-pop//lib/net/pop.rb#720
 Net::POPSession = Net::POP3

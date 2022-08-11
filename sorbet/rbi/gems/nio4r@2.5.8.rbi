@@ -6,7 +6,7 @@
 
 # New I/O for Ruby
 #
-# source://nio4r-2.5.8/lib/nio/version.rb:3
+# source://nio4r//lib/nio/version.rb#3
 module NIO
   class << self
     # NIO implementation, one of the following (as a string):
@@ -14,12 +14,12 @@ module NIO
     # * libev: as a C extension using libev
     # * java: using Java NIO
     #
-    # source://nio4r-2.5.8/lib/nio.rb:12
+    # source://nio4r//lib/nio.rb#12
     def engine; end
 
     # @return [Boolean]
     #
-    # source://nio4r-2.5.8/lib/nio.rb:16
+    # source://nio4r//lib/nio.rb#16
     def pure?(env = T.unsafe(nil)); end
   end
 end
@@ -150,7 +150,7 @@ class NIO::ByteBuffer::OverflowError < ::IOError; end
 # Not enough data remaining in buffer
 class NIO::ByteBuffer::UnderflowError < ::IOError; end
 
-# source://nio4r-2.5.8/lib/nio.rb:50
+# source://nio4r//lib/nio.rb#50
 NIO::ENGINE = T.let(T.unsafe(nil), String)
 
 # Monitors watch IO objects for specific events
@@ -288,5 +288,5 @@ class NIO::Selector
   end
 end
 
-# source://nio4r-2.5.8/lib/nio/version.rb:4
+# source://nio4r//lib/nio/version.rb#4
 NIO::VERSION = T.let(T.unsafe(nil), String)
