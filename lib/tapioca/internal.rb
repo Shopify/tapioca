@@ -36,6 +36,7 @@ require "tapioca/sorbet_ext/generic_name_patch"
 require "tapioca/sorbet_ext/proc_bind_patch"
 require "tapioca/runtime/generic_type_registry"
 
+require "tapioca/helpers/source_uri"
 require "tapioca/helpers/cli_helper"
 require "tapioca/helpers/config_helper"
 require "tapioca/helpers/rbi_files_helper"

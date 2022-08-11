@@ -136,6 +136,22 @@ module Tapioca
       extend(T::Sig)
       include GemHelper
 
+      class << self
+        extend T::Sig
+
+        sig { returns(T::Hash[String, Gemfile::GemSpec]) }
+        def spec_lookup_by_file_path
+          @lookup ||= T.let(
+            [*::Gem::Specification.default_stubs, *::Gem::Specification.stubs]
+            .map! { |spec| new(spec.to_spec) }
+            .flat_map do |spec|
+              spec.files.map { |file| [file.to_s, spec] }
+            end.to_h,
+            T.nilable(T::Hash[String, Gemfile::GemSpec])
+          )
+        end
+      end
+
       IGNORED_GEMS = T.let(
         [
           "sorbet", "sorbet-static", "sorbet-runtime", "sorbet-static-and-runtime",
@@ -211,6 +227,20 @@ module Tapioca
         rewriter.tree
       end
 
+      sig { returns(T.nilable(T::Boolean)) }
+      def default_gem?
+        @spec.respond_to?(:default_gem?) && @spec.default_gem?
+      end
+
+      sig { params(file: Pathname).returns(Pathname) }
+      def relative_path_for(file)
+        if default_gem?
+          file.realpath.relative_path_from(RbConfig::CONFIG["rubylibdir"])
+        else
+          file.realpath.relative_path_from(full_gem_path)
+        end
+      end
+
       private
 
       sig { returns(T::Array[Pathname]) }
@@ -226,11 +256,6 @@ module Tapioca
             Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
           end
         end
-      end
-
-      sig { returns(T.nilable(T::Boolean)) }
-      def default_gem?
-        @spec.respond_to?(:default_gem?) && @spec.default_gem?
       end
 
       sig { returns(Regexp) }

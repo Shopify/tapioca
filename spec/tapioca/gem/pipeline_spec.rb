@@ -3962,49 +3962,50 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         NewClass = Class.new
       RB
 
-      active_support_version = Gem::Specification.find_by_name("activesupport").version
-      sorbet_runtime_version = Gem::Specification.find_by_name("sorbet-runtime").version
       mutex = Class.new { |k| k.include(::Mutex_m) }
+      sorbet_runtime_version = ::Gem::Specification.find_by_name("sorbet-runtime").version.to_s
+      active_support_version = ::Gem::Specification.find_by_name("activesupport").version.to_s
+      mutex_version = ::Gem::Specification.default_stubs.find { |s| s.name == "mutex_m" }.version.to_s
 
       output = template(<<~RBI)
-        # source://the-dep-1.1.2/lib/bar.rb:1
+        # source://the-dep//lib/bar.rb#1
         module Bar
           # Some documentation
           #
-          # source://the-dep-1.1.2/lib/bar.rb:6
+          # source://the-dep//lib/bar.rb#6
           sig { void }
           def bar; end
 
           def foo1; end
 
-          # source://the-dep-1.1.2/lib/bar.rb:15
+          # source://the-dep//lib/bar.rb#15
           def foo2; end
 
           class << self
             # Some documentation
             #
-            # source://the-dep-1.1.2/lib/bar.rb:9
+            # source://the-dep//lib/bar.rb#9
             def bar; end
           end
         end
 
-        # source://the-dep-1.1.2/lib/bar.rb:11
+        # source://the-dep//lib/bar.rb#11
         Bar::BAR = T.let(T.unsafe(nil), Integer)
 
-        # source://the-dep-1.1.2/lib/foo.rb:23
+        # source://the-dep//lib/foo.rb#23
         class BasicFoo < ::BasicObject
-          # source://the-dep-1.1.2/lib/foo.rb:27
+          # source://the-dep//lib/foo.rb#27
           sig { void }
           def foo; end
         end
 
         # @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
         #
-        # source://the-dep-1.1.2/lib/foo.rb:11
+        # source://the-dep//lib/foo.rb#11
         class Baz
           abstract!
 
-          # source://sorbet-runtime-#{sorbet_runtime_version}/lib/types/private/abstract/declare.rb:37
+          # source://sorbet-runtime/#{sorbet_runtime_version}/lib/types/private/abstract/declare.rb#37
         <% if ruby_version(">= 3.1") %>
           def initialize(*args, **_arg1, &blk); end
         <% else %>
@@ -4012,58 +4013,58 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         <% end %>
         end
 
-        # source://the-dep-1.1.2/lib/foo.rb:1
+        # source://the-dep//lib/foo.rb#1
         class Foo; end
 
-        # source://the-dep-1.1.2/lib/foo.rb:6
+        # source://the-dep//lib/foo.rb#6
         module Foo::Helper
-          # source://the-dep-1.1.2/lib/foo.rb:7
+          # source://the-dep//lib/foo.rb#7
           def helper_method; end
         end
 
-        # source://the-dep-1.1.2/lib/foo.rb:30
+        # source://the-dep//lib/foo.rb#30
         class NewClass; end
 
-        # source://the-dep-1.1.2/lib/option.rb:1
+        # source://the-dep//lib/option.rb#1
         class Option
           include ::Mutex_m
 
-          # source://RUBY_ROOT/mutex_m.rb:#{mutex.instance_method(:lock).source_location&.last}
+          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:lock).source_location&.last}
           def lock; end
 
-          # source://RUBY_ROOT/mutex_m.rb:#{mutex.instance_method(:locked?).source_location&.last}
+          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:locked?).source_location&.last}
           def locked?; end
 
-          # source://RUBY_ROOT/mutex_m.rb:#{mutex.instance_method(:synchronize).source_location&.last}
+          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:synchronize).source_location&.last}
           def synchronize(&block); end
 
-          # source://RUBY_ROOT/mutex_m.rb:#{mutex.instance_method(:try_lock).source_location&.last}
+          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:try_lock).source_location&.last}
           def try_lock; end
 
-          # source://RUBY_ROOT/mutex_m.rb:#{mutex.instance_method(:unlock).source_location&.last}
+          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:unlock).source_location&.last}
           def unlock; end
         end
 
-        # source://the-dep-1.1.2/lib/foo.rb:16
+        # source://the-dep//lib/foo.rb#16
         class Quux < ::T::Struct
           class << self
-            # source://sorbet-runtime-#{sorbet_runtime_version}/lib/types/struct.rb:13
+            # source://sorbet-runtime/#{sorbet_runtime_version}/lib/types/struct.rb#13
             def inherited(s); end
           end
         end
 
-        # source://the-dep-1.1.2/lib/foo.rb:19
+        # source://the-dep//lib/foo.rb#19
         class String
           include ::Comparable
 
-          # source://the-dep-1.1.2/lib/foo.rb:20
+          # source://the-dep//lib/foo.rb#20
           def foo; end
         end
 
-        # source://activesupport-#{active_support_version}/lib/active_support/core_ext/object/blank.rb:104
+        # source://activesupport/#{active_support_version}/lib/active_support/core_ext/object/blank.rb#104
         String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-        # source://activesupport-#{active_support_version}/lib/active_support/core_ext/object/blank.rb:105
+        # source://activesupport/#{active_support_version}/lib/active_support/core_ext/object/blank.rb#105
         String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
