@@ -6,6 +6,7 @@ module Tapioca
     class Loader
       extend(T::Sig)
       include Tapioca::GemHelper
+      include Thor::Base
 
       sig do
         params(gemfile: Tapioca::Gemfile, initialize_file: T.nilable(String), require_file: T.nilable(String)).void
@@ -29,12 +30,17 @@ module Tapioca
         silence_deprecations
 
         if environment_load
-          safe_require("./config/environment")
+          require "./config/environment"
         else
-          safe_require("./config/application")
+          require "./config/application"
         end
 
         eager_load_rails_app if eager_load
+      rescue LoadError, StandardError => e
+        say("Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
+          "but it failed. If your application uses Rails please ensure it can be loaded correctly before generating " \
+          "RBIs.\n#{e}", :yellow)
+        say("Continuing RBI generation without loading the Rails application.")
       end
 
       private
