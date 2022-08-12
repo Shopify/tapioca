@@ -103,7 +103,7 @@ class Module
     # this mixin can be found whether searching for an include/prepend on the singleton class
     # or an extend on the attached class.
     def register_extend_on_attached_class(constant)
-      attached_class = Tapioca::Runtime::Reflection.constant_from_singleton_class(constant)
+      attached_class = Tapioca::Runtime::Reflection.attached_class_of(constant)
 
       Tapioca::Runtime::Trackers::Mixin.register(
         T.cast(attached_class, Module),
