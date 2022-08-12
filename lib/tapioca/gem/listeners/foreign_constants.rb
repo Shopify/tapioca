@@ -35,10 +35,10 @@ module Tapioca
               # base constant. Then, generate RBIs as if the base constant is extending the mixin,
               # which is functionally equivalent to including or prepending to the singleton class.
               if !name && constant.singleton_class?
-                name = constant_name_from_singleton_class(constant)
-                next unless name
+                attached_class = attached_class_of(constant)
+                next unless attached_class
 
-                constant = T.cast(constantize(name), Module)
+                constant = attached_class
               end
 
               @pipeline.push_foreign_constant(name, constant) if name
