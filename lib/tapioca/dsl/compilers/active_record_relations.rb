@@ -242,6 +242,15 @@ module Tapioca
           create_relation_class(model)
           create_association_relation_class(model)
           create_collection_proxy_class(model)
+          
+          klass.create_type_alias(
+            'RelationType',
+            Types::Union.new([
+              RelationClassName,
+              AssociationRelationClassName,
+              RelationWhereChainClassName
+            ])
+          )
         end
 
         sig { params(model: RBI::Scope).void }
