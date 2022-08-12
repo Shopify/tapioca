@@ -8,29 +8,33 @@ module Tapioca
 
   @traces = T.let([], T::Array[TracePoint])
 
-  sig { params(trace_name: Symbol, block: T.proc.params(arg0: TracePoint).void).void }
-  def self.register_trace(trace_name, &block)
-    @traces << TracePoint.trace(trace_name, &block)
-  end
+  class << self
+    extend T::Sig
 
-  sig { void }
-  def self.disable_traces
-    @traces.each(&:disable)
-  end
-
-  sig do
-    type_parameters(:Result)
-      .params(blk: T.proc.returns(T.type_parameter(:Result)))
-      .returns(T.type_parameter(:Result))
-  end
-  def self.silence_warnings(&blk)
-    original_verbosity = $VERBOSE
-    $VERBOSE = nil
-    ::Gem::DefaultUserInteraction.use_ui(::Gem::SilentUI.new) do
-      blk.call
+    sig { params(trace_name: Symbol, block: T.proc.params(arg0: TracePoint).void).void }
+    def register_trace(trace_name, &block)
+      @traces << TracePoint.trace(trace_name, &block)
     end
-  ensure
-    $VERBOSE = original_verbosity
+
+    sig { void }
+    def disable_traces
+      @traces.each(&:disable)
+    end
+
+    sig do
+      type_parameters(:Result)
+        .params(blk: T.proc.returns(T.type_parameter(:Result)))
+        .returns(T.type_parameter(:Result))
+    end
+    def silence_warnings(&blk)
+      original_verbosity = $VERBOSE
+      $VERBOSE = nil
+      ::Gem::DefaultUserInteraction.use_ui(::Gem::SilentUI.new) do
+        blk.call
+      end
+    ensure
+      $VERBOSE = original_verbosity
+    end
   end
 
   class Error < StandardError; end

@@ -96,16 +96,20 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          name = ::Config.const_name
-          return [] unless Object.const_defined?(name)
+        class << self
+          extend T::Sig
 
-          config_object = Object.const_get(name)
-          options_class_name = "#{name}#{CONFIG_OPTIONS_SUFFIX}"
-          Object.const_set(options_class_name, config_object.singleton_class)
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            name = ::Config.const_name
+            return [] unless Object.const_defined?(name)
 
-          Array(config_object.singleton_class)
+            config_object = Object.const_get(name)
+            options_class_name = "#{name}#{CONFIG_OPTIONS_SUFFIX}"
+            Object.const_set(options_class_name, config_object.singleton_class)
+
+            Array(config_object.singleton_class)
+          end
         end
       end
     end

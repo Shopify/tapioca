@@ -112,11 +112,15 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          marker = Google::Protobuf::MessageExts::ClassMethods
-          results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module])
-          results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            marker = Google::Protobuf::MessageExts::ClassMethods
+            results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module])
+            results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
+          end
         end
 
         private

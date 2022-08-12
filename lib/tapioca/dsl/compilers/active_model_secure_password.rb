@@ -85,13 +85,17 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          # This selects all classes that are `ActiveModel::SecurePassword::ClassMethods === klass`.
-          # In other words, we select all classes that have `ActiveModel::SecurePassword::ClassMethods`
-          # as an ancestor of its singleton class, i.e. all classes that have extended the
-          # `ActiveModel::SecurePassword::ClassMethods` module.
-          all_classes.grep(::ActiveModel::SecurePassword::ClassMethods)
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            # This selects all classes that are `ActiveModel::SecurePassword::ClassMethods === klass`.
+            # In other words, we select all classes that have `ActiveModel::SecurePassword::ClassMethods`
+            # as an ancestor of its singleton class, i.e. all classes that have extended the
+            # `ActiveModel::SecurePassword::ClassMethods` module.
+            all_classes.grep(::ActiveModel::SecurePassword::ClassMethods)
+          end
         end
       end
     end

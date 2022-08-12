@@ -6,17 +6,24 @@ module Tapioca
     class Gem < Loader
       extend T::Sig
 
-      sig do
-        params(
-          bundle: Gemfile,
-          prerequire: T.nilable(String),
-          postrequire: String,
-          default_command: String
-        ).void
-      end
-      def self.load_application(bundle:, prerequire:, postrequire:, default_command:)
-        loader = new(bundle: bundle, prerequire: prerequire, postrequire: postrequire, default_command: default_command)
-        loader.load
+      class << self
+        extend T::Sig
+
+        sig do
+          params(
+            bundle: Gemfile,
+            prerequire: T.nilable(String),
+            postrequire: String,
+            default_command: String
+          ).void
+        end
+        def load_application(bundle:, prerequire:, postrequire:, default_command:)
+          loader = new(bundle: bundle,
+            prerequire: prerequire,
+            postrequire: postrequire,
+            default_command: default_command)
+          loader.load
+        end
       end
 
       sig { override.void }

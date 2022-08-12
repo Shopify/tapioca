@@ -6,15 +6,19 @@ module Tapioca
     extend T::Sig
     extend T::Generic
 
-    sig { params(json: String).returns(RepoIndex) }
-    def self.from_json(json)
-      RepoIndex.from_hash(JSON.parse(json))
-    end
+    class << self
+      extend T::Sig
 
-    sig { params(hash: T::Hash[String, T::Hash[T.untyped, T.untyped]]).returns(RepoIndex) }
-    def self.from_hash(hash)
-      hash.each_with_object(RepoIndex.new) do |(name, _), index|
-        index << name
+      sig { params(json: String).returns(RepoIndex) }
+      def from_json(json)
+        RepoIndex.from_hash(JSON.parse(json))
+      end
+
+      sig { params(hash: T::Hash[String, T::Hash[T.untyped, T.untyped]]).returns(RepoIndex) }
+      def from_hash(hash)
+        hash.each_with_object(RepoIndex.new) do |(name, _), index|
+          index << name
+        end
       end
     end
 

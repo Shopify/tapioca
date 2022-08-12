@@ -10,9 +10,13 @@ module Tapioca
         extend T::Sig
         require "thread"
 
-        sig { returns(T::Boolean) }
-        def self.forking_env?
-          !ENV["NO_FORK"] && Process.respond_to?(:fork)
+        class << self
+          extend T::Sig
+
+          sig { returns(T::Boolean) }
+          def forking_env?
+            !ENV["NO_FORK"] && Process.respond_to?(:fork)
+          end
         end
 
         def run
