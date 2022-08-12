@@ -1284,6 +1284,33 @@ module Tapioca
           RBI
         end
 
+        it "must generate RBIs for foreign constants whose singleton class overrides #inspect" do
+          bar = mock_gem("bar", "0.0.2") do
+            write("lib/bar.rb", <<~RBI)
+              class Bar
+                def self.inspect
+                  "Override!"
+                end
+              end
+            RBI
+          end
+
+          foo = mock_gem("foo", "0.0.1") do
+            write("lib/foo.rb", <<~RBI)
+              module Foo; end
+
+              Bar.singleton_class.include(Foo)
+            RBI
+          end
+
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(foo)
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo")
+          assert_empty_stderr(result)
+        end
+
         it "must not load engines in the application" do
           @project.write("config/application.rb", <<~RB)
             require "rails"
