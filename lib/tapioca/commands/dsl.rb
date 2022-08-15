@@ -56,6 +56,32 @@ module Tapioca
         super()
       end
 
+      sig { void }
+      def list_compilers
+        Loaders::Dsl.load_application(
+          tapioca_path: @tapioca_path,
+          eager_load: @requested_constants.empty?
+        )
+
+        pipeline = create_pipeline
+
+        say("")
+        say("Loaded DSL compiler classes:")
+        say("")
+
+        table = pipeline.compilers.map do |compiler|
+          status = if pipeline.active_compilers.include?(compiler)
+            set_color("enabled", :green)
+          else
+            set_color("disabled", :red)
+          end
+
+          [compiler.name, status]
+        end
+
+        print_table(table, { indent: 2 })
+      end
+
       sig { override.void }
       def execute
         Loaders::Dsl.load_application(
@@ -73,15 +99,7 @@ module Tapioca
         outpath = @should_verify ? Pathname.new(Dir.mktmpdir) : @outpath
         rbi_files_to_purge = existing_rbi_filenames(@requested_constants)
 
-        pipeline = Tapioca::Dsl::Pipeline.new(
-          requested_constants: constantize(@requested_constants),
-          requested_compilers: constantize_compilers(@only),
-          excluded_compilers: constantize_compilers(@exclude),
-          error_handler: ->(error) {
-            say_error(error, :bold, :red)
-          },
-          number_of_workers: @number_of_workers
-        )
+        pipeline = create_pipeline
 
         processed_files = pipeline.run do |constant, contents|
           constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
@@ -115,7 +133,7 @@ module Tapioca
               gem_dir: @gem_dir,
               dsl_dir: @outpath.to_s,
               auto_strictness: @auto_strictness,
-              compilers: pipeline.compilers
+              compilers: pipeline.active_compilers
             )
           end
 
@@ -125,6 +143,19 @@ module Tapioca
       end
 
       private
+
+      sig { returns(Tapioca::Dsl::Pipeline) }
+      def create_pipeline
+        Tapioca::Dsl::Pipeline.new(
+          requested_constants: constantize(@requested_constants),
+          requested_compilers: constantize_compilers(@only),
+          excluded_compilers: constantize_compilers(@exclude),
+          error_handler: ->(error) {
+            say_error(error, :bold, :red)
+          },
+          number_of_workers: @number_of_workers
+        )
+      end
 
       sig { params(requested_constants: T::Array[String], path: Pathname).returns(T::Set[Pathname]) }
       def existing_rbi_filenames(requested_constants, path: @outpath)

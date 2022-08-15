@@ -1767,6 +1767,107 @@ module Tapioca
           OUT
         end
       end
+
+      describe "list compilers" do
+        before(:all) do
+          @project.tapioca("configure")
+          @project.require_real_gem("smart_properties")
+          @project.require_real_gem("sidekiq")
+          @project.require_real_gem("activerecord")
+          @project.bundle_install
+
+          @project.write("lib/compilers/post_compiler.rb", <<~RB)
+            require "tapioca/dsl"
+
+            class PostCompiler < Tapioca::Dsl::Compiler
+            end
+          RB
+        end
+
+        it "lists all Tapioca bundled compilers" do
+          result = @project.tapioca("dsl --list-compilers")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+
+            Loaded DSL compiler classes:
+
+              PostCompiler                                             enabled
+              Tapioca::Dsl::Compilers::ActiveModelAttributes           enabled
+              Tapioca::Dsl::Compilers::ActiveModelSecurePassword       enabled
+              Tapioca::Dsl::Compilers::ActiveRecordAssociations        enabled
+              Tapioca::Dsl::Compilers::ActiveRecordColumns             enabled
+              Tapioca::Dsl::Compilers::ActiveRecordEnum                enabled
+              Tapioca::Dsl::Compilers::ActiveRecordRelations           enabled
+              Tapioca::Dsl::Compilers::ActiveRecordScope               enabled
+              Tapioca::Dsl::Compilers::ActiveSupportConcern            enabled
+              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes  enabled
+              Tapioca::Dsl::Compilers::MixedInClassAttributes          enabled
+              Tapioca::Dsl::Compilers::SidekiqWorker                   enabled
+              Tapioca::Dsl::Compilers::SmartProperties                 enabled
+          OUT
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "lists excluded compilers" do
+          result = @project.tapioca("dsl --list-compilers --exclude SmartProperties ActiveRecordEnum")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+
+            Loaded DSL compiler classes:
+
+              PostCompiler                                             enabled
+              Tapioca::Dsl::Compilers::ActiveModelAttributes           enabled
+              Tapioca::Dsl::Compilers::ActiveModelSecurePassword       enabled
+              Tapioca::Dsl::Compilers::ActiveRecordAssociations        enabled
+              Tapioca::Dsl::Compilers::ActiveRecordColumns             enabled
+              Tapioca::Dsl::Compilers::ActiveRecordEnum                disabled
+              Tapioca::Dsl::Compilers::ActiveRecordRelations           enabled
+              Tapioca::Dsl::Compilers::ActiveRecordScope               enabled
+              Tapioca::Dsl::Compilers::ActiveSupportConcern            enabled
+              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes  enabled
+              Tapioca::Dsl::Compilers::MixedInClassAttributes          enabled
+              Tapioca::Dsl::Compilers::SidekiqWorker                   enabled
+              Tapioca::Dsl::Compilers::SmartProperties                 disabled
+          OUT
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "lists enabled compilers" do
+          result = @project.tapioca("dsl --list-compilers --only SmartProperties ActiveRecordEnum")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+
+            Loaded DSL compiler classes:
+
+              PostCompiler                                             disabled
+              Tapioca::Dsl::Compilers::ActiveModelAttributes           disabled
+              Tapioca::Dsl::Compilers::ActiveModelSecurePassword       disabled
+              Tapioca::Dsl::Compilers::ActiveRecordAssociations        disabled
+              Tapioca::Dsl::Compilers::ActiveRecordColumns             disabled
+              Tapioca::Dsl::Compilers::ActiveRecordEnum                enabled
+              Tapioca::Dsl::Compilers::ActiveRecordRelations           disabled
+              Tapioca::Dsl::Compilers::ActiveRecordScope               disabled
+              Tapioca::Dsl::Compilers::ActiveSupportConcern            disabled
+              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes  disabled
+              Tapioca::Dsl::Compilers::MixedInClassAttributes          disabled
+              Tapioca::Dsl::Compilers::SidekiqWorker                   disabled
+              Tapioca::Dsl::Compilers::SmartProperties                 enabled
+          OUT
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+      end
     end
 
     describe "cli::dsl::custom application.rb" do
