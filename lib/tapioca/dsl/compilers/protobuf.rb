@@ -90,23 +90,51 @@ module Tapioca
             elsif constant == Google::Protobuf::Map
               create_type_members(klass, "Key", "Value")
             else
-              descriptor = T.let(T.unsafe(constant).descriptor, Google::Protobuf::Descriptor)
-              descriptor.each_oneof { |oneof| create_oneof_method(klass, oneof) }
-              fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
-              fields.sort_by!(&:name)
+              descriptor = T.unsafe(constant).descriptor
 
-              parameters = fields.map do |field|
-                create_kw_opt_param(field.name, type: field.init_type, default: field.default)
-              end
+              case descriptor
+              when Google::Protobuf::EnumDescriptor
+                descriptor.to_h.each do |sym, val|
+                  klass.create_constant(sym.to_s, value: val.to_s)
+                end
 
-              if fields.all? { |field| FIELD_RE.match?(field.name) }
-                klass.create_method("initialize", parameters: parameters, return_type: "void")
+                klass.create_method(
+                  "lookup",
+                  parameters: [create_param("number", type: "Integer")],
+                  return_type: "T.nilable(Symbol)",
+                  class_method: true,
+                )
+                klass.create_method(
+                  "resolve",
+                  parameters: [create_param("symbol", type: "Symbol")],
+                  return_type: "T.nilable(Integer)",
+                  class_method: true,
+                )
+                klass.create_method(
+                  "descriptor",
+                  return_type: "Google::Protobuf::EnumDescriptor",
+                  class_method: true,
+                )
+              when Google::Protobuf::Descriptor
+                descriptor.each_oneof { |oneof| create_oneof_method(klass, oneof) }
+                fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
+                fields.sort_by!(&:name)
+
+                parameters = fields.map do |field|
+                  create_kw_opt_param(field.name, type: field.init_type, default: field.default)
+                end
+
+                if fields.all? { |field| FIELD_RE.match?(field.name) }
+                  klass.create_method("initialize", parameters: parameters, return_type: "void")
+                else
+                  # One of the fields has an incorrect name for a named parameter so creating the default initialize for
+                  # it would create a RBI with a syntax error.
+                  # The workaround is to create an initialize that takes a **kwargs instead.
+                  kwargs_parameter = create_kw_rest_param("fields", type: "T.untyped")
+                  klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
+                end
               else
-                # One of the fields has an incorrect name for a named parameter so creating the default initialize for
-                # it would create a RBI with a syntax error.
-                # The workaround is to create an initialize that takes a **kwargs instead.
-                kwargs_parameter = create_kw_rest_param("fields", type: "T.untyped")
-                klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
+                raise TypeError, "Unexpected descriptor class: #{descriptor.class.name}"
               end
             end
           end
@@ -118,7 +146,12 @@ module Tapioca
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
             marker = Google::Protobuf::MessageExts::ClassMethods
-            results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module])
+
+            enum_modules = ObjectSpace.each_object(Google::Protobuf::EnumDescriptor).map do |desc|
+              T.cast(desc, Google::Protobuf::EnumDescriptor).enummodule
+            end
+
+            results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module]).concat(enum_modules)
             results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
           end
         end
@@ -142,7 +175,13 @@ module Tapioca
         def type_of(descriptor)
           case descriptor.type
           when :enum
-            descriptor.subtype.enummodule.name
+            # According to https://developers.google.com/protocol-buffers/docs/reference/ruby-generated#enum
+            # > You may assign either a number or a symbol to an enum field.
+            # > When reading the value back, it will be a symbol if the enum
+            # > value is known, or a number if it is unknown. Since proto3 uses
+            # > open enum semantics, any number may be assigned to an enum
+            # > field, even if it was not defined in the enum.
+            "T.any(Symbol, Integer)"
           when :message
             descriptor.subtype.msgclass.name
           when :int32, :int64, :uint32, :uint64
@@ -183,7 +222,7 @@ module Tapioca
               Field.new(
                 name: descriptor.name,
                 type: type,
-                init_type: "T.any(#{type}, T::Hash[#{key_type}, #{value_type}])",
+                init_type: "T.nilable(T.any(#{type}, T::Hash[#{key_type}, #{value_type}]))",
                 default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
               )
             else
@@ -196,18 +235,19 @@ module Tapioca
               Field.new(
                 name: descriptor.name,
                 type: type,
-                init_type: "T.any(#{type}, T::Array[#{elem_type}])",
+                init_type: "T.nilable(T.any(#{type}, T::Array[#{elem_type}]))",
                 default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
               )
             end
           else
             type = type_of(descriptor)
-            type = as_nilable_type(type) if nilable_descriptor?(descriptor)
+            nilable_type = as_nilable_type(type)
+            type = nilable_type if nilable_descriptor?(descriptor)
 
             Field.new(
               name: descriptor.name,
               type: type,
-              init_type: type,
+              init_type: nilable_type,
               default: "nil"
             )
           end
@@ -230,7 +270,7 @@ module Tapioca
           klass.create_method(
             "#{field.name}=",
             parameters: [create_param("value", type: field.type)],
-            return_type: field.type
+            return_type: "void"
           )
 
           field
