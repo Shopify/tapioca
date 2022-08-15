@@ -115,9 +115,13 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          T.cast(ObjectSpace.each_object(::AASM::ClassMethods), T::Enumerable[Module])
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            T.cast(ObjectSpace.each_object(::AASM::ClassMethods), T::Enumerable[Module])
+          end
         end
       end
     end

@@ -6,10 +6,14 @@ module Tapioca
     class Dsl < Loader
       extend T::Sig
 
-      sig { params(tapioca_path: String, eager_load: T::Boolean).void }
-      def self.load_application(tapioca_path:, eager_load: true)
-        loader = new(tapioca_path: tapioca_path)
-        loader.load
+      class << self
+        extend T::Sig
+
+        sig { params(tapioca_path: String, eager_load: T::Boolean).void }
+        def load_application(tapioca_path:, eager_load: true)
+          loader = new(tapioca_path: tapioca_path)
+          loader.load
+        end
       end
 
       sig { override.void }

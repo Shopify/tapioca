@@ -151,24 +151,26 @@ task :readme do
   require "kramdown"
 
   class TocConverter < Kramdown::Converter::Toc
+    class << self
+      def convert(doc, options)
+        result, _ = super(doc.root, options)
+        convert_to_list_items(result.children)
+      end
+
+      def convert_to_list_items(elements)
+        elements.flat_map do |elem|
+          level = elem.value.options[:level]
+          text = elem.value.options[:raw_text]
+          id = elem.attr[:id]
+          padding = "  " * (level - 2)
+
+          ["#{padding}* [#{text}](##{id})"] + convert_to_list_items(elem.children)
+        end
+      end
+    end
+
     def in_toc?(el)
       super && el.options[:raw_text] !~ /<!--\sno_toc\s-->/
-    end
-
-    def self.convert(doc, options)
-      result, _ = super(doc.root, options)
-      convert_to_list_items(result.children)
-    end
-
-    def self.convert_to_list_items(elements)
-      elements.flat_map do |elem|
-        level = elem.value.options[:level]
-        text = elem.value.options[:raw_text]
-        id = elem.attr[:id]
-        padding = "  " * (level - 2)
-
-        ["#{padding}* [#{text}](##{id})"] + convert_to_list_items(elem.children)
-      end
     end
   end
 

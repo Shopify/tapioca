@@ -53,9 +53,13 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          all_classes.grep(::ActiveModel::Attributes::ClassMethods)
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            all_classes.grep(::ActiveModel::Attributes::ClassMethods)
+          end
         end
 
         private

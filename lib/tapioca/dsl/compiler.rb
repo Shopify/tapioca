@@ -22,17 +22,46 @@ module Tapioca
       sig { returns(RBI::Tree) }
       attr_reader :root
 
+      class << self
+        extend T::Sig
+
+        sig { params(constant: Module).returns(T::Boolean) }
+        def handles?(constant)
+          processable_constants.include?(constant)
+        end
+
+        sig { abstract.returns(T::Enumerable[Module]) }
+        def gather_constants; end
+
+        sig { returns(T::Set[Module]) }
+        def processable_constants
+          @processable_constants ||= T.let(
+            T::Set[Module].new(gather_constants).compare_by_identity,
+            T.nilable(T::Set[Module])
+          )
+        end
+
+        private
+
+        sig { returns(T::Enumerable[Class]) }
+        def all_classes
+          @all_classes = T.let(@all_classes, T.nilable(T::Enumerable[Class]))
+          @all_classes ||= T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class]).each
+        end
+
+        sig { returns(T::Enumerable[Module]) }
+        def all_modules
+          @all_modules = T.let(@all_modules, T.nilable(T::Enumerable[Module]))
+          @all_modules ||= T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module]).each
+        end
+      end
+
       sig { params(pipeline: Tapioca::Dsl::Pipeline, root: RBI::Tree, constant: ConstantType).void }
       def initialize(pipeline, root, constant)
         @pipeline = pipeline
         @root = root
         @constant = constant
         @errors = T.let([], T::Array[String])
-      end
-
-      sig { params(constant: Module).returns(T::Boolean) }
-      def self.handles?(constant)
-        processable_constants.include?(constant)
       end
 
       sig { params(compiler_name: String).returns(T::Boolean) }
@@ -43,17 +72,6 @@ module Tapioca
       sig { abstract.void }
       def decorate; end
 
-      sig { abstract.returns(T::Enumerable[Module]) }
-      def self.gather_constants; end
-
-      sig { returns(T::Set[Module]) }
-      def self.processable_constants
-        @processable_constants ||= T.let(
-          T::Set[Module].new(gather_constants).compare_by_identity,
-          T.nilable(T::Set[Module])
-        )
-      end
-
       # NOTE: This should eventually accept an `Error` object or `Exception` rather than simply a `String`.
       sig { params(error: String).void }
       def add_error(error)
@@ -61,18 +79,6 @@ module Tapioca
       end
 
       private
-
-      sig { returns(T::Enumerable[Class]) }
-      private_class_method def self.all_classes
-        @all_classes = T.let(@all_classes, T.nilable(T::Enumerable[Class]))
-        @all_classes ||= T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class]).each
-      end
-
-      sig { returns(T::Enumerable[Module]) }
-      private_class_method def self.all_modules
-        @all_modules = T.let(@all_modules, T.nilable(T::Enumerable[Module]))
-        @all_modules ||= T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module]).each
-      end
 
       # Get the types of each parameter from a method signature
       sig do
