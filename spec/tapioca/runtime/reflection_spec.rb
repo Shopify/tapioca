@@ -8,28 +8,46 @@ module Tapioca
     class LyingFoo < BasicObject
       include ::Kernel
 
+      class << self
+        def constants
+          [::Symbol, ::String]
+        end
+
+        def name
+          "Foo"
+        end
+
+        def singleton_class
+          ::String
+        end
+
+        def ancestors
+          [::Integer, ::String, ::Symbol]
+        end
+
+        def superclass
+          ::Integer
+        end
+
+        def public_instance_methods
+          [:foo, :bar, :baz]
+        end
+
+        def protected_instance_methods
+          [:foo, :bar, :baz]
+        end
+
+        def private_instance_methods
+          [:foo, :bar, :baz]
+        end
+
+        def method(_name)
+          :lies
+        end
+      end
+
       def class
         ::String
-      end
-
-      def self.constants
-        [::Symbol, ::String]
-      end
-
-      def self.name
-        "Foo"
-      end
-
-      def self.singleton_class
-        ::String
-      end
-
-      def self.ancestors
-        [::Integer, ::String, ::Symbol]
-      end
-
-      def self.superclass
-        ::Integer
       end
 
       def __id__
@@ -38,22 +56,6 @@ module Tapioca
 
       def equal?(other)
         other == 1
-      end
-
-      def self.public_instance_methods
-        [:foo, :bar, :baz]
-      end
-
-      def self.protected_instance_methods
-        [:foo, :bar, :baz]
-      end
-
-      def self.private_instance_methods
-        [:foo, :bar, :baz]
-      end
-
-      def self.method(_name)
-        :lies
       end
     end
 

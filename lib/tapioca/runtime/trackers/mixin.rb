@@ -19,42 +19,46 @@ module Tapioca
           end
         end
 
-        sig do
-          type_parameters(:Result)
-            .params(block: T.proc.returns(T.type_parameter(:Result)))
-            .returns(T.type_parameter(:Result))
-        end
-        def self.with_disabled_registration(&block)
-          @enabled = false
+        class << self
+          extend T::Sig
 
-          block.call
-        ensure
-          @enabled = true
-        end
+          sig do
+            type_parameters(:Result)
+              .params(block: T.proc.returns(T.type_parameter(:Result)))
+              .returns(T.type_parameter(:Result))
+          end
+          def with_disabled_registration(&block)
+            @enabled = false
 
-        sig do
-          params(
-            constant: Module,
-            mixin: Module,
-            mixin_type: Type,
-          ).void
-        end
-        def self.register(constant, mixin, mixin_type)
-          return unless @enabled
+            block.call
+          ensure
+            @enabled = true
+          end
 
-          location = Reflection.resolve_loc(caller_locations)
+          sig do
+            params(
+              constant: Module,
+              mixin: Module,
+              mixin_type: Type,
+            ).void
+          end
+          def register(constant, mixin, mixin_type)
+            return unless @enabled
 
-          constants = constants_with_mixin(mixin)
-          constants.fetch(mixin_type).store(constant, location)
-        end
+            location = Reflection.resolve_loc(caller_locations)
 
-        sig { params(mixin: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
-        def self.constants_with_mixin(mixin)
-          @mixins_to_constants[mixin] ||= {
-            Type::Prepend => {}.compare_by_identity,
-            Type::Include => {}.compare_by_identity,
-            Type::Extend => {}.compare_by_identity,
-          }
+            constants = constants_with_mixin(mixin)
+            constants.fetch(mixin_type).store(constant, location)
+          end
+
+          sig { params(mixin: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
+          def constants_with_mixin(mixin)
+            @mixins_to_constants[mixin] ||= {
+              Type::Prepend => {}.compare_by_identity,
+              Type::Include => {}.compare_by_identity,
+              Type::Extend => {}.compare_by_identity,
+            }
+          end
         end
       end
     end
@@ -103,7 +107,7 @@ class Module
     # this mixin can be found whether searching for an include/prepend on the singleton class
     # or an extend on the attached class.
     def register_extend_on_attached_class(constant)
-      attached_class = Tapioca::Runtime::Reflection.constant_from_singleton_class(constant)
+      attached_class = Tapioca::Runtime::Reflection.attached_class_of(constant)
 
       Tapioca::Runtime::Trackers::Mixin.register(
         T.cast(attached_class, Module),

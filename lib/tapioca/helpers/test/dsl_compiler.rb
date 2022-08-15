@@ -79,7 +79,7 @@ module Tapioca
 
           sig { returns(T::Array[String]) }
           def gathered_constants
-            compiler_class.processable_constants.map(&:name).compact.sort
+            compiler_class.processable_constants.filter_map(&:name).sort
           end
 
           sig { params(constant_name: T.any(Symbol, String)).returns(String) }

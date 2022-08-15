@@ -8,15 +8,19 @@ module Tapioca
 
       SKIP_PARSE_KINDS = T.let(["CLASS_OR_MODULE", "STATIC_FIELD"].freeze, T::Array[String])
 
-      sig { params(json_string: String).returns(T::Set[String]) }
-      def self.parse_json(json_string)
-        obj = JSON.parse(json_string)
+      class << self
+        extend T::Sig
 
-        parser = SymbolTableParser.new
-        parser.parse_object(obj)
-        parser.symbols
-      rescue JSON::ParserError
-        Set.new
+        sig { params(json_string: String).returns(T::Set[String]) }
+        def parse_json(json_string)
+          obj = JSON.parse(json_string)
+
+          parser = SymbolTableParser.new
+          parser.parse_object(obj)
+          parser.symbols
+        rescue JSON::ParserError
+          Set.new
+        end
       end
 
       sig { returns(T::Set[String]) }

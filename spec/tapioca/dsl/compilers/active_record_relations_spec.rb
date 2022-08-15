@@ -361,6 +361,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
                     def where(*args, &blk); end
+                <% if rails_version(">= 7.1.alpha") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    def with(*args, &blk); end
+                <% end %>
                 <% if rails_version(">= 7.0") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -499,6 +504,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
                     def where(*args, &blk); end
+                <% if rails_version(">= 7.1.alpha") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    def with(*args, &blk); end
+                <% end %>
                 <% if rails_version(">= 7.0") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -607,13 +617,6 @@ module Tapioca
               assert_equal(expected, rbi_for(:Post))
             end
           end
-        end
-
-        private
-
-        sig { params(selector: String).returns(T::Boolean) }
-        def rails_version(selector)
-          ::Gem::Requirement.new(selector).satisfied_by?(ActiveSupport.gem_version)
         end
       end
     end

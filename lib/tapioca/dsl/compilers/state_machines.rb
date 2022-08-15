@@ -160,9 +160,13 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          all_classes.select { |mod| mod < ::StateMachines::InstanceMethods }
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            all_classes.select { |mod| mod < ::StateMachines::InstanceMethods }
+          end
         end
 
         private

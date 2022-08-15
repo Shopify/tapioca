@@ -85,12 +85,16 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          all_modules.select do |c|
-            name_of(c) &&
-              c != ::SmartProperties::Validations::Ancestor &&
-              c < ::SmartProperties && ::SmartProperties::ClassMethods === c
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            all_modules.select do |c|
+              name_of(c) &&
+                c != ::SmartProperties::Validations::Ancestor &&
+                c < ::SmartProperties && ::SmartProperties::ClassMethods === c
+            end
           end
         end
 

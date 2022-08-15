@@ -49,22 +49,24 @@ module Tapioca
           (@class_files[key] ||= Set.new) << loc
         end
 
-        def self.build_constant_location(tp, locations)
-          file = resolve_loc(caller_locations)
-          lineno = file == File.realpath(tp.path) ? tp.lineno : 0
+        class << self
+          def build_constant_location(tp, locations)
+            file = resolve_loc(caller_locations)
+            lineno = file == File.realpath(tp.path) ? tp.lineno : 0
 
-          ConstantLocation.new(path: file, lineno: lineno)
-        end
+            ConstantLocation.new(path: file, lineno: lineno)
+          end
 
-        # Returns the files in which this class or module was opened. Doesn't know
-        # about situations where the class was opened prior to +require+ing,
-        # or where metaprogramming was used via +eval+, etc.
-        def self.files_for(klass)
-          locations_for(klass).map(&:path).to_set
-        end
+          # Returns the files in which this class or module was opened. Doesn't know
+          # about situations where the class was opened prior to +require+ing,
+          # or where metaprogramming was used via +eval+, etc.
+          def files_for(klass)
+            locations_for(klass).map(&:path).to_set
+          end
 
-        def self.locations_for(klass)
-          @class_files.fetch(klass, Set.new)
+          def locations_for(klass)
+            @class_files.fetch(klass, Set.new)
+          end
         end
       end
     end

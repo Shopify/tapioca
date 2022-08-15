@@ -8,6 +8,44 @@ module Tapioca
     extend SorbetHelper
     extend self
 
+    class << self
+      extend T::Sig
+
+      sig do
+        params(
+          type: String,
+          variance: Symbol,
+          fixed: T.nilable(String),
+          upper: T.nilable(String),
+          lower: T.nilable(String)
+        ).returns(String)
+      end
+      def serialize_type_variable(type, variance, fixed, upper, lower)
+        variance = nil if variance == :invariant
+
+        bounds = []
+        bounds << "fixed: #{fixed}" if fixed
+        bounds << "lower: #{lower}" if lower
+        bounds << "upper: #{upper}" if upper
+
+        parameters = []
+        block = []
+
+        parameters << ":#{variance}" if variance
+
+        if sorbet_supports?(:type_variable_block_syntax)
+          block = bounds
+        else
+          parameters.concat(bounds)
+        end
+
+        serialized = type.dup
+        serialized << "(#{parameters.join(", ")})" unless parameters.empty?
+        serialized << " { { #{block.join(", ")} } }" unless block.empty?
+        serialized
+      end
+    end
+
     sig { params(name: String, type: String).returns(RBI::TypedParam) }
     def create_param(name, type:)
       create_typed_param(RBI::Param.new(name), type)
@@ -55,40 +93,6 @@ module Tapioca
         .gsub("<VOID>", "void")
         .gsub("<NOT-TYPED>", "T.untyped")
         .gsub(".params()", "")
-    end
-
-    sig do
-      params(
-        type: String,
-        variance: Symbol,
-        fixed: T.nilable(String),
-        upper: T.nilable(String),
-        lower: T.nilable(String)
-      ).returns(String)
-    end
-    def self.serialize_type_variable(type, variance, fixed, upper, lower)
-      variance = nil if variance == :invariant
-
-      bounds = []
-      bounds << "fixed: #{fixed}" if fixed
-      bounds << "lower: #{lower}" if lower
-      bounds << "upper: #{upper}" if upper
-
-      parameters = []
-      block = []
-
-      parameters << ":#{variance}" if variance
-
-      if sorbet_supports?(:type_variable_block_syntax)
-        block = bounds
-      else
-        parameters.concat(bounds)
-      end
-
-      serialized = type.dup
-      serialized << "(#{parameters.join(", ")})" unless parameters.empty?
-      serialized << " { { #{block.join(", ")} } }" unless block.empty?
-      serialized
     end
 
     sig { params(name: String).returns(T::Boolean) }

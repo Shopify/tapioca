@@ -57,7 +57,7 @@ module Tapioca
                 end
               RUBY
 
-              expected = <<~RBI
+              expected = template(<<~RBI)
                 # typed: strong
 
                 class User
@@ -73,8 +73,22 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password=(unencrypted_password); end
 
+                <% if rails_version(">= 7.1.alpha") %>
+                  sig { returns(T.untyped) }
+                  def password_challenge; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def password_challenge=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def password_confirmation; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def password_confirmation=(_arg0); end
+                <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password_confirmation=(unencrypted_password); end
+                <% end %>
                 end
               RBI
 
@@ -90,7 +104,7 @@ module Tapioca
                 end
               RUBY
 
-              expected = <<~RBI
+              expected = template(<<~RBI)
                 # typed: strong
 
                 class User
@@ -103,8 +117,22 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token=(unencrypted_password); end
 
+                <% if rails_version(">= 7.1.alpha") %>
+                  sig { returns(T.untyped) }
+                  def token_challenge; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def token_challenge=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def token_confirmation; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def token_confirmation=(_arg0); end
+                <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token_confirmation=(unencrypted_password); end
+                <% end %>
                 end
               RBI
 
@@ -121,7 +149,7 @@ module Tapioca
                 end
               RUBY
 
-              expected = <<~RBI
+              expected = template(<<~RBI)
                 # typed: strong
 
                 class User
@@ -140,8 +168,22 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password=(unencrypted_password); end
 
+                <% if rails_version(">= 7.1.alpha") %>
+                  sig { returns(T.untyped) }
+                  def password_challenge; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def password_challenge=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def password_confirmation; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def password_confirmation=(_arg0); end
+                <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password_confirmation=(unencrypted_password); end
+                <% end %>
 
                   sig { returns(T.untyped) }
                   def token; end
@@ -149,8 +191,22 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token=(unencrypted_password); end
 
+                <% if rails_version(">= 7.1.alpha") %>
+                  sig { returns(T.untyped) }
+                  def token_challenge; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def token_challenge=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def token_confirmation; end
+
+                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  def token_confirmation=(_arg0); end
+                <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token_confirmation=(unencrypted_password); end
+                <% end %>
                 end
               RBI
 

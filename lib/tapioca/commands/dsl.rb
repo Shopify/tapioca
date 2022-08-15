@@ -266,9 +266,9 @@ module Tapioca
 
         common_files = (existing_rbis & new_rbis)
 
-        changed_files = common_files.map do |filename|
+        changed_files = common_files.filter_map do |filename|
           filename unless FileUtils.identical?(@outpath / filename, tmp_dir / filename)
-        end.compact
+        end
 
         changed_files.each do |file|
           diff[file] = :changed

@@ -1447,7 +1447,9 @@ module Tapioca
                 class Dummy < Rails::Application
                   config.eager_load = true
                   config.active_storage.service = :local
-                  config.active_record.legacy_connection_handling = false
+                  if ActiveRecord::Base.respond_to?(:legacy_connection_handling=)
+                    config.active_record.legacy_connection_handling = false
+                  end
                   config.active_storage.service_configurations = {
                     local: {
                       service: "Disk",

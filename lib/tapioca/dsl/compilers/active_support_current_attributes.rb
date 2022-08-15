@@ -88,9 +88,13 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          descendants_of(::ActiveSupport::CurrentAttributes)
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            descendants_of(::ActiveSupport::CurrentAttributes)
+          end
         end
 
         private

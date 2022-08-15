@@ -80,9 +80,11 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
+        class << self
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
+          end
         end
 
         private

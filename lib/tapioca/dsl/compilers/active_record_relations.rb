@@ -166,9 +166,13 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          ActiveRecord::Base.descendants.reject(&:abstract_class?)
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            ActiveRecord::Base.descendants.reject(&:abstract_class?)
+          end
         end
 
         ASSOCIATION_METHODS = T.let(

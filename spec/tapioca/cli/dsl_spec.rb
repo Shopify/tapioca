@@ -1768,5 +1768,40 @@ module Tapioca
         end
       end
     end
+
+    describe "cli::dsl::custom application.rb" do
+      it "output errors when rails application cannot be loaded" do
+        @project.write("config/environment.rb", <<~RB)
+          require_relative "application.rb"
+        RB
+
+        @project.write("config/application.rb", <<~RB)
+          require "rails"
+
+          module Test
+            class Application < Rails::Application
+              raise "Error during application loading"
+            end
+          end
+        RB
+
+        @project.require_real_gem("rails")
+        @project.bundle_install
+        res = @project.tapioca("dsl")
+
+        out = "Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
+          "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
+          "generating RBIs."
+        assert_includes(res.out, out)
+        assert_includes(res.out, <<~OUT)
+          Error during application loading
+          Continuing RBI generation without loading the Rails application.
+          Done
+          Loading DSL compiler classes... Done
+          Compiling DSL RBI files...
+        OUT
+        assert_success_status(res)
+      end
+    end
   end
 end

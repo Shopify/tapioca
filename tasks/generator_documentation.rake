@@ -31,10 +31,9 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
 
   def table_contents(registry)
     registry
-      .map do |entry|
+      .filter_map do |entry|
         "* #{entry.link}"
       end
-      .compact
       .join("\n")
   end
 

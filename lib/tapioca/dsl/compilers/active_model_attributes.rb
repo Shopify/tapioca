@@ -53,9 +53,13 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          all_classes.grep(::ActiveModel::Attributes::ClassMethods)
+        class << self
+          extend T::Sig
+
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            all_classes.grep(::ActiveModel::Attributes::ClassMethods)
+          end
         end
 
         private
@@ -71,11 +75,11 @@ module Tapioca
             constant.attribute_method_matchers
           end
           patterns.flat_map do |pattern|
-            constant.attribute_types.map do |name, value|
+            constant.attribute_types.filter_map do |name, value|
               next unless handle_method_pattern?(pattern)
 
               [pattern.method_name(name), type_for(value)]
-            end.compact
+            end
           end
         end
 

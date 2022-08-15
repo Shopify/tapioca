@@ -42,13 +42,12 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          method_names = fixture_loader.ancestors # get all ancestors from class that includes AR fixtures
-            .drop(1) # drop the anonymous class itself from the array
-            .reject(&:name) # only collect anonymous ancestors because fixture methods are always on an anonymous module
-            .map! do |mod|
-              [mod.private_instance_methods(false), mod.instance_methods(false)]
-            end
-            .flatten # merge methods into a single list
+          method_names = if fixture_loader.respond_to?(:fixture_sets)
+            method_names_from_lazy_fixture_loader
+          else
+            method_names_from_eager_fixture_loader
+          end
+
           return if method_names.empty?
 
           root.create_path(constant) do |mod|
@@ -58,22 +57,42 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          return [] unless Rails.application
+        class << self
+          extend T::Sig
 
-          [ActiveSupport::TestCase]
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            return [] unless Rails.application
+
+            [ActiveSupport::TestCase]
+          end
         end
 
         private
 
         sig { returns(Class) }
         def fixture_loader
-          Class.new do
+          @fixture_loader ||= T.let(Class.new do
             T.unsafe(self).include(ActiveRecord::TestFixtures)
             T.unsafe(self).fixture_path = Rails.root.join("test", "fixtures")
             T.unsafe(self).fixtures(:all)
-          end
+          end, T.nilable(Class))
+        end
+
+        sig { returns(T::Array[String]) }
+        def method_names_from_lazy_fixture_loader
+          T.unsafe(fixture_loader).fixture_sets.keys
+        end
+
+        sig { returns(T::Array[Symbol]) }
+        def method_names_from_eager_fixture_loader
+          fixture_loader.ancestors # get all ancestors from class that includes AR fixtures
+            .drop(1) # drop the anonymous class itself from the array
+            .reject(&:name) # only collect anonymous ancestors because fixture methods are always on an anonymous module
+            .map! do |mod|
+              [mod.private_instance_methods(false), mod.instance_methods(false)]
+            end
+            .flatten # merge methods into a single list
         end
 
         sig { params(mod: RBI::Scope, name: String).void }

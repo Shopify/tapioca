@@ -52,10 +52,9 @@ module Tapioca
 
           mixed_in_class_methods = dependencies
             .uniq # Deduplicate
-            .map do |concern| # Map to class methods module name, if exists
+            .filter_map do |concern| # Map to class methods module name, if exists
               "#{qualified_name_of(concern)}::ClassMethods" if concern.const_defined?(:ClassMethods)
             end
-            .compact # Remove non-existent records
 
           return if mixed_in_class_methods.empty?
 
@@ -66,24 +65,28 @@ module Tapioca
           end
         end
 
-        sig { override.returns(T::Enumerable[Module]) }
-        def self.gather_constants
-          # Find all Modules that are:
-          all_modules.select do |mod|
-            # named (i.e. not anonymous)
-            name_of(mod) &&
-              # not singleton classes
-              !mod.singleton_class? &&
-              # extend ActiveSupport::Concern, and
-              mod.singleton_class < ActiveSupport::Concern &&
-              # have dependencies (i.e. include another concern)
-              !dependencies_of(mod).empty?
-          end
-        end
+        class << self
+          extend T::Sig
 
-        sig { params(concern: Module).returns(T::Array[Module]) }
-        def self.dependencies_of(concern)
-          concern.instance_variable_get(:@_dependencies)
+          sig { override.returns(T::Enumerable[Module]) }
+          def gather_constants
+            # Find all Modules that are:
+            all_modules.select do |mod|
+              # named (i.e. not anonymous)
+              name_of(mod) &&
+                # not singleton classes
+                !mod.singleton_class? &&
+                # extend ActiveSupport::Concern, and
+                mod.singleton_class < ActiveSupport::Concern &&
+                # have dependencies (i.e. include another concern)
+                !dependencies_of(mod).empty?
+            end
+          end
+
+          sig { params(concern: Module).returns(T::Array[Module]) }
+          def dependencies_of(concern)
+            concern.instance_variable_get(:@_dependencies)
+          end
         end
 
         private

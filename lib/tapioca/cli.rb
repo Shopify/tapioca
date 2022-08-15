@@ -308,8 +308,10 @@ module Tapioca
     end
 
     no_commands do
-      def self.exit_on_failure?
-        true
+      class << self
+        def exit_on_failure?
+          true
+        end
       end
     end
 
