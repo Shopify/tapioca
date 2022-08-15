@@ -1190,8 +1190,8 @@ module Tapioca
 
           OUT
 
-          assert_includes(result.err, "Error: `PostCompilerThatRaises` failed to generate RBI for `Post`")
-          assert_includes(result.err, "Some unexpected error happened")
+          assert_stderr_includes(result, "Error: `PostCompilerThatRaises` failed to generate RBI for `Post`")
+          assert_stderr_includes(result, "Some unexpected error happened")
 
           refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
           refute_success_status(result)
@@ -1313,7 +1313,7 @@ module Tapioca
           @project.tapioca("dsl")
           result = @project.tapioca("dsl --verify")
 
-          assert_includes(result.out, <<~OUT)
+          assert_stdout_includes(result, <<~OUT)
             Nothing to do, all RBIs are up-to-date.
           OUT
 
@@ -1463,7 +1463,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post")
 
-          assert_includes(result.out, <<~OUT)
+          assert_stdout_includes(result, <<~OUT)
             Checking generated RBI files...  Done
 
               Changed strictness of sorbet/rbi/gems/bar@1.0.0.rbi to `typed: false` (conflicting with DSL files)

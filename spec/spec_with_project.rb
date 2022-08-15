@@ -127,6 +127,16 @@ module Tapioca
       refute(result.status)
     end
 
+    sig { params(result: MockProject::ExecResult, snippet: String).void }
+    def assert_stdout_includes(result, snippet)
+      assert_includes(result.out, snippet, result.to_s)
+    end
+
+    sig { params(result: MockProject::ExecResult, snippet: String).void }
+    def assert_stderr_includes(result, snippet)
+      assert_includes(result.err, snippet, result.to_s)
+    end
+
     private
 
     sig { returns(String) }
