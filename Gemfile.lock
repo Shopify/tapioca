@@ -278,7 +278,7 @@ GEM
       rubocop (~> 1.33)
     rubocop-sorbet (0.6.11)
       rubocop (>= 0.90.0)
-    ruby-lsp (0.2.1)
+    ruby-lsp (0.2.2)
       language_server-protocol
       sorbet-runtime
       syntax_tree (>= 2.4)
@@ -315,7 +315,7 @@ GEM
     sqlite3 (1.4.4)
     state_machines (0.5.0)
     strscan (3.0.4)
-    syntax_tree (3.2.1)
+    syntax_tree (3.3.0)
       prettier_print
     thor (1.2.1)
     timeout (0.3.0)
