@@ -183,6 +183,17 @@ module Tapioca
                 # typed: strong
 
                 module Cart::VALUE_TYPE
+                  class << self
+                    sig { returns(Google::Protobuf::EnumDescriptor) }
+                    def descriptor; end
+
+                    sig { params(number: Integer).returns(T.nilable(Symbol)) }
+                    def lookup(number); end
+
+                    sig { params(symbol: Symbol).returns(T.nilable(Integer)) }
+                    def resolve(symbol); end
+                  end
+
                   FIXED_AMOUNT = 1
                   NULL = 0
                   PERCENTAGE = 2
@@ -219,7 +230,7 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(value_type: T.any(Symbol, Integer)).void }
+                  sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
                   def initialize(value_type: nil); end
 
                   sig { returns(T.any(Symbol, Integer)) }
