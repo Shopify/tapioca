@@ -237,12 +237,13 @@ module Tapioca
             end
           else
             type = type_of(descriptor)
-            type = as_nilable_type(type) if nilable_descriptor?(descriptor)
+            nilable_type = as_nilable_type(type)
+            type = nilable_type if nilable_descriptor?(descriptor)
 
             Field.new(
               name: descriptor.name,
               type: type,
-              init_type: "T.nilable(#{type})",
+              init_type: nilable_type,
               default: "nil"
             )
           end
