@@ -20,10 +20,10 @@ module Tapioca
       it "must create proper files" do
         result = @project.tapioca("configure")
 
-        assert_includes(result.out, "create  sorbet/config")
-        assert_includes(result.out, "create  sorbet/tapioca/config.yml")
-        assert_includes(result.out, "create  sorbet/tapioca/require.rb")
-        assert_includes(result.out, "create  bin/tapioca")
+        assert_stdout_includes(result, "create  sorbet/config")
+        assert_stdout_includes(result, "create  sorbet/tapioca/config.yml")
+        assert_stdout_includes(result, "create  sorbet/tapioca/require.rb")
+        assert_stdout_includes(result, "create  bin/tapioca")
 
         assert_equal(<<~CONFIG, @project.read("sorbet/config"))
           --dir
@@ -57,10 +57,10 @@ module Tapioca
 
         result = @project.tapioca("configure")
 
-        assert_includes(result.out, "skip  sorbet/config")
-        assert_includes(result.out, "skip  sorbet/tapioca/config.yml")
-        assert_includes(result.out, "skip  sorbet/tapioca/require.rb")
-        assert_includes(result.out, "force  bin/tapioca")
+        assert_stdout_includes(result, "skip  sorbet/config")
+        assert_stdout_includes(result, "skip  sorbet/tapioca/config.yml")
+        assert_stdout_includes(result, "skip  sorbet/tapioca/require.rb")
+        assert_stdout_includes(result, "force  bin/tapioca")
 
         assert_empty(@project.read("sorbet/config"))
         assert_empty(@project.read("sorbet/tapioca/require.rb"))
@@ -71,7 +71,7 @@ module Tapioca
 
       it "creates the Tapioca config file in a custom location" do
         result = @project.tapioca("configure --config sorbet/tapioca/custom_config.yml")
-        assert_includes(result.out, "create  sorbet/tapioca/custom_config.yml")
+        assert_stdout_includes(result, "create  sorbet/tapioca/custom_config.yml")
         assert_project_file_exist("sorbet/tapioca/custom_config.yml")
         assert_empty_stderr(result)
         assert_success_status(result)
@@ -79,7 +79,7 @@ module Tapioca
 
       it "creates the Tapioca post-require file in a custom location" do
         result = @project.tapioca("configure --postrequire sorbet/tapioca/custom_require.rb")
-        assert_includes(result.out, "create  sorbet/tapioca/custom_require.rb")
+        assert_stdout_includes(result, "create  sorbet/tapioca/custom_require.rb")
         assert_project_file_exist("sorbet/tapioca/custom_require.rb")
         assert_empty_stderr(result)
         assert_success_status(result)

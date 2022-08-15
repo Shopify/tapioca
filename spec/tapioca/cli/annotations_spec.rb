@@ -40,8 +40,8 @@ module Tapioca
 
         result = @project.tapioca("annotations --sources #{repo.path}")
 
-        assert_includes(result.out, "remove  sorbet/rbi/annotations/bar.rbi")
-        assert_includes(result.out, "remove  sorbet/rbi/annotations/foo.rbi")
+        assert_stdout_includes(result, "remove  sorbet/rbi/annotations/bar.rbi")
+        assert_stdout_includes(result, "remove  sorbet/rbi/annotations/foo.rbi")
         refute_includes(result.out, "remove  sorbet/rbi/annotations/rbi.rbi")
 
         assert_success_status(result)
@@ -70,8 +70,8 @@ module Tapioca
 
         result = @project.tapioca("annotations --sources #{repo.path}")
 
-        assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
-        assert_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
+        assert_stdout_includes(result, "create  sorbet/rbi/annotations/rbi.rbi")
+        assert_stdout_includes(result, "create  sorbet/rbi/annotations/spoom.rbi")
         refute_includes(result.out, "create  sorbet/rbi/annotations/foo.rbi")
 
         assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
@@ -103,16 +103,16 @@ module Tapioca
       it "gets index from the central repo using the default source" do
         result = @project.tapioca("annotations")
 
-        assert_includes(result.out, "Retrieving index from central repository... Done")
+        assert_stdout_includes(result, "Retrieving index from central repository... Done")
         assert_success_status(result)
       end
 
       it "recovers from a bad source" do
         result = @project.tapioca("annotations --sources #{Tapioca::CENTRAL_REPO_ROOT_URI} https://bad-source")
 
-        assert_includes(result.out, "Retrieving index from central repository #1... Done")
-        assert_includes(result.err, "Can't fetch file `index.json` from https://bad-source")
-        assert_includes(result.err, <<~ERROR)
+        assert_stdout_includes(result, "Retrieving index from central repository #1... Done")
+        assert_stderr_includes(result, "Can't fetch file `index.json` from https://bad-source")
+        assert_stderr_includes(result, <<~ERROR)
           Tapioca can't access the annotations at https://bad-source.
 
           Are you trying to access a private repository?
@@ -126,8 +126,8 @@ module Tapioca
       it "errors without a valid source" do
         result = @project.tapioca("annotations --sources https://bad-source")
 
-        assert_includes(result.err, "Can't fetch file `index.json` from https://bad-source")
-        assert_includes(result.err, "Can't fetch annotations without sources (no index fetched)")
+        assert_stderr_includes(result, "Can't fetch file `index.json` from https://bad-source")
+        assert_stderr_includes(result, "Can't fetch annotations without sources (no index fetched)")
         refute_success_status(result)
       end
 
@@ -142,7 +142,7 @@ module Tapioca
 
         result = @project.tapioca("annotations --sources #{repo.path}")
 
-        assert_includes(result.err, <<~ERR)
+        assert_stderr_includes(result, <<~ERR)
           Can't import RBI file for `spoom` as it contains errors:
               Error: unexpected token $end (-:4:0-4:0)
         ERR
@@ -172,8 +172,8 @@ module Tapioca
 
         result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
-        assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
-        assert_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
+        assert_stdout_includes(result, "create  sorbet/rbi/annotations/rbi.rbi")
+        assert_stdout_includes(result, "create  sorbet/rbi/annotations/spoom.rbi")
 
         assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
           # typed: true
@@ -226,7 +226,7 @@ module Tapioca
 
         result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
-        assert_includes(result.out, "create  sorbet/rbi/annotations/rbi.rbi")
+        assert_stdout_includes(result, "create  sorbet/rbi/annotations/rbi.rbi")
 
         assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
           # typed: true
@@ -275,7 +275,7 @@ module Tapioca
 
         result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
-        assert_includes(result.err, <<~ERR)
+        assert_stderr_includes(result, <<~ERR)
           Can't import RBI file for `spoom` as it contains conflicts:
               Conflicting definitions for `::AnnotationForSpoom#foo(x, y)`
               Conflicting definitions for `::AnnotationForSpoom#bar()`
@@ -291,7 +291,7 @@ module Tapioca
       it "errors if passing both --no-netrc and --netrc-file" do
         result = @project.tapioca("annotations --no-netrc --netrc-file some_file")
 
-        assert_includes(result.err, <<~ERR)
+        assert_stderr_includes(result, <<~ERR)
           Options `--no-netrc` and `--netrc-file` can't be used together
         ERR
 
