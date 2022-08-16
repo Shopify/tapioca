@@ -115,6 +115,11 @@ module Tapioca
       type: :string,
       desc: "The Rack/Rails environment to use when generating RBIs",
       default: DEFAULT_ENVIRONMENT
+    option :list_compilers,
+      aliases: ["-l"],
+      type: :boolean,
+      desc: "List all loaded compilers",
+      default: false
     def dsl(*constants)
       set_environment(options)
 
@@ -133,7 +138,11 @@ module Tapioca
       )
 
       Tapioca.silence_warnings do
-        command.execute
+        if options[:list_compilers]
+          command.list_compilers
+        else
+          command.execute
+        end
       end
     end
 

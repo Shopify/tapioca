@@ -458,22 +458,23 @@ Usage:
   tapioca dsl [constant...]
 
 Options:
-  --out, -o, [--outdir=directory]              # The output directory for generated DSL RBI files
-                                               # Default: sorbet/rbi/dsl
-          [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
-                                               # Default: true
-          [--only=compiler [compiler ...]]     # Only run supplied DSL compiler(s)
-          [--exclude=compiler [compiler ...]]  # Exclude supplied DSL compiler(s)
-          [--verify], [--no-verify]            # Verifies RBIs are up-to-date
-  -q, [--quiet], [--no-quiet]                  # Suppresses file creation output
-  -w, [--workers=N]                            # Number of parallel workers to use when generating RBIs (default: auto)
-          [--rbi-max-line-length=N]            # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
-                                               # Default: 120
-  -e, [--environment=ENVIRONMENT]              # The Rack/Rails environment to use when generating RBIs
-                                               # Default: development
-  -c, [--config=<config file path>]            # Path to the Tapioca configuration file
-                                               # Default: sorbet/tapioca/config.yml
-  -V, [--verbose], [--no-verbose]              # Verbose output for debugging purposes
+  --out, -o, [--outdir=directory]                # The output directory for generated DSL RBI files
+                                                 # Default: sorbet/rbi/dsl
+          [--file-header], [--no-file-header]    # Add a "This file is generated" header on top of each generated RBI file
+                                                 # Default: true
+          [--only=compiler [compiler ...]]       # Only run supplied DSL compiler(s)
+          [--exclude=compiler [compiler ...]]    # Exclude supplied DSL compiler(s)
+          [--verify], [--no-verify]              # Verifies RBIs are up-to-date
+  -q, [--quiet], [--no-quiet]                    # Suppresses file creation output
+  -w, [--workers=N]                              # Number of parallel workers to use when generating RBIs (default: auto)
+          [--rbi-max-line-length=N]              # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
+                                                 # Default: 120
+  -e, [--environment=ENVIRONMENT]                # The Rack/Rails environment to use when generating RBIs
+                                                 # Default: development
+  -l, [--list-compilers], [--no-list-compilers]  # List all loaded compilers
+  -c, [--config=<config file path>]              # Path to the Tapioca configuration file
+                                                 # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]                # Verbose output for debugging purposes
 
 generate RBIs for dynamic methods
 ```
@@ -819,6 +820,7 @@ dsl:
   workers: 1
   rbi_max_line_length: 120
   environment: development
+  list_compilers: false
 gem:
   outdir: sorbet/rbi/gems
   file_header: true

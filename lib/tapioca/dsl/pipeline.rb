@@ -7,7 +7,7 @@ module Tapioca
       extend T::Sig
 
       sig { returns(T::Enumerable[T.class_of(Compiler)]) }
-      attr_reader :compilers
+      attr_reader :active_compilers
 
       sig { returns(T::Array[Module]) }
       attr_reader :requested_constants
@@ -34,8 +34,8 @@ module Tapioca
         error_handler: $stderr.method(:puts).to_proc,
         number_of_workers: nil
       )
-        @compilers = T.let(
-          gather_compilers(requested_compilers, excluded_compilers),
+        @active_compilers = T.let(
+          gather_active_compilers(requested_compilers, excluded_compilers),
           T::Enumerable[T.class_of(Compiler)]
         )
         @requested_constants = requested_constants
@@ -87,8 +87,16 @@ module Tapioca
       def compiler_enabled?(compiler_name)
         potential_names = Compilers::NAMESPACES.map { |namespace| namespace + compiler_name }
 
-        @compilers.any? do |compiler|
+        active_compilers.any? do |compiler|
           potential_names.any?(compiler.name)
+        end
+      end
+
+      sig { returns(T::Array[T.class_of(Compiler)]) }
+      def compilers
+        @compilers = T.let(@compilers, T.nilable(T::Array[T.class_of(Compiler)]))
+        @compilers ||= Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
+          T.must(compiler.name)
         end
       end
 
@@ -100,16 +108,16 @@ module Tapioca
           excluded_compilers: T::Array[T.class_of(Compiler)]
         ).returns(T::Enumerable[T.class_of(Compiler)])
       end
-      def gather_compilers(requested_compilers, excluded_compilers)
-        Runtime::Reflection.descendants_of(Compiler).select do |klass|
-          (requested_compilers.empty? || requested_compilers.include?(klass)) &&
-            !excluded_compilers.include?(klass)
-        end.sort_by { |klass| T.must(klass.name) }
+      def gather_active_compilers(requested_compilers, excluded_compilers)
+        active_compilers = compilers
+        active_compilers -= excluded_compilers
+        active_compilers &= requested_compilers unless requested_compilers.empty?
+        active_compilers
       end
 
       sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }
       def gather_constants(requested_constants)
-        constants = compilers.map(&:processable_constants).reduce(Set.new, :union)
+        constants = active_compilers.map(&:processable_constants).reduce(Set.new, :union)
         constants = filter_anonymous_and_reloaded_constants(constants)
 
         constants &= requested_constants unless requested_constants.empty?
@@ -145,7 +153,7 @@ module Tapioca
       def rbi_for_constant(constant)
         file = RBI::File.new(strictness: "true")
 
-        compilers.each do |compiler_class|
+        active_compilers.each do |compiler_class|
           next unless compiler_class.handles?(constant)
 
           compiler = compiler_class.new(self, file.root, constant)
