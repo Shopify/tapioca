@@ -41,7 +41,6 @@ module Tapioca
         def add_source_location_comment(node, file, line)
           return unless file && line
 
-          gem = @pipeline.gem
           path = Pathname.new(file)
           return unless File.exist?(path)
 
@@ -49,17 +48,25 @@ module Tapioca
           # use for jump to definition. Only add source comments on Ruby files
           return unless path.extname == ".rb"
 
-          path = if path.realpath.to_s.start_with?(gem.full_gem_path)
-            "#{gem.name}-#{gem.version}/#{path.realpath.relative_path_from(gem.full_gem_path)}"
-          else
-            path.sub("#{Bundler.bundle_path}/gems/", "").to_s
-          end
+          realpath = path.realpath.to_s
+          gem = Gemfile::GemSpec.spec_lookup_by_file_path[realpath]
+          return if gem.nil?
 
-          # Strip out the RUBY_ROOT prefix, which is different for each user
-          path = path.sub(RbConfig::CONFIG["rubylibdir"], "RUBY_ROOT")
+          path = gem.relative_path_for(path)
+          version = gem.version
+          # we can clear the gem version if the gem is the same one we are processing
+          version = "" if gem == @pipeline.gem
 
+          uri = URI::Source.build(
+            gem_name: gem.name,
+            gem_version: version,
+            path: path.to_s,
+            line_number: line.to_s
+          )
           node.comments << RBI::Comment.new("") if node.comments.any?
-          node.comments << RBI::Comment.new("source://#{path}:#{line}")
+          node.comments << RBI::Comment.new(uri.to_s)
+        rescue URI::InvalidComponentError, URI::InvalidURIError
+          # Bad uri
         end
       end
     end

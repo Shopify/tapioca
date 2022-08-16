@@ -136,6 +136,22 @@ module Tapioca
       extend(T::Sig)
       include GemHelper
 
+      class << self
+        extend T::Sig
+
+        sig { returns(T::Hash[String, Gemfile::GemSpec]) }
+        def spec_lookup_by_file_path
+          @lookup ||= T.let(
+            [*::Gem::Specification.default_stubs, *::Gem::Specification.stubs]
+              .map! { |spec| new(spec.to_spec) }
+              .flat_map do |spec|
+                spec.files.filter_map { |file| [file.realpath.to_s, spec] if file.exist? }
+              end.to_h,
+            T.nilable(T::Hash[String, Gemfile::GemSpec])
+          )
+        end
+      end
+
       IGNORED_GEMS = T.let(
         [
           "sorbet", "sorbet-static", "sorbet-runtime", "sorbet-static-and-runtime",
@@ -158,6 +174,11 @@ module Tapioca
         @version = T.let(version_string, String)
         @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
         @files = T.let(collect_files, T::Array[Pathname])
+      end
+
+      sig { params(other: BasicObject).returns(T::Boolean) }
+      def ==(other)
+        GemSpec === other && other.name == name && other.version == version
       end
 
       sig { params(gemfile_dir: String).returns(T::Boolean) }
@@ -209,6 +230,15 @@ module Tapioca
         end
 
         rewriter.tree
+      end
+
+      sig { params(file: Pathname).returns(Pathname) }
+      def relative_path_for(file)
+        if default_gem?
+          file.realpath.relative_path_from(RbConfig::CONFIG["rubylibdir"])
+        else
+          file.realpath.relative_path_from(full_gem_path)
+        end
       end
 
       private
