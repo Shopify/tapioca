@@ -11,35 +11,23 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::Helpers::Test::Template
   include Tapioca::Helpers::Test::Isolation
 
-  class GemStub < T::Struct
-    extend T::Sig
-
-    const :name, String
-    const :version, String
-    const :platform, T.nilable(String)
-    const :full_gem_path, String
-    const :full_require_paths, T::Array[String]
-
-    sig { returns(T::Boolean) }
-    def default_gem?
-      false
-    end
-  end
-
   describe Tapioca::Gem::Pipeline do
     sig { params(include_doc: T::Boolean, include_loc: T::Boolean).returns(String) }
     def compile(include_doc: false, include_loc: false)
-      stub = GemStub.new(
-        name: "the-dep",
-        version: "1.1.2",
-        platform: nil,
-        full_gem_path: tmp_path,
-        full_require_paths: [tmp_path("lib")]
-      )
+      # create a fake gemspec
+      spec = ::Gem::Specification.new("the-dep", "1.1.2") do |spec|
+        spec.platform = nil
+        spec.full_gem_path = tmp_path
+        spec.require_paths = ["lib"]
+      end
 
-      spec = Bundler::StubSpecification.from_stub(stub)
+      # add it to the list of gem specification stubs
+      Gem::Specification.stubs[spec.name] = spec
+
+      # wrap it in our gemspec wrapper
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
+      # push it through the pipeline
       tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc, include_loc: include_loc).compile
 
       # NOTE: This is not returning a `RBI::File`.
