@@ -7,10 +7,10 @@
 # source://shopify-money-0.16.0/lib/money/deprecations.rb:3
 ::ACTIVE_SUPPORT_DEFINED = T.let(T.unsafe(nil), String)
 
-# source://yard-0.9.27/lib/yard.rb:59
+# source://yard-0.9.28/lib/yard.rb:62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
-# source://pry-0.13.1/lib/pry/core_extensions.rb:115
+# source://pry-0.14.1/lib/pry/core_extensions.rb:115
 class BasicObject
   # Return a binding object for the receiver.
   #
@@ -22,17 +22,13 @@ class BasicObject
   #
   # @return [Binding]
   #
-  # source://pry-0.13.1/lib/pry/core_extensions.rb:125
+  # source://pry-0.14.1/lib/pry/core_extensions.rb:125
   def __binding__; end
 end
 
-# Same as above, except in Object.
-#
-# source://pry-0.13.1/lib/pry/core_extensions.rb:24
+# source://pry-0.14.1/lib/pry/core_extensions.rb:24
 class Object < ::BasicObject
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
 
   # Return a binding object for the receiver.
   #
@@ -54,7 +50,7 @@ class Object < ::BasicObject
   #
   # @return [Binding]
   #
-  # source://pry-0.13.1/lib/pry/core_extensions.rb:70
+  # source://pry-0.14.1/lib/pry/core_extensions.rb:70
   def __binding__; end
 
   # Start a Pry REPL on self.
@@ -76,11 +72,11 @@ class Object < ::BasicObject
   # @param hash [Hash] the options hash
   # @see Pry.start
   #
-  # source://pry-0.13.1/lib/pry/core_extensions.rb:43
+  # source://pry-0.14.1/lib/pry/core_extensions.rb:43
   def pry(object = T.unsafe(nil), hash = T.unsafe(nil)); end
 end
 
-# source://pry-0.13.1/lib/pry/version.rb:3
+# source://pry-0.14.1/lib/pry/version.rb:3
 class Pry
   extend ::Forwardable
   extend ::Pry::Forwardable
@@ -99,7 +95,7 @@ class Pry
   # @param options [Hash]
   # @return [Pry] a new instance of Pry
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:81
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:81
   def initialize(options = T.unsafe(nil)); end
 
   # Add a sticky local to this Pry instance.
@@ -109,63 +105,63 @@ class Pry
   # @yield The block that defines the content of the local. The local
   #   will be refreshed at each tick of the repl loop.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:212
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:212
   def add_sticky_local(name, &block); end
 
   # Returns the value of attribute backtrace.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:35
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:35
   def backtrace; end
 
   # Sets the attribute backtrace
   #
   # @param value the value to set the attribute backtrace to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:35
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:35
   def backtrace=(_arg0); end
 
   # Returns the value of attribute binding_stack.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:32
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:32
   def binding_stack; end
 
   # Sets the attribute binding_stack
   #
   # @param value the value to set the attribute binding_stack to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:32
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:32
   def binding_stack=(_arg0); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def color(*args, &block); end
+  def color(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def color=(*args, &block); end
+  def color=(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def commands(*args, &block); end
+  def commands(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def commands=(*args, &block); end
+  def commands=(*args, **_arg1, &block); end
 
   # Generate completions.
   #
   # @param str [String] What the user has typed so far
   # @return [Array<String>] Possible completions
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:145
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:145
   def complete(str); end
 
   # Returns the value of attribute config.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:50
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:50
   def config; end
 
   # The currently active `Binding`.
   #
   # @return [Binding] The currently active `Binding` for the session.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:124
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:124
   def current_binding; end
 
   # The currently active `Binding`.
@@ -173,26 +169,26 @@ class Pry
   #
   # @return [Binding] The currently active `Binding` for the session.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:124
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:124
   def current_context; end
 
   # Returns the value of attribute custom_completions.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:33
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:33
   def custom_completions; end
 
   # Sets the attribute custom_completions
   #
   # @param value the value to set the attribute custom_completions to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:33
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:33
   def custom_completions=(_arg0); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def editor(*args, &block); end
+  def editor(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def editor=(*args, &block); end
+  def editor=(*args, **_arg1, &block); end
 
   # Pass a line of input to Pry.
   #
@@ -215,29 +211,29 @@ class Pry
   #   will raise that exception.
   # @return [Boolean] Is Pry ready to accept more input?
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:255
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:255
   def eval(line, options = T.unsafe(nil)); end
 
   # Returns the value of attribute eval_string.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:34
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:34
   def eval_string; end
 
   # Sets the attribute eval_string
   #
   # @param value the value to set the attribute eval_string to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:34
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:34
   def eval_string=(_arg0); end
 
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:286
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:286
   def evaluate_ruby(code); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def exception_handler(*args, &block); end
+  def exception_handler(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def exception_handler=(*args, &block); end
+  def exception_handler=(*args, **_arg1, &block); end
 
   # Execute the specified hook.
   # If executing a hook raises an exception, we log that and then continue sucessfully.
@@ -248,25 +244,25 @@ class Pry
   # @param args [*Object] The arguments to pass to the hook
   # @return [Object, Exception] The return value of the hook or the exception raised
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:394
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:394
   def exec_hook(name, *args, &block); end
 
   # Returns the value of attribute exit_value.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:42
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:42
   def exit_value; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def extra_sticky_locals(*args, &block); end
+  def extra_sticky_locals(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def extra_sticky_locals=(*args, &block); end
+  def extra_sticky_locals=(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def hooks(*args, &block); end
+  def hooks(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def hooks=(*args, &block); end
+  def hooks=(*args, **_arg1, &block); end
 
   # Injects a local variable into the provided binding.
   #
@@ -275,87 +271,87 @@ class Pry
   # @param binding [Binding] The binding to set the local on.
   # @return [Object] The value the local was set to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:173
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:173
   def inject_local(name, value, binding); end
 
   # Inject all the sticky locals into the current binding.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:201
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:201
   def inject_sticky_locals!; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def input(*args, &block); end
+  def input(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def input=(*args, &block); end
+  def input=(*args, **_arg1, &block); end
 
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:45
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:45
   def input_ring; end
 
   # Returns the value of attribute last_dir.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:39
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:39
   def last_dir; end
 
   # Sets the attribute last_dir
   #
   # @param value the value to set the attribute last_dir to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:39
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:39
   def last_dir=(_arg0); end
 
   # Returns the value of attribute last_exception.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:41
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:41
   def last_exception; end
 
   # Set the last exception for a session.
   #
   # @param exception [Exception] The last exception.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:418
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:418
   def last_exception=(exception); end
 
   # Returns the value of attribute last_file.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:38
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:38
   def last_file; end
 
   # Sets the attribute last_file
   #
   # @param value the value to set the attribute last_file to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:38
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:38
   def last_file=(_arg0); end
 
   # Returns the value of attribute last_result.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:37
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:37
   def last_result; end
 
   # Sets the attribute last_result
   #
   # @param value the value to set the attribute last_result to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:37
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:37
   def last_result=(_arg0); end
 
   # @return [Boolean] True if the last result is an exception that was raised,
   #   as opposed to simply an instance of Exception (like the result of
   #   Exception.new)
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:440
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:440
   def last_result_is_exception?; end
 
   # @return [Integer] The maximum amount of objects remembered by the inp and
   #   out arrays. Defaults to 100.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:190
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:190
   def memory_size; end
 
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:195
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:195
   def memory_size=(size); end
 
   # Returns an output device
@@ -363,15 +359,15 @@ class Pry
   # @example
   #   pry_instance.output.puts "ohai!"
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:538
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:538
   def output; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def output=(*args, &block); end
+  def output=(*args, **_arg1, &block); end
 
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:48
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:48
   def output_ring; end
 
   # Returns the currently configured pager
@@ -379,11 +375,11 @@ class Pry
   # @example
   #   pry_instance.pager.page text
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:530
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:530
   def pager; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def pager=(*args, &block); end
+  def pager=(*args, **_arg1, &block); end
 
   # Pops the current prompt off of the prompt stack. If the prompt you are
   # popping is the last prompt, it will not be popped. Use this to restore the
@@ -397,14 +393,14 @@ class Pry
   #   pry.pop_prompt # => prompt1
   # @return [Pry::Prompt] the prompt being popped
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:522
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:522
   def pop_prompt; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def print(*args, &block); end
+  def print(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def print=(*args, &block); end
+  def print=(*args, **_arg1, &block); end
 
   # If the given line is a valid command, process it in the context of the
   # current `eval_string` and binding.
@@ -412,7 +408,7 @@ class Pry
   # @param val [String] The line to process.
   # @return [Boolean] `true` if `val` is a command, `false` otherwise
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:325
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:325
   def process_command(val); end
 
   # Same as process_command, but outputs exceptions to `#output` instead of
@@ -421,14 +417,14 @@ class Pry
   # @param val [String] The line to process.
   # @return [Boolean] `true` if `val` is a command, `false` otherwise
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:360
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:360
   def process_command_safely(val); end
 
   # This is the prompt at the top of the prompt stack.
   #
   # @return [Pry::Prompt] the current prompt
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:101
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:101
   def prompt; end
 
   # Sets the Pry prompt.
@@ -436,19 +432,19 @@ class Pry
   # @param new_prompt [Pry::Prompt]
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:108
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:108
   def prompt=(new_prompt); end
 
   # Push a binding for the given object onto the stack. If this instance is
   # currently stopped, mark it as usable again.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:131
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:131
   def push_binding(object); end
 
   # Initialize this instance by pushing its initial context into the binding
   # stack. If no target is given, start at the top level.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:118
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:118
   def push_initial_binding(target = T.unsafe(nil)); end
 
   # Pushes the current prompt onto a stack that it can be restored from later.
@@ -459,20 +455,20 @@ class Pry
   # @param new_prompt [Pry::Prompt]
   # @return [Pry::Prompt] new_prompt
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:506
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:506
   def push_prompt(new_prompt); end
 
   # Convenience accessor for the `quiet` config key.
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:592
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:592
   def quiet?; end
 
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:582
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:582
   def raise_up(*args); end
 
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:586
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:586
   def raise_up!(*args); end
 
   # Raise an exception out of Pry.
@@ -489,20 +485,20 @@ class Pry
   #
   # @raise [TypeError]
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:554
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:554
   def raise_up_common(force, *args); end
 
   # Potentially deprecated. Use `Pry::REPL.new(pry, :target => target).start`
   # (If nested sessions are going to exist, this method is fine, but a goal is
   # to come up with an alternative to nested sessions altogether.)
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:282
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:282
   def repl(target = T.unsafe(nil)); end
 
   # Reset the current eval string. If the user has entered part of a multiline
   # expression, this discards that input.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:231
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:231
   def reset_eval_string; end
 
   # Run the specified command.
@@ -512,14 +508,14 @@ class Pry
   # @param val [String] The command (and its params) to execute.
   # @return [Pry::Command::VOID_VALUE]
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:375
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:375
   def run_command(val); end
 
   # Returns the appropriate prompt to use.
   #
   # @return [String] The prompt.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:453
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:453
   def select_prompt; end
 
   # Set the last result of an eval.
@@ -528,7 +524,7 @@ class Pry
   # @param result [Object] The result.
   # @param code [String] The code that was run.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:409
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:409
   def set_last_result(result, code = T.unsafe(nil)); end
 
   # Whether the print proc should be invoked.
@@ -536,27 +532,27 @@ class Pry
   #
   # @return [Boolean] Whether the print proc should be invoked.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:447
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:447
   def should_print?; end
 
   # Output the result or pass to an exception handler (if result is an exception).
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:298
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:298
   def show_result(result); end
 
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:216
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:216
   def sticky_locals; end
 
   # Returns the value of attribute suppress_output.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:36
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:36
   def suppress_output; end
 
   # Sets the attribute suppress_output
   #
   # @param value the value to set the attribute suppress_output to.
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:36
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:36
   def suppress_output=(_arg0); end
 
   # Update Pry's internal state after evalling code.
@@ -564,25 +560,25 @@ class Pry
   #
   # @param code [String] The code we just eval'd
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:428
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:428
   def update_input_history(code); end
 
   private
 
   # Force `eval_string` into the encoding of `val`. [Issue #284]
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:680
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:680
   def ensure_correct_encoding!(val); end
 
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:688
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:688
   def generate_prompt(prompt_proc, conf); end
 
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:598
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:598
   def handle_line(line, options); end
 
   # the array that the prompt stack is stored in
   #
-  # source://pry-0.13.1/lib/pry/pry_instance.rb:697
+  # source://pry-0.14.1/lib/pry/pry_instance.rb:697
   def prompt_stack; end
 
   class << self
@@ -591,22 +587,22 @@ class Pry
     #
     # @param obj [Code, Method, UnboundMethod, Proc, Pry::Method, String, Array, IO]
     #
-    # source://pry-0.13.1/lib/pry/code.rb:12
+    # source://pry-0.14.1/lib/pry/code.rb:12
     def Code(obj); end
 
     # If the given object is a `Pry::Method`, return it unaltered. If it's
     # anything else, return it wrapped in a `Pry::Method` instance.
     #
-    # source://pry-0.13.1/lib/pry/method.rb:9
+    # source://pry-0.14.1/lib/pry/method.rb:9
     def Method(obj); end
 
     # If the given object is a `Pry::WrappedModule`, return it unaltered. If it's
     # anything else, return it wrapped in a `Pry::WrappedModule` instance.
     #
-    # source://pry-0.13.1/lib/pry/wrapped_module.rb:7
+    # source://pry-0.14.1/lib/pry/wrapped_module.rb:7
     def WrappedModule(obj); end
 
-    # source://pry-0.13.1/lib/pry/pry_class.rb:291
+    # source://pry-0.14.1/lib/pry/pry_class.rb:288
     def auto_resize!; end
 
     # Return a `Binding` object for `target` or return `target` if it is
@@ -616,43 +612,43 @@ class Pry
     # @param target [Object] The object to get a `Binding` object for.
     # @return [Binding] The `Binding` object.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:346
+    # source://pry-0.14.1/lib/pry/pry_class.rb:341
     def binding_for(target); end
 
     # Returns the value of attribute cli.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:22
+    # source://pry-0.14.1/lib/pry/pry_class.rb:22
     def cli; end
 
     # Sets the attribute cli
     #
     # @param value the value to set the attribute cli to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:22
+    # source://pry-0.14.1/lib/pry/pry_class.rb:22
     def cli=(_arg0); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def color(*args, &block); end
+    def color(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def color=(*args, &block); end
+    def color=(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def commands(*args, &block); end
+    def commands(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def commands=(*args, &block); end
+    def commands=(*args, **_arg1, &block); end
 
     # Returns the value of attribute config.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:25
+    # source://pry-0.14.1/lib/pry/pry_class.rb:25
     def config; end
 
     # Sets the attribute config
     #
     # @param value the value to set the attribute config to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:25
+    # source://pry-0.14.1/lib/pry/pry_class.rb:25
     def config=(_arg0); end
 
     # @example
@@ -663,246 +659,237 @@ class Pry
     #   end
     # @yield [config] Yields a block with {Pry.config} as its argument.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:48
+    # source://pry-0.14.1/lib/pry/pry_class.rb:46
     def configure; end
 
-    # source://pry-0.13.1/lib/pry/pry_class.rb:379
+    # source://pry-0.14.1/lib/pry/pry_class.rb:374
     def critical_section; end
 
     # @return [Pry::Config] Returns a value store for an instance of Pry running on the current thread.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:65
+    # source://pry-0.14.1/lib/pry/pry_class.rb:63
     def current; end
 
     # Returns the value of attribute current_line.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:19
+    # source://pry-0.14.1/lib/pry/pry_class.rb:19
     def current_line; end
 
     # Sets the attribute current_line
     #
     # @param value the value to set the attribute current_line to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:19
+    # source://pry-0.14.1/lib/pry/pry_class.rb:19
     def current_line=(_arg0); end
 
     # Returns the value of attribute custom_completions.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:18
+    # source://pry-0.14.1/lib/pry/pry_class.rb:18
     def custom_completions; end
 
     # Sets the attribute custom_completions
     #
     # @param value the value to set the attribute custom_completions to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:18
+    # source://pry-0.14.1/lib/pry/pry_class.rb:18
     def custom_completions=(_arg0); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def editor(*args, &block); end
+    def editor(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def editor=(*args, &block); end
+    def editor=(*args, **_arg1, &block); end
 
     # Returns the value of attribute eval_path.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:21
+    # source://pry-0.14.1/lib/pry/pry_class.rb:21
     def eval_path; end
 
     # Sets the attribute eval_path
     #
     # @param value the value to set the attribute eval_path to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:21
+    # source://pry-0.14.1/lib/pry/pry_class.rb:21
     def eval_path=(_arg0); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def exception_handler(*args, &block); end
+    def exception_handler(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def exception_handler=(*args, &block); end
+    def exception_handler=(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def extra_sticky_locals(*args, &block); end
+    def extra_sticky_locals(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def extra_sticky_locals=(*args, &block); end
+    def extra_sticky_locals=(*args, **_arg1, &block); end
 
-    # source://pry-0.13.1/lib/pry/pry_class.rb:141
+    # source://pry-0.14.1/lib/pry/pry_class.rb:139
     def final_session_setup; end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def history(*args, &block); end
+    def history(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def history=(*args, &block); end
+    def history=(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def hooks(*args, &block); end
+    def hooks(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def hooks=(*args, &block); end
+    def hooks=(*args, **_arg1, &block); end
 
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:374
+    # source://pry-0.14.1/lib/pry/pry_class.rb:369
     def in_critical_section?; end
 
     # Basic initialization.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:335
+    # source://pry-0.14.1/lib/pry/pry_class.rb:332
     def init; end
 
     # @return [Boolean] Whether this is the first time a Pry session has
     #   been started since loading the Pry class.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:254
+    # source://pry-0.14.1/lib/pry/pry_class.rb:251
     def initial_session?; end
 
     # Do basic setup for initial session including: loading pryrc, plugins,
     # requires, and history.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:131
+    # source://pry-0.14.1/lib/pry/pry_class.rb:129
     def initial_session_setup; end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def input(*args, &block); end
+    def input(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def input=(*args, &block); end
+    def input=(*args, **_arg1, &block); end
 
     # Returns the value of attribute last_internal_error.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:24
+    # source://pry-0.14.1/lib/pry/pry_class.rb:24
     def last_internal_error; end
 
     # Sets the attribute last_internal_error
     #
     # @param value the value to set the attribute last_internal_error to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:24
+    # source://pry-0.14.1/lib/pry/pry_class.rb:24
     def last_internal_error=(_arg0); end
 
     # Returns the value of attribute line_buffer.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:20
+    # source://pry-0.14.1/lib/pry/pry_class.rb:20
     def line_buffer; end
 
     # Sets the attribute line_buffer
     #
     # @param value the value to set the attribute line_buffer to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:20
+    # source://pry-0.14.1/lib/pry/pry_class.rb:20
     def line_buffer=(_arg0); end
 
     # Load the given file in the context of `Pry.toplevel_binding`
     #
     # @param file [String] The unexpanded file path.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:71
+    # source://pry-0.14.1/lib/pry/pry_class.rb:69
     def load_file_at_toplevel(file); end
 
     # Execute the file through the REPL loop, non-interactively.
     #
     # @param file_name [String] File name to load through the REPL.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:199
+    # source://pry-0.14.1/lib/pry/pry_class.rb:196
     def load_file_through_repl(file_name); end
 
     # Load Readline history if required.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:248
+    # source://pry-0.14.1/lib/pry/pry_class.rb:245
     def load_history; end
-
-    # source://RUBY_ROOT/forwardable.rb:229
-    def load_plugins(*args, &block); end
 
     # Load RC files if appropriate This method can also be used to reload the
     # files if they have changed.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:79
+    # source://pry-0.14.1/lib/pry/pry_class.rb:77
     def load_rc_files; end
 
     # Load any Ruby files specified with the -r flag on the command line.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:103
+    # source://pry-0.14.1/lib/pry/pry_class.rb:101
     def load_requires; end
 
     # Trap interrupts on jruby, and make them behave like MRI so we can
     # catch them.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:111
+    # source://pry-0.14.1/lib/pry/pry_class.rb:109
     def load_traps; end
 
-    # source://pry-0.13.1/lib/pry/pry_class.rb:115
+    # source://pry-0.14.1/lib/pry/pry_class.rb:113
     def load_win32console; end
-
-    # source://RUBY_ROOT/forwardable.rb:229
-    def locate_plugins(*args, &block); end
 
     # @return [main] returns the special instance of Object, "main".
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:57
+    # source://pry-0.14.1/lib/pry/pry_class.rb:55
     def main; end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def memory_size(*args, &block); end
+    def memory_size(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def memory_size=(*args, &block); end
+    def memory_size=(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def output(*args, &block); end
+    def output(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def output=(*args, &block); end
+    def output=(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def pager(*args, &block); end
+    def pager(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def pager=(*args, &block); end
+    def pager=(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def plugins(*args, &block); end
+    def print(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def print(*args, &block); end
+    def print=(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def print=(*args, &block); end
+    def prompt(*args, **_arg1, &block); end
 
     # source://RUBY_ROOT/forwardable.rb:229
-    def prompt(*args, &block); end
-
-    # source://RUBY_ROOT/forwardable.rb:229
-    def prompt=(*args, &block); end
+    def prompt=(*args, **_arg1, &block); end
 
     # Returns the value of attribute quiet.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:23
+    # source://pry-0.14.1/lib/pry/pry_class.rb:23
     def quiet; end
 
     # Sets the attribute quiet
     #
     # @param value the value to set the attribute quiet to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:23
+    # source://pry-0.14.1/lib/pry/pry_class.rb:23
     def quiet=(_arg0); end
 
     # Load the local RC file (./.pryrc)
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:88
+    # source://pry-0.14.1/lib/pry/pry_class.rb:86
     def rc_files_to_load; end
 
     # Expand a file to its canonical name (following symlinks as appropriate)
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:96
+    # source://pry-0.14.1/lib/pry/pry_class.rb:94
     def real_path_to(file); end
 
     # Set all the configurable options back to their default values
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:323
+    # source://pry-0.14.1/lib/pry/pry_class.rb:320
     def reset_defaults; end
 
     # Run a Pry command from outside a session. The commands available are
@@ -921,7 +908,7 @@ class Pry
     # @param options [Hash] Optional named parameters.
     # @return [nil]
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:274
+    # source://pry-0.14.1/lib/pry/pry_class.rb:271
     def run_command(command_string, options = T.unsafe(nil)); end
 
     # Start a Pry REPL.
@@ -941,23 +928,17 @@ class Pry
     # @param target [Object, Binding] The receiver of the Pry session
     # @param options [Hash]
     #
-    # source://pry-byebug-3.9.0/lib/pry-byebug/pry_ext.rb:8
+    # source://pry-0.14.1/lib/pry/pry_class.rb:156
     def start(target = T.unsafe(nil), options = T.unsafe(nil)); end
 
-    # source://pry-byebug-3.9.0/lib/pry-byebug/pry_ext.rb:8
-    def start_with_pry_byebug(target = T.unsafe(nil), options = T.unsafe(nil)); end
-
-    # source://pry-0.13.1/lib/pry/pry_class.rb:159
-    def start_without_pry_byebug(target = T.unsafe(nil), options = T.unsafe(nil)); end
-
-    # source://pry-0.13.1/lib/pry/pry_class.rb:353
+    # source://pry-0.14.1/lib/pry/pry_class.rb:348
     def toplevel_binding; end
 
     # Sets the attribute toplevel_binding
     #
     # @param value the value to set the attribute toplevel_binding to.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:371
+    # source://pry-0.14.1/lib/pry/pry_class.rb:366
     def toplevel_binding=(_arg0); end
 
     # An inspector that clips the output to `max_length` chars.
@@ -969,7 +950,7 @@ class Pry
     # @param options [Hash]
     # @return [String] The string representation of `obj`.
     #
-    # source://pry-0.13.1/lib/pry/pry_class.rb:222
+    # source://pry-0.14.1/lib/pry/pry_class.rb:219
     def view_clip(obj, options = T.unsafe(nil)); end
   end
 end
@@ -979,32 +960,30 @@ end
 #   friends).
 # @see Object#__binding__
 #
-# source://pry-0.13.1/lib/pry/core_extensions.rb:9
+# source://pry-0.14.1/lib/pry/core_extensions.rb:9
 Pry::BINDING_METHOD_IMPL = T.let(T.unsafe(nil), Array)
 
-# source://pry-0.13.1/lib/pry/basic_object.rb:4
+# source://pry-0.14.1/lib/pry/basic_object.rb:4
 class Pry::BasicObject < ::BasicObject
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
 end
 
-# source://pry-0.13.1/lib/pry/basic_object.rb:6
+# source://pry-0.14.1/lib/pry/basic_object.rb:6
 Pry::BasicObject::Dir = Dir
 
-# source://pry-0.13.1/lib/pry/basic_object.rb:6
+# source://pry-0.14.1/lib/pry/basic_object.rb:6
 Pry::BasicObject::ENV = T.let(T.unsafe(nil), Object)
 
-# source://pry-0.13.1/lib/pry/basic_object.rb:6
+# source://pry-0.14.1/lib/pry/basic_object.rb:6
 Pry::BasicObject::File = File
 
-# source://pry-0.13.1/lib/pry/basic_object.rb:6
+# source://pry-0.14.1/lib/pry/basic_object.rb:6
 Pry::BasicObject::Kernel = Kernel
 
-# source://pry-0.13.1/lib/pry/basic_object.rb:6
+# source://pry-0.14.1/lib/pry/basic_object.rb:6
 Pry::BasicObject::LoadError = LoadError
 
-# source://pry-0.13.1/lib/pry/basic_object.rb:6
+# source://pry-0.14.1/lib/pry/basic_object.rb:6
 Pry::BasicObject::Pry = Pry
 
 # A super-class for Commands that are created with a single block.
@@ -1014,90 +993,85 @@ Pry::BasicObject::Pry = Pry
 #
 # Create subclasses using {Pry::CommandSet#command}.
 #
-# source://pry-0.13.1/lib/pry/block_command.rb:13
+# source://pry-0.14.1/lib/pry/block_command.rb:13
 class Pry::BlockCommand < ::Pry::Command
   # Call the block that was registered with this command.
   #
   # @param args [Array<String>] The arguments passed
   # @return [Object] The return value of the block
   #
-  # source://pry-0.13.1/lib/pry/block_command.rb:14
+  # source://pry-0.14.1/lib/pry/block_command.rb:14
   def call(*args); end
 
-  # source://pry-0.13.1/lib/pry/block_command.rb:18
+  # source://pry-0.14.1/lib/pry/block_command.rb:18
   def help; end
 end
 
 # Manage the processing of command line options
 #
-# source://pry-0.13.1/lib/pry/cli.rb:7
+# source://pry-0.14.1/lib/pry/cli.rb:7
 class Pry::CLI
   class << self
     # Add a block responsible for processing parsed options.
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:46
+    # source://pry-0.14.1/lib/pry/cli.rb:39
     def add_option_processor(&block); end
 
     # Add another set of CLI options (a Pry::Slop block)
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:24
+    # source://pry-0.14.1/lib/pry/cli.rb:24
     def add_options(&block); end
-
-    # Bring in options defined in plugins
-    #
-    # source://pry-0.13.1/lib/pry/cli.rb:39
-    def add_plugin_options; end
 
     # @return [Array<String>] The input array of strings to process
     #   as CLI options.
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:21
+    # source://pry-0.14.1/lib/pry/cli.rb:21
     def input_args; end
 
     # @return [Array<String>] The input array of strings to process
     #   as CLI options.
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:21
+    # source://pry-0.14.1/lib/pry/cli.rb:21
     def input_args=(_arg0); end
 
     # @return [Array] The Procs that process the parsed options. Plugins can
     #   utilize this facility in order to add and process their own Pry
     #   options.
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:17
+    # source://pry-0.14.1/lib/pry/cli.rb:17
     def option_processors; end
 
     # @return [Array] The Procs that process the parsed options. Plugins can
     #   utilize this facility in order to add and process their own Pry
     #   options.
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:17
+    # source://pry-0.14.1/lib/pry/cli.rb:17
     def option_processors=(_arg0); end
 
     # @return [Proc] The Proc defining the valid command line options.
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:12
+    # source://pry-0.14.1/lib/pry/cli.rb:12
     def options; end
 
     # @return [Proc] The Proc defining the valid command line options.
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:12
+    # source://pry-0.14.1/lib/pry/cli.rb:12
     def options=(_arg0); end
 
-    # source://pry-0.13.1/lib/pry/cli.rb:59
+    # source://pry-0.14.1/lib/pry/cli.rb:52
     def parse_options(args = T.unsafe(nil)); end
 
     # Clear `options` and `option_processors`
     #
-    # source://pry-0.13.1/lib/pry/cli.rb:54
+    # source://pry-0.14.1/lib/pry/cli.rb:47
     def reset; end
 
-    # source://pry-0.13.1/lib/pry/cli.rb:97
+    # source://pry-0.14.1/lib/pry/cli.rb:90
     def start(opts); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/cli.rb:8
+# source://pry-0.14.1/lib/pry/cli.rb:8
 class Pry::CLI::NoOptionsError < ::StandardError; end
 
 # A super-class of Commands with structure.
@@ -1112,18 +1086,18 @@ class Pry::CLI::NoOptionsError < ::StandardError; end
 # `setup` which will be called before `options`, for example to require any
 # gems your command needs to run, or to set up state.
 #
-# source://pry-0.13.1/lib/pry/class_command.rb:15
+# source://pry-0.14.1/lib/pry/class_command.rb:15
 class Pry::ClassCommand < ::Pry::Command
   # Returns the value of attribute args.
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:64
+  # source://pry-0.14.1/lib/pry/class_command.rb:64
   def args; end
 
   # Sets the attribute args
   #
   # @param value the value to set the attribute args to.
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:64
+  # source://pry-0.14.1/lib/pry/class_command.rb:64
   def args=(_arg0); end
 
   # Set up `opts` and `args`, and then call `process`.
@@ -1133,7 +1107,7 @@ class Pry::ClassCommand < ::Pry::Command
   # @param args [Array<String>] The arguments passed
   # @return [Object] The return value of `process` or VOID_VALUE
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:72
+  # source://pry-0.14.1/lib/pry/class_command.rb:72
   def call(*args); end
 
   # Generate shell completions
@@ -1141,12 +1115,12 @@ class Pry::ClassCommand < ::Pry::Command
   # @param search [String] The line typed so far
   # @return [Array<String>] the words to complete
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:105
+  # source://pry-0.14.1/lib/pry/class_command.rb:105
   def complete(search); end
 
   # Return the help generated by Pry::Slop for this command.
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:87
+  # source://pry-0.14.1/lib/pry/class_command.rb:87
   def help; end
 
   # A method to setup Pry::Slop so it can parse the options your command expects.
@@ -1163,19 +1137,19 @@ class Pry::ClassCommand < ::Pry::Command
   #   end
   # @note Please don't do anything side-effecty in the main part of this
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:171
+  # source://pry-0.14.1/lib/pry/class_command.rb:171
   def options(opt); end
 
   # Returns the value of attribute opts.
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:63
+  # source://pry-0.14.1/lib/pry/class_command.rb:63
   def opts; end
 
   # Sets the attribute opts
   #
   # @param value the value to set the attribute opts to.
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:63
+  # source://pry-0.14.1/lib/pry/class_command.rb:63
   def opts=(_arg0); end
 
   # The actual body of your command should go here.
@@ -1197,7 +1171,7 @@ class Pry::ClassCommand < ::Pry::Command
   #   end
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:190
+  # source://pry-0.14.1/lib/pry/class_command.rb:190
   def process; end
 
   # A method called just before `options(opt)` as part of `call`.
@@ -1211,13 +1185,13 @@ class Pry::ClassCommand < ::Pry::Command
   #   @action = :method
   #   end
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:121
+  # source://pry-0.14.1/lib/pry/class_command.rb:121
   def setup; end
 
   # Return an instance of Pry::Slop that can parse either subcommands or the
   # options that this command accepts.
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:93
+  # source://pry-0.14.1/lib/pry/class_command.rb:93
   def slop; end
 
   # A method to setup Pry::Slop commands so it can parse the subcommands your
@@ -1253,35 +1227,35 @@ class Pry::ClassCommand < ::Pry::Command
   #   # More calculations...
   #   end
   #
-  # source://pry-0.13.1/lib/pry/class_command.rb:156
+  # source://pry-0.14.1/lib/pry/class_command.rb:156
   def subcommands(cmd); end
 
   class << self
-    # source://pry-0.13.1/lib/pry/class_command.rb:29
+    # source://pry-0.14.1/lib/pry/class_command.rb:29
     def doc; end
 
-    # source://pry-0.13.1/lib/pry/class_command.rb:37
+    # source://pry-0.14.1/lib/pry/class_command.rb:37
     def file; end
 
     # Ensure that subclasses inherit the options, description and
     # match from a ClassCommand super class.
     #
-    # source://pry-0.13.1/lib/pry/class_command.rb:19
+    # source://pry-0.14.1/lib/pry/class_command.rb:19
     def inherited(klass); end
 
-    # source://pry-0.13.1/lib/pry/class_command.rb:42
+    # source://pry-0.14.1/lib/pry/class_command.rb:42
     def line; end
 
-    # source://pry-0.13.1/lib/pry/class_command.rb:25
+    # source://pry-0.14.1/lib/pry/class_command.rb:25
     def source; end
 
-    # source://pry-0.13.1/lib/pry/class_command.rb:37
+    # source://pry-0.14.1/lib/pry/class_command.rb:37
     def source_file; end
 
-    # source://pry-0.13.1/lib/pry/class_command.rb:42
+    # source://pry-0.14.1/lib/pry/class_command.rb:42
     def source_line; end
 
-    # source://pry-0.13.1/lib/pry/class_command.rb:33
+    # source://pry-0.14.1/lib/pry/class_command.rb:33
     def source_location; end
 
     private
@@ -1293,7 +1267,7 @@ class Pry::ClassCommand < ::Pry::Command
     #
     # @return [Pry::WrappedModule, Pry::Method]
     #
-    # source://pry-0.13.1/lib/pry/class_command.rb:54
+    # source://pry-0.14.1/lib/pry/class_command.rb:54
     def source_object; end
   end
 end
@@ -1307,7 +1281,7 @@ end
 # arbitrary chaining of formatting methods without mutating the original
 # object.
 #
-# source://pry-0.13.1/lib/pry/code.rb:32
+# source://pry-0.14.1/lib/pry/code.rb:32
 class Pry::Code
   extend ::MethodSource::CodeHelpers
 
@@ -1321,7 +1295,7 @@ class Pry::Code
   # @param code_type [Symbol?]
   # @return [Code] a new instance of Code
   #
-  # source://pry-0.13.1/lib/pry/code.rb:87
+  # source://pry-0.14.1/lib/pry/code.rb:87
   def initialize(lines = T.unsafe(nil), start_line = T.unsafe(nil), code_type = T.unsafe(nil)); end
 
   # Append the given line. +lineno+ is one more than the last existing
@@ -1330,7 +1304,7 @@ class Pry::Code
   # @param line [String]
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:102
+  # source://pry-0.14.1/lib/pry/code.rb:102
   def <<(line); end
 
   # Two `Code` objects are equal if they contain the same lines with the same
@@ -1339,7 +1313,7 @@ class Pry::Code
   # @param other [Code, Object]
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:325
+  # source://pry-0.14.1/lib/pry/code.rb:325
   def ==(other); end
 
   # Remove all lines except for the +lines+ after and excluding +lineno+.
@@ -1348,7 +1322,7 @@ class Pry::Code
   # @param lines [Integer]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:195
+  # source://pry-0.14.1/lib/pry/code.rb:195
   def after(lineno, lines = T.unsafe(nil)); end
 
   # Remove all lines except for the +lines+ on either side of and including
@@ -1358,7 +1332,7 @@ class Pry::Code
   # @param lines [Integer]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:182
+  # source://pry-0.14.1/lib/pry/code.rb:182
   def around(lineno, lines = T.unsafe(nil)); end
 
   # Remove all lines except for the +lines+ up to and excluding +lineno+.
@@ -1367,7 +1341,7 @@ class Pry::Code
   # @param lines [Integer]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:168
+  # source://pry-0.14.1/lib/pry/code.rb:168
   def before(lineno, lines = T.unsafe(nil)); end
 
   # Remove all lines that aren't in the given range, expressed either as a
@@ -1378,17 +1352,17 @@ class Pry::Code
   # @param end_line [Integer?]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:135
+  # source://pry-0.14.1/lib/pry/code.rb:135
   def between(start_line, end_line = T.unsafe(nil)); end
 
   # @return [Symbol] The type of code stored in this wrapper.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:77
+  # source://pry-0.14.1/lib/pry/code.rb:77
   def code_type; end
 
   # @return [Symbol] The type of code stored in this wrapper.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:77
+  # source://pry-0.14.1/lib/pry/code.rb:77
   def code_type=(_arg0); end
 
   # Get the comment that describes the expression on the given line number.
@@ -1396,7 +1370,7 @@ class Pry::Code
   # @param line_number [Integer] (1-based)
   # @return [String] the code.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:286
+  # source://pry-0.14.1/lib/pry/code.rb:286
   def comment_describing(line_number); end
 
   # Get the multiline expression that starts on the given line number.
@@ -1404,7 +1378,7 @@ class Pry::Code
   # @param line_number [Integer] (1-based)
   # @return [String] the code.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:294
+  # source://pry-0.14.1/lib/pry/code.rb:294
   def expression_at(line_number, consume = T.unsafe(nil)); end
 
   # Remove all lines that don't match the given `pattern`.
@@ -1412,29 +1386,29 @@ class Pry::Code
   # @param pattern [Regexp]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:207
+  # source://pry-0.14.1/lib/pry/code.rb:207
   def grep(pattern); end
 
   # @return [String] a (possibly highlighted) copy of the source code.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:263
+  # source://pry-0.14.1/lib/pry/code.rb:263
   def highlighted; end
 
   # Return the number of lines stored.
   #
   # @return [Integer]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:316
+  # source://pry-0.14.1/lib/pry/code.rb:316
   def length; end
 
   # @return [Integer] the number of digits in the last line.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:252
+  # source://pry-0.14.1/lib/pry/code.rb:252
   def max_lineno_width; end
 
   # Forward any missing methods to the output of `#to_s`.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:335
+  # source://pry-0.14.1/lib/pry/code.rb:335
   def method_missing(method_name, *args, &block); end
 
   # Get the (approximate) Module.nesting at the give line number.
@@ -1442,13 +1416,13 @@ class Pry::Code
   # @param line_number [Integer] line number starting from 1
   # @return [Array<Module>] a list of open modules.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:302
+  # source://pry-0.14.1/lib/pry/code.rb:302
   def nesting_at(line_number); end
 
   # Writes a formatted representation (based on the configuration of the
   # object) to the given output, which must respond to `#<<`.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:269
+  # source://pry-0.14.1/lib/pry/code.rb:269
   def print_to_output(output, color = T.unsafe(nil)); end
 
   # Append the given line. +lineno+ is one more than the last existing
@@ -1457,14 +1431,14 @@ class Pry::Code
   # @param line [String]
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:102
+  # source://pry-0.14.1/lib/pry/code.rb:102
   def push(line); end
 
   # Return an unformatted String of the code.
   #
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:309
+  # source://pry-0.14.1/lib/pry/code.rb:309
   def raw; end
 
   # Filter the lines using the given block.
@@ -1472,7 +1446,7 @@ class Pry::Code
   # @return [Code]
   # @yield [LOC]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:122
+  # source://pry-0.14.1/lib/pry/code.rb:122
   def reject(&block); end
 
   # Filter the lines using the given block.
@@ -1480,7 +1454,7 @@ class Pry::Code
   # @return [Code]
   # @yield [LOC]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:112
+  # source://pry-0.14.1/lib/pry/code.rb:112
   def select(&block); end
 
   # Take `num_lines` from `start_line`, forward or backwards.
@@ -1489,13 +1463,13 @@ class Pry::Code
   # @param num_lines [Integer]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:150
+  # source://pry-0.14.1/lib/pry/code.rb:150
   def take_lines(start_line, num_lines); end
 
   # @return [String] a formatted representation (based on the configuration of
   #   the object).
   #
-  # source://pry-0.13.1/lib/pry/code.rb:258
+  # source://pry-0.14.1/lib/pry/code.rb:258
   def to_s; end
 
   # Format output with the specified number of spaces in front of every line,
@@ -1504,7 +1478,7 @@ class Pry::Code
   # @param spaces [Integer?]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:244
+  # source://pry-0.14.1/lib/pry/code.rb:244
   def with_indentation(spaces = T.unsafe(nil)); end
 
   # Format output with line numbers next to it, unless `y_n` is falsy.
@@ -1512,7 +1486,7 @@ class Pry::Code
   # @param y_n [Boolean?]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:221
+  # source://pry-0.14.1/lib/pry/code.rb:221
   def with_line_numbers(y_n = T.unsafe(nil)); end
 
   # Format output with a marker next to the given +lineno+, unless +lineno+ is
@@ -1521,7 +1495,7 @@ class Pry::Code
   # @param lineno [Integer?]
   # @return [Code]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:232
+  # source://pry-0.14.1/lib/pry/code.rb:232
   def with_marker(lineno = T.unsafe(nil)); end
 
   protected
@@ -1529,7 +1503,7 @@ class Pry::Code
   # An abstraction of the `dup.instance_eval` pattern used throughout this
   # class.
   #
-  # source://pry-0.13.1/lib/pry/code.rb:361
+  # source://pry-0.14.1/lib/pry/code.rb:361
   def alter(&block); end
 
   private
@@ -1538,7 +1512,7 @@ class Pry::Code
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code.rb:345
+  # source://pry-0.14.1/lib/pry/code.rb:345
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 
   class << self
@@ -1549,7 +1523,7 @@ class Pry::Code
     # @param code_type [Symbol] The type of code the file contains.
     # @return [Code]
     #
-    # source://pry-0.13.1/lib/pry/code.rb:42
+    # source://pry-0.14.1/lib/pry/code.rb:42
     def from_file(filename, code_type = T.unsafe(nil)); end
 
     # Instantiate a `Code` object containing code extracted from a
@@ -1561,7 +1535,7 @@ class Pry::Code
     #   use the method's original line numbers.
     # @return [Code]
     #
-    # source://pry-0.13.1/lib/pry/code.rb:55
+    # source://pry-0.14.1/lib/pry/code.rb:55
     def from_method(meth, start_line = T.unsafe(nil)); end
 
     # Attempt to extract the source code for module (or class) `mod`.
@@ -1573,7 +1547,7 @@ class Pry::Code
     #   use the method's original line numbers.
     # @return [Code]
     #
-    # source://pry-0.13.1/lib/pry/code.rb:69
+    # source://pry-0.14.1/lib/pry/code.rb:69
     def from_module(mod, candidate_rank = T.unsafe(nil), start_line = T.unsafe(nil)); end
   end
 end
@@ -1582,40 +1556,40 @@ end
 #
 # @api private
 #
-# source://pry-0.13.1/lib/pry/code/code_range.rb:8
+# source://pry-0.14.1/lib/pry/code/code_range.rb:8
 class Pry::Code::CodeRange
   # @api private
   # @param start_line [Integer]
   # @param end_line [Integer?]
   # @return [CodeRange] a new instance of CodeRange
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:11
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:11
   def initialize(start_line, end_line = T.unsafe(nil)); end
 
   # @api private
   # @param lines [Array<LOC>]
   # @return [Range]
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:19
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:19
   def indices_range(lines); end
 
   private
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:27
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:27
   def end_line; end
 
   # @api private
   # @return [Integer]
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:57
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:57
   def find_end_index(lines); end
 
   # @api private
   # @return [Integer]
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:50
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:50
   def find_start_index(lines); end
 
   # If `end_line` is equal to `nil`, then calculate it from the first
@@ -1624,7 +1598,7 @@ class Pry::Code::CodeRange
   # @api private
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:32
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:32
   def force_set_end_line; end
 
   # Finds indices of `start_line` and `end_line` in the given Array of
@@ -1634,7 +1608,7 @@ class Pry::Code::CodeRange
   # @param lines [Array<LOC>]
   # @return [Array<Integer>]
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:45
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:45
   def indices(lines); end
 
   # For example, if the range is 4..10, then `start_line` would be equal to
@@ -1643,12 +1617,12 @@ class Pry::Code::CodeRange
   # @api private
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:66
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:66
   def set_end_line_from_range; end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/code/code_range.rb:25
+  # source://pry-0.14.1/lib/pry/code/code_range.rb:25
   def start_line; end
 end
 
@@ -1671,20 +1645,20 @@ end
 #   loc.indent(3)
 #   loc.line #=> "   def example\n  :example\nend"
 #
-# source://pry-0.13.1/lib/pry/code/loc.rb:23
+# source://pry-0.14.1/lib/pry/code/loc.rb:23
 class Pry::Code::LOC
   # @api private
   # @param line [String] The line of code.
   # @param lineno [Integer] The position of the +line+.
   # @return [LOC] a new instance of LOC
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:29
+  # source://pry-0.14.1/lib/pry/code/loc.rb:29
   def initialize(line, lineno); end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:34
+  # source://pry-0.14.1/lib/pry/code/loc.rb:34
   def ==(other); end
 
   # Prepends the line number `lineno` to the `line`.
@@ -1693,7 +1667,7 @@ class Pry::Code::LOC
   # @param max_width [Integer]
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:64
+  # source://pry-0.14.1/lib/pry/code/loc.rb:64
   def add_line_number(max_width = T.unsafe(nil), color = T.unsafe(nil)); end
 
   # Prepends a marker "=>" or an empty marker to the +line+.
@@ -1703,7 +1677,7 @@ class Pry::Code::LOC
   #   prepend a hashrocket. Otherwise, an empty marker.
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:81
+  # source://pry-0.14.1/lib/pry/code/loc.rb:81
   def add_marker(marker_lineno); end
 
   # Paints the `line` of code.
@@ -1712,17 +1686,17 @@ class Pry::Code::LOC
   # @param code_type [Symbol]
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:56
+  # source://pry-0.14.1/lib/pry/code/loc.rb:56
   def colorize(code_type); end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:38
+  # source://pry-0.14.1/lib/pry/code/loc.rb:38
   def dup; end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:98
+  # source://pry-0.14.1/lib/pry/code/loc.rb:98
   def handle_multiline_entries_from_edit_command(line, max_width); end
 
   # Indents the `line` with +distance+ spaces.
@@ -1731,45 +1705,45 @@ class Pry::Code::LOC
   # @param distance [Integer]
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:94
+  # source://pry-0.14.1/lib/pry/code/loc.rb:94
   def indent(distance); end
 
   # @api private
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:43
+  # source://pry-0.14.1/lib/pry/code/loc.rb:43
   def line; end
 
   # @api private
   # @return [Integer]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:48
+  # source://pry-0.14.1/lib/pry/code/loc.rb:48
   def lineno; end
 
   # @api private
   # @return [Array<String, Integer>]
   #
-  # source://pry-0.13.1/lib/pry/code/loc.rb:25
+  # source://pry-0.14.1/lib/pry/code/loc.rb:25
   def tuple; end
 end
 
-# source://pry-0.13.1/lib/pry/code/code_file.rb:6
+# source://pry-0.14.1/lib/pry/code/code_file.rb:6
 class Pry::CodeFile
   # @param filename [String] The name of a file with code to be detected
   # @param code_type [Symbol] The type of code the `filename` contains
   # @return [CodeFile] a new instance of CodeFile
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:41
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:41
   def initialize(filename, code_type = T.unsafe(nil)); end
 
   # @return [String] The code contained in the current `@filename`.
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:47
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:47
   def code; end
 
   # @return [Symbol] The type of code stored in this wrapper.
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:37
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:37
   def code_type; end
 
   private
@@ -1778,35 +1752,35 @@ class Pry::CodeFile
   #   readable for some reason.
   # @return [String] absolute path for the given `filename`.
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:64
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:64
   def abs_path; end
 
   # @return [Array] All the paths that contain code that Pry can use for its
   #   API's. Skips directories.
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:80
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:80
   def code_path; end
 
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:110
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:110
   def from_load_path; end
 
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:105
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:105
   def from_pry_init_pwd; end
 
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:100
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:100
   def from_pwd; end
 
   # @param path [String]
   # @return [Boolean] if the path, with or without the default ext,
   #   is a readable file then `true`, otherwise `false`.
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:73
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:73
   def readable?(path); end
 
   # @param filename [String]
@@ -1815,27 +1789,27 @@ class Pry::CodeFile
   # @return [Symbol, nil] The SyntaxHighlighter type of a file from its
   #   extension, or `nil` if `:unknown`.
   #
-  # source://pry-0.13.1/lib/pry/code/code_file.rb:89
+  # source://pry-0.14.1/lib/pry/code/code_file.rb:89
   def type_from_filename(filename, default = T.unsafe(nil)); end
 end
 
-# source://pry-0.13.1/lib/pry/code/code_file.rb:7
+# source://pry-0.14.1/lib/pry/code/code_file.rb:7
 Pry::CodeFile::DEFAULT_EXT = T.let(T.unsafe(nil), String)
 
 # List of all supported languages.
 #
 # @return [Hash]
 #
-# source://pry-0.13.1/lib/pry/code/code_file.rb:11
+# source://pry-0.14.1/lib/pry/code/code_file.rb:11
 Pry::CodeFile::EXTENSIONS = T.let(T.unsafe(nil), Hash)
 
-# source://pry-0.13.1/lib/pry/code/code_file.rb:28
+# source://pry-0.14.1/lib/pry/code/code_file.rb:28
 Pry::CodeFile::FILES = T.let(T.unsafe(nil), Hash)
 
 # Store the current working directory. This allows show-source etc. to work if
 # your process has changed directory since boot. [Issue #675]
 #
-# source://pry-0.13.1/lib/pry/code/code_file.rb:34
+# source://pry-0.14.1/lib/pry/code/code_file.rb:34
 Pry::CodeFile::INITIAL_PWD = T.let(T.unsafe(nil), String)
 
 # This class is responsible for taking a string (identifying a
@@ -1857,81 +1831,81 @@ Pry::CodeFile::INITIAL_PWD = T.let(T.unsafe(nil), String)
 # commands/classes/candidates/methods and so on just share a very
 # ill-defined interface.
 #
-# source://pry-0.13.1/lib/pry/code_object.rb:22
+# source://pry-0.14.1/lib/pry/code_object.rb:22
 class Pry::CodeObject
   include ::Pry::Helpers::OptionsHelpers
   include ::Pry::Helpers::CommandHelpers
 
   # @return [CodeObject] a new instance of CodeObject
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:82
+  # source://pry-0.14.1/lib/pry/code_object.rb:82
   def initialize(str, pry_instance, options = T.unsafe(nil)); end
 
   # TODO: just make it so find_command_by_match_or_listing doesn't raise?
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:94
+  # source://pry-0.14.1/lib/pry/code_object.rb:94
   def command_lookup; end
 
   # lookup variables and constants and `self` that are not modules
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:118
+  # source://pry-0.14.1/lib/pry/code_object.rb:118
   def default_lookup; end
 
   # when no paramter is given (i.e CodeObject.lookup(nil)), then we
   # lookup the 'current object' from the binding.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:102
+  # source://pry-0.14.1/lib/pry/code_object.rb:102
   def empty_lookup; end
 
-  # source://pry-0.13.1/lib/pry/code_object.rb:136
+  # source://pry-0.14.1/lib/pry/code_object.rb:136
   def method_or_class_lookup; end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:79
+  # source://pry-0.14.1/lib/pry/code_object.rb:79
   def pry_instance; end
 
   # Sets the attribute pry_instance
   #
   # @param value the value to set the attribute pry_instance to.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:79
+  # source://pry-0.14.1/lib/pry/code_object.rb:79
   def pry_instance=(_arg0); end
 
   # Returns the value of attribute str.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:77
+  # source://pry-0.14.1/lib/pry/code_object.rb:77
   def str; end
 
   # Sets the attribute str
   #
   # @param value the value to set the attribute str to.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:77
+  # source://pry-0.14.1/lib/pry/code_object.rb:77
   def str=(_arg0); end
 
   # Returns the value of attribute super_level.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:80
+  # source://pry-0.14.1/lib/pry/code_object.rb:80
   def super_level; end
 
   # Sets the attribute super_level
   #
   # @param value the value to set the attribute super_level to.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:80
+  # source://pry-0.14.1/lib/pry/code_object.rb:80
   def super_level=(_arg0); end
 
   # Returns the value of attribute target.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:78
+  # source://pry-0.14.1/lib/pry/code_object.rb:78
   def target; end
 
   # Sets the attribute target
   #
   # @param value the value to set the attribute target to.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:78
+  # source://pry-0.14.1/lib/pry/code_object.rb:78
   def target=(_arg0); end
 
   private
@@ -1945,7 +1919,7 @@ class Pry::CodeObject
   # @param str [String]
   # @return [Boolean] Whether the string looks like an instance method.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:163
+  # source://pry-0.14.1/lib/pry/code_object.rb:163
   def looks_like_an_instance_method?(str); end
 
   # grab the nth (`super_level`) super of `obj
@@ -1954,7 +1928,7 @@ class Pry::CodeObject
   # @param super_level [Fixnum] How far up the super chain to ascend.
   # @raise [Pry::CommandError]
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:188
+  # source://pry-0.14.1/lib/pry/code_object.rb:188
   def lookup_super(obj, super_level); end
 
   # We use this method to decide whether code is safe to eval. Method's are
@@ -1965,28 +1939,28 @@ class Pry::CodeObject
   # @param str [String] The string to lookup
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:173
+  # source://pry-0.14.1/lib/pry/code_object.rb:173
   def safe_to_evaluate?(str); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:152
+  # source://pry-0.14.1/lib/pry/code_object.rb:152
   def sourcable_object?(obj); end
 
-  # source://pry-0.13.1/lib/pry/code_object.rb:181
+  # source://pry-0.14.1/lib/pry/code_object.rb:181
   def target_self; end
 
   class << self
-    # source://pry-0.13.1/lib/pry/code_object.rb:69
+    # source://pry-0.14.1/lib/pry/code_object.rb:69
     def lookup(str, pry_instance, options = T.unsafe(nil)); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/code_object.rb:23
+# source://pry-0.14.1/lib/pry/code_object.rb:23
 module Pry::CodeObject::Helpers
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:30
+  # source://pry-0.14.1/lib/pry/code_object.rb:30
   def c_method?; end
 
   # @note If a module defined by C was extended with a lot of methods written
@@ -1994,57 +1968,57 @@ module Pry::CodeObject::Helpers
   # @return [Boolean] `true` if this module was defined by means of the C API,
   #   `false` if it's a Ruby module.
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:46
+  # source://pry-0.14.1/lib/pry/code_object.rb:46
   def c_module?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:38
+  # source://pry-0.14.1/lib/pry/code_object.rb:38
   def command?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:34
+  # source://pry-0.14.1/lib/pry/code_object.rb:34
   def module_with_yard_docs?; end
 
   # we need this helper as some Pry::Method objects can wrap Procs
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/code_object.rb:26
+  # source://pry-0.14.1/lib/pry/code_object.rb:26
   def real_method_object?; end
 end
 
 # PP subclass for streaming inspect output in color.
 #
-# source://pry-0.13.1/lib/pry/color_printer.rb:8
+# source://pry-0.14.1/lib/pry/color_printer.rb:8
 class Pry::ColorPrinter < ::PP
-  # source://pry-0.13.1/lib/pry/color_printer.rb:25
+  # source://pry-0.14.1/lib/pry/color_printer.rb:25
   def pp(object); end
 
-  # source://pry-0.13.1/lib/pry/color_printer.rb:37
+  # source://pry-0.14.1/lib/pry/color_printer.rb:37
   def text(str, max_width = T.unsafe(nil)); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/color_printer.rb:49
+  # source://pry-0.14.1/lib/pry/color_printer.rb:49
   def highlight_object_literal(object_literal); end
 
-  # source://pry-0.13.1/lib/pry/color_printer.rb:55
+  # source://pry-0.14.1/lib/pry/color_printer.rb:55
   def inspect_object(object); end
 
   class << self
-    # source://pry-0.13.1/lib/pry/color_printer.rb:11
+    # source://pry-0.14.1/lib/pry/color_printer.rb:11
     def default(_output, value, pry_instance); end
 
-    # source://pry-0.13.1/lib/pry/color_printer.rb:18
+    # source://pry-0.14.1/lib/pry/color_printer.rb:18
     def pp(obj, output = T.unsafe(nil), max_width = T.unsafe(nil)); end
   end
 end
 
 # N.B. using a regular expresion here so that "raise-up 'foo'" does the right thing.
 #
-# source://pry-0.13.1/lib/pry/command.rb:11
+# source://pry-0.14.1/lib/pry/command.rb:11
 class Pry::Command
   include ::Pry::Helpers::BaseHelpers
   include ::Pry::Helpers::OptionsHelpers
@@ -2058,50 +2032,50 @@ class Pry::Command
   # @param context [Hash] The runtime context to use with this command.
   # @return [Command] a new instance of Command
   #
-  # source://pry-0.13.1/lib/pry/command.rb:230
+  # source://pry-0.14.1/lib/pry/command.rb:230
   def initialize(context = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:292
+  # source://pry-0.14.1/lib/pry/command.rb:292
   def _pry_; end
 
   # Sets the attribute pry_instance
   #
   # @param value the value to set the attribute pry_instance to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:217
+  # source://pry-0.14.1/lib/pry/command.rb:217
   def _pry_=(_arg0); end
 
   # Returns the value of attribute arg_string.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:213
+  # source://pry-0.14.1/lib/pry/command.rb:213
   def arg_string; end
 
   # Sets the attribute arg_string
   #
   # @param value the value to set the attribute arg_string to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:213
+  # source://pry-0.14.1/lib/pry/command.rb:213
   def arg_string=(_arg0); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:253
+  # source://pry-0.14.1/lib/pry/command.rb:253
   def block; end
 
   # Returns the value of attribute captures.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:211
+  # source://pry-0.14.1/lib/pry/command.rb:211
   def captures; end
 
   # Sets the attribute captures
   #
   # @param value the value to set the attribute captures to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:211
+  # source://pry-0.14.1/lib/pry/command.rb:211
   def captures=(_arg0); end
 
   # Display a warning if a command collides with a local/method in
   # the current scope.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:329
+  # source://pry-0.14.1/lib/pry/command.rb:329
   def check_for_command_collision(command_match, arg_string); end
 
   # The block we pass *into* a command so long as `:takes_block` is
@@ -2112,7 +2086,7 @@ class Pry::Command
   #   puts "block content"
   #   end
   #
-  # source://pry-0.13.1/lib/pry/command.rb:226
+  # source://pry-0.14.1/lib/pry/command.rb:226
   def command_block; end
 
   # The block we pass *into* a command so long as `:takes_block` is
@@ -2123,28 +2097,28 @@ class Pry::Command
   #   puts "block content"
   #   end
   #
-  # source://pry-0.13.1/lib/pry/command.rb:226
+  # source://pry-0.14.1/lib/pry/command.rb:226
   def command_block=(_arg0); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:261
+  # source://pry-0.14.1/lib/pry/command.rb:261
   def command_name; end
 
-  # source://pry-0.13.1/lib/pry/command.rb:257
+  # source://pry-0.14.1/lib/pry/command.rb:257
   def command_options; end
 
   # Returns the value of attribute command_set.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:215
+  # source://pry-0.14.1/lib/pry/command.rb:215
   def command_set; end
 
   # Sets the attribute command_set
   #
   # @param value the value to set the attribute command_set to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:215
+  # source://pry-0.14.1/lib/pry/command.rb:215
   def command_set=(_arg0); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:284
+  # source://pry-0.14.1/lib/pry/command.rb:284
   def commands; end
 
   # Generate completions for this command
@@ -2152,46 +2126,46 @@ class Pry::Command
   # @param _search [String] The line typed so far
   # @return [Array<String>] Completion words
   #
-  # source://pry-0.13.1/lib/pry/command.rb:411
+  # source://pry-0.14.1/lib/pry/command.rb:411
   def complete(_search); end
 
   # Returns the value of attribute context.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:214
+  # source://pry-0.14.1/lib/pry/command.rb:214
   def context; end
 
   # Sets the attribute context
   #
   # @param value the value to set the attribute context to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:214
+  # source://pry-0.14.1/lib/pry/command.rb:214
   def context=(_arg0); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:249
+  # source://pry-0.14.1/lib/pry/command.rb:249
   def description; end
 
   # Returns the value of attribute eval_string.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:212
+  # source://pry-0.14.1/lib/pry/command.rb:212
   def eval_string; end
 
   # Sets the attribute eval_string
   #
   # @param value the value to set the attribute eval_string to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:212
+  # source://pry-0.14.1/lib/pry/command.rb:212
   def eval_string=(_arg0); end
 
   # Returns the value of attribute hooks.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:216
+  # source://pry-0.14.1/lib/pry/command.rb:216
   def hooks; end
 
   # Sets the attribute hooks
   #
   # @param value the value to set the attribute hooks to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:216
+  # source://pry-0.14.1/lib/pry/command.rb:216
   def hooks=(_arg0); end
 
   # Revaluate the string (str) and perform interpolation.
@@ -2200,27 +2174,27 @@ class Pry::Command
   # @return [String] The reevaluated string with interpolations
   #   applied (if any).
   #
-  # source://pry-0.13.1/lib/pry/command.rb:318
+  # source://pry-0.14.1/lib/pry/command.rb:318
   def interpolate_string(str); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:245
+  # source://pry-0.14.1/lib/pry/command.rb:245
   def match; end
 
   # Make those properties accessible to instances
   #
-  # source://pry-0.13.1/lib/pry/command.rb:241
+  # source://pry-0.14.1/lib/pry/command.rb:241
   def name; end
 
   # Properties of one execution of a command (passed by {Pry#run_command} as a hash of
   # context and expanded in `#initialize`
   #
-  # source://pry-0.13.1/lib/pry/command.rb:209
+  # source://pry-0.14.1/lib/pry/command.rb:209
   def output; end
 
   # Properties of one execution of a command (passed by {Pry#run_command} as a hash of
   # context and expanded in `#initialize`
   #
-  # source://pry-0.13.1/lib/pry/command.rb:209
+  # source://pry-0.14.1/lib/pry/command.rb:209
   def output=(_arg0); end
 
   # Process a line that Command.matches? this command.
@@ -2228,19 +2202,19 @@ class Pry::Command
   # @param line [String] The line to process
   # @return [Object, Command::VOID_VALUE]
   #
-  # source://pry-0.13.1/lib/pry/command.rb:394
+  # source://pry-0.14.1/lib/pry/command.rb:394
   def process_line(line); end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:217
+  # source://pry-0.14.1/lib/pry/command.rb:217
   def pry_instance; end
 
   # Sets the attribute pry_instance
   #
   # @param value the value to set the attribute pry_instance to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:217
+  # source://pry-0.14.1/lib/pry/command.rb:217
   def pry_instance=(_arg0); end
 
   # Run a command from another command.
@@ -2254,10 +2228,10 @@ class Pry::Command
   # @param command_string [String] The string that invokes the command
   # @param args [Array] Further arguments to pass to the command
   #
-  # source://pry-0.13.1/lib/pry/command.rb:278
+  # source://pry-0.14.1/lib/pry/command.rb:278
   def run(command_string, *args); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:265
+  # source://pry-0.14.1/lib/pry/command.rb:265
   def source; end
 
   # @example
@@ -2268,24 +2242,24 @@ class Pry::Command
   #   All state saved here is unique to the command, it does not
   #   need to be namespaced.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:309
+  # source://pry-0.14.1/lib/pry/command.rb:309
   def state; end
 
   # Returns the value of attribute target.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:210
+  # source://pry-0.14.1/lib/pry/command.rb:210
   def target; end
 
   # Sets the attribute target
   #
   # @param value the value to set the attribute target to.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:210
+  # source://pry-0.14.1/lib/pry/command.rb:210
   def target=(_arg0); end
 
   # @return [Object] The value of `self` inside the `target` binding.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:298
+  # source://pry-0.14.1/lib/pry/command.rb:298
   def target_self; end
 
   # Extract necessary information from a line that Command.matches? this
@@ -2303,18 +2277,18 @@ class Pry::Command
   # @param val [String] The line of input
   # @return [Array]
   #
-  # source://pry-0.13.1/lib/pry/command.rb:356
+  # source://pry-0.14.1/lib/pry/command.rb:356
   def tokenize(val); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:288
+  # source://pry-0.14.1/lib/pry/command.rb:288
   def void; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/command.rb:485
+  # source://pry-0.14.1/lib/pry/command.rb:485
   def after_hooks; end
 
-  # source://pry-0.13.1/lib/pry/command.rb:481
+  # source://pry-0.14.1/lib/pry/command.rb:481
   def before_hooks; end
 
   # Run the command with the given `args`.
@@ -2326,7 +2300,7 @@ class Pry::Command
   # @return [Object] The return value of the `#call` method, or
   #   {Command::VOID_VALUE}.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:425
+  # source://pry-0.14.1/lib/pry/command.rb:425
   def call_safely(*args); end
 
   # Run the `#call` method and all the registered hooks.
@@ -2334,10 +2308,10 @@ class Pry::Command
   # @param args [Array<String>] The arguments to `#call`
   # @return [Object] The return value from `#call`
   #
-  # source://pry-0.13.1/lib/pry/command.rb:492
+  # source://pry-0.14.1/lib/pry/command.rb:492
   def call_with_hooks(*args); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:476
+  # source://pry-0.14.1/lib/pry/command.rb:476
   def find_hooks(event); end
 
   # Normalize method arguments according to its arity.
@@ -2346,7 +2320,7 @@ class Pry::Command
   # @param args [Array]
   # @return [Array] a (possibly shorter) array of the arguments to pass
   #
-  # source://pry-0.13.1/lib/pry/command.rb:509
+  # source://pry-0.14.1/lib/pry/command.rb:509
   def normalize_method_args(method, args); end
 
   # Pass a block argument to a command.
@@ -2358,68 +2332,68 @@ class Pry::Command
   #   Note that if we find the '| do' or '| {' we delete this and the
   #   elements following it from `arg_string`.
   #
-  # source://pry-0.13.1/lib/pry/command.rb:451
+  # source://pry-0.14.1/lib/pry/command.rb:451
   def pass_block(arg_string); end
 
-  # source://pry-0.13.1/lib/pry/command.rb:436
+  # source://pry-0.14.1/lib/pry/command.rb:436
   def use_unpatched_symbol; end
 
   class << self
     # Define or get the command's banner
     #
-    # source://pry-0.13.1/lib/pry/command.rb:61
+    # source://pry-0.14.1/lib/pry/command.rb:61
     def banner(arg = T.unsafe(nil)); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:66
+    # source://pry-0.14.1/lib/pry/command.rb:66
     def block; end
 
     # Sets the attribute block
     #
     # @param value the value to set the attribute block to.
     #
-    # source://pry-0.13.1/lib/pry/command.rb:30
+    # source://pry-0.14.1/lib/pry/command.rb:30
     def block=(_arg0); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:109
+    # source://pry-0.14.1/lib/pry/command.rb:109
     def command_name; end
 
     # Define or get the command's options
     #
-    # source://pry-0.13.1/lib/pry/command.rb:51
+    # source://pry-0.14.1/lib/pry/command.rb:51
     def command_options(arg = T.unsafe(nil)); end
 
     # Sets the attribute command_options
     #
     # @param value the value to set the attribute command_options to.
     #
-    # source://pry-0.13.1/lib/pry/command.rb:32
+    # source://pry-0.14.1/lib/pry/command.rb:32
     def command_options=(_arg0); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:165
+    # source://pry-0.14.1/lib/pry/command.rb:165
     def command_regex; end
 
-    # source://pry-0.13.1/lib/pry/command.rb:172
+    # source://pry-0.14.1/lib/pry/command.rb:172
     def convert_to_regex(obj); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:89
+    # source://pry-0.14.1/lib/pry/command.rb:89
     def default_options(match); end
 
     # Define or get the command's description
     #
-    # source://pry-0.13.1/lib/pry/command.rb:45
+    # source://pry-0.14.1/lib/pry/command.rb:45
     def description(arg = T.unsafe(nil)); end
 
     # Sets the attribute description
     #
     # @param value the value to set the attribute description to.
     #
-    # source://pry-0.13.1/lib/pry/command.rb:31
+    # source://pry-0.14.1/lib/pry/command.rb:31
     def description=(_arg0); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:75
+    # source://pry-0.14.1/lib/pry/command.rb:75
     def doc; end
 
-    # source://pry-0.13.1/lib/pry/command.rb:79
+    # source://pry-0.14.1/lib/pry/command.rb:79
     def file; end
 
     # The group in which the command should be displayed in "help" output.
@@ -2427,23 +2401,23 @@ class Pry::Command
     # manually overridden if necessary.
     # Group should not be changed once it is initialized.
     #
-    # source://pry-0.13.1/lib/pry/command.rb:185
+    # source://pry-0.14.1/lib/pry/command.rb:185
     def group(name = T.unsafe(nil)); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:105
+    # source://pry-0.14.1/lib/pry/command.rb:105
     def inspect; end
 
-    # source://pry-0.13.1/lib/pry/command.rb:84
+    # source://pry-0.14.1/lib/pry/command.rb:84
     def line; end
 
-    # source://pry-0.13.1/lib/pry/command.rb:35
+    # source://pry-0.14.1/lib/pry/command.rb:35
     def match(arg = T.unsafe(nil)); end
 
     # Sets the attribute match
     #
     # @param value the value to set the attribute match to.
     #
-    # source://pry-0.13.1/lib/pry/command.rb:33
+    # source://pry-0.14.1/lib/pry/command.rb:33
     def match=(_arg0); end
 
     # How well does this command match the given line?
@@ -2462,7 +2436,7 @@ class Pry::Command
     # @param val [String] A line input at the REPL
     # @return [Fixnum]
     #
-    # source://pry-0.13.1/lib/pry/command.rb:153
+    # source://pry-0.14.1/lib/pry/command.rb:153
     def match_score(val); end
 
     # Should this command be called for the given line?
@@ -2470,35 +2444,35 @@ class Pry::Command
     # @param val [String] A line input at the REPL
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/command.rb:133
+    # source://pry-0.14.1/lib/pry/command.rb:133
     def matches?(val); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:101
+    # source://pry-0.14.1/lib/pry/command.rb:101
     def name; end
 
     # Define or get the command's options
     # backward compatibility
     #
-    # source://pry-0.13.1/lib/pry/command.rb:51
+    # source://pry-0.14.1/lib/pry/command.rb:51
     def options(arg = T.unsafe(nil)); end
 
     # Sets the attribute command_options
     #
     # @param value the value to set the attribute command_options to.
     #
-    # source://pry-0.13.1/lib/pry/command.rb:32
+    # source://pry-0.14.1/lib/pry/command.rb:32
     def options=(_arg0); end
 
-    # source://pry-0.13.1/lib/pry/command.rb:70
+    # source://pry-0.14.1/lib/pry/command.rb:70
     def source; end
 
-    # source://pry-0.13.1/lib/pry/command.rb:79
+    # source://pry-0.14.1/lib/pry/command.rb:79
     def source_file; end
 
-    # source://pry-0.13.1/lib/pry/command.rb:84
+    # source://pry-0.14.1/lib/pry/command.rb:84
     def source_line; end
 
-    # source://pry-0.13.1/lib/pry/command.rb:202
+    # source://pry-0.14.1/lib/pry/command.rb:202
     def state; end
 
     # Create a new command with the given properties.
@@ -2510,45 +2484,45 @@ class Pry::Command
     # @return [Class] (a subclass of {Pry::Command})
     # @yield optional, used for BlockCommands
     #
-    # source://pry-0.13.1/lib/pry/command.rb:120
+    # source://pry-0.14.1/lib/pry/command.rb:120
     def subclass(match, description, options, helpers, &block); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/commands/amend_line.rb:5
+# source://pry-0.14.1/lib/pry/commands/amend_line.rb:5
 class Pry::Command::AmendLine < ::Pry::ClassCommand
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:22
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:22
   def process; end
 
   private
 
   # @return [String] A new string with the amendments applied to it.
   #
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:33
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:33
   def amend_input; end
 
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:47
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:47
   def delete_from_array(array, range); end
 
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:51
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:51
   def insert_into_array(array, range); end
 
   # @return [Fixnum] The number of lines currently in `eval_string` (the
   #   input buffer)
   #
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:62
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:62
   def line_count; end
 
   # The lines (or line) that will be modified by the `amend-line`.
   #
   # @return [Range, Fixnum] The lines or line.
   #
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:90
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:90
   def line_range; end
 
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:56
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:56
   def replace_in_array(array, range); end
 
   # Returns the (one-indexed) start and end lines given by the user.
@@ -2557,7 +2531,7 @@ class Pry::Command::AmendLine < ::Pry::ClassCommand
   #
   # @return [Array<Fixnum>, nil]
   #
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:70
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:70
   def start_and_end_line_number; end
 
   # Takes two numbers that are 1-indexed, and returns a range (or
@@ -2568,38 +2542,38 @@ class Pry::Command::AmendLine < ::Pry::ClassCommand
   # @param end_line_number [Fixnum] One-indexed number.
   # @return [Range] The zero-indexed range.
   #
-  # source://pry-0.13.1/lib/pry/commands/amend_line.rb:83
+  # source://pry-0.14.1/lib/pry/commands/amend_line.rb:83
   def zero_indexed_range_from_one_indexed_numbers(start_line_number, end_line_number); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/bang.rb:5
+# source://pry-0.14.1/lib/pry/commands/bang.rb:5
 class Pry::Command::Bang < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/bang.rb:16
+  # source://pry-0.14.1/lib/pry/commands/bang.rb:16
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/bang_pry.rb:5
+# source://pry-0.14.1/lib/pry/commands/bang_pry.rb:5
 class Pry::Command::BangPry < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/bang_pry.rb:14
+  # source://pry-0.14.1/lib/pry/commands/bang_pry.rb:14
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/cat.rb:5
+# source://pry-0.14.1/lib/pry/commands/cat.rb:5
 class Pry::Command::Cat < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/cat.rb:53
+  # source://pry-0.14.1/lib/pry/commands/cat.rb:53
   def complete(search); end
 
-  # source://pry-0.13.1/lib/pry/commands/cat.rb:57
+  # source://pry-0.14.1/lib/pry/commands/cat.rb:57
   def load_path_completions; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat.rb:23
+  # source://pry-0.14.1/lib/pry/commands/cat.rb:23
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/cat.rb:38
+  # source://pry-0.14.1/lib/pry/commands/cat.rb:38
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/cat/abstract_formatter.rb:6
+# source://pry-0.14.1/lib/pry/commands/cat/abstract_formatter.rb:6
 class Pry::Command::Cat::AbstractFormatter
   include ::Pry::Helpers::OptionsHelpers
   include ::Pry::Helpers::CommandHelpers
@@ -2607,234 +2581,234 @@ class Pry::Command::Cat::AbstractFormatter
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/cat/abstract_formatter.rb:26
+  # source://pry-0.14.1/lib/pry/commands/cat/abstract_formatter.rb:26
   def between_lines; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/abstract_formatter.rb:18
+  # source://pry-0.14.1/lib/pry/commands/cat/abstract_formatter.rb:18
   def code_type; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/abstract_formatter.rb:12
+  # source://pry-0.14.1/lib/pry/commands/cat/abstract_formatter.rb:12
   def decorate(content); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/abstract_formatter.rb:22
+  # source://pry-0.14.1/lib/pry/commands/cat/abstract_formatter.rb:22
   def use_line_numbers?; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:6
+# source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:6
 class Pry::Command::Cat::ExceptionFormatter < ::Pry::Command::Cat::AbstractFormatter
   include ::Pry::Helpers::Text
 
   # @return [ExceptionFormatter] a new instance of ExceptionFormatter
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:12
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:12
   def initialize(exception, pry_instance, opts); end
 
   # Returns the value of attribute ex.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:7
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:7
   def ex; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:18
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:18
   def format; end
 
   # Returns the value of attribute opts.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:8
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:8
   def opts; end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:9
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:9
   def pry_instance; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:56
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:56
   def backtrace_file; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:37
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:37
   def backtrace_level; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:60
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:60
   def backtrace_line; end
 
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:64
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:64
   def check_for_errors; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:33
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:33
   def code_window_size; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:78
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:78
   def header; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:52
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:52
   def increment_backtrace_level; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/exception_formatter.rb:71
+  # source://pry-0.14.1/lib/pry/commands/cat/exception_formatter.rb:71
   def start_and_end_line_for_code_window; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:6
+# source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:6
 class Pry::Command::Cat::FileFormatter < ::Pry::Command::Cat::AbstractFormatter
   # @return [FileFormatter] a new instance of FileFormatter
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:11
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:11
   def initialize(file_with_embedded_line, pry_instance, opts); end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:27
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:27
   def file_and_line; end
 
   # Returns the value of attribute file_with_embedded_line.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:7
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:7
   def file_with_embedded_line; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:22
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:22
   def format; end
 
   # Returns the value of attribute opts.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:8
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:8
   def opts; end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:9
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:9
   def pry_instance; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:55
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:55
   def code_type; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:43
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:43
   def code_window_size; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:47
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:47
   def decorate(content); end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:59
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:59
   def detect_code_type_from_file(file_name); end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:35
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:35
   def file_name; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/file_formatter.rb:39
+  # source://pry-0.14.1/lib/pry/commands/cat/file_formatter.rb:39
   def line_number; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:6
+# source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:6
 class Pry::Command::Cat::InputExpressionFormatter < ::Pry::Command::Cat::AbstractFormatter
   # @return [InputExpressionFormatter] a new instance of InputExpressionFormatter
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:10
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:10
   def initialize(input_expressions, opts); end
 
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:15
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:15
   def format; end
 
   # Returns the value of attribute input_expressions.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:7
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:7
   def input_expressions; end
 
   # Sets the attribute input_expressions
   #
   # @param value the value to set the attribute input_expressions to.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:7
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:7
   def input_expressions=(_arg0); end
 
   # Returns the value of attribute opts.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:8
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:8
   def opts; end
 
   # Sets the attribute opts
   #
   # @param value the value to set the attribute opts to.
   #
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:8
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:8
   def opts=(_arg0); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:42
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:42
   def normalized_expression_range; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:37
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:37
   def numbered_input_items; end
 
-  # source://pry-0.13.1/lib/pry/commands/cat/input_expression_formatter.rb:33
+  # source://pry-0.14.1/lib/pry/commands/cat/input_expression_formatter.rb:33
   def selected_input_items; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/cd.rb:5
+# source://pry-0.14.1/lib/pry/commands/cd.rb:5
 class Pry::Command::Cd < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/cd.rb:25
+  # source://pry-0.14.1/lib/pry/commands/cd.rb:25
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/change_inspector.rb:5
+# source://pry-0.14.1/lib/pry/commands/change_inspector.rb:5
 class Pry::Command::ChangeInspector < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/change_inspector.rb:17
+  # source://pry-0.14.1/lib/pry/commands/change_inspector.rb:17
   def process(inspector); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/change_inspector.rb:28
+  # source://pry-0.14.1/lib/pry/commands/change_inspector.rb:28
   def inspector_map; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/change_prompt.rb:5
+# source://pry-0.14.1/lib/pry/commands/change_prompt.rb:5
 class Pry::Command::ChangePrompt < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/change_prompt.rb:16
+  # source://pry-0.14.1/lib/pry/commands/change_prompt.rb:16
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/change_prompt.rb:20
+  # source://pry-0.14.1/lib/pry/commands/change_prompt.rb:20
   def process(prompt); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/change_prompt.rb:38
+  # source://pry-0.14.1/lib/pry/commands/change_prompt.rb:38
   def change_prompt(prompt); end
 
-  # source://pry-0.13.1/lib/pry/commands/change_prompt.rb:30
+  # source://pry-0.14.1/lib/pry/commands/change_prompt.rb:30
   def list_prompts; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/clear_screen.rb:5
+# source://pry-0.14.1/lib/pry/commands/clear_screen.rb:5
 class Pry::Command::ClearScreen < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/clear_screen.rb:10
+  # source://pry-0.14.1/lib/pry/commands/clear_screen.rb:10
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/code_collector.rb:5
+# source://pry-0.14.1/lib/pry/commands/code_collector.rb:5
 class Pry::Command::CodeCollector
   include ::Pry::Helpers::OptionsHelpers
   include ::Pry::Helpers::CommandHelpers
 
   # @return [CodeCollector] a new instance of CodeCollector
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:23
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:23
   def initialize(args, opts, pry_instance); end
 
   # Returns the value of attribute args.
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:8
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:8
   def args; end
 
   # The code object
   #
   # @return [Pry::WrappedModule, Pry::Method, Pry::Command]
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:86
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:86
   def code_object; end
 
   # The content (i.e code/docs) for the selected object.
@@ -2845,32 +2819,32 @@ class Pry::Command::CodeCollector
   #
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:60
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:60
   def content; end
 
   # The name of the explicitly given file (if any).
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:13
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:13
   def file; end
 
   # The name of the explicitly given file (if any).
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:13
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:13
   def file=(_arg0); end
 
   # The line range passed to `--lines`, converted to a 0-indexed range.
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:123
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:123
   def line_range; end
 
   # Name of the object argument
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:128
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:128
   def obj_name; end
 
   # Returns the value of attribute opts.
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:9
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:9
   def opts; end
 
   # The selected `pry_instance.input_ring` as a string, as specified by
@@ -2878,12 +2852,12 @@ class Pry::Command::CodeCollector
   #
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:116
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:116
   def pry_input_content; end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:10
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:10
   def pry_instance; end
 
   # The selected `pry_instance.output_ring` as a string, as specified by
@@ -2891,7 +2865,7 @@ class Pry::Command::CodeCollector
   #
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:104
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:104
   def pry_output_content; end
 
   # Given a string and a range, return the `range` lines of that
@@ -2901,269 +2875,269 @@ class Pry::Command::CodeCollector
   # @param range [Range, Fixnum]
   # @return [String] The string restricted to the given range
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:96
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:96
   def restrict_to_lines(content, range); end
 
   private
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:134
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:134
   def bad_option_combination?; end
 
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:153
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:153
   def code_object_doc; end
 
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:157
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:157
   def code_object_source_or_file; end
 
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:175
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:175
   def convert_to_range(range); end
 
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:171
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:171
   def could_not_locate(name); end
 
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:161
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:161
   def file_content; end
 
-  # source://pry-0.13.1/lib/pry/commands/code_collector.rb:139
+  # source://pry-0.14.1/lib/pry/commands/code_collector.rb:139
   def pry_array_content_as_string(array, ranges); end
 
   class << self
     # Add the `--lines`, `-o`, `-i`, `-s`, `-d` options.
     #
-    # source://pry-0.13.1/lib/pry/commands/code_collector.rb:30
+    # source://pry-0.14.1/lib/pry/commands/code_collector.rb:30
     def inject_options(opt); end
 
     # Returns the value of attribute input_expression_ranges.
     #
-    # source://pry-0.13.1/lib/pry/commands/code_collector.rb:16
+    # source://pry-0.14.1/lib/pry/commands/code_collector.rb:16
     def input_expression_ranges; end
 
     # Sets the attribute input_expression_ranges
     #
     # @param value the value to set the attribute input_expression_ranges to.
     #
-    # source://pry-0.13.1/lib/pry/commands/code_collector.rb:16
+    # source://pry-0.14.1/lib/pry/commands/code_collector.rb:16
     def input_expression_ranges=(_arg0); end
 
     # Returns the value of attribute output_result_ranges.
     #
-    # source://pry-0.13.1/lib/pry/commands/code_collector.rb:17
+    # source://pry-0.14.1/lib/pry/commands/code_collector.rb:17
     def output_result_ranges; end
 
     # Sets the attribute output_result_ranges
     #
     # @param value the value to set the attribute output_result_ranges to.
     #
-    # source://pry-0.13.1/lib/pry/commands/code_collector.rb:17
+    # source://pry-0.14.1/lib/pry/commands/code_collector.rb:17
     def output_result_ranges=(_arg0); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/commands/disable_pry.rb:5
+# source://pry-0.14.1/lib/pry/commands/disable_pry.rb:5
 class Pry::Command::DisablePry < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/disable_pry.rb:23
+  # source://pry-0.14.1/lib/pry/commands/disable_pry.rb:23
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/edit.rb:5
+# source://pry-0.14.1/lib/pry/commands/edit.rb:5
 class Pry::Command::Edit < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:89
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:89
   def apply_runtime_patch; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:172
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:172
   def bad_option_combination?; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:152
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:152
   def code_object; end
 
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:105
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:105
   def ensure_file_name_is_valid(file_name); end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:119
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:119
   def file_and_line; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:115
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:115
   def file_and_line_for_current_exception; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:78
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:78
   def file_based_exception?; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:135
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:135
   def file_edit; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:148
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:148
   def filename_argument; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:203
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:203
   def initial_temp_file_content; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:180
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:180
   def input_expression; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:195
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:195
   def never_reload?; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:25
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:25
   def options(opt); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:168
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:168
   def patch_exception?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:163
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:163
   def previously_patched?(code_object); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:215
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:215
   def probably_a_file?(str); end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:46
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:46
   def process; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:158
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:158
   def pry_method?(code_object); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:199
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:199
   def reload?(file_name = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:191
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:191
   def reloadable?; end
 
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:69
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:69
   def repl_edit; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:64
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:64
   def repl_edit?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/edit.rb:82
+  # source://pry-0.14.1/lib/pry/commands/edit.rb:82
   def runtime_patch?; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:6
+# source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:6
 class Pry::Command::Edit::ExceptionPatcher
   # @return [ExceptionPatcher] a new instance of ExceptionPatcher
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:11
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:11
   def initialize(pry_instance, state, exception_file_and_line); end
 
   # Returns the value of attribute file_and_line.
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:9
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:9
   def file_and_line; end
 
   # Sets the attribute file_and_line
   #
   # @param value the value to set the attribute file_and_line to.
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:9
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:9
   def file_and_line=(_arg0); end
 
   # perform the patch
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:18
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:18
   def perform_patch; end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:7
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:7
   def pry_instance; end
 
   # Sets the attribute pry_instance
   #
   # @param value the value to set the attribute pry_instance to.
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:7
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:7
   def pry_instance=(_arg0); end
 
   # Returns the value of attribute state.
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:8
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:8
   def state; end
 
   # Sets the attribute state
   #
   # @param value the value to set the attribute state to.
   #
-  # source://pry-0.13.1/lib/pry/commands/edit/exception_patcher.rb:8
+  # source://pry-0.14.1/lib/pry/commands/edit/exception_patcher.rb:8
   def state=(_arg0); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/edit/file_and_line_locator.rb:6
+# source://pry-0.14.1/lib/pry/commands/edit/file_and_line_locator.rb:6
 module Pry::Command::Edit::FileAndLineLocator
   class << self
-    # source://pry-0.13.1/lib/pry/commands/edit/file_and_line_locator.rb:8
+    # source://pry-0.14.1/lib/pry/commands/edit/file_and_line_locator.rb:8
     def from_binding(target); end
 
-    # source://pry-0.13.1/lib/pry/commands/edit/file_and_line_locator.rb:16
+    # source://pry-0.14.1/lib/pry/commands/edit/file_and_line_locator.rb:16
     def from_code_object(code_object, filename_argument); end
 
     # @raise [CommandError]
     #
-    # source://pry-0.13.1/lib/pry/commands/edit/file_and_line_locator.rb:24
+    # source://pry-0.14.1/lib/pry/commands/edit/file_and_line_locator.rb:24
     def from_exception(exception, backtrace_level); end
 
     # when file and line are passed as a single arg, e.g my_file.rb:30
     #
-    # source://pry-0.13.1/lib/pry/commands/edit/file_and_line_locator.rb:38
+    # source://pry-0.14.1/lib/pry/commands/edit/file_and_line_locator.rb:38
     def from_filename_argument(filename_argument); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/commands/exit.rb:5
+# source://pry-0.14.1/lib/pry/commands/exit.rb:5
 class Pry::Command::Exit < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/exit.rb:25
+  # source://pry-0.14.1/lib/pry/commands/exit.rb:25
   def process; end
 
-  # source://pry-0.13.1/lib/pry/commands/exit.rb:34
+  # source://pry-0.14.1/lib/pry/commands/exit.rb:34
   def process_pop_and_return; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/exit_all.rb:5
+# source://pry-0.14.1/lib/pry/commands/exit_all.rb:5
 class Pry::Command::ExitAll < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/exit_all.rb:18
+  # source://pry-0.14.1/lib/pry/commands/exit_all.rb:18
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/exit_program.rb:5
+# source://pry-0.14.1/lib/pry/commands/exit_program.rb:5
 class Pry::Command::ExitProgram < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/exit_program.rb:18
+  # source://pry-0.14.1/lib/pry/commands/exit_program.rb:18
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/find_method.rb:5
+# source://pry-0.14.1/lib/pry/commands/find_method.rb:5
 class Pry::Command::FindMethod < ::Pry::ClassCommand
   extend ::Pry::Helpers::BaseHelpers
 
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:31
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:31
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:36
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:36
   def process; end
 
   private
@@ -3171,7 +3145,7 @@ class Pry::Command::FindMethod < ::Pry::ClassCommand
   # Return the matched lines of method source if `-c` is given or ""
   # if `-c` was not given
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:100
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:100
   def additional_info(header, method); end
 
   # Search for all methods who's implementation matches the given regex
@@ -3180,10 +3154,10 @@ class Pry::Command::FindMethod < ::Pry::ClassCommand
   # @param namespace [Module] The namespace to search
   # @return [Array<Method>]
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:186
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:186
   def content_search(namespace); end
 
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:108
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:108
   def matched_method_lines(header, method); end
 
   # Search for all methods with a name that matches the given regex
@@ -3192,24 +3166,24 @@ class Pry::Command::FindMethod < ::Pry::ClassCommand
   # @param namespace [Module] The namespace to search
   # @return [Array<Method>]
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:174
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:174
   def name_search(namespace); end
 
   # @return [Regexp] The pattern to search for.
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:48
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:48
   def pattern; end
 
   # pretty-print a list of matching methods.
   #
   # @param matches [Array<Method>]
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:80
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:80
   def print_matches(matches); end
 
   # Print matched methods for a class
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:90
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:90
   def print_matches_for_class(klass, grouped); end
 
   # Run the given block against every constant in the provided namespace.
@@ -3218,7 +3192,7 @@ class Pry::Command::FindMethod < ::Pry::ClassCommand
   # @param done [Hash<Module,Boolean>] The namespaces we've already visited (private)
   # @yieldparam klass Each class/module in the namespace.
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:120
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:120
   def recurse_namespace(klass, done = T.unsafe(nil), &block); end
 
   # Gather all the methods in a namespace that pass the given block.
@@ -3228,7 +3202,7 @@ class Pry::Command::FindMethod < ::Pry::ClassCommand
   # @yieldparam method [Method] The method to test
   # @yieldreturn [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:150
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:150
   def search_all_methods(namespace); end
 
   # The class to search for methods.
@@ -3236,35 +3210,35 @@ class Pry::Command::FindMethod < ::Pry::ClassCommand
   # instance, return its class. If no search object is given
   # search `target_self`.
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:67
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:67
   def search_class; end
 
   # Output the result of the search.
   #
   # @param matches [Array]
   #
-  # source://pry-0.13.1/lib/pry/commands/find_method.rb:55
+  # source://pry-0.14.1/lib/pry/commands/find_method.rb:55
   def show_search_results(matches); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/fix_indent.rb:5
+# source://pry-0.14.1/lib/pry/commands/fix_indent.rb:5
 class Pry::Command::FixIndent < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/fix_indent.rb:15
+  # source://pry-0.14.1/lib/pry/commands/fix_indent.rb:15
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/help.rb:5
+# source://pry-0.14.1/lib/pry/commands/help.rb:5
 class Pry::Command::Help < ::Pry::ClassCommand
   # Get a hash of available commands grouped by the "group" name.
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:29
+  # source://pry-0.14.1/lib/pry/commands/help.rb:29
   def command_groups; end
 
   # Display help for an individual command.
   #
   # @param command [Pry::Command]
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:125
+  # source://pry-0.14.1/lib/pry/commands/help.rb:125
   def display_command(command); end
 
   # Display help for a searched item, filtered by group
@@ -3272,7 +3246,7 @@ class Pry::Command::Help < ::Pry::ClassCommand
   # @param search [String] The string to search for.
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:111
+  # source://pry-0.14.1/lib/pry/commands/help.rb:111
   def display_filtered_commands(search); end
 
   # Display help for a searched item, filtered first by group
@@ -3280,24 +3254,24 @@ class Pry::Command::Help < ::Pry::ClassCommand
   #
   # @param search [String] The string to search for.
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:98
+  # source://pry-0.14.1/lib/pry/commands/help.rb:98
   def display_filtered_search_results(search); end
 
   # Display the index view, with headings and short descriptions per command.
   #
   # @param groups [Hash<String, Array<Commands>>]
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:44
+  # source://pry-0.14.1/lib/pry/commands/help.rb:44
   def display_index(groups); end
 
   # Display help for an individual command or group.
   #
   # @param search [String] The string to search for.
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:86
+  # source://pry-0.14.1/lib/pry/commands/help.rb:86
   def display_search(search); end
 
-  # source://pry-0.13.1/lib/pry/commands/help.rb:159
+  # source://pry-0.14.1/lib/pry/commands/help.rb:159
   def group_sort_key(group_name); end
 
   # Given a group name and an array of commands,
@@ -3307,7 +3281,7 @@ class Pry::Command::Help < ::Pry::ClassCommand
   # @param commands [Array<Pry::Command>]
   # @return [String] The generated help string.
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:62
+  # source://pry-0.14.1/lib/pry/commands/help.rb:62
   def help_text_for_commands(name, commands); end
 
   # Clean search terms to make it easier to search group names
@@ -3315,10 +3289,10 @@ class Pry::Command::Help < ::Pry::ClassCommand
   # @param key [String]
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:155
+  # source://pry-0.14.1/lib/pry/commands/help.rb:155
   def normalize(key); end
 
-  # source://pry-0.13.1/lib/pry/commands/help.rb:33
+  # source://pry-0.14.1/lib/pry/commands/help.rb:33
   def process; end
 
   # Find a subset of a hash that matches the user's search term.
@@ -3330,7 +3304,7 @@ class Pry::Command::Help < ::Pry::ClassCommand
   # @param search [String] the search term
   # @param hash [Hash] the hash to search
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:137
+  # source://pry-0.14.1/lib/pry/commands/help.rb:137
   def search_hash(search, hash); end
 
   # Sort an array of commands by their `listing` name.
@@ -3338,28 +3312,28 @@ class Pry::Command::Help < ::Pry::ClassCommand
   # @param commands [Array<Pry::Command>] The commands to sort
   # @return [Array<Pry::Command>] commands sorted by listing name.
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:79
+  # source://pry-0.14.1/lib/pry/commands/help.rb:79
   def sorted_commands(commands); end
 
   # @param groups [Hash]
   # @return [Array<String>] An array of sorted group names.
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:71
+  # source://pry-0.14.1/lib/pry/commands/help.rb:71
   def sorted_group_names(groups); end
 
   # We only want to show commands that have descriptions, so that the
   # easter eggs don't show up.
   #
-  # source://pry-0.13.1/lib/pry/commands/help.rb:20
+  # source://pry-0.14.1/lib/pry/commands/help.rb:20
   def visible_commands; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/hist.rb:5
+# source://pry-0.14.1/lib/pry/commands/hist.rb:5
 class Pry::Command::Hist < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:25
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:25
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:43
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:43
   def process; end
 
   private
@@ -3384,7 +3358,7 @@ class Pry::Command::Hist < ::Pry::ClassCommand
   # @return [Boolean] `false` if +replay_sequence+ does not contain another
   #   "hist --replay" call
   #
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:143
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:143
   def check_for_juxtaposed_replay(replay_sequence); end
 
   # Finds history depending on the given switch.
@@ -3393,249 +3367,249 @@ class Pry::Command::Hist < ::Pry::ClassCommand
   #   entries in history. Without the switch returns only the entries from the
   #   current Pry session.
   #
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:168
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:168
   def find_history; end
 
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:105
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:105
   def process_clear; end
 
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:78
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:78
   def process_display; end
 
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:110
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:110
   def process_replay; end
 
-  # source://pry-0.13.1/lib/pry/commands/hist.rb:86
+  # source://pry-0.14.1/lib/pry/commands/hist.rb:86
   def process_save; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/import_set.rb:5
+# source://pry-0.14.1/lib/pry/commands/import_set.rb:5
 class Pry::Command::ImportSet < ::Pry::ClassCommand
   # TODO: resolve unused parameter.
   #
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/import_set.rb:17
+  # source://pry-0.14.1/lib/pry/commands/import_set.rb:17
   def process(_command_set_name); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/jump_to.rb:5
+# source://pry-0.14.1/lib/pry/commands/jump_to.rb:5
 class Pry::Command::JumpTo < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/jump_to.rb:14
+  # source://pry-0.14.1/lib/pry/commands/jump_to.rb:14
   def process(break_level); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/list_inspectors.rb:5
+# source://pry-0.14.1/lib/pry/commands/list_inspectors.rb:5
 class Pry::Command::ListInspectors < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/list_inspectors.rb:16
+  # source://pry-0.14.1/lib/pry/commands/list_inspectors.rb:16
   def process; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/list_inspectors.rb:28
+  # source://pry-0.14.1/lib/pry/commands/list_inspectors.rb:28
   def inspector_map; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/list_inspectors.rb:36
+  # source://pry-0.14.1/lib/pry/commands/list_inspectors.rb:36
   def selected_inspector?(inspector); end
 
-  # source://pry-0.13.1/lib/pry/commands/list_inspectors.rb:32
+  # source://pry-0.14.1/lib/pry/commands/list_inspectors.rb:32
   def selected_text; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/jruby_hacks.rb:5
+# source://pry-0.14.1/lib/pry/commands/ls/jruby_hacks.rb:5
 class Pry::Command::Ls < ::Pry::ClassCommand
   # Exclude -q, -v and --grep because they,
   # don't specify what the user wants to see.
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls.rb:85
+  # source://pry-0.14.1/lib/pry/commands/ls.rb:85
   def no_user_opts?; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls.rb:52
+  # source://pry-0.14.1/lib/pry/commands/ls.rb:52
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls.rb:90
+  # source://pry-0.14.1/lib/pry/commands/ls.rb:90
   def process; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls.rb:106
+  # source://pry-0.14.1/lib/pry/commands/ls.rb:106
   def error_list; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls.rb:126
+  # source://pry-0.14.1/lib/pry/commands/ls.rb:126
   def raise_errors_if_arguments_are_weird; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/constants.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/constants.rb:6
 class Pry::Command::Ls::Constants < ::Pry::Command::Ls::Formatter
   include ::Pry::Command::Ls::Interrogatable
 
   # @return [Constants] a new instance of Constants
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/constants.rb:14
+  # source://pry-0.14.1/lib/pry/commands/ls/constants.rb:14
   def initialize(interrogatee, no_user_opts, opts, pry_instance); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/constants.rb:23
+  # source://pry-0.14.1/lib/pry/commands/ls/constants.rb:23
   def correct_opts?; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/constants.rb:27
+  # source://pry-0.14.1/lib/pry/commands/ls/constants.rb:27
   def output_self; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/constants.rb:39
+  # source://pry-0.14.1/lib/pry/commands/ls/constants.rb:39
   def format(mod, constants); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/constants.rb:35
+  # source://pry-0.14.1/lib/pry/commands/ls/constants.rb:35
   def show_deprecated_constants?; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/constants.rb:7
+# source://pry-0.14.1/lib/pry/commands/ls/constants.rb:7
 Pry::Command::Ls::Constants::DEPRECATED_CONSTANTS = T.let(T.unsafe(nil), Array)
 
-# source://pry-0.13.1/lib/pry/commands/ls.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls.rb:6
 Pry::Command::Ls::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
-# source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:6
 class Pry::Command::Ls::Formatter
   # @return [Formatter] a new instance of Formatter
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:10
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:10
   def initialize(pry_instance); end
 
   # Sets the attribute grep
   #
   # @param value the value to set the attribute grep to.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:7
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:7
   def grep=(_arg0); end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:8
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:8
   def pry_instance; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:16
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:16
   def write_out; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:24
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:24
   def color(type, str); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:41
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:41
   def correct_opts?; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:37
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:37
   def format_value(value); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:49
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:49
   def grep; end
 
   # Add a new section to the output.
   # Outputs nothing if the section would be empty.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:30
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:30
   def output_section(heading, body); end
 
   # @raise [NotImplementedError]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/formatter.rb:45
+  # source://pry-0.14.1/lib/pry/commands/ls/formatter.rb:45
   def output_self; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/globals.rb:7
+# source://pry-0.14.1/lib/pry/commands/ls/globals.rb:7
 class Pry::Command::Ls::Globals < ::Pry::Command::Ls::Formatter
   # @return [Globals] a new instance of Globals
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/globals.rb:24
+  # source://pry-0.14.1/lib/pry/commands/ls/globals.rb:24
   def initialize(opts, pry_instance); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/globals.rb:29
+  # source://pry-0.14.1/lib/pry/commands/ls/globals.rb:29
   def output_self; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/globals.rb:36
+  # source://pry-0.14.1/lib/pry/commands/ls/globals.rb:36
   def format(globals); end
 end
 
 # Taken from "puts global_variables.inspect".
 #
-# source://pry-0.13.1/lib/pry/commands/ls/globals.rb:8
+# source://pry-0.14.1/lib/pry/commands/ls/globals.rb:8
 Pry::Command::Ls::Globals::BUILTIN_GLOBALS = T.let(T.unsafe(nil), Array)
 
 # `$SAFE` and `$?` are thread-local, the exception stuff only works in a
 # rescue clause, everything else is basically a local variable with a `$`
 # in its name.
 #
-# source://pry-0.13.1/lib/pry/commands/ls/globals.rb:19
+# source://pry-0.14.1/lib/pry/commands/ls/globals.rb:19
 Pry::Command::Ls::Globals::PSEUDO_GLOBALS = T.let(T.unsafe(nil), Array)
 
-# source://pry-0.13.1/lib/pry/commands/ls/grep.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/grep.rb:6
 class Pry::Command::Ls::Grep
   # @return [Grep] a new instance of Grep
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/grep.rb:7
+  # source://pry-0.14.1/lib/pry/commands/ls/grep.rb:7
   def initialize(grep_regexp); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/grep.rb:11
+  # source://pry-0.14.1/lib/pry/commands/ls/grep.rb:11
   def regexp; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/instance_vars.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/instance_vars.rb:6
 class Pry::Command::Ls::InstanceVars < ::Pry::Command::Ls::Formatter
   include ::Pry::Command::Ls::Interrogatable
 
   # @return [InstanceVars] a new instance of InstanceVars
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/instance_vars.rb:9
+  # source://pry-0.14.1/lib/pry/commands/ls/instance_vars.rb:9
   def initialize(interrogatee, no_user_opts, opts, pry_instance); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/instance_vars.rb:16
+  # source://pry-0.14.1/lib/pry/commands/ls/instance_vars.rb:16
   def correct_opts?; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/instance_vars.rb:20
+  # source://pry-0.14.1/lib/pry/commands/ls/instance_vars.rb:20
   def output_self; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/instance_vars.rb:34
+  # source://pry-0.14.1/lib/pry/commands/ls/instance_vars.rb:34
   def format(type, vars); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/interrogatable.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/interrogatable.rb:6
 module Pry::Command::Ls::Interrogatable
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/interrogatable.rb:13
+  # source://pry-0.14.1/lib/pry/commands/ls/interrogatable.rb:13
   def interrogatee_mod; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/interrogatable.rb:9
+  # source://pry-0.14.1/lib/pry/commands/ls/interrogatable.rb:9
   def interrogating_a_module?; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/jruby_hacks.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/jruby_hacks.rb:6
 module Pry::Command::Ls::JRubyHacks
   private
 
   # When removing jruby aliases, we want to keep the alias that is
   # "least rubbish" according to this metric.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/jruby_hacks.rb:40
+  # source://pry-0.14.1/lib/pry/commands/ls/jruby_hacks.rb:40
   def rubbishness(name); end
 
   # JRuby creates lots of aliases for methods imported from java in an attempt
@@ -3651,96 +3625,96 @@ module Pry::Command::Ls::JRubyHacks
   # TODO: This is a little bit vague, better heuristics could be used.
   #       JRuby also has a lot of scala-specific logic, which we don't copy.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/jruby_hacks.rb:21
+  # source://pry-0.14.1/lib/pry/commands/ls/jruby_hacks.rb:21
   def trim_jruby_aliases(methods); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/local_names.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/local_names.rb:6
 class Pry::Command::Ls::LocalNames < ::Pry::Command::Ls::Formatter
   # @return [LocalNames] a new instance of LocalNames
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/local_names.rb:7
+  # source://pry-0.14.1/lib/pry/commands/ls/local_names.rb:7
   def initialize(no_user_opts, args, pry_instance); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/local_names.rb:14
+  # source://pry-0.14.1/lib/pry/commands/ls/local_names.rb:14
   def correct_opts?; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/local_names.rb:18
+  # source://pry-0.14.1/lib/pry/commands/ls/local_names.rb:18
   def output_self; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/local_names.rb:25
+  # source://pry-0.14.1/lib/pry/commands/ls/local_names.rb:25
   def format(locals); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/local_vars.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/local_vars.rb:6
 class Pry::Command::Ls::LocalVars < ::Pry::Command::Ls::Formatter
   # @return [LocalVars] a new instance of LocalVars
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/local_vars.rb:7
+  # source://pry-0.14.1/lib/pry/commands/ls/local_vars.rb:7
   def initialize(opts, pry_instance); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/local_vars.rb:13
+  # source://pry-0.14.1/lib/pry/commands/ls/local_vars.rb:13
   def output_self; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/local_vars.rb:34
+  # source://pry-0.14.1/lib/pry/commands/ls/local_vars.rb:34
   def colorized_assignment_style(lhs, rhs, desired_width = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/local_vars.rb:25
+  # source://pry-0.14.1/lib/pry/commands/ls/local_vars.rb:25
   def format(name_value_pairs); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:6
 class Pry::Command::Ls::LsEntity
   # @return [LsEntity] a new instance of LsEntity
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:9
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:9
   def initialize(opts); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:18
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:18
   def entities_table; end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:7
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:7
   def pry_instance; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:32
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:32
   def constants; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:56
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:56
   def entities; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:28
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:28
   def globals; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:24
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:24
   def grep(entity); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:44
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:44
   def instance_vars; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:48
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:48
   def local_names; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:52
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:52
   def local_vars; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:36
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:36
   def methods; end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/ls_entity.rb:40
+  # source://pry-0.14.1/lib/pry/commands/ls/ls_entity.rb:40
   def self_methods; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/methods.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/methods.rb:6
 class Pry::Command::Ls::Methods < ::Pry::Command::Ls::Formatter
   include ::Pry::Command::Ls::Interrogatable
   include ::Pry::Command::Ls::JRubyHacks
@@ -3748,10 +3722,10 @@ class Pry::Command::Ls::Methods < ::Pry::Command::Ls::Formatter
 
   # @return [Methods] a new instance of Methods
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/methods.rb:10
+  # source://pry-0.14.1/lib/pry/commands/ls/methods.rb:10
   def initialize(interrogatee, no_user_opts, opts, pry_instance); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/methods.rb:22
+  # source://pry-0.14.1/lib/pry/commands/ls/methods.rb:22
   def output_self; end
 
   private
@@ -3759,16 +3733,16 @@ class Pry::Command::Ls::Methods < ::Pry::Command::Ls::Formatter
   # Get a lambda that can be used with `take_while` to prevent over-eager
   # traversal of the Object's ancestry graph.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/methods.rb:41
+  # source://pry-0.14.1/lib/pry/commands/ls/methods.rb:41
   def below_ceiling; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/methods.rb:35
+  # source://pry-0.14.1/lib/pry/commands/ls/methods.rb:35
   def correct_opts?; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/methods_helper.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/methods_helper.rb:6
 module Pry::Command::Ls::MethodsHelper
   include ::Pry::Command::Ls::JRubyHacks
 
@@ -3776,17 +3750,17 @@ module Pry::Command::Ls::MethodsHelper
 
   # Get all the methods that we'll want to output.
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/methods_helper.rb:12
+  # source://pry-0.14.1/lib/pry/commands/ls/methods_helper.rb:12
   def all_methods(instance_methods = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/methods_helper.rb:34
+  # source://pry-0.14.1/lib/pry/commands/ls/methods_helper.rb:34
   def format(methods); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/methods_helper.rb:26
+  # source://pry-0.14.1/lib/pry/commands/ls/methods_helper.rb:26
   def resolution_order; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ls/self_methods.rb:6
+# source://pry-0.14.1/lib/pry/commands/ls/self_methods.rb:6
 class Pry::Command::Ls::SelfMethods < ::Pry::Command::Ls::Formatter
   include ::Pry::Command::Ls::Interrogatable
   include ::Pry::Command::Ls::JRubyHacks
@@ -3794,179 +3768,179 @@ class Pry::Command::Ls::SelfMethods < ::Pry::Command::Ls::Formatter
 
   # @return [SelfMethods] a new instance of SelfMethods
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/self_methods.rb:10
+  # source://pry-0.14.1/lib/pry/commands/ls/self_methods.rb:10
   def initialize(interrogatee, no_user_opts, opts, pry_instance); end
 
-  # source://pry-0.13.1/lib/pry/commands/ls/self_methods.rb:18
+  # source://pry-0.14.1/lib/pry/commands/ls/self_methods.rb:18
   def output_self; end
 
   private
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/ls/self_methods.rb:28
+  # source://pry-0.14.1/lib/pry/commands/ls/self_methods.rb:28
   def correct_opts?; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/nesting.rb:5
+# source://pry-0.14.1/lib/pry/commands/nesting.rb:5
 class Pry::Command::Nesting < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/nesting.rb:14
+  # source://pry-0.14.1/lib/pry/commands/nesting.rb:14
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/play.rb:5
+# source://pry-0.14.1/lib/pry/commands/play.rb:5
 class Pry::Command::Play < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/play.rb:74
+  # source://pry-0.14.1/lib/pry/commands/play.rb:74
   def code_object; end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:82
+  # source://pry-0.14.1/lib/pry/commands/play.rb:82
   def content; end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:60
+  # source://pry-0.14.1/lib/pry/commands/play.rb:60
   def content_after_options; end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:70
+  # source://pry-0.14.1/lib/pry/commands/play.rb:70
   def content_at_expression; end
 
   # The file to play from when no code object is specified.
   # e.g `play --lines 4..10`
   #
-  # source://pry-0.13.1/lib/pry/commands/play.rb:92
+  # source://pry-0.14.1/lib/pry/commands/play.rb:92
   def default_file; end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:102
+  # source://pry-0.14.1/lib/pry/commands/play.rb:102
   def file_content; end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:29
+  # source://pry-0.14.1/lib/pry/commands/play.rb:29
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:48
+  # source://pry-0.14.1/lib/pry/commands/play.rb:48
   def perform_play; end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:41
+  # source://pry-0.14.1/lib/pry/commands/play.rb:41
   def process; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/play.rb:78
+  # source://pry-0.14.1/lib/pry/commands/play.rb:78
   def should_use_default_file?; end
 
-  # source://pry-0.13.1/lib/pry/commands/play.rb:53
+  # source://pry-0.14.1/lib/pry/commands/play.rb:53
   def show_input; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/pry_backtrace.rb:5
+# source://pry-0.14.1/lib/pry/commands/pry_backtrace.rb:5
 class Pry::Command::PryBacktrace < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/pry_backtrace.rb:22
+  # source://pry-0.14.1/lib/pry/commands/pry_backtrace.rb:22
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/raise_up.rb:6
+# source://pry-0.14.1/lib/pry/commands/raise_up.rb:6
 class Pry::Command::RaiseUp < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/raise_up.rb:27
+  # source://pry-0.14.1/lib/pry/commands/raise_up.rb:27
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/reload_code.rb:5
+# source://pry-0.14.1/lib/pry/commands/reload_code.rb:5
 class Pry::Command::ReloadCode < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/reload_code.rb:20
+  # source://pry-0.14.1/lib/pry/commands/reload_code.rb:20
   def process; end
 
   private
 
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/reload_code.rb:58
+  # source://pry-0.14.1/lib/pry/commands/reload_code.rb:58
   def check_for_reloadability(code_object, identifier); end
 
-  # source://pry-0.13.1/lib/pry/commands/reload_code.rb:32
+  # source://pry-0.14.1/lib/pry/commands/reload_code.rb:32
   def current_file; end
 
-  # source://pry-0.13.1/lib/pry/commands/reload_code.rb:42
+  # source://pry-0.14.1/lib/pry/commands/reload_code.rb:42
   def reload_current_file; end
 
-  # source://pry-0.13.1/lib/pry/commands/reload_code.rb:51
+  # source://pry-0.14.1/lib/pry/commands/reload_code.rb:51
   def reload_object(identifier); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/reset.rb:5
+# source://pry-0.14.1/lib/pry/commands/reset.rb:5
 class Pry::Command::Reset < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/reset.rb:14
+  # source://pry-0.14.1/lib/pry/commands/reset.rb:14
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/ri.rb:7
+# source://pry-0.14.1/lib/pry/commands/ri.rb:7
 class Pry::Command::Ri < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/ri.rb:21
+  # source://pry-0.14.1/lib/pry/commands/ri.rb:21
   def process(spec); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/save_file.rb:5
+# source://pry-0.14.1/lib/pry/commands/save_file.rb:5
 class Pry::Command::SaveFile < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/save_file.rb:50
+  # source://pry-0.14.1/lib/pry/commands/save_file.rb:50
   def display_content; end
 
-  # source://pry-0.13.1/lib/pry/commands/save_file.rb:39
+  # source://pry-0.14.1/lib/pry/commands/save_file.rb:39
   def file_name; end
 
-  # source://pry-0.13.1/lib/pry/commands/save_file.rb:56
+  # source://pry-0.14.1/lib/pry/commands/save_file.rb:56
   def mode; end
 
-  # source://pry-0.13.1/lib/pry/commands/save_file.rb:21
+  # source://pry-0.14.1/lib/pry/commands/save_file.rb:21
   def options(opt); end
 
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/save_file.rb:28
+  # source://pry-0.14.1/lib/pry/commands/save_file.rb:28
   def process; end
 
-  # source://pry-0.13.1/lib/pry/commands/save_file.rb:43
+  # source://pry-0.14.1/lib/pry/commands/save_file.rb:43
   def save_file; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/shell_command.rb:5
+# source://pry-0.14.1/lib/pry/commands/shell_command.rb:5
 class Pry::Command::ShellCommand < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/shell_command.rb:21
+  # source://pry-0.14.1/lib/pry/commands/shell_command.rb:21
   def process(cmd); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/shell_command.rb:50
+  # source://pry-0.14.1/lib/pry/commands/shell_command.rb:50
   def cd_path_env; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/shell_command.rb:54
+  # source://pry-0.14.1/lib/pry/commands/shell_command.rb:54
   def cd_path_exists?; end
 
-  # source://pry-0.13.1/lib/pry/commands/shell_command.rb:36
+  # source://pry-0.14.1/lib/pry/commands/shell_command.rb:36
   def parse_destination(dest); end
 
-  # source://pry-0.13.1/lib/pry/commands/shell_command.rb:58
+  # source://pry-0.14.1/lib/pry/commands/shell_command.rb:58
   def path_from_cd_path(dest); end
 
-  # source://pry-0.13.1/lib/pry/commands/shell_command.rb:43
+  # source://pry-0.14.1/lib/pry/commands/shell_command.rb:43
   def process_cd(dest); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/shell_command.rb:68
+  # source://pry-0.14.1/lib/pry/commands/shell_command.rb:68
   def special_case_path?(dest); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/shell_mode.rb:5
+# source://pry-0.14.1/lib/pry/commands/shell_mode.rb:5
 class Pry::Command::ShellMode < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/shell_mode.rb:14
+  # source://pry-0.14.1/lib/pry/commands/shell_mode.rb:14
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/show_doc.rb:5
+# source://pry-0.14.1/lib/pry/commands/show_doc.rb:5
 class Pry::Command::ShowDoc < ::Pry::Command::ShowInfo
   include ::Pry::Helpers::DocumentationHelpers
 
   # The docs for code_object prepared for display.
   #
-  # source://pry-0.13.1/lib/pry/commands/show_doc.rb:35
+  # source://pry-0.14.1/lib/pry/commands/show_doc.rb:35
   def content_for(code_object); end
 
   # Return docs for the code_object, adjusting for whether the code_object
@@ -3975,21 +3949,21 @@ class Pry::Command::ShowDoc < ::Pry::Command::ShowInfo
   # have multiple docs, but methods can only be doc'd once so we
   # dont need to check them)
   #
-  # source://pry-0.13.1/lib/pry/commands/show_doc.rb:64
+  # source://pry-0.14.1/lib/pry/commands/show_doc.rb:64
   def docs_for(code_object); end
 
   # Which sections to include in the 'header', can toggle: :owner,
   # :signature and visibility.
   #
-  # source://pry-0.13.1/lib/pry/commands/show_doc.rb:76
+  # source://pry-0.14.1/lib/pry/commands/show_doc.rb:76
   def header_options; end
 
-  # source://pry-0.13.1/lib/pry/commands/show_doc.rb:24
+  # source://pry-0.14.1/lib/pry/commands/show_doc.rb:24
   def process; end
 
   # process the markup (if necessary) and apply colors
   #
-  # source://pry-0.13.1/lib/pry/commands/show_doc.rb:44
+  # source://pry-0.14.1/lib/pry/commands/show_doc.rb:44
   def render_doc_markup_for(code_object); end
 
   # figure out start line of docs by back-calculating based on
@@ -3997,20 +3971,20 @@ class Pry::Command::ShowDoc < ::Pry::Command::ShowInfo
   #
   # @return [Fixnum] start line of docs
   #
-  # source://pry-0.13.1/lib/pry/commands/show_doc.rb:83
+  # source://pry-0.14.1/lib/pry/commands/show_doc.rb:83
   def start_line_for(code_object); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/show_info.rb:5
+# source://pry-0.14.1/lib/pry/commands/show_info.rb:5
 class Pry::Command::ShowInfo < ::Pry::ClassCommand
   extend ::Pry::Helpers::BaseHelpers
 
   # @return [ShowInfo] a new instance of ShowInfo
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:10
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:10
   def initialize(*_arg0); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:127
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:127
   def code_object_header(code_object, line_num); end
 
   # This method checks whether the `code_object` is a WrappedModule, if it
@@ -4021,16 +3995,16 @@ class Pry::Command::ShowInfo < ::Pry::ClassCommand
   # @raise [CommandError]
   # @return [Pry::WrappedModule, Pry::Method, Pry::Command]
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:61
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:61
   def code_object_with_accessible_source(code_object); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:213
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:213
   def complete(input); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:77
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:77
   def content_and_header_for_code_object(code_object); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:81
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:81
   def content_and_headers_for_all_module_candidates(mod); end
 
   # takes into account possible yard docs, and returns yard_file / yard_line
@@ -4038,73 +4012,73 @@ class Pry::Command::ShowInfo < ::Pry::ClassCommand
   # has to infer by subtracting number of lines of comment from start line
   # of code_object
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:205
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:205
   def file_and_line_for(code_object); end
 
   # Generate a header (meta-data information) for all the code
   # object types: methods, modules, commands, procs...
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:106
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:106
   def header(code_object); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:173
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:173
   def header_options; end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:142
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:142
   def method_header(code_object, line_num); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:165
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:165
   def method_sections(code_object); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:151
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:151
   def module_header(code_object, line_num); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:100
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:100
   def no_definition_message; end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:185
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:185
   def obj_name; end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:16
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:16
   def options(opt); end
 
   # @raise [CommandError]
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:26
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:26
   def process; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:181
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:181
   def show_all_modules?(code_object); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:193
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:193
   def start_line_for(code_object); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:189
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:189
   def use_line_numbers?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/show_info.rb:73
+  # source://pry-0.14.1/lib/pry/commands/show_info.rb:73
   def valid_superclass?(code_object); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/show_input.rb:5
+# source://pry-0.14.1/lib/pry/commands/show_input.rb:5
 class Pry::Command::ShowInput < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/show_input.rb:15
+  # source://pry-0.14.1/lib/pry/commands/show_input.rb:15
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/show_source.rb:5
+# source://pry-0.14.1/lib/pry/commands/show_source.rb:5
 class Pry::Command::ShowSource < ::Pry::Command::ShowInfo
   include ::Pry::Helpers::DocumentationHelpers
 
   # The source for code_object prepared for display.
   #
-  # source://pry-0.13.1/lib/pry/commands/show_source.rb:48
+  # source://pry-0.14.1/lib/pry/commands/show_source.rb:48
   def content_for(code_object); end
 
   # Return docs for the code_object, adjusting for whether the code_object
@@ -4113,24 +4087,24 @@ class Pry::Command::ShowSource < ::Pry::Command::ShowInfo
   # have multiple docs, but methods can only be doc'd once so we
   # dont need to check them)
   #
-  # source://pry-0.13.1/lib/pry/commands/show_source.rb:86
+  # source://pry-0.14.1/lib/pry/commands/show_source.rb:86
   def docs_for(code_object); end
 
   # Which sections to include in the 'header', can toggle: :owner,
   # :signature and visibility.
   #
-  # source://pry-0.13.1/lib/pry/commands/show_source.rb:98
+  # source://pry-0.14.1/lib/pry/commands/show_source.rb:98
   def header_options; end
 
-  # source://pry-0.13.1/lib/pry/commands/show_source.rb:31
+  # source://pry-0.14.1/lib/pry/commands/show_source.rb:31
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/show_source.rb:38
+  # source://pry-0.14.1/lib/pry/commands/show_source.rb:38
   def process; end
 
   # process the markup (if necessary) and apply colors
   #
-  # source://pry-0.13.1/lib/pry/commands/show_source.rb:66
+  # source://pry-0.14.1/lib/pry/commands/show_source.rb:66
   def render_doc_markup_for(code_object); end
 
   # figure out start line of docs by back-calculating based on
@@ -4138,51 +4112,51 @@ class Pry::Command::ShowSource < ::Pry::Command::ShowInfo
   #
   # @return [Fixnum] start line of docs
   #
-  # source://pry-0.13.1/lib/pry/commands/show_source.rb:105
+  # source://pry-0.14.1/lib/pry/commands/show_source.rb:105
   def start_line_for(code_object); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/stat.rb:5
+# source://pry-0.14.1/lib/pry/commands/stat.rb:5
 class Pry::Command::Stat < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/stat.rb:19
+  # source://pry-0.14.1/lib/pry/commands/stat.rb:19
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/stat.rb:23
+  # source://pry-0.14.1/lib/pry/commands/stat.rb:23
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/switch_to.rb:5
+# source://pry-0.14.1/lib/pry/commands/switch_to.rb:5
 class Pry::Command::SwitchTo < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/switch_to.rb:14
+  # source://pry-0.14.1/lib/pry/commands/switch_to.rb:14
   def process(selection); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/toggle_color.rb:5
+# source://pry-0.14.1/lib/pry/commands/toggle_color.rb:5
 class Pry::Command::ToggleColor < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/toggle_color.rb:21
+  # source://pry-0.14.1/lib/pry/commands/toggle_color.rb:21
   def color_toggle; end
 
-  # source://pry-0.13.1/lib/pry/commands/toggle_color.rb:16
+  # source://pry-0.14.1/lib/pry/commands/toggle_color.rb:16
   def process; end
 end
 
 # represents a void return value for a command
 #
-# source://pry-0.13.1/lib/pry/command.rb:20
+# source://pry-0.14.1/lib/pry/command.rb:20
 Pry::Command::VOID_VALUE = T.let(T.unsafe(nil), Object)
 
-# source://pry-0.13.1/lib/pry/commands/pry_version.rb:5
+# source://pry-0.14.1/lib/pry/commands/pry_version.rb:5
 class Pry::Command::Version < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/pry_version.rb:14
+  # source://pry-0.14.1/lib/pry/commands/pry_version.rb:14
   def process; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/watch_expression.rb:5
+# source://pry-0.14.1/lib/pry/commands/watch_expression.rb:5
 class Pry::Command::WatchExpression < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:31
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:31
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:42
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:42
   def process; end
 
   private
@@ -4190,30 +4164,30 @@ class Pry::Command::WatchExpression < ::Pry::ClassCommand
   # TODO: fix arguments.
   # https://github.com/pry/pry/commit/b031df2f2f5850ee6e9018f33d35f3485a9b0423
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:93
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:93
   def add_expression(_arguments); end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:98
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:98
   def add_hook; end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:59
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:59
   def delete(index); end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:84
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:84
   def eval_and_print_changed(output); end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:55
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:55
   def expressions; end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression.rb:69
+  # source://pry-0.14.1/lib/pry/commands/watch_expression.rb:69
   def list; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:6
+# source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:6
 class Pry::Command::WatchExpression::Expression
   # @return [Expression] a new instance of Expression
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:9
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:9
   def initialize(pry_instance, target, source); end
 
   # Has the value of the expression changed?
@@ -4224,109 +4198,109 @@ class Pry::Command::WatchExpression::Expression
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:29
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:29
   def changed?; end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:15
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:15
   def eval!; end
 
   # Returns the value of attribute previous_value.
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:7
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:7
   def previous_value; end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:7
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:7
   def pry_instance; end
 
   # Returns the value of attribute source.
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:7
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:7
   def source; end
 
   # Returns the value of attribute target.
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:7
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:7
   def target; end
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:20
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:20
   def to_s; end
 
   # Returns the value of attribute value.
   #
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:7
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:7
   def value; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/watch_expression/expression.rb:35
+  # source://pry-0.14.1/lib/pry/commands/watch_expression/expression.rb:35
   def target_eval(target, source); end
 end
 
-# source://pry-0.13.1/lib/pry/commands/whereami.rb:7
+# source://pry-0.14.1/lib/pry/commands/whereami.rb:7
 class Pry::Command::Whereami < ::Pry::ClassCommand
   # @return [Whereami] a new instance of Whereami
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:8
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:8
   def initialize(*_arg0); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:83
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:83
   def bad_option_combination?; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:63
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:63
   def code; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:77
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:77
   def code?; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:88
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:88
   def location; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:55
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:55
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:92
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:92
   def process; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:44
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:44
   def setup; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:171
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:171
   def class_code; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:152
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:152
   def code_window; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:144
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:144
   def default_code; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:185
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:185
   def expand_path(filename); end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:132
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:132
   def handle_internal_binding; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:124
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:124
   def marker; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:156
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:156
   def method_code; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:116
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:116
   def nothing_to_do?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:140
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:140
   def small_method?; end
 
   # This either returns the `target_self`
@@ -4334,81 +4308,81 @@ class Pry::Command::Whereami < ::Pry::ClassCommand
   #
   # @return [Pry::WrappedModule]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:165
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:165
   def target_class; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:128
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:128
   def top_level?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:120
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:120
   def use_line_numbers?; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:180
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:180
   def valid_method?; end
 
-  # source://pry-0.13.1/lib/pry/commands/whereami.rb:192
+  # source://pry-0.14.1/lib/pry/commands/whereami.rb:192
   def window_size; end
 
   class << self
     # Returns the value of attribute method_size_cutoff.
     #
-    # source://pry-0.13.1/lib/pry/commands/whereami.rb:15
+    # source://pry-0.14.1/lib/pry/commands/whereami.rb:15
     def method_size_cutoff; end
 
     # Sets the attribute method_size_cutoff
     #
     # @param value the value to set the attribute method_size_cutoff to.
     #
-    # source://pry-0.13.1/lib/pry/commands/whereami.rb:15
+    # source://pry-0.14.1/lib/pry/commands/whereami.rb:15
     def method_size_cutoff=(_arg0); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/commands/wtf.rb:5
+# source://pry-0.14.1/lib/pry/commands/wtf.rb:5
 class Pry::Command::Wtf < ::Pry::ClassCommand
-  # source://pry-0.13.1/lib/pry/commands/wtf.rb:27
+  # source://pry-0.14.1/lib/pry/commands/wtf.rb:27
   def options(opt); end
 
-  # source://pry-0.13.1/lib/pry/commands/wtf.rb:32
+  # source://pry-0.14.1/lib/pry/commands/wtf.rb:32
   def process; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/commands/wtf.rb:64
+  # source://pry-0.14.1/lib/pry/commands/wtf.rb:64
   def format_backtrace(backtrace); end
 
-  # source://pry-0.13.1/lib/pry/commands/wtf.rb:60
+  # source://pry-0.14.1/lib/pry/commands/wtf.rb:60
   def format_header(title, exception); end
 
-  # source://pry-0.13.1/lib/pry/commands/wtf.rb:83
+  # source://pry-0.14.1/lib/pry/commands/wtf.rb:83
   def read_line(file, line); end
 
-  # source://pry-0.13.1/lib/pry/commands/wtf.rb:76
+  # source://pry-0.14.1/lib/pry/commands/wtf.rb:76
   def trim_backtrace(backtrace); end
 
-  # source://pry-0.13.1/lib/pry/commands/wtf.rb:48
+  # source://pry-0.14.1/lib/pry/commands/wtf.rb:48
   def unwind_exceptions; end
 end
 
-# source://pry-0.13.1/lib/pry/commands/wtf.rb:25
+# source://pry-0.14.1/lib/pry/commands/wtf.rb:25
 Pry::Command::Wtf::RUBY_FRAME_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # CommandErrors are caught by the REPL loop and displayed to the user. They
 # indicate an exceptional condition that's fatal to the current command.
 #
-# source://pry-0.13.1/lib/pry/exceptions.rb:68
+# source://pry-0.14.1/lib/pry/exceptions.rb:68
 class Pry::CommandError < ::StandardError; end
 
 # This class is used to create sets of commands. Commands can be imported from
 # different sets, aliased, removed, etc.
 #
-# source://pry-0.13.1/lib/pry/command_set.rb:12
+# source://pry-0.14.1/lib/pry/command_set.rb:12
 class Pry::CommandSet
   include ::Enumerable
   include ::Pry::Helpers::BaseHelpers
@@ -4417,7 +4391,7 @@ class Pry::CommandSet
   # @return [CommandSet] a new instance of CommandSet
   # @yield Optional block run to define commands
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:20
+  # source://pry-0.14.1/lib/pry/command_set.rb:20
   def initialize(*imported_sets, &block); end
 
   # Find a command that matches the given line
@@ -4425,7 +4399,7 @@ class Pry::CommandSet
   # @param pattern [String] The line that might be a command invocation
   # @return [Pry::Command, nil]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:275
+  # source://pry-0.14.1/lib/pry/command_set.rb:275
   def [](pattern); end
 
   # Re-assign the command found at _pattern_ with _command_.
@@ -4436,14 +4410,14 @@ class Pry::CommandSet
   # @param command [Pry::Command] The command to add.
   # @return [Pry::Command] Returns the new command (matched with "pattern".)
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:298
+  # source://pry-0.14.1/lib/pry/command_set.rb:298
   def []=(pattern, command); end
 
   # Add a command to set.
   #
   # @param command [Command] a subclass of Pry::Command.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:324
+  # source://pry-0.14.1/lib/pry/command_set.rb:324
   def add_command(command); end
 
   # Aliases a command
@@ -4459,7 +4433,7 @@ class Pry::CommandSet
   #   accepts the same as the `command` method, but also allows the
   #   command description to be passed this way too as `:desc`
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:190
+  # source://pry-0.14.1/lib/pry/command_set.rb:190
   def alias_command(match, action, options = T.unsafe(nil)); end
 
   # Defines a new Pry command.
@@ -4505,7 +4479,7 @@ class Pry::CommandSet
   #   parameters passed into the block will be strings. Successive
   #   command parameters are separated by whitespace at the Pry prompt.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:78
+  # source://pry-0.14.1/lib/pry/command_set.rb:78
   def block_command(match, description = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Defines a new Pry command.
@@ -4551,7 +4525,7 @@ class Pry::CommandSet
   #   parameters passed into the block will be strings. Successive
   #   command parameters are separated by whitespace at the Pry prompt.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:78
+  # source://pry-0.14.1/lib/pry/command_set.rb:78
   def command(match, description = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Generate completions for the user's search.
@@ -4560,7 +4534,7 @@ class Pry::CommandSet
   # @param context [Hash] The context to create the command with
   # @return [Array<String>]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:365
+  # source://pry-0.14.1/lib/pry/command_set.rb:365
   def complete(search, context = T.unsafe(nil)); end
 
   # Defines a new Pry command class.
@@ -4588,7 +4562,7 @@ class Pry::CommandSet
   # @param options [Hash] The optional configuration parameters, see {#command}
   # @yield The class body's definition.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:117
+  # source://pry-0.14.1/lib/pry/command_set.rb:117
   def create_command(match, description = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Removes some commands from the set
@@ -4596,7 +4570,7 @@ class Pry::CommandSet
   # @param searches [Array<String>] the matches or listings of the commands
   #   to remove
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:138
+  # source://pry-0.14.1/lib/pry/command_set.rb:138
   def delete(*searches); end
 
   # Sets or gets the description for a command (replacing the old
@@ -4612,10 +4586,10 @@ class Pry::CommandSet
   # @param search [String, Regexp] The command match.
   # @param description [String?] (nil) The command description.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:253
+  # source://pry-0.14.1/lib/pry/command_set.rb:253
   def desc(search, description = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/command_set.rb:131
+  # source://pry-0.14.1/lib/pry/command_set.rb:131
   def each(&block); end
 
   # Find a command that matches the given line
@@ -4623,14 +4597,14 @@ class Pry::CommandSet
   # @param pattern [String] The line that might be a command invocation
   # @return [Pry::Command, nil]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:275
+  # source://pry-0.14.1/lib/pry/command_set.rb:275
   def find_command(pattern); end
 
   # @param match_or_listing [String, Regexp] The match or listing of a command.
   #   of the command to retrieve.
   # @return [Command] The command object matched.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:173
+  # source://pry-0.14.1/lib/pry/command_set.rb:173
   def find_command_by_match_or_listing(match_or_listing); end
 
   # Find the command that the user might be trying to refer to.
@@ -4638,12 +4612,12 @@ class Pry::CommandSet
   # @param search [String] The user's search.
   # @return [Pry::Command?]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:331
+  # source://pry-0.14.1/lib/pry/command_set.rb:331
   def find_command_for_help(search); end
 
   # Returns the value of attribute helper_module.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:15
+  # source://pry-0.14.1/lib/pry/command_set.rb:15
   def helper_module; end
 
   # Imports all the commands from one or more sets.
@@ -4652,7 +4626,7 @@ class Pry::CommandSet
   #   will be imported.
   # @return [Pry::CommandSet] Returns the reciever (a command set).
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:149
+  # source://pry-0.14.1/lib/pry/command_set.rb:149
   def import(*sets); end
 
   # Imports some commands from a set
@@ -4661,17 +4635,17 @@ class Pry::CommandSet
   # @param matches [Array<String>] Commands to import
   # @return [Pry::CommandSet] Returns the reciever (a command set).
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:161
+  # source://pry-0.14.1/lib/pry/command_set.rb:161
   def import_from(set, *matches); end
 
   # @return [Array] The list of commands provided by the command set.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:262
+  # source://pry-0.14.1/lib/pry/command_set.rb:262
   def keys; end
 
   # @return [Array] The list of commands provided by the command set.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:262
+  # source://pry-0.14.1/lib/pry/command_set.rb:262
   def list_commands; end
 
   # Process the given line to see whether it needs executing as a command.
@@ -4680,7 +4654,7 @@ class Pry::CommandSet
   # @param context [Hash] The context to execute the commands with
   # @return [CommandSet::Result]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:351
+  # source://pry-0.14.1/lib/pry/command_set.rb:351
   def process_line(val, context = T.unsafe(nil)); end
 
   # Rename a command. Accepts either match or listing for the search.
@@ -4693,13 +4667,13 @@ class Pry::CommandSet
   #   accepts the same as the `command` method, but also allows the
   #   command description to be passed this way too.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:227
+  # source://pry-0.14.1/lib/pry/command_set.rb:227
   def rename_command(new_match, search, options = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/command_set.rb:267
+  # source://pry-0.14.1/lib/pry/command_set.rb:267
   def to_h; end
 
-  # source://pry-0.13.1/lib/pry/command_set.rb:267
+  # source://pry-0.14.1/lib/pry/command_set.rb:267
   def to_hash; end
 
   # Is the given line a command invocation?
@@ -4707,7 +4681,7 @@ class Pry::CommandSet
   # @param val [String]
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:343
+  # source://pry-0.14.1/lib/pry/command_set.rb:343
   def valid_command?(val); end
 
   private
@@ -4725,7 +4699,7 @@ class Pry::CommandSet
   #   end
   # @yield A block defining helper methods
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:390
+  # source://pry-0.14.1/lib/pry/command_set.rb:390
   def helpers(&block); end
 end
 
@@ -4738,96 +4712,96 @@ end
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/command_state.rb:14
+# source://pry-0.14.1/lib/pry/command_state.rb:14
 class Pry::CommandState
   # @api private
   # @return [CommandState] a new instance of CommandState
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/command_state.rb:19
+  # source://pry-0.14.1/lib/pry/command_state.rb:19
   def initialize; end
 
   # @api private
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/command_state.rb:27
+  # source://pry-0.14.1/lib/pry/command_state.rb:27
   def reset(command_name); end
 
   # @api private
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/command_state.rb:23
+  # source://pry-0.14.1/lib/pry/command_state.rb:23
   def state_for(command_name); end
 
   class << self
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/command_state.rb:15
+    # source://pry-0.14.1/lib/pry/command_state.rb:15
     def default; end
   end
 end
 
-# source://pry-0.13.1/lib/pry.rb:36
+# source://pry-0.14.1/lib/pry.rb:35
 Pry::Commands = T.let(T.unsafe(nil), Pry::CommandSet)
 
 # @api private
 #
-# source://pry-0.13.1/lib/pry/config/attributable.rb:4
+# source://pry-0.14.1/lib/pry/config/attributable.rb:4
 class Pry::Config
   extend ::Pry::Config::Attributable
 
   # @api private
   # @return [Config] a new instance of Config
   #
-  # source://pry-0.13.1/lib/pry/config.rb:157
+  # source://pry-0.14.1/lib/pry/config.rb:154
   def initialize; end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:238
+  # source://pry-0.14.1/lib/pry/config.rb:234
   def [](attr); end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:234
+  # source://pry-0.14.1/lib/pry/config.rb:230
   def []=(attr, value); end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def auto_indent; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def auto_indent=(_arg0); end
 
   # @api private
   # @return [Boolean] whether or not display a warning when a command name
   #   collides with a method/local in the current context.
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def collision_warning; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def collision_warning=(_arg0); end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def color; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def color=(_arg0); end
 
   # @api private
   # @return [Proc]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def command_completions; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def command_completions=(_arg0); end
 
   # A string that must precede all commands. For example, if is is
@@ -4836,66 +4810,66 @@ class Pry::Config
   # @api private
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def command_prefix; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def command_prefix=(_arg0); end
 
   # @api private
   # @return [Pry::CommandSet]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def commands; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def commands=(_arg0); end
 
   # @api private
   # @return [#build_completion_proc] a completer to use
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def completer; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def completer=(_arg0); end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:263
+  # source://pry-0.14.1/lib/pry/config.rb:259
   def control_d_handler; end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:264
+  # source://pry-0.14.1/lib/pry/config.rb:260
   def control_d_handler=(value); end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def correct_indent; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def correct_indent=(_arg0); end
 
   # @api private
   # @return [Integer] The number of lines of context to show before and after
   #   exceptions
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def default_window_size; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def default_window_size=(_arg0); end
 
   # @api private
   # @return [Boolean] whether to disable edit-method's auto-reloading behavior
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def disable_auto_reload; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def disable_auto_reload=(_arg0); end
 
   # If it is a String, then that String is used as the shell
@@ -4908,282 +4882,273 @@ class Pry::Config
   # @api private
   # @return [String, #call]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def editor; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def editor=(_arg0); end
 
   # @api private
   # @return [Proc] the printer for exceptions
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def exception_handler; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def exception_handler=(_arg0); end
 
   # @api private
   # @deprecated
   # @return [Array] Exception that Pry shouldn't rescue
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def exception_whitelist; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def exception_whitelist=(_arg0); end
 
   # @api private
   # @return [String] a line of code to execute in context before the session
   #   starts
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def exec_string; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def exec_string=(_arg0); end
 
   # @api private
   # @return [Hash{Symbol=>Proc}]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def extra_sticky_locals; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def extra_sticky_locals=(_arg0); end
 
   # @api private
   # @return [Proc]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def file_completions; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def file_completions=(_arg0); end
 
   # @api private
   # @return [Pry::History]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def history; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def history=(_arg0); end
 
   # @api private
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def history_file; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def history_file=(_arg0); end
 
   # @api private
   # @return [Array<String,Regexp>]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def history_ignorelist; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def history_ignorelist=(_arg0); end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def history_load; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def history_load=(_arg0); end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def history_save; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def history_save=(_arg0); end
 
   # @api private
   # @return [Pry::Hooks]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def hooks; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def hooks=(_arg0); end
 
   # @api private
   # @return [IO, #readline] he object from which Pry retrieves its lines of
   #   input
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def input; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def input=(_arg0); end
 
   # @api private
   # @return [Hash]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def ls; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def ls=(_arg0); end
 
   # @api private
   # @return [Integer] how many input/output lines to keep in memory
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def memory_size; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def memory_size=(_arg0); end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:230
+  # source://pry-0.14.1/lib/pry/config.rb:226
   def merge(config_hash); end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:225
+  # source://pry-0.14.1/lib/pry/config.rb:221
   def merge!(config_hash); end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:243
+  # source://pry-0.14.1/lib/pry/config.rb:239
   def method_missing(method_name, *args, &_block); end
 
   # @api private
   # @return [IO, #puts] where Pry should output results provided by {input}
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def output; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def output=(_arg0); end
 
   # @api private
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def output_prefix; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def output_prefix=(_arg0); end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def pager; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def pager=(_arg0); end
 
   # @api private
   # @return [Proc] the printer for Ruby expressions (not commands)
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def print; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def print=(_arg0); end
 
   # @api private
   # @return [Pry::Prompt]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def prompt; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def prompt=(_arg0); end
 
   # @api private
   # @return [String] The display name that is part of the prompt
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def prompt_name; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def prompt_name=(_arg0); end
 
   # @api private
   # @return [Array<Object>] the list of objects that are known to have a
   #   1-line #inspect output suitable for prompt
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def prompt_safe_contexts; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def prompt_safe_contexts=(_arg0); end
 
   # @api private
   # @return [Boolean] suppresses whereami output on `binding.pry`
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def quiet; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def quiet=(_arg0); end
 
   # @api private
   # @return [String]
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def rc_file; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def rc_file=(_arg0); end
 
   # @api private
   # @return [Array<String>] Ruby files to be required
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def requires; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def requires=(_arg0); end
 
   # @api private
   # @return [Boolean] whether the local ./.pryrc should be loaded
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def should_load_local_rc; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def should_load_local_rc=(_arg0); end
-
-  # @api private
-  # @return [Boolean]
-  #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
-  def should_load_plugins; end
-
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
-  def should_load_plugins=(_arg0); end
 
   # @api private
   # @return [Boolean] whether the global ~/.pryrc should be loaded
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def should_load_rc; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def should_load_rc=(_arg0); end
 
   # @api private
   # @return [Boolean] whether to load files specified with the -r flag
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def should_load_requires; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def should_load_requires=(_arg0); end
 
   # Whether Pry should trap SIGINT and cause it to raise an Interrupt
@@ -5192,61 +5157,61 @@ class Pry::Config
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def should_trap_interrupts; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def should_trap_interrupts=(_arg0); end
 
   # @api private
   # @return [Proc] The proc that runs system commands
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def system; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def system=(_arg0); end
 
   # @api private
   # @return [Array] Exception that Pry shouldn't rescue
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def unrescued_exceptions; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def unrescued_exceptions=(_arg0); end
 
   # @api private
   # @return [Boolean] displays a warning about experience improvement on
   #   Windows
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:13
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:13
   def windows_console_warning; end
 
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:18
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:18
   def windows_console_warning=(_arg0); end
 
   private
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:307
+  # source://pry-0.14.1/lib/pry/config.rb:303
   def default_rc_file; end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:258
+  # source://pry-0.14.1/lib/pry/config.rb:254
   def initialize_dup(other); end
 
   # @api private
   #
-  # source://pry-0.13.1/lib/pry/config.rb:293
+  # source://pry-0.14.1/lib/pry/config.rb:289
   def lazy_readline; end
 
   # @api private
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/config.rb:254
+  # source://pry-0.14.1/lib/pry/config.rb:250
   def respond_to_missing?(method_name, include_all = T.unsafe(nil)); end
 end
 
@@ -5257,12 +5222,12 @@ end
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/config/attributable.rb:11
+# source://pry-0.14.1/lib/pry/config/attributable.rb:11
 module Pry::Config::Attributable
   # @api private
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/attributable.rb:12
+  # source://pry-0.14.1/lib/pry/config/attributable.rb:12
   def attribute(attr_name); end
 end
 
@@ -5280,19 +5245,19 @@ end
 # @see Pry::Config::MemoizedValue
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/config/lazy_value.rb:19
+# source://pry-0.14.1/lib/pry/config/lazy_value.rb:19
 class Pry::Config::LazyValue
   # @api private
   # @return [LazyValue] a new instance of LazyValue
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/lazy_value.rb:20
+  # source://pry-0.14.1/lib/pry/config/lazy_value.rb:20
   def initialize(&block); end
 
   # @api private
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/lazy_value.rb:24
+  # source://pry-0.14.1/lib/pry/config/lazy_value.rb:24
   def call; end
 end
 
@@ -5310,19 +5275,19 @@ end
 # @see Pry::Config::LazyValue
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/config/memoized_value.rb:19
+# source://pry-0.14.1/lib/pry/config/memoized_value.rb:19
 class Pry::Config::MemoizedValue
   # @api private
   # @return [MemoizedValue] a new instance of MemoizedValue
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/memoized_value.rb:20
+  # source://pry-0.14.1/lib/pry/config/memoized_value.rb:20
   def initialize(&block); end
 
   # @api private
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/memoized_value.rb:26
+  # source://pry-0.14.1/lib/pry/config/memoized_value.rb:26
   def call; end
 end
 
@@ -5332,26 +5297,26 @@ end
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/config/value.rb:10
+# source://pry-0.14.1/lib/pry/config/value.rb:10
 class Pry::Config::Value
   # @api private
   # @return [Value] a new instance of Value
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/value.rb:11
+  # source://pry-0.14.1/lib/pry/config/value.rb:11
   def initialize(value); end
 
   # @api private
   # @since v0.13.0
   #
-  # source://pry-0.13.1/lib/pry/config/value.rb:15
+  # source://pry-0.14.1/lib/pry/config/value.rb:15
   def call; end
 end
 
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/control_d_handler.rb:6
+# source://pry-0.14.1/lib/pry/control_d_handler.rb:6
 module Pry::ControlDHandler
   class << self
     # Deal with the ^D key being pressed. Different behaviour in different
@@ -5363,40 +5328,40 @@ module Pry::ControlDHandler
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/control_d_handler.rb:12
+    # source://pry-0.14.1/lib/pry/control_d_handler.rb:12
     def default(pry_instance); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/pry_instance.rb:59
+# source://pry-0.14.1/lib/pry/pry_instance.rb:59
 Pry::EMPTY_COMPLETIONS = T.let(T.unsafe(nil), Array)
 
-# source://pry-0.13.1/lib/pry/editor.rb:6
+# source://pry-0.14.1/lib/pry/editor.rb:6
 class Pry::Editor
   include ::Pry::Helpers::OptionsHelpers
   include ::Pry::Helpers::CommandHelpers
 
   # @return [Editor] a new instance of Editor
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:27
+  # source://pry-0.14.1/lib/pry/editor.rb:27
   def initialize(pry_instance); end
 
   # Generate the string that's used to start the editor. This includes
   # all the flags we want as well as the file and line number we
   # want to open at.
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:60
+  # source://pry-0.14.1/lib/pry/editor.rb:60
   def build_editor_invocation_string(file, line, blocking); end
 
-  # source://pry-0.13.1/lib/pry/editor.rb:31
+  # source://pry-0.14.1/lib/pry/editor.rb:31
   def edit_tempfile_with_content(initial_content, line = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/editor.rb:41
+  # source://pry-0.14.1/lib/pry/editor.rb:41
   def invoke_editor(file, line, blocking = T.unsafe(nil)); end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:25
+  # source://pry-0.14.1/lib/pry/editor.rb:25
   def pry_instance; end
 
   private
@@ -5405,7 +5370,7 @@ class Pry::Editor
   # not to block the process from which they were launched (in this case, Pry).
   # For those editors, return the flag that produces the desired behavior.
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:100
+  # source://pry-0.14.1/lib/pry/editor.rb:100
   def blocking_flag_for_editor(blocking); end
 
   # Get the name of the binary that Pry.config.editor points to.
@@ -5418,28 +5383,28 @@ class Pry::Editor
   #   editor_name
   #   # => textmate
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:151
+  # source://pry-0.14.1/lib/pry/editor.rb:151
   def editor_name; end
 
   # Start the editor running, using the calculated invocation string
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:76
+  # source://pry-0.14.1/lib/pry/editor.rb:76
   def open_editor(editor_invocation); end
 
   # We need JRuby specific code here cos just shelling out using
   # system() appears to be pretty broken :/
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:89
+  # source://pry-0.14.1/lib/pry/editor.rb:89
   def open_editor_on_jruby(editor_invocation); end
 
   # Return the syntax for a given editor for starting the editor
   # and moving to a particular line within that file
   #
-  # source://pry-0.13.1/lib/pry/editor.rb:115
+  # source://pry-0.14.1/lib/pry/editor.rb:115
   def start_line_syntax_for_editor(file_name, line_number); end
 
   class << self
-    # source://pry-0.13.1/lib/pry/editor.rb:7
+    # source://pry-0.14.1/lib/pry/editor.rb:7
     def default; end
   end
 end
@@ -5449,13 +5414,13 @@ end
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/env.rb:8
+# source://pry-0.14.1/lib/pry/env.rb:8
 module Pry::Env
   class << self
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/env.rb:9
+    # source://pry-0.14.1/lib/pry/env.rb:9
     def [](key); end
   end
 end
@@ -5463,7 +5428,7 @@ end
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/exception_handler.rb:6
+# source://pry-0.14.1/lib/pry/exception_handler.rb:6
 module Pry::ExceptionHandler
   class << self
     # Will only show the first line of the backtrace.
@@ -5471,7 +5436,7 @@ module Pry::ExceptionHandler
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/exception_handler.rb:9
+    # source://pry-0.14.1/lib/pry/exception_handler.rb:9
     def handle_exception(output, exception, _pry_instance); end
 
     private
@@ -5479,24 +5444,24 @@ module Pry::ExceptionHandler
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/exception_handler.rb:37
+    # source://pry-0.14.1/lib/pry/exception_handler.rb:37
     def cause_text(cause); end
 
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/exception_handler.rb:32
+    # source://pry-0.14.1/lib/pry/exception_handler.rb:32
     def exception_text(exception); end
 
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/exception_handler.rb:19
+    # source://pry-0.14.1/lib/pry/exception_handler.rb:19
     def standard_error_text_for(exception); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/forwardable.rb:4
+# source://pry-0.14.1/lib/pry/forwardable.rb:4
 module Pry::Forwardable
   include ::Forwardable
 
@@ -5507,7 +5472,7 @@ module Pry::Forwardable
   # That's why we revert to a custom implementation for delegating one
   # private method to another.
   #
-  # source://pry-0.13.1/lib/pry/forwardable.rb:16
+  # source://pry-0.14.1/lib/pry/forwardable.rb:16
   def def_private_delegators(target, *private_delegates); end
 end
 
@@ -5515,49 +5480,49 @@ end
 # that Object's singleton class. This doesn't work for "frozen" Object's, and
 # the exception is just a vanilla RuntimeError.
 #
-# source://pry-0.13.1/lib/pry/exceptions.rb:56
+# source://pry-0.14.1/lib/pry/exceptions.rb:56
 module Pry::FrozenObjectException
   class << self
-    # source://pry-0.13.1/lib/pry/exceptions.rb:57
+    # source://pry-0.14.1/lib/pry/exceptions.rb:57
     def ===(exception); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:4
+# source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:4
 module Pry::Helpers
   class << self
-    # source://pry-0.13.1/lib/pry/helpers/table.rb:27
+    # source://pry-0.14.1/lib/pry/helpers/table.rb:27
     def tablify(things, line_length, pry_instance = T.unsafe(nil)); end
 
-    # source://pry-0.13.1/lib/pry/helpers/table.rb:5
+    # source://pry-0.14.1/lib/pry/helpers/table.rb:5
     def tablify_or_one_line(heading, things, pry_instance = T.unsafe(nil)); end
 
-    # source://pry-0.13.1/lib/pry/helpers/table.rb:16
+    # source://pry-0.14.1/lib/pry/helpers/table.rb:16
     def tablify_to_screen_width(things, options, pry_instance = T.unsafe(nil)); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:5
+# source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:5
 module Pry::Helpers::BaseHelpers
   extend ::Pry::Helpers::BaseHelpers
 
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:43
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:43
   def colorize_code(code); end
 
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:27
   def find_command(name, set = T.unsafe(nil)); end
 
   # formatting
   #
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:54
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:54
   def heading(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:47
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:47
   def highlight(string, regexp, highlight_color = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:34
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:34
   def not_a_real_file?(file); end
 
   # Acts like send but ignores any methods defined below Object or Class in the
@@ -5565,54 +5530,54 @@ module Pry::Helpers::BaseHelpers
   # This is required to introspect methods on objects like Net::HTTP::Get that
   # have overridden the `method` method.
   #
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:22
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:22
   def safe_send(obj, method, *args, &block); end
 
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:8
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:8
   def silence_warnings; end
 
   # Send the given text through the best available pager (if Pry.config.pager is
   # enabled). Infers where to send the output if used as a mixin.
   # DEPRECATED.
   #
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:62
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:62
   def stagger_output(text, _out = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/helpers/base_helpers.rb:38
+  # source://pry-0.14.1/lib/pry/helpers/base_helpers.rb:38
   def use_ansi_codes?; end
 end
 
-# source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:7
+# source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:7
 module Pry::Helpers::CommandHelpers
   include ::Pry::Helpers::OptionsHelpers
   extend ::Pry::Helpers::OptionsHelpers
   extend ::Pry::Helpers::CommandHelpers
 
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:115
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:115
   def absolute_index_number(line_number, array_length); end
 
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:123
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:123
   def absolute_index_range(range_or_number, array_length); end
 
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:31
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:31
   def get_method_or_raise(method_name, context, opts = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:21
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:21
   def internal_binding?(context); end
 
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:97
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:97
   def one_index_number(line_number); end
 
   # convert a 1-index range to a 0-indexed one
   #
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:102
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:102
   def one_index_range(range); end
 
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:106
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:106
   def one_index_range_or_number(range_or_number); end
 
   # Restrict a string to the given range of lines (1-indexed)
@@ -5621,17 +5586,17 @@ module Pry::Helpers::CommandHelpers
   # @param lines [Range, Integer] The line(s) to restrict it to.
   # @return [String] The resulting string.
   #
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:92
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:92
   def restrict_to_lines(content, lines); end
 
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:135
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:135
   def set_file_and_dir_locals(file_name, pry = T.unsafe(nil), ctx = T.unsafe(nil)); end
 
   # Open a temp file and yield it to the block, closing it after
   #
   # @return [String] The path of the temp file
   #
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:14
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:14
   def temp_file(ext = T.unsafe(nil)); end
 
   # Remove any common leading whitespace from every line in `text`. This
@@ -5647,14 +5612,14 @@ module Pry::Helpers::CommandHelpers
   # @param dirty_text [String] The text from which to remove indentation
   # @return [String] the text with indentation stripped
   #
-  # source://pry-0.13.1/lib/pry/helpers/command_helpers.rb:68
+  # source://pry-0.14.1/lib/pry/helpers/command_helpers.rb:68
   def unindent(dirty_text, left_padding = T.unsafe(nil)); end
 end
 
 # This class contains methods useful for extracting
 # documentation from methods and classes.
 #
-# source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:7
+# source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:7
 module Pry::Helpers::DocumentationHelpers
   private
 
@@ -5665,31 +5630,31 @@ module Pry::Helpers::DocumentationHelpers
   # @param comment [String]
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:66
+  # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:67
   def get_comment_content(comment); end
 
-  # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:50
+  # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:51
   def process_comment_markup(comment); end
 
-  # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:15
+  # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:15
   def process_rdoc(comment); end
 
-  # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:44
+  # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:45
   def process_yardoc(comment); end
 
-  # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:29
+  # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:30
   def process_yardoc_tag(comment, tag); end
 
   # @param code [String]
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:56
+  # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:57
   def strip_comments_from_c_code(code); end
 
   # @param text [String]
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:78
+  # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:79
   def strip_leading_whitespace(text); end
 
   class << self
@@ -5700,61 +5665,61 @@ module Pry::Helpers::DocumentationHelpers
     # @param comment [String]
     # @return [String]
     #
-    # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:66
+    # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:67
     def get_comment_content(comment); end
 
-    # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:50
+    # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:51
     def process_comment_markup(comment); end
 
-    # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:15
+    # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:15
     def process_rdoc(comment); end
 
-    # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:44
+    # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:45
     def process_yardoc(comment); end
 
-    # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:29
+    # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:30
     def process_yardoc_tag(comment, tag); end
 
     # @param code [String]
     # @return [String]
     #
-    # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:56
+    # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:57
     def strip_comments_from_c_code(code); end
 
     # @param text [String]
     # @return [String]
     #
-    # source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:78
+    # source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:79
     def strip_leading_whitespace(text); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/helpers/documentation_helpers.rb:8
+# source://pry-0.14.1/lib/pry/helpers/documentation_helpers.rb:8
 Pry::Helpers::DocumentationHelpers::YARD_TAGS = T.let(T.unsafe(nil), Array)
 
-# source://pry-0.13.1/lib/pry/helpers/options_helpers.rb:5
+# source://pry-0.14.1/lib/pry/helpers/options_helpers.rb:5
 module Pry::Helpers::OptionsHelpers
   private
 
   # Get the method object parsed by the slop instance
   #
-  # source://pry-0.13.1/lib/pry/helpers/options_helpers.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/options_helpers.rb:23
   def method_object; end
 
   # Add method options to the Pry::Slop instance
   #
-  # source://pry-0.13.1/lib/pry/helpers/options_helpers.rb:9
+  # source://pry-0.14.1/lib/pry/helpers/options_helpers.rb:9
   def method_options(opt); end
 
   class << self
     # Get the method object parsed by the slop instance
     #
-    # source://pry-0.13.1/lib/pry/helpers/options_helpers.rb:23
+    # source://pry-0.14.1/lib/pry/helpers/options_helpers.rb:23
     def method_object; end
 
     # Add method options to the Pry::Slop instance
     #
-    # source://pry-0.13.1/lib/pry/helpers/options_helpers.rb:9
+    # source://pry-0.14.1/lib/pry/helpers/options_helpers.rb:9
     def method_options(opt); end
   end
 end
@@ -5764,56 +5729,56 @@ end
 # @api public
 # @since v0.12.0
 #
-# source://pry-0.13.1/lib/pry/helpers/platform.rb:10
+# source://pry-0.14.1/lib/pry/helpers/platform.rb:10
 module Pry::Helpers::Platform
   class << self
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:35
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:35
     def jruby?; end
 
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:40
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:40
     def jruby_19?; end
 
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:17
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:17
     def linux?; end
 
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:12
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:12
     def mac_osx?; end
 
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:45
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:45
     def mri?; end
 
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:50
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:50
     def mri_19?; end
 
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:55
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:55
     def mri_2?; end
 
     # @api public
@@ -5821,141 +5786,141 @@ module Pry::Helpers::Platform
     #   false otherwise
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:23
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:23
     def windows?; end
 
     # @api public
     # @return [Boolean]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/helpers/platform.rb:28
+    # source://pry-0.14.1/lib/pry/helpers/platform.rb:28
     def windows_ansi?; end
   end
 end
 
-# source://pry-0.13.1/lib/pry/helpers/table.rb:35
+# source://pry-0.14.1/lib/pry/helpers/table.rb:35
 class Pry::Helpers::Table
   # @return [Table] a new instance of Table
   #
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:37
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:37
   def initialize(items, args, pry_instance = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:81
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:81
   def ==(other); end
 
   # Returns the value of attribute column_count.
   #
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:36
   def column_count; end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:68
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:68
   def column_count=(count); end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:77
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:77
   def columns; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:73
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:73
   def fits_on_line?(line_length); end
 
   # Returns the value of attribute items.
   #
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:36
   def items; end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:62
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:62
   def items=(items); end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:47
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:47
   def rows_to_s(style = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:85
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:85
   def to_a; end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:43
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:43
   def to_s; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:91
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:91
   def _max_width(things); end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:95
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:95
   def _rebuild_colorless_cache; end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:116
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:116
   def _recall_color_for(thing); end
 
-  # source://pry-0.13.1/lib/pry/helpers/table.rb:105
+  # source://pry-0.14.1/lib/pry/helpers/table.rb:105
   def _recolumn; end
 end
 
 # The methods defined on {Text} are available to custom commands via
 # {Pry::Command#text}.
 #
-# source://pry-0.13.1/lib/pry/helpers/text.rb:7
+# source://pry-0.14.1/lib/pry/helpers/text.rb:7
 module Pry::Helpers::Text
   extend ::Pry::Helpers::Text
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def black_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def blue_on_yellow(text); end
 
   # Returns _text_ as bold text for use on a terminal.
@@ -5963,307 +5928,307 @@ module Pry::Helpers::Text
   # @param text [String, #to_s]
   # @return [String] _text_
   #
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:54
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:54
   def bold(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_black_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_blue_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_cyan_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_green_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_magenta_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_purple_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_red_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_white_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:27
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:27
   def bright_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:36
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:36
   def bright_yellow_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def cyan_on_yellow(text); end
 
   # Returns `text` in the default foreground colour.
@@ -6272,37 +6237,37 @@ module Pry::Helpers::Text
   # @param text [String, #to_s]
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:63
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:63
   def default(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def green_on_yellow(text); end
 
   # Returns _text_ indented by _chars_ spaces.
@@ -6310,109 +6275,109 @@ module Pry::Helpers::Text
   # @param text [String]
   # @param chars [Fixnum]
   #
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:113
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:113
   def indent(text, chars); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def magenta_on_yellow(text); end
 
   # @return [void]
   # @yield Yields a block with color turned off.
   #
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:73
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:73
   def no_color; end
 
   # @return [void]
   # @yield Yields a block with paging turned off.
   #
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:87
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:87
   def no_pager; end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def purple_on_yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def red_on_yellow(text); end
 
   # Remove any color codes from _text_.
@@ -6420,37 +6385,37 @@ module Pry::Helpers::Text
   # @param text [String, #to_s]
   # @return [String] _text_ stripped of any color codes.
   #
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:46
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:46
   def strip_color(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def white_on_yellow(text); end
 
   # Returns _text_ in a numbered list, beginning at _offset_.
@@ -6459,51 +6424,51 @@ module Pry::Helpers::Text
   # @param offset [Fixnum]
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:100
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:100
   def with_line_numbers(text, offset, color = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:23
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:23
   def yellow(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_black(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_blue(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_cyan(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_green(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_magenta(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_purple(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_red(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_white(text); end
 
-  # source://pry-0.13.1/lib/pry/helpers/text.rb:32
+  # source://pry-0.14.1/lib/pry/helpers/text.rb:32
   def yellow_on_yellow(text); end
 end
 
-# source://pry-0.13.1/lib/pry/helpers/text.rb:10
+# source://pry-0.14.1/lib/pry/helpers/text.rb:10
 Pry::Helpers::Text::COLORS = T.let(T.unsafe(nil), Hash)
 
 # The History class is responsible for maintaining the user's input history,
 # both internally and within Readline.
 #
-# source://pry-0.13.1/lib/pry/history.rb:6
+# source://pry-0.14.1/lib/pry/history.rb:6
 class Pry::History
   # @return [History] a new instance of History
   #
-  # source://pry-0.13.1/lib/pry/history.rb:29
+  # source://pry-0.14.1/lib/pry/history.rb:29
   def initialize(options = T.unsafe(nil)); end
 
   # Add a line to the input history, ignoring blank and duplicate lines.
@@ -6511,13 +6476,13 @@ class Pry::History
   # @param line [String]
   # @return [String] The same line that was passed in
   #
-  # source://pry-0.13.1/lib/pry/history.rb:53
+  # source://pry-0.14.1/lib/pry/history.rb:53
   def <<(line); end
 
   # Clear this session's history. This won't affect the contents of the
   # history file.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:74
+  # source://pry-0.14.1/lib/pry/history.rb:74
   def clear; end
 
   # Filter the history with the histignore options
@@ -6525,36 +6490,36 @@ class Pry::History
   # @return [Array<String>] An array containing all the lines that are not
   #   included in the histignore.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:95
+  # source://pry-0.14.1/lib/pry/history.rb:95
   def filter(history); end
 
   # @return [Integer] total number of lines, including original lines
   #
-  # source://pry-0.13.1/lib/pry/history.rb:27
+  # source://pry-0.14.1/lib/pry/history.rb:27
   def history_line_count; end
 
   # Load the input history using `History.loader`.
   #
   # @return [Integer] The number of lines loaded
   #
-  # source://pry-0.13.1/lib/pry/history.rb:40
+  # source://pry-0.14.1/lib/pry/history.rb:40
   def load; end
 
   # Returns the value of attribute loader.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:21
+  # source://pry-0.14.1/lib/pry/history.rb:21
   def loader; end
 
   # Sets the attribute loader
   #
   # @param value the value to set the attribute loader to.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:21
+  # source://pry-0.14.1/lib/pry/history.rb:21
   def loader=(_arg0); end
 
   # @return [Fixnum] Number of lines in history when Pry first loaded.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:24
+  # source://pry-0.14.1/lib/pry/history.rb:24
   def original_lines; end
 
   # Add a line to the input history, ignoring blank and duplicate lines.
@@ -6562,24 +6527,24 @@ class Pry::History
   # @param line [String]
   # @return [String] The same line that was passed in
   #
-  # source://pry-0.13.1/lib/pry/history.rb:53
+  # source://pry-0.14.1/lib/pry/history.rb:53
   def push(line); end
 
   # Returns the value of attribute saver.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:21
+  # source://pry-0.14.1/lib/pry/history.rb:21
   def saver; end
 
   # Sets the attribute saver
   #
   # @param value the value to set the attribute saver to.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:21
+  # source://pry-0.14.1/lib/pry/history.rb:21
   def saver=(_arg0); end
 
   # @return [Fixnum] The number of lines in history from just this session.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:81
+  # source://pry-0.14.1/lib/pry/history.rb:81
   def session_line_count; end
 
   # Return an Array containing all stored history.
@@ -6587,32 +6552,32 @@ class Pry::History
   # @return [Array<String>] An Array containing all lines of history loaded
   #   or entered by the user in the current session.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:88
+  # source://pry-0.14.1/lib/pry/history.rb:88
   def to_a; end
 
   private
 
   # The history file, opened for appending.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:127
+  # source://pry-0.14.1/lib/pry/history.rb:127
   def history_file; end
 
-  # source://pry-0.13.1/lib/pry/history.rb:143
+  # source://pry-0.14.1/lib/pry/history.rb:143
   def history_file_path; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/history.rb:147
+  # source://pry-0.14.1/lib/pry/history.rb:147
   def invalid_readline_line?(line); end
 
   # The default loader. Yields lines from `Pry.config.history_file`.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:113
+  # source://pry-0.14.1/lib/pry/history.rb:113
   def read_from_file; end
 
   # The default saver. Appends the given line to `Pry.config.history_file`.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:122
+  # source://pry-0.14.1/lib/pry/history.rb:122
   def save_to_file(line); end
 
   # Check if the line match any option in the histignore
@@ -6621,11 +6586,11 @@ class Pry::History
   # @return [Boolean] a boolean that notifies if the line was found in the
   #   histignore array.
   #
-  # source://pry-0.13.1/lib/pry/history.rb:105
+  # source://pry-0.14.1/lib/pry/history.rb:105
   def should_ignore?(line); end
 
   class << self
-    # source://pry-0.13.1/lib/pry/history.rb:7
+    # source://pry-0.14.1/lib/pry/history.rb:7
     def default_file; end
   end
 end
@@ -6641,11 +6606,11 @@ end
 #   puts "hello"
 #   end
 #
-# source://pry-0.13.1/lib/pry/hooks.rb:14
+# source://pry-0.14.1/lib/pry/hooks.rb:14
 class Pry::Hooks
   # @return [Hooks] a new instance of Hooks
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:25
+  # source://pry-0.14.1/lib/pry/hooks.rb:25
   def initialize; end
 
   # Add a new hook to be executed for the `event_name` event.
@@ -6657,7 +6622,7 @@ class Pry::Hooks
   # @return [Pry:Hooks] The receiver.
   # @yield The block to use as the callable (if no `callable` provided).
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:81
+  # source://pry-0.14.1/lib/pry/hooks.rb:81
   def add_hook(event_name, hook_name, callable = T.unsafe(nil), &block); end
 
   # Clear all hooks functions for a given event.
@@ -6665,7 +6630,7 @@ class Pry::Hooks
   # @param event_name [String] The name of the event.
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:165
+  # source://pry-0.14.1/lib/pry/hooks.rb:165
   def clear_event_hooks(event_name); end
 
   # @param event_name [Symbol] The name of the event.
@@ -6673,10 +6638,10 @@ class Pry::Hooks
   #   to delete.
   # @return [#call] The deleted hook.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:147
+  # source://pry-0.14.1/lib/pry/hooks.rb:147
   def delete_hook(event_name, hook_name); end
 
-  # source://pry-0.13.1/lib/pry/hooks.rb:39
+  # source://pry-0.14.1/lib/pry/hooks.rb:39
   def errors; end
 
   # Execute the list of hooks for the `event_name` event.
@@ -6685,14 +6650,14 @@ class Pry::Hooks
   # @param args [Array] The arguments to pass to each hook function.
   # @return [Object] The return value of the last executed hook.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:108
+  # source://pry-0.14.1/lib/pry/hooks.rb:108
   def exec_hook(event_name, *args, &block); end
 
   # @param event_name [Symbol] The name of the event.
   # @param hook_name [Symbol] The name of the hook
   # @return [#call] a specific hook for a given event.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:128
+  # source://pry-0.14.1/lib/pry/hooks.rb:128
   def get_hook(event_name, hook_name); end
 
   # `add_hook`/`delete_hook` for that.
@@ -6701,20 +6666,20 @@ class Pry::Hooks
   # @param event_name [Symbol] The name of the event.
   # @return [Hash] The hash of hook names / hook functions.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:139
+  # source://pry-0.14.1/lib/pry/hooks.rb:139
   def get_hooks(event_name); end
 
   # @param event_name [Symbol] The name of the event.
   # @return [Fixnum] The number of hook functions for `event_name`.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:121
+  # source://pry-0.14.1/lib/pry/hooks.rb:121
   def hook_count(event_name); end
 
   # @param event_name [Symbol] Name of the event.
   # @param hook_name [Symbol] Name of the hook.
   # @return [Boolean] Whether the hook by the name `hook_name`.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:172
+  # source://pry-0.14.1/lib/pry/hooks.rb:172
   def hook_exists?(event_name, hook_name); end
 
   # @example
@@ -6724,7 +6689,7 @@ class Pry::Hooks
   # @return [Pry::Hooks] a new `Pry::Hooks` instance containing a merge of the
   #   contents of two `Pry:Hooks` instances.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:69
+  # source://pry-0.14.1/lib/pry/hooks.rb:69
   def merge(other); end
 
   # Destructively merge the contents of two `Pry:Hooks` instances.
@@ -6733,25 +6698,25 @@ class Pry::Hooks
   # @return [Pry:Hooks] The receiver.
   # @see #merge
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:48
+  # source://pry-0.14.1/lib/pry/hooks.rb:48
   def merge!(other); end
 
   protected
 
   # Returns the value of attribute hooks.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:178
+  # source://pry-0.14.1/lib/pry/hooks.rb:178
   def hooks; end
 
   private
 
   # Ensure that duplicates have their @hooks object.
   #
-  # source://pry-0.13.1/lib/pry/hooks.rb:30
+  # source://pry-0.14.1/lib/pry/hooks.rb:30
   def initialize_copy(_orig); end
 
   class << self
-    # source://pry-0.13.1/lib/pry/hooks.rb:15
+    # source://pry-0.14.1/lib/pry/hooks.rb:15
     def default; end
   end
 end
@@ -6762,13 +6727,13 @@ end
 # tokens. Based on the tokens in a line of code that line (or the next one)
 # will be indented or un-indented by correctly.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:11
+# source://pry-0.14.1/lib/pry/indent.rb:11
 class Pry::Indent
   include ::Pry::Helpers::BaseHelpers
 
   # @return [Indent] a new instance of Indent
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:104
+  # source://pry-0.14.1/lib/pry/indent.rb:104
   def initialize(pry_instance = T.unsafe(nil)); end
 
   # Return a string which, when printed, will rewrite the previous line with
@@ -6780,7 +6745,7 @@ class Pry::Indent
   #   the difference in length between the old line and the new one)
   # @return [String] correctly indented line
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:393
+  # source://pry-0.14.1/lib/pry/indent.rb:393
   def correct_indentation(prompt, code, overhang = T.unsafe(nil)); end
 
   # Get the indentation for the start of the next line.
@@ -6789,7 +6754,7 @@ class Pry::Indent
   #
   # @return String  The correct number of spaces
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:181
+  # source://pry-0.14.1/lib/pry/indent.rb:181
   def current_prefix; end
 
   # If the code just before an "if" or "while" token on a line looks like the
@@ -6798,7 +6763,7 @@ class Pry::Indent
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:264
+  # source://pry-0.14.1/lib/pry/indent.rb:264
   def end_of_statement?(last_token, last_kind); end
 
   # Are we currently in the middle of a string literal.
@@ -6809,7 +6774,7 @@ class Pry::Indent
   #
   # @return [Boolean] Boolean
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:275
+  # source://pry-0.14.1/lib/pry/indent.rb:275
   def in_string?; end
 
   # Indents a string and returns it. This string can either be a single line
@@ -6832,12 +6797,12 @@ class Pry::Indent
   # @param input [String] The input string to indent.
   # @return [String] The indented version of +input+.
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:142
+  # source://pry-0.14.1/lib/pry/indent.rb:142
   def indent(input); end
 
   # @return [String] String containing the spaces to be inserted before the next line.
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:18
+  # source://pry-0.14.1/lib/pry/indent.rb:18
   def indent_level; end
 
   # Get the change in indentation indicated by the line.
@@ -6853,7 +6818,7 @@ class Pry::Indent
   # @param tokens [Array] A list of tokens to scan.
   # @return [Array[Integer]]
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:198
+  # source://pry-0.14.1/lib/pry/indent.rb:198
   def indentation_delta(tokens); end
 
   # Return a list of strings which can be used to re-construct the Module.nesting at
@@ -6863,14 +6828,14 @@ class Pry::Indent
   #
   # @return [Array<String>]
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:376
+  # source://pry-0.14.1/lib/pry/indent.rb:376
   def module_nesting; end
 
   # All the open delimiters, in the order that they first appeared.
   #
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:312
+  # source://pry-0.14.1/lib/pry/indent.rb:312
   def open_delimiters; end
 
   # Return a string which restores the CodeRay string status to the correct value by
@@ -6878,17 +6843,17 @@ class Pry::Indent
   #
   # @return String
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:320
+  # source://pry-0.14.1/lib/pry/indent.rb:320
   def open_delimiters_line; end
 
   # reset internal state
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:110
+  # source://pry-0.14.1/lib/pry/indent.rb:110
   def reset; end
 
   # @return [Array<String>] The stack of open tokens.
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:21
+  # source://pry-0.14.1/lib/pry/indent.rb:21
   def stack; end
 
   # Given a string of Ruby code, use CodeRay to export the tokens.
@@ -6896,7 +6861,7 @@ class Pry::Indent
   # @param string [String] The Ruby to lex
   # @return [Array] An Array of pairs of [token_value, token_type]
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:283
+  # source://pry-0.14.1/lib/pry/indent.rb:283
   def tokenize(string); end
 
   # Update the internal state about what kind of strings are open.
@@ -6908,7 +6873,7 @@ class Pry::Indent
   #
   # @param token [String] The token (of type :delimiter)
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:297
+  # source://pry-0.14.1/lib/pry/indent.rb:297
   def track_delimiter(token); end
 
   # Update the internal state relating to module nesting.
@@ -6929,7 +6894,7 @@ class Pry::Indent
   # @param token [String] a token from Coderay
   # @param kind [Symbol] the kind of that token
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:341
+  # source://pry-0.14.1/lib/pry/indent.rb:341
   def track_module_nesting(token, kind); end
 
   # Update the internal state relating to module nesting on 'end'.
@@ -6940,7 +6905,7 @@ class Pry::Indent
   # @param token [String] a token from Coderay
   # @param kind [Symbol] the kind of that token
   #
-  # source://pry-0.13.1/lib/pry/indent.rb:366
+  # source://pry-0.14.1/lib/pry/indent.rb:366
   def track_module_nesting_end(token, kind = T.unsafe(nil)); end
 
   class << self
@@ -6949,7 +6914,7 @@ class Pry::Indent
     # @param str [String]
     # @return [String]
     #
-    # source://pry-0.13.1/lib/pry/indent.rb:82
+    # source://pry-0.14.1/lib/pry/indent.rb:82
     def indent(str); end
 
     # Get the module nesting at the given point in the given string.
@@ -6962,7 +6927,7 @@ class Pry::Indent
     # @param line_number [Fixnum] The line number (starting from 1)
     # @return [Array<String>]
     #
-    # source://pry-0.13.1/lib/pry/indent.rb:95
+    # source://pry-0.14.1/lib/pry/indent.rb:95
     def nesting_at(str, line_number); end
   end
 end
@@ -6974,13 +6939,13 @@ end
 # :pre_constant and :preserved_constant are the CodeRay 0.9.8 and 1.0.0
 # classifications of "true", "false", and "nil".
 #
-# source://pry-0.13.1/lib/pry/indent.rb:60
+# source://pry-0.14.1/lib/pry/indent.rb:60
 Pry::Indent::IGNORE_TOKENS = T.let(T.unsafe(nil), Array)
 
 # Collection of tokens that should appear dedented even though they
 # don't affect the surrounding code.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:76
+# source://pry-0.14.1/lib/pry/indent.rb:76
 Pry::Indent::MIDWAY_TOKENS = T.let(T.unsafe(nil), Array)
 
 # Hash containing all the tokens that should increase the indentation
@@ -6988,23 +6953,23 @@ Pry::Indent::MIDWAY_TOKENS = T.let(T.unsafe(nil), Array)
 # tokens that should prevent a line from being indented if they appear on
 # the same line.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:30
+# source://pry-0.14.1/lib/pry/indent.rb:30
 Pry::Indent::OPEN_TOKENS = T.let(T.unsafe(nil), Hash)
 
 # Which tokens can be followed by an optional "do" keyword.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:52
+# source://pry-0.14.1/lib/pry/indent.rb:52
 Pry::Indent::OPTIONAL_DO_TOKENS = T.let(T.unsafe(nil), Array)
 
 # Which tokens can either be open tokens, or appear as modifiers on
 # a single-line.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:49
+# source://pry-0.14.1/lib/pry/indent.rb:49
 Pry::Indent::SINGLELINE_TOKENS = T.let(T.unsafe(nil), Array)
 
 # The amount of spaces to insert for each indent level.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:24
+# source://pry-0.14.1/lib/pry/indent.rb:24
 Pry::Indent::SPACES = T.let(T.unsafe(nil), String)
 
 # Tokens that indicate the end of a statement (i.e. that, if they appear
@@ -7014,80 +6979,80 @@ Pry::Indent::SPACES = T.let(T.unsafe(nil), String)
 # :reserved and :keywords are the CodeRay 0.9.8 and 1.0.0 respectively
 # classifications of "super", "next", "return", etc.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:69
+# source://pry-0.14.1/lib/pry/indent.rb:69
 Pry::Indent::STATEMENT_END_TOKENS = T.let(T.unsafe(nil), Array)
 
 # Raised if {#module_nesting} would not work.
 #
-# source://pry-0.13.1/lib/pry/indent.rb:15
+# source://pry-0.14.1/lib/pry/indent.rb:15
 class Pry::Indent::UnparseableNestingError < ::StandardError; end
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:6
+# source://pry-0.14.1/lib/pry/input_completer.rb:6
 class Pry::InputCompleter
   # @return [InputCompleter] a new instance of InputCompleter
   #
-  # source://pry-0.13.1/lib/pry/input_completer.rb:42
+  # source://pry-0.14.1/lib/pry/input_completer.rb:42
   def initialize(input, pry = T.unsafe(nil)); end
 
   # build_path seperates the input into two parts: path and input.
   # input is the partial string that should be completed
   # path is a proc that takes an input and builds a full path.
   #
-  # source://pry-0.13.1/lib/pry/input_completer.rb:240
+  # source://pry-0.14.1/lib/pry/input_completer.rb:240
   def build_path(input); end
 
   # Return a new completion proc for use by Readline.
   #
-  # source://pry-0.13.1/lib/pry/input_completer.rb:56
+  # source://pry-0.14.1/lib/pry/input_completer.rb:56
   def call(str, options = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/input_completer.rb:255
+  # source://pry-0.14.1/lib/pry/input_completer.rb:255
   def ignored_modules; end
 
-  # source://pry-0.13.1/lib/pry/input_completer.rb:229
+  # source://pry-0.14.1/lib/pry/input_completer.rb:229
   def select_message(path, receiver, message, candidates); end
 end
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:8
+# source://pry-0.14.1/lib/pry/input_completer.rb:8
 Pry::InputCompleter::ARRAY_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:15
+# source://pry-0.14.1/lib/pry/input_completer.rb:15
 Pry::InputCompleter::CONSTANT_OR_METHOD_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:14
+# source://pry-0.14.1/lib/pry/input_completer.rb:14
 Pry::InputCompleter::CONSTANT_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:17
+# source://pry-0.14.1/lib/pry/input_completer.rb:17
 Pry::InputCompleter::GLOBALVARIABLE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:16
+# source://pry-0.14.1/lib/pry/input_completer.rb:16
 Pry::InputCompleter::HEX_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:7
+# source://pry-0.14.1/lib/pry/input_completer.rb:7
 Pry::InputCompleter::NUMERIC_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:12
+# source://pry-0.14.1/lib/pry/input_completer.rb:12
 Pry::InputCompleter::PROC_OR_HASH_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:11
+# source://pry-0.14.1/lib/pry/input_completer.rb:11
 Pry::InputCompleter::REGEX_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:20
+# source://pry-0.14.1/lib/pry/input_completer.rb:20
 Pry::InputCompleter::RESERVED_WORDS = T.let(T.unsafe(nil), Array)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:10
+# source://pry-0.14.1/lib/pry/input_completer.rb:10
 Pry::InputCompleter::SYMBOL_METHOD_CALL_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:9
+# source://pry-0.14.1/lib/pry/input_completer.rb:9
 Pry::InputCompleter::SYMBOL_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:13
+# source://pry-0.14.1/lib/pry/input_completer.rb:13
 Pry::InputCompleter::TOPLEVEL_LOOKUP_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:18
+# source://pry-0.14.1/lib/pry/input_completer.rb:18
 Pry::InputCompleter::VARIABLE_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# source://pry-0.13.1/lib/pry/input_completer.rb:40
+# source://pry-0.14.1/lib/pry/input_completer.rb:40
 Pry::InputCompleter::WORD_ESCAPE_STR = T.let(T.unsafe(nil), String)
 
 # There is one InputLock per input (such as STDIN) as two REPLs on the same
@@ -7095,128 +7060,128 @@ Pry::InputCompleter::WORD_ESCAPE_STR = T.let(T.unsafe(nil), String)
 # that threads to not conflict with each other. The latest thread to request
 # ownership of the input wins.
 #
-# source://pry-0.13.1/lib/pry/input_lock.rb:8
+# source://pry-0.14.1/lib/pry/input_lock.rb:8
 class Pry::InputLock
   # @return [InputLock] a new instance of InputLock
   #
-  # source://pry-0.13.1/lib/pry/input_lock.rb:29
+  # source://pry-0.14.1/lib/pry/input_lock.rb:29
   def initialize; end
 
   # Adds ourselves to the ownership list. The last one in the list may access
   # the input through interruptible_region().
   #
-  # source://pry-0.13.1/lib/pry/input_lock.rb:38
+  # source://pry-0.14.1/lib/pry/input_lock.rb:38
   def __with_ownership; end
 
-  # source://pry-0.13.1/lib/pry/input_lock.rb:81
+  # source://pry-0.14.1/lib/pry/input_lock.rb:81
   def enter_interruptible_region; end
 
-  # source://pry-0.13.1/lib/pry/input_lock.rb:108
+  # source://pry-0.14.1/lib/pry/input_lock.rb:108
   def interruptible_region; end
 
-  # source://pry-0.13.1/lib/pry/input_lock.rb:95
+  # source://pry-0.14.1/lib/pry/input_lock.rb:95
   def leave_interruptible_region; end
 
-  # source://pry-0.13.1/lib/pry/input_lock.rb:75
+  # source://pry-0.14.1/lib/pry/input_lock.rb:75
   def with_ownership(&block); end
 
   class << self
-    # source://pry-0.13.1/lib/pry/input_lock.rb:19
+    # source://pry-0.14.1/lib/pry/input_lock.rb:19
     def for(input); end
 
     # Returns the value of attribute global_lock.
     #
-    # source://pry-0.13.1/lib/pry/input_lock.rb:13
+    # source://pry-0.14.1/lib/pry/input_lock.rb:13
     def global_lock; end
 
     # Sets the attribute global_lock
     #
     # @param value the value to set the attribute global_lock to.
     #
-    # source://pry-0.13.1/lib/pry/input_lock.rb:13
+    # source://pry-0.14.1/lib/pry/input_lock.rb:13
     def global_lock=(_arg0); end
 
     # Returns the value of attribute input_locks.
     #
-    # source://pry-0.13.1/lib/pry/input_lock.rb:12
+    # source://pry-0.14.1/lib/pry/input_lock.rb:12
     def input_locks; end
 
     # Sets the attribute input_locks
     #
     # @param value the value to set the attribute input_locks to.
     #
-    # source://pry-0.13.1/lib/pry/input_lock.rb:12
+    # source://pry-0.14.1/lib/pry/input_lock.rb:12
     def input_locks=(_arg0); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/input_lock.rb:9
+# source://pry-0.14.1/lib/pry/input_lock.rb:9
 class Pry::InputLock::Interrupt < ::Exception; end
 
-# source://pry-0.13.1/lib/pry/inspector.rb:4
+# source://pry-0.14.1/lib/pry/inspector.rb:4
 class Pry::Inspector; end
 
-# source://pry-0.13.1/lib/pry/inspector.rb:5
+# source://pry-0.14.1/lib/pry/inspector.rb:5
 Pry::Inspector::MAP = T.let(T.unsafe(nil), Hash)
 
-# source://pry-0.13.1/lib/pry/pry_class.rb:7
+# source://pry-0.14.1/lib/pry/pry_class.rb:7
 Pry::LOCAL_RC_FILE = T.let(T.unsafe(nil), String)
 
-# source://pry-0.13.1/lib/pry/last_exception.rb:12
+# source://pry-0.14.1/lib/pry/last_exception.rb:12
 class Pry::LastException < ::BasicObject
   # @return [LastException] a new instance of LastException
   #
-  # source://pry-0.13.1/lib/pry/last_exception.rb:15
+  # source://pry-0.14.1/lib/pry/last_exception.rb:15
   def initialize(exception); end
 
   # Returns the value of attribute bt_index.
   #
-  # source://pry-0.13.1/lib/pry/last_exception.rb:13
+  # source://pry-0.14.1/lib/pry/last_exception.rb:13
   def bt_index; end
 
   # Sets the attribute bt_index
   #
   # @param value the value to set the attribute bt_index to.
   #
-  # source://pry-0.13.1/lib/pry/last_exception.rb:13
+  # source://pry-0.14.1/lib/pry/last_exception.rb:13
   def bt_index=(_arg0); end
 
-  # source://pry-0.13.1/lib/pry/last_exception.rb:52
+  # source://pry-0.14.1/lib/pry/last_exception.rb:52
   def bt_source_location_for(index); end
 
   # @return [String] returns the path to a file for the current backtrace. see {#bt_index}.
   #
-  # source://pry-0.13.1/lib/pry/last_exception.rb:37
+  # source://pry-0.14.1/lib/pry/last_exception.rb:37
   def file; end
 
-  # source://pry-0.13.1/lib/pry/last_exception.rb:57
+  # source://pry-0.14.1/lib/pry/last_exception.rb:57
   def inc_bt_index; end
 
   # @return [Fixnum] returns the line for the current backtrace. see {#bt_index}.
   #
-  # source://pry-0.13.1/lib/pry/last_exception.rb:43
+  # source://pry-0.14.1/lib/pry/last_exception.rb:43
   def line; end
 
-  # source://pry-0.13.1/lib/pry/last_exception.rb:21
+  # source://pry-0.14.1/lib/pry/last_exception.rb:21
   def method_missing(name, *args, &block); end
 
   # @return [Exception] returns the wrapped exception
   #
-  # source://pry-0.13.1/lib/pry/last_exception.rb:48
+  # source://pry-0.14.1/lib/pry/last_exception.rb:48
   def wrapped_exception; end
 
   private
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/last_exception.rb:29
+  # source://pry-0.14.1/lib/pry/last_exception.rb:29
   def respond_to_missing?(name, include_all = T.unsafe(nil)); end
 end
 
 # This class wraps the normal `Method` and `UnboundMethod` classes
 # to provide extra functionality useful to Pry.
 #
-# source://pry-0.13.1/lib/pry/method.rb:20
+# source://pry-0.14.1/lib/pry/method.rb:20
 class Pry::Method
   include ::Pry::Helpers::BaseHelpers
   include ::Pry::Helpers::DocumentationHelpers
@@ -7232,58 +7197,58 @@ class Pry::Method
   # @param known_info [Hash] Can be used to pre-cache expensive to compute stuff.
   # @return [Pry::Method]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:263
+  # source://pry-0.14.1/lib/pry/method.rb:263
   def initialize(method, known_info = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:483
+  # source://pry-0.14.1/lib/pry/method.rb:483
   def ==(other); end
 
   # @return [Boolean] Is the method definitely an alias?
   #
-  # source://pry-0.13.1/lib/pry/method.rb:478
+  # source://pry-0.14.1/lib/pry/method.rb:478
   def alias?; end
 
   # @return [Array<String>] All known aliases for the method.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:461
+  # source://pry-0.14.1/lib/pry/method.rb:461
   def aliases; end
 
   # @return [Boolean] Whether the method is bound.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:446
+  # source://pry-0.14.1/lib/pry/method.rb:446
   def bound_method?; end
 
-  # source://pry-0.13.1/lib/pry/method.rb:515
+  # source://pry-0.14.1/lib/pry/method.rb:515
   def comment; end
 
   # @return [String, nil] The documentation for the method, or `nil` if it's
   #   unavailable.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:329
+  # source://pry-0.14.1/lib/pry/method.rb:329
   def doc; end
 
   # @return [Boolean] Was the method defined outside a source file?
   #
-  # source://pry-0.13.1/lib/pry/method.rb:436
+  # source://pry-0.14.1/lib/pry/method.rb:436
   def dynamically_defined?; end
 
   # @param klass [Class]
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:491
+  # source://pry-0.14.1/lib/pry/method.rb:491
   def is_a?(klass); end
 
   # @param klass [Class]
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:491
+  # source://pry-0.14.1/lib/pry/method.rb:491
   def kind_of?(klass); end
 
   # Delegate any unknown calls to the wrapped method.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:503
+  # source://pry-0.14.1/lib/pry/method.rb:503
   def method_missing(method_name, *args, &block); end
 
   # Get the name of the method as a String, regardless of the underlying
@@ -7291,7 +7256,7 @@ class Pry::Method
   #
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:272
+  # source://pry-0.14.1/lib/pry/method.rb:272
   def name; end
 
   # Get the name of the method including the class on which it was defined.
@@ -7301,38 +7266,38 @@ class Pry::Method
   #   => "Kernel.puts"
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:299
+  # source://pry-0.14.1/lib/pry/method.rb:299
   def name_with_owner; end
 
   # @return [String, nil] The original name the method was defined under,
   #   before any aliasing, or `nil` if it can't be determined.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:429
+  # source://pry-0.14.1/lib/pry/method.rb:429
   def original_name; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def owner(*args, &block); end
+  def owner(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def parameters(*args, &block); end
+  def parameters(*args, **_arg1, &block); end
 
   # @return [Boolean] Was the method defined within the Pry REPL?
   #
-  # source://pry-0.13.1/lib/pry/method.rb:456
+  # source://pry-0.14.1/lib/pry/method.rb:456
   def pry_method?; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def receiver(*args, &block); end
+  def receiver(*args, **_arg1, &block); end
 
   # Update the live copy of the method's source.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:314
+  # source://pry-0.14.1/lib/pry/method.rb:314
   def redefine(source); end
 
   # @param method_name [String, Symbol]
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:498
+  # source://pry-0.14.1/lib/pry/method.rb:498
   def respond_to?(method_name, include_all = T.unsafe(nil)); end
 
   # @return [String] A representation of the method's signature, including its
@@ -7341,117 +7306,117 @@ class Pry::Method
   #   If the parameter names are unavailable, they're given numbered names instead.
   #   Paraphrased from `awesome_print` gem.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:391
+  # source://pry-0.14.1/lib/pry/method.rb:391
   def signature; end
 
   # @return [Boolean] Whether the method is a singleton method.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:451
+  # source://pry-0.14.1/lib/pry/method.rb:451
   def singleton_method?; end
 
   # @return [String, nil] The source code of the method, or `nil` if it's unavailable.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:304
+  # source://pry-0.14.1/lib/pry/method.rb:304
   def source; end
 
   # Can we get the source code for this method?
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:321
+  # source://pry-0.14.1/lib/pry/method.rb:321
   def source?; end
 
   # @return [String, nil] The name of the file the method is defined in, or
   #   `nil` if the filename is unavailable.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:348
+  # source://pry-0.14.1/lib/pry/method.rb:348
   def source_file; end
 
   # @return [Fixnum, nil] The line of code in `source_file` which begins
   #   the method's definition, or `nil` if that information is unavailable.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:361
+  # source://pry-0.14.1/lib/pry/method.rb:361
   def source_line; end
 
   # @return [Range, nil] The range of lines in `source_file` which contain
   #   the method's definition, or `nil` if that information is unavailable.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:367
+  # source://pry-0.14.1/lib/pry/method.rb:367
   def source_range; end
 
   # @return [Symbol] The source type of the method. The options are
   #   `:ruby` for Ruby methods or `:c` for methods written in C.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:342
+  # source://pry-0.14.1/lib/pry/method.rb:342
   def source_type; end
 
   # @return [Pry::Method, nil] The wrapped method that is called when you
   #   use "super" in the body of this method.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:417
+  # source://pry-0.14.1/lib/pry/method.rb:417
   def super(times = T.unsafe(nil)); end
 
   # @return [Boolean] Whether the method is unbound.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:441
+  # source://pry-0.14.1/lib/pry/method.rb:441
   def unbound_method?; end
 
   # Is the method undefined? (aka `Disowned`)
   #
   # @return [Boolean] false
   #
-  # source://pry-0.13.1/lib/pry/method.rb:290
+  # source://pry-0.14.1/lib/pry/method.rb:290
   def undefined?; end
 
   # @return [Symbol] The visibility of the method. May be `:public`,
   #   `:protected`, or `:private`.
   #
-  # source://pry-0.13.1/lib/pry/method.rb:373
+  # source://pry-0.14.1/lib/pry/method.rb:373
   def visibility; end
 
   # Get underlying object wrapped by this Pry::Method instance
   #
   # @return [Method, UnboundMethod, Proc]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:284
+  # source://pry-0.14.1/lib/pry/method.rb:284
   def wrapped; end
 
   # Get the owner of the method as a Pry::Module
   #
   # @return [Pry::Module]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:278
+  # source://pry-0.14.1/lib/pry/method.rb:278
   def wrapped_owner; end
 
   private
 
-  # source://pry-0.13.1/lib/pry/method.rb:577
+  # source://pry-0.14.1/lib/pry/method.rb:577
   def c_source; end
 
   # @param first_ln [String] The first line of a method definition.
   # @return [String, nil]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:563
+  # source://pry-0.14.1/lib/pry/method.rb:563
   def method_name_from_first_line(first_ln); end
 
   # @raise [CommandError] when the method can't be found or `pry-doc` isn't installed.
   # @return [YARD::CodeObjects::MethodObject]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:523
+  # source://pry-0.14.1/lib/pry/method.rb:523
   def pry_doc_info; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method.rb:511
+  # source://pry-0.14.1/lib/pry/method.rb:511
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 
-  # source://pry-0.13.1/lib/pry/method.rb:582
+  # source://pry-0.14.1/lib/pry/method.rb:582
   def ruby_source; end
 
   # @param ancestors [Class, Module] The ancestors to investigate
   # @return [Method] The unwrapped super-method
   #
-  # source://pry-0.13.1/lib/pry/method.rb:542
+  # source://pry-0.14.1/lib/pry/method.rb:542
   def super_using_ancestors(ancestors, times = T.unsafe(nil)); end
 
   class << self
@@ -7461,7 +7426,7 @@ class Pry::Method
     # @param include_super [Boolean] Whether to include methods from ancestors.
     # @return [Array[Pry::Method]]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:161
+    # source://pry-0.14.1/lib/pry/method.rb:161
     def all_from_class(klass, include_super = T.unsafe(nil)); end
 
     # Get all of the methods on an `Object`
@@ -7470,7 +7435,7 @@ class Pry::Method
     # @param include_super [Boolean] indicates whether or not to include methods from ancestors.
     # @return [Array[Pry::Method]]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:184
+    # source://pry-0.14.1/lib/pry/method.rb:184
     def all_from_obj(obj, include_super = T.unsafe(nil)); end
 
     # Given a `Binding`, try to extract the `::Method` it originated from and
@@ -7480,7 +7445,7 @@ class Pry::Method
     # @param binding [Binding]
     # @return [Pry::Method, nil]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:77
+    # source://pry-0.14.1/lib/pry/method.rb:77
     def from_binding(binding); end
 
     # Given a `Class` or `Module` and the name of a method, try to
@@ -7492,7 +7457,7 @@ class Pry::Method
     # @param target [Binding] The binding where the method is looked up.
     # @return [Pry::Method, nil]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:136
+    # source://pry-0.14.1/lib/pry/method.rb:136
     def from_class(klass, name, target = T.unsafe(nil)); end
 
     # Given a `Class` or `Module` and the name of a method, try to
@@ -7504,7 +7469,7 @@ class Pry::Method
     # @param target [Binding] The binding where the method is looked up.
     # @return [Pry::Method, nil]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:136
+    # source://pry-0.14.1/lib/pry/method.rb:136
     def from_module(klass, name, target = T.unsafe(nil)); end
 
     # Given an object and the name of a method, try to instantiate
@@ -7516,7 +7481,7 @@ class Pry::Method
     # @param target [Binding] The binding where the method is looked up.
     # @return [Pry::Method, nil]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:151
+    # source://pry-0.14.1/lib/pry/method.rb:151
     def from_obj(obj, name, target = T.unsafe(nil)); end
 
     # Given a string representing a method name and optionally a binding to
@@ -7532,12 +7497,12 @@ class Pry::Method
     #   requested method, or `nil` if name is `nil` or no method could be
     #   located matching the parameters.
     #
-    # source://pry-0.13.1/lib/pry/method.rb:43
+    # source://pry-0.14.1/lib/pry/method.rb:43
     def from_str(name, target = T.unsafe(nil), options = T.unsafe(nil)); end
 
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:227
+    # source://pry-0.14.1/lib/pry/method.rb:227
     def instance_method_definition?(name, definition_line); end
 
     # Get every `Class` and `Module`, in order, that will be checked when looking
@@ -7547,7 +7512,7 @@ class Pry::Method
     # @param klass [Class, Module]
     # @return [Array[Class, Module]]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:210
+    # source://pry-0.14.1/lib/pry/method.rb:210
     def instance_resolution_order(klass); end
 
     # In order to support 2.0 Refinements we need to look up methods
@@ -7559,12 +7524,12 @@ class Pry::Method
     # @param target [Binding] The binding where the method is looked up.
     # @return [Method, UnboundMethod] The 'refined' method object.
     #
-    # source://pry-0.13.1/lib/pry/method.rb:114
+    # source://pry-0.14.1/lib/pry/method.rb:114
     def lookup_method_via_binding(obj, method_name, method_type, target = T.unsafe(nil)); end
 
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:215
+    # source://pry-0.14.1/lib/pry/method.rb:215
     def method_definition?(name, definition_line); end
 
     # Get every `Class` and `Module`, in order, that will be checked when looking
@@ -7573,10 +7538,10 @@ class Pry::Method
     # @param obj [Object]
     # @return [Array[Class, Module]]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:192
+    # source://pry-0.14.1/lib/pry/method.rb:192
     def resolution_order(obj); end
 
-    # source://pry-0.13.1/lib/pry/method.rb:247
+    # source://pry-0.14.1/lib/pry/method.rb:247
     def singleton_class_of(obj); end
 
     # Get the singleton classes of superclasses that could define methods on
@@ -7584,12 +7549,12 @@ class Pry::Method
     # If a module is included at multiple points in the ancestry, only
     # the lowest copy will be returned.
     #
-    # source://pry-0.13.1/lib/pry/method.rb:238
+    # source://pry-0.14.1/lib/pry/method.rb:238
     def singleton_class_resolution_order(klass); end
 
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/method.rb:220
+    # source://pry-0.14.1/lib/pry/method.rb:220
     def singleton_method_definition?(name, definition_line); end
   end
 end
@@ -7608,7 +7573,7 @@ end
 #
 # This occurs mainly in Sinatra applications.
 #
-# source://pry-0.13.1/lib/pry/method/disowned.rb:18
+# source://pry-0.14.1/lib/pry/method/disowned.rb:18
 class Pry::Method::Disowned < ::Pry::Method
   # Create a new Disowned method.
   #
@@ -7616,80 +7581,80 @@ class Pry::Method::Disowned < ::Pry::Method
   # @param method_name [String]
   # @return [Disowned] a new instance of Disowned
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:25
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:25
   def initialize(receiver, method_name); end
 
   # Raise a more useful error message instead of trying to forward to nil.
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:52
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:52
   def method_missing(method_name, *args, &block); end
 
   # Returns the value of attribute name.
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:19
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:19
   def name; end
 
   # Get the hypothesized owner of the method.
   #
   # @return [Object]
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:46
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:46
   def owner; end
 
   # Returns the value of attribute receiver.
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:19
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:19
   def receiver; end
 
   # Can we get the source for this method?
   #
   # @return [Boolean] false
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:39
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:39
   def source?; end
 
   # Is the method undefined? (aka `Disowned`)
   #
   # @return [Boolean] true
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:33
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:33
   def undefined?; end
 
   private
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method/disowned.rb:62
+  # source://pry-0.14.1/lib/pry/method/disowned.rb:62
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 end
 
-# source://pry-0.13.1/lib/pry/method/patcher.rb:5
+# source://pry-0.14.1/lib/pry/method/patcher.rb:5
 class Pry::Method::Patcher
   # @return [Patcher] a new instance of Patcher
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:12
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:12
   def initialize(method); end
 
   # Returns the value of attribute method.
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:6
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:6
   def method; end
 
   # Sets the attribute method
   #
   # @param value the value to set the attribute method to.
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:6
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:6
   def method=(_arg0); end
 
   # perform the patch
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:21
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:21
   def patch_in_ram(source); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:38
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:38
   def cache_key; end
 
   # Update the definition line so that it can be eval'd directly on the Method's
@@ -7705,10 +7670,10 @@ class Pry::Method::Patcher
   # @param line [String] The original definition line. e.g. def self.foo(bar, baz=1)
   # @return [String] The new definition line. e.g. def foo(bar, baz=1)
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:78
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:78
   def definition_for_owner(line); end
 
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:33
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:33
   def redefine(source); end
 
   # Run some code ensuring that at the end target#meth_name will not have changed.
@@ -7718,7 +7683,7 @@ class Pry::Method::Patcher
   # transation we make that not happen, which means that alias_method_chains, etc.
   # continue to work.
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:49
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:49
   def with_method_transaction; end
 
   # Apply wrap_for_owner and wrap_for_nesting successively to `source`
@@ -7726,7 +7691,7 @@ class Pry::Method::Patcher
   # @param source [String]
   # @return [String] The wrapped source.
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:91
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:91
   def wrap(source); end
 
   # Update the new source code to have the correct Module.nesting.
@@ -7742,7 +7707,7 @@ class Pry::Method::Patcher
   # @param source [String] The source to wrap.
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:122
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:122
   def wrap_for_nesting(source); end
 
   # Update the source code so that when it has the right owner when eval'd.
@@ -7754,11 +7719,11 @@ class Pry::Method::Patcher
   # @param source [String] The source to wrap
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/method/patcher.rb:103
+  # source://pry-0.14.1/lib/pry/method/patcher.rb:103
   def wrap_for_owner(source); end
 
   class << self
-    # source://pry-0.13.1/lib/pry/method/patcher.rb:16
+    # source://pry-0.14.1/lib/pry/method/patcher.rb:16
     def code_for(filename); end
   end
 end
@@ -7778,59 +7743,59 @@ end
 # When we locate the method that matches the Binding we wrap it in
 # Pry::Method and return it, or return nil if we fail.
 #
-# source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:19
+# source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:19
 class Pry::Method::WeirdMethodLocator
   # @param method [Pry::Method] The seed method.
   # @param target [Binding] The Binding that captures the method
   #   we want to locate.
   # @return [WeirdMethodLocator] a new instance of WeirdMethodLocator
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:55
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:55
   def initialize(method, target); end
 
   # @return [Pry::Method, nil] The Pry::Method that matches the
   #   given binding.
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:62
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:62
   def find_method; end
 
   # @return [Boolean] Whether the Pry::Method is unrecoverable
   #   This usually happens when the method captured by the Binding
   #   has been subsequently deleted.
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:69
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:69
   def lost_method?; end
 
   # Returns the value of attribute method.
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:49
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:49
   def method; end
 
   # Sets the attribute method
   #
   # @param value the value to set the attribute method to.
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:49
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:49
   def method=(_arg0); end
 
   # Returns the value of attribute target.
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:50
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:50
   def target; end
 
   # Sets the attribute target
   #
   # @param value the value to set the attribute target to.
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:50
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:50
   def target=(_arg0); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:215
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:215
   def all_methods_for(obj); end
 
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:167
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:167
   def expanded_source_location(source_location); end
 
   # it's possible in some cases that the method we find by this approach is
@@ -7849,7 +7814,7 @@ class Pry::Method::WeirdMethodLocator
   # @return [Pry::Method, nil] The Pry::Method representing the
   #   superclass method.
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:131
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:131
   def find_method_in_superclass; end
 
   # This is the case where the name of a method has changed
@@ -7859,23 +7824,23 @@ class Pry::Method::WeirdMethodLocator
   # @return [Pry::Method, nil] The Pry::Method representing the
   #   renamed method
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:156
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:156
   def find_renamed_method; end
 
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:197
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:197
   def index_to_line_number(index); end
 
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:206
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:206
   def lines_for_file(file); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:80
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:80
   def normal_method?(method); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:106
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:106
   def pry_file?; end
 
   # Use static analysis to locate the start of the method definition.
@@ -7886,26 +7851,26 @@ class Pry::Method::WeirdMethodLocator
   # @return [Array<String, Fixnum>] The `source_location` of the
   #   renamed method
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:184
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:184
   def renamed_method_source_location; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:75
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:75
   def skip_superclass_search?; end
 
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:88
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:88
   def target_file; end
 
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:98
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:98
   def target_line; end
 
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:84
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:84
   def target_self; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:202
+  # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:202
   def valid_file?(file); end
 
   class << self
@@ -7918,24 +7883,24 @@ class Pry::Method::WeirdMethodLocator
     # @param binding [Binding]
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:29
+    # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:29
     def normal_method?(method, binding); end
 
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/method/weird_method_locator.rb:44
+    # source://pry-0.14.1/lib/pry/method/weird_method_locator.rb:44
     def weird_method?(method, binding); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/exceptions.rb:69
+# source://pry-0.14.1/lib/pry/exceptions.rb:69
 class Pry::MethodNotFound < ::Pry::CommandError; end
 
-# source://pry-0.13.1/lib/pry/command_set.rb:4
+# source://pry-0.14.1/lib/pry/command_set.rb:4
 class Pry::NoCommandError < ::StandardError
   # @return [NoCommandError] a new instance of NoCommandError
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:5
+  # source://pry-0.14.1/lib/pry/command_set.rb:5
   def initialize(match, owner); end
 end
 
@@ -7952,136 +7917,136 @@ end
 #
 # @see https://github.com/pry/pry/wiki/State-navigation
 #
-# source://pry-0.13.1/lib/pry/object_path.rb:17
+# source://pry-0.14.1/lib/pry/object_path.rb:17
 class Pry::ObjectPath
   # @param path_string [String] The object path expressed as a string.
   # @param current_stack [Array<Binding>] The current state of the binding
   #   stack.
   # @return [ObjectPath] a new instance of ObjectPath
   #
-  # source://pry-0.13.1/lib/pry/object_path.rb:23
+  # source://pry-0.14.1/lib/pry/object_path.rb:23
   def initialize(path_string, current_stack); end
 
   # @return [Array<Binding>] a new stack resulting from applying the given
   #   path to the current stack.
   #
-  # source://pry-0.13.1/lib/pry/object_path.rb:30
+  # source://pry-0.14.1/lib/pry/object_path.rb:30
   def resolve; end
 
   private
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/object_path.rb:74
+  # source://pry-0.14.1/lib/pry/object_path.rb:74
   def complete?(segment); end
 
-  # source://pry-0.13.1/lib/pry/object_path.rb:78
+  # source://pry-0.14.1/lib/pry/object_path.rb:78
   def handle_failure(context, err); end
 end
 
-# source://pry-0.13.1/lib/pry/object_path.rb:18
+# source://pry-0.14.1/lib/pry/object_path.rb:18
 Pry::ObjectPath::SPECIAL_TERMS = T.let(T.unsafe(nil), Array)
 
 # indicates obsolete API
 #
-# source://pry-0.13.1/lib/pry/exceptions.rb:72
+# source://pry-0.14.1/lib/pry/exceptions.rb:72
 class Pry::ObsoleteError < ::StandardError; end
 
-# source://pry-0.13.1/lib/pry/output.rb:4
+# source://pry-0.14.1/lib/pry/output.rb:4
 class Pry::Output
   # @return [Output] a new instance of Output
   #
-  # source://pry-0.13.1/lib/pry/output.rb:10
+  # source://pry-0.14.1/lib/pry/output.rb:10
   def initialize(pry_instance); end
 
-  # source://pry-0.13.1/lib/pry/output.rb:28
+  # source://pry-0.14.1/lib/pry/output.rb:28
   def <<(*objs); end
 
-  # source://pry-0.13.1/lib/pry/output.rb:53
+  # source://pry-0.14.1/lib/pry/output.rb:53
   def decolorize_maybe(str); end
 
   # Return a screen height or the default if that fails.
   #
-  # source://pry-0.13.1/lib/pry/output.rb:74
+  # source://pry-0.14.1/lib/pry/output.rb:74
   def height; end
 
-  # source://pry-0.13.1/lib/pry/output.rb:41
+  # source://pry-0.14.1/lib/pry/output.rb:41
   def method_missing(method_name, *args, &block); end
 
-  # source://pry-0.13.1/lib/pry/output.rb:28
+  # source://pry-0.14.1/lib/pry/output.rb:28
   def print(*objs); end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/output.rb:8
+  # source://pry-0.14.1/lib/pry/output.rb:8
   def pry_instance; end
 
-  # source://pry-0.13.1/lib/pry/output.rb:15
+  # source://pry-0.14.1/lib/pry/output.rb:15
   def puts(*objs); end
 
   # @return [Array<Integer>] a pair of [rows, columns] which gives the size of
   #   the window. If the window size cannot be determined, the default value.
   #
-  # source://pry-0.13.1/lib/pry/output.rb:61
+  # source://pry-0.14.1/lib/pry/output.rb:61
   def size; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/output.rb:37
+  # source://pry-0.14.1/lib/pry/output.rb:37
   def tty?; end
 
   # Return a screen width or the default if that fails.
   #
-  # source://pry-0.13.1/lib/pry/output.rb:69
+  # source://pry-0.14.1/lib/pry/output.rb:69
   def width; end
 
-  # source://pry-0.13.1/lib/pry/output.rb:28
+  # source://pry-0.14.1/lib/pry/output.rb:28
   def write(*objs); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/output.rb:80
+  # source://pry-0.14.1/lib/pry/output.rb:80
   def actual_screen_size; end
 
-  # source://pry-0.13.1/lib/pry/output.rb:125
+  # source://pry-0.14.1/lib/pry/output.rb:125
   def ansicon_env_size; end
 
-  # source://pry-0.13.1/lib/pry/output.rb:109
+  # source://pry-0.14.1/lib/pry/output.rb:109
   def env_size; end
 
-  # source://pry-0.13.1/lib/pry/output.rb:92
+  # source://pry-0.14.1/lib/pry/output.rb:92
   def io_console_size; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/output.rb:132
+  # source://pry-0.14.1/lib/pry/output.rb:132
   def nonzero_column?(size); end
 
-  # source://pry-0.13.1/lib/pry/output.rb:114
+  # source://pry-0.14.1/lib/pry/output.rb:114
   def readline_size; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/output.rb:49
+  # source://pry-0.14.1/lib/pry/output.rb:49
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 end
 
 # @return [Array<Integer>] default terminal screen size [rows, cols]
 #
-# source://pry-0.13.1/lib/pry/output.rb:6
+# source://pry-0.14.1/lib/pry/output.rb:6
 Pry::Output::DEFAULT_SIZE = T.let(T.unsafe(nil), Array)
 
-# source://pry-0.13.1/lib/pry/pager.rb:7
+# source://pry-0.14.1/lib/pry/pager.rb:7
 class Pry::Pager
   # @return [Pager] a new instance of Pager
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:13
+  # source://pry-0.14.1/lib/pry/pager.rb:13
   def initialize(pry_instance); end
 
   # Yields a pager object (`NullPager`, `SimplePager`, or `SystemPager`).
   # All pagers accept output with `#puts`, `#print`, `#write`, and `#<<`.
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:33
+  # source://pry-0.14.1/lib/pry/pager.rb:33
   def open; end
 
   # Send the given text through the best available pager (if
@@ -8091,12 +8056,12 @@ class Pry::Pager
   #
   # @param text [String] Text to run through a pager.
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:25
+  # source://pry-0.14.1/lib/pry/pager.rb:25
   def page(text); end
 
   # Returns the value of attribute pry_instance.
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:11
+  # source://pry-0.14.1/lib/pry/pager.rb:11
   def pry_instance; end
 
   private
@@ -8109,51 +8074,51 @@ class Pry::Pager
   # you must rescue `Pry::Pager::StopPaging`. These requirements can be
   # avoided by using `.open` instead.
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:56
+  # source://pry-0.14.1/lib/pry/pager.rb:56
   def best_available; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:43
+  # source://pry-0.14.1/lib/pry/pager.rb:43
   def enabled?; end
 
   # Returns the value of attribute output.
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:47
+  # source://pry-0.14.1/lib/pry/pager.rb:47
   def output; end
 end
 
 # `NullPager` is a "pager" that actually just prints all output as it
 # comes in. Used when `Pry.config.pager` is false.
 #
-# source://pry-0.13.1/lib/pry/pager.rb:68
+# source://pry-0.14.1/lib/pry/pager.rb:68
 class Pry::Pager::NullPager
   # @return [NullPager] a new instance of NullPager
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:69
+  # source://pry-0.14.1/lib/pry/pager.rb:69
   def initialize(out); end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:77
+  # source://pry-0.14.1/lib/pry/pager.rb:77
   def <<(str); end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:86
+  # source://pry-0.14.1/lib/pry/pager.rb:86
   def close; end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:77
+  # source://pry-0.14.1/lib/pry/pager.rb:77
   def print(str); end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:73
+  # source://pry-0.14.1/lib/pry/pager.rb:73
   def puts(str); end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:82
+  # source://pry-0.14.1/lib/pry/pager.rb:82
   def write(str); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/pager.rb:90
+  # source://pry-0.14.1/lib/pry/pager.rb:90
   def height; end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:94
+  # source://pry-0.14.1/lib/pry/pager.rb:94
   def width; end
 end
 
@@ -8167,22 +8132,22 @@ end
 # counted as multiple lines, but we don't have to transition from
 # `false` to `true` until we see a newline.
 #
-# source://pry-0.13.1/lib/pry/pager.rb:213
+# source://pry-0.14.1/lib/pry/pager.rb:213
 class Pry::Pager::PageTracker
   # @return [PageTracker] a new instance of PageTracker
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:214
+  # source://pry-0.14.1/lib/pry/pager.rb:214
   def initialize(rows, cols); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:231
+  # source://pry-0.14.1/lib/pry/pager.rb:231
   def page?; end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:220
+  # source://pry-0.14.1/lib/pry/pager.rb:220
   def record(str); end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:235
+  # source://pry-0.14.1/lib/pry/pager.rb:235
   def reset; end
 
   private
@@ -8190,25 +8155,25 @@ class Pry::Pager::PageTracker
   # Approximation of the printable length of a given line, without the
   # newline and without ANSI color codes.
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:244
+  # source://pry-0.14.1/lib/pry/pager.rb:244
   def line_length(line); end
 end
 
 # `SimplePager` is a straightforward pure-Ruby pager. We use it on
 # JRuby and when we can't find a usable external pager.
 #
-# source://pry-0.13.1/lib/pry/pager.rb:101
+# source://pry-0.14.1/lib/pry/pager.rb:101
 class Pry::Pager::SimplePager < ::Pry::Pager::NullPager
   # @return [SimplePager] a new instance of SimplePager
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:102
+  # source://pry-0.14.1/lib/pry/pager.rb:102
   def initialize(*_arg0); end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:107
+  # source://pry-0.14.1/lib/pry/pager.rb:107
   def write(str); end
 end
 
-# source://pry-0.13.1/lib/pry/pager.rb:8
+# source://pry-0.14.1/lib/pry/pager.rb:8
 class Pry::Pager::StopPaging < ::StandardError; end
 
 # `SystemPager` buffers output until we're pretty sure it's at least a
@@ -8216,206 +8181,41 @@ class Pry::Pager::StopPaging < ::StandardError; end
 # to it. If `#close` is called before then, it just prints out the
 # buffered content.
 #
-# source://pry-0.13.1/lib/pry/pager.rb:129
+# source://pry-0.14.1/lib/pry/pager.rb:129
 class Pry::Pager::SystemPager < ::Pry::Pager::NullPager
   # @return [SystemPager] a new instance of SystemPager
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:161
+  # source://pry-0.14.1/lib/pry/pager.rb:161
   def initialize(*_arg0); end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:181
+  # source://pry-0.14.1/lib/pry/pager.rb:181
   def close; end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:168
+  # source://pry-0.14.1/lib/pry/pager.rb:168
   def write(str); end
 
   private
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/pager.rb:195
+  # source://pry-0.14.1/lib/pry/pager.rb:195
   def invoked_pager?; end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:199
+  # source://pry-0.14.1/lib/pry/pager.rb:199
   def pager; end
 
-  # source://pry-0.13.1/lib/pry/pager.rb:191
+  # source://pry-0.14.1/lib/pry/pager.rb:191
   def write_to_pager(text); end
 
   class << self
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/pager.rb:142
+    # source://pry-0.14.1/lib/pry/pager.rb:142
     def available?; end
 
-    # source://pry-0.13.1/lib/pry/pager.rb:130
+    # source://pry-0.14.1/lib/pry/pager.rb:130
     def default_pager; end
   end
-end
-
-# source://pry-0.13.1/lib/pry/plugins.rb:6
-class Pry::PluginManager
-  # @return [PluginManager] a new instance of PluginManager
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:93
-  def initialize; end
-
-  # Require all enabled plugins, disabled plugins are skipped.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:120
-  def load_plugins; end
-
-  # Find all installed Pry plugins and store them in an internal array.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:98
-  def locate_plugins; end
-
-  # @return [Hash] A hash with all plugin names (minus the 'pry-') as
-  #   keys and Plugin objects as values.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:111
-  def plugins; end
-
-  private
-
-  # source://pry-0.13.1/lib/pry/plugins.rb:132
-  def gem_list; end
-
-  # @return [Boolean]
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:128
-  def plugin_located?(plugin); end
-end
-
-# Placeholder when no associated gem found, displays warning
-#
-# source://pry-0.13.1/lib/pry/plugins.rb:10
-class Pry::PluginManager::NoPlugin
-  # @return [NoPlugin] a new instance of NoPlugin
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:11
-  def initialize(name); end
-
-  # source://pry-0.13.1/lib/pry/plugins.rb:15
-  def method_missing(*_arg0); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:20
-  def respond_to_missing?(*_arg0); end
-end
-
-# source://pry-0.13.1/lib/pry/plugins.rb:7
-Pry::PluginManager::PRY_PLUGIN_PREFIX = T.let(T.unsafe(nil), Regexp)
-
-# source://pry-0.13.1/lib/pry/plugins.rb:25
-class Pry::PluginManager::Plugin
-  # @return [Plugin] a new instance of Plugin
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:28
-  def initialize(name, gem_name, spec, enabled); end
-
-  # Activate the plugin (require the gem - enables/loads the
-  # plugin immediately at point of call, even if plugin is
-  # disabled)
-  # Does not reload plugin if it's already active.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:62
-  def activate!; end
-
-  # Returns the value of attribute active.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def active; end
-
-  # Sets the attribute active
-  #
-  # @param value the value to set the attribute active to.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def active=(_arg0); end
-
-  # Returns the value of attribute active.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def active?; end
-
-  # Disable a plugin. (prevents plugin from being loaded, cannot
-  # disable an already activated plugin)
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:37
-  def disable!; end
-
-  # Enable a plugin. (does not load it immediately but puts on
-  # 'white list' to be loaded)
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:43
-  def enable!; end
-
-  # Returns the value of attribute enabled.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def enabled; end
-
-  # Sets the attribute enabled
-  #
-  # @param value the value to set the attribute enabled to.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def enabled=(_arg0); end
-
-  # Returns the value of attribute enabled.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def enabled?; end
-
-  # Returns the value of attribute gem_name.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def gem_name; end
-
-  # Sets the attribute gem_name
-  #
-  # @param value the value to set the attribute gem_name to.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def gem_name=(_arg0); end
-
-  # Load the Command line options defined by this plugin (if they exist)
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:48
-  def load_cli_options; end
-
-  # Returns the value of attribute name.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def name; end
-
-  # Sets the attribute name
-  #
-  # @param value the value to set the attribute name to.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def name=(_arg0); end
-
-  # Returns the value of attribute spec.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def spec; end
-
-  # Sets the attribute spec
-  #
-  # @param value the value to set the attribute spec to.
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:26
-  def spec=(_arg0); end
-
-  # @return [Boolean]
-  #
-  # source://pry-0.13.1/lib/pry/plugins.rb:82
-  def supported?; end
 end
 
 # Prompt represents the Pry prompt, which can be used with Readline-like
@@ -8451,7 +8251,7 @@ end
 #   prompt.incomplete_proc.call(...)
 # @since v0.11.0
 #
-# source://pry-0.13.1/lib/pry/prompt.rb:38
+# source://pry-0.14.1/lib/pry/prompt.rb:38
 class Pry::Prompt
   # @api public
   # @param name [String]
@@ -8460,21 +8260,21 @@ class Pry::Prompt
   # @return [Prompt] a new instance of Prompt
   # @since v0.11.0
   #
-  # source://pry-0.13.1/lib/pry/prompt.rb:117
+  # source://pry-0.14.1/lib/pry/prompt.rb:117
   def initialize(name, description, prompt_procs); end
 
   # @api public
   # @deprecated Use a `Pry::Prompt` instance directly
   # @since v0.11.0
   #
-  # source://pry-0.13.1/lib/pry/prompt.rb:135
+  # source://pry-0.14.1/lib/pry/prompt.rb:135
   def [](key); end
 
   # @api public
   # @return [String]
   # @since v0.11.0
   #
-  # source://pry-0.13.1/lib/pry/prompt.rb:108
+  # source://pry-0.14.1/lib/pry/prompt.rb:108
   def description; end
 
   # @api public
@@ -8482,14 +8282,14 @@ class Pry::Prompt
   #   expression such as open method, etc. (`*`)
   # @since v0.11.0
   #
-  # source://pry-0.13.1/lib/pry/prompt.rb:130
+  # source://pry-0.14.1/lib/pry/prompt.rb:130
   def incomplete_proc; end
 
   # @api public
   # @return [String]
   # @since v0.11.0
   #
-  # source://pry-0.13.1/lib/pry/prompt.rb:105
+  # source://pry-0.14.1/lib/pry/prompt.rb:105
   def name; end
 
   # @api public
@@ -8497,14 +8297,14 @@ class Pry::Prompt
   #   `[wait_proc, incomplete_proc]`
   # @since v0.11.0
   #
-  # source://pry-0.13.1/lib/pry/prompt.rb:112
+  # source://pry-0.14.1/lib/pry/prompt.rb:112
   def prompt_procs; end
 
   # @api public
   # @return [Proc] the proc which builds the wait prompt (`>`)
   # @since v0.11.0
   #
-  # source://pry-0.13.1/lib/pry/prompt.rb:124
+  # source://pry-0.14.1/lib/pry/prompt.rb:124
   def wait_proc; end
 
   class << self
@@ -8517,7 +8317,7 @@ class Pry::Prompt
     # @return [Hash{Symbol=>Object}]
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/prompt.rb:52
+    # source://pry-0.14.1/lib/pry/prompt.rb:52
     def [](name); end
 
     # Adds a new prompt to the prompt hash.
@@ -8538,7 +8338,7 @@ class Pry::Prompt
     # @yieldparam pry_instance [Pry] the Pry instance
     # @yieldparam separator [String] separator string
     #
-    # source://pry-0.13.1/lib/pry/prompt.rb:79
+    # source://pry-0.14.1/lib/pry/prompt.rb:79
     def add(name, description = T.unsafe(nil), separators = T.unsafe(nil)); end
 
     # @api public
@@ -8546,12 +8346,12 @@ class Pry::Prompt
     # @return [Hash{Symbol=>Hash}] the duplicate of the internal prompts hash
     # @since v0.12.0
     #
-    # source://pry-0.13.1/lib/pry/prompt.rb:59
+    # source://pry-0.14.1/lib/pry/prompt.rb:59
     def all; end
   end
 end
 
-# source://pry-0.13.1/lib/pry/repl.rb:4
+# source://pry-0.14.1/lib/pry/repl.rb:4
 class Pry::REPL
   extend ::Forwardable
   extend ::Pry::Forwardable
@@ -8563,23 +8363,23 @@ class Pry::REPL
   # @param options [Hash] Options for this {REPL} instance.
   # @return [REPL] a new instance of REPL
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:22
+  # source://pry-0.14.1/lib/pry/repl.rb:22
   def initialize(pry, options = T.unsafe(nil)); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def input(*args, &block); end
+  def input(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def output(*args, &block); end
+  def output(*args, **_arg1, &block); end
 
   # @return [Pry] The instance of {Pry} that the user is controlling.
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:9
+  # source://pry-0.14.1/lib/pry/repl.rb:9
   def pry; end
 
   # @return [Pry] The instance of {Pry} that the user is controlling.
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:9
+  # source://pry-0.14.1/lib/pry/repl.rb:9
   def pry=(_arg0); end
 
   # Start the read-eval-print loop.
@@ -8589,7 +8389,7 @@ class Pry::REPL
   # @return [Object?] If the session throws `:breakout`, return the value
   #   thrown with it.
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:36
+  # source://pry-0.14.1/lib/pry/repl.rb:36
   def start; end
 
   private
@@ -8602,19 +8402,19 @@ class Pry::REPL
   #   indicators in 99% of cases.
   # @return [Integer]
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:238
+  # source://pry-0.14.1/lib/pry/repl.rb:238
   def calculate_overhang(current_prompt, original_val, indented_val); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:206
+  # source://pry-0.14.1/lib/pry/repl.rb:206
   def coolline_available?; end
 
   # Clean up after the repl session.
   #
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:84
+  # source://pry-0.14.1/lib/pry/repl.rb:84
   def epilogue; end
 
   # Manage switching of input objects on encountering `EOFError`s.
@@ -8622,10 +8422,10 @@ class Pry::REPL
   # @return [Object] Whatever the given block returns.
   # @return [:no_more_input] Indicates that no more input can be read.
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:127
+  # source://pry-0.14.1/lib/pry/repl.rb:127
   def handle_read_errors; end
 
-  # source://pry-0.13.1/lib/pry/repl.rb:196
+  # source://pry-0.14.1/lib/pry/repl.rb:196
   def input_readline(*args); end
 
   # If `$stdout` is not a tty, it's probably a pipe.
@@ -8639,14 +8439,14 @@ class Pry::REPL
   #   % pry | tee log
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:218
+  # source://pry-0.14.1/lib/pry/repl.rb:218
   def piping?; end
 
   # Set up the repl session.
   #
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:47
+  # source://pry-0.14.1/lib/pry/repl.rb:47
   def prologue; end
 
   # Read a line of input from the user.
@@ -8656,7 +8456,7 @@ class Pry::REPL
   # @return [:control_c] On `<Ctrl+C>`.
   # @return [:no_more_input] On EOF.
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:93
+  # source://pry-0.14.1/lib/pry/repl.rb:93
   def read; end
 
   # Returns the next line of input to be sent to the {Pry} instance.
@@ -8664,12 +8464,12 @@ class Pry::REPL
   # @param current_prompt [String] The prompt to use for input.
   # @return [String?] The next line of input, or `nil` on <Ctrl-D>.
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:170
+  # source://pry-0.14.1/lib/pry/repl.rb:170
   def read_line(current_prompt); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:202
+  # source://pry-0.14.1/lib/pry/repl.rb:202
   def readline_available?; end
 
   # The actual read-eval-print loop.
@@ -8683,12 +8483,12 @@ class Pry::REPL
   # @return [Object?] If the session throws `:breakout`, return the value
   #   thrown with it.
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:66
+  # source://pry-0.14.1/lib/pry/repl.rb:66
   def repl; end
 
   # @return [void]
   #
-  # source://pry-0.13.1/lib/pry/repl.rb:225
+  # source://pry-0.14.1/lib/pry/repl.rb:225
   def set_readline_output; end
 
   class << self
@@ -8698,8 +8498,14 @@ class Pry::REPL
     # @option options
     # @param options [Hash] a customizable set of options
     #
-    # source://pry-0.13.1/lib/pry/repl.rb:14
-    def start(options); end
+    # source://pry-byebug-3.10.0/lib/pry-byebug/pry_ext.rb:8
+    def start(_ = T.unsafe(nil)); end
+
+    # source://pry-byebug-3.10.0/lib/pry-byebug/pry_ext.rb:8
+    def start_with_pry_byebug(_ = T.unsafe(nil)); end
+
+    # source://pry-0.14.1/lib/pry/repl.rb:14
+    def start_without_pry_byebug(options); end
   end
 end
 
@@ -8713,17 +8519,17 @@ end
 # the error before returning to non-interactive processing with the
 # 'make-non-interactive' command.
 #
-# source://pry-0.13.1/lib/pry/repl_file_loader.rb:14
+# source://pry-0.14.1/lib/pry/repl_file_loader.rb:14
 class Pry::REPLFileLoader
   # @return [REPLFileLoader] a new instance of REPLFileLoader
   #
-  # source://pry-0.13.1/lib/pry/repl_file_loader.rb:15
+  # source://pry-0.14.1/lib/pry/repl_file_loader.rb:15
   def initialize(file_name); end
 
   # Define a few extra commands useful for flipping back & forth
   # between interactive/non-interactive modes
   #
-  # source://pry-0.13.1/lib/pry/repl_file_loader.rb:59
+  # source://pry-0.14.1/lib/pry/repl_file_loader.rb:59
   def define_additional_commands; end
 
   # Switch to interactive mode, i.e take input from the user
@@ -8731,13 +8537,13 @@ class Pry::REPLFileLoader
   #
   # @param pry_instance [Pry] the Pry instance to make interactive.
   #
-  # source://pry-0.13.1/lib/pry/repl_file_loader.rb:26
+  # source://pry-0.14.1/lib/pry/repl_file_loader.rb:26
   def interactive_mode(pry_instance); end
 
   # Actually load the file through the REPL by setting file content
   # as the REPL input stream.
   #
-  # source://pry-0.13.1/lib/pry/repl_file_loader.rb:75
+  # source://pry-0.14.1/lib/pry/repl_file_loader.rb:75
   def load; end
 
   # Switch to non-interactive mode. Essentially
@@ -8746,7 +8552,7 @@ class Pry::REPLFileLoader
   #
   # @param pry_instance [Pry] the Pry instance to make non-interactive.
   #
-  # source://pry-0.13.1/lib/pry/repl_file_loader.rb:37
+  # source://pry-0.14.1/lib/pry/repl_file_loader.rb:37
   def non_interactive_mode(pry_instance, content); end
 end
 
@@ -8754,10 +8560,10 @@ end
 # been raised; however we don't want to go overboard and prevent the user
 # from exiting Pry when they want to.
 #
-# source://pry-0.13.1/lib/pry/exceptions.rb:7
+# source://pry-0.14.1/lib/pry/exceptions.rb:7
 module Pry::RescuableException
   class << self
-    # source://pry-0.13.1/lib/pry/exceptions.rb:8
+    # source://pry-0.14.1/lib/pry/exceptions.rb:8
     def ===(exception); end
   end
 end
@@ -8765,23 +8571,23 @@ end
 # Wraps the return result of process_commands, indicates if the
 # result IS a command and what kind of command (e.g void)
 #
-# source://pry-0.13.1/lib/pry/command_set.rb:397
+# source://pry-0.14.1/lib/pry/command_set.rb:397
 class Pry::Result
   # @return [Result] a new instance of Result
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:400
+  # source://pry-0.14.1/lib/pry/command_set.rb:400
   def initialize(is_command, retval = T.unsafe(nil)); end
 
   # Is the result a command?
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:407
+  # source://pry-0.14.1/lib/pry/command_set.rb:407
   def command?; end
 
   # Returns the value of attribute retval.
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:398
+  # source://pry-0.14.1/lib/pry/command_set.rb:398
   def retval; end
 
   # Is the result a command and if it is, is it a void command?
@@ -8789,7 +8595,7 @@ class Pry::Result
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/command_set.rb:414
+  # source://pry-0.14.1/lib/pry/command_set.rb:414
   def void_command?; end
 end
 
@@ -8811,7 +8617,7 @@ end
 #   ring[0] #=> nil
 # @since v0.12.0
 #
-# source://pry-0.13.1/lib/pry/ring.rb:22
+# source://pry-0.14.1/lib/pry/ring.rb:22
 class Pry::Ring
   # @api public
   # @param max_size [Integer] Maximum buffer size. The buffer will start
@@ -8819,7 +8625,7 @@ class Pry::Ring
   # @return [Ring] a new instance of Ring
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:33
+  # source://pry-0.14.1/lib/pry/ring.rb:33
   def initialize(max_size); end
 
   # Push `value` to the current index.
@@ -8829,7 +8635,7 @@ class Pry::Ring
   # @return [self]
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:43
+  # source://pry-0.14.1/lib/pry/ring.rb:43
   def <<(value); end
 
   # Read the value stored at `index`.
@@ -8841,7 +8647,7 @@ class Pry::Ring
   #   exist
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:57
+  # source://pry-0.14.1/lib/pry/ring.rb:57
   def [](index); end
 
   # Clear the buffer and reset count.
@@ -8850,7 +8656,7 @@ class Pry::Ring
   # @return [void]
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:75
+  # source://pry-0.14.1/lib/pry/ring.rb:75
   def clear; end
 
   # @api public
@@ -8858,14 +8664,14 @@ class Pry::Ring
   #   ring
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:28
+  # source://pry-0.14.1/lib/pry/ring.rb:28
   def count; end
 
   # @api public
   # @return [Integer] maximum buffer size
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:24
+  # source://pry-0.14.1/lib/pry/ring.rb:24
   def max_size; end
 
   # @api public
@@ -8873,14 +8679,14 @@ class Pry::Ring
   #   ring
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:28
+  # source://pry-0.14.1/lib/pry/ring.rb:28
   def size; end
 
   # @api public
   # @return [Array<Object>] the buffer as unwinded array
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:67
+  # source://pry-0.14.1/lib/pry/ring.rb:67
   def to_a; end
 
   private
@@ -8888,11 +8694,11 @@ class Pry::Ring
   # @api public
   # @since v0.12.0
   #
-  # source://pry-0.13.1/lib/pry/ring.rb:84
+  # source://pry-0.14.1/lib/pry/ring.rb:84
   def transpose_buffer_tail; end
 end
 
-# source://pry-0.13.1/lib/pry/slop.rb:5
+# source://pry-0.14.1/lib/pry/slop.rb:5
 class Pry::Slop
   include ::Enumerable
 
@@ -8903,7 +8709,7 @@ class Pry::Slop
   #
   # @return [Slop] a new instance of Slop
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:127
+  # source://pry-0.14.1/lib/pry/slop.rb:127
   def initialize(config = T.unsafe(nil), &block); end
 
   # Fetch an options argument value.
@@ -8912,7 +8718,7 @@ class Pry::Slop
   #
   # Returns the Object value for this option, or nil.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:278
+  # source://pry-0.14.1/lib/pry/slop.rb:278
   def [](key); end
 
   # Add a callback.
@@ -8921,7 +8727,7 @@ class Pry::Slop
   #
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:398
+  # source://pry-0.14.1/lib/pry/slop.rb:398
   def add_callback(label, &block); end
 
   # Get or set the banner.
@@ -8930,14 +8736,14 @@ class Pry::Slop
   #
   # Returns the banner String.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:168
+  # source://pry-0.14.1/lib/pry/slop.rb:168
   def banner(banner = T.unsafe(nil)); end
 
   # Set the banner.
   #
   # banner - The String to set the banner.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:159
+  # source://pry-0.14.1/lib/pry/slop.rb:159
   def banner=(banner); end
 
   # Add a new command.
@@ -8947,12 +8753,12 @@ class Pry::Slop
   #
   # Returns a new instance of Slop mapped to this command.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:196
+  # source://pry-0.14.1/lib/pry/slop.rb:196
   def command(command, options = T.unsafe(nil), &block); end
 
   # The Hash of configuration options for this Slop instance.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:118
+  # source://pry-0.14.1/lib/pry/slop.rb:118
   def config; end
 
   # Get or set the description (used for commands).
@@ -8961,19 +8767,19 @@ class Pry::Slop
   #
   # Returns the description String.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:185
+  # source://pry-0.14.1/lib/pry/slop.rb:185
   def description(desc = T.unsafe(nil)); end
 
   # Set the description (used for commands).
   #
   # desc - The String to set the description.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:176
+  # source://pry-0.14.1/lib/pry/slop.rb:176
   def description=(desc); end
 
   # Enumerable interface. Yields each Slop::Option.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:297
+  # source://pry-0.14.1/lib/pry/slop.rb:297
   def each(&block); end
 
   # Fetch a Slop object associated with this command.
@@ -8989,7 +8795,7 @@ class Pry::Slop
   #   # ruby run.rb foo -v
   #   opts.fetch_command(:foo).verbose? #=> true
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:389
+  # source://pry-0.14.1/lib/pry/slop.rb:389
   def fetch_command(command); end
 
   # Fetch a Slop::Option object.
@@ -9005,7 +8811,7 @@ class Pry::Slop
   #
   # Returns an Option or nil if none were found.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:373
+  # source://pry-0.14.1/lib/pry/slop.rb:373
   def fetch_option(key); end
 
   # Fetch an options argument value.
@@ -9014,14 +8820,14 @@ class Pry::Slop
   #
   # Returns the Object value for this option, or nil.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:278
+  # source://pry-0.14.1/lib/pry/slop.rb:278
   def get(key); end
 
   # Print a handy Slop help string.
   #
   # Returns the banner followed by available option help strings.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:416
+  # source://pry-0.14.1/lib/pry/slop.rb:416
   def help; end
 
   # Fetch a list of options which were missing from the parsed list.
@@ -9038,7 +8844,7 @@ class Pry::Slop
   #
   # Returns an Array of Strings representing missing options.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:357
+  # source://pry-0.14.1/lib/pry/slop.rb:357
   def missing; end
 
   # Add an Option.
@@ -9052,7 +8858,7 @@ class Pry::Slop
   #
   # Returns the created instance of Slop::Option.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:265
+  # source://pry-0.14.1/lib/pry/slop.rb:265
   def on(*objects, &block); end
 
   # Add an Option.
@@ -9066,7 +8872,7 @@ class Pry::Slop
   #
   # Returns the created instance of Slop::Option.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:265
+  # source://pry-0.14.1/lib/pry/slop.rb:265
   def opt(*objects, &block); end
 
   # Add an Option.
@@ -9080,12 +8886,12 @@ class Pry::Slop
   #
   # Returns the created instance of Slop::Option.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:265
+  # source://pry-0.14.1/lib/pry/slop.rb:265
   def option(*objects, &block); end
 
   # The Array of Slop::Option objects tied to this Slop instance.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:121
+  # source://pry-0.14.1/lib/pry/slop.rb:121
   def options; end
 
   # Parse a list of items, executing and gathering options along the way.
@@ -9095,7 +8901,7 @@ class Pry::Slop
   #
   # Returns an Array of original items.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:206
+  # source://pry-0.14.1/lib/pry/slop.rb:206
   def parse(items = T.unsafe(nil), &block); end
 
   # Parse a list of items, executing and gathering options along the way.
@@ -9107,7 +8913,7 @@ class Pry::Slop
   #
   # Returns an Array of original items with options removed.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:219
+  # source://pry-0.14.1/lib/pry/slop.rb:219
   def parse!(items = T.unsafe(nil), &block); end
 
   # Check for an options presence.
@@ -9122,7 +8928,7 @@ class Pry::Slop
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:333
+  # source://pry-0.14.1/lib/pry/slop.rb:333
   def present?(*keys); end
 
   # Specify code to be executed when these options are parsed.
@@ -9144,14 +8950,14 @@ class Pry::Slop
   #
   # @raise [ArgumentError]
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:317
+  # source://pry-0.14.1/lib/pry/slop.rb:317
   def run(callable = T.unsafe(nil), &block); end
 
   # Add string separators between options.
   #
   # text - The String text to print.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:405
+  # source://pry-0.14.1/lib/pry/slop.rb:405
   def separator(text); end
 
   # Is strict mode enabled?
@@ -9160,28 +8966,28 @@ class Pry::Slop
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:152
+  # source://pry-0.14.1/lib/pry/slop.rb:152
   def strict?; end
 
   # Returns a new Hash with option flags as keys and option values as values.
   #
   # include_commands - If true, merge options from all sub-commands.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:287
+  # source://pry-0.14.1/lib/pry/slop.rb:287
   def to_h(include_commands = T.unsafe(nil)); end
 
   # Returns a new Hash with option flags as keys and option values as values.
   #
   # include_commands - If true, merge options from all sub-commands.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:287
+  # source://pry-0.14.1/lib/pry/slop.rb:287
   def to_hash(include_commands = T.unsafe(nil)); end
 
   # Print a handy Slop help string.
   #
   # Returns the banner followed by available option help strings.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:416
+  # source://pry-0.14.1/lib/pry/slop.rb:416
   def to_s; end
 
   private
@@ -9193,7 +8999,7 @@ class Pry::Slop
   #
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:590
+  # source://pry-0.14.1/lib/pry/slop.rb:590
   def autocreate(items, index); end
 
   # Build an option from a list of objects.
@@ -9202,7 +9008,7 @@ class Pry::Slop
   #
   # Returns a new instance of Slop::Option.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:606
+  # source://pry-0.14.1/lib/pry/slop.rb:606
   def build_option(objects, &block); end
 
   # Remove any leading -- characters from a string.
@@ -9211,10 +9017,10 @@ class Pry::Slop
   #
   # Returns the newly cleaned String with leading -- characters removed.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:659
+  # source://pry-0.14.1/lib/pry/slop.rb:659
   def clean(object); end
 
-  # source://pry-0.13.1/lib/pry/slop.rb:663
+  # source://pry-0.14.1/lib/pry/slop.rb:663
   def commands_to_help; end
 
   # Execute a `-abc` type option where a, b and c are all options. This
@@ -9226,7 +9032,7 @@ class Pry::Slop
   #
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:552
+  # source://pry-0.14.1/lib/pry/slop.rb:552
   def execute_multiple_switches(option, argument, index); end
 
   # Execute an option, firing off callbacks and assigning arguments.
@@ -9238,7 +9044,7 @@ class Pry::Slop
   #
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:519
+  # source://pry-0.14.1/lib/pry/slop.rb:519
   def execute_option(option, argument, index, item = T.unsafe(nil)); end
 
   # Extract the long flag from an item.
@@ -9246,7 +9052,7 @@ class Pry::Slop
   # objects - The Array of objects passed from #build_option.
   # config  - The Hash of configuration options built in #build_option.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:644
+  # source://pry-0.14.1/lib/pry/slop.rb:644
   def extract_long_flag(objects, config); end
 
   # Extract an option from a flag.
@@ -9255,7 +9061,7 @@ class Pry::Slop
   #
   # Returns an Array of [option, argument].
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:567
+  # source://pry-0.14.1/lib/pry/slop.rb:567
   def extract_option(flag); end
 
   # Extract the short flag from an item.
@@ -9263,7 +9069,7 @@ class Pry::Slop
   # objects - The Array of objects passed from #build_option.
   # config  - The Hash of configuration options built in #build_option.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:626
+  # source://pry-0.14.1/lib/pry/slop.rb:626
   def extract_short_flag(objects, config); end
 
   # Convenience method for present?(:option).
@@ -9277,7 +9083,7 @@ class Pry::Slop
   # Returns true if this option is present. If this method does not end
   # with a ? character it will instead call super().
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:454
+  # source://pry-0.14.1/lib/pry/slop.rb:454
   def method_missing(method, *args, &block); end
 
   # Process a list item, figure out if it's an option, execute any
@@ -9289,7 +9095,7 @@ class Pry::Slop
   #
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:472
+  # source://pry-0.14.1/lib/pry/slop.rb:472
   def process_item(items, index, &block); end
 
   # Override this method so we can check if an option? method exists.
@@ -9298,7 +9104,7 @@ class Pry::Slop
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/slop.rb:340
+  # source://pry-0.14.1/lib/pry/slop.rb:340
   def respond_to_missing?(method_name, include_all = T.unsafe(nil)); end
 
   class << self
@@ -9327,7 +9133,7 @@ class Pry::Slop
     #
     # Returns a new instance of Slop.
     #
-    # source://pry-0.13.1/lib/pry/slop.rb:97
+    # source://pry-0.14.1/lib/pry/slop.rb:97
     def optspec(string, config = T.unsafe(nil)); end
 
     # items  - The Array of items to extract options from (default: ARGV).
@@ -9342,7 +9148,7 @@ class Pry::Slop
     #
     # Returns a new instance of Slop.
     #
-    # source://pry-0.13.1/lib/pry/slop.rb:54
+    # source://pry-0.14.1/lib/pry/slop.rb:54
     def parse(items = T.unsafe(nil), config = T.unsafe(nil), &block); end
 
     # items  - The Array of items to extract options from (default: ARGV).
@@ -9351,12 +9157,12 @@ class Pry::Slop
     #
     # Returns a new instance of Slop.
     #
-    # source://pry-0.13.1/lib/pry/slop.rb:63
+    # source://pry-0.14.1/lib/pry/slop.rb:63
     def parse!(items = T.unsafe(nil), config = T.unsafe(nil), &block); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/slop/commands.rb:5
+# source://pry-0.14.1/lib/pry/slop/commands.rb:5
 class Pry::Slop::Commands
   include ::Enumerable
 
@@ -9390,7 +9196,7 @@ class Pry::Slop::Commands
   #
   # @return [Commands] a new instance of Commands
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:39
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:39
   def initialize(config = T.unsafe(nil), &block); end
 
   # Fetch the instance of Slop tied to a command.
@@ -9399,12 +9205,12 @@ class Pry::Slop::Commands
   #
   # Returns the Slop instance if this key is found, nil otherwise.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:100
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:100
   def [](key); end
 
   # Returns the value of attribute arguments.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:8
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:8
   def arguments; end
 
   # Optionally set the banner for this command help output.
@@ -9413,24 +9219,24 @@ class Pry::Slop::Commands
   #
   # Returns the String banner if one is set.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:59
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:59
   def banner(banner = T.unsafe(nil)); end
 
   # Sets the attribute banner
   #
   # @param value the value to set the attribute banner to.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:9
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:9
   def banner=(_arg0); end
 
   # Returns the value of attribute commands.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:8
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:8
   def commands; end
 
   # Returns the value of attribute config.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:8
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:8
   def config; end
 
   # Add a Slop instance used when no other commands exist.
@@ -9440,12 +9246,12 @@ class Pry::Slop::Commands
   #
   # Returns the newly created Slop instance mapped to default.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:81
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:81
   def default(config = T.unsafe(nil), &block); end
 
   # Enumerable interface.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:119
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:119
   def each(&block); end
 
   # Fetch the instance of Slop tied to a command.
@@ -9454,7 +9260,7 @@ class Pry::Slop::Commands
   #
   # Returns the Slop instance if this key is found, nil otherwise.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:100
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:100
   def get(key); end
 
   # Add a global Slop instance.
@@ -9464,17 +9270,17 @@ class Pry::Slop::Commands
   #
   # Returns the newly created Slop instance mapped to global.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:91
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:91
   def global(config = T.unsafe(nil), &block); end
 
   # Returns the help String.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:158
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:158
   def help; end
 
   # Returns the inspection String.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:170
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:170
   def inspect; end
 
   # Add a Slop instance for a specific command.
@@ -9485,7 +9291,7 @@ class Pry::Slop::Commands
   #
   # Returns the newly created Slop instance mapped to command.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:71
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:71
   def on(command, config = T.unsafe(nil), &block); end
 
   # Parse a list of items.
@@ -9494,7 +9300,7 @@ class Pry::Slop::Commands
   #
   # Returns the original Array of items.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:128
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:128
   def parse(items = T.unsafe(nil)); end
 
   # Parse a list of items, removing any options or option arguments found.
@@ -9503,7 +9309,7 @@ class Pry::Slop::Commands
   #
   # Returns the original Array of items with options removed.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:138
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:138
   def parse!(items = T.unsafe(nil)); end
 
   # Check for a command presence.
@@ -9518,68 +9324,68 @@ class Pry::Slop::Commands
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:114
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:114
   def present?(key); end
 
   # Returns a nested Hash with Slop options and values. See Slop#to_hash.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:153
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:153
   def to_hash; end
 
   # Returns the help String.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:158
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:158
   def to_s; end
 
   private
 
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:177
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:177
   def execute_arguments!(items); end
 
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop/commands.rb:183
+  # source://pry-0.14.1/lib/pry/slop/commands.rb:183
   def execute_global_opts!(items); end
 end
 
 # Returns a default Hash of configuration options this Slop instance uses.
 #
-# source://pry-0.13.1/lib/pry/slop.rb:30
+# source://pry-0.14.1/lib/pry/slop.rb:30
 Pry::Slop::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
 # The main Error class, all Exception classes inherit from this class.
 #
-# source://pry-0.13.1/lib/pry/slop.rb:12
+# source://pry-0.14.1/lib/pry/slop.rb:12
 class Pry::Slop::Error < ::StandardError; end
 
 # Raised when an argument does not match its intended match constraint.
 #
-# source://pry-0.13.1/lib/pry/slop.rb:21
+# source://pry-0.14.1/lib/pry/slop.rb:21
 class Pry::Slop::InvalidArgumentError < ::Pry::Slop::Error; end
 
 # Raised when an invalid command is found and the strict flag is enabled.
 #
-# source://pry-0.13.1/lib/pry/slop.rb:27
+# source://pry-0.14.1/lib/pry/slop.rb:27
 class Pry::Slop::InvalidCommandError < ::Pry::Slop::Error; end
 
 # Raised when an invalid option is found and the strict flag is enabled.
 #
-# source://pry-0.13.1/lib/pry/slop.rb:24
+# source://pry-0.14.1/lib/pry/slop.rb:24
 class Pry::Slop::InvalidOptionError < ::Pry::Slop::Error; end
 
 # Raised when an option argument is expected but none are given.
 #
-# source://pry-0.13.1/lib/pry/slop.rb:15
+# source://pry-0.14.1/lib/pry/slop.rb:15
 class Pry::Slop::MissingArgumentError < ::Pry::Slop::Error; end
 
 # Raised when an option is expected/required but not present.
 #
-# source://pry-0.13.1/lib/pry/slop.rb:18
+# source://pry-0.14.1/lib/pry/slop.rb:18
 class Pry::Slop::MissingOptionError < ::Pry::Slop::Error; end
 
-# source://pry-0.13.1/lib/pry/slop/option.rb:5
+# source://pry-0.14.1/lib/pry/slop/option.rb:5
 class Pry::Slop::Option
   # Incapsulate internal option information, mainly used to store
   # option specific configuration data, most of the meat of this
@@ -9594,140 +9400,104 @@ class Pry::Slop::Option
   #
   # @return [Option] a new instance of Option
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:35
+  # source://pry-0.14.1/lib/pry/slop/option.rb:35
   def initialize(slop, short, long, description, config = T.unsafe(nil), &block); end
 
   # Returns true if this option accepts an optional argument.
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:72
+  # source://pry-0.14.1/lib/pry/slop/option.rb:72
   def accepts_optional_argument?; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def argument?; end
 
   # Returns the value of attribute argument_in_value.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:23
+  # source://pry-0.14.1/lib/pry/slop/option.rb:23
   def argument_in_value; end
 
   # Sets the attribute argument_in_value
   #
   # @param value the value to set the attribute argument_in_value to.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:23
+  # source://pry-0.14.1/lib/pry/slop/option.rb:23
   def argument_in_value=(_arg0); end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def as?; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def autocreated?; end
 
   # Call this options callback if one exists, and it responds to call().
   #
   # Returns nothing.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:84
+  # source://pry-0.14.1/lib/pry/slop/option.rb:84
   def call(*objects); end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def callback?; end
 
   # Returns the value of attribute config.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:22
+  # source://pry-0.14.1/lib/pry/slop/option.rb:22
   def config; end
 
   # Returns the value of attribute count.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:23
+  # source://pry-0.14.1/lib/pry/slop/option.rb:23
   def count; end
 
   # Sets the attribute count
   #
   # @param value the value to set the attribute count to.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:23
+  # source://pry-0.14.1/lib/pry/slop/option.rb:23
   def count=(_arg0); end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def default?; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def delimiter?; end
 
   # Returns the value of attribute description.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:22
+  # source://pry-0.14.1/lib/pry/slop/option.rb:22
   def description; end
 
   # Returns true if this option expects an argument.
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:67
+  # source://pry-0.14.1/lib/pry/slop/option.rb:67
   def expects_argument?; end
 
   # Returns the help String for this option.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:124
+  # source://pry-0.14.1/lib/pry/slop/option.rb:124
   def help; end
 
   # Returns the String inspection text.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:143
+  # source://pry-0.14.1/lib/pry/slop/option.rb:143
   def inspect; end
 
   # Returns the String flag of this option. Preferring the long flag.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:77
+  # source://pry-0.14.1/lib/pry/slop/option.rb:77
   def key; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def limit?; end
 
   # Returns the value of attribute long.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:22
+  # source://pry-0.14.1/lib/pry/slop/option.rb:22
   def long; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def match?; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def optional?; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def optional_argument?; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def required?; end
 
   # Returns the value of attribute short.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:22
+  # source://pry-0.14.1/lib/pry/slop/option.rb:22
   def short; end
-
-  # source://pry-0.13.1/lib/pry/slop/option.rb:61
-  def tail?; end
 
   # Returns the help String for this option.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:124
+  # source://pry-0.14.1/lib/pry/slop/option.rb:124
   def to_s; end
 
   # Returns the value of attribute types.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:22
+  # source://pry-0.14.1/lib/pry/slop/option.rb:22
   def types; end
 
   # Fetch the argument value for this option.
   #
   # Returns the Object once any type conversions have taken place.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:108
+  # source://pry-0.14.1/lib/pry/slop/option.rb:108
   def value; end
 
   # Set the new argument value for this option.
@@ -9736,7 +9506,7 @@ class Pry::Slop::Option
   # when an array type is specified and used more than once, values from
   # both options will be grouped together and flattened into a single array.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:93
+  # source://pry-0.14.1/lib/pry/slop/option.rb:93
   def value=(new_value); end
 
   private
@@ -9747,7 +9517,7 @@ class Pry::Slop::Option
   #
   # Returns the Float value if possible to convert, else a zero.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:173
+  # source://pry-0.14.1/lib/pry/slop/option.rb:173
   def value_to_float(value); end
 
   # Convert an object to an Integer if possible.
@@ -9756,7 +9526,7 @@ class Pry::Slop::Option
   #
   # Returns the Integer value if possible to convert, else a zero.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:156
+  # source://pry-0.14.1/lib/pry/slop/option.rb:156
   def value_to_integer(value); end
 
   # Convert an object to a Range if possible.
@@ -9765,34 +9535,34 @@ class Pry::Slop::Option
   #
   # Returns the Range value if one could be found, else the original object.
   #
-  # source://pry-0.13.1/lib/pry/slop/option.rb:190
+  # source://pry-0.14.1/lib/pry/slop/option.rb:190
   def value_to_range(value); end
 end
 
 # The default Hash of configuration options this class uses.
 #
-# source://pry-0.13.1/lib/pry/slop/option.rb:7
+# source://pry-0.14.1/lib/pry/slop/option.rb:7
 Pry::Slop::Option::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
-# source://pry-0.13.1/lib/pry/slop.rb:9
+# source://pry-0.14.1/lib/pry/slop.rb:9
 Pry::Slop::VERSION = T.let(T.unsafe(nil), String)
 
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/syntax_highlighter.rb:8
+# source://pry-0.14.1/lib/pry/syntax_highlighter.rb:8
 class Pry::SyntaxHighlighter
   class << self
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/syntax_highlighter.rb:9
+    # source://pry-0.14.1/lib/pry/syntax_highlighter.rb:9
     def highlight(code, language = T.unsafe(nil)); end
 
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/syntax_highlighter.rb:17
+    # source://pry-0.14.1/lib/pry/syntax_highlighter.rb:17
     def keyword_token_color; end
 
     # Sets comment token to blue (black by default), so it's more legible.
@@ -9800,13 +9570,13 @@ class Pry::SyntaxHighlighter
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/syntax_highlighter.rb:22
+    # source://pry-0.14.1/lib/pry/syntax_highlighter.rb:22
     def overwrite_coderay_comment_token!; end
 
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/syntax_highlighter.rb:13
+    # source://pry-0.14.1/lib/pry/syntax_highlighter.rb:13
     def tokenize(code, language = T.unsafe(nil)); end
   end
 end
@@ -9814,23 +9584,23 @@ end
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/system_command_handler.rb:6
+# source://pry-0.14.1/lib/pry/system_command_handler.rb:6
 module Pry::SystemCommandHandler
   class << self
     # @api private
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/system_command_handler.rb:8
+    # source://pry-0.14.1/lib/pry/system_command_handler.rb:8
     def default(output, command, _pry_instance); end
   end
 end
 
 # Catches SecurityErrors if $SAFE is set
 #
-# source://pry-0.13.1/lib/pry/exceptions.rb:28
+# source://pry-0.14.1/lib/pry/exceptions.rb:28
 module Pry::TooSafeException
   class << self
-    # source://pry-0.13.1/lib/pry/exceptions.rb:29
+    # source://pry-0.14.1/lib/pry/exceptions.rb:29
     def ===(exception); end
   end
 end
@@ -9849,16 +9619,16 @@ end
 # SyntaxError: (eval):1: syntax error, unexpected ')'
 # from ./a.rb:2 in `eval'
 #
-# source://pry-0.13.1/lib/pry/exceptions.rb:51
+# source://pry-0.14.1/lib/pry/exceptions.rb:51
 module Pry::UserError; end
 
-# source://pry-0.13.1/lib/pry/version.rb:4
+# source://pry-0.14.1/lib/pry/version.rb:4
 Pry::VERSION = T.let(T.unsafe(nil), String)
 
 # @api private
 # @since v0.13.0
 #
-# source://pry-0.13.1/lib/pry/warning.rb:6
+# source://pry-0.14.1/lib/pry/warning.rb:6
 module Pry::Warning
   class << self
     # Prints a warning message with exact file and line location, similar to how
@@ -9869,12 +9639,12 @@ module Pry::Warning
     # @return [void]
     # @since v0.13.0
     #
-    # source://pry-0.13.1/lib/pry/warning.rb:12
+    # source://pry-0.14.1/lib/pry/warning.rb:12
     def warn(message); end
   end
 end
 
-# source://pry-0.13.1/lib/pry/wrapped_module.rb:16
+# source://pry-0.14.1/lib/pry/wrapped_module.rb:16
 class Pry::WrappedModule
   include ::Pry::Helpers::BaseHelpers
   include ::Pry::CodeObject::Helpers
@@ -9883,7 +9653,7 @@ class Pry::WrappedModule
   # @raise [ArgumentError] if the argument is not a `Module`
   # @return [WrappedModule] a new instance of WrappedModule
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:56
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:56
   def initialize(mod); end
 
   # Return a candidate for this module of specified rank. A `rank`
@@ -9900,7 +9670,7 @@ class Pry::WrappedModule
   #   is greater than `number_of_candidates - 1`.
   # @return [Pry::WrappedModule::Candidate]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:239
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:239
   def candidate(rank); end
 
   # @note On JRuby 1.9 and higher, in certain conditions, this method chucks
@@ -9910,14 +9680,14 @@ class Pry::WrappedModule
   #   other rubies returns Enumerator
   # @see https://github.com/jruby/jruby/issues/525
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:255
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:255
   def candidates; end
 
   # Is this strictly a class?
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:126
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:126
   def class?; end
 
   # Returns an array of the names of the constants accessible in the wrapped
@@ -9927,7 +9697,7 @@ class Pry::WrappedModule
   # @param inherit [Boolean] Include the names of constants from included
   #   modules?
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:76
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:76
   def constants(inherit = T.unsafe(nil)); end
 
   # Returns documentation for the module.
@@ -9939,24 +9709,24 @@ class Pry::WrappedModule
   # @raise [Pry::CommandError] If documentation cannot be found.
   # @return [String] The documentation for the module.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:195
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:195
   def doc; end
 
   # @return [String, nil] The associated file for the module (i.e
   #   the primary candidate: highest ranked monkeypatch).
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:176
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:176
   def file; end
 
   # @return [Fixnum, nil] The associated line for the module (i.e
   #   the primary candidate: highest ranked monkeypatch).
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:183
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:183
   def line; end
 
   # Forward method invocations to the wrapped module
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:150
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:150
   def method_missing(method_name, *args, &block); end
 
   # The prefix that would appear before methods defined on this class.
@@ -9965,34 +9735,34 @@ class Pry::WrappedModule
   #
   # @return String
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:85
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:85
   def method_prefix; end
 
   # Is this strictly a module? (does not match classes)
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:120
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:120
   def module?; end
 
   # The name of the Module if it has one, otherwise #<Class:0xf00>.
   #
   # @return [String]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:100
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:100
   def nonblank_name; end
 
   # @return [Fixnum] The number of candidate definitions for the
   #   current module.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:245
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:245
   def number_of_candidates; end
 
   # Is this a singleton class?
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:110
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:110
   def singleton_class?; end
 
   # Get the instance associated with this singleton class.
@@ -10000,7 +9770,7 @@ class Pry::WrappedModule
   # @raise ArgumentError: tried to get instance of non singleton class
   # @return [Object]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:135
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:135
   def singleton_instance; end
 
   # Returns the source for the module.
@@ -10012,19 +9782,19 @@ class Pry::WrappedModule
   # @raise [Pry::CommandError] If source cannot be found.
   # @return [String] The source for the module.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:206
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:206
   def source; end
 
   # @return [String, nil] The associated file for the module (i.e
   #   the primary candidate: highest ranked monkeypatch).
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:176
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:176
   def source_file; end
 
   # @return [Fixnum, nil] The associated line for the module (i.e
   #   the primary candidate: highest ranked monkeypatch).
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:183
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:183
   def source_line; end
 
   # Retrieve the source location of a module. Return value is in same
@@ -10034,7 +9804,7 @@ class Pry::WrappedModule
   # @return [Array<String, Fixnum>, nil] The source location of the
   #   module (or class), or `nil` if no source location found.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:168
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:168
   def source_location; end
 
   # @param times [Fixnum] How far to travel up the ancestor chain.
@@ -10044,34 +9814,34 @@ class Pry::WrappedModule
   #   nth ancestor, otherwise (in the case of classes) return the
   #   nth ancestor that is a class.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:275
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:275
   def super(times = T.unsafe(nil)); end
 
   # Returns the value of attribute wrapped.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:20
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:20
   def wrapped; end
 
   # @return [String] Return the YARD docs for this module.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:223
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:223
   def yard_doc; end
 
   # @return [Boolean] Whether YARD docs are available for this module.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:265
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:265
   def yard_docs?; end
 
   # @return [String] Return the associated file for the
   #   module from YARD, if one exists.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:212
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:212
   def yard_file; end
 
   # @return [Fixnum] Return the associated line for the
   #   module from YARD, if one exists.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:218
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:218
   def yard_line; end
 
   private
@@ -10081,7 +9851,7 @@ class Pry::WrappedModule
   #
   # @return [Array<Pry::Method>]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:352
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:352
   def all_methods_for(mod); end
 
   # We only want methods that have a non-nil `source_location`. We also
@@ -10089,17 +9859,17 @@ class Pry::WrappedModule
   #
   # @return [Array<Pry::Method>]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:334
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:334
   def all_relevant_methods_for(mod); end
 
   # A helper method.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:315
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:315
   def all_source_locations_by_popularity; end
 
   # memoized lines for file
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:376
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:376
   def lines_for_file(file); end
 
   # @return [Array<Array<Pry::Method>>] The array of `Pry::Method` objects,
@@ -10109,7 +9879,7 @@ class Pry::WrappedModule
   #   the last method defined for that candidate and it is used to
   #   speed up source code extraction.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:307
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:307
   def method_candidates; end
 
   # Detect methods that are defined with `def_delegator` from the Forwardable
@@ -10120,12 +9890,12 @@ class Pry::WrappedModule
   #
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:371
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:371
   def method_defined_by_forwardable_module?(method); end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:356
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:356
   def nested_module?(parent, name); end
 
   # @return [Pry::WrappedModule::Candidate] The candidate with the
@@ -10136,12 +9906,12 @@ class Pry::WrappedModule
   #   candidate of rank 0 will be returned, or a CommandError raised if
   #   there are no candidates at all.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:297
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:297
   def primary_candidate; end
 
   # @return [Boolean]
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module.rb:158
+  # source://pry-0.14.1/lib/pry/wrapped_module.rb:158
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
 
   class << self
@@ -10153,7 +9923,7 @@ class Pry::WrappedModule
     # @param target [Binding] The binding where the lookup takes place.
     # @return [Module, nil] The module or `nil` (if conversion failed).
     #
-    # source://pry-0.13.1/lib/pry/wrapped_module.rb:29
+    # source://pry-0.14.1/lib/pry/wrapped_module.rb:29
     def from_str(mod_name, target = T.unsafe(nil)); end
 
     private
@@ -10167,7 +9937,7 @@ class Pry::WrappedModule
     # @param target [Binding] Where the lookup takes place.
     # @return [Boolean]
     #
-    # source://pry-0.13.1/lib/pry/wrapped_module.rb:45
+    # source://pry-0.14.1/lib/pry/wrapped_module.rb:45
     def safe_to_evaluate?(str, target); end
   end
 end
@@ -10176,7 +9946,7 @@ end
 # It provides access to the source, documentation, line and file
 # for a monkeypatch (reopening) of a class/module.
 #
-# source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:8
+# source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:8
 class Pry::WrappedModule::Candidate
   include ::Pry::Helpers::DocumentationHelpers
   include ::Pry::CodeObject::Helpers
@@ -10193,67 +9963,67 @@ class Pry::WrappedModule::Candidate
   # @raise [Pry::CommandError] If `rank` is out of bounds.
   # @return [Candidate] a new instance of Candidate
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:38
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:38
   def initialize(wrapper, rank); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def class?(*args, &block); end
+  def class?(*args, **_arg1, &block); end
 
   # @raise [Pry::CommandError] If documentation cannot be found.
   # @return [String] The documentation for the candidate.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:70
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:70
   def doc; end
 
   # @return [String] The file where the module definition is located.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:14
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:14
   def file; end
 
   # @return [Fixnum] The line where the module definition is located.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:18
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:18
   def line; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def module?(*args, &block); end
+  def module?(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def nonblank_name(*args, &block); end
+  def nonblank_name(*args, **_arg1, &block); end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def number_of_candidates(*args, &block); end
+  def number_of_candidates(*args, **_arg1, &block); end
 
   # @raise [Pry::CommandError] If source code cannot be found.
   # @return [String] The source for the candidate, i.e the
   #   complete module/class definition.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:59
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:59
   def source; end
 
   # @return [String] The file where the module definition is located.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:14
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:14
   def source_file; end
 
   # @return [Fixnum] The line where the module definition is located.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:18
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:18
   def source_line; end
 
   # @return [Array, nil] A `[String, Fixnum]` pair representing the
   #   source location (file and line) for the candidate or `nil`
   #   if no source location found.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:79
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:79
   def source_location; end
 
   # source://RUBY_ROOT/forwardable.rb:229
-  def wrapped(*args, &block); end
+  def wrapped(*args, **_arg1, &block); end
 
   private
 
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:104
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:104
   def class_regexes; end
 
   # Locate the first line of the module definition.
@@ -10265,7 +10035,7 @@ class Pry::WrappedModule::Candidate
   # @return [Fixnum] The line where the module is defined. This
   #   line number is one-indexed.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:99
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:99
   def first_line_of_module_definition(file, line); end
 
   # This method is used by `Candidate#source_location` as a
@@ -10274,22 +10044,22 @@ class Pry::WrappedModule::Candidate
   # @return [Array] The source location of the base method used to
   #   calculate the source location of the candidate.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:115
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:115
   def first_method_source_location; end
 
   # @return [Array] The source location of the last method in this
   #   candidate's module definition.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:121
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:121
   def last_method_source_location; end
 
-  # source://pry-0.13.1/lib/pry/forwardable.rb:18
+  # source://pry-0.14.1/lib/pry/forwardable.rb:18
   def lines_for_file(*a, &b); end
 
-  # source://pry-0.13.1/lib/pry/forwardable.rb:18
+  # source://pry-0.14.1/lib/pry/forwardable.rb:18
   def method_candidates(*a, &b); end
 
-  # source://pry-0.13.1/lib/pry/forwardable.rb:18
+  # source://pry-0.14.1/lib/pry/forwardable.rb:18
   def name(*a, &b); end
 
   # Return the number of lines between the start of the class definition and
@@ -10299,9 +10069,9 @@ class Pry::WrappedModule::Candidate
   #
   # @return [Integer] number of lines.
   #
-  # source://pry-0.13.1/lib/pry/wrapped_module/candidate.rb:131
+  # source://pry-0.14.1/lib/pry/wrapped_module/candidate.rb:131
   def number_of_lines_in_first_chunk; end
 
-  # source://pry-0.13.1/lib/pry/forwardable.rb:18
+  # source://pry-0.14.1/lib/pry/forwardable.rb:18
   def yard_docs?(*a, &b); end
 end
