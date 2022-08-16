@@ -48,17 +48,18 @@ module Tapioca
           # use for jump to definition. Only add source comments on Ruby files
           return unless path.extname == ".rb"
 
-          gem = @pipeline.gem
           realpath = path.realpath.to_s
-          same_gem = realpath.start_with?(gem.full_gem_path)
-          gem = Gemfile::GemSpec.spec_lookup_by_file_path[realpath] unless same_gem
+          gem = Gemfile::GemSpec.spec_lookup_by_file_path[realpath]
           return if gem.nil?
 
           path = gem.relative_path_for(path)
+          version = gem.version
+          # we can clear the gem version if the gem is the same one we are processing
+          version = "" if gem == @pipeline.gem
 
           uri = URI::Source.build(
             gem_name: gem.name,
-            gem_version: same_gem ? "" : gem.version,
+            gem_version: version,
             path: path.to_s,
             line_number: line.to_s
           )
