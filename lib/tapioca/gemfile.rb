@@ -176,6 +176,11 @@ module Tapioca
         @files = T.let(collect_files, T::Array[Pathname])
       end
 
+      sig { params(other: BasicObject).returns(T::Boolean) }
+      def ==(other)
+        GemSpec === other && other.name == name && other.version == version
+      end
+
       sig { params(gemfile_dir: String).returns(T::Boolean) }
       def ignore?(gemfile_dir)
         gem_ignored? || gem_in_app_dir?(gemfile_dir, full_gem_path)
