@@ -143,10 +143,10 @@ module Tapioca
         def spec_lookup_by_file_path
           @lookup ||= T.let(
             [*::Gem::Specification.default_stubs, *::Gem::Specification.stubs]
-            .map! { |spec| new(spec.to_spec) }
-            .flat_map do |spec|
-              spec.files.map { |file| [file.to_s, spec] }
-            end.to_h,
+              .map! { |spec| new(spec.to_spec) }
+              .flat_map do |spec|
+                spec.files.filter_map { |file| [file.realpath.to_s, spec] if file.exist? }
+              end.to_h,
             T.nilable(T::Hash[String, Gemfile::GemSpec])
           )
         end
