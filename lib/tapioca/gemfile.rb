@@ -232,11 +232,6 @@ module Tapioca
         rewriter.tree
       end
 
-      sig { returns(T.nilable(T::Boolean)) }
-      def default_gem?
-        @spec.respond_to?(:default_gem?) && @spec.default_gem?
-      end
-
       sig { params(file: Pathname).returns(Pathname) }
       def relative_path_for(file)
         if default_gem?
@@ -261,6 +256,11 @@ module Tapioca
             Pathname.glob((Pathname.new(path) / "**/*.rb").to_s)
           end
         end
+      end
+
+      sig { returns(T.nilable(T::Boolean)) }
+      def default_gem?
+        @spec.respond_to?(:default_gem?) && @spec.default_gem?
       end
 
       sig { returns(Regexp) }
