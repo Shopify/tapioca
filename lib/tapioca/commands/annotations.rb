@@ -112,7 +112,7 @@ module Tapioca
         fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[String, T::Array[String]])
 
         gem_names.each_with_object(fetchable_gems) do |gem_name, hash|
-          @indexes.each { |uri, index| hash[gem_name] << uri if index.has_gem?(gem_name) }
+          @indexes.each { |uri, index| T.must(hash[gem_name]) << uri if index.has_gem?(gem_name) }
         end
 
         if fetchable_gems.empty?

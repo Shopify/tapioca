@@ -101,7 +101,7 @@ module RBI
 
     sig { returns(T::Hash[String, RBI::Node]) }
     def nodes_cache
-      T.must(@nodes_cache ||= T.let({}, T.nilable(T::Hash[String, Node])))
+      @nodes_cache ||= T.let({}, T.nilable(T::Hash[String, Node]))
     end
 
     sig { params(node: RBI::Node).returns(RBI::Node) }
