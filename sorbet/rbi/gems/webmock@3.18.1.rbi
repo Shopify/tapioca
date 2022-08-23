@@ -10,104 +10,79 @@ module Net::WebMockHTTPResponse
   def read_body(dest = T.unsafe(nil), &block); end
 end
 
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#259
-class Net::WebMockNetBufferedIO < ::Net::BufferedIO
-  # @return [WebMockNetBufferedIO] a new instance of WebMockNetBufferedIO
-  #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#260
-  def initialize(io, *args, **kwargs); end
-
-  # https://github.com/ruby/ruby/blob/7d02441f0d6e5c9d0a73a024519eba4f69e36dce/lib/net/protocol.rb#L208
-  # Modified version of method from ruby, so that nil is always passed into orig_read_nonblock to avoid timeout
-  #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#284
-  def rbuf_fill; end
-end
-
-# patch for StringIO behavior in Ruby 2.2.3
-# https://github.com/bblimke/webmock/issues/558
-#
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#213
-class PatchedStringIO < ::StringIO
-  def orig_read_nonblock(*_arg0); end
-
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#217
-  def read_nonblock(size, *args, **kwargs); end
-end
-
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#224
+# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#206
 class StubSocket
   # @return [StubSocket] a new instance of StubSocket
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#228
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#210
   def initialize(*args); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#236
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#218
   def close; end
 
   # @return [Boolean]
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#232
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#214
   def closed?; end
 
   # Returns the value of attribute continue_timeout.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#208
   def continue_timeout; end
 
   # Sets the attribute continue_timeout
   #
   # @param value the value to set the attribute continue_timeout to.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#208
   def continue_timeout=(_arg0); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#244
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
   def io; end
 
   # Returns the value of attribute read_timeout.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#208
   def read_timeout; end
 
   # Sets the attribute read_timeout
   #
   # @param value the value to set the attribute read_timeout to.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#208
   def read_timeout=(_arg0); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#241
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#223
   def readuntil(*args); end
 
   # Returns the value of attribute write_timeout.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#208
   def write_timeout; end
 
   # Sets the attribute write_timeout
   #
   # @param value the value to set the attribute write_timeout to.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#208
   def write_timeout=(_arg0); end
 end
 
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#248
+# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#230
 class StubSocket::StubIO
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#253
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#235
   def cipher; end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#250
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#232
   def peer_cert; end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#251
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#233
   def peeraddr; end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#249
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#231
   def setsockopt(*args); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#252
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#234
   def ssl_version; end
 end
 
@@ -618,16 +593,13 @@ module WebMock::HttpLibAdapters; end
 # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#9
 class WebMock::HttpLibAdapters::NetHttpAdapter < ::WebMock::HttpLibAdapter
   class << self
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#24
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#21
     def disable!; end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#15
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#14
     def enable!; end
   end
 end
-
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#13
-WebMock::HttpLibAdapters::NetHttpAdapter::OriginalNetBufferedIO = Net::BufferedIO
 
 # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#12
 WebMock::HttpLibAdapters::NetHttpAdapter::OriginalNetHTTP = Net::HTTP
@@ -715,19 +687,19 @@ class WebMock::NetConnectNotAllowedError < ::Exception
   def initialize(request_signature); end
 end
 
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#306
+# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#240
 module WebMock::NetHTTPUtility
   class << self
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#345
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#279
     def check_right_http_connection; end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#336
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#270
     def get_uri(net_http, path = T.unsafe(nil)); end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#349
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#283
     def puts_warning_for_right_http_if_needed; end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#308
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#242
     def request_signature_from_request(net_http, request, body = T.unsafe(nil)); end
   end
 end
@@ -1224,56 +1196,56 @@ class WebMock::Response
   # source://webmock//lib/webmock/response.rb#16
   def initialize(options = T.unsafe(nil)); end
 
-  # source://webmock//lib/webmock/response.rb#92
+  # source://webmock//lib/webmock/response.rb#95
   def ==(other); end
 
-  # source://webmock//lib/webmock/response.rb#35
+  # source://webmock//lib/webmock/response.rb#38
   def body; end
 
-  # source://webmock//lib/webmock/response.rb#39
+  # source://webmock//lib/webmock/response.rb#42
   def body=(body); end
 
-  # source://webmock//lib/webmock/response.rb#83
+  # source://webmock//lib/webmock/response.rb#86
   def evaluate(request_signature); end
 
-  # source://webmock//lib/webmock/response.rb#53
+  # source://webmock//lib/webmock/response.rb#56
   def exception; end
 
-  # source://webmock//lib/webmock/response.rb#57
+  # source://webmock//lib/webmock/response.rb#60
   def exception=(exception); end
 
-  # source://webmock//lib/webmock/response.rb#24
+  # source://webmock//lib/webmock/response.rb#27
   def headers; end
 
-  # source://webmock//lib/webmock/response.rb#28
+  # source://webmock//lib/webmock/response.rb#31
   def headers=(headers); end
 
-  # source://webmock//lib/webmock/response.rb#73
+  # source://webmock//lib/webmock/response.rb#76
   def options=(options); end
 
   # @raise [@exception]
   #
-  # source://webmock//lib/webmock/response.rb#65
+  # source://webmock//lib/webmock/response.rb#68
   def raise_error_if_any; end
 
-  # source://webmock//lib/webmock/response.rb#69
+  # source://webmock//lib/webmock/response.rb#72
   def should_timeout; end
 
-  # source://webmock//lib/webmock/response.rb#45
+  # source://webmock//lib/webmock/response.rb#48
   def status; end
 
-  # source://webmock//lib/webmock/response.rb#49
+  # source://webmock//lib/webmock/response.rb#52
   def status=(status); end
 
   private
 
-  # source://webmock//lib/webmock/response.rb#110
+  # source://webmock//lib/webmock/response.rb#113
   def assert_valid_body!; end
 
-  # source://webmock//lib/webmock/response.rb#123
-  def read_raw_response(raw_response); end
+  # source://webmock//lib/webmock/response.rb#126
+  def read_raw_response(io); end
 
-  # source://webmock//lib/webmock/response.rb#102
+  # source://webmock//lib/webmock/response.rb#105
   def stringify_body!; end
 end
 
