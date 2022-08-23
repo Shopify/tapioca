@@ -881,10 +881,10 @@ class Pry::REPL
 
   class << self
     # source://pry-byebug//lib/pry-byebug/pry_ext.rb#8
-    def start(_ = T.unsafe(nil)); end
+    def start(options = T.unsafe(nil)); end
 
     # source://pry-byebug//lib/pry-byebug/pry_ext.rb#8
-    def start_with_pry_byebug(_ = T.unsafe(nil)); end
+    def start_with_pry_byebug(options = T.unsafe(nil)); end
 
     # source://pry/0.14.1/lib/pry/repl.rb#14
     def start_without_pry_byebug(options); end
