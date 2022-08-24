@@ -3987,7 +3987,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def foo; end
         end
 
-        # @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+        # @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
         #
         # source://the-dep//lib/foo.rb#11
         class Baz
