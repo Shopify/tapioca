@@ -85,7 +85,7 @@ module Tapioca
 
           sig { params(concern: Module).returns(T::Array[Module]) }
           def dependencies_of(concern)
-            concern.instance_variable_get(:@_dependencies)
+            concern.instance_variable_get(:@_dependencies) || []
           end
         end
 
