@@ -9,3 +9,6 @@ module RubyLsp; end
 
 # source://ruby-lsp//lib/ruby-lsp.rb#5
 RubyLsp::VERSION = T.let(T.unsafe(nil), String)
+
+# source://tapioca/0.9.2/lib/tapioca/helpers/source_uri.rb#10
+URI::Source::COMPONENT = T.let(T.unsafe(nil), Array)
