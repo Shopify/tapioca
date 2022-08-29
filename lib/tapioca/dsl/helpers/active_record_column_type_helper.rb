@@ -6,6 +6,7 @@ module Tapioca
     module Helpers
       class ActiveRecordColumnTypeHelper
         extend T::Sig
+        include RBIHelper
 
         sig { params(constant: T.class_of(ActiveRecord::Base)).void }
         def initialize(constant)
@@ -72,15 +73,6 @@ module Tapioca
         def do_not_generate_strong_types?(constant)
           Object.const_defined?(:StrongTypeGeneration) &&
             !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
-        end
-
-        sig { params(type: String).returns(String) }
-        def as_nilable_type(type)
-          if type.start_with?("T.nilable(") || type == "T.untyped"
-            type
-          else
-            "T.nilable(#{type})"
-          end
         end
 
         sig { params(column_type: BasicObject).returns(String) }

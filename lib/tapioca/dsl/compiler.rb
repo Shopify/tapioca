@@ -164,15 +164,6 @@ module Tapioca
         return_type = "T.untyped" if return_type == "<NOT-TYPED>"
         return_type
       end
-
-      sig { params(type: String).returns(String) }
-      def as_nilable_type(type)
-        if type.start_with?("T.nilable(", "::T.nilable(") || type == "T.untyped" || type == "::T.untyped"
-          type
-        else
-          "T.nilable(#{type})"
-        end
-      end
     end
   end
 end
