@@ -745,24 +745,24 @@ module Sidekiq::RedisConnection
   class << self
     # Returns the value of attribute adapter.
     #
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#65
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#63
     def adapter; end
 
     # RedisConnection.adapter = :redis
     # RedisConnection.adapter = :redis_client
     #
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#69
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#67
     def adapter=(adapter); end
 
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#83
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#81
     def create(options = T.unsafe(nil)); end
 
     private
 
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#152
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#150
     def determine_redis_provider; end
 
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#127
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#125
     def log_info(options); end
 
     # Sidekiq needs many concurrent Redis connections.
@@ -776,7 +776,7 @@ module Sidekiq::RedisConnection
     #
     # @raise [ArgumentError]
     #
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#123
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#121
     def verify_sizing(size, concurrency); end
   end
 end
