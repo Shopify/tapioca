@@ -95,6 +95,15 @@ module Tapioca
         .gsub(".params()", "")
     end
 
+    sig { params(type: String).returns(String) }
+    def as_nilable_type(type)
+      if type.start_with?("T.nilable(", "::T.nilable(") || type == "T.untyped" || type == "::T.untyped"
+        type
+      else
+        "T.nilable(#{type})"
+      end
+    end
+
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
       # try to parse a method definition with this name

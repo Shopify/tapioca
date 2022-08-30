@@ -22,6 +22,8 @@ In the following section you will find all available DSL compilers:
 * [ActiveSupportCurrentAttributes](compiler_activesupportcurrentattributes.md)
 * [Config](compiler_config.md)
 * [FrozenRecord](compiler_frozenrecord.md)
+* [GraphqlInputObject](compiler_graphqlinputobject.md)
+* [GraphqlMutation](compiler_graphqlmutation.md)
 * [IdentityCache](compiler_identitycache.md)
 * [MixedInClassAttributes](compiler_mixedinclassattributes.md)
 * [Protobuf](compiler_protobuf.md)

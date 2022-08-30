@@ -34,6 +34,7 @@ group(:development, :test) do
   )
   gem("activeresource", require: false)
   gem("google-protobuf", require: false)
+  gem("graphql", require: false)
   gem("shopify-money", require: false)
   gem("sidekiq", require: false)
   gem("nokogiri", require: false)
