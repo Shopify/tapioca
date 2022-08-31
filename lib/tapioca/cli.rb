@@ -213,6 +213,10 @@ module Tapioca
       type: :boolean,
       desc: "Include RBIs found in the `rbi/` directory of the gem",
       default: true
+    option :exported_gem_rbs,
+      type: :boolean,
+      desc: "Include RBS files found in the `sig/` directory of the gem as RBI files",
+      default: true
     option :workers,
       aliases: ["-w"],
       type: :numeric,
@@ -253,6 +257,7 @@ module Tapioca
           include_doc: options[:doc],
           include_loc: options[:loc],
           include_exported_rbis: options[:exported_gem_rbis],
+          include_exported_rbs: options[:exported_gem_rbs],
           number_of_workers: options[:workers],
           auto_strictness: options[:auto_strictness],
           dsl_dir: options[:dsl_dir],

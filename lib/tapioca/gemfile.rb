@@ -235,6 +235,11 @@ module Tapioca
         rewriter.tree
       end
 
+      sig { returns(RBI::Tree) }
+      def exported_rbs_tree
+        ::RbsConverter.new(name).convert
+      end
+
       sig { params(file: Pathname).returns(Pathname) }
       def relative_path_for(file)
         if default_gem?
