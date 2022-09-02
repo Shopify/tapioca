@@ -18,8 +18,8 @@ module Tapioca
           file_header: T::Boolean,
           include_doc: T::Boolean,
           include_loc: T::Boolean,
-          include_exported_rbis: T::Boolean,
-          include_exported_rbs: T::Boolean,
+          import_gem_rbi: T::Boolean,
+          import_gem_rbs: T::Boolean,
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
           dsl_dir: String,
@@ -36,8 +36,8 @@ module Tapioca
         file_header:,
         include_doc:,
         include_loc:,
-        include_exported_rbis:,
-        include_exported_rbs:,
+        import_gem_rbi:,
+        import_gem_rbs:,
         number_of_workers: nil,
         auto_strictness: true,
         dsl_dir: DEFAULT_DSL_DIR,
@@ -62,8 +62,8 @@ module Tapioca
         @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
         @include_doc = T.let(include_doc, T::Boolean)
         @include_loc = T.let(include_loc, T::Boolean)
-        @include_exported_rbis = include_exported_rbis
-        @include_exported_rbs = include_exported_rbs
+        @import_gem_rbi = import_gem_rbi
+        @import_gem_rbs = import_gem_rbs
       end
 
       sig { override.void }
@@ -167,8 +167,8 @@ module Tapioca
 
         rbi.root = Tapioca::Gem::Pipeline.new(gem, include_doc: @include_doc, include_loc: @include_loc).compile
 
-        merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
-        merge_with_exported_rbs(gem, rbi) if @include_exported_rbs
+        merge_with_exported_rbi(gem, rbi) if @import_gem_rbi
+        merge_with_exported_rbs(gem, rbi) if @import_gem_rbs
 
         if rbi.empty?
           @rbi_formatter.write_empty_body_comment!(rbi)

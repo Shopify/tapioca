@@ -209,14 +209,14 @@ module Tapioca
       type: :boolean,
       desc: "Include comments with source location when generating RBIs",
       default: true
-    option :exported_gem_rbis,
+    option :import_gem_rbi,
       type: :boolean,
-      desc: "Include RBIs found in the `rbi/` directory of the gem",
+      desc: "Import (and merge) signatures from RBI files found in the `rbi/` directory of the gem",
       default: true
-    option :exported_gem_rbs,
+    option :import_gem_rbs,
       type: :boolean,
-      desc: "Include RBS files found in the `sig/` directory of the gem as RBI files",
-      default: true
+      desc: "Import (and merge) signatures from RBS files found in the `sig/` directory of the gem",
+      default: false
     option :workers,
       aliases: ["-w"],
       type: :numeric,
@@ -256,8 +256,8 @@ module Tapioca
           file_header: options[:file_header],
           include_doc: options[:doc],
           include_loc: options[:loc],
-          include_exported_rbis: options[:exported_gem_rbis],
-          include_exported_rbs: options[:exported_gem_rbs],
+          import_gem_rbi: options[:import_gem_rbi],
+          import_gem_rbs: options[:import_gem_rbs],
           number_of_workers: options[:workers],
           auto_strictness: options[:auto_strictness],
           dsl_dir: options[:dsl_dir],
