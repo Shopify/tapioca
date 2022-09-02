@@ -40,11 +40,9 @@ module Tapioca
             end
           when GraphQL::Schema::InputObject.singleton_class
             qualified_name_of(unwrapped_type)
-          else
-            "T.untyped"
           end
 
-          parsed_type = T.must(parsed_type)
+          return "T.untyped" if parsed_type.nil?
 
           if type.list?
             parsed_type = "T::Array[#{parsed_type}]"

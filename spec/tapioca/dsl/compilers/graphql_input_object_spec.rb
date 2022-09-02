@@ -57,6 +57,7 @@ module Tapioca
                 class CreateCommentInput < GraphQL::Schema::InputObject
                   argument :body, String, required: true
                   argument :post_id, ID, required: true
+                  argument :signature, Class.new(GraphQL::Schema::InputObject), required: true
 
                   def resolve(body:, post_id:)
                     # ...
@@ -73,6 +74,9 @@ module Tapioca
 
                   sig { returns(::String) }
                   def post_id; end
+
+                  sig { returns(T.untyped) }
+                  def signature; end
                 end
               RBI
 
