@@ -49,7 +49,7 @@ require "tapioca/executor"
 require "tapioca/static/symbol_table_parser"
 require "tapioca/static/symbol_loader"
 require "tapioca/static/requires_compiler"
-require "tapioca/static/rbs_converter"
+require "tapioca/static/rbs"
 
 require "tapioca/loaders/loader"
 require "tapioca/loaders/gem"

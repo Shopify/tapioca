@@ -237,7 +237,7 @@ module Tapioca
 
       sig { returns(RBI::Tree) }
       def exported_rbs_tree
-        ::RbsConverter.new(name).convert
+        Tapioca::Static::Rbs::Converter.new(name, version).convert
       end
 
       sig { params(file: Pathname).returns(Pathname) }
