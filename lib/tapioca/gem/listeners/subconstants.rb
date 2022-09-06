@@ -26,7 +26,7 @@ module Tapioca
             # Don't compile modules of Object because Object::Foo == Foo
             # Don't compile modules of BasicObject because BasicObject::BasicObject == BasicObject
             next if (Object == constant || BasicObject == constant) && Module === subconstant
-            next unless subconstant
+            next unless Runtime::Reflection.constant_defined?(subconstant)
 
             @pipeline.push_constant(name, subconstant)
           end

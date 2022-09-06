@@ -146,6 +146,7 @@ module Tapioca
         constants_by_name
           .keys
           .map { |name| T.cast(Runtime::Reflection.constantize(name), Module) }
+          .select { |mod| Runtime::Reflection.constant_defined?(mod) }
           .to_set
       end
 
