@@ -37,7 +37,7 @@ module Tapioca
       #   sig { returns(Integer) }
       #   def customer_id; end
       #
-      #   sig { params(month: Integer).returns(Integer) }
+      #   sig { params(value: Integer).returns(Integer) }
       #   def customer_id=(value); end
       #
       #   sig { returns(Integer) }
