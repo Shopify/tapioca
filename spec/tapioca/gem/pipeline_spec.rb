@@ -3054,10 +3054,28 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         BAR = Bar.new
+
+        class Fuz
+          extend T::Generic
+
+          Elem = type_member { { fixed: NilClass } }
+        end
+
+        FUZ = Fuz.new
+
+        class Baz
+          extend T::Generic
+
+          Key = type_member { { fixed: Symbol } }
+          Value = type_member
+        end
+
+        BAZ = Baz.new
       RUBY
 
       output = template(<<~RBI)
         BAR = T.let(T.unsafe(nil), Bar[T.untyped, T.untyped])
+        BAZ = T.let(T.unsafe(nil), Baz[T.untyped])
 
         class Bar
           extend T::Generic
@@ -3066,12 +3084,26 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           Value = type_member
         end
 
+        class Baz
+          extend T::Generic
+
+          Key = type_member { { fixed: Symbol } }
+          Value = type_member
+        end
+
         FOO = T.let(T.unsafe(nil), Foo[T.untyped])
+        FUZ = T.let(T.unsafe(nil), Fuz)
 
         class Foo
           extend T::Generic
 
           Elem = type_member
+        end
+
+        class Fuz
+          extend T::Generic
+
+          Elem = type_member { { fixed: NilClass } }
         end
       RBI
 

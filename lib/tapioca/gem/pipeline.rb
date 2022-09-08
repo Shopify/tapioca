@@ -390,6 +390,9 @@ module Tapioca
         type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)
         return type_name unless type_variables
 
+        type_variables = type_variables.reject(&:fixed?)
+        return type_name if type_variables.empty?
+
         type_variable_names = type_variables.map { "T.untyped" }.join(", ")
 
         "#{type_name}[#{type_variable_names}]"
