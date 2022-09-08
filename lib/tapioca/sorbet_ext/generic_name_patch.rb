@@ -164,10 +164,14 @@ module Tapioca
       constant_name&.split("::")&.last
     end
 
+    sig { returns(T::Boolean) }
+    def fixed?
+      bounds.key?(:fixed)
+    end
+
     sig { returns(String) }
     def serialize
-      bounds = @bounds_proc.call
-      fixed = bounds[:fixed].to_s if bounds.key?(:fixed)
+      fixed = bounds[:fixed].to_s if fixed?
       lower = bounds[:lower].to_s if bounds.key?(:lower)
       upper = bounds[:upper].to_s if bounds.key?(:upper)
 
@@ -212,6 +216,11 @@ module Tapioca
       block.call
     ensure
       self.class.send(:remove_const, temp_name) if temp_name
+    end
+
+    sig { returns(T::Hash[Symbol, T.untyped]) }
+    def bounds
+      @bounds ||= @bounds_proc.call
     end
   end
 end
