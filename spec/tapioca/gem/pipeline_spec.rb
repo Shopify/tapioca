@@ -3271,6 +3271,51 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles constants of generic types" do
+      add_ruby_file("generic.rb", <<~RUBY)
+        module GenericInterface
+          extend T::Generic
+
+          interface!
+
+          Parameter = type_member
+        end
+
+        class Concrete
+          extend T::Generic
+
+          include GenericInterface
+          Parameter = type_member
+        end
+
+        GENERIC_CONSTANT = T.let(
+          Concrete.new,
+          GenericInterface[Numeric]
+        )
+      RUBY
+
+      output = template(<<~RBI)
+        class Concrete
+          extend T::Generic
+          include ::GenericInterface
+
+          Parameter = type_member
+        end
+
+        GENERIC_CONSTANT = T.let(T.unsafe(nil), Concrete[T.untyped])
+
+        module GenericInterface
+          extend T::Generic
+
+          interface!
+
+          Parameter = type_member
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles structs with default values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo < T::Struct

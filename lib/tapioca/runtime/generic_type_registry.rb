@@ -31,6 +31,18 @@ module Tapioca
         T::Hash[Module, T::Array[TypeVariableModule]]
       )
 
+      class GenericType < T::Types::Simple
+        def initialize(raw_type, underlying_type)
+          super(raw_type)
+
+          @underlying_type = underlying_type
+        end
+
+        def valid?(obj)
+          obj.is_a?(@underlying_type)
+        end
+      end
+
       class << self
         extend T::Sig
 
@@ -115,6 +127,10 @@ module Tapioca
           name_proc = -> { name }
           generic_type.define_singleton_method(:name, name_proc)
           generic_type.define_singleton_method(:to_s, name_proc)
+
+          override_type = GenericType.new(generic_type, constant)
+          override_type_proc = -> { override_type }
+          generic_type.define_singleton_method(:__tapioca_override_type, override_type_proc)
 
           # We need to define a `<=` method on the cloned constant, so that Sorbet
           # can do covariance/contravariance checks on the type variables.
