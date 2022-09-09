@@ -39,7 +39,7 @@ module Tapioca
               "T.any(#{value_types.join(", ")})"
             end
           when GraphQL::Schema::InputObject.singleton_class
-            qualified_name_of(unwrapped_type)
+            qualified_name_of(unwrapped_type) || "T.untyped"
           else
             "T.untyped"
           end
