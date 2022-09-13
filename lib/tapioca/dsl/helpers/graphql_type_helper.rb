@@ -4,7 +4,9 @@
 module Tapioca
   module Dsl
     module Helpers
-      class GraphqlTypeHelper
+      module GraphqlTypeHelper
+        extend self
+
         extend T::Sig
         include RBIHelper
         include Runtime::Reflection

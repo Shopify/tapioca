@@ -47,12 +47,10 @@ module Tapioca
           arguments = constant.all_argument_definitions
           return if arguments.empty?
 
-          graphql_type_helper = Helpers::GraphqlTypeHelper.new
-
           root.create_path(constant) do |input_object|
             arguments.each do |argument|
               name = argument.keyword.to_s
-              input_object.create_method(name, return_type: graphql_type_helper.type_for(argument.type))
+              input_object.create_method(name, return_type: Helpers::GraphqlTypeHelper.type_for(argument.type))
             end
           end
         end
