@@ -8,8 +8,6 @@ module Tapioca
         extend self
 
         extend T::Sig
-        include RBIHelper
-        include Runtime::Reflection
 
         sig { params(type: GraphQL::Schema::Wrapper).returns(String) }
         def type_for(type)
@@ -50,7 +48,7 @@ module Tapioca
           end
 
           unless type.non_null?
-            parsed_type = as_nilable_type(parsed_type)
+            parsed_type = RBIHelper.as_nilable_type(parsed_type)
           end
 
           parsed_type
@@ -60,7 +58,7 @@ module Tapioca
 
         sig { params(constant: Module).returns(String) }
         def type_for_constant(constant)
-          qualified_name_of(constant) || "T.untyped"
+          Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
         end
       end
     end
