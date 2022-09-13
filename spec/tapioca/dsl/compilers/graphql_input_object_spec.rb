@@ -78,6 +78,29 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:CreateCommentInput))
             end
+
+            it "doesn't fail when input object is anonymous" do
+              add_ruby_file("create_comment_input.rb", <<~RUBY)
+                class CreateCommentInput < GraphQL::Schema::InputObject
+                  argument :transport, Class.new(GraphQL::Schema::InputObject), required: true
+
+                  def resolve(body:, post_id:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateCommentInput
+                  sig { returns(T.untyped) }
+                  def transport; end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateCommentInput))
+            end
           end
         end
       end
