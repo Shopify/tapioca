@@ -17,34 +17,31 @@ module Tapioca
           when GraphQL::Types::Boolean.singleton_class
             "T::Boolean"
           when GraphQL::Types::Float.singleton_class
-            qualified_name_of(Float)
-          when GraphQL::Types::ID.singleton_class
-            qualified_name_of(String)
+            type_for_constant(Float)
+          when GraphQL::Types::ID.singleton_class, GraphQL::Types::String.singleton_class
+            type_for_constant(String)
           when GraphQL::Types::Int.singleton_class
-            qualified_name_of(Integer)
+            type_for_constant(Integer)
           when GraphQL::Types::ISO8601Date.singleton_class
-            qualified_name_of(Date)
+            type_for_constant(Date)
           when GraphQL::Types::ISO8601DateTime.singleton_class
-            qualified_name_of(DateTime)
+            type_for_constant(DateTime)
           when GraphQL::Types::JSON.singleton_class
             "T::Hash[::String, T.untyped]"
-          when GraphQL::Types::String.singleton_class
-            qualified_name_of(String)
           when GraphQL::Schema::Enum.singleton_class
             enum_values = T.cast(unwrapped_type.enum_values, T::Array[GraphQL::Schema::EnumValue])
-            value_types = enum_values.map { |v| qualified_name_of(v.value.class) }.uniq
+            value_types = enum_values.map { |v| type_for_constant(v.value.class) }.uniq
+
             if value_types.size == 1
-              value_types.first
+              T.must(value_types.first)
             else
               "T.any(#{value_types.join(", ")})"
             end
           when GraphQL::Schema::InputObject.singleton_class
-            qualified_name_of(unwrapped_type)
+            type_for_constant(unwrapped_type)
           else
             "T.untyped"
           end
-
-          parsed_type = T.must(parsed_type)
 
           if type.list?
             parsed_type = "T::Array[#{parsed_type}]"
@@ -55,6 +52,13 @@ module Tapioca
           end
 
           parsed_type
+        end
+
+        private
+
+        sig { params(constant: Module).returns(String) }
+        def type_for_constant(constant)
+          qualified_name_of(constant) || "T.untyped"
         end
       end
     end
