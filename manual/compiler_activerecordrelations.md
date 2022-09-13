@@ -50,6 +50,16 @@ Additionally, the actual `Model` class extends both `Model::CommonRelationMethod
 `Model::PrivateRelation` modules, so that, for example, `find_by` and `all` can be chained off of the
 `Model` class.
 
+**A note on find**: `find` is typed as `T.untyped` by default.
+
+While it is often used in the manner of `Model.find(id)`, Rails does support pasing in an array to find, which
+would then return a `T::Enumerable[Model]`. This would force a static cast everywhere find is used to avoid type
+errors. This is not ideal considering very few users of find use the array syntax over a where. With untyped,
+this cast is optional and so it was decided to avoid typing it. If you need runtime guarentees when using `find`
+the best method of doing so is by casting the return value to the model: `T.cast(Model.find(id), Model)`.
+`find_by` does guarentee a return value of `Model`, so find can can be refactored accordingly:
+`Model.find_by!(id: id)`. This will avoid the cast requirement at runtime.
+
 **CAUTION**: The generated relation classes are named `PrivateXXX` intentionally to reflect the fact
 that they represent private subconstants of the Active Record model. As such, these types do not
 exist at runtime, and their counterparts that do exist at runtime are marked `private_constant` anyway.
