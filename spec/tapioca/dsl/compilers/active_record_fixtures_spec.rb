@@ -68,7 +68,7 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_names: Symbol).returns(T.untyped) }
+                  sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
                   def posts(*fixture_names); end
                 end
               RBI
@@ -97,10 +97,10 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_names: Symbol).returns(T.untyped) }
+                  sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
                   def posts(*fixture_names); end
 
-                  sig { params(fixture_names: Symbol).returns(T.untyped) }
+                  sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
                   def users(*fixture_names); end
                 end
               RBI

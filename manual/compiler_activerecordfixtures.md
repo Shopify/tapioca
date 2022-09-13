@@ -18,7 +18,7 @@ The generated RBI by this compiler will produce the following
 # test_case.rbi
 # typed: true
 class ActiveSupport::TestCase
-  sig { params(fixture_names: Symbol).returns(T.untyped) }
+  sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
   def posts(*fixture_names); end
 end
 ~~~
