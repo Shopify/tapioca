@@ -31,7 +31,7 @@ module Tapioca
       # # test_case.rbi
       # # typed: true
       # class ActiveSupport::TestCase
-      #   sig { params(fixture_names: Symbol).returns(T.untyped) }
+      #   sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
       #   def posts(*fixture_names); end
       # end
       # ~~~
@@ -99,7 +99,7 @@ module Tapioca
         def create_fixture_method(mod, name)
           mod.create_method(
             name,
-            parameters: [create_rest_param("fixture_names", type: "Symbol")],
+            parameters: [create_rest_param("fixture_names", type: "T.any(String, Symbol)")],
             return_type: "T.untyped"
           )
         end
