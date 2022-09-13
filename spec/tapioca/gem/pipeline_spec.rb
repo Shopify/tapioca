@@ -4090,5 +4090,20 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       assert_equal(output, compile(include_doc: true, include_loc: true))
     end
+
+    it "compiles constants with nil values" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          BAR = nil
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo; end
+        Foo::BAR = T.let(T.unsafe(nil), T.untyped)
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end

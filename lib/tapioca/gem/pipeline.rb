@@ -162,7 +162,7 @@ module Tapioca
         return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
 
         constant = constantize(symbol)
-        push_constant(symbol, constant) if constant
+        push_constant(symbol, constant) if Runtime::Reflection.constant_defined?(constant)
       end
 
       sig { params(event: Gem::ConstantFound).void.checked(:never) }
@@ -260,6 +260,7 @@ module Tapioca
         return if klass_name&.start_with?("T::Types::", "T::Private::")
 
         type_name = klass_name || "T.untyped"
+        type_name = "T.untyped" if type_name == "NilClass"
         node = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
         push_const(name, klass, node)
         @root << node
@@ -321,7 +322,7 @@ module Tapioca
           next unless superclass_name
 
           resolved_superclass = constantize(superclass_name)
-          next unless Module === resolved_superclass
+          next unless Module === resolved_superclass && Runtime::Reflection.constant_defined?(resolved_superclass)
           next if name_of(resolved_superclass) == constant_name
 
           # We found a suitable superclass

@@ -19,8 +19,14 @@ module Tapioca
       PROTECTED_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:protected_instance_methods), UnboundMethod)
       PRIVATE_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:private_instance_methods), UnboundMethod)
       METHOD_METHOD = T.let(Kernel.instance_method(:method), UnboundMethod)
+      UNDEFINED_CONSTANT = T.let(Module.new.freeze, Module)
 
       REQUIRED_FROM_LABELS = T.let(["<top (required)>", "<main>"].freeze, T::Array[String])
+
+      T::Sig::WithoutRuntime.sig { params(constant: BasicObject).returns(T::Boolean) }
+      def constant_defined?(constant)
+        !UNDEFINED_CONSTANT.eql?(constant)
+      end
 
       sig do
         params(
@@ -32,7 +38,7 @@ module Tapioca
       def constantize(symbol, inherit: false, namespace: Object)
         namespace.const_get(symbol, inherit)
       rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
-        nil
+        UNDEFINED_CONSTANT
       end
 
       sig { params(object: BasicObject).returns(Class).checked(:never) }
