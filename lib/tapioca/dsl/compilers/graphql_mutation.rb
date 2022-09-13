@@ -54,12 +54,11 @@ module Tapioca
           return if arguments.empty?
 
           arguments_by_name = arguments.to_h { |a| [a.keyword.to_s, a] }
-          graphql_type_helper = Helpers::GraphqlTypeHelper.new
 
           params = compile_method_parameters_to_rbi(method_def).map do |param|
             name = param.param.name
             argument = arguments_by_name.fetch(name, nil)
-            create_typed_param(param.param, argument ? graphql_type_helper.type_for(argument.type) : "T.untyped")
+            create_typed_param(param.param, argument ? Helpers::GraphqlTypeHelper.type_for(argument.type) : "T.untyped")
           end
 
           root.create_path(constant) do |mutation|
