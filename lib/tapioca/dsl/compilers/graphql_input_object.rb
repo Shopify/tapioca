@@ -44,7 +44,7 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          arguments = constant.all_argument_definitions
+          arguments = constant.arguments.values
           return if arguments.empty?
 
           root.create_path(constant) do |input_object|

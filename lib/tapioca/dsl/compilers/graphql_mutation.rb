@@ -50,7 +50,7 @@ module Tapioca
           method_def = constant.instance_method(:resolve)
           return if signature_of(method_def) # Skip if the mutation already has an inline sig
 
-          arguments = constant.all_argument_definitions
+          arguments = constant.arguments.values
           return if arguments.empty?
 
           arguments_by_name = arguments.to_h { |a| [a.keyword.to_s, a] }
