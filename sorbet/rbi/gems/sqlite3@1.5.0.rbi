@@ -7,7 +7,7 @@
 # source://sqlite3//lib/sqlite3/constants.rb#1
 module SQLite3
   class << self
-    # source://sqlite3//lib/sqlite3/version.rb#18
+    # source://sqlite3//lib/sqlite3/version.rb#16
     def const_missing(name); end
 
     def libversion; end
@@ -1401,6 +1401,7 @@ end
 # source://sqlite3//lib/sqlite3/errors.rb#9
 class SQLite3::SQLException < ::SQLite3::Exception; end
 
+SQLite3::SQLITE_LOADED_VERSION = T.let(T.unsafe(nil), String)
 SQLite3::SQLITE_VERSION = T.let(T.unsafe(nil), String)
 SQLite3::SQLITE_VERSION_NUMBER = T.let(T.unsafe(nil), Integer)
 
@@ -1459,7 +1460,6 @@ class SQLite3::Statement
   # source://sqlite3//lib/sqlite3/statement.rb#101
   def columns; end
 
-  def database_name(_arg0); end
   def done?; end
 
   # source://sqlite3//lib/sqlite3/statement.rb#106
@@ -1646,21 +1646,22 @@ end
 # source://sqlite3//lib/sqlite3/version.rb#5
 module SQLite3::VersionProxy; end
 
-# source://sqlite3//lib/sqlite3/version.rb#7
+# source://sqlite3//lib/sqlite3/version.rb#9
+SQLite3::VersionProxy::BUILD = T.let(T.unsafe(nil), T.untyped)
+
+# source://sqlite3//lib/sqlite3/version.rb#6
 SQLite3::VersionProxy::MAJOR = T.let(T.unsafe(nil), Integer)
 
-# source://sqlite3//lib/sqlite3/version.rb#8
+# source://sqlite3//lib/sqlite3/version.rb#7
 SQLite3::VersionProxy::MINOR = T.let(T.unsafe(nil), Integer)
 
-# source://sqlite3//lib/sqlite3/version.rb#12
+# source://sqlite3//lib/sqlite3/version.rb#11
 SQLite3::VersionProxy::STRING = T.let(T.unsafe(nil), String)
 
-# source://sqlite3//lib/sqlite3/version.rb#9
+# source://sqlite3//lib/sqlite3/version.rb#8
 SQLite3::VersionProxy::TINY = T.let(T.unsafe(nil), Integer)
 
-# :beta-tag:
-#
-# source://sqlite3//lib/sqlite3/version.rb#15
+# source://sqlite3//lib/sqlite3/version.rb#13
 SQLite3::VersionProxy::VERSION = T.let(T.unsafe(nil), String)
 
 # source://sqlite3//lib/sqlite3/statement.rb#4
