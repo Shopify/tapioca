@@ -3860,6 +3860,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           requires_ancestor { ViewHelpers::UrlHelper }
           requires_ancestor { Assertions }
           requires_ancestor { Hooks }
+          requires_ancestor { T.class_of(String) }
 
           module Assertions; end
           module Hooks; end
@@ -3883,6 +3884,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
         module TestHelper
           requires_ancestor { Base::Helper }
+          requires_ancestor { T.class_of(String) }
           requires_ancestor { TestHelper::Assertions }
           requires_ancestor { TestHelper::Hooks }
           requires_ancestor { ViewHelpers::UrlHelper }
