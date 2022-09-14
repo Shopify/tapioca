@@ -75,13 +75,13 @@ module ActionMailbox
     # source://actionmailbox//lib/action_mailbox.rb#16
     def queues=(val); end
 
-    # source://railties/7.0.3.1/lib/rails/engine.rb#405
+    # source://railties/7.0.4/lib/rails/engine.rb#405
     def railtie_helpers_paths; end
 
-    # source://railties/7.0.3.1/lib/rails/engine.rb#394
+    # source://railties/7.0.4/lib/rails/engine.rb#394
     def railtie_namespace; end
 
-    # source://railties/7.0.3.1/lib/rails/engine.rb#409
+    # source://railties/7.0.4/lib/rails/engine.rb#409
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
 
     # source://actionmailbox//lib/action_mailbox.rb#17
@@ -90,10 +90,10 @@ module ActionMailbox
     # source://actionmailbox//lib/action_mailbox.rb#17
     def storage_service=(val); end
 
-    # source://railties/7.0.3.1/lib/rails/engine.rb#397
+    # source://railties/7.0.4/lib/rails/engine.rb#397
     def table_name_prefix; end
 
-    # source://railties/7.0.3.1/lib/rails/engine.rb#401
+    # source://railties/7.0.4/lib/rails/engine.rb#401
     def use_relative_model_naming?; end
   end
 end
@@ -170,16 +170,16 @@ class ActionMailbox::Base
   # source://actionmailbox//lib/action_mailbox/base.rb#76
   def initialize(inbound_email); end
 
-  # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
-  # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#940
   def _process_callbacks; end
 
-  # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#928
   def _run_process_callbacks(&block); end
 
   # Enqueues the given +message+ for delivery and changes the inbound email's status to +:bounced+.
@@ -215,13 +215,13 @@ class ActionMailbox::Base
   # source://actionmailbox//lib/action_mailbox/base.rb#91
   def process; end
 
-  # source://activesupport/7.0.3.1/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
   def rescue_handlers; end
 
-  # source://activesupport/7.0.3.1/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.0.3.1/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
   def rescue_handlers?; end
 
   # source://actionmailbox//lib/action_mailbox/routing.rb#9
@@ -236,31 +236,31 @@ class ActionMailbox::Base
   def track_status_of_inbound_email; end
 
   class << self
-    # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#932
     def _process_callbacks; end
 
-    # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#936
     def _process_callbacks=(value); end
 
     # source://actionmailbox//lib/action_mailbox/base.rb#72
     def receive(inbound_email); end
 
-    # source://activesupport/7.0.3.1/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
 
-    # source://activesupport/7.0.3.1/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.0.3.1/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
     def rescue_handlers?; end
 
     # source://actionmailbox//lib/action_mailbox/routing.rb#9
@@ -274,7 +274,7 @@ end
 class ActionMailbox::BaseController < ::ActionController::Base
   private
 
-  # source://actionview/7.0.3.1/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   def authenticate_by_password; end
@@ -283,10 +283,10 @@ class ActionMailbox::BaseController < ::ActionController::Base
   def password; end
 
   class << self
-    # source://activesupport/7.0.3.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionpack/7.0.3.1/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -339,10 +339,10 @@ class ActionMailbox::InboundEmail < ::ActionMailbox::Record
   include ::ActionMailbox::InboundEmail::GeneratedAssociationMethods
 
   class << self
-    # source://activemodel/7.0.3.1/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
     def _validators; end
 
-    # source://activerecord/7.0.3.1/lib/active_record/enum.rb#116
+    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
     def defined_enums; end
   end
 end
@@ -395,10 +395,10 @@ class ActionMailbox::IncinerationJob < ::ActiveJob::Base
   def perform(inbound_email); end
 
   class << self
-    # source://activejob/7.0.3.1/lib/active_job/queue_name.rb#56
+    # source://activejob/7.0.4/lib/active_job/queue_name.rb#56
     def queue_name; end
 
-    # source://activesupport/7.0.3.1/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
 
     def schedule(inbound_email); end
@@ -410,10 +410,10 @@ class ActionMailbox::Record < ::ActiveRecord::Base
   include ::ActionMailbox::Record::GeneratedAssociationMethods
 
   class << self
-    # source://activemodel/7.0.3.1/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
     def _validators; end
 
-    # source://activerecord/7.0.3.1/lib/active_record/enum.rb#116
+    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
     def defined_enums; end
   end
 end
@@ -502,7 +502,7 @@ class ActionMailbox::RoutingJob < ::ActiveJob::Base
   def perform(inbound_email); end
 
   class << self
-    # source://activejob/7.0.3.1/lib/active_job/queue_name.rb#56
+    # source://activejob/7.0.4/lib/active_job/queue_name.rb#56
     def queue_name; end
   end
 end
@@ -1386,67 +1386,67 @@ Mail::RubyVer = Mail::Ruby19
 
 module Rails
   class << self
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def app_class; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def app_class=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#39
+    # source://railties/7.0.4/lib/rails.rb#39
     def application; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#37
+    # source://railties/7.0.4/lib/rails.rb#37
     def application=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#116
+    # source://railties/7.0.4/lib/rails.rb#123
     def autoloaders; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#50
+    # source://railties/7.0.4/lib/rails.rb#50
     def backtrace_cleaner; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def cache; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def cache=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#46
+    # source://railties/7.0.4/lib/rails.rb#46
     def configuration; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#72
+    # source://railties/7.0.4/lib/rails.rb#72
     def env; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#79
+    # source://railties/7.0.4/lib/rails.rb#79
     def env=(environment); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#83
+    # source://railties/7.0.4/lib/rails.rb#90
     def error; end
 
-    # source://railties/7.0.3.1/lib/rails/gem_version.rb#5
+    # source://railties/7.0.4/lib/rails/gem_version.rb#5
     def gem_version; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#96
+    # source://railties/7.0.4/lib/rails.rb#103
     def groups(*groups); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#43
+    # source://railties/7.0.4/lib/rails.rb#43
     def initialize!(*_arg0, **_arg1, &_arg2); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#43
+    # source://railties/7.0.4/lib/rails.rb#43
     def initialized?(*_arg0, **_arg1, &_arg2); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def logger; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def logger=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#112
+    # source://railties/7.0.4/lib/rails.rb#119
     def public_path; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#63
+    # source://railties/7.0.4/lib/rails.rb#63
     def root; end
 
-    # source://railties/7.0.3.1/lib/rails/version.rb#7
+    # source://railties/7.0.4/lib/rails/version.rb#7
     def version; end
   end
 end
