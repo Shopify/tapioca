@@ -328,7 +328,7 @@ module Tapioca
 
           raise Thor::Error, <<~ERROR
             #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
-              #{set_color("`#{default_command(command)}`", [:green, :bold])}
+              #{set_color("`#{default_command(command)}`", :green, :bold)}
             #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
 
             #{set_color("Reason:", :red)}
