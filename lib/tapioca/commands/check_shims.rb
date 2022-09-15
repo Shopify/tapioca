@@ -16,7 +16,7 @@ module Tapioca
           shim_rbi_dir: String,
           todo_rbi_file: String,
           payload: T::Boolean,
-          number_of_workers: T.nilable(Integer)
+          number_of_workers: T.nilable(Integer),
         ).void
       end
       def initialize(

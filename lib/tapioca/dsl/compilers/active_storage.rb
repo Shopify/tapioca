@@ -63,12 +63,12 @@ module Tapioca
               name = reflection.name.to_s
               scope.create_method(
                 name,
-                return_type: type
+                return_type: type,
               )
               scope.create_method(
                 "#{name}=",
                 parameters: [create_param("attachable", type: "T.untyped")],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             end
           end

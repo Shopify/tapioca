@@ -41,7 +41,7 @@ module Tapioca
     sig do
       params(
         sorbet_dependency: T::Boolean,
-        block: T.nilable(T.proc.params(gem: MockProject).bind(MockProject).void)
+        block: T.nilable(T.proc.params(gem: MockProject).bind(MockProject).void),
       ).returns(MockProject)
     end
     def mock_project(sorbet_dependency: true, &block)
@@ -50,7 +50,7 @@ module Tapioca
       # Pin Sorbet static and runtime version to the current one in this project
       project.require_real_gem(
         "sorbet-static-and-runtime",
-        ::Gem::Specification.find_by_name("sorbet-static-and-runtime").version.to_s
+        ::Gem::Specification.find_by_name("sorbet-static-and-runtime").version.to_s,
       ) if sorbet_dependency
       project.instance_exec(project, &block) if block
       project
@@ -72,7 +72,7 @@ module Tapioca
         name: String,
         version: String,
         dependencies: T::Array[String],
-        block: T.nilable(T.proc.params(gem: MockGem).bind(MockGem).void)
+        block: T.nilable(T.proc.params(gem: MockGem).bind(MockGem).void),
       ).returns(MockGem)
     end
     def mock_gem(name, version, dependencies: [], &block)

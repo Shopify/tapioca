@@ -37,7 +37,7 @@ module Tapioca
         def processable_constants
           @processable_constants ||= T.let(
             T::Set[Module].new(gather_constants).compare_by_identity,
-            T.nilable(T::Set[Module])
+            T.nilable(T::Set[Module]),
           )
         end
 
@@ -84,7 +84,7 @@ module Tapioca
       sig do
         params(
           method_def: T.any(Method, UnboundMethod),
-          signature: T.untyped # as `T::Private::Methods::Signature` is private
+          signature: T.untyped, # as `T::Private::Methods::Signature` is private
         ).returns(T::Array[String])
       end
       def parameters_types_from_signature(method_def, signature)
@@ -115,7 +115,7 @@ module Tapioca
           method_def.name.to_s,
           parameters: compile_method_parameters_to_rbi(method_def),
           return_type: compile_method_return_type_to_rbi(method_def),
-          class_method: class_method
+          class_method: class_method,
         )
       end
 

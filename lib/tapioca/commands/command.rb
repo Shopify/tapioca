@@ -40,7 +40,7 @@ module Tapioca
           content: String,
           force: T::Boolean,
           skip: T::Boolean,
-          verbose: T::Boolean
+          verbose: T::Boolean,
         ).void
       end
       def create_file(path, content, force: true, skip: false, verbose: true)
@@ -50,7 +50,7 @@ module Tapioca
       sig do
         params(
           path: T.any(String, Pathname),
-          verbose: T::Boolean
+          verbose: T::Boolean,
         ).void
       end
       def remove_file(path, verbose: true)

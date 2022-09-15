@@ -83,14 +83,14 @@ module Tapioca
               # Create getter method
               mod.create_method(
                 method_name.to_s,
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
 
               # Create setter method
               mod.create_method(
                 "#{method_name}=",
                 parameters: [create_param("value", type: "T.untyped")],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             end
           end

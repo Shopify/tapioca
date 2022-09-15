@@ -12,7 +12,7 @@ module Tapioca
           auth: T.nilable(String),
           netrc_file: T.nilable(String),
           central_repo_index_path: String,
-          typed_overrides: T::Hash[String, String]
+          typed_overrides: T::Hash[String, String],
         ).void
       end
       def initialize(

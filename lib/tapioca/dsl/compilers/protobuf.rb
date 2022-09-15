@@ -169,7 +169,7 @@ module Tapioca
 
         sig do
           params(
-            descriptor: Google::Protobuf::FieldDescriptor
+            descriptor: Google::Protobuf::FieldDescriptor,
           ).returns(String)
         end
         def type_of(descriptor)
@@ -223,7 +223,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.nilable(T.any(#{type}, T::Hash[#{key_type}, #{value_type}]))",
-                default: "Google::Protobuf::Map.new(#{default_args.join(", ")})"
+                default: "Google::Protobuf::Map.new(#{default_args.join(", ")})",
               )
             else
               elem_type = type_of(descriptor)
@@ -236,7 +236,7 @@ module Tapioca
                 name: descriptor.name,
                 type: type,
                 init_type: "T.nilable(T.any(#{type}, T::Array[#{elem_type}]))",
-                default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})"
+                default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})",
               )
             end
           else
@@ -248,7 +248,7 @@ module Tapioca
               name: descriptor.name,
               type: type,
               init_type: nilable_type,
-              default: "nil"
+              default: "nil",
             )
           end
         end
@@ -264,13 +264,13 @@ module Tapioca
 
           klass.create_method(
             field.name,
-            return_type: field.type
+            return_type: field.type,
           )
 
           klass.create_method(
             "#{field.name}=",
             parameters: [create_param("value", type: field.type)],
-            return_type: "void"
+            return_type: "void",
           )
 
           field
@@ -279,13 +279,13 @@ module Tapioca
         sig do
           params(
             klass: RBI::Scope,
-            desc: Google::Protobuf::OneofDescriptor
+            desc: Google::Protobuf::OneofDescriptor,
           ).void
         end
         def create_oneof_method(klass, desc)
           klass.create_method(
             desc.name,
-            return_type: "T.nilable(Symbol)"
+            return_type: "T.nilable(Symbol)",
           )
         end
       end

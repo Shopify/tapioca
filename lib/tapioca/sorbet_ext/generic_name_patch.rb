@@ -28,7 +28,7 @@ module T
           fixed,
           lower,
           upper,
-          bounds_proc
+          bounds_proc,
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
@@ -44,7 +44,7 @@ module T
           fixed,
           lower,
           upper,
-          bounds_proc
+          bounds_proc,
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
@@ -128,7 +128,7 @@ module Tapioca
         fixed: T.untyped,
         lower: T.untyped,
         upper: T.untyped,
-        bounds_proc: T.nilable(T.proc.returns(T::Hash[Symbol, T.untyped]))
+        bounds_proc: T.nilable(T.proc.returns(T::Hash[Symbol, T.untyped])),
       ).void
     end
     def initialize(context, type, variance, fixed, lower, upper, bounds_proc)
@@ -180,7 +180,7 @@ module Tapioca
         @variance,
         fixed,
         upper,
-        lower
+        lower,
       )
     end
 

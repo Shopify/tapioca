@@ -66,7 +66,7 @@ module Tapioca
 
         COLLECTION_TYPE = T.let(
           ->(type) { "T::Array[::#{type}]" },
-          T.proc.params(type: T.any(Module, String)).returns(String)
+          T.proc.params(type: T.any(Module, String)).returns(String),
         )
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
@@ -116,7 +116,7 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            returns_collection: T::Boolean
+            returns_collection: T::Boolean,
           ).returns(String)
         end
         def type_for_field(field, returns_collection:)
@@ -134,7 +134,7 @@ module Tapioca
           params(
             field: T.untyped,
             klass: RBI::Scope,
-            returns_collection: T::Boolean
+            returns_collection: T::Boolean,
           ).void
         end
         def create_fetch_field_methods(field, klass, returns_collection:)
@@ -152,7 +152,7 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            klass: RBI::Scope
+            klass: RBI::Scope,
           ).void
         end
         def create_fetch_by_methods(field, klass)
@@ -168,7 +168,7 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            klass: RBI::Scope
+            klass: RBI::Scope,
           ).void
         end
         def create_index_fetch_by_methods(field, klass)
@@ -187,21 +187,21 @@ module Tapioca
               "#{name}!",
               class_method: true,
               parameters: parameters,
-              return_type: type
+              return_type: type,
             )
 
             klass.create_method(
               name,
               class_method: true,
               parameters: parameters,
-              return_type: as_nilable_type(type)
+              return_type: as_nilable_type(type),
             )
           else
             klass.create_method(
               name,
               class_method: true,
               parameters: parameters,
-              return_type: COLLECTION_TYPE.call(constant)
+              return_type: COLLECTION_TYPE.call(constant),
             )
           end
 
@@ -213,7 +213,7 @@ module Tapioca
                 create_param("index_values", type: "T::Enumerable[T.untyped]"),
                 create_kw_opt_param("includes", default: "nil", type: "T.untyped"),
               ],
-              return_type: COLLECTION_TYPE.call(constant)
+              return_type: COLLECTION_TYPE.call(constant),
             )
           end
         end
@@ -221,7 +221,7 @@ module Tapioca
         sig do
           params(
             field: T.untyped,
-            klass: RBI::Scope
+            klass: RBI::Scope,
           ).void
         end
         def create_aliased_fetch_by_methods(field, klass)
@@ -238,7 +238,7 @@ module Tapioca
             "fetch_#{suffix}",
             class_method: true,
             parameters: parameters,
-            return_type: type
+            return_type: type,
           )
 
           if length == 1
@@ -246,7 +246,7 @@ module Tapioca
               "fetch_multi_#{suffix}",
               class_method: true,
               parameters: [create_param("keys", type: "T::Enumerable[T.untyped]")],
-              return_type: COLLECTION_TYPE.call(multi_type)
+              return_type: COLLECTION_TYPE.call(multi_type),
             )
           end
         end

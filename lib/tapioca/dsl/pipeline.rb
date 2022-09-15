@@ -36,7 +36,7 @@ module Tapioca
       )
         @active_compilers = T.let(
           gather_active_compilers(requested_compilers, excluded_compilers),
-          T::Enumerable[T.class_of(Compiler)]
+          T::Enumerable[T.class_of(Compiler)],
         )
         @requested_constants = requested_constants
         @error_handler = error_handler
@@ -46,7 +46,7 @@ module Tapioca
 
       sig do
         type_parameters(:T).params(
-          blk: T.proc.params(constant: Module, rbi: RBI::File).returns(T.type_parameter(:T))
+          blk: T.proc.params(constant: Module, rbi: RBI::File).returns(T.type_parameter(:T)),
         ).returns(T::Array[T.type_parameter(:T)])
       end
       def run(&blk)
@@ -63,7 +63,7 @@ module Tapioca
 
         result = Executor.new(
           constants_to_process,
-          number_of_workers: @number_of_workers
+          number_of_workers: @number_of_workers,
         ).run_in_parallel do |constant|
           rbi = rbi_for_constant(constant)
           next if rbi.nil?
@@ -105,7 +105,7 @@ module Tapioca
       sig do
         params(
           requested_compilers: T::Array[T.class_of(Compiler)],
-          excluded_compilers: T::Array[T.class_of(Compiler)]
+          excluded_compilers: T::Array[T.class_of(Compiler)],
         ).returns(T::Enumerable[T.class_of(Compiler)])
       end
       def gather_active_compilers(requested_compilers, excluded_compilers)

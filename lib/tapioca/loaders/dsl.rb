@@ -63,7 +63,7 @@ module Tapioca
 
         load_rails_application(
           environment_load: true,
-          eager_load: @eager_load
+          eager_load: @eager_load,
         )
 
         say("Done", :green)

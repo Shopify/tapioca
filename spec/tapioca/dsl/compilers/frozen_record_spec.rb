@@ -40,8 +40,7 @@ module Tapioca
                 end
               RUBY
 
-              add_content_file("students.yml", <<~YAML)
-              YAML
+              add_content_file("students.yml", "")
 
               expected = <<~RBI
                 # typed: strong

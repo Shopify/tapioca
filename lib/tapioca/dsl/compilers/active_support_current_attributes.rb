@@ -117,7 +117,7 @@ module Tapioca
               method,
               class_method: class_method,
               parameters: [parameter],
-              return_type: "T.untyped"
+              return_type: "T.untyped",
             )
           else
             klass.create_method(method, class_method: class_method, return_type: "T.untyped")

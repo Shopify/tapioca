@@ -7,12 +7,12 @@ module Tapioca
 
     SORBET_GEM_SPEC = T.let(
       ::Gem::Specification.find_by_name("sorbet-static"),
-      ::Gem::Specification
+      ::Gem::Specification,
     )
 
     SORBET_BIN = T.let(
       Pathname.new(SORBET_GEM_SPEC.full_gem_path) / "libexec" / "sorbet",
-      Pathname
+      Pathname,
     )
 
     SORBET_EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"

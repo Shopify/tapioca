@@ -188,12 +188,12 @@ module Tapioca
         ASSOCIATION_METHODS = T.let(
           ::ActiveRecord::AssociationRelation.instance_methods -
             ::ActiveRecord::Relation.instance_methods,
-          T::Array[Symbol]
+          T::Array[Symbol],
         )
         COLLECTION_PROXY_METHODS = T.let(
           ::ActiveRecord::Associations::CollectionProxy.instance_methods -
             ::ActiveRecord::AssociationRelation.instance_methods,
-          T::Array[Symbol]
+          T::Array[Symbol],
         )
 
         QUERY_METHODS = T.let(begin
@@ -214,14 +214,14 @@ module Tapioca
         end, T::Array[Symbol])
         WHERE_CHAIN_QUERY_METHODS = T.let(
           ActiveRecord::QueryMethods::WhereChain.instance_methods(false),
-          T::Array[Symbol]
+          T::Array[Symbol],
         )
         FINDER_METHODS = T.let(ActiveRecord::FinderMethods.instance_methods(false), T::Array[Symbol])
         CALCULATION_METHODS = T.let(ActiveRecord::Calculations.instance_methods(false), T::Array[Symbol])
         ENUMERABLE_QUERY_METHODS = T.let([:any?, :many?, :none?, :one?], T::Array[Symbol])
         FIND_OR_CREATE_METHODS = T.let(
           [:find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :create_or_find_by, :create_or_find_by!],
-          T::Array[Symbol]
+          T::Array[Symbol],
         )
         BUILDER_METHODS = T.let([:new, :build, :create, :create!], T::Array[Symbol])
 
@@ -302,7 +302,7 @@ module Tapioca
         def create_association_relation_where_chain_class(model)
           model.create_class(
             AssociationRelationWhereChainClassName,
-            superclass_name: AssociationRelationClassName
+            superclass_name: AssociationRelationClassName,
           ) do |klass|
             create_where_chain_methods(klass, AssociationRelationClassName)
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
@@ -320,7 +320,7 @@ module Tapioca
                   create_param("opts", type: "T.untyped"),
                   create_rest_param("rest", type: "T.untyped"),
                 ],
-                return_type: return_type
+                return_type: return_type,
               )
             when :associated, :missing
               klass.create_method(
@@ -328,7 +328,7 @@ module Tapioca
                 parameters: [
                   create_rest_param("args", type: "T.untyped"),
                 ],
-                return_type: return_type
+                return_type: return_type,
               )
             end
           end
@@ -384,12 +384,12 @@ module Tapioca
                 parameters: [
                   create_rest_param("records", type: model_collection),
                 ],
-                return_type: AssociationsCollectionProxyClassName
+                return_type: AssociationsCollectionProxyClassName,
               )
             when :clear
               klass.create_method(
                 method_name.to_s,
-                return_type: AssociationsCollectionProxyClassName
+                return_type: AssociationsCollectionProxyClassName,
               )
             when :delete, :destroy
               klass.create_method(
@@ -397,12 +397,12 @@ module Tapioca
                 parameters: [
                   create_rest_param("records", type: model_or_id_collection),
                 ],
-                return_type: "T::Array[#{constant_name}]"
+                return_type: "T::Array[#{constant_name}]",
               )
             when :load_target
               klass.create_method(
                 method_name.to_s,
-                return_type: "T::Array[#{constant_name}]"
+                return_type: "T::Array[#{constant_name}]",
               )
             when :replace
               klass.create_method(
@@ -410,19 +410,19 @@ module Tapioca
                 parameters: [
                   create_param("other_array", type: model_collection),
                 ],
-                return_type: "T::Array[#{constant_name}]"
+                return_type: "T::Array[#{constant_name}]",
               )
             when :reset_scope
               # skip
             when :scope
               klass.create_method(
                 method_name.to_s,
-                return_type: AssociationRelationClassName
+                return_type: AssociationRelationClassName,
               )
             when :target
               klass.create_method(
                 method_name.to_s,
-                return_type: "T::Array[#{constant_name}]"
+                return_type: "T::Array[#{constant_name}]",
               )
             end
           end
@@ -451,7 +451,7 @@ module Tapioca
               parameters: [
                 create_rest_param("args", type: "T.untyped"),
                 create_block_param("blk", type: "T.untyped"),
-              ]
+              ],
             )
           end
         end
@@ -477,7 +477,7 @@ module Tapioca
               association_relation_methods_module.create_method(
                 method_name.to_s,
                 parameters: parameters,
-                return_type: "ActiveRecord::Result"
+                return_type: "ActiveRecord::Result",
               )
             when :insert, :insert!, :upsert
               parameters = [
@@ -493,7 +493,7 @@ module Tapioca
               association_relation_methods_module.create_method(
                 method_name.to_s,
                 parameters: parameters,
-                return_type: "ActiveRecord::Result"
+                return_type: "ActiveRecord::Result",
               )
             when :proxy_association
               # skip - private method
@@ -506,7 +506,7 @@ module Tapioca
           create_common_method(
             "destroy_all",
             common_relation_methods_module,
-            return_type: "T::Array[#{constant_name}]"
+            return_type: "T::Array[#{constant_name}]",
           )
 
           FINDER_METHODS.each do |method_name|
@@ -518,7 +518,7 @@ module Tapioca
                 parameters: [
                   create_opt_param("conditions", type: "T.untyped", default: ":none"),
                 ],
-                return_type: "T::Boolean"
+                return_type: "T::Boolean",
               )
             when :include?, :member?
               create_common_method(
@@ -527,7 +527,7 @@ module Tapioca
                 parameters: [
                   create_param("record", type: "T.untyped"),
                 ],
-                return_type: "T::Boolean"
+                return_type: "T::Boolean",
               )
             when :find
               create_common_method(
@@ -536,7 +536,7 @@ module Tapioca
                 parameters: [
                   create_rest_param("args", type: "T.untyped"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             when :find_by
               create_common_method(
@@ -545,7 +545,7 @@ module Tapioca
                 parameters: [
                   create_rest_param("args", type: "T.untyped"),
                 ],
-                return_type: as_nilable_type(constant_name)
+                return_type: as_nilable_type(constant_name),
               )
             when :find_by!
               create_common_method(
@@ -554,7 +554,7 @@ module Tapioca
                 parameters: [
                   create_rest_param("args", type: "T.untyped"),
                 ],
-                return_type: constant_name
+                return_type: constant_name,
               )
             when :find_sole_by
               create_common_method(
@@ -564,14 +564,14 @@ module Tapioca
                   create_param("arg", type: "T.untyped"),
                   create_rest_param("args", type: "T.untyped"),
                 ],
-                return_type: constant_name
+                return_type: constant_name,
               )
             when :sole
               create_common_method(
                 "sole",
                 common_relation_methods_module,
                 parameters: [],
-                return_type: constant_name
+                return_type: constant_name,
               )
             when :first, :last, :take
               create_common_method(
@@ -580,7 +580,7 @@ module Tapioca
                 parameters: [
                   create_opt_param("limit", type: "T.untyped", default: "nil"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             when :raise_record_not_found_exception!
               # skip
@@ -594,7 +594,7 @@ module Tapioca
               create_common_method(
                 method_name,
                 common_relation_methods_module,
-                return_type: return_type
+                return_type: return_type,
               )
             end
           end
@@ -608,7 +608,7 @@ module Tapioca
                 parameters: [
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             when :calculate
               create_common_method(
@@ -618,7 +618,7 @@ module Tapioca
                   create_param("operation", type: "Symbol"),
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             when :count
               create_common_method(
@@ -627,7 +627,7 @@ module Tapioca
                 parameters: [
                   create_opt_param("column_name", type: "T.untyped", default: "nil"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             when :ids
               create_common_method("ids", common_relation_methods_module, return_type: "Array")
@@ -638,7 +638,7 @@ module Tapioca
                 parameters: [
                   create_rest_param("column_names", type: "T.untyped"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             when :sum
               create_common_method(
@@ -648,7 +648,7 @@ module Tapioca
                   create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
                   create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
                 ],
-                return_type: "T.untyped"
+                return_type: "T.untyped",
               )
             end
           end
@@ -661,7 +661,7 @@ module Tapioca
               parameters: [
                 create_block_param("block", type: block_type),
               ],
-              return_type: "T::Boolean"
+              return_type: "T::Boolean",
             )
           end
 
@@ -674,7 +674,7 @@ module Tapioca
                 create_param("attributes", type: "T.untyped"),
                 create_block_param("block", type: block_type),
               ],
-              return_type: constant_name
+              return_type: constant_name,
             )
           end
 
@@ -686,7 +686,7 @@ module Tapioca
                 create_opt_param("attributes", type: "T.untyped", default: "nil"),
                 create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
               ],
-              return_type: constant_name
+              return_type: constant_name,
             )
           end
         end
@@ -696,14 +696,14 @@ module Tapioca
             name: T.any(Symbol, String),
             common_relation_methods_module: RBI::Scope,
             parameters: T::Array[RBI::TypedParam],
-            return_type: T.nilable(String)
+            return_type: T.nilable(String),
           ).void
         end
         def create_common_method(name, common_relation_methods_module, parameters: [], return_type: nil)
           common_relation_methods_module.create_method(
             name.to_s,
             parameters: parameters,
-            return_type: return_type || "void"
+            return_type: return_type || "void",
           )
         end
 
@@ -728,12 +728,12 @@ module Tapioca
           relation_methods_module.create_method(
             name.to_s,
             parameters: parameters,
-            return_type: relation_return_type
+            return_type: relation_return_type,
           )
           association_relation_methods_module.create_method(
             name.to_s,
             parameters: parameters,
-            return_type: association_return_type
+            return_type: association_return_type,
           )
         end
       end

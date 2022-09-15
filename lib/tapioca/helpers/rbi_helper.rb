@@ -17,7 +17,7 @@ module Tapioca
           variance: Symbol,
           fixed: T.nilable(String),
           upper: T.nilable(String),
-          lower: T.nilable(String)
+          lower: T.nilable(String),
         ).returns(String)
       end
       def serialize_type_variable(type, variance, fixed, upper, lower)

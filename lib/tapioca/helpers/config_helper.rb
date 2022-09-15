@@ -96,7 +96,7 @@ module Tapioca
       params(
         command_options: T::Hash[Symbol, Thor::Option],
         config_key: String,
-        config_options: T::Hash[T.untyped, T.untyped]
+        config_options: T::Hash[T.untyped, T.untyped],
       ).returns(T::Array[ConfigError])
     end
     def validate_config_options(command_options, config_key, config_options)
@@ -157,18 +157,18 @@ module Tapioca
         if match
           ConfigErrorMessagePart.new(
             message: "#{match[1]}#{match[2]}",
-            colors: [:bold, :blue]
+            colors: [:bold, :blue],
           )
         else
           ConfigErrorMessagePart.new(
             message: part,
-            colors: [:yellow]
+            colors: [:yellow],
           )
         end
       end
 
       ConfigError.new(
-        message_parts: message_parts
+        message_parts: message_parts,
       )
     end
 

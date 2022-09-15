@@ -22,7 +22,7 @@ module Tapioca
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
           dsl_dir: String,
-          rbi_formatter: RBIFormatter
+          rbi_formatter: RBIFormatter,
         ).void
       end
       def initialize(
@@ -91,7 +91,7 @@ module Tapioca
             gem_dir: @outpath.to_s,
             dsl_dir: @dsl_dir,
             auto_strictness: @auto_strictness,
-            gems: @bundle.dependencies
+            gems: @bundle.dependencies,
           )
 
           say("All operations performed in working directory.", [:green, :bold])
@@ -121,7 +121,7 @@ module Tapioca
             gem_dir: @outpath.to_s,
             dsl_dir: @dsl_dir,
             auto_strictness: @auto_strictness,
-            gems: @bundle.dependencies
+            gems: @bundle.dependencies,
           )
 
           say("All operations performed in working directory.", [:green, :bold])
@@ -158,7 +158,7 @@ module Tapioca
 
         @rbi_formatter.write_header!(rbi,
           default_command(:gem, gem.name),
-          reason: "types exported from the `#{gem.name}` gem",) if @file_header
+          reason: "types exported from the `#{gem.name}` gem") if @file_header
 
         rbi.root = Tapioca::Gem::Pipeline.new(gem, include_doc: @include_doc, include_loc: @include_loc).compile
 

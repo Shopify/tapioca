@@ -43,7 +43,7 @@ module Tapioca
 
         BUILT_IN_MATCHER = T.let(
           /::(ActionMailbox|ActionText|ActiveRecord|Rails)::Generators/,
-          Regexp
+          Regexp,
         )
 
         ConstantType = type_member { { fixed: T.class_of(::Rails::Generators::Base) } }
@@ -86,7 +86,7 @@ module Tapioca
           klass.create_method(
             argument.name,
             parameters: [],
-            return_type: type_for(argument)
+            return_type: type_for(argument),
           )
         end
 

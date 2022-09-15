@@ -16,13 +16,13 @@ module Tapioca
       # one has at least 4 items to process
       @number_of_workers = T.let(
         number_of_workers || [Etc.nprocessors, (queue.length.to_f / MINIMUM_ITEMS_PER_WORKER).ceil].min,
-        Integer
+        Integer,
       )
     end
 
     sig do
       type_parameters(:T).params(
-        block: T.proc.params(item: T.untyped).returns(T.type_parameter(:T))
+        block: T.proc.params(item: T.untyped).returns(T.type_parameter(:T)),
       ).returns(T::Array[T.type_parameter(:T)])
     end
     def run_in_parallel(&block)

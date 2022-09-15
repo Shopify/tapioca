@@ -152,14 +152,14 @@ module Tapioca
             name: String,
             methods_to_add: T.nilable(T::Array[String]),
             return_type: String,
-            parameters: T::Array[[String, String]]
+            parameters: T::Array[[String, String]],
           ).void
         end
         def add_method(klass, name, methods_to_add, return_type: "void", parameters: [])
           klass.create_method(
             name,
             parameters: parameters.map { |param, type| create_param(param, type: type) },
-            return_type: return_type
+            return_type: return_type,
           ) if methods_to_add.nil? || methods_to_add.include?(name)
         end
 
@@ -168,7 +168,7 @@ module Tapioca
             klass: RBI::Scope,
             column_name: String,
             attribute_name: String,
-            methods_to_add: T.nilable(T::Array[String])
+            methods_to_add: T.nilable(T::Array[String]),
           ).void
         end
         def add_methods_for_attribute(klass, column_name, attribute_name = column_name, methods_to_add = nil)
@@ -180,7 +180,7 @@ module Tapioca
             klass,
             attribute_name.to_s,
             methods_to_add,
-            return_type: getter_type
+            return_type: getter_type,
           )
 
           # Added by ActiveRecord::AttributeMethods::Write
@@ -190,7 +190,7 @@ module Tapioca
             "#{attribute_name}=",
             methods_to_add,
             parameters: [["value", setter_type]],
-            return_type: setter_type
+            return_type: setter_type,
           )
 
           # Added by ActiveRecord::AttributeMethods::Query
@@ -199,7 +199,7 @@ module Tapioca
             klass,
             "#{attribute_name}?",
             methods_to_add,
-            return_type: "T::Boolean"
+            return_type: "T::Boolean",
           )
 
           # Added by ActiveRecord::AttributeMethods::Dirty
@@ -208,37 +208,37 @@ module Tapioca
             klass,
             "#{attribute_name}_before_last_save",
             methods_to_add,
-            return_type: as_nilable_type(getter_type)
+            return_type: as_nilable_type(getter_type),
           )
           add_method(
             klass,
             "#{attribute_name}_change_to_be_saved",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
             "#{attribute_name}_in_database",
             methods_to_add,
-            return_type: as_nilable_type(getter_type)
+            return_type: as_nilable_type(getter_type),
           )
           add_method(
             klass,
             "saved_change_to_#{attribute_name}",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
             "saved_change_to_#{attribute_name}?",
             methods_to_add,
-            return_type: "T::Boolean"
+            return_type: "T::Boolean",
           )
           add_method(
             klass,
             "will_save_change_to_#{attribute_name}?",
             methods_to_add,
-            return_type: "T::Boolean"
+            return_type: "T::Boolean",
           )
 
           # Added by ActiveModel::Dirty
@@ -247,47 +247,47 @@ module Tapioca
             klass,
             "#{attribute_name}_change",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
             "#{attribute_name}_changed?",
             methods_to_add,
-            return_type: "T::Boolean"
+            return_type: "T::Boolean",
           )
           add_method(
             klass,
             "#{attribute_name}_will_change!",
-            methods_to_add
+            methods_to_add,
           )
           add_method(
             klass,
             "#{attribute_name}_was",
             methods_to_add,
-            return_type: as_nilable_type(getter_type)
+            return_type: as_nilable_type(getter_type),
           )
           add_method(
             klass,
             "#{attribute_name}_previous_change",
             methods_to_add,
-            return_type: "T.nilable([#{getter_type}, #{getter_type}])"
+            return_type: "T.nilable([#{getter_type}, #{getter_type}])",
           )
           add_method(
             klass,
             "#{attribute_name}_previously_changed?",
             methods_to_add,
-            return_type: "T::Boolean"
+            return_type: "T::Boolean",
           )
           add_method(
             klass,
             "#{attribute_name}_previously_was",
             methods_to_add,
-            return_type: as_nilable_type(getter_type)
+            return_type: as_nilable_type(getter_type),
           )
           add_method(
             klass,
             "restore_#{attribute_name}!",
-            methods_to_add
+            methods_to_add,
           )
 
           # Added by ActiveRecord::AttributeMethods::BeforeTypeCast
@@ -296,13 +296,13 @@ module Tapioca
             klass,
             "#{attribute_name}_before_type_cast",
             methods_to_add,
-            return_type: "T.untyped"
+            return_type: "T.untyped",
           )
           add_method(
             klass,
             "#{attribute_name}_came_from_user?",
             methods_to_add,
-            return_type: "T::Boolean"
+            return_type: "T::Boolean",
           )
         end
       end

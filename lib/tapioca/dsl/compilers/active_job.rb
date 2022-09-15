@@ -55,14 +55,14 @@ module Tapioca
               "perform_later",
               parameters: parameters,
               return_type: "T.any(#{name_of(constant)}, FalseClass)",
-              class_method: true
+              class_method: true,
             )
 
             job.create_method(
               "perform_now",
               parameters: parameters,
               return_type: return_type,
-              class_method: true
+              class_method: true,
             )
           end
         end

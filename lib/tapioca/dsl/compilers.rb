@@ -15,7 +15,7 @@ module Tapioca
           "#{name}::", # compilers in this namespace
           "::", # compilers that need to be fully namespaced
         ],
-        T::Array[String]
+        T::Array[String],
       )
     end
   end

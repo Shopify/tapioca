@@ -152,7 +152,7 @@ module Tapioca
             mod.create_method(
               "#{association_name}_attributes=",
               parameters: [create_param("attributes", type: "T.untyped")],
-              return_type: "T.untyped"
+              return_type: "T.untyped",
             )
           end
         end
@@ -180,7 +180,7 @@ module Tapioca
           params(
             klass: RBI::Scope,
             association_name: T.any(String, Symbol),
-            reflection: ReflectionType
+            reflection: ReflectionType,
           ).void
         end
         def populate_single_assoc_getter_setter(klass, association_name, reflection)
@@ -194,7 +194,7 @@ module Tapioca
           klass.create_method(
             "#{association_name}=",
             parameters: [create_param("value", type: association_type)],
-            return_type: "void"
+            return_type: "void",
           )
           klass.create_method(
             "reload_#{association_name}",
@@ -207,7 +207,7 @@ module Tapioca
                 create_rest_param("args", type: "T.untyped"),
                 create_block_param("blk", type: "T.untyped"),
               ],
-              return_type: association_class
+              return_type: association_class,
             )
             klass.create_method(
               "create_#{association_name}",
@@ -215,7 +215,7 @@ module Tapioca
                 create_rest_param("args", type: "T.untyped"),
                 create_block_param("blk", type: "T.untyped"),
               ],
-              return_type: association_class
+              return_type: association_class,
             )
             klass.create_method(
               "create_#{association_name}!",
@@ -223,7 +223,7 @@ module Tapioca
                 create_rest_param("args", type: "T.untyped"),
                 create_block_param("blk", type: "T.untyped"),
               ],
-              return_type: association_class
+              return_type: association_class,
             )
           end
         end
@@ -232,7 +232,7 @@ module Tapioca
           params(
             klass: RBI::Scope,
             association_name: T.any(String, Symbol),
-            reflection: ReflectionType
+            reflection: ReflectionType,
           ).void
         end
         def populate_collection_assoc_getter_setter(klass, association_name, reflection)
@@ -250,18 +250,18 @@ module Tapioca
           )
           klass.create_method(
             "#{association_name.to_s.singularize}_ids",
-            return_type: "T::Array[T.untyped]"
+            return_type: "T::Array[T.untyped]",
           )
           klass.create_method(
             "#{association_name.to_s.singularize}_ids=",
             parameters: [create_param("ids", type: "T::Array[T.untyped]")],
-            return_type: "T::Array[T.untyped]"
+            return_type: "T::Array[T.untyped]",
           )
         end
 
         sig do
           params(
-            reflection: ReflectionType
+            reflection: ReflectionType,
           ).returns(String)
         end
         def type_for(reflection)
@@ -274,7 +274,7 @@ module Tapioca
 
         sig do
           params(
-            reflection: ReflectionType
+            reflection: ReflectionType,
           ).void
         end
         def validate_reflection!(reflection)
@@ -322,7 +322,7 @@ module Tapioca
 
         sig do
           params(
-            reflection: ReflectionType
+            reflection: ReflectionType,
           ).returns(String)
         end
         def relation_type_for(reflection)
@@ -346,7 +346,7 @@ module Tapioca
 
         sig do
           params(
-            reflection: ReflectionType
+            reflection: ReflectionType,
           ).returns(T::Boolean)
         end
         def polymorphic_association?(reflection)

@@ -8,7 +8,7 @@ module Tapioca
     Spec = T.type_alias do
       T.any(
         ::Bundler::StubSpecification,
-        ::Gem::Specification
+        ::Gem::Specification,
       )
     end
 
@@ -147,7 +147,7 @@ module Tapioca
               .flat_map do |spec|
                 spec.files.filter_map { |file| [file.realpath.to_s, spec] if file.exist? }
               end.to_h,
-            T.nilable(T::Hash[String, Gemfile::GemSpec])
+            T.nilable(T::Hash[String, Gemfile::GemSpec]),
           )
         end
       end
@@ -157,7 +157,7 @@ module Tapioca
           "sorbet", "sorbet-static", "sorbet-runtime", "sorbet-static-and-runtime",
           "debug", "fakefs",
         ].freeze,
-        T::Array[String]
+        T::Array[String],
       )
 
       sig { returns(String) }

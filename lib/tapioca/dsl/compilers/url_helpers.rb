@@ -154,7 +154,7 @@ module Tapioca
               mod.create_method(
                 method.to_s,
                 parameters: [create_rest_param("args", type: "T.untyped")],
-                return_type: "String"
+                return_type: "String",
               )
             end
           end

@@ -14,7 +14,7 @@ module Tapioca
             bundle: Gemfile,
             prerequire: T.nilable(String),
             postrequire: String,
-            default_command: String
+            default_command: String,
           ).void
         end
         def load_application(bundle:, prerequire:, postrequire:, default_command:)
@@ -38,7 +38,7 @@ module Tapioca
           bundle: Gemfile,
           prerequire: T.nilable(String),
           postrequire: String,
-          default_command: String
+          default_command: String,
         ).void
       end
       def initialize(bundle:, prerequire:, postrequire:, default_command:)

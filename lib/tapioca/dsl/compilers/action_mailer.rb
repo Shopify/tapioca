@@ -48,7 +48,7 @@ module Tapioca
                 mailer_method,
                 parameters: parameters,
                 return_type: "::ActionMailer::MessageDelivery",
-                class_method: true
+                class_method: true,
               )
             end
           end

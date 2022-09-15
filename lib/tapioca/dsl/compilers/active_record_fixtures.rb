@@ -100,7 +100,7 @@ module Tapioca
           mod.create_method(
             name,
             parameters: [create_rest_param("fixture_names", type: "T.any(String, Symbol)")],
-            return_type: "T.untyped"
+            return_type: "T.untyped",
           )
         end
       end

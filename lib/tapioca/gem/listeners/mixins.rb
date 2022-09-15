@@ -36,7 +36,7 @@ module Tapioca
             tree: RBI::Tree,
             constant: Module,
             mods: T::Array[Module],
-            mixin_type: Runtime::Trackers::Mixin::Type
+            mixin_type: Runtime::Trackers::Mixin::Type,
           ).void
         end
         def add_mixins(tree, constant, mods, mixin_type)
@@ -69,14 +69,14 @@ module Tapioca
           params(
             constant: Module,
             mixin: Module,
-            mixin_type: Runtime::Trackers::Mixin::Type
+            mixin_type: Runtime::Trackers::Mixin::Type,
           ).returns(T::Boolean)
         end
         def mixed_in_by_gem?(constant, mixin, mixin_type)
           mixin_location =
             T.cast(
               Runtime::Trackers::Mixin.constants_with_mixin(mixin).dig(mixin_type, constant),
-              T.nilable(String)
+              T.nilable(String),
             )
 
           return true if mixin_location.nil?
