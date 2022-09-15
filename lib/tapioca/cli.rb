@@ -37,7 +37,7 @@ module Tapioca
       command = Commands::Configure.new(
         sorbet_config: SORBET_CONFIG_FILE,
         tapioca_config: options[:config],
-        default_postrequire: options[:postrequire]
+        default_postrequire: options[:postrequire],
       )
       command.execute
     end
@@ -47,7 +47,7 @@ module Tapioca
     def require
       command = Commands::Require.new(
         requires_path: options[:postrequire],
-        sorbet_config_path: SORBET_CONFIG_FILE
+        sorbet_config_path: SORBET_CONFIG_FILE,
       )
       Tapioca.silence_warnings do
         command.execute
@@ -66,7 +66,7 @@ module Tapioca
     def todo
       command = Commands::Todo.new(
         todo_file: options[:todo_file],
-        file_header: options[:file_header]
+        file_header: options[:file_header],
       )
       Tapioca.silence_warnings do
         command.execute
@@ -134,7 +134,7 @@ module Tapioca
         quiet: options[:quiet],
         verbose: options[:verbose],
         number_of_workers: options[:workers],
-        rbi_formatter: rbi_formatter(options)
+        rbi_formatter: rbi_formatter(options),
       )
 
       Tapioca.silence_warnings do
@@ -241,7 +241,7 @@ module Tapioca
           number_of_workers: options[:workers],
           auto_strictness: options[:auto_strictness],
           dsl_dir: options[:dsl_dir],
-          rbi_formatter: rbi_formatter(options)
+          rbi_formatter: rbi_formatter(options),
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
@@ -278,7 +278,7 @@ module Tapioca
         annotations_rbi_dir: options[:annotations_rbi_dir],
         todo_rbi_file: options[:todo_rbi_file],
         payload: options[:payload],
-        number_of_workers: options[:workers]
+        number_of_workers: options[:workers],
       )
       command.execute
     end
@@ -304,7 +304,7 @@ module Tapioca
         central_repo_root_uris: options[:sources],
         auth: options[:auth],
         netrc_file: netrc_file(options),
-        typed_overrides: options[:typed_overrides]
+        typed_overrides: options[:typed_overrides],
       )
       command.execute
     end

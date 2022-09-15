@@ -46,7 +46,7 @@ module Tapioca
           T.let(
             ["after", "after_commit", "after_transaction", "before", "before_transaction", "ensure", "error",
              "before_success", "success",].freeze,
-            T::Array[String]
+            T::Array[String],
           )
 
         ConstantType = type_member { { fixed: T.all(::AASM::ClassMethods, Class) } }
@@ -81,7 +81,7 @@ module Tapioca
                 create_block_param("block", type: "T.nilable(T.proc.bind(PrivateAASMMachine).void)"),
               ],
               return_type: "PrivateAASMMachine",
-              class_method: true
+              class_method: true,
             )
 
             # Create a private machine class that we can pass around for the
@@ -94,7 +94,7 @@ module Tapioca
                   create_param("name", type: "T.untyped"),
                   create_opt_param("options", default: "nil", type: "T.untyped"),
                   create_block_param("block", type: "T.proc.bind(PrivateAASMEvent).void"),
-                ]
+                ],
               )
 
               # Create a private event class that we can pass around for the
@@ -107,7 +107,7 @@ module Tapioca
                     parameters: [
                       create_opt_param("symbol", type: "T.nilable(Symbol)", default: "nil"),
                       create_block_param("block", type: "T.nilable(T.proc.bind(#{name_of(constant)}).void)"),
-                    ]
+                    ],
                   )
                 end
               end

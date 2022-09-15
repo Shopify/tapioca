@@ -109,7 +109,7 @@ module Tapioca
           def pipeline
             @pipeline ||= Tapioca::Dsl::Pipeline.new(
               requested_constants: [],
-              requested_compilers: activated_compiler_classes
+              requested_compilers: activated_compiler_classes,
             )
           end
         end

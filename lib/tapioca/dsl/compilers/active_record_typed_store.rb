@@ -147,7 +147,7 @@ module Tapioca
           params(
             klass: RBI::Scope,
             name: String,
-            type: String
+            type: String,
           )
             .void
         end
@@ -155,7 +155,7 @@ module Tapioca
           klass.create_method(
             "#{name}=",
             parameters: [create_param(name, type: type)],
-            return_type: type
+            return_type: type,
           )
           klass.create_method(name, return_type: type)
           klass.create_method("#{name}?", return_type: "T::Boolean")

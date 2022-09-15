@@ -28,7 +28,7 @@ module Tapioca
             tree: RBI::Tree,
             module_name: String,
             mod: Module,
-            for_visibility: T::Array[Symbol]
+            for_visibility: T::Array[Symbol],
           ).void
         end
         def compile_directly_owned_methods(tree, module_name, mod, for_visibility = [:public, :protected, :private])
@@ -57,7 +57,7 @@ module Tapioca
             symbol_name: String,
             constant: Module,
             method: T.nilable(UnboundMethod),
-            visibility: RBI::Visibility
+            visibility: RBI::Visibility,
           ).void
         end
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
@@ -112,7 +112,7 @@ module Tapioca
           rbi_method = RBI::Method.new(
             method_name,
             is_singleton: constant.singleton_class?,
-            visibility: visibility
+            visibility: visibility,
           )
 
           sanitized_parameters.each do |type, name|

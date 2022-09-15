@@ -91,7 +91,7 @@ module Tapioca
 
           command = Annotations.new(
             central_repo_root_uris: [DUMMY_REPO_URI_1, DUMMY_REPO_URI_2],
-            netrc_file: @project.absolute_path(".netrc")
+            netrc_file: @project.absolute_path(".netrc"),
           )
 
           indexes = T.unsafe(command).stub(:say, ->(*_args) {}) do
@@ -111,7 +111,7 @@ module Tapioca
 
           command = Annotations.new(
             central_repo_root_uris: [DUMMY_REPO_URI_1, DUMMY_REPO_URI_2],
-            netrc_file: @project.absolute_path(".netrc_not_found")
+            netrc_file: @project.absolute_path(".netrc_not_found"),
           )
 
           indexes = T.unsafe(command).stub(:say, ->(*_args) {}) do
@@ -134,7 +134,7 @@ module Tapioca
           command = Annotations.new(
             central_repo_root_uris: [DUMMY_REPO_URI_1, DUMMY_REPO_URI_2],
             auth: "AUTH",
-            netrc_file: @project.absolute_path(".netrc")
+            netrc_file: @project.absolute_path(".netrc"),
           )
 
           indexes = T.unsafe(command).stub(:say, ->(*_args) {}) do

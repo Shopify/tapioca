@@ -204,7 +204,7 @@ module Tapioca
               assert_equal(expected, rbi_for(:Bar))
               assert_equal(
                 class_method_ancestors_for(:Baz),
-                arguments_to_micm_in_effective_order(rbi_for(:Bar))
+                arguments_to_micm_in_effective_order(rbi_for(:Bar)),
               )
             end
 
@@ -268,7 +268,7 @@ module Tapioca
               assert_equal(expected_qux, rbi_for(:Qux))
               assert_equal(
                 class_method_ancestors_for(:Quux),
-                arguments_to_micm_in_effective_order(rbi_for(:Qux))
+                arguments_to_micm_in_effective_order(rbi_for(:Qux)),
               )
             end
           end

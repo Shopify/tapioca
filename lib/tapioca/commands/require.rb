@@ -7,7 +7,7 @@ module Tapioca
       sig do
         params(
           requires_path: String,
-          sorbet_config_path: String
+          sorbet_config_path: String,
         ).void
       end
       def initialize(requires_path:, sorbet_config_path:)

@@ -69,7 +69,7 @@ module Tapioca
         def decorate
           properties = T.let(
             T.unsafe(constant).properties,
-            ::SmartProperties::PropertyCollection
+            ::SmartProperties::PropertyCollection,
           )
           return if properties.keys.empty?
 
@@ -103,7 +103,7 @@ module Tapioca
         sig do
           params(
             mod: RBI::Scope,
-            property: ::SmartProperties::Property
+            property: ::SmartProperties::Property,
           ).void
         end
         def generate_methods_for_property(mod, property)

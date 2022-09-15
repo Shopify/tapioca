@@ -9,7 +9,7 @@ module Tapioca
       sig do
         params(
           todo_file: String,
-          file_header: T::Boolean
+          file_header: T::Boolean,
         ).void
       end
       def initialize(todo_file:, file_header:)

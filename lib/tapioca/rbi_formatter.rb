@@ -9,7 +9,7 @@ module Tapioca
       params(
         file: RBI::File,
         command: String,
-        reason: T.nilable(String)
+        reason: T.nilable(String),
       ).void
     end
     def write_header!(file, command, reason: nil)
@@ -32,6 +32,6 @@ module Tapioca
     max_line_length: nil,
     nest_singleton_methods: true,
     nest_non_public_methods: true,
-    sort_nodes: true
+    sort_nodes: true,
   ), RBIFormatter)
 end

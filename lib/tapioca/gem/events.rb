@@ -124,7 +124,7 @@ module Tapioca
           method: UnboundMethod,
           node: RBI::Method,
           signature: T.untyped,
-          parameters: T::Array[[Symbol, String]]
+          parameters: T::Array[[Symbol, String]],
         ).void.checked(:never)
       end
       def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists

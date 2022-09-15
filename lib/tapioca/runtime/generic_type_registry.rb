@@ -23,12 +23,12 @@ module Tapioca
     module GenericTypeRegistry
       @generic_instances = T.let(
         {},
-        T::Hash[String, Module]
+        T::Hash[String, Module],
       )
 
       @type_variables = T.let(
         {}.compare_by_identity,
-        T::Hash[Module, T::Array[TypeVariableModule]]
+        T::Hash[Module, T::Array[TypeVariableModule]],
       )
 
       class << self

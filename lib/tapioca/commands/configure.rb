@@ -8,7 +8,7 @@ module Tapioca
         params(
           sorbet_config: String,
           tapioca_config: String,
-          default_postrequire: String
+          default_postrequire: String,
         ).void
       end
       def initialize(
@@ -83,7 +83,7 @@ module Tapioca
         say_status(
           force ? :force : :create,
           Tapioca::BINARY_FILE,
-          force ? :yellow : :green
+          force ? :yellow : :green,
         )
       end
 

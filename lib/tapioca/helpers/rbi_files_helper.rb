@@ -42,7 +42,7 @@ module Tapioca
       params(
         index: RBI::Index,
         shim_rbi_dir: String,
-        todo_rbi_file: String
+        todo_rbi_file: String,
       ).returns(T::Hash[String, T::Array[RBI::Node]])
     end
     def duplicated_nodes_from_index(index, shim_rbi_dir:, todo_rbi_file:)
@@ -80,7 +80,7 @@ module Tapioca
         dsl_dir: String,
         auto_strictness: T::Boolean,
         gems: T::Array[Gemfile::GemSpec],
-        compilers: T::Enumerable[Class]
+        compilers: T::Enumerable[Class],
       ).void
     end
     def validate_rbi_files(command:, gem_dir:, dsl_dir:, auto_strictness:, gems: [], compilers: [])
@@ -92,7 +92,7 @@ module Tapioca
         "--error-url-base=#{error_url_base}",
         "--stop-after namer",
         dsl_dir,
-        gem_dir
+        gem_dir,
       )
       say(" Done", :green)
 

@@ -426,7 +426,7 @@ module Tapioca
 
           result = @project.tapioca(
             "check-shims --gem-rbi-dir=rbi/gem --dsl-rbi-dir=rbi/dsl --shim-rbi-dir=rbi/shim " \
-              "--todo-rbi-file=rbi/todo.rbi --no-payload"
+              "--todo-rbi-file=rbi/todo.rbi --no-payload",
           )
 
           assert_equal(<<~ERR, result.err)

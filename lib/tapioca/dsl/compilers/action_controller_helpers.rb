@@ -149,7 +149,7 @@ module Tapioca
               create_kw_rest_param("kwargs", type: "T.untyped"),
               create_block_param("blk", type: "T.untyped"),
             ],
-            return_type: "T.untyped"
+            return_type: "T.untyped",
           )
         end
 

@@ -30,7 +30,7 @@ group(:development, :test) do
     "cityhash",
     git: "https://github.com/csfrancis/cityhash.git",
     ref: "3cfc7d01f333c01811d5e834f1495eaa29f87c36",
-    require: false
+    require: false,
   )
   gem("activeresource", require: false)
   gem("google-protobuf", require: false)

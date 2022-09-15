@@ -703,7 +703,7 @@ module Tapioca
           assert_stdout_includes(result, "Compiled faraday")
 
           assert_project_file_exist(
-            "sorbet/rbi/gems/faraday@2.0.0.alpha.pre.4-23e249563613971ced8f851230c46b9eeeefe931.rbi"
+            "sorbet/rbi/gems/faraday@2.0.0.alpha.pre.4-23e249563613971ced8f851230c46b9eeeefe931.rbi",
           )
 
           assert_empty_stderr(result)

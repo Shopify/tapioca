@@ -87,7 +87,7 @@ module Tapioca
           params(
             worker: RBI::Scope,
             method_name: String,
-            parameters: T::Array[RBI::TypedParam]
+            parameters: T::Array[RBI::TypedParam],
           ).void
         end
         def generate_perform_method(worker, method_name, parameters)

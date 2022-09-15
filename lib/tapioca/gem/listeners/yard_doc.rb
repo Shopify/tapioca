@@ -43,7 +43,7 @@ module Tapioca
           separator = event.constant.singleton_class? ? "." : "#"
           event.node.comments = documentation_comments(
             "#{event.symbol}#{separator}#{event.node.name}",
-            sigs: event.node.sigs
+            sigs: event.node.sigs,
           )
         end
 

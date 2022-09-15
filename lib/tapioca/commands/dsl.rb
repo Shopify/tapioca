@@ -21,7 +21,7 @@ module Tapioca
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
           gem_dir: String,
-          rbi_formatter: RBIFormatter
+          rbi_formatter: RBIFormatter,
         ).void
       end
       def initialize(
@@ -60,7 +60,7 @@ module Tapioca
       def list_compilers
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty?
+          eager_load: @requested_constants.empty?,
         )
 
         pipeline = create_pipeline
@@ -86,7 +86,7 @@ module Tapioca
       def execute
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty?
+          eager_load: @requested_constants.empty?,
         )
 
         if @should_verify
@@ -112,7 +112,7 @@ module Tapioca
             constant_name,
             contents,
             outpath: outpath,
-            quiet: @should_verify || (@quiet && !@verbose)
+            quiet: @should_verify || (@quiet && !@verbose),
           )
         end
 
@@ -133,7 +133,7 @@ module Tapioca
               gem_dir: @gem_dir,
               dsl_dir: @outpath.to_s,
               auto_strictness: @auto_strictness,
-              compilers: pipeline.active_compilers
+              compilers: pipeline.active_compilers,
             )
           end
 
@@ -153,7 +153,7 @@ module Tapioca
           error_handler: ->(error) {
             say_error(error, :bold, :red)
           },
-          number_of_workers: @number_of_workers
+          number_of_workers: @number_of_workers,
         )
       end
 
@@ -230,7 +230,7 @@ module Tapioca
           constant_name: String,
           rbi: RBI::File,
           outpath: Pathname,
-          quiet: T::Boolean
+          quiet: T::Boolean,
         ).returns(T.nilable(Pathname))
       end
       def compile_dsl_rbi(constant_name, rbi, outpath: @outpath, quiet: false)
@@ -241,7 +241,7 @@ module Tapioca
         @rbi_formatter.write_header!(
           rbi,
           generate_command_for(constant_name),
-          reason: "dynamic methods in `#{constant_name}`"
+          reason: "dynamic methods in `#{constant_name}`",
         ) if @file_header
 
         rbi_string = @rbi_formatter.print_file(rbi)

@@ -32,7 +32,7 @@ module Tapioca
         params(
           symbol: String,
           inherit: T::Boolean,
-          namespace: Module
+          namespace: Module,
         ).returns(BasicObject).checked(:never)
       end
       def constantize(symbol, inherit: false, namespace: Object)

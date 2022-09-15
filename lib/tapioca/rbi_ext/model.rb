@@ -32,7 +32,7 @@ module RBI
       params(
         name: String,
         superclass_name: T.nilable(String),
-        block: T.nilable(T.proc.params(scope: RBI::Scope).void)
+        block: T.nilable(T.proc.params(scope: RBI::Scope).void),
       ).returns(Scope)
     end
     def create_class(name, superclass_name: nil, &block)
@@ -68,7 +68,7 @@ module RBI
         variance: Symbol,
         fixed: T.nilable(String),
         upper: T.nilable(String),
-        lower: T.nilable(String)
+        lower: T.nilable(String),
       ).void
     end
     def create_type_variable(name, type:, variance: :invariant, fixed: nil, upper: nil, lower: nil)
@@ -82,7 +82,7 @@ module RBI
         parameters: T::Array[TypedParam],
         return_type: String,
         class_method: T::Boolean,
-        visibility: RBI::Visibility
+        visibility: RBI::Visibility,
       ).void
     end
     def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new)

@@ -113,7 +113,7 @@ module Tapioca
         if Object.const_defined?("ActiveSupport")
           Object.const_get("ActiveSupport").run_load_hooks(
             :before_eager_load,
-            application
+            application,
           )
         end
 

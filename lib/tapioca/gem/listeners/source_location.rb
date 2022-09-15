@@ -61,7 +61,7 @@ module Tapioca
             gem_name: gem.name,
             gem_version: version,
             path: path.to_s,
-            line_number: line.to_s
+            line_number: line.to_s,
           )
           node.comments << RBI::Comment.new("") if node.comments.any?
           node.comments << RBI::Comment.new(uri.to_s)
