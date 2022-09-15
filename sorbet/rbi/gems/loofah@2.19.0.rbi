@@ -130,10 +130,20 @@ module Loofah::HTML5::SafeList; end
 # source://loofah//lib/loofah/html5/safelist.rb#226
 Loofah::HTML5::SafeList::ACCEPTABLE_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
+# https://www.w3.org/TR/css-color-3/#html4
+#
+# source://loofah//lib/loofah/html5/safelist.rb#724
+Loofah::HTML5::SafeList::ACCEPTABLE_CSS_COLORS = T.let(T.unsafe(nil), Set)
+
+# https://www.w3.org/TR/css-color-3/#svg-color
+#
+# source://loofah//lib/loofah/html5/safelist.rb#744
+Loofah::HTML5::SafeList::ACCEPTABLE_CSS_EXTENDED_COLORS = T.let(T.unsafe(nil), Set)
+
 # see https://www.quackit.com/css/functions/
 # omit `url` and `image` from that list
 #
-# source://loofah//lib/loofah/html5/safelist.rb#742
+# source://loofah//lib/loofah/html5/safelist.rb#896
 Loofah::HTML5::SafeList::ACCEPTABLE_CSS_FUNCTIONS = T.let(T.unsafe(nil), Set)
 
 # source://loofah//lib/loofah/html5/safelist.rb#685
@@ -145,42 +155,42 @@ Loofah::HTML5::SafeList::ACCEPTABLE_CSS_PROPERTIES = T.let(T.unsafe(nil), Set)
 # source://loofah//lib/loofah/html5/safelist.rb#49
 Loofah::HTML5::SafeList::ACCEPTABLE_ELEMENTS = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#815
+# source://loofah//lib/loofah/html5/safelist.rb#969
 Loofah::HTML5::SafeList::ACCEPTABLE_PROTOCOLS = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#802
+# source://loofah//lib/loofah/html5/safelist.rb#956
 Loofah::HTML5::SafeList::ACCEPTABLE_SVG_PROPERTIES = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#844
+# source://loofah//lib/loofah/html5/safelist.rb#998
 Loofah::HTML5::SafeList::ACCEPTABLE_URI_DATA_MEDIATYPES = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#855
+# source://loofah//lib/loofah/html5/safelist.rb#1009
 Loofah::HTML5::SafeList::ALLOWED_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#858
+# source://loofah//lib/loofah/html5/safelist.rb#1012
 Loofah::HTML5::SafeList::ALLOWED_CSS_FUNCTIONS = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#857
+# source://loofah//lib/loofah/html5/safelist.rb#1011
 Loofah::HTML5::SafeList::ALLOWED_CSS_KEYWORDS = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#856
+# source://loofah//lib/loofah/html5/safelist.rb#1010
 Loofah::HTML5::SafeList::ALLOWED_CSS_PROPERTIES = T.let(T.unsafe(nil), Set)
 
 # subclasses may define their own versions of these constants
 #
-# source://loofah//lib/loofah/html5/safelist.rb#854
+# source://loofah//lib/loofah/html5/safelist.rb#1008
 Loofah::HTML5::SafeList::ALLOWED_ELEMENTS = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#879
+# source://loofah//lib/loofah/html5/safelist.rb#1033
 Loofah::HTML5::SafeList::ALLOWED_ELEMENTS_WITH_LIBXML2 = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#860
+# source://loofah//lib/loofah/html5/safelist.rb#1014
 Loofah::HTML5::SafeList::ALLOWED_PROTOCOLS = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#859
+# source://loofah//lib/loofah/html5/safelist.rb#1013
 Loofah::HTML5::SafeList::ALLOWED_SVG_PROPERTIES = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#861
+# source://loofah//lib/loofah/html5/safelist.rb#1015
 Loofah::HTML5::SafeList::ALLOWED_URI_DATA_MEDIATYPES = T.let(T.unsafe(nil), Set)
 
 # source://loofah//lib/loofah/html5/safelist.rb#515
@@ -195,10 +205,10 @@ Loofah::HTML5::SafeList::MATHML_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 # source://loofah//lib/loofah/html5/safelist.rb#146
 Loofah::HTML5::SafeList::MATHML_ELEMENTS = T.let(T.unsafe(nil), Set)
 
-# source://loofah//lib/loofah/html5/safelist.rb#813
+# source://loofah//lib/loofah/html5/safelist.rb#967
 Loofah::HTML5::SafeList::PROTOCOL_SEPARATOR = T.let(T.unsafe(nil), Regexp)
 
-# source://loofah//lib/loofah/html5/safelist.rb#795
+# source://loofah//lib/loofah/html5/safelist.rb#949
 Loofah::HTML5::SafeList::SHORTHAND_CSS_PROPERTIES = T.let(T.unsafe(nil), Set)
 
 # source://loofah//lib/loofah/html5/safelist.rb#597
@@ -215,13 +225,13 @@ Loofah::HTML5::SafeList::SVG_ELEMENTS = T.let(T.unsafe(nil), Set)
 
 # additional tags we should consider safe since we have libxml2 fixing up our documents.
 #
-# source://loofah//lib/loofah/html5/safelist.rb#874
+# source://loofah//lib/loofah/html5/safelist.rb#1028
 Loofah::HTML5::SafeList::TAGS_SAFE_WITH_LIBXML2 = T.let(T.unsafe(nil), Set)
 
 # TODO: remove VOID_ELEMENTS in a future major release
 # and put it in the tests (it is used only for testing, not for functional behavior)
 #
-# source://loofah//lib/loofah/html5/safelist.rb#865
+# source://loofah//lib/loofah/html5/safelist.rb#1019
 Loofah::HTML5::SafeList::VOID_ELEMENTS = T.let(T.unsafe(nil), Set)
 
 # source://loofah//lib/loofah/html5/scrub.rb#7
@@ -270,7 +280,7 @@ Loofah::HTML5::Scrub::CSS_PROPERTY_STRING_WITHOUT_EMBEDDED_QUOTES = T.let(T.unsa
 # source://loofah//lib/loofah/html5/scrub.rb#13
 Loofah::HTML5::Scrub::DATA_ATTRIBUTE_NAME = T.let(T.unsafe(nil), Regexp)
 
-# source://loofah//lib/loofah/html5/safelist.rb#882
+# source://loofah//lib/loofah/html5/safelist.rb#1036
 Loofah::HTML5::WhiteList = Loofah::HTML5::SafeList
 
 # Subclass of Nokogiri::HTML::Document.
