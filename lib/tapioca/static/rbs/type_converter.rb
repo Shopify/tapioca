@@ -20,6 +20,8 @@ module Tapioca
 
         sig { params(type: T.untyped).returns(T::Types::Base) }
         def convert(type)
+          @converter.push_foreign_name(type.name) if type.respond_to?(:name)
+
           case type
           when RBS::Types::Alias
             string_holder(type.name.to_s)

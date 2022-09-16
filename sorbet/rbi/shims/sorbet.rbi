@@ -22,8 +22,8 @@ module T
     end
 
     module Types
-      class NotTyped < Base; end
-      class StringHolder < Base; end
+      class NotTyped < T::Types::Base; end
+      class StringHolder < T::Types::Base; end
     end
 
     module Methods

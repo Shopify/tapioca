@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Tapioca
@@ -14,9 +14,37 @@ module Tapioca
           @gem_version = gem_version
           @env = T.let(load_environment, ::RBS::Environment)
           @declarations = T.let(@env.declarations, T::Array[T.untyped])
+          @foreign_decls = T.let(Set.new.compare_by_identity, T::Set[T.untyped])
           @root = T.let(RBI::Tree.new, RBI::Tree)
         end
 
+        sig { returns(RBI::Tree) }
+        def convert
+          @declarations.each { |decl| process_declaration(decl) }
+          index = 0
+          while (index < @foreign_decls.size)
+            process_declaration(@foreign_decls.to_a[index], include_foreign: true)
+            index += 1
+          end
+          @root
+        end
+
+        sig { params(name: RBS::TypeName).void }
+        def push_foreign_name(name)
+          # binding.b if type.respond_to?(:name) && type.name.to_s == "::Interfaces::Interface_ToJson"
+          # if type.respond_to?(:location) && skipped?(type.location)
+          decl = lookup_declaration_for_name(name)
+          return unless decl
+          return unless skipped?(decl.location)
+          return if @foreign_decls.include?(decl)
+
+          puts "Pushind decl of #{decl.name}"
+          @foreign_decls << decl
+        end
+
+        private
+
+        sig { returns(RBS::Environment) }
         def load_environment
           loader = RBS::EnvironmentLoader.new
           loader.dirs.concat(loader.repository.dirs)
@@ -24,10 +52,17 @@ module Tapioca
           RBS::Environment.from_loader(loader).resolve_type_names
         end
 
-        sig { returns(RBI::Tree) }
-        def convert
-          @declarations.each { |decl| process_declaration(decl) }
-          @root
+        sig { params(name: RBS::TypeName).returns(T.untyped) }
+        def lookup_declaration_for_name(name)
+          if @env.interface_decls.key?(name)
+            @env.interface_decls[name].decl
+          elsif @env.alias_decls.key?(name)
+            @env.alias_decls[name].decl
+          # elsif @env.constant_decls.key?(name)
+          #   Array(@env.constant_decls[name].decl)
+          else
+            nil
+          end
         end
 
         sig do
@@ -77,6 +112,13 @@ module Tapioca
           )
         end
 
+        sig do
+          params(scope: RBI::Scope, decl:               T.any(
+            ::RBS::AST::Declarations::Class,
+            ::RBS::AST::Declarations::Interface,
+            ::RBS::AST::Declarations::Module
+          )).void
+        end
         def add_type_variables(scope, decl)
           if decl.type_params.any?
             decl.type_params.each do |type_param|
@@ -145,6 +187,7 @@ module Tapioca
               create_attr_writer_method(scope, member, current_visibility)
             when RBS::AST::Members::Include, RBS::AST::Members::Prepend
               scope.create_include(member.name.to_s)
+              push_foreign_name(member.name)
             when RBS::AST::Members::Extend
               name = member.name.to_s
               scope.create_extend(member.name.to_s)
@@ -160,11 +203,17 @@ module Tapioca
           @type_converter ||= T.let(TypeConverter.new(self), T.nilable(TypeConverter))
         end
 
-        sig { params(decl: T.untyped).void }
-        def process_declaration(decl)
-          # binding.b if decl.name.to_s == "::Array"
-          return if decl.location.buffer.name.start_with?(RBS::Repository::DEFAULT_STDLIB_ROOT.to_s,
-            RBS::EnvironmentLoader::DEFAULT_CORE_ROOT.to_s)
+        sig { params(location: T.untyped).returns(T::Boolean) }
+        def skipped?(location)
+          location.buffer.name.start_with?(
+            RBS::Repository::DEFAULT_STDLIB_ROOT.to_s,
+            RBS::EnvironmentLoader::DEFAULT_CORE_ROOT.to_s
+          )
+        end
+
+        sig { params(decl: T.untyped, include_foreign: T::Boolean).void }
+        def process_declaration(decl, include_foreign: false)
+          return if !include_foreign && skipped?(decl.location)
 
           case decl
           when RBS::AST::Declarations::Global
@@ -173,6 +222,8 @@ module Tapioca
               process_scope(scope, decl)
             end
           when RBS::AST::Declarations::Module
+            # We don't want to generate a definition for ::Enumerable ever,
+            # since it crashes Sorbet, if we do so.
             return if decl.name.to_s == "::Enumerable"
 
             @root.create_module(decl.name.to_s) do |scope|
