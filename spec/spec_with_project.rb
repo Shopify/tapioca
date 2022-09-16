@@ -72,11 +72,12 @@ module Tapioca
         name: String,
         version: String,
         dependencies: T::Array[String],
+        path: String,
         block: T.nilable(T.proc.params(gem: MockGem).bind(MockGem).void),
       ).returns(MockGem)
     end
-    def mock_gem(name, version, dependencies: [], &block)
-      gem = MockGem.new("#{TEST_TMP_PATH}/#{spec_name}/gems/#{name}", name, version, dependencies)
+    def mock_gem(name, version, dependencies: [], path: default_gem_path(name), &block)
+      gem = MockGem.new(path, name, version, dependencies)
       gem.gemspec(gem.default_gemspec_contents)
       gem.instance_exec(gem, &block) if block
       gem
@@ -138,6 +139,11 @@ module Tapioca
     end
 
     private
+
+    sig { params(name: String).returns(String) }
+    def default_gem_path(name)
+      "#{TEST_TMP_PATH}/#{spec_name}/gems/#{name}"
+    end
 
     sig { returns(String) }
     def spec_name
