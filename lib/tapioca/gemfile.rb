@@ -201,7 +201,7 @@ module Tapioca
         if default_gem?
           files.any? { |file| file.to_s == to_realpath(path) }
         else
-          to_realpath(path).start_with?(full_gem_path) || has_parent_gemspec?(path)
+          path_in_dir?(to_realpath(path), full_gem_path) || has_parent_gemspec?(path)
         end
       end
 
