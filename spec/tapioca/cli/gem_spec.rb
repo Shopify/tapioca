@@ -710,6 +710,20 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "must generate RBIs for gems whose folder location starts with the same prefix as project folder" do
+          # Set the gem path so that the project folder is a prefix of the gem folder
+          gem_path = @project.path + "-gem/foo"
+          gem = mock_gem("foo", "0.0.1", path: gem_path)
+
+          @project.require_mock_gem(gem)
+
+          result = @project.tapioca("gem foo")
+
+          assert_stdout_includes(result, "Compiled foo")
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
         it "must respect exclude option" do
           @project.require_mock_gem(mock_gem("foo", "0.0.1"))
           @project.require_mock_gem(mock_gem("bar", "0.3.0"))
