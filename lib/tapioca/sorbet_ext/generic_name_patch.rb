@@ -82,6 +82,8 @@ module T
       def coerce(val)
         if val.is_a?(Tapioca::TypeVariableModule)
           val.coerce_to_type_variable
+        elsif val.respond_to?(:__tapioca_override_type)
+          val.__tapioca_override_type
         else
           super
         end
