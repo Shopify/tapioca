@@ -32,12 +32,16 @@ module Tapioca
       )
 
       class GenericType < T::Types::Simple
+        extend T::Sig
+
+        sig { params(raw_type: Module, underlying_type: Module).void }
         def initialize(raw_type, underlying_type)
           super(raw_type)
 
-          @underlying_type = underlying_type
+          @underlying_type = T.let(underlying_type, Module)
         end
 
+        sig { params(obj: T.untyped).returns(T::Boolean) }
         def valid?(obj)
           obj.is_a?(@underlying_type)
         end
