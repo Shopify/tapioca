@@ -1016,7 +1016,7 @@ class AASM::InstanceBase
 
   private
 
-  # @raise [AASM::UndefinedState]
+  # @raise [AASM::UndefinedEvent]
   # @return [Boolean]
   #
   # source://aasm//lib/aasm/instance_base.rb#136
@@ -1099,7 +1099,7 @@ end
 # source://aasm//lib/aasm/aasm.rb#3
 AASM::NO_VALUE = T.let(T.unsafe(nil), Symbol)
 
-# source://aasm//lib/aasm/errors.rb#20
+# source://aasm//lib/aasm/errors.rb#21
 class AASM::NoDirectAssignmentError < ::RuntimeError; end
 
 # source://aasm//lib/aasm/persistence.rb#2
@@ -1331,6 +1331,9 @@ class AASM::StateMachineStore
     def unregister(klass); end
   end
 end
+
+# source://aasm//lib/aasm/errors.rb#20
+class AASM::UndefinedEvent < ::AASM::UndefinedState; end
 
 # source://aasm//lib/aasm/errors.rb#19
 class AASM::UndefinedState < ::RuntimeError; end
