@@ -259,7 +259,7 @@ GEM
       sorbet-runtime (>= 0.5.9204)
       unparser
     redis (4.8.0)
-    regexp_parser (2.5.0)
+    regexp_parser (2.6.0)
     rexml (3.2.5)
     rubocop (1.36.0)
       json (~> 2.3)
@@ -273,7 +273,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.21.0)
       parser (>= 3.1.1.0)
-    rubocop-rspec (2.13.1)
+    rubocop-rspec (2.13.2)
       rubocop (~> 1.33)
     rubocop-shopify (2.10.1)
       rubocop (~> 1.35)
