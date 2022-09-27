@@ -931,12 +931,12 @@ end
 
 # source://sidekiq//lib/sidekiq/worker.rb#267
 module Sidekiq::Worker::ClassMethods
-  # source://sidekiq//lib/sidekiq/worker.rb#360
+  # source://sidekiq//lib/sidekiq/worker.rb#363
   def build_client; end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/worker.rb#355
+  # source://sidekiq//lib/sidekiq/worker.rb#358
   def client_push(item); end
 
   # @raise [ArgumentError]
@@ -1011,7 +1011,7 @@ module Sidekiq::Worker::ClassMethods
   # Legal options:
   #
   #   queue - use a named queue for this Worker, default 'default'
-  #   retry - enable the RetryJobs middleware for this Worker, *true* to use the default
+  #   retry - enable retries via JobRetry, *true* to use the default
   #      or *Integer* count
   #   backtrace - whether to save any error backtrace in the retry payload to display in web UI,
   #      can be true, false or an integer number of lines to save, default *false*
@@ -1020,7 +1020,10 @@ module Sidekiq::Worker::ClassMethods
   # In practice, any option is allowed.  This is the main mechanism to configure the
   # options for a specific job.
   #
-  # source://sidekiq//lib/sidekiq/worker.rb#351
+  # These options will be saved into the serialized job when enqueued by
+  # the client.
+  #
+  # source://sidekiq//lib/sidekiq/worker.rb#354
   def sidekiq_options(opts = T.unsafe(nil)); end
 end
 
