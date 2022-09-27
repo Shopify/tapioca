@@ -37,58 +37,58 @@ class ConnectionPool
   # @raise [ArgumentError]
   # @return [ConnectionPool] a new instance of ConnectionPool
   #
-  # source://connection_pool//lib/connection_pool.rb#45
+  # source://connection_pool//lib/connection_pool.rb#47
   def initialize(options = T.unsafe(nil), &block); end
 
   # Number of pool entries available for checkout at this instant.
   #
-  # source://connection_pool//lib/connection_pool.rb#120
+  # source://connection_pool//lib/connection_pool.rb#122
   def available; end
 
-  # source://connection_pool//lib/connection_pool.rb#82
+  # source://connection_pool//lib/connection_pool.rb#84
   def checkin; end
 
-  # source://connection_pool//lib/connection_pool.rb#72
+  # source://connection_pool//lib/connection_pool.rb#74
   def checkout(options = T.unsafe(nil)); end
 
   # Reloads the ConnectionPool by passing each connection to +block+ and then
   # removing it the pool. Subsequent checkouts will create new connections as
   # needed.
   #
-  # source://connection_pool//lib/connection_pool.rb#112
+  # source://connection_pool//lib/connection_pool.rb#114
   def reload(&block); end
 
   # Shuts down the ConnectionPool by passing each connection to +block+ and
   # then removing it from the pool. Attempting to checkout a connection after
   # shutdown will raise +ConnectionPool::PoolShuttingDownError+.
   #
-  # source://connection_pool//lib/connection_pool.rb#103
+  # source://connection_pool//lib/connection_pool.rb#105
   def shutdown(&block); end
 
   # Size of this connection pool
   #
-  # source://connection_pool//lib/connection_pool.rb#117
+  # source://connection_pool//lib/connection_pool.rb#119
   def size; end
 
-  # source://connection_pool//lib/connection_pool.rb#58
+  # source://connection_pool//lib/connection_pool.rb#60
   def then(options = T.unsafe(nil)); end
 
-  # source://connection_pool//lib/connection_pool.rb#58
+  # source://connection_pool//lib/connection_pool.rb#60
   def with(options = T.unsafe(nil)); end
 
   class << self
-    # source://connection_pool//lib/connection_pool.rb#41
+    # source://connection_pool//lib/connection_pool.rb#43
     def wrap(options, &block); end
   end
 end
 
-# source://connection_pool//lib/connection_pool.rb#39
+# source://connection_pool//lib/connection_pool.rb#41
 ConnectionPool::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
 # source://connection_pool//lib/connection_pool.rb#5
 class ConnectionPool::Error < ::RuntimeError; end
 
-# source://connection_pool//lib/connection_pool.rb#6
+# source://connection_pool//lib/connection_pool.rb#7
 class ConnectionPool::PoolShuttingDownError < ::ConnectionPool::Error; end
 
 # Examples:
@@ -209,7 +209,7 @@ class ConnectionPool::TimedStack
   def try_create(options = T.unsafe(nil)); end
 end
 
-# source://connection_pool//lib/connection_pool.rb#7
+# source://connection_pool//lib/connection_pool.rb#9
 class ConnectionPool::TimeoutError < ::Timeout::Error; end
 
 # source://connection_pool//lib/connection_pool/version.rb#2
@@ -222,7 +222,7 @@ class ConnectionPool::Wrapper < ::BasicObject
   # source://connection_pool//lib/connection_pool/wrapper.rb#5
   def initialize(options = T.unsafe(nil), &block); end
 
-  # source://connection_pool//lib/connection_pool/wrapper.rb#36
+  # source://connection_pool//lib/connection_pool/wrapper.rb#35
   def method_missing(name, *args, **kwargs, &block); end
 
   # source://connection_pool//lib/connection_pool/wrapper.rb#25
