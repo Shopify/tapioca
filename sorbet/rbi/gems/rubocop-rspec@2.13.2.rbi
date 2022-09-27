@@ -578,6 +578,9 @@ class RuboCop::Cop::RSpec::Capybara::SpecificFinders < ::RuboCop::Cop::RSpec::Ba
   # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#52
   def attribute?(arg); end
 
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#82
+  def end_pos(node); end
+
   # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#78
   def offense_range(node); end
 
@@ -4603,14 +4606,20 @@ class RuboCop::Cop::RSpec::NoExpectationExample < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/no_expectation_example.rb#47
   def including_any_expectation?(param0); end
 
+  # @param node [RuboCop::AST::Node]
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/no_expectation_example.rb#55
+  def including_any_skip_example?(param0); end
+
   # @param node [RuboCop::AST::BlockNode]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/no_expectation_example.rb#53
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/no_expectation_example.rb#60
   def on_block(node); end
 
   # @param node [RuboCop::AST::BlockNode]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/no_expectation_example.rb#53
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/no_expectation_example.rb#60
   def on_numblock(node); end
 
   # @param node [RuboCop::AST::Node]
