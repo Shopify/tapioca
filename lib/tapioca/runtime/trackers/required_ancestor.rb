@@ -5,6 +5,7 @@ module Tapioca
   module Runtime
     module Trackers
       module RequiredAncestor
+        extend Tracker
         @required_ancestors_map = {}.compare_by_identity
 
         class << self
@@ -12,6 +13,8 @@ module Tapioca
 
           sig { params(requiring: T::Helpers, block: T.proc.void).void }
           def register(requiring, block)
+            return unless enabled?
+
             ancestors = @required_ancestors_map[requiring] ||= []
             ancestors << block
           end

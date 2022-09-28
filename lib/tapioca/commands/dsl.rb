@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Dsl < Command
+    class Dsl < CommandWithoutTracker
       include SorbetHelper
       include RBIFilesHelper
 

@@ -5,6 +5,7 @@ module Tapioca
   module Runtime
     module Trackers
       module Autoload
+        extend Tracker
         extend T::Sig
 
         NOOP_METHOD = ->(*_args, **_kwargs, &_block) {}
@@ -28,6 +29,8 @@ module Tapioca
 
           sig { params(constant_name: String).void }
           def register(constant_name)
+            return unless enabled?
+
             @constant_names_registered_for_autoload << constant_name
           end
 

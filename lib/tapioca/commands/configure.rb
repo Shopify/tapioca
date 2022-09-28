@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Configure < Command
+    class Configure < CommandWithoutTracker
       sig do
         params(
           sorbet_config: String,
