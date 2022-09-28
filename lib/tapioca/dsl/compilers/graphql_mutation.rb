@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 begin
+  gem("graphql", ">= 1.13")
   require "graphql"
 rescue LoadError
   return
