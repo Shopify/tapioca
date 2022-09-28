@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Annotations < Command
+    class Annotations < CommandWithoutTracker
       extend T::Sig
 
       sig do

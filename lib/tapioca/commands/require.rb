@@ -3,7 +3,7 @@
 
 module Tapioca
   module Commands
-    class Require < Command
+    class Require < CommandWithoutTracker
       sig do
         params(
           requires_path: String,
