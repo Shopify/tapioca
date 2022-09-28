@@ -53,7 +53,7 @@ module Tapioca
         class << self
           def build_constant_location(tp, locations)
             file = resolve_loc(locations)
-            lineno = file == File.realpath(tp.path) ? tp.lineno : 0
+            lineno = File.identical?(file, tp.path) ? tp.lineno : 0
 
             ConstantLocation.new(path: file, lineno: lineno)
           end
