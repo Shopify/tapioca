@@ -7,6 +7,7 @@ require "webmock"
 module Tapioca
   module Commands
     class AnnotationsSpec < SpecWithProject
+      include Tapioca::Helpers::Test::Isolation
       include WebMock::API
 
       DUMMY_REPO_URI_1 = "https://my-private-repo-1"
