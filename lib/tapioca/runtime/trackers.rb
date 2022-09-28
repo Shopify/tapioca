@@ -1,5 +1,31 @@
-# typed: strict
+# typed: true
 # frozen_string_literal: true
+
+require "tapioca/runtime/trackers/tracker"
+
+module Tapioca
+  module Runtime
+    module Trackers
+      extend T::Sig
+
+      @trackers = T.let([], T::Array[Tracker])
+
+      class << self
+        extend T::Sig
+
+        sig { void }
+        def disable_all!
+          @trackers.each(&:disable!)
+        end
+
+        sig { params(tracker: Tracker).void }
+        def register_tracker(tracker)
+          @trackers << tracker
+        end
+      end
+    end
+  end
+end
 
 # The load order below is important:
 # ----------------------------------
