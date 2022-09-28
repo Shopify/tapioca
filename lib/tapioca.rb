@@ -11,16 +11,6 @@ module Tapioca
   class << self
     extend T::Sig
 
-    sig { params(trace_name: Symbol, block: T.proc.params(arg0: TracePoint).void).void }
-    def register_trace(trace_name, &block)
-      @traces << TracePoint.trace(trace_name, &block)
-    end
-
-    sig { void }
-    def disable_traces
-      @traces.each(&:disable)
-    end
-
     sig do
       type_parameters(:Result)
         .params(blk: T.proc.returns(T.type_parameter(:Result)))
