@@ -42,9 +42,10 @@ module Tapioca
 
         Tapioca.register_trace(:c_return) do |tp|
           next unless tp.method_id == :new
-          next unless Module === tp.return_value
 
           key = tp.return_value
+          next unless Module === key
+
           loc = build_constant_location(tp, caller_locations)
           (@class_files[key] ||= Set.new) << loc
         end
