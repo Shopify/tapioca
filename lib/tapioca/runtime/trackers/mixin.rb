@@ -35,24 +35,49 @@ module Tapioca
             @enabled = true
           end
 
-          sig do
-            params(
-              constant: Module,
-              mixin: Module,
-              mixin_type: Type,
-            ).void
-          end
+          sig { params(constant: Module, mixin: Module, mixin_type: Type).void }
           def register(constant, mixin, mixin_type)
             return unless @enabled
 
             location = Reflection.resolve_loc(caller_locations)
 
-            constants = constants_with_mixin(mixin)
-            constants.fetch(mixin_type).store(constant, location)
+            register_with_location(constant, mixin, mixin_type, location)
+          end
+
+          def resolve_to_attached_class(constant, mixin, mixin_type)
+            attached_class = Reflection.attached_class_of(constant)
+            return unless attached_class
+
+            if mixin_type == Type::Include || mixin_type == Type::Prepend
+              location = mixin_location(mixin, mixin_type, constant)
+              register_with_location(constant, mixin, Type::Extend, T.must(location))
+            end
+
+            attached_class
           end
 
           sig { params(mixin: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
           def constants_with_mixin(mixin)
+            find_or_initialize_mixin_lookup(mixin)
+          end
+
+          sig { params(mixin: Module, mixin_type: Type, constant: Module).returns(T.nilable(String)) }
+          def mixin_location(mixin, mixin_type, constant)
+            find_or_initialize_mixin_lookup(mixin).dig(mixin_type, constant)
+          end
+
+          private
+
+          sig { params(constant: Module, mixin: Module, mixin_type: Type, location: String).void }
+          def register_with_location(constant, mixin, mixin_type, location)
+            return unless @enabled
+
+            constants = find_or_initialize_mixin_lookup(mixin)
+            constants.fetch(mixin_type).store(constant, location)
+          end
+
+          sig { params(mixin: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
+          def find_or_initialize_mixin_lookup(mixin)
             @mixins_to_constants[mixin] ||= {
               Type::Prepend => {}.compare_by_identity,
               Type::Include => {}.compare_by_identity,
@@ -74,8 +99,6 @@ class Module
         Tapioca::Runtime::Trackers::Mixin::Type::Prepend,
       )
 
-      register_extend_on_attached_class(constant) if constant.singleton_class?
-
       super
     end
 
@@ -85,8 +108,6 @@ class Module
         self,
         Tapioca::Runtime::Trackers::Mixin::Type::Include,
       )
-
-      register_extend_on_attached_class(constant) if constant.singleton_class?
 
       super
     end
@@ -98,22 +119,6 @@ class Module
         Tapioca::Runtime::Trackers::Mixin::Type::Extend,
       ) if Module === obj
       super
-    end
-
-    private
-
-    # Including or prepending on a singleton class is functionally equivalent to extending the
-    # attached class. Registering the mixin as an extend on the attached class ensures that
-    # this mixin can be found whether searching for an include/prepend on the singleton class
-    # or an extend on the attached class.
-    def register_extend_on_attached_class(constant)
-      attached_class = Tapioca::Runtime::Reflection.attached_class_of(constant)
-
-      Tapioca::Runtime::Trackers::Mixin.register(
-        T.cast(attached_class, Module),
-        self,
-        Tapioca::Runtime::Trackers::Mixin::Type::Extend,
-      ) if attached_class
     end
   end)
 end
