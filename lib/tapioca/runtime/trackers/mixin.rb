@@ -5,11 +5,11 @@ module Tapioca
   module Runtime
     module Trackers
       module Mixin
+        extend Tracker
         extend T::Sig
 
         @constants_to_mixin_locations = {}.compare_by_identity
         @mixins_to_constants = {}.compare_by_identity
-        @enabled = true
 
         class Type < T::Enum
           enums do
@@ -28,11 +28,7 @@ module Tapioca
               .returns(T.type_parameter(:Result))
           end
           def with_disabled_registration(&block)
-            @enabled = false
-
-            block.call
-          ensure
-            @enabled = true
+            with_disabled_tracker(&block)
           end
 
           sig do
@@ -43,7 +39,7 @@ module Tapioca
             ).void
           end
           def register(constant, mixin, mixin_type)
-            return unless @enabled
+            return unless enabled?
 
             location = Reflection.resolve_loc(caller_locations)
 

@@ -9,6 +9,7 @@ module Tapioca
       # correspondence between classes/modules and files, as this information isn't
       # available in the ruby runtime without extra accounting.
       module ConstantDefinition
+        extend Tracker
         extend Reflection
         extend T::Sig
 
@@ -20,7 +21,7 @@ module Tapioca
         @class_files = {}.compare_by_identity
 
         # Immediately activated upon load. Observes class/module definition.
-        Tapioca.register_trace(:class) do |tp|
+        @class_tracepoint = TracePoint.trace(:class) do |tp|
           next if tp.self.singleton_class?
 
           key = tp.self
@@ -40,7 +41,7 @@ module Tapioca
           (@class_files[key] ||= Set.new) << loc
         end
 
-        Tapioca.register_trace(:c_return) do |tp|
+        @creturn_tracepoint = TracePoint.trace(:c_return) do |tp|
           next unless tp.method_id == :new
           next unless Module === tp.return_value
 
@@ -50,6 +51,12 @@ module Tapioca
         end
 
         class << self
+          def disable!
+            @class_tracepoint.disable
+            @creturn_tracepoint.disable
+            super
+          end
+
           def build_constant_location(tp, locations)
             file = resolve_loc(caller_locations)
             lineno = file == File.realpath(tp.path) ? tp.lineno : 0
