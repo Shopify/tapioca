@@ -326,7 +326,7 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(::Object)).returns(T.nilable(::Object)) }
+                  sig { params(value: T.untyped).returns(T.untyped) }
                   def serialized_column=(value); end
                 RBI
                 assert_includes(output, expected)
@@ -405,7 +405,7 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { params(value: T.nilable(T::Hash[::String, T.untyped])).returns(T.nilable(T::Hash[::String, T.untyped])) }
+                  sig { params(value: T.untyped).returns(T.untyped) }
                   def serialized_column_json=(value); end
                 RBI
                 assert_includes(output, expected)
