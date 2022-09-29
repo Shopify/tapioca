@@ -124,24 +124,19 @@ module Tapioca
 
         sig { params(column_type: ActiveRecord::Type::Serialized).returns(String) }
         def serialized_column_type(column_type)
-          return "T::Hash[::String, T.untyped]" if column_type.coder == ActiveRecord::Coders::JSON
-
-          if ActiveRecord::Coders::YAMLColumn === column_type.coder
-            return serialized_column_coder_type(column_type.coder)
+          case column_type.coder
+          when ActiveRecord::Coders::YAMLColumn
+            case column_type.coder.object_class
+            when Array.singleton_class
+              "T::Array[T.untyped]"
+            when Hash.singleton_class
+              "T::Hash[T.untyped, T.untyped]"
+            else
+              "T.untyped"
+            end
+          else
+            "T.untyped"
           end
-
-          "T.untyped"
-        end
-
-        sig { params(yaml_coder: ActiveRecord::Coders::YAMLColumn).returns(String) }
-        def serialized_column_coder_type(yaml_coder)
-          sub_type = yaml_coder.object_class
-
-          return "T::Array[T.untyped]" if sub_type == Array
-          return "T::Hash[T.untyped, T.untyped]" if sub_type == Hash
-          return T.must(Runtime::Reflection.qualified_name_of(Object)) if sub_type == Object
-
-          "T.untyped"
         end
       end
     end
