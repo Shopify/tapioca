@@ -242,6 +242,11 @@ module Tapioca
 
               it "generates a proper type for every ActiveRecord column type" do
                 add_ruby_file("schema.rb", <<~RUBY)
+                  class CustomCoder
+                    def dump(value); nil end
+                    def load; nil end
+                  end
+
                   ActiveRecord::Migration.suppress_messages do
                     ActiveRecord::Schema.define do
                       create_table :posts do |t|
@@ -253,7 +258,11 @@ module Tapioca
                         t.boolean :boolean_column
                         t.datetime :datetime_column
                         t.decimal :money_column
-                        t.text :serialized_column
+                        t.text :serialized_column_array
+                        t.text :serialized_column_custom
+                        t.text :serialized_column_hash
+                        t.text :serialized_column_json
+                        t.text :serialized_column_object
                         # Ideally this would also test t.enum but that is not supported by sqlite
                         t.integer :integer_enum_column
                         t.string :string_enum_column
@@ -268,7 +277,11 @@ module Tapioca
 
                   class Post < ActiveRecord::Base
                     money_column(:money_column, currency: "USD")
-                    serialize :serialized_column, JSON
+                    serialize :serialized_column_array, Array
+                    serialize :serialized_column_custom, CustomCoder
+                    serialize :serialized_column_hash, Hash
+                    serialize :serialized_column_json, JSON
+                    serialize :serialized_column_object # default is Object
                     # Change enum calls to new syntax when we drop support to Rails 6.
                     enum integer_enum_column: [ :active, :archived ]
                     enum string_enum_column: { high: 'high', low: 'low' }
@@ -326,8 +339,32 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T::Array[T.untyped])).returns(T.nilable(T::Array[T.untyped])) }
+                  def serialized_column_array=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
                   sig { params(value: T.untyped).returns(T.untyped) }
-                  def serialized_column=(value); end
+                  def serialized_column_custom=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T::Hash[T.untyped, T.untyped])).returns(T.nilable(T::Hash[T.untyped, T.untyped])) }
+                  def serialized_column_hash=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(T::Hash[::String, T.untyped])).returns(T.nilable(T::Hash[::String, T.untyped])) }
+                  def serialized_column_json=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(::Object)).returns(T.nilable(::Object)) }
+                  def serialized_column_object=(value); end
                 RBI
                 assert_includes(output, expected)
 

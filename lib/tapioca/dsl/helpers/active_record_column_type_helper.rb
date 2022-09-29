@@ -41,6 +41,8 @@ module Tapioca
               "::ActiveSupport::TimeWithZone"
             when ActiveRecord::Enum::EnumType
               "::String"
+            when ActiveRecord::Type::Serialized
+              serialized_column_type(column_type)
             else
               handle_unknown_type(column_type)
             end
@@ -118,6 +120,28 @@ module Tapioca
           else
             "T.any(::String, ::Symbol)"
           end
+        end
+
+        sig { params(column_type: ActiveRecord::Type::Serialized).returns(String) }
+        def serialized_column_type(column_type)
+          return "T::Hash[::String, T.untyped]" if column_type.coder == ActiveRecord::Coders::JSON
+
+          if ActiveRecord::Coders::YAMLColumn === column_type.coder
+            return serialized_column_coder_type(column_type.coder)
+          end
+
+          "T.untyped"
+        end
+
+        sig { params(yaml_coder: ActiveRecord::Coders::YAMLColumn).returns(String) }
+        def serialized_column_coder_type(yaml_coder)
+          sub_type = yaml_coder.object_class
+
+          return "T::Array[T.untyped]" if sub_type == Array
+          return "T::Hash[T.untyped, T.untyped]" if sub_type == Hash
+          return T.must(Runtime::Reflection.qualified_name_of(Object)) if sub_type == Object
+
+          "T.untyped"
         end
       end
     end
