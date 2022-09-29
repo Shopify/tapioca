@@ -466,7 +466,8 @@ Options:
           [--exclude=compiler [compiler ...]]    # Exclude supplied DSL compiler(s)
           [--verify], [--no-verify]              # Verifies RBIs are up-to-date
   -q, [--quiet], [--no-quiet]                    # Suppresses file creation output
-  -w, [--workers=N]                              # Number of parallel workers to use when generating RBIs (default: auto)
+  -w, [--workers=N]                              # Number of parallel workers to use when generating RBIs (default: 2)
+                                                 # Default: 2
           [--rbi-max-line-length=N]              # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
                                                  # Default: 120
   -e, [--environment=ENVIRONMENT]                # The Rack/Rails environment to use when generating RBIs
@@ -817,7 +818,7 @@ dsl:
   exclude: []
   verify: false
   quiet: false
-  workers: 1
+  workers: 2
   rbi_max_line_length: 120
   environment: development
   list_compilers: false
