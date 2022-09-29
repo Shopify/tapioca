@@ -43,9 +43,10 @@ module Tapioca
 
         @creturn_tracepoint = TracePoint.trace(:c_return) do |tp|
           next unless tp.method_id == :new
-          next unless Module === tp.return_value
 
           key = tp.return_value
+          next unless Module === key
+
           loc = build_constant_location(tp, caller_locations)
           (@class_files[key] ||= Set.new) << loc
         end
@@ -58,8 +59,8 @@ module Tapioca
           end
 
           def build_constant_location(tp, locations)
-            file = resolve_loc(caller_locations)
-            lineno = file == File.realpath(tp.path) ? tp.lineno : 0
+            file = resolve_loc(locations)
+            lineno = File.identical?(file, tp.path) ? tp.lineno : 0
 
             ConstantLocation.new(path: file, lineno: lineno)
           end

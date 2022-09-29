@@ -73,11 +73,7 @@ module Tapioca
           ).returns(T::Boolean)
         end
         def mixed_in_by_gem?(constant, mixin, mixin_type)
-          mixin_location =
-            T.cast(
-              Runtime::Trackers::Mixin.constants_with_mixin(mixin).dig(mixin_type, constant),
-              T.nilable(String),
-            )
+          mixin_location = Runtime::Trackers::Mixin.mixin_location(mixin, mixin_type, constant)
 
           return true if mixin_location.nil?
 

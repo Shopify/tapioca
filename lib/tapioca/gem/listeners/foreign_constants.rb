@@ -24,7 +24,7 @@ module Tapioca
           # The way we identify these "foreign constants" is by asking the mixin tracker which
           # constants have mixed in the current module that we are handling. We add all the
           # constants that we discover to the pipeline to be processed.
-          Runtime::Trackers::Mixin.constants_with_mixin(mixin).each_value do |location_info|
+          Runtime::Trackers::Mixin.constants_with_mixin(mixin).each do |mixin_type, location_info|
             location_info.each do |constant, location|
               next unless mixed_in_by_gem?(location)
 
@@ -35,10 +35,11 @@ module Tapioca
               # base constant. Then, generate RBIs as if the base constant is extending the mixin,
               # which is functionally equivalent to including or prepending to the singleton class.
               if !name && constant.singleton_class?
-                attached_class = attached_class_of(constant)
+                attached_class = Runtime::Trackers::Mixin.resolve_to_attached_class(constant, mixin, mixin_type)
                 next unless attached_class
 
                 constant = attached_class
+                name = @pipeline.name_of(constant)
               end
 
               @pipeline.push_foreign_constant(name, constant) if name
