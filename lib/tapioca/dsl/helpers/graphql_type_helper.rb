@@ -25,7 +25,7 @@ module Tapioca
           when GraphQL::Types::ISO8601Date.singleton_class
             type_for_constant(Date)
           when GraphQL::Types::ISO8601DateTime.singleton_class
-            type_for_constant(DateTime)
+            type_for_constant(Time)
           when GraphQL::Types::JSON.singleton_class
             "T::Hash[::String, T.untyped]"
           when GraphQL::Schema::Enum.singleton_class
