@@ -138,6 +138,9 @@ GEM
     dry-logic (1.2.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 0.5, >= 0.5)
+    dry-monads (1.4.0)
+      concurrent-ruby (~> 1.0)
+      dry-core (~> 0.7)
     dry-schema (1.9.3)
       concurrent-ruby (~> 1.0)
       dry-configurable (~> 0.13, >= 0.13.0)
@@ -145,6 +148,10 @@ GEM
       dry-initializer (~> 3.0)
       dry-logic (~> 1.0)
       dry-types (~> 1.5)
+    dry-struct (1.4.0)
+      dry-core (~> 0.5, >= 0.5)
+      dry-types (~> 1.5)
+      ice_nine (~> 0.11)
     dry-types (1.5.1)
       concurrent-ruby (~> 1.0)
       dry-container (~> 0.3)
@@ -167,6 +174,7 @@ GEM
     hashdiff (1.0.1)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
+    ice_nine (0.11.2)
     identity_cache (1.2.0)
       activerecord (>= 5.2)
       ar_transaction_changes (~> 1.1)
@@ -293,15 +301,6 @@ GEM
     sorbet (0.5.10456)
       sorbet-static (= 0.5.10456)
     sorbet-runtime (0.5.10456)
-    sorbet-static (0.5.10456-universal-darwin-14)
-    sorbet-static (0.5.10456-universal-darwin-15)
-    sorbet-static (0.5.10456-universal-darwin-16)
-    sorbet-static (0.5.10456-universal-darwin-17)
-    sorbet-static (0.5.10456-universal-darwin-18)
-    sorbet-static (0.5.10456-universal-darwin-19)
-    sorbet-static (0.5.10456-universal-darwin-20)
-    sorbet-static (0.5.10456-universal-darwin-21)
-    sorbet-static (0.5.10456-universal-darwin-22)
     sorbet-static (0.5.10456-x86_64-linux)
     sorbet-static-and-runtime (0.5.10456)
       sorbet (= 0.5.10456)
@@ -354,6 +353,9 @@ DEPENDENCIES
   bcrypt
   cityhash!
   config!
+  dry-monads
+  dry-struct
+  dry-types
   frozen_record
   google-protobuf
   graphql

@@ -42,6 +42,9 @@ group(:development, :test) do
   gem("aasm", require: false)
   gem("bcrypt", require: false)
   gem("xpath", require: false)
+  gem("dry-types", require: false)
+  gem("dry-struct", require: false)
+  gem("dry-monads", require: false)
 
   # net-smtp was removed from default gems in Ruby 3.1, but is used by the `mail` gem.
   # So we need to add it as a dependency until `mail` is fixed:
