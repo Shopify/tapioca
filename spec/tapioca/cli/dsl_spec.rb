@@ -36,6 +36,18 @@ module Tapioca
         RB
       end
 
+      it "shows an error message for unknown options" do
+        result = @project.tapioca("dsl --unknown-option")
+
+        assert_empty_stdout(result)
+
+        assert_equal(<<~ERR, result.err)
+          Unknown switches "--unknown-option"
+        ERR
+
+        refute_success_status(result)
+      end
+
       describe "generate" do
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
