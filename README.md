@@ -635,6 +635,8 @@ There are two main parts to the DSL compiler API: `gather_constants` and `decora
 * The `gather_constants` class method collects all classes (or modules) that should be processed by this specific DSL compiler.
 * The `decorate` method defines how to generate the necessary RBI definitions for the gathered constants.
 
+Every compiler must declare the type member `ConstantType` in order for Sorbet to understand what the return type of the `constant` attribute reader is. It needs to be assigned the correct type variable matching the type of constants that `gather_constants` returns. This generic variable allows Sorbet to type-check method calls on the `constant` reader in your `decorate` method. See the Sorbet documentation on [generics](https://sorbet.org/docs/generics) for more information.
+
 You can now run the new RBI compiler through the normal DSL generation process (your custom compiler will be loaded automatically by Tapioca):
 
 ```shell
