@@ -41,6 +41,8 @@ module Tapioca
               "::ActiveSupport::TimeWithZone"
             when ActiveRecord::Enum::EnumType
               "::String"
+            when ActiveRecord::Type::Serialized
+              serialized_column_type(column_type)
             else
               handle_unknown_type(column_type)
             end
@@ -117,6 +119,23 @@ module Tapioca
             "T.any(::String, ::Symbol, ::Integer)"
           else
             "T.any(::String, ::Symbol)"
+          end
+        end
+
+        sig { params(column_type: ActiveRecord::Type::Serialized).returns(String) }
+        def serialized_column_type(column_type)
+          case column_type.coder
+          when ActiveRecord::Coders::YAMLColumn
+            case column_type.coder.object_class
+            when Array.singleton_class
+              "T::Array[T.untyped]"
+            when Hash.singleton_class
+              "T::Hash[T.untyped, T.untyped]"
+            else
+              "T.untyped"
+            end
+          else
+            "T.untyped"
           end
         end
       end
