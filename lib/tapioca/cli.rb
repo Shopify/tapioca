@@ -9,6 +9,8 @@ module Tapioca
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
 
+    check_unknown_options!
+
     class_option :config,
       aliases: ["-c"],
       banner: "<config file path>",
