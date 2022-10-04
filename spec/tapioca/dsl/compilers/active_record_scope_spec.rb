@@ -266,6 +266,38 @@ module Tapioca
                 assert_equal(expected, rbi_for(:Post))
               end
 
+              it "generates scopes defined by enum attributes" do
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    enum status: [ :active, :archived ]
+                  end
+                RUBY
+
+                expected = <<~RBI
+                  # typed: strong
+
+                  class Post
+                    extend GeneratedRelationMethods
+
+                    module GeneratedRelationMethods
+                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      def active(*args, &blk); end
+
+                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      def archived(*args, &blk); end
+
+                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      def not_active(*args, &blk); end
+
+                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      def not_archived(*args, &blk); end
+                    end
+                  end
+                RBI
+
+                assert_equal(expected, rbi_for(:Post))
+              end
+
               it "generates relation includes from non-abstract parent models" do
                 add_ruby_file("post.rb", <<~RUBY)
                   class Post < ActiveRecord::Base
