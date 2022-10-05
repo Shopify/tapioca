@@ -22,7 +22,7 @@ PATH
       netrc (>= 0.11.0)
       parallel (>= 1.21.0)
       pry (>= 0.12.2)
-      rbi (~> 0.0.0, >= 0.0.14)
+      rbi (~> 0.0.0, >= 0.0.16)
       sorbet-static-and-runtime (>= 0.5.9204)
       spoom (~> 1.1.0, >= 1.1.11)
       thor (>= 1.2.0)
@@ -251,7 +251,7 @@ GEM
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
     rake (13.0.6)
-    rbi (0.0.15)
+    rbi (0.0.16)
       ast
       parser (>= 2.6.4.0)
       sorbet-runtime (>= 0.5.9204)
