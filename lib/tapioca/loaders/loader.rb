@@ -33,16 +33,16 @@ module Tapioca
         load_rails_engines
       end
 
-      sig { params(environment_load: T::Boolean, eager_load: T::Boolean).void }
-      def load_rails_application(environment_load: false, eager_load: false)
-        return unless File.exist?("config/application.rb")
+      sig { params(environment_load: T::Boolean, eager_load: T::Boolean, app_root: String).void }
+      def load_rails_application(environment_load: false, eager_load: false, app_root: ".")
+        return unless File.exist?("#{app_root}/config/application.rb")
 
         silence_deprecations
 
         if environment_load
-          require "./config/environment"
+          require "./#{app_root}/config/environment"
         else
-          require "./config/application"
+          require "./#{app_root}/config/application"
         end
 
         eager_load_rails_app if eager_load

@@ -473,6 +473,8 @@ Options:
   -e, [--environment=ENVIRONMENT]                # The Rack/Rails environment to use when generating RBIs
                                                  # Default: development
   -l, [--list-compilers], [--no-list-compilers]  # List all loaded compilers
+          [--app-root=APP_ROOT]                  # The path to the Rails application
+                                                 # Default: .
   -c, [--config=<config file path>]              # Path to the Tapioca configuration file
                                                  # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                # Verbose output for debugging purposes
@@ -824,6 +826,7 @@ dsl:
   rbi_max_line_length: 120
   environment: development
   list_compilers: false
+  app_root: "."
 gem:
   outdir: sorbet/rbi/gems
   file_header: true

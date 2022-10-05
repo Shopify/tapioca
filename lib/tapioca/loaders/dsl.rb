@@ -9,9 +9,9 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig { params(tapioca_path: String, eager_load: T::Boolean).void }
-        def load_application(tapioca_path:, eager_load: true)
-          loader = new(tapioca_path: tapioca_path)
+        sig { params(tapioca_path: String, eager_load: T::Boolean, app_root: String).void }
+        def load_application(tapioca_path:, eager_load: true, app_root: ".")
+          loader = new(tapioca_path: tapioca_path, app_root: app_root)
           loader.load
         end
       end
@@ -26,12 +26,13 @@ module Tapioca
 
       protected
 
-      sig { params(tapioca_path: String, eager_load: T::Boolean).void }
-      def initialize(tapioca_path:, eager_load: true)
+      sig { params(tapioca_path: String, eager_load: T::Boolean, app_root: String).void }
+      def initialize(tapioca_path:, eager_load: true, app_root: ".")
         super()
 
         @tapioca_path = tapioca_path
         @eager_load = eager_load
+        @app_root = app_root
       end
 
       sig { void }
@@ -64,6 +65,7 @@ module Tapioca
         load_rails_application(
           environment_load: true,
           eager_load: @eager_load,
+          app_root: @app_root,
         )
 
         say("Done", :green)
@@ -71,7 +73,7 @@ module Tapioca
 
       sig { void }
       def abort_if_pending_migrations!
-        return unless File.exist?("config/application.rb")
+        return unless File.exist?("#{@app_root}/config/application.rb")
         return unless defined?(::Rake)
 
         Rails.application.load_tasks
