@@ -281,7 +281,10 @@ module Tapioca
         payload: options[:payload],
         number_of_workers: options[:workers],
       )
-      command.execute
+
+      Tapioca.silence_warnings do
+        command.execute
+      end
     end
 
     desc "annotations", "Pull gem RBI annotations from remote sources"
@@ -307,7 +310,10 @@ module Tapioca
         netrc_file: netrc_file(options),
         typed_overrides: options[:typed_overrides],
       )
-      command.execute
+
+      Tapioca.silence_warnings do
+        command.execute
+      end
     end
 
     map ["--version", "-v"] => :__print_version
