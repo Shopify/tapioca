@@ -43,6 +43,12 @@ module Tapioca
 
           next if name.nil?
           next unless SKIP_PARSE_KINDS.include?(kind)
+
+          # Turn singleton class names to attached class names
+          if (match_data = name.match(/<Class:(.*)>/))
+            name = match_data[1]
+          end
+
           next if name.match?(/[<>()$]/)
           next if name.match?(/^[0-9]+$/)
           next if name == "T::Helpers"
