@@ -2842,9 +2842,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         class Bar < ::T::Struct
+          const :foo, ::Integer
           prop :bar, ::String
           const :baz, T::Hash[::String, T.untyped]
-          const :foo, ::Integer
           prop :quux, T.untyped, default: T.unsafe(nil)
           const :quuz, ::Integer, default: T.unsafe(nil)
 
@@ -2875,9 +2875,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           extend ::T::Props::ClassMethods
           extend ::T::Props::Plugin::ClassMethods
 
+          const :foo, ::Integer
           prop :bar, ::String
           const :baz, T.proc.params(arg0: ::String).void
-          const :foo, ::Integer
         end
 
         class Foo
