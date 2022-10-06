@@ -522,12 +522,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           def to_foo(base = T.unsafe(nil)); end
         end
-
-        String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
-        String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
-      assert_equal(output, compile)
+      compiled = compile
+        .gsub(/^\s+String::BLANK_RE = .+/, "")
+        .gsub(/^\s+String::ENCODED_BLANKS = .+/, "")
+        .rstrip.concat("\n")
+
+      assert_equal(output, compiled)
     end
 
     it "compiles extensions to core types without adding methods" do
@@ -4050,7 +4052,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       mutex = Class.new { |k| k.include(::Mutex_m) }
       sorbet_runtime_version = ::Gem::Specification.find_by_name("sorbet-runtime").version.to_s
-      active_support_version = ::Gem::Specification.find_by_name("activesupport").version.to_s
       mutex_version = ::Gem::Specification.default_stubs.find { |s| s.name == "mutex_m" }.version.to_s
 
       output = template(<<~RBI)
@@ -4146,15 +4147,13 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           # source://the-dep//lib/foo.rb#20
           def foo; end
         end
-
-        # source://activesupport/#{active_support_version}/lib/active_support/core_ext/object/blank.rb#104
-        String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
-
-        # source://activesupport/#{active_support_version}/lib/active_support/core_ext/object/blank.rb#105
-        String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
       RBI
 
-      assert_equal(output, compile(include_doc: true, include_loc: true))
+      compiled = compile(include_doc: true, include_loc: true)
+        .gsub(%r{\s+# source://activesupport/.+?\nString::.+$}m, "")
+        .rstrip.concat("\n")
+
+      assert_equal(output, compiled)
     end
 
     it "compiles constants with nil values" do
