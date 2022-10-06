@@ -35,19 +35,12 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ["2.7", "3.0", "3.1"]
-        experimental: [false]
         gemfile:
           - Gemfile
           - gemfiles/Gemfile-rails-6-1
+          - gemfiles/Gemfile-rails-main
         include:
           - gemfile: gemfiles/Gemfile-rails-main
-            ruby: "2.7"
-            experimental: true
-          - gemfile: gemfiles/Gemfile-rails-main
-            ruby: "3.0"
-            experimental: true
-          - gemfile: gemfiles/Gemfile-rails-main
-            ruby: "3.1"
             experimental: true
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
     env:
@@ -61,7 +54,7 @@ jobs:
           bundler-cache: true
       - name: Run tests
         run: bin/test
-        continue-on-error: ${{ matrix.experimental }}
+        continue-on-error: ${{ !!matrix.experimental }}
 
   buildall:
     if: ${{ always() && github.event.pull_request }}
