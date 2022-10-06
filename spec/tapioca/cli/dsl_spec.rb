@@ -37,6 +37,7 @@ module Tapioca
       end
 
       it "shows an error message for unknown options" do
+        @project.bundle_install
         result = @project.tapioca("dsl --unknown-option")
 
         assert_empty_stdout(result)
