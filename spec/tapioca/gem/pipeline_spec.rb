@@ -281,6 +281,25 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles extensions to existing classes if it only adds to the singleton class" do
+      add_ruby_file("json_ext.rb", <<~RUBY)
+        module JSON
+          def self.foo
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module JSON
+          class << self
+            def foo; end
+          end
+        end
+      RBI
+
+      assert_includes(compile, output)
+    end
+
     it "compiles extensions to BasicObject, Object and <main> object" do
       add_ruby_file("ext.rb", <<~RUBY)
         class BasicObject
