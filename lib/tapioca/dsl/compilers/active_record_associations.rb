@@ -241,6 +241,7 @@ module Tapioca
 
           klass.create_method(
             association_name.to_s,
+            comments: association_comments(reflection),
             return_type: relation_class,
           )
           klass.create_method(
@@ -317,6 +318,36 @@ module Tapioca
             through_name = delegate_reflection.options[:through]
 
             "#{declaration}, through: :#{through_name}"
+          end
+        end
+
+        sig { params(reflection: ReflectionType).returns(T::Array[RBI::Comment]) }
+        def association_comments(reflection)
+          association = case reflection
+          when ActiveRecord::Reflection::HasOneReflection
+            "the-has-one-association"
+          when ActiveRecord::Reflection::HasManyReflection
+            "the-has-many-association"
+          when ActiveRecord::Reflection::HasAndBelongsToManyReflection
+            "the-has-and-belongs-to-many-association"
+          when ActiveRecord::Reflection::BelongsToReflection
+            "the-belongs-to-association"
+          when ActiveRecord::Reflection::ThroughReflection
+            delegate_reflection = reflection.send(:delegate_reflection)
+            declaration = declaration(delegate_reflection)
+            if T.must(declaration).match?("has_one")
+              "the-has-one-through-association"
+            else
+              "the-has-many-through-association"
+            end
+          end
+
+          if association
+            url = "https://guides.rubyonrails.org/association_basics.html##{association}"
+            association_name = association.sub(/^the-(.*)-association$/, '\1')
+            [RBI::Comment.new("🔗 [Rails guide for `#{association_name}` association](#{url})")]
+          else
+            []
           end
         end
 
