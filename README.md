@@ -866,3 +866,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Shopif
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://github.com/Shopify/tapioca/blob/main/LICENSE.txt).
+#
