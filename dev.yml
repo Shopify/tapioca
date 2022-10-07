@@ -18,6 +18,3 @@ commands:
   style:     "bin/style"
   docs:      "bin/docs"
   sanity:    "bin/typecheck && bin/style && bin/test"
-
-open:
-  travis: "https://travis-ci.org/Shopify/tapioca"
