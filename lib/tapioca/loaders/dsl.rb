@@ -57,14 +57,24 @@ module Tapioca
         say("Done", :green)
       end
 
+      # TODO: this could be done more elegantly but this was a simple way to
+      # split between a Rails application and a non-Rails one. One option
+      # might be to detect a Zeitwerk project where eager loading is also
+      # a definable option. I'm not sure it's important to actually specify
+      # we're loading a Rails application
       sig { void }
       def load_application
-        say("Loading Rails application... ")
+        if defined?(Rails)
+          say("Loading Rails application... ")
 
-        load_rails_application(
-          environment_load: true,
-          eager_load: @eager_load,
-        )
+          load_rails_application(
+            environment_load: true,
+            eager_load: @eager_load,
+          )
+        else
+          say("Loading application... ")
+          load_generic_application
+        end
 
         say("Done", :green)
       end

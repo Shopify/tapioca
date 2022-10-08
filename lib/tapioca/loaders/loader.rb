@@ -90,6 +90,21 @@ module Tapioca
           .reject { |engine| gem_in_app_dir?(project_path, engine.config.root.to_path) }
       end
 
+      # TODO: Zeitwerk loads objects based on the defined constant, inferring
+      # their paths and loading them when encountered. We could potentially
+      # first discover if this is a Zeitwerk project or not, and perform
+      # (optional) eager loading based on that. For other types of projects,
+      # there is no standard to conform to outside of using `autoload`, and
+      # still more projects that don't use lazy loading at all. As such, I
+      # chose to take a very greedy, naive approach to just loading every Ruby
+      # file that could be found.
+      sig { params(eager_load: T::Boolean).void }
+      def load_generic_application(eager_load: false)
+        Dir.glob("**/*.rb").each do |file|
+          safe_require(file)
+        end
+      end
+
       sig { params(path: String).void }
       def safe_require(path)
         require path
