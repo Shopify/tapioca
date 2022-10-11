@@ -344,6 +344,8 @@ GEM
 
 PLATFORMS
   ruby
+  universal-darwin-22
+  x86_64-linux
 
 DEPENDENCIES
   aasm
