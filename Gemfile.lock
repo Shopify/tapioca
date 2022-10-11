@@ -31,7 +31,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (5.3.1)
+    aasm (5.4.0)
       concurrent-ruby (~> 1.0)
     actioncable (7.0.4)
       actionpack (= 7.0.4)
@@ -380,4 +380,4 @@ DEPENDENCIES
   xpath
 
 BUNDLED WITH
-   2.3.4
+   2.3.23
