@@ -62,14 +62,14 @@ module Tapioca
 
         sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
         def symbols_from_paths(paths)
-          output = T.cast(Tempfile.create("sorbet") do |file|
+          output = Tempfile.create("sorbet") do |file|
             file.write(Array(paths).join("\n"))
             file.flush
 
             symbol_table_json_from("@#{file.path.shellescape}")
-          end, T.nilable(String))
+          end
 
-          return Set.new if output.nil? || output.empty?
+          return Set.new if output.empty?
 
           SymbolTableParser.parse_json(output)
         end
