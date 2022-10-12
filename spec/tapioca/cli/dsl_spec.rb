@@ -344,7 +344,7 @@ module Tapioca
         end
 
         it "generates RBI files for engine when provided with an `app_root` flag" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write("test/dummy/lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -353,7 +353,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/comment.rb", <<~RB)
+          @project.write("test/dummy/lib/comment.rb", <<~RB)
             require "smart_properties"
 
             module Namespace
@@ -369,7 +369,6 @@ module Tapioca
           begin
             FileUtils.mkdir_p(engine_path)
             FileUtils.mv(@project.path + "/config", engine_path)
-            FileUtils.mv(@project.path + "/lib", engine_path)
 
             result = @project.tapioca("dsl --app_root=test/dummy")
 
@@ -398,7 +397,6 @@ module Tapioca
           # Restore directory structure so to not impact other tests
           ensure
             FileUtils.mv(engine_path + "/config", @project.path)
-            FileUtils.mv(engine_path + "/lib", @project.path)
             FileUtils.rm_rf(engine_path)
           end
         end
