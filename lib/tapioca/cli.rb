@@ -123,6 +123,10 @@ module Tapioca
       type: :boolean,
       desc: "List all loaded compilers",
       default: false
+    option :app_root,
+      type: :string,
+      desc: "The path to the Rails application",
+      default: "."
     def dsl(*constants)
       set_environment(options)
 
@@ -138,6 +142,7 @@ module Tapioca
         verbose: options[:verbose],
         number_of_workers: options[:workers],
         rbi_formatter: rbi_formatter(options),
+        app_root: options[:app_root],
       )
 
       Tapioca.silence_warnings do

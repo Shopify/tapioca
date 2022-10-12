@@ -22,6 +22,7 @@ module Tapioca
           auto_strictness: T::Boolean,
           gem_dir: String,
           rbi_formatter: RBIFormatter,
+          app_root: String,
         ).void
       end
       def initialize(
@@ -37,7 +38,8 @@ module Tapioca
         number_of_workers: nil,
         auto_strictness: true,
         gem_dir: DEFAULT_GEM_DIR,
-        rbi_formatter: DEFAULT_RBI_FORMATTER
+        rbi_formatter: DEFAULT_RBI_FORMATTER,
+        app_root: "."
       )
         @requested_constants = requested_constants
         @outpath = outpath
@@ -52,6 +54,7 @@ module Tapioca
         @auto_strictness = auto_strictness
         @gem_dir = gem_dir
         @rbi_formatter = rbi_formatter
+        @app_root = app_root
 
         super()
       end
@@ -61,6 +64,7 @@ module Tapioca
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
           eager_load: @requested_constants.empty?,
+          app_root: @app_root,
         )
 
         pipeline = create_pipeline
@@ -87,6 +91,7 @@ module Tapioca
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
           eager_load: @requested_constants.empty?,
+          app_root: @app_root,
         )
 
         if @should_verify
