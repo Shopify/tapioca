@@ -44,6 +44,9 @@ jobs:
             experimental: true
           - ruby: "3.2"
             experimental: true
+          - gemfile: Gemfile
+            ruby: "3.2"
+            experimental: true
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
@@ -53,7 +56,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
+      - name: Install dependencies
+        run: bundle install
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
