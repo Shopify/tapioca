@@ -2998,7 +2998,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { returns(T::Array[::Integer]) }
           def foo; end
 
-          def foo=(_arg0); end
+          sig { params(foo: T::Array[::Integer]).returns(T::Array[::Integer]) }
+          def foo=(foo); end
 
           sig { override.returns(::Integer) }
           def something; end
