@@ -37,7 +37,7 @@ group(:development, :test) do
   gem("graphql", require: false)
   gem("shopify-money", require: false)
   gem("sidekiq", require: false)
-  gem("nokogiri", require: false)
+  gem("nokogiri", require: false, force_ruby_platform: true)
   gem("config", github: "rubyconfig/config", branch: "master", require: false)
   gem("aasm", require: false)
   gem("bcrypt", require: false)
