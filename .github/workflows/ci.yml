@@ -49,6 +49,8 @@ jobs:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
       - uses: actions/checkout@v3.1.0
+      - if: ${{ matrix.ruby == '3.2' }}
+        run: "rm -f ${{ matrix.gemfile }}.lock"
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
