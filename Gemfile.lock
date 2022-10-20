@@ -184,6 +184,7 @@ GEM
     marcel (1.0.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
+    mini_portile2 (2.8.0)
     minitest (5.16.3)
     minitest-hooks (1.5.0)
       minitest (> 5.3)
@@ -206,6 +207,9 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.5.8)
+    nokogiri (1.13.9)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
     nokogiri (1.13.9-arm64-darwin)
       racc (~> 1.4)
     nokogiri (1.13.9-x86_64-darwin)
@@ -308,6 +312,8 @@ GEM
     sprockets (4.1.1)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
+    sqlite3 (1.5.3)
+      mini_portile2 (~> 2.8.0)
     sqlite3 (1.5.3-arm64-darwin)
     sqlite3 (1.5.3-x86_64-darwin)
     sqlite3 (1.5.3-x86_64-linux)
@@ -342,6 +348,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  ruby
   universal-darwin-22
   x86_64-linux
 
