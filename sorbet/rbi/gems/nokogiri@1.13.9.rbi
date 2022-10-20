@@ -7,6 +7,9 @@
 # source://shopify-money/0.16.0/lib/money/deprecations.rb#3
 ::ACTIVE_SUPPORT_DEFINED = T.let(T.unsafe(nil), String)
 
+# source://yard/0.9.28/lib/yard.rb#61
+::RUBY18 = T.let(T.unsafe(nil), FalseClass)
+
 # source://yard/0.9.28/lib/yard.rb#62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
@@ -510,6 +513,9 @@ Nokogiri::CSS::Parser::CACHE_SWITCH_NAME = T.let(T.unsafe(nil), Symbol)
 
 # source://nokogiri//lib/nokogiri/css/parser.rb#279
 Nokogiri::CSS::Parser::Racc_arg = T.let(T.unsafe(nil), Array)
+
+# source://nokogiri//lib/nokogiri/css/parser.rb#355
+Nokogiri::CSS::Parser::Racc_debug_parser = T.let(T.unsafe(nil), FalseClass)
 
 # source://nokogiri//lib/nokogiri/css/parser.rb#295
 Nokogiri::CSS::Parser::Racc_token_to_s_table = T.let(T.unsafe(nil), Array)
@@ -4682,6 +4688,9 @@ Nokogiri::XML::Node::SaveOptions::NO_XHTML = T.let(T.unsafe(nil), Integer)
 #
 # source://nokogiri//lib/nokogiri/xml/node.rb#67
 Nokogiri::XML::Node::TEXT_NODE = T.let(T.unsafe(nil), Integer)
+
+# source://nokogiri//lib/nokogiri/xml/node.rb#1374
+Nokogiri::XML::Node::USING_LIBXML_WITH_BROKEN_SERIALIZATION = T.let(T.unsafe(nil), FalseClass)
 
 # XInclude end type
 #
