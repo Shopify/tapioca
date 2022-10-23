@@ -7,8 +7,12 @@ module Tapioca
   module Dsl
     module Compilers
       class ActiveRecordDelegatedTypesSpec < ::DslSpec
-
         describe "Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypesSpec" do
+          sig { void }
+          def before_setup
+            require "tapioca/dsl/extensions/active_record"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no ActiveRecord subclasses" do
               assert_empty(gathered_constants)
