@@ -76,6 +76,8 @@ module Tapioca
           root.create_path(constant) do |model|
             model.create_module(DelegatedTypesModuleName) do |mod|
               constant.__tapioca_delegated_types.each do |role, data|
+                types = data.fetch(:types)
+                populate_role_accessors(mod, role, types)
               end
             end
 
@@ -94,6 +96,26 @@ module Tapioca
 
         private
 
+        sig { params(mod: RBI::Scope, role: Symbol, types: T::Array[String]).void }
+        def populate_role_accessors(mod, role, types)
+          mod.create_method(
+            "#{role}_name",
+            parameters: [],
+            return_type: "String",
+          )
+
+          mod.create_method(
+            "#{role}_class",
+            parameters: [],
+            return_type: "Class",
+          )
+
+          mod.create_method(
+            "build_#{role}",
+            parameters: [create_rest_param("args", type: "T.untyped")],
+            return_type: "T.any(#{types.join(", ")})",
+          )
+        end
       end
     end
   end
