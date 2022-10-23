@@ -13,6 +13,7 @@ module Tapioca
 
         AttributeMethodsModuleName = T.let("GeneratedAttributeMethods", String)
         AssociationMethodsModuleName = T.let("GeneratedAssociationMethods", String)
+        DelegatedTypesModuleName = T.let("GeneratedDelegatedTypeMethods", String)
 
         RelationMethodsModuleName = T.let("GeneratedRelationMethods", String)
         AssociationRelationMethodsModuleName = T.let("GeneratedAssociationRelationMethods", String)
