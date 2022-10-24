@@ -7,6 +7,7 @@ rescue LoadError
   return
 end
 
+require "tapioca/dsl/helpers/active_record_column_type_helper"
 require "tapioca/dsl/helpers/active_record_constants_helper"
 
 module Tapioca
@@ -77,7 +78,9 @@ module Tapioca
             model.create_module(DelegatedTypesModuleName) do |mod|
               constant.__tapioca_delegated_types.each do |role, data|
                 types = data.fetch(:types)
+                options = data.fetch(:options, {})
                 populate_role_accessors(mod, role, types)
+                populate_type_helpers(mod, role, types, options)
               end
             end
 
@@ -114,6 +117,41 @@ module Tapioca
             "build_#{role}",
             parameters: [create_rest_param("args", type: "T.untyped")],
             return_type: "T.any(#{types.join(", ")})",
+          )
+        end
+
+        sig { params(mod: RBI::Scope, role: Symbol, types: T::Array[String], options: T::Hash[Symbol, T.untyped]).void }
+        def populate_type_helpers(mod, role, types, options)
+          types.each do |type|
+            populate_type_helper(mod, role, type, options: options)
+          end
+        end
+
+        sig { params(mod: RBI::Scope, role: Symbol, type: String, options: T::Hash[Symbol, T.untyped]).void }
+        def populate_type_helper(mod, role, type, options)
+          singular   = type.tableize.tr("/", "_").singularize
+          query      = "#{singular}?"
+          primary_key = options[:primary_key] || "id"
+          role_id = options[:foreign_key] || "#{role}_id"
+
+          getter_type, _ = Helpers::ActiveRecordColumnTypeHelper.new(constant).type_for(role_id)
+
+          mod.create_method(
+            query,
+            parameters: [],
+            return_type: "T::Boolean",
+          )
+
+          mod.create_method(
+            singular,
+            parameters: [],
+            return_type: "T.nilable(#{type})",
+          )
+
+          mod.create_method(
+            "#{singular}_#{primary_key}",
+            parameters: [],
+            return_type: as_nilable_type(getter_type),
           )
         end
       end
