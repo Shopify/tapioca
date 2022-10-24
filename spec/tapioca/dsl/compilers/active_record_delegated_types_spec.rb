@@ -78,6 +78,17 @@ module Tapioca
                 end
 
                 it "generates RBI file for delegated_type" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :entries do |t|
+                          t.string :entryable_type
+                          t.integer :entryable_id
+                        end
+                      end
+                    end
+                  RUBY
+
                   add_ruby_file("comment.rb", <<~RUBY)
                     class Comment < ActiveRecord::Base
                     end
