@@ -11,6 +11,7 @@ In the following section you will find all available DSL compilers:
 * [ActiveModelSecurePassword](compiler_activemodelsecurepassword.md)
 * [ActiveRecordAssociations](compiler_activerecordassociations.md)
 * [ActiveRecordColumns](compiler_activerecordcolumns.md)
+* [ActiveRecordDelegatedTypes](compiler_activerecorddelegatedtypes.md)
 * [ActiveRecordEnum](compiler_activerecordenum.md)
 * [ActiveRecordFixtures](compiler_activerecordfixtures.md)
 * [ActiveRecordRelations](compiler_activerecordrelations.md)
