@@ -1,6 +1,6 @@
 ## ActiveRecordDelegatedTypes
 
-`Tapioca::Dsl::Compilers::DelegatedTypes` refines RBI files for subclasses of
+`Tapioca::Dsl::Compilers::DelegatedTypes` defines RBI files for subclasses of
 [`ActiveRecord::Base`](https://api.rubyonrails.org/classes/ActiveRecord/Base.html).
 This compiler is only responsible for defining the methods that would be created for delegated_types that
 are defined in the Active Record model.
@@ -17,13 +17,16 @@ this compiler will produce the following methods in the RBI file
 `entry.rbi`:
 
 ~~~rbi
-# rntry.rbi
+# entry.rbi
 # typed: true
 
 class Entry
   include GeneratedDelegatedTypeMethods
 
   module GeneratedDelegatedTypeMethods
+    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+    def build_entryable(*args); end
+
     sig { returns(Class) }
     def entryable_class; end
 

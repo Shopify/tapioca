@@ -13,7 +13,7 @@ require "tapioca/dsl/helpers/active_record_constants_helper"
 module Tapioca
   module Dsl
     module Compilers
-      # `Tapioca::Dsl::Compilers::DelegatedTypes` refines RBI files for subclasses of
+      # `Tapioca::Dsl::Compilers::DelegatedTypes` defines RBI files for subclasses of
       # [`ActiveRecord::Base`](https://api.rubyonrails.org/classes/ActiveRecord/Base.html).
       # This compiler is only responsible for defining the methods that would be created for delegated_types that
       # are defined in the Active Record model.
@@ -30,13 +30,16 @@ module Tapioca
       # `entry.rbi`:
       #
       # ~~~rbi
-      # # rntry.rbi
+      # # entry.rbi
       # # typed: true
       #
       # class Entry
       #   include GeneratedDelegatedTypeMethods
       #
       #   module GeneratedDelegatedTypeMethods
+      #     sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+      #     def build_entryable(*args); end
+      #
       #     sig { returns(Class) }
       #     def entryable_class; end
       #
