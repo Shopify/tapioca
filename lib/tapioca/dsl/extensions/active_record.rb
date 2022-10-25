@@ -16,7 +16,7 @@ module Tapioca
 
           def delegated_type(role, types:, **options)
             @__tapioca_delegated_types ||= {}
-            @__tapioca_delegated_types[role] = { types: types }
+            @__tapioca_delegated_types[role] = { types: types, options: options }
 
             super
           end

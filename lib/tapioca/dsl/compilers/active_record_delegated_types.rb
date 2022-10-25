@@ -123,7 +123,7 @@ module Tapioca
         sig { params(mod: RBI::Scope, role: Symbol, types: T::Array[String], options: T::Hash[Symbol, T.untyped]).void }
         def populate_type_helpers(mod, role, types, options)
           types.each do |type|
-            populate_type_helper(mod, role, type, options: options)
+            populate_type_helper(mod, role, type, options)
           end
         end
 
@@ -134,7 +134,7 @@ module Tapioca
           primary_key = options[:primary_key] || "id"
           role_id = options[:foreign_key] || "#{role}_id"
 
-          getter_type, _ = Helpers::ActiveRecordColumnTypeHelper.new(constant).type_for(role_id)
+          getter_type, _ = Helpers::ActiveRecordColumnTypeHelper.new(constant).type_for(role_id.to_s)
 
           mod.create_method(
             query,
