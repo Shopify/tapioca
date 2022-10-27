@@ -14,10 +14,10 @@ end
 # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/top_level_group.rb#4
 module RuboCop::Cop; end
 
-# source://rubocop/1.36.0/lib/rubocop/cop/mixin/allowed_methods.rb#38
+# source://rubocop/1.37.1/lib/rubocop/cop/mixin/allowed_methods.rb#38
 RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
 
-# source://rubocop/1.36.0/lib/rubocop/cop/mixin/allowed_pattern.rb#54
+# source://rubocop/1.37.1/lib/rubocop/cop/mixin/allowed_pattern.rb#54
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/top_level_group.rb#5
@@ -2401,34 +2401,36 @@ class RuboCop::Cop::RSpec::ExampleWording < ::RuboCop::Cop::RSpec::Base
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#85
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#80
   def add_wording_offense(node, message); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#79
-  def check_and_handle_insufficient_examples(description); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#132
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#127
   def custom_transform; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#95
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#90
   def docstring(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#136
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#131
   def ignored_words; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#140
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#135
+  def insufficient_docstring?(description_node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#139
   def insufficient_examples; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#145
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#144
   def preprocess(message); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#105
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#100
   def replacement_text(node); end
 
   # Recursive processing is required to process nested dstr nodes
   # that is the case for \-separated multiline strings with interpolation.
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#121
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#116
   def text(node); end
 end
 
@@ -2858,47 +2860,57 @@ RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically::MSG = T.let(T.unsaf
 #   create :login
 #   create :login
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#33
+#   # also good
+#   # when method name and first argument are not on same line
+#   create(
+#   :user
+#   )
+#   build(
+#   :user,
+#   name: 'foo'
+#   )
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#43
 class RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::RSpec::FactoryBot::Language
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#49
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#59
   def factory_call(param0 = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#85
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#96
   def nested_call?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#55
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#65
   def on_send(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#67
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#77
   def process_with_parentheses(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#76
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#87
   def process_without_parentheses(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#91
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#102
   def remove_parentheses(corrector, node); end
 
   class << self
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#39
+    # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#49
     def autocorrect_incompatible_with; end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#46
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#56
 RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::FACTORY_CALLS = T.let(T.unsafe(nil), Set)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#44
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#54
 RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::MSG_OMIT_PARENS = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#43
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#53
 RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::MSG_REQUIRE_PARENS = T.let(T.unsafe(nil), String)
 
 # Checks for create_list usage.
@@ -3207,8 +3219,11 @@ class RuboCop::Cop::RSpec::FilePath < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#143
   def custom_transform; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#87
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#85
   def ensure_correct_file_path(send_node, example_group, arguments); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#167
+  def expanded_file_path; end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#126
   def expected_path(constant); end
@@ -3226,25 +3241,30 @@ class RuboCop::Cop::RSpec::FilePath < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#119
   def name_pattern(method_name); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#103
-  def pattern_for(example_group, method_name); end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#101
+  def pattern_for(example_group, arguments); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#115
   def pattern_for_spec_suffix_only; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#156
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#155
   def relevant_rubocop_rspec_file?(_file); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#99
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#97
   def routing_spec?(args); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#160
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#163
+  def routing_spec_path?; end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#159
   def spec_suffix_only?; end
 end
 
@@ -6402,16 +6422,16 @@ class RuboCop::Cop::RSpec::SortMetadata < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RangeHelp
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#40
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#39
   def metadata_in_block(param0, param1); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#44
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#43
   def on_block(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#44
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#43
   def on_numblock(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#35
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#34
   def rspec_configure(param0 = T.unsafe(nil)); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#26
@@ -6419,24 +6439,24 @@ class RuboCop::Cop::RSpec::SortMetadata < ::RuboCop::Cop::RSpec::Base
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#69
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#68
   def crime_scene(symbols, pairs); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#60
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#59
   def investigate(symbols, pairs); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#78
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#77
   def replacement(symbols, pairs); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#86
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#85
   def sort_pairs(pairs); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#90
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#89
   def sort_symbols(symbols); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#82
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/sort_metadata.rb#81
   def sorted?(symbols, pairs); end
 end
 
@@ -7096,10 +7116,10 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RangeHelp
 
-  # source://rubocop/1.36.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#91
+  # source://rubocop/1.37.1/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#91
   def on_csend(node); end
 
-  # source://rubocop/1.36.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#91
+  # source://rubocop/1.37.1/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#91
   def on_send(node); end
 
   class << self
@@ -7108,10 +7128,10 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   end
 end
 
-# source://rubocop/1.36.0/lib/rubocop/ast_aliases.rb#5
+# source://rubocop/1.37.1/lib/rubocop/ast_aliases.rb#5
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 
-# source://rubocop/1.36.0/lib/rubocop/ast_aliases.rb#6
+# source://rubocop/1.37.1/lib/rubocop/ast_aliases.rb#6
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
 # RuboCop RSpec project namespace
@@ -7701,5 +7721,5 @@ RuboCop::RSpec::Wording::SHOULDNT_BE_PREFIX = T.let(T.unsafe(nil), Regexp)
 # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#7
 RuboCop::RSpec::Wording::SHOULDNT_PREFIX = T.let(T.unsafe(nil), Regexp)
 
-# source://rubocop/1.36.0/lib/rubocop/ast_aliases.rb#7
+# source://rubocop/1.37.1/lib/rubocop/ast_aliases.rb#7
 RuboCop::Token = RuboCop::AST::Token
