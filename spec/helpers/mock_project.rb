@@ -92,8 +92,18 @@ module Tapioca
       opts = {}
       opts[:chdir] = path
       Bundler.with_unbundled_env do
-        ::Gem.install("bundler", bundler_version)
-        out, err, status = Open3.capture3(["bundle", "_#{bundler_version}_", "install"].join(" "), opts)
+        cmd =
+          # prerelease versions are not always available on rubygems.org
+          # so in this case, we install whichever is the latest
+          if ::Gem::Version.new(bundler_version).prerelease?
+            ::Gem.install("bundler")
+            "bundle install"
+          else
+            ::Gem.install("bundler", bundler_version)
+            "bundle _#{bundler_version}_ install"
+          end
+
+        out, err, status = Open3.capture3(cmd, opts)
         ExecResult.new(out: out, err: err, status: T.must(status.success?))
       end
     end
