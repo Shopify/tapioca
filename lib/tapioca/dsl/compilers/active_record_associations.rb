@@ -323,7 +323,7 @@ module Tapioca
 
         sig { params(reflection: ReflectionType).returns(T::Array[RBI::Comment]) }
         def association_comments(reflection)
-          association = case reflection
+          anchor_name = case reflection
           when ActiveRecord::Reflection::HasOneReflection
             "the-has-one-association"
           when ActiveRecord::Reflection::HasManyReflection
@@ -342,10 +342,14 @@ module Tapioca
             end
           end
 
-          if association
-            url = "https://guides.rubyonrails.org/association_basics.html##{association}"
-            association_name = association.sub(/^the-(.*)-association$/, '\1')
-            [RBI::Comment.new("🔗 [Rails guide for `#{association_name}` association](#{url})")]
+          if anchor_name
+            url = "https://guides.rubyonrails.org/association_basics.html##{anchor_name}"
+            association_name = anchor_name.sub(/^the-(.*)-association$/, '\1')
+            comment = <<~MSG
+              This method is created by ActiveRecord on the `#{reflection.active_record.name}` class because it declared `#{declaration(reflection)}`.
+              🔗 [Rails guide for `#{association_name.gsub("-", "_")}` association](#{url})
+            MSG
+            [RBI::Comment.new(comment)]
           else
             []
           end
