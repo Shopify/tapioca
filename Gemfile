@@ -23,7 +23,7 @@ group(:development, :test) do
   gem("smart_properties", require: false)
   gem("frozen_record", require: false)
   gem("sprockets", require: false)
-  gem("rails", require: false)
+  gem("rails", require: false) unless defined?(@specified_rails)
   gem("state_machines", require: false)
   gem("activerecord-typedstore", require: false)
   gem("sqlite3")
