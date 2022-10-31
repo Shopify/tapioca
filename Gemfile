@@ -7,6 +7,7 @@ gemspec
 gem("minitest")
 gem("minitest-hooks")
 gem("minitest-reporters")
+gem("debug", require: false)
 gem("pry-byebug")
 gem("rubocop-shopify", require: false)
 gem("rubocop-sorbet", ">= 0.4.1")
