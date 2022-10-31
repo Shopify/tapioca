@@ -225,6 +225,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def picture_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Employee` class because it declared `has_many :pictures`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(ActiveRecord::Associations::CollectionProxy) }
                         def pictures; end
 
@@ -333,6 +335,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def comment_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::Comment::PrivateCollectionProxy) }
                         def comments; end
 
@@ -400,6 +404,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def commenter_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_many :commenters, through: :comments`.
+                        # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
                         sig { returns(::Commenter::PrivateCollectionProxy) }
                         def commenters; end
 
@@ -409,6 +415,8 @@ module Tapioca
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def commenters_attributes=(attributes); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::Comment::PrivateCollectionProxy) }
                         def comments; end
 
@@ -461,6 +469,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def commenter_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_and_belongs_to_many :commenters`.
+                        # 🔗 [Rails guide for `has_and_belongs_to_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-and-belongs-to-many-association)
                         sig { returns(::Commenter::PrivateCollectionProxy) }
                         def commenters; end
 
@@ -561,6 +571,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def comment_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :comments`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::Comment::PrivateCollectionProxy) }
                         def comments; end
 
@@ -573,6 +585,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def draft_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :drafts`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::Blog::Draft::PrivateCollectionProxy) }
                         def drafts; end
 
@@ -913,6 +927,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def picture_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Employee` class because it declared `has_many :pictures`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(ActiveRecord::Associations::CollectionProxy[T.untyped]) }
                         def pictures; end
 
@@ -1021,6 +1037,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def comment_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::ActiveRecord::Associations::CollectionProxy[::Comment]) }
                         def comments; end
 
@@ -1088,6 +1106,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def commenter_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_many :commenters, through: :comments`.
+                        # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
                         sig { returns(::ActiveRecord::Associations::CollectionProxy[::Commenter]) }
                         def commenters; end
 
@@ -1097,6 +1117,8 @@ module Tapioca
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def commenters_attributes=(attributes); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::ActiveRecord::Associations::CollectionProxy[::Comment]) }
                         def comments; end
 
@@ -1149,6 +1171,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def commenter_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Post` class because it declared `has_and_belongs_to_many :commenters`.
+                        # 🔗 [Rails guide for `has_and_belongs_to_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-and-belongs-to-many-association)
                         sig { returns(::ActiveRecord::Associations::CollectionProxy[::Commenter]) }
                         def commenters; end
 
@@ -1249,6 +1273,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def comment_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :comments`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::ActiveRecord::Associations::CollectionProxy[::Comment]) }
                         def comments; end
 
@@ -1261,6 +1287,8 @@ module Tapioca
                         sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                         def draft_ids=(ids); end
 
+                        # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :drafts`.
+                        # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                         sig { returns(::ActiveRecord::Associations::CollectionProxy[::Blog::Draft]) }
                         def drafts; end
 
@@ -1547,6 +1575,8 @@ module Tapioca
                     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                     def photos_attachment_ids=(ids); end
 
+                    # This method is created by ActiveRecord on the `Post` class because it declared `has_many :photos_attachments`.
+                    # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
                     sig { returns(::ActiveStorage::Attachment::PrivateCollectionProxy) }
                     def photos_attachments; end
 
@@ -1559,6 +1589,8 @@ module Tapioca
                     sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
                     def photos_blob_ids=(ids); end
 
+                    # This method is created by ActiveRecord on the `Post` class because it declared `has_many :photos_blobs, through: :photos_attachments`.
+                    # 🔗 [Rails guide for `has_many_through` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-through-association)
                     sig { returns(::ActiveStorage::Blob::PrivateCollectionProxy) }
                     def photos_blobs; end
 
