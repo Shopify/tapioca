@@ -144,6 +144,9 @@ Racc::Parser::Racc_Runtime_Version = T.let(T.unsafe(nil), String)
 # source://racc//racc/parser.rb#208
 Racc::Parser::Racc_YY_Parse_Method = T.let(T.unsafe(nil), Symbol)
 
+# source://racc//racc/parser.rb#183
+Racc::Racc_No_Extensions = T.let(T.unsafe(nil), FalseClass)
+
 # source://racc//racc/info.rb#14
 Racc::VERSION = T.let(T.unsafe(nil), String)
 

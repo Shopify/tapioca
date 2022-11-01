@@ -2930,6 +2930,9 @@ class Byebug::Setting
   end
 end
 
+# source://byebug//lib/byebug/setting.rb#12
+Byebug::Setting::DEFAULT = T.let(T.unsafe(nil), FalseClass)
+
 # Show byebug settings.
 #
 # source://byebug//lib/byebug/commands/show.rb#9

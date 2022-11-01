@@ -573,7 +573,7 @@ end
 # source://spoom//lib/spoom/coverage/report.rb#92
 Spoom::Coverage::Cards::Card::TEMPLATE = T.let(T.unsafe(nil), String)
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/coverage/report.rb#105
 class Spoom::Coverage::Cards::Erb < ::Spoom::Coverage::Cards::Card
@@ -700,7 +700,7 @@ module Spoom::Coverage::D3
   end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/coverage/d3/base.rb#7
 class Spoom::Coverage::D3::Base
@@ -792,19 +792,19 @@ end
 
 # source://spoom//lib/spoom/coverage/d3.rb#103
 class Spoom::Coverage::D3::ColorPalette < ::T::Struct
-  prop :false, ::String
   prop :ignore, ::String
+  prop :false, ::String
+  prop :true, ::String
   prop :strict, ::String
   prop :strong, ::String
-  prop :true, ::String
 
   class << self
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/coverage/d3/pie.rb#9
 class Spoom::Coverage::D3::Pie < ::Spoom::Coverage::D3::Base
@@ -862,7 +862,7 @@ class Spoom::Coverage::D3::Pie::Sigs < ::Spoom::Coverage::D3::Pie
   def tooltip; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/coverage/d3/timeline.rb#9
 class Spoom::Coverage::D3::Timeline < ::Spoom::Coverage::D3::Base
@@ -992,13 +992,13 @@ class Spoom::Coverage::D3::Timeline::Sigs < ::Spoom::Coverage::D3::Timeline::Sta
   def tooltip; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/coverage/d3/timeline.rb#329
 class Spoom::Coverage::D3::Timeline::Stacked < ::Spoom::Coverage::D3::Timeline
   abstract!
 
-  # source://sorbet-runtime/0.5.10326/lib/types/private/abstract/declare.rb#37
+  # source://sorbet-runtime/0.5.10526/lib/types/private/abstract/declare.rb#37
   def initialize(*args, **_arg1, &blk); end
 
   # source://spoom//lib/spoom/coverage/d3/timeline.rb#388
@@ -1029,7 +1029,7 @@ class Spoom::Coverage::D3::Timeline::Versions < ::Spoom::Coverage::D3::Timeline
   def tooltip; end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/coverage/report.rb#38
 class Spoom::Coverage::Page < ::Spoom::Coverage::Template
@@ -1123,22 +1123,22 @@ end
 
 # source://spoom//lib/spoom/coverage/snapshot.rb#6
 class Spoom::Coverage::Snapshot < ::T::Struct
-  prop :calls_typed, ::Integer, default: T.unsafe(nil)
-  prop :calls_untyped, ::Integer, default: T.unsafe(nil)
-  prop :classes, ::Integer, default: T.unsafe(nil)
+  prop :timestamp, ::Integer, default: T.unsafe(nil)
+  prop :version_static, T.nilable(::String), default: T.unsafe(nil)
+  prop :version_runtime, T.nilable(::String), default: T.unsafe(nil)
+  prop :duration, ::Integer, default: T.unsafe(nil)
   prop :commit_sha, T.nilable(::String), default: T.unsafe(nil)
   prop :commit_timestamp, T.nilable(::Integer), default: T.unsafe(nil)
-  prop :duration, ::Integer, default: T.unsafe(nil)
   prop :files, ::Integer, default: T.unsafe(nil)
-  prop :methods_with_sig, ::Integer, default: T.unsafe(nil)
-  prop :methods_without_sig, ::Integer, default: T.unsafe(nil)
-  prop :modules, ::Integer, default: T.unsafe(nil)
   prop :rbi_files, ::Integer, default: T.unsafe(nil)
-  prop :sigils, T::Hash[::String, ::Integer], default: T.unsafe(nil)
+  prop :modules, ::Integer, default: T.unsafe(nil)
+  prop :classes, ::Integer, default: T.unsafe(nil)
   prop :singleton_classes, ::Integer, default: T.unsafe(nil)
-  prop :timestamp, ::Integer, default: T.unsafe(nil)
-  prop :version_runtime, T.nilable(::String), default: T.unsafe(nil)
-  prop :version_static, T.nilable(::String), default: T.unsafe(nil)
+  prop :methods_without_sig, ::Integer, default: T.unsafe(nil)
+  prop :methods_with_sig, ::Integer, default: T.unsafe(nil)
+  prop :calls_untyped, ::Integer, default: T.unsafe(nil)
+  prop :calls_typed, ::Integer, default: T.unsafe(nil)
+  prop :sigils, T::Hash[::String, ::Integer], default: T.unsafe(nil)
 
   # source://spoom//lib/spoom/coverage/snapshot.rb#30
   sig { params(out: T.any(::IO, ::StringIO), colors: T::Boolean, indent_level: ::Integer).void }
@@ -1157,7 +1157,7 @@ class Spoom::Coverage::Snapshot < ::T::Struct
     sig { params(obj: T::Hash[::String, T.untyped]).returns(::Spoom::Coverage::Snapshot) }
     def from_obj(obj); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1184,7 +1184,7 @@ class Spoom::Coverage::SnapshotPrinter < ::Spoom::Printer
   def print_map(hash, total); end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/coverage/report.rb#10
 class Spoom::Coverage::Template
@@ -1214,17 +1214,17 @@ class Spoom::Error < ::StandardError; end
 
 # source://spoom//lib/spoom.rb#14
 class Spoom::ExecResult < ::T::Struct
-  const :err, ::String
-  const :exit_code, ::Integer
   const :out, ::String
+  const :err, ::String
   const :status, T::Boolean
+  const :exit_code, ::Integer
 
   # source://spoom//lib/spoom.rb#23
   sig { returns(::String) }
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1300,9 +1300,9 @@ end
 #
 # source://spoom//lib/spoom/file_tree.rb#92
 class Spoom::FileTree::Node < ::T::Struct
-  const :children, T::Hash[::String, ::Spoom::FileTree::Node], default: T.unsafe(nil)
-  const :name, ::String
   const :parent, T.nilable(::Spoom::FileTree::Node)
+  const :name, ::String
+  const :children, T::Hash[::String, ::Spoom::FileTree::Node], default: T.unsafe(nil)
 
   # Full path to this node from root
   #
@@ -1311,7 +1311,7 @@ class Spoom::FileTree::Node < ::T::Struct
   def path; end
 
   class << self
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1525,10 +1525,10 @@ end
 class Spoom::LSP::Diagnostic < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
-  const :code, ::Integer
-  const :informations, ::Object
-  const :message, ::String
   const :range, ::Spoom::LSP::Range
+  const :code, ::Integer
+  const :message, ::String
+  const :informations, ::Object
 
   # source://spoom//lib/spoom/sorbet/lsp/structures.rb#202
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
@@ -1543,7 +1543,7 @@ class Spoom::LSP::Diagnostic < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Diagnostic) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1552,12 +1552,12 @@ end
 class Spoom::LSP::DocumentSymbol < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
-  const :children, T::Array[::Spoom::LSP::DocumentSymbol]
+  const :name, ::String
   const :detail, T.nilable(::String)
   const :kind, ::Integer
   const :location, T.nilable(::Spoom::LSP::Location)
-  const :name, ::String
   const :range, T.nilable(::Spoom::LSP::Range)
+  const :children, T::Array[::Spoom::LSP::DocumentSymbol]
 
   # source://spoom//lib/spoom/sorbet/lsp/structures.rb#240
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
@@ -1576,7 +1576,7 @@ class Spoom::LSP::DocumentSymbol < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::DocumentSymbol) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1634,7 +1634,7 @@ class Spoom::LSP::Hover < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Hover) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1643,8 +1643,8 @@ end
 class Spoom::LSP::Location < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
-  const :range, ::Spoom::LSP::Range
   const :uri, ::String
+  const :range, ::Spoom::LSP::Range
 
   # source://spoom//lib/spoom/sorbet/lsp/structures.rb#132
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
@@ -1659,7 +1659,7 @@ class Spoom::LSP::Location < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Location) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1710,8 +1710,8 @@ end
 class Spoom::LSP::Position < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
-  const :char, ::Integer
   const :line, ::Integer
+  const :char, ::Integer
 
   # source://spoom//lib/spoom/sorbet/lsp/structures.rb#70
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
@@ -1726,7 +1726,7 @@ class Spoom::LSP::Position < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Position) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1748,8 +1748,8 @@ end
 class Spoom::LSP::Range < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
-  const :end, ::Spoom::LSP::Position
   const :start, ::Spoom::LSP::Position
+  const :end, ::Spoom::LSP::Position
 
   # source://spoom//lib/spoom/sorbet/lsp/structures.rb#100
   sig { override.params(printer: ::Spoom::LSP::SymbolPrinter).void }
@@ -1764,7 +1764,7 @@ class Spoom::LSP::Range < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Range) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1817,8 +1817,8 @@ end
 class Spoom::LSP::SignatureHelp < ::T::Struct
   include ::Spoom::LSP::PrintableSymbol
 
-  const :doc, ::Object
   const :label, T.nilable(::String)
+  const :doc, ::Object
   const :params, T::Array[T.untyped]
 
   # source://spoom//lib/spoom/sorbet/lsp/structures.rb#165
@@ -1834,7 +1834,7 @@ class Spoom::LSP::SignatureHelp < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::SignatureHelp) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10326/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1887,7 +1887,7 @@ class Spoom::LSP::SymbolPrinter < ::Spoom::Printer
   def seen=(_arg0); end
 end
 
-# @abstract It cannont be directly instantiated. Subclasses must implement the `abstract` methods below.
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
 # source://spoom//lib/spoom/printer.rb#7
 class Spoom::Printer

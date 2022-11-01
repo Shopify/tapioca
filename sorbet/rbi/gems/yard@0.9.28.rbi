@@ -7,6 +7,9 @@
 # source://shopify-money/0.16.0/lib/money/deprecations.rb#3
 ::ACTIVE_SUPPORT_DEFINED = T.let(T.unsafe(nil), String)
 
+# source://yard//lib/yard.rb#61
+::RUBY18 = T.let(T.unsafe(nil), FalseClass)
+
 # source://yard//lib/yard.rb#62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
@@ -31,7 +34,7 @@ class Array
   def place(*values); end
 end
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/array/deprecated_conversions.rb#4
+# source://activesupport/7.0.4/lib/active_support/core_ext/array/deprecated_conversions.rb#4
 Array::NOT_SET = T.let(T.unsafe(nil), Object)
 
 # source://yard//lib/yard/core_ext/file.rb#4
@@ -462,18 +465,6 @@ class Insertion
   def insertion(val, rel, recursive = T.unsafe(nil), list = T.unsafe(nil)); end
 end
 
-# == Attribute Accessors per Thread
-#
-# Extends the module object with class/module and instance accessors for
-# class/module attributes, just like the native attr* accessors for instance
-# attributes, but does so on a per-thread basis.
-#
-# So the values are scoped within the Thread.current space under the class name
-# of the module.
-#
-# Note that it can also be scoped per-fiber if +Rails.application.config.active_support.isolation_level+
-# is set to +:fiber+.
-#
 # source://yard//lib/yard/core_ext/module.rb#2
 class Module
   # Returns the class name of a full module namespace path
@@ -486,33 +477,15 @@ class Module
   def class_name; end
 end
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#13
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#13
 Module::DELEGATION_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#14
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#14
 Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#10
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#10
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# --
-# Most objects are cloneable, but not all. For example you can't dup methods:
-#
-#   method(:puts).dup # => TypeError: allocator undefined for Method
-#
-# Classes may signal their instances are not duplicable removing +dup+/+clone+
-# or raising exceptions from them. So, to dup an arbitrary object you normally
-# use an optimistic approach and are ready to catch an exception, say:
-#
-#   arbitrary_object.dup rescue object
-#
-# Rails dups objects in a few critical spots where they are not that arbitrary.
-# That rescue is very expensive (like 40 times slower than a predicate), and it
-# is often triggered.
-#
-# That's why we hardcode the following cases and check duplicable? instead of
-# using that rescue idiom.
-# ++
 class Object < ::BasicObject
   include ::Kernel
 
@@ -525,6 +498,13 @@ class Object < ::BasicObject
   def log; end
 end
 
+# Keep track of Ruby version for compatibility code
+#
+# @deprecated Use {YARD.ruby18?} or {YARD.ruby19?} instead.
+#
+# source://yard//lib/yard.rb#61
+RUBY18 = T.let(T.unsafe(nil), FalseClass)
+
 # source://yard//lib/yard.rb#62
 RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
@@ -532,8 +512,6 @@ RUBY19 = T.let(T.unsafe(nil), TrueClass)
 #
 # source://yard//lib/yard/server/rack_adapter.rb#85
 class Rack::Request
-  # @return [Request] a new instance of Request
-  #
   # source://rack/2.2.4/lib/rack/request.rb#26
   def initialize(env); end
 
@@ -567,15 +545,9 @@ class Rack::Request
   def xhr?; end
 
   class << self
-    # Returns the value of attribute ip_filter.
-    #
     # source://rack/2.2.4/lib/rack/request.rb#16
     def ip_filter; end
 
-    # Sets the attribute ip_filter
-    #
-    # @param value the value to set the attribute ip_filter to.
-    #
     # source://rack/2.2.4/lib/rack/request.rb#16
     def ip_filter=(_arg0); end
   end
@@ -587,10 +559,10 @@ Rack::Request::ALLOWED_SCHEMES = T.let(T.unsafe(nil), Array)
 # source://rack/2.2.4/lib/rack/request.rb#21
 Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
 
-# String inflections define new methods on the String class to transform names for different purposes.
-# For instance, you can figure out the name of a table from the name of a class.
-#
-#   'ScaleScore'.tableize # => "scale_scores"
+# Allows Writing of '100'.to_money for +String+ types
+# Excess characters will be discarded
+#   '100'.to_money => #<Money @cents=10000>
+#   '100.37'.to_money => #<Money @cents=10037>
 #
 # source://yard//lib/yard/core_ext/string.rb#2
 class String
@@ -606,10 +578,10 @@ class String
   def shell_split; end
 end
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/object/blank.rb#104
+# source://activesupport/7.0.4/lib/active_support/core_ext/object/blank.rb#104
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/object/blank.rb#105
+# source://activesupport/7.0.4/lib/active_support/core_ext/object/blank.rb#105
 String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
 
 # A subclass of Hash where all keys are converted into Symbols, and

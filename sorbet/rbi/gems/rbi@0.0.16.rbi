@@ -13,7 +13,7 @@ module RBI; end
 class RBI::ASTVisitor
   abstract!
 
-  # source://sorbet-runtime/0.5.10474/lib/types/private/abstract/declare.rb#37
+  # source://sorbet-runtime/0.5.10526/lib/types/private/abstract/declare.rb#37
   def initialize(*args, **_arg1, &blk); end
 
   # @abstract
@@ -1761,7 +1761,7 @@ class RBI::Rewriters::Merge::Conflict < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.10474/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1978,7 +1978,7 @@ class RBI::Rewriters::RemoveKnownDefinitions::Operation < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.10474/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -2018,7 +2018,7 @@ class RBI::Scope < ::RBI::Tree
 
   abstract!
 
-  # source://sorbet-runtime/0.5.10474/lib/types/private/abstract/declare.rb#37
+  # source://sorbet-runtime/0.5.10526/lib/types/private/abstract/declare.rb#37
   def initialize(*args, **_arg1, &blk); end
 
   # source://rbi//lib/rbi/printer.rb#240
@@ -2992,7 +2992,7 @@ end
 class RBI::Visitor
   abstract!
 
-  # source://sorbet-runtime/0.5.10474/lib/types/private/abstract/declare.rb#37
+  # source://sorbet-runtime/0.5.10526/lib/types/private/abstract/declare.rb#37
   def initialize(*args, **_arg1, &blk); end
 
   # @abstract

@@ -7,6 +7,9 @@
 # source://shopify-money/0.16.0/lib/money/deprecations.rb#3
 ::ACTIVE_SUPPORT_DEFINED = T.let(T.unsafe(nil), String)
 
+# source://yard/0.9.28/lib/yard.rb#61
+::RUBY18 = T.let(T.unsafe(nil), FalseClass)
+
 # source://yard/0.9.28/lib/yard.rb#62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
@@ -1977,13 +1980,13 @@ class Module
   def infect_an_assertion(meth, new_name, dont_flip = T.unsafe(nil)); end
 end
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#13
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#13
 Module::DELEGATION_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#14
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#14
 Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#10
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#10
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://minitest//lib/minitest/spec.rb#341
