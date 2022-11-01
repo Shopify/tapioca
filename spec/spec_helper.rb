@@ -8,6 +8,7 @@ require "minitest/hooks/default"
 require "minitest/reporters"
 require "rails/test_unit/line_filtering"
 require "byebug"
+require "debug"
 
 require "tapioca/helpers/test/content"
 require "tapioca/helpers/test/template"
