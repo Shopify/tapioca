@@ -7,18 +7,18 @@
 # source://rails-html-sanitizer//lib/rails-html-sanitizer.rb#30
 module ActionView
   class << self
-    # source://actionview/7.0.3.1/lib/action_view.rb#90
+    # source://actionview/7.0.4/lib/action_view.rb#90
     def eager_load!; end
 
-    # source://actionview/7.0.3.1/lib/action_view/gem_version.rb#5
+    # source://actionview/7.0.4/lib/action_view/gem_version.rb#5
     def gem_version; end
 
-    # source://actionview/7.0.3.1/lib/action_view/version.rb#7
+    # source://actionview/7.0.4/lib/action_view/version.rb#7
     def version; end
   end
 end
 
-# source://actionview/7.0.3.1/lib/action_view.rb#33
+# source://actionview/7.0.4/lib/action_view.rb#33
 ActionView::ENCODING_FLAG = T.let(T.unsafe(nil), String)
 
 # source://rails-html-sanitizer//lib/rails-html-sanitizer.rb#31
@@ -36,7 +36,7 @@ module ActionView::Helpers
   mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
   class << self
-    # source://actionview/7.0.3.1/lib/action_view/helpers.rb#34
+    # source://actionview/7.0.4/lib/action_view/helpers.rb#34
     def eager_load!; end
   end
 end
@@ -45,40 +45,40 @@ end
 module ActionView::Helpers::SanitizeHelper
   mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#81
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#81
   def sanitize(html, options = T.unsafe(nil)); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#86
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#86
   def sanitize_css(style); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#120
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#120
   def strip_links(html); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#103
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#103
   def strip_tags(html); end
 end
 
 # source://rails-html-sanitizer//lib/rails-html-sanitizer.rb#33
 module ActionView::Helpers::SanitizeHelper::ClassMethods
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#145
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#145
   def full_sanitizer; end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#125
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#125
   def full_sanitizer=(_arg0); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#155
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#155
   def link_sanitizer; end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#125
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#125
   def link_sanitizer=(_arg0); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#165
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#165
   def safe_list_sanitizer; end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#125
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#125
   def safe_list_sanitizer=(_arg0); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#135
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#135
   def sanitized_allowed_attributes; end
 
   # Replaces the allowed HTML attributes for the +sanitize+ helper.
@@ -108,7 +108,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   # source://rails-html-sanitizer//lib/rails-html-sanitizer.rb#64
   def sanitized_allowed_protocols=(_); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#131
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#131
   def sanitized_allowed_tags; end
 
   # Replaces the allowed tags for the +sanitize+ helper.
@@ -144,7 +144,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   # source://rails-html-sanitizer//lib/rails-html-sanitizer.rb#64
   def sanitized_uri_attributes=(_); end
 
-  # source://actionview/7.0.3.1/lib/action_view/helpers/sanitize_helper.rb#127
+  # source://actionview/7.0.4/lib/action_view/helpers/sanitize_helper.rb#127
   def sanitizer_vendor; end
 
   private
@@ -153,73 +153,73 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   def deprecate_option(name); end
 end
 
-# source://actionview/7.0.3.1/lib/action_view/template/error.rb#230
+# source://actionview/7.0.4/lib/action_view/template/error.rb#230
 ActionView::TemplateError = ActionView::Template::Error
 
 # source://rails-html-sanitizer//lib/rails/html/sanitizer/version.rb#1
 module Rails
   class << self
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def app_class; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def app_class=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#39
+    # source://railties/7.0.4/lib/rails.rb#39
     def application; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#37
+    # source://railties/7.0.4/lib/rails.rb#37
     def application=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#116
+    # source://railties/7.0.4/lib/rails.rb#123
     def autoloaders; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#50
+    # source://railties/7.0.4/lib/rails.rb#50
     def backtrace_cleaner; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def cache; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def cache=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#46
+    # source://railties/7.0.4/lib/rails.rb#46
     def configuration; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#72
+    # source://railties/7.0.4/lib/rails.rb#72
     def env; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#79
+    # source://railties/7.0.4/lib/rails.rb#79
     def env=(environment); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#83
+    # source://railties/7.0.4/lib/rails.rb#90
     def error; end
 
-    # source://railties/7.0.3.1/lib/rails/gem_version.rb#5
+    # source://railties/7.0.4/lib/rails/gem_version.rb#5
     def gem_version; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#96
+    # source://railties/7.0.4/lib/rails.rb#103
     def groups(*groups); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#43
+    # source://railties/7.0.4/lib/rails.rb#43
     def initialize!(*_arg0, **_arg1, &_arg2); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#43
+    # source://railties/7.0.4/lib/rails.rb#43
     def initialized?(*_arg0, **_arg1, &_arg2); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def logger; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#38
+    # source://railties/7.0.4/lib/rails.rb#38
     def logger=(_arg0); end
 
-    # source://railties/7.0.3.1/lib/rails.rb#112
+    # source://railties/7.0.4/lib/rails.rb#119
     def public_path; end
 
-    # source://railties/7.0.3.1/lib/rails.rb#63
+    # source://railties/7.0.4/lib/rails.rb#63
     def root; end
 
-    # source://railties/7.0.3.1/lib/rails/version.rb#7
+    # source://railties/7.0.4/lib/rails/version.rb#7
     def version; end
   end
 end

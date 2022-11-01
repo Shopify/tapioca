@@ -127,7 +127,7 @@ module Mail
     # source://mail//lib/mail/mail.rb#151
     def first(*args, &block); end
 
-    # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/from_source.rb#4
+    # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/from_source.rb#4
     def from_source(source); end
 
     # source://mail//lib/mail/mail.rb#233
@@ -279,7 +279,7 @@ class Mail::Address
   # source://mail//lib/mail/elements/address.rb#25
   def initialize(value = T.unsafe(nil)); end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/address_equality.rb#5
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/address_equality.rb#5
   def ==(other_address); end
 
   # Returns the address that is in the address itself.  That is, the
@@ -428,7 +428,7 @@ class Mail::Address
   def strip_domain_comments(value); end
 
   class << self
-    # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/address_wrapping.rb#5
+    # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/address_wrapping.rb#5
     def wrap(address); end
   end
 end
@@ -3368,7 +3368,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#519
   def bcc=(val); end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb#21
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/addresses.rb#21
   def bcc_addresses; end
 
   # Returns an array of addresses (the encoded value) in the Bcc field,
@@ -3477,7 +3477,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#560
   def cc=(val); end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb#17
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/addresses.rb#17
   def cc_addresses; end
 
   # Returns an array of addresses (the encoded value) in the Cc field,
@@ -3799,7 +3799,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#677
   def from=(val); end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb#5
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/addresses.rb#5
   def from_address; end
 
   # Returns an array of addresses (the encoded value) in the From field,
@@ -4202,10 +4202,10 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#758
   def received=(val); end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/recipients.rb#5
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/recipients.rb#5
   def recipients; end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb#9
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/addresses.rb#9
   def recipients_addresses; end
 
   # source://mail//lib/mail/message.rb#762
@@ -4679,7 +4679,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#1200
   def to=(val); end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb#13
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/addresses.rb#13
   def to_addresses; end
 
   # Returns an array of addresses (the encoded value) in the To field,
@@ -4706,7 +4706,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#1837
   def without_attachments!; end
 
-  # source://actionmailbox/7.0.3.1/lib/action_mailbox/mail_ext/addresses.rb#25
+  # source://actionmailbox/7.0.4/lib/action_mailbox/mail_ext/addresses.rb#25
   def x_original_to_addresses; end
 
   private
@@ -9499,6 +9499,9 @@ module Mail::VERSION
   end
 end
 
+# source://mail//lib/mail/version.rb#8
+Mail::VERSION::BUILD = T.let(T.unsafe(nil), T.untyped)
+
 # source://mail//lib/mail/version.rb#5
 Mail::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
@@ -9516,8 +9519,8 @@ class String
   include ::Comparable
 end
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/object/blank.rb#104
+# source://activesupport/7.0.4/lib/active_support/core_ext/object/blank.rb#104
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/object/blank.rb#105
+# source://activesupport/7.0.4/lib/active_support/core_ext/object/blank.rb#105
 String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)

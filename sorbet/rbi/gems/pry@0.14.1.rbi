@@ -7,6 +7,9 @@
 # source://shopify-money/0.16.0/lib/money/deprecations.rb#3
 ::ACTIVE_SUPPORT_DEFINED = T.let(T.unsafe(nil), String)
 
+# source://yard/0.9.28/lib/yard.rb#61
+::RUBY18 = T.let(T.unsafe(nil), FalseClass)
+
 # source://yard/0.9.28/lib/yard.rb#62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
@@ -26,6 +29,25 @@ class BasicObject
   def __binding__; end
 end
 
+# --
+# Most objects are cloneable, but not all. For example you can't dup methods:
+#
+#   method(:puts).dup # => TypeError: allocator undefined for Method
+#
+# Classes may signal their instances are not duplicable removing +dup+/+clone+
+# or raising exceptions from them. So, to dup an arbitrary object you normally
+# use an optimistic approach and are ready to catch an exception, say:
+#
+#   arbitrary_object.dup rescue object
+#
+# Rails dups objects in a few critical spots where they are not that arbitrary.
+# That rescue is very expensive (like 40 times slower than a predicate), and it
+# is often triggered.
+#
+# That's why we hardcode the following cases and check duplicable? instead of
+# using that rescue idiom.
+# ++
+#
 # source://pry//lib/pry/core_extensions.rb#24
 class Object < ::BasicObject
   include ::Kernel
@@ -5488,6 +5510,12 @@ module Pry::FrozenObjectException
   end
 end
 
+# @return [Boolean] true if this Ruby supports safe levels and tainting,
+#   to guard against using deprecated or unsupported features
+#
+# source://pry//lib/pry/pry_class.rb#11
+Pry::HAS_SAFE_LEVEL = T.let(T.unsafe(nil), FalseClass)
+
 # source://pry//lib/pry/helpers/base_helpers.rb#4
 module Pry::Helpers
   class << self
@@ -8498,11 +8526,11 @@ class Pry::REPL
     # @option options
     # @param options [Hash] a customizable set of options
     #
-    # source://pry-byebug/3.10.0/lib/pry-byebug/pry_ext.rb#8
-    def start(_ = T.unsafe(nil)); end
+    # source://pry-byebug/3.10.1/lib/pry-byebug/pry_ext.rb#8
+    def start(options = T.unsafe(nil)); end
 
-    # source://pry-byebug/3.10.0/lib/pry-byebug/pry_ext.rb#8
-    def start_with_pry_byebug(_ = T.unsafe(nil)); end
+    # source://pry-byebug/3.10.1/lib/pry-byebug/pry_ext.rb#8
+    def start_with_pry_byebug(options = T.unsafe(nil)); end
 
     # source://pry//lib/pry/repl.rb#14
     def start_without_pry_byebug(options); end

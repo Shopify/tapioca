@@ -9078,6 +9078,11 @@ Concurrent::RubyThreadPoolExecutor::DEFAULT_MAX_QUEUE_SIZE = T.let(T.unsafe(nil)
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb#18
 Concurrent::RubyThreadPoolExecutor::DEFAULT_MIN_POOL_SIZE = T.let(T.unsafe(nil), Integer)
 
+# Default value of the :synchronous option.
+#
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb#27
+Concurrent::RubyThreadPoolExecutor::DEFAULT_SYNCHRONOUS = T.let(T.unsafe(nil), FalseClass)
+
 # Default maximum number of seconds a thread in the pool may remain idle
 # before being reclaimed.
 #

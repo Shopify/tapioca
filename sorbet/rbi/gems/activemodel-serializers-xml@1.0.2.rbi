@@ -7,13 +7,13 @@
 # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#8
 module ActiveModel
   class << self
-    # source://activemodel/7.0.3.1/lib/active_model.rb#71
+    # source://activemodel/7.0.4/lib/active_model.rb#71
     def eager_load!; end
 
-    # source://activemodel/7.0.3.1/lib/active_model/gem_version.rb#5
+    # source://activemodel/7.0.4/lib/active_model/gem_version.rb#5
     def gem_version; end
 
-    # source://activemodel/7.0.3.1/lib/active_model/version.rb#7
+    # source://activemodel/7.0.4/lib/active_model/version.rb#7
     def version; end
   end
 end

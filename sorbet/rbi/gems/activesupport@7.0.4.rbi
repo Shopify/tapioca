@@ -533,15 +533,6 @@ module ActiveSupport::Cache::Coders::Rails70Coder
   def dump_compressed(entry, threshold); end
 end
 
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#26
-module ActiveSupport::Cache::ConnectionPoolLike
-  # @yield [_self]
-  # @yieldparam _self [ActiveSupport::Cache::ConnectionPoolLike] the object that the method was called on
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#27
-  def with; end
-end
-
 # source://activesupport//lib/active_support/cache.rb#27
 ActiveSupport::Cache::DEFAULT_COMPRESS_LIMIT = T.let(T.unsafe(nil), Integer)
 
@@ -943,274 +934,6 @@ end
 #
 # source://activesupport//lib/active_support/cache.rb#30
 ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
-
-# Redis cache store.
-#
-# Deployment note: Take care to use a *dedicated Redis cache* rather
-# than pointing this at your existing Redis server. It won't cope well
-# with mixed usage patterns and it won't expire cache entries by default.
-#
-# Redis cache server setup guide: https://redis.io/topics/lru-cache
-#
-# * Supports vanilla Redis, hiredis, and Redis::Distributed.
-# * Supports Memcached-like sharding across Redises with Redis::Distributed.
-# * Fault tolerant. If the Redis server is unavailable, no exceptions are
-#   raised. Cache fetches are all misses and writes are dropped.
-# * Local cache. Hot in-memory primary cache within block/middleware scope.
-# * +read_multi+ and +write_multi+ support for Redis mget/mset. Use Redis::Distributed
-#   4.0.1+ for distributed mget support.
-# * +delete_matched+ support for Redis KEYS globs.
-#
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#52
-class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
-  include ::ActiveSupport::Cache::Strategy::LocalCache
-
-  # Creates a new Redis cache store.
-  #
-  # Handles four options: :redis block, :redis instance, single :url
-  # string, and multiple :url strings.
-  #
-  #   Option  Class       Result
-  #   :redis  Proc    ->  options[:redis].call
-  #   :redis  Object  ->  options[:redis]
-  #   :url    String  ->  Redis.new(url: …)
-  #   :url    Array   ->  Redis::Distributed.new([{ url: … }, { url: … }, …])
-  #
-  # No namespace is set by default. Provide one if the Redis cache
-  # server is shared with other apps: <tt>namespace: 'myapp-cache'</tt>.
-  #
-  # Compression is enabled by default with a 1kB threshold, so cached
-  # values larger than 1kB are automatically compressed. Disable by
-  # passing <tt>compress: false</tt> or change the threshold by passing
-  # <tt>compress_threshold: 4.kilobytes</tt>.
-  #
-  # No expiry is set on cache entries by default. Redis is expected to
-  # be configured with an eviction policy that automatically deletes
-  # least-recently or -frequently used keys when it reaches max memory.
-  # See https://redis.io/topics/lru-cache for cache server setup.
-  #
-  # Race condition TTL is not set by default. This can be used to avoid
-  # "thundering herd" cache writes when hot cache entries are expired.
-  # See ActiveSupport::Cache::Store#fetch for more.
-  #
-  # @return [RedisCacheStore] a new instance of RedisCacheStore
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#149
-  def initialize(namespace: T.unsafe(nil), compress: T.unsafe(nil), compress_threshold: T.unsafe(nil), coder: T.unsafe(nil), expires_in: T.unsafe(nil), race_condition_ttl: T.unsafe(nil), error_handler: T.unsafe(nil), **redis_options); end
-
-  # Cache Store API implementation.
-  #
-  # Removes expired entries. Handled natively by Redis least-recently-/
-  # least-frequently-used expiry, so manual cleanup is not supported.
-  #
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#81
-  def cleanup(**options); end
-
-  # Clear the entire cache on all Redis servers. Safe to use on
-  # shared servers if the cache is namespaced.
-  #
-  # Failsafe: Raises errors.
-  #
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#75
-  def clear(**options); end
-
-  # Cache Store API implementation.
-  #
-  # Decrement a cached value. This method uses the Redis decr atomic
-  # operator and can only be used on values written with the +:raw+ option.
-  # Calling it on a value not stored with +:raw+ will initialize that value
-  # to zero.
-  #
-  # Failsafe: Raises errors.
-  #
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#100
-  def decrement(name, amount = T.unsafe(nil), **options); end
-
-  # Cache Store API implementation.
-  #
-  # Supports Redis KEYS glob patterns:
-  #
-  #   h?llo matches hello, hallo and hxllo
-  #   h*llo matches hllo and heeeello
-  #   h[ae]llo matches hello and hallo, but not hillo
-  #   h[^e]llo matches hallo, hbllo, ... but not hello
-  #   h[a-b]llo matches hallo and hbllo
-  #
-  # Use \ to escape special characters if you want to match them verbatim.
-  #
-  # See https://redis.io/commands/KEYS for more.
-  #
-  # Failsafe: Raises errors.
-  #
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#87
-  def delete_matched(matcher, options = T.unsafe(nil)); end
-
-  # Cache Store API implementation.
-  #
-  # Increment a cached value. This method uses the Redis incr atomic
-  # operator and can only be used on values written with the +:raw+ option.
-  # Calling it on a value not stored with +:raw+ will initialize that value
-  # to zero.
-  #
-  # Failsafe: Raises errors.
-  #
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#93
-  def increment(name, amount = T.unsafe(nil), **options); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#174
-  def inspect; end
-
-  # Returns the value of attribute max_key_bytesize.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#120
-  def max_key_bytesize; end
-
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#304
-  def mget_capable?; end
-
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#309
-  def mset_capable?; end
-
-  # Cache Store API implementation.
-  #
-  # Read multiple values at once. Returns a hash of requested keys ->
-  # fetched values.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#183
-  def read_multi(*names); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#161
-  def redis; end
-
-  # Returns the value of attribute redis_options.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#119
-  def redis_options; end
-
-  # Get info from redis servers.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#300
-  def stats; end
-
-  private
-
-  # Delete an entry from the cache.
-  #
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#147
-  def delete_entry(key, **_arg1); end
-
-  # Deletes multiple entries in the cache. Returns the number of entries deleted.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#408
-  def delete_multi_entries(entries, **_options); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#443
-  def deserialize_entry(payload, raw: T.unsafe(nil), **_arg2); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#465
-  def failsafe(method, returning: T.unsafe(nil)); end
-
-  # Truncate keys that exceed 1kB.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#429
-  def normalize_key(key, options); end
-
-  # Store provider interface:
-  # Read an entry from the cache.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#328
-  def read_entry(key, **options); end
-
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#122
-  def read_multi_entries(keys, **options); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#346
-  def read_multi_mget(*names); end
-
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#108
-  def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#459
-  def serialize_entries(entries, **options); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#451
-  def serialize_entry(entry, raw: T.unsafe(nil), **options); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#315
-  def set_redis_capabilities; end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#433
-  def truncate_key(key); end
-
-  # Write an entry to the cache.
-  #
-  # Requires Redis 2.6.12+ for extended SET options.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#371
-  def write_entry(key, entry, raw: T.unsafe(nil), **options); end
-
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#394
-  def write_key_expiry(client, key, options); end
-
-  # Nonstandard store provider API to write multiple values at once.
-  #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#413
-  def write_multi_entries(entries, expires_in: T.unsafe(nil), **options); end
-
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#138
-  def write_serialized_entry(key, payload, **_arg2); end
-
-  class << self
-    # Factory method to create a new Redis instance.
-    #
-    # Handles four options: :redis block, :redis instance, single :url
-    # string, and multiple :url strings.
-    #
-    #   Option  Class       Result
-    #   :redis  Proc    ->  options[:redis].call
-    #   :redis  Object  ->  options[:redis]
-    #   :url    String  ->  Redis.new(url: …)
-    #   :url    Array   ->  Redis::Distributed.new([{ url: … }, { url: … }, …])
-    #
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#91
-    def build_redis(redis: T.unsafe(nil), url: T.unsafe(nil), **redis_options); end
-
-    # Advertise cache versioning support.
-    #
-    # @return [Boolean]
-    #
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#73
-    def supports_cache_versioning?; end
-
-    private
-
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#114
-    def build_redis_client(**redis_options); end
-
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#108
-    def build_redis_distributed_client(urls:, **redis_options); end
-  end
-end
-
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#62
-ActiveSupport::Cache::RedisCacheStore::DEFAULT_ERROR_HANDLER = T.let(T.unsafe(nil), Proc)
-
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#55
-ActiveSupport::Cache::RedisCacheStore::DEFAULT_REDIS_OPTIONS = T.let(T.unsafe(nil), Hash)
-
-# Keys are truncated with the ActiveSupport digest if they exceed 1kB
-#
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#53
-ActiveSupport::Cache::RedisCacheStore::MAX_KEY_BYTESIZE = T.let(T.unsafe(nil), Integer)
-
-# The maximum number of entries to receive per SCAN call.
-#
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#69
-ActiveSupport::Cache::RedisCacheStore::SCAN_BATCH_SIZE = T.let(T.unsafe(nil), Integer)
 
 # An abstract cache store class. There are multiple cache store
 # implementations, each having its own additional features. See the classes
@@ -15226,6 +14949,41 @@ class FalseClass
   def to_param; end
 end
 
+# source://activesupport//lib/active_support/core_ext/file/atomic.rb#5
+class File < ::IO
+  class << self
+    # Write to a file atomically. Useful for situations where you don't
+    # want other processes or threads to see half-written files.
+    #
+    #   File.atomic_write('important.file') do |file|
+    #     file.write('hello')
+    #   end
+    #
+    # This method needs to create a temporary file. By default it will create it
+    # in the same directory as the destination file. If you don't like this
+    # behavior you can provide a different directory but it must be on the
+    # same physical filesystem as the file you're trying to write.
+    #
+    #   File.atomic_write('/data/something.important', '/data/tmp') do |file|
+    #     file.write('hello')
+    #   end
+    #
+    # source://activesupport//lib/active_support/core_ext/file/atomic.rb#21
+    def atomic_write(file_name, temp_dir = T.unsafe(nil)); end
+
+    # Private utility method.
+    #
+    # source://activesupport//lib/active_support/core_ext/file/atomic.rb#56
+    def probe_stat_in(dir); end
+  end
+end
+
+# source://yard/0.9.28/lib/yard/core_ext/file.rb#5
+File::RELATIVE_PARENTDIR = T.let(T.unsafe(nil), String)
+
+# source://yard/0.9.28/lib/yard/core_ext/file.rb#6
+File::RELATIVE_SAMEDIR = T.let(T.unsafe(nil), String)
+
 # source://activesupport//lib/active_support/core_ext/object/json.rb#110
 class Float < ::Numeric
   include ::ActiveSupport::NumericWithFormat
@@ -17797,30 +17555,6 @@ class Range
   def to_s(format = T.unsafe(nil)); end
 end
 
-class Redis
-  include ::Redis::Commands::Bitmaps
-  include ::Redis::Commands::Cluster
-  include ::Redis::Commands::Connection
-  include ::Redis::Commands::Geo
-  include ::Redis::Commands::Hashes
-  include ::Redis::Commands::HyperLogLog
-  include ::Redis::Commands::Keys
-  include ::Redis::Commands::Lists
-  include ::Redis::Commands::Pubsub
-  include ::Redis::Commands::Scripting
-  include ::Redis::Commands::Server
-  include ::Redis::Commands::Sets
-  include ::Redis::Commands::SortedSets
-  include ::Redis::Commands::Streams
-  include ::Redis::Commands::Strings
-  include ::Redis::Commands::Transactions
-  include ::ActiveSupport::Cache::ConnectionPoolLike
-end
-
-class Redis::Distributed
-  include ::ActiveSupport::Cache::ConnectionPoolLike
-end
-
 # source://activesupport//lib/active_support/core_ext/object/json.rb#133
 class Regexp
   # source://activesupport//lib/active_support/core_ext/object/json.rb#134
@@ -17840,7 +17574,7 @@ class Regexp
   def multiline?; end
 end
 
-# source://regexp_parser/2.5.0/lib/regexp_parser/token.rb#2
+# source://regexp_parser/2.6.0/lib/regexp_parser/token.rb#2
 Regexp::TOKEN_KEYS = T.let(T.unsafe(nil), Array)
 
 # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#53
@@ -18576,7 +18310,7 @@ end
 
 Struct::Group = Etc::Group
 
-# source://nokogiri/1.13.8/lib/nokogiri/html4/element_description_defaults.rb#11
+# source://nokogiri/1.13.9/lib/nokogiri/html4/element_description_defaults.rb#11
 Struct::HTMLElementDescription = Struct
 
 Struct::Passwd = Etc::Passwd

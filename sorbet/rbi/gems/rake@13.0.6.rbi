@@ -111,13 +111,13 @@ class Module
   def rake_extension(method); end
 end
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#13
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#13
 Module::DELEGATION_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#14
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#14
 Module::DELEGATION_RESERVED_METHOD_NAMES = T.let(T.unsafe(nil), Set)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/module/delegation.rb#10
+# source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#10
 Module::RUBY_RESERVED_KEYWORDS = T.let(T.unsafe(nil), Array)
 
 # source://rake//lib/rake.rb#24
@@ -3087,8 +3087,8 @@ class String
   def pathmap_replace(patterns, &block); end
 end
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/object/blank.rb#104
+# source://activesupport/7.0.4/lib/active_support/core_ext/object/blank.rb#104
 String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://activesupport/7.0.3.1/lib/active_support/core_ext/object/blank.rb#105
+# source://activesupport/7.0.4/lib/active_support/core_ext/object/blank.rb#105
 String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
