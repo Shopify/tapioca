@@ -21,7 +21,6 @@ PATH
       bundler (>= 1.17.3)
       netrc (>= 0.11.0)
       parallel (>= 1.21.0)
-      pry (>= 0.12.2)
       rbi (~> 0.0.0, >= 0.0.16)
       sorbet-static-and-runtime (>= 0.5.9204)
       spoom (~> 1.1.0, >= 1.1.11)
@@ -380,6 +379,7 @@ DEPENDENCIES
   minitest-reporters
   net-smtp (= 0.3.3)
   nokogiri
+  pry
   pry-byebug
   rails
   rake
