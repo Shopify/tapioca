@@ -43,7 +43,7 @@ module Tapioca
       #     sig { returns(Class) }
       #     def entryable_class; end
       #
-      #     sig { returns(String) }
+      #     sig { returns(ActiveSupport::StringInquirer) }
       #     def entryable_name; end
       #
       #     sig { returns(T::Boolean) }
@@ -107,7 +107,7 @@ module Tapioca
           mod.create_method(
             "#{role}_name",
             parameters: [],
-            return_type: "String",
+            return_type: "ActiveSupport::StringInquirer",
           )
 
           mod.create_method(

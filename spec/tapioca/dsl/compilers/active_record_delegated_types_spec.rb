@@ -127,7 +127,7 @@ module Tapioca
                         sig { returns(Class) }
                         def entryable_class; end
 
-                        sig { returns(String) }
+                        sig { returns(ActiveSupport::StringInquirer) }
                         def entryable_name; end
 
                         sig { returns(T.nilable(Message)) }
@@ -195,7 +195,7 @@ module Tapioca
                         sig { returns(Class) }
                         def entryable_class; end
 
-                        sig { returns(String) }
+                        sig { returns(ActiveSupport::StringInquirer) }
                         def entryable_name; end
 
                         sig { returns(T.nilable(Message)) }

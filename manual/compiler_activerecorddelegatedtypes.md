@@ -30,7 +30,7 @@ class Entry
     sig { returns(Class) }
     def entryable_class; end
 
-    sig { returns(String) }
+    sig { returns(ActiveSupport::StringInquirer) }
     def entryable_name; end
 
     sig { returns(T::Boolean) }
