@@ -183,6 +183,61 @@ module Tapioca
 
         T.cast(result, Module)
       end
+
+      sig { params(constant: Module).returns(T::Set[String]) }
+      def file_candidates_for(constant)
+        relevant_methods_for(constant).filter_map do |method|
+          method.source_location&.first
+        end.to_set
+      end
+
+      private
+
+      sig { params(constant: Module).returns(T::Array[UnboundMethod]) }
+      def relevant_methods_for(constant)
+        methods = methods_for(constant).select(&:source_location)
+          .reject { |x| method_defined_by_forwardable_module?(x) }
+
+        return methods unless methods.empty?
+
+        constants_of(constant).flat_map do |const_name|
+          if (mod = child_module_for_parent_with_name(constant, const_name.to_s))
+            relevant_methods_for(mod)
+          else
+            []
+          end
+        end
+      end
+
+      sig { params(constant: Module).returns(T::Array[UnboundMethod]) }
+      def methods_for(constant)
+        modules = [constant, singleton_class_of(constant)]
+        method_list_methods = [
+          PUBLIC_INSTANCE_METHODS_METHOD,
+          PROTECTED_INSTANCE_METHODS_METHOD,
+          PRIVATE_INSTANCE_METHODS_METHOD,
+        ]
+
+        modules.product(method_list_methods).flat_map do |mod, method_list_method|
+          method_list_method.bind_call(mod, false).map { |name| mod.instance_method(name) }
+        end
+      end
+
+      sig { params(parent: Module, name: String).returns(T.nilable(Module)) }
+      def child_module_for_parent_with_name(parent, name)
+        return if parent.autoload?(name)
+
+        child = constantize(name, inherit: true, namespace: parent)
+        return unless Module === child
+        return unless name_of(child) == "#{name_of(parent)}::#{name}"
+
+        child
+      end
+
+      sig { params(method: UnboundMethod).returns(T::Boolean) }
+      def method_defined_by_forwardable_module?(method)
+        method.source_location&.first == Object.const_source_location(:Forwardable)&.first
+      end
     end
   end
 end
