@@ -212,7 +212,6 @@ module Tapioca
 
                   assert_equal(expected, rbi_for(:Entry))
                 end
-
               end
             end
           end
