@@ -241,6 +241,7 @@ module Tapioca
 
           klass.create_method(
             association_name.to_s,
+            comments: association_comments(reflection),
             return_type: relation_class,
           )
           klass.create_method(
@@ -317,6 +318,40 @@ module Tapioca
             through_name = delegate_reflection.options[:through]
 
             "#{declaration}, through: :#{through_name}"
+          end
+        end
+
+        sig { params(reflection: ReflectionType).returns(T::Array[RBI::Comment]) }
+        def association_comments(reflection)
+          anchor_name = case reflection
+          when ActiveRecord::Reflection::HasOneReflection
+            "the-has-one-association"
+          when ActiveRecord::Reflection::HasManyReflection
+            "the-has-many-association"
+          when ActiveRecord::Reflection::HasAndBelongsToManyReflection
+            "the-has-and-belongs-to-many-association"
+          when ActiveRecord::Reflection::BelongsToReflection
+            "the-belongs-to-association"
+          when ActiveRecord::Reflection::ThroughReflection
+            delegate_reflection = reflection.send(:delegate_reflection)
+            declaration = declaration(delegate_reflection)
+            if T.must(declaration).match?("has_one")
+              "the-has-one-through-association"
+            else
+              "the-has-many-through-association"
+            end
+          end
+
+          if anchor_name
+            url = "https://guides.rubyonrails.org/association_basics.html##{anchor_name}"
+            association_name = anchor_name.sub(/^the-(.*)-association$/, '\1')
+            comment = <<~MSG
+              This method is created by ActiveRecord on the `#{reflection.active_record.name}` class because it declared `#{declaration(reflection)}`.
+              🔗 [Rails guide for `#{association_name.gsub("-", "_")}` association](#{url})
+            MSG
+            [RBI::Comment.new(comment)]
+          else
+            []
           end
         end
 

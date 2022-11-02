@@ -83,13 +83,16 @@ module RBI
         return_type: String,
         class_method: T::Boolean,
         visibility: RBI::Visibility,
+        comments: T::Array[RBI::Comment],
       ).void
     end
-    def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new)
+    def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new,
+      comments: [])
       return unless Tapioca::RBIHelper.valid_method_name?(name)
 
       sig = RBI::Sig.new(return_type: return_type)
-      method = RBI::Method.new(name, sigs: [sig], is_singleton: class_method, visibility: visibility)
+      method = RBI::Method.new(name, sigs: [sig], is_singleton: class_method, visibility: visibility,
+        comments: comments)
       parameters.each do |param|
         method << param.param
         sig << RBI::SigParam.new(param.param.name, param.type)
