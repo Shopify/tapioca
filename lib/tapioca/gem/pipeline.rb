@@ -342,7 +342,7 @@ module Tapioca
 
       sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
       def defined_in_gem?(constant, strict: true)
-        files = Set.new(get_file_candidates(constant))
+        files = get_file_candidates(constant)
           .merge(Runtime::Trackers::ConstantDefinition.files_for(constant))
 
         return !strict if files.empty?
@@ -352,13 +352,11 @@ module Tapioca
         end
       end
 
-      sig { params(constant: Module).returns(T::Array[String]) }
+      sig { params(constant: Module).returns(T::Set[String]) }
       def get_file_candidates(constant)
-        wrapped_module = Pry::WrappedModule.new(constant)
-
-        wrapped_module.send(:method_candidates).flatten.filter_map(&:source_file).uniq
+        file_candidates_for(constant)
       rescue ArgumentError, NameError
-        []
+        Set.new
       end
 
       sig { params(name: String).void }
