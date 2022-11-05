@@ -20,7 +20,6 @@ module Tapioca
     SORBET_PAYLOAD_URL = "https://github.com/sorbet/sorbet/tree/master/rbi"
 
     FEATURE_REQUIREMENTS = T.let({
-      type_variable_block_syntax: ::Gem::Requirement.new(">= 0.5.9892"), # https://github.com/sorbet/sorbet/pull/5639
     }.freeze, T::Hash[Symbol, ::Gem::Requirement])
 
     sig { params(sorbet_args: String).returns(Spoom::ExecResult) }
