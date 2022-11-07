@@ -669,35 +669,6 @@ module Tapioca
         end
       end
 
-      describe "when Sorbet version is too old" do
-        before(:all) do
-          @project = mock_project(sorbet_dependency: false)
-          @project.require_real_gem("sorbet-static-and-runtime", "=0.5.9760")
-          @project.bundle_install
-        end
-
-        it "does not check shims against payload for older Sorbet versions" do
-          @project.write("sorbet/rbi/shims/core/string.rbi", <<~RBI)
-            class String
-              sig { returns(String) }
-              def capitalize(); end
-
-              def some_method_that_is_not_defined_in_the_payload; end
-            end
-          RBI
-
-          result = @project.tapioca("check-shims")
-
-          assert_equal(<<~ERR, result.err)
-            The version of Sorbet used in your Gemfile.lock does not support `--print=payload-sources`
-            Current: v0.5.9760
-            Required: >= 0.5.9818
-          ERR
-
-          refute_success_status(result)
-        end
-      end
-
       sig { params(string: String).returns(String) }
       def strip_timer(string)
         string.gsub(/ \(\d+\.\d+s\)/, "")

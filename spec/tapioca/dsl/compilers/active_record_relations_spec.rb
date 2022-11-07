@@ -46,13 +46,11 @@ module Tapioca
                   extend CommonRelationMethods
                   extend GeneratedRelationMethods
 
-                <% if sorbet_supports?(:to_ary_nil_support) %>
                   private
 
                   sig { returns(NilClass) }
                   def to_ary; end
 
-                <% end %>
                   module CommonRelationMethods
                     sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
                     def any?(&block); end

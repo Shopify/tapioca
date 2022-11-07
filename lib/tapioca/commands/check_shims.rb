@@ -51,26 +51,18 @@ module Tapioca
         payload_path = T.let(nil, T.nilable(String))
 
         if @payload
-          if sorbet_supports?(:print_payload_sources)
-            Dir.mktmpdir do |dir|
-              payload_path = dir
-              result = sorbet("--no-config --print=payload-sources:#{payload_path}")
+          Dir.mktmpdir do |dir|
+            payload_path = dir
+            result = sorbet("--no-config --print=payload-sources:#{payload_path}")
 
-              unless result.status
-                raise Thor::Error, <<~ERROR
-                  "Sorbet failed to dump payload"
-                  #{result.err}
-                ERROR
-              end
-
-              index_rbis(index, "payload", payload_path, number_of_workers: @number_of_workers)
+            unless result.status
+              raise Thor::Error, <<~ERROR
+                "Sorbet failed to dump payload"
+                #{result.err}
+              ERROR
             end
-          else
-            raise Thor::Error, <<~ERROR
-              The version of Sorbet used in your Gemfile.lock does not support `--print=payload-sources`
-              Current: v#{SORBET_GEM_SPEC.version}
-              Required: #{FEATURE_REQUIREMENTS[:print_payload_sources]}
-            ERROR
+
+            index_rbis(index, "payload", payload_path, number_of_workers: @number_of_workers)
           end
         end
 
