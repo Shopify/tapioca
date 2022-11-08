@@ -143,3 +143,16 @@ class Post
   end
 end
 ~~~
+
+**A note about migrating from `sorbet-rails`**: there is no direct analogue to `Post::RelationType` in Tapioca.  
+
+`sorbet-rails` actually [changes the way a Rails application loads](https://github.com/chanzuckerberg/sorbet-rails/blob/447ecbe4a2586ce8aa9055290d571fe34a55e27f/lib/sorbet-rails/railtie.rb#L26-L50) in order to make `RelationType` work at runtime.  One strategy to add types for relations is to use `WithoutRuntime`.  For example:
+
+~~~rbi
+T::Sig::WithoutRuntime.sig { returns(Post::PrivateRelation) }
+def posts
+  Post.where(id: 123)
+end
+~~~
+
+As the name suggests, this will give you type checking during development but disable it at runtime.
