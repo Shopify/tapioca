@@ -193,6 +193,14 @@ module ActiveRecord::TypedStore::Behavior
 
   # source://activerecord-typedstore//lib/active_record/typed_store/behavior.rb#49
   def read_attribute(attr_name); end
+
+  private
+
+  # source://activerecord-typedstore//lib/active_record/typed_store/behavior.rb#77
+  def attribute_names_for_partial_inserts; end
+
+  # source://activerecord-typedstore//lib/active_record/typed_store/behavior.rb#84
+  def attribute_names_for_partial_updates; end
 end
 
 # source://activerecord-typedstore//lib/active_record/typed_store/behavior.rb#7
