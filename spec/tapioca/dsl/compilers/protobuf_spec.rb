@@ -193,11 +193,11 @@ module Tapioca
                     sig { params(symbol: Symbol).returns(T.nilable(Integer)) }
                     def resolve(symbol); end
                   end
-
-                  FIXED_AMOUNT = 1
-                  NULL = 0
-                  PERCENTAGE = 2
                 end
+
+                Cart::VALUE_TYPE::FIXED_AMOUNT = 1
+                Cart::VALUE_TYPE::NULL = 0
+                Cart::VALUE_TYPE::PERCENTAGE = 2
               RBI
 
               assert_equal(expected_enum_rbi, rbi_for("Cart::VALUE_TYPE"))
