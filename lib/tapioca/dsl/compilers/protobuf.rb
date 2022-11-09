@@ -95,7 +95,18 @@ module Tapioca
               case descriptor
               when Google::Protobuf::EnumDescriptor
                 descriptor.to_h.each do |sym, val|
-                  klass.create_constant(sym.to_s, value: val.to_s)
+                  # For each enum value, create a namespaced constant on the root rather than an un-namespaced
+                  # constant within the class. This is because un-namespaced constants might conflict with reserved
+                  # Ruby words, such as "BEGIN." By namespacing them, we avoid this problem.
+                  #
+                  # Invalid syntax:
+                  # class Foo
+                  #   BEGIN = 3
+                  # end
+                  #
+                  # Valid syntax:
+                  # Foo::BEGIN = 3
+                  root.create_constant("#{constant}::#{sym}", value: val.to_s)
                 end
 
                 klass.create_method(
