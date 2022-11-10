@@ -41,6 +41,13 @@ module Tapioca
           symbols_from_paths(gem.files)
         end
 
+        sig { params(gem: Gemfile::GemSpec).returns(T::Hash[Pathname, T::Set[String]]) }
+        def gem_symbols_with_paths(gem)
+          gem.files.to_h do |path|
+            [path, symbols_from_paths([path])]
+          end
+        end
+
         private
 
         sig { returns(T::Array[T.class_of(Rails::Engine)]) }
