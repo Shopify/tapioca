@@ -87,34 +87,37 @@ module Tapioca
 end
 
 class Module
-  prepend(Module.new do
-    def prepend_features(constant)
-      Tapioca::Runtime::Trackers::Mixin.register(
-        constant,
-        self,
-        Tapioca::Runtime::Trackers::Mixin::Type::Prepend,
-      )
+  alias_method :prepend_features_without_tapioca, :prepend_features
+  alias_method :append_features_without_tapioca, :append_features
+  alias_method :extend_object_without_tapioca, :extend_object
 
-      super
-    end
+  def prepend_features(constant)
+    Tapioca::Runtime::Trackers::Mixin.register(
+      constant,
+      self,
+      Tapioca::Runtime::Trackers::Mixin::Type::Prepend,
+    )
 
-    def append_features(constant)
-      Tapioca::Runtime::Trackers::Mixin.register(
-        constant,
-        self,
-        Tapioca::Runtime::Trackers::Mixin::Type::Include,
-      )
+    prepend_features_without_tapioca(constant)
+  end
 
-      super
-    end
+  def append_features(constant)
+    Tapioca::Runtime::Trackers::Mixin.register(
+      constant,
+      self,
+      Tapioca::Runtime::Trackers::Mixin::Type::Include,
+    )
 
-    def extend_object(obj)
-      Tapioca::Runtime::Trackers::Mixin.register(
-        obj,
-        self,
-        Tapioca::Runtime::Trackers::Mixin::Type::Extend,
-      ) if Module === obj
-      super
-    end
-  end)
+    append_features_without_tapioca(constant)
+  end
+
+  def extend_object(obj)
+    Tapioca::Runtime::Trackers::Mixin.register(
+      obj,
+      self,
+      Tapioca::Runtime::Trackers::Mixin::Type::Extend,
+    ) if Module === obj
+
+    extend_object_without_tapioca(obj)
+  end
 end
