@@ -78,20 +78,22 @@ module T
   end
 
   module Utils
-    module CoercePatch
-      def coerce(val)
-        if val.is_a?(Tapioca::TypeVariableModule)
-          val.coerce_to_type_variable
-        elsif val.respond_to?(:__tapioca_override_type)
-          val.__tapioca_override_type
-        else
-          super
+    module Private
+      module CoercePatch
+        def coerce_and_check_module_types(val, check_val, check_module_type)
+          if val.is_a?(Tapioca::TypeVariableModule)
+            val.coerce_to_type_variable
+          elsif val.respond_to?(:__tapioca_override_type)
+            val.__tapioca_override_type
+          else
+            super
+          end
         end
       end
-    end
 
-    class << self
-      prepend(CoercePatch)
+      class << self
+        prepend(CoercePatch)
+      end
     end
   end
 end
