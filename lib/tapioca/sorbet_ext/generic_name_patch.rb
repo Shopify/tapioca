@@ -78,9 +78,29 @@ module T
   end
 
   module Utils
-    module Private
+    # This duplication is required to preserve backwards compatibility with sorbet-runtime versions prior to the
+    # introduction of the `Private` module in https://github.com/sorbet/sorbet/pull/6559.
+    if defined?(T::Utils::Private)
+      module Private
+        module PrivateCoercePatch
+          def coerce_and_check_module_types(val, check_val, check_module_type)
+            if val.is_a?(Tapioca::TypeVariableModule)
+              val.coerce_to_type_variable
+            elsif val.respond_to?(:__tapioca_override_type)
+              val.__tapioca_override_type
+            else
+              super
+            end
+          end
+        end
+
+        class << self
+          prepend(PrivateCoercePatch)
+        end
+      end
+    else
       module CoercePatch
-        def coerce_and_check_module_types(val, check_val, check_module_type)
+        def coerce(val)
           if val.is_a?(Tapioca::TypeVariableModule)
             val.coerce_to_type_variable
           elsif val.respond_to?(:__tapioca_override_type)
