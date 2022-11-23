@@ -160,13 +160,7 @@ module Tapioca
                   def helpers; end
 
                   module HelperMethods
-                    include ::ActionController::Base::HelperMethods
-
-                    sig { returns(T.untyped) }
-                    def current_user_name; end
-
-                    sig { params(user_id: ::Integer).void }
-                    def notify_user(user_id); end
+                    include ::BaseController::HelperMethods
                   end
 
                   class HelperProxy < ::ActionView::Base
