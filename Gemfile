@@ -40,7 +40,7 @@ group(:development, :test) do
   gem("shopify-money", require: false)
   gem("sidekiq", require: false)
   gem("nokogiri", require: false)
-  gem("config", github: "rubyconfig/config", branch: "master", require: false)
+  gem("config", require: false)
   gem("aasm", require: false)
   gem("bcrypt", require: false)
   gem("xpath", require: false)
