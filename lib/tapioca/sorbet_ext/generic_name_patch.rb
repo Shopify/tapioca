@@ -62,8 +62,8 @@ module T
         # we've created a clone of that type with the `name` method returning the
         # appropriate name for that specific concrete type.
         def name
-          if T::Generic === @raw_type || Tapioca::TypeVariableModule === @raw_type
-            # for types that are generic or are type variables, use the name
+          if T::Generic === @raw_type
+            # for types that are generic, use the name
             # returned by the "name" method of this instance
             @name ||= T.unsafe(@raw_type).name.freeze
           else
