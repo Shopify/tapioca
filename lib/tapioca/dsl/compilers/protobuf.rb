@@ -284,6 +284,11 @@ module Tapioca
             return_type: "void",
           )
 
+          klass.create_method(
+            "clear_#{field.name}",
+            return_type: "void",
+          )
+
           field
         end
 
