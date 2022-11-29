@@ -25,7 +25,7 @@ class Spoom::Cli::Bump < ::Thor
   sig { params(directory: ::String).void }
   def bump(directory = T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/cli/bump.rb#159
+  # source://spoom//lib/spoom/cli/bump.rb#160
   def config_files(path: T.unsafe(nil)); end
 
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
@@ -33,7 +33,7 @@ class Spoom::Cli::Bump < ::Thor
   # source://spoom//lib/spoom/cli/bump.rb#134
   def print_changes(files, command:, from: T.unsafe(nil), to: T.unsafe(nil), dry: T.unsafe(nil), path: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/cli/bump.rb#155
+  # source://spoom//lib/spoom/cli/bump.rb#156
   def undo_changes(files, from_strictness); end
 end
 
@@ -53,21 +53,21 @@ class Spoom::Cli::Coverage < ::Thor
   include ::Spoom::Colorize
   include ::Spoom::Cli::Helper
 
-  # source://spoom//lib/spoom/cli/coverage.rb#187
+  # source://spoom//lib/spoom/cli/coverage.rb#186
   def bundle_install(path, sha); end
 
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/cli/coverage.rb#199
+  # source://spoom//lib/spoom/cli/coverage.rb#198
   def message_no_data(file); end
 
-  # source://spoom//lib/spoom/cli/coverage.rb#162
+  # source://spoom//lib/spoom/cli/coverage.rb#161
   def open(file = T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/cli/coverage.rb#178
+  # source://spoom//lib/spoom/cli/coverage.rb#177
   def parse_time(string, option); end
 
-  # source://spoom//lib/spoom/cli/coverage.rb#131
+  # source://spoom//lib/spoom/cli/coverage.rb#130
   def report; end
 
   # source://spoom//lib/spoom/cli/coverage.rb#20
@@ -521,7 +521,7 @@ end
 # source://spoom//lib/spoom/coverage/snapshot.rb#5
 module Spoom::Coverage
   class << self
-    # source://spoom//lib/spoom/coverage.rb#69
+    # source://spoom//lib/spoom/coverage.rb#90
     sig do
       params(
         snapshots: T::Array[::Spoom::Coverage::Snapshot],
@@ -531,7 +531,7 @@ module Spoom::Coverage
     end
     def report(snapshots, palette:, path: T.unsafe(nil)); end
 
-    # source://spoom//lib/spoom/coverage.rb#89
+    # source://spoom//lib/spoom/coverage.rb#109
     sig { params(path: ::String).returns(::Spoom::FileTree) }
     def sigils_tree(path: T.unsafe(nil)); end
 
@@ -545,7 +545,7 @@ module Spoom::Coverage
     end
     def snapshot(path: T.unsafe(nil), rbi: T.unsafe(nil), sorbet_bin: T.unsafe(nil)); end
 
-    # source://spoom//lib/spoom/coverage.rb#84
+    # source://spoom//lib/spoom/coverage.rb#104
     sig { params(path: ::String).returns(::Spoom::Sorbet::Config) }
     def sorbet_config(path: T.unsafe(nil)); end
   end
@@ -799,7 +799,7 @@ class Spoom::Coverage::D3::ColorPalette < ::T::Struct
   prop :strong, ::String
 
   class << self
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -857,7 +857,7 @@ class Spoom::Coverage::D3::Pie::Sigs < ::Spoom::Coverage::D3::Pie
   sig { params(id: ::String, title: ::String, snapshot: ::Spoom::Coverage::Snapshot).void }
   def initialize(id, title, snapshot); end
 
-  # source://spoom//lib/spoom/coverage/d3/pie.rb#168
+  # source://spoom//lib/spoom/coverage/d3/pie.rb#172
   sig { override.returns(::String) }
   def tooltip; end
 end
@@ -932,25 +932,25 @@ class Spoom::Coverage::D3::Timeline::Calls < ::Spoom::Coverage::D3::Timeline::St
   def tooltip; end
 end
 
-# source://spoom//lib/spoom/coverage/d3/timeline.rb#502
+# source://spoom//lib/spoom/coverage/d3/timeline.rb#505
 class Spoom::Coverage::D3::Timeline::RBIs < ::Spoom::Coverage::D3::Timeline::Stacked
-  # source://spoom//lib/spoom/coverage/d3/timeline.rb#506
+  # source://spoom//lib/spoom/coverage/d3/timeline.rb#509
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
-  # source://spoom//lib/spoom/coverage/d3/timeline.rb#574
+  # source://spoom//lib/spoom/coverage/d3/timeline.rb#577
   sig { override.params(y: ::String, color: ::String, curve: ::String).returns(::String) }
   def line(y:, color: T.unsafe(nil), curve: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/coverage/d3/timeline.rb#614
+  # source://spoom//lib/spoom/coverage/d3/timeline.rb#617
   sig { override.returns(::String) }
   def plot; end
 
-  # source://spoom//lib/spoom/coverage/d3/timeline.rb#534
+  # source://spoom//lib/spoom/coverage/d3/timeline.rb#537
   sig { override.returns(::String) }
   def script; end
 
-  # source://spoom//lib/spoom/coverage/d3/timeline.rb#520
+  # source://spoom//lib/spoom/coverage/d3/timeline.rb#523
   sig { override.returns(::String) }
   def tooltip; end
 end
@@ -987,7 +987,7 @@ class Spoom::Coverage::D3::Timeline::Sigs < ::Spoom::Coverage::D3::Timeline::Sta
   sig { params(id: ::String, snapshots: T::Array[::Spoom::Coverage::Snapshot]).void }
   def initialize(id, snapshots); end
 
-  # source://spoom//lib/spoom/coverage/d3/timeline.rb#493
+  # source://spoom//lib/spoom/coverage/d3/timeline.rb#496
   sig { override.returns(::String) }
   def tooltip; end
 end
@@ -998,7 +998,7 @@ end
 class Spoom::Coverage::D3::Timeline::Stacked < ::Spoom::Coverage::D3::Timeline
   abstract!
 
-  # source://sorbet-runtime/0.5.10526/lib/types/private/abstract/declare.rb#37
+  # source://sorbet-runtime/0.5.10564/lib/types/private/abstract/declare.rb#37
   def initialize(*args, **_arg1, &blk); end
 
   # source://spoom//lib/spoom/coverage/d3/timeline.rb#388
@@ -1139,47 +1139,50 @@ class Spoom::Coverage::Snapshot < ::T::Struct
   prop :calls_untyped, ::Integer, default: T.unsafe(nil)
   prop :calls_typed, ::Integer, default: T.unsafe(nil)
   prop :sigils, T::Hash[::String, ::Integer], default: T.unsafe(nil)
+  prop :methods_with_sig_excluding_rbis, ::Integer, default: T.unsafe(nil)
+  prop :methods_without_sig_excluding_rbis, ::Integer, default: T.unsafe(nil)
+  prop :sigils_excluding_rbis, T::Hash[::String, ::Integer], default: T.unsafe(nil)
 
-  # source://spoom//lib/spoom/coverage/snapshot.rb#30
+  # source://spoom//lib/spoom/coverage/snapshot.rb#33
   sig { params(out: T.any(::IO, ::StringIO), colors: T::Boolean, indent_level: ::Integer).void }
   def print(out: T.unsafe(nil), colors: T.unsafe(nil), indent_level: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/coverage/snapshot.rb#36
+  # source://spoom//lib/spoom/coverage/snapshot.rb#39
   sig { params(arg: T.untyped).returns(::String) }
   def to_json(*arg); end
 
   class << self
-    # source://spoom//lib/spoom/coverage/snapshot.rb#44
+    # source://spoom//lib/spoom/coverage/snapshot.rb#47
     sig { params(json: ::String).returns(::Spoom::Coverage::Snapshot) }
     def from_json(json); end
 
-    # source://spoom//lib/spoom/coverage/snapshot.rb#49
+    # source://spoom//lib/spoom/coverage/snapshot.rb#52
     sig { params(obj: T::Hash[::String, T.untyped]).returns(::Spoom::Coverage::Snapshot) }
     def from_obj(obj); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
 
 # The strictness name as found in the Sorbet metrics file
 #
-# source://spoom//lib/spoom/coverage/snapshot.rb#27
+# source://spoom//lib/spoom/coverage/snapshot.rb#30
 Spoom::Coverage::Snapshot::STRICTNESSES = T.let(T.unsafe(nil), Array)
 
-# source://spoom//lib/spoom/coverage/snapshot.rb#81
+# source://spoom//lib/spoom/coverage/snapshot.rb#95
 class Spoom::Coverage::SnapshotPrinter < ::Spoom::Printer
-  # source://spoom//lib/spoom/coverage/snapshot.rb#85
+  # source://spoom//lib/spoom/coverage/snapshot.rb#99
   sig { params(snapshot: ::Spoom::Coverage::Snapshot).void }
   def print_snapshot(snapshot); end
 
   private
 
-  # source://spoom//lib/spoom/coverage/snapshot.rb#134
+  # source://spoom//lib/spoom/coverage/snapshot.rb#158
   sig { params(value: T.nilable(::Integer), total: T.nilable(::Integer)).returns(::String) }
   def percent(value, total); end
 
-  # source://spoom//lib/spoom/coverage/snapshot.rb#123
+  # source://spoom//lib/spoom/coverage/snapshot.rb#147
   sig { params(hash: T::Hash[::String, ::Integer], total: ::Integer).void }
   def print_map(hash, total); end
 end
@@ -1224,7 +1227,7 @@ class Spoom::ExecResult < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1311,7 +1314,7 @@ class Spoom::FileTree::Node < ::T::Struct
   def path; end
 
   class << self
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1368,77 +1371,76 @@ module Spoom::Git
   class << self
     # Git commands
     #
-    # source://spoom//lib/spoom/git.rb#36
+    # source://spoom//lib/spoom/git.rb#48
     sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def checkout(*arg, path: T.unsafe(nil)); end
 
-    # Get the commit Time for a `sha`
-    #
-    # source://spoom//lib/spoom/git.rb#81
-    sig { params(sha: ::String, path: ::String).returns(T.nilable(::Time)) }
-    def commit_time(sha, path: T.unsafe(nil)); end
-
-    # Get the commit epoch timestamp for a `sha`
-    #
-    # source://spoom//lib/spoom/git.rb#72
-    sig { params(sha: ::String, path: ::String).returns(T.nilable(::Integer)) }
-    def commit_timestamp(sha, path: T.unsafe(nil)); end
-
-    # source://spoom//lib/spoom/git.rb#61
+    # source://spoom//lib/spoom/git.rb#68
     sig { params(path: ::String).returns(T.nilable(::String)) }
     def current_branch(path: T.unsafe(nil)); end
 
-    # source://spoom//lib/spoom/git.rb#41
+    # source://spoom//lib/spoom/git.rb#53
     sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def diff(*arg, path: T.unsafe(nil)); end
 
-    # Translate a git epoch timestamp into a Time
-    #
-    # source://spoom//lib/spoom/git.rb#99
-    sig { params(timestamp: ::String).returns(::Time) }
-    def epoch_to_time(timestamp); end
-
     # Execute a `command`
     #
-    # source://spoom//lib/spoom/git.rb#14
+    # source://spoom//lib/spoom/git.rb#26
     sig { params(command: ::String, arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def exec(command, *arg, path: T.unsafe(nil)); end
 
-    # Get the last commit sha
+    # Get the last commit in the currently checked out branch
     #
-    # source://spoom//lib/spoom/git.rb#90
-    sig { params(path: ::String).returns(T.nilable(::String)) }
+    # source://spoom//lib/spoom/git.rb#79
+    sig { params(path: ::String).returns(T.nilable(::Spoom::Git::Commit)) }
     def last_commit(path: T.unsafe(nil)); end
 
-    # source://spoom//lib/spoom/git.rb#46
+    # source://spoom//lib/spoom/git.rb#58
     sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def log(*arg, path: T.unsafe(nil)); end
 
-    # source://spoom//lib/spoom/git.rb#51
-    sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
-    def rev_parse(*arg, path: T.unsafe(nil)); end
+    # Parse a line formated as `%h %at` into a `Commit`
+    #
+    # source://spoom//lib/spoom/git.rb#121
+    sig { params(string: ::String).returns(T.nilable(::Spoom::Git::Commit)) }
+    def parse_commit(string); end
 
-    # source://spoom//lib/spoom/git.rb#56
+    # source://spoom//lib/spoom/git.rb#63
     sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
     def show(*arg, path: T.unsafe(nil)); end
 
-    # Get the hash of the commit introducing the `sorbet/config` file
+    # Get the commit introducing the `sorbet/config` file
     #
-    # source://spoom//lib/spoom/git.rb#111
-    sig { params(path: ::String).returns(T.nilable(::String)) }
+    # source://spoom//lib/spoom/git.rb#97
+    sig { params(path: ::String).returns(T.nilable(::Spoom::Git::Commit)) }
     def sorbet_intro_commit(path: T.unsafe(nil)); end
 
-    # Get the hash of the commit removing the `sorbet/config` file
+    # Get the commit removing the `sorbet/config` file
     #
-    # source://spoom//lib/spoom/git.rb#123
-    sig { params(path: ::String).returns(T.nilable(::String)) }
+    # source://spoom//lib/spoom/git.rb#109
+    sig { params(path: ::String).returns(T.nilable(::Spoom::Git::Commit)) }
     def sorbet_removal_commit(path: T.unsafe(nil)); end
 
     # Is there uncommited changes in `path`?
     #
-    # source://spoom//lib/spoom/git.rb#105
+    # source://spoom//lib/spoom/git.rb#91
     sig { params(path: ::String).returns(T::Boolean) }
     def workdir_clean?(path: T.unsafe(nil)); end
+  end
+end
+
+# source://spoom//lib/spoom/git.rb#9
+class Spoom::Git::Commit < ::T::Struct
+  const :sha, ::String
+  const :time, ::Time
+
+  # source://spoom//lib/spoom/git.rb#16
+  sig { returns(::Integer) }
+  def timestamp; end
+
+  class << self
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
+    def inherited(s); end
   end
 end
 
@@ -1543,7 +1545,7 @@ class Spoom::LSP::Diagnostic < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Diagnostic) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1576,7 +1578,7 @@ class Spoom::LSP::DocumentSymbol < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::DocumentSymbol) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1634,7 +1636,7 @@ class Spoom::LSP::Hover < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Hover) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1659,7 +1661,7 @@ class Spoom::LSP::Location < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Location) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1726,7 +1728,7 @@ class Spoom::LSP::Position < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Position) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1764,7 +1766,7 @@ class Spoom::LSP::Range < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Range) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1834,7 +1836,7 @@ class Spoom::LSP::SignatureHelp < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::SignatureHelp) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.10526/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.10564/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -2349,7 +2351,7 @@ class Spoom::Timeline
   # Return one commit for each date in `dates`
   #
   # source://spoom//lib/spoom/timeline.rb#38
-  sig { params(dates: T::Array[::Time]).returns(T::Array[::String]) }
+  sig { params(dates: T::Array[::Time]).returns(T::Array[::Spoom::Git::Commit]) }
   def commits_for_dates(dates); end
 
   # Return all months between `from` and `to`
@@ -2361,7 +2363,7 @@ class Spoom::Timeline
   # Return one commit for each month between `from` and `to`
   #
   # source://spoom//lib/spoom/timeline.rb#19
-  sig { returns(T::Array[::String]) }
+  sig { returns(T::Array[::Spoom::Git::Commit]) }
   def ticks; end
 end
 
