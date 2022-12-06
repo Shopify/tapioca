@@ -1285,7 +1285,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --only=ActiveRecordTypedStore Post")
+          result = @project.tapioca("dsl Post --only=ActiveRecordTypedStore")
 
           assert_equal(<<~OUT, result.out)
             Loading Rails application... Done
