@@ -92,7 +92,7 @@ module Tapioca
         @installer ||= Bundler::Installer.new(Bundler.root, Bundler.definition)
       end
 
-      sig { returns(Bundler::StubSpecification) }
+      sig { returns(T.any(Bundler::StubSpecification, ::Gem::Specification)) }
       def spec
         @spec ||= Bundler.definition.specs.find { |s| s.name == "tapioca" }
       end
