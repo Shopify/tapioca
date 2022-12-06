@@ -161,7 +161,8 @@ module Tapioca
         RBI::Parser.parse_file(file)
       rescue RBI::ParseError => e
         say_error("\nWarning: #{e} (#{e.location})", :yellow)
-      end
+        nil
+      end.compact
 
       index.visit_all(trees)
     end
