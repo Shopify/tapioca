@@ -99,7 +99,7 @@ module Tapioca
         signature.kwarg_types.each { |_, kwarg_type| params << kwarg_type.to_s }
 
         # rest and keyrest parameter types
-        ['', 'key'].each do |prefix|
+        ["", "key"].each do |prefix|
           params << signature.public_send("#{prefix}rest_type").to_s if signature.public_send("has_#{prefix}rest")
         end
 
