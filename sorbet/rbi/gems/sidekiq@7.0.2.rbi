@@ -264,10 +264,10 @@ class Sidekiq::Config
   def initialize(options = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def [](*args, **_arg1, &block); end
+  def [](*args, &block); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def []=(*args, **_arg1, &block); end
+  def []=(*args, &block); end
 
   # How frequently Redis should be checked by a random Sidekiq process for
   # scheduled and retriable jobs. Each individual process will take turns by
@@ -331,18 +331,18 @@ class Sidekiq::Config
   def error_handlers; end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def fetch(*args, **_arg1, &block); end
+  def fetch(*args, &block); end
 
   # INTERNAL USE ONLY
   #
-  # source://sidekiq//lib/sidekiq/config.rb#256
+  # source://sidekiq//lib/sidekiq/config.rb#255
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def has_key?(*args, **_arg1, &block); end
+  def has_key?(*args, &block); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def key?(*args, **_arg1, &block); end
+  def key?(*args, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#234
   def logger; end
@@ -356,7 +356,7 @@ class Sidekiq::Config
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def merge!(*args, **_arg1, &block); end
+  def merge!(*args, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#129
   def new_redis_pool(size, name = T.unsafe(nil)); end
@@ -1069,15 +1069,15 @@ end
 class Sidekiq::RedisClientAdapter
   # @return [RedisClientAdapter] a new instance of RedisClientAdapter
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#69
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#66
   def initialize(options); end
 
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#78
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#75
   def new_client; end
 
   private
 
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#84
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#81
   def client_opts(options); end
 end
 
@@ -1091,22 +1091,17 @@ Sidekiq::RedisClientAdapter::CommandError = RedisClient::CommandError
 class Sidekiq::RedisClientAdapter::CompatClient < ::RedisClient::Decorator::Client
   include ::Sidekiq::RedisClientAdapter::CompatMethods
 
-  # underscore methods are not official API
-  #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#38
-  def _client; end
-
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#42
-  def _config; end
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#39
+  def config; end
 
   # @yield [nil, @queue.pop]
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#46
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#43
   def message; end
 
   # NB: this method does not return
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#51
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#48
   def subscribe(chan); end
 end
 
@@ -1117,10 +1112,14 @@ end
 
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#11
 module Sidekiq::RedisClientAdapter::CompatMethods
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#16
+  # TODO Deprecate and remove this
+  #
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#18
   def evalsha(sha, keys, argv); end
 
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#12
+  # TODO Deprecate and remove this
+  #
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#13
   def info; end
 
   private
@@ -1128,12 +1127,12 @@ module Sidekiq::RedisClientAdapter::CompatMethods
   # this allows us to use methods like `conn.hmset(...)` instead of having to use
   # redis-client's native `conn.call("hmset", ...)`
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#24
-  def method_missing(*args, **_arg1, &block); end
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#26
+  def method_missing(*args, &block); end
 
   # @return [Boolean]
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#29
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#31
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
