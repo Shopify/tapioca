@@ -5,7 +5,7 @@ module Tapioca
   module GemHelper
     extend T::Sig
 
-    sig { params(app_dir: String, full_gem_path: String).returns(T::Boolean) }
+    sig { params(app_dir: T.any(String, Pathname), full_gem_path: String).returns(T::Boolean) }
     def gem_in_app_dir?(app_dir, full_gem_path)
       app_dir = to_realpath(app_dir)
       full_gem_path = to_realpath(full_gem_path)
