@@ -48,8 +48,6 @@ module Tapioca
         sig {params(column_type: T.untyped).returns(String)}
         def type_for_activerecord_value(column_type)
           case column_type
-          when defined?(MoneyColumn) && MoneyColumn::ActiveRecordType
-            "::Money"
           when ActiveRecord::Type::Integer
             "::Integer"
           when ActiveRecord::Type::String
@@ -62,10 +60,6 @@ module Tapioca
             "::Float"
           when ActiveRecord::Type::Boolean
             "T::Boolean"
-          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL) && ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore
-            "T::Hash[::String, ::String]"
-          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL) && ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array
-            "T::Array[#{type_for_activerecord_value column_type.subtype}]"
           when ActiveRecord::Type::DateTime, ActiveRecord::Type::Time
             "::Time"
           when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
@@ -74,6 +68,12 @@ module Tapioca
             "::String"
           when ActiveRecord::Type::Serialized
             serialized_column_type(column_type)
+          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL) && ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore
+            "T::Hash[::String, ::String]"
+          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL) && ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array
+            "T::Array[#{type_for_activerecord_value column_type.subtype}]"
+          when defined?(MoneyColumn) && MoneyColumn::ActiveRecordType
+            "::Money"
           else
             handle_unknown_type(column_type)
           end
