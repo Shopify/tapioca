@@ -343,6 +343,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     end
 
     it "compiles dynamic includes into Object" do
+      puts %x(bundle info pp)
+
       add_ruby_file("ext.rb", <<~RUBY)
         module Foo
           # This class will trigger an include into
