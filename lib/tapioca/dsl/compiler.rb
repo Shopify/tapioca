@@ -98,10 +98,11 @@ module Tapioca
         # keyword parameters types
         signature.kwarg_types.each { |_, kwarg_type| params << kwarg_type.to_s }
 
-        # rest and keyrest parameter types
-        ["", "key"].each do |prefix|
-          params << signature.public_send("#{prefix}rest_type").to_s if signature.public_send("has_#{prefix}rest")
-        end
+        # rest parameter type
+        params << signature.rest_type.to_s if signature.has_rest
+
+        # keyrest parameter type
+        params << signature.keyrest_type.to_s if signature.has_keyrest
 
         # special case `.void` in a proc
         unless signature.block_name.nil?
