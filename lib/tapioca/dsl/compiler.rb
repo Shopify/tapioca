@@ -101,6 +101,9 @@ module Tapioca
         # rest parameter type
         params << signature.rest_type.to_s if signature.has_rest
 
+        # keyrest parameter type
+        params << signature.keyrest_type.to_s if signature.has_keyrest
+
         # special case `.void` in a proc
         unless signature.block_name.nil?
           params << signature.block_type.to_s.gsub("returns(<VOID>)", "void")
