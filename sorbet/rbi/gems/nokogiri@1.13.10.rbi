@@ -6516,9 +6516,10 @@ class Nokogiri::XSLT::Stylesheet
   end
 end
 
-# Same as above, except in Object.
 class Object < ::BasicObject
   include ::Kernel
+  include ::ActiveSupport::ForkTracker::CoreExt
+  include ::ActiveSupport::ForkTracker::CoreExtPrivate
 
   private
 
