@@ -162,10 +162,7 @@ module Tapioca
       def compile_method_return_type_to_rbi(method_def)
         signature = signature_of(method_def)
         return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)
-        return_type = "void" if return_type == "<VOID>"
-        # Map <NOT-TYPED> to `T.untyped`
-        return_type = "T.untyped" if return_type == "<NOT-TYPED>"
-        return_type
+        sanitize_signature_types(return_type)
       end
     end
   end
