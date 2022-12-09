@@ -217,6 +217,7 @@ module Tapioca
           T::Array[Symbol],
         )
         FINDER_METHODS = T.let(ActiveRecord::FinderMethods.instance_methods(false), T::Array[Symbol])
+        SIGNED_FINDER_METHODS = T.let(ActiveRecord::SignedId::ClassMethods.instance_methods(false), T::Array[Symbol])
         CALCULATION_METHODS = T.let(ActiveRecord::Calculations.instance_methods(false), T::Array[Symbol])
         ENUMERABLE_QUERY_METHODS = T.let([:any?, :many?, :none?, :one?], T::Array[Symbol])
         FIND_OR_CREATE_METHODS = T.let(
@@ -589,6 +590,31 @@ module Tapioca
                 method_name,
                 common_relation_methods_module,
                 return_type: return_type,
+              )
+            end
+          end
+
+          SIGNED_FINDER_METHODS.each do |method_name|
+            case method_name
+            when :find_signed
+              create_common_method(
+                "find_signed",
+                common_relation_methods_module,
+                parameters: [
+                  create_param("signed_id", type: "T.untyped"),
+                  create_kw_opt_param("purpose", type: "T.untyped", default: "nil"),
+                ],
+                return_type: as_nilable_type(constant_name),
+              )
+            when :find_signed!
+              create_common_method(
+                "find_signed!",
+                common_relation_methods_module,
+                parameters: [
+                  create_param("signed_id", type: "T.untyped"),
+                  create_kw_opt_param("purpose", type: "T.untyped", default: "nil"),
+                ],
+                return_type: constant_name,
               )
             end
           end
