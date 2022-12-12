@@ -13,7 +13,7 @@ PATH
       netrc (>= 0.11.0)
       parallel (>= 1.21.0)
       rbi (~> 0.0.0, >= 0.0.16)
-      sorbet-static-and-runtime (>= 0.5.9892)
+      sorbet-static-and-runtime (>= 0.5.10187)
       spoom (~> 1.1.0, >= 1.1.11)
       thor (>= 1.2.0)
       yard-sorbet
