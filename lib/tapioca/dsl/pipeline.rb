@@ -128,8 +128,10 @@ module Tapioca
       def filter_anonymous_and_reloaded_constants(constants)
         # Group constants by their names
         constants_by_name = constants
-          .group_by { |c| T.must(Runtime::Reflection.name_of(c)) }
+          .group_by { |c| Runtime::Reflection.name_of(c) }
           .select { |name, _| !name.nil? }
+
+        constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[Module]])
 
         # Find the constants that have been reloaded
         reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
