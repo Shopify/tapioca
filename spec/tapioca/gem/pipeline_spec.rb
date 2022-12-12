@@ -1953,7 +1953,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
+        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
       RBI
 
       assert_equal(output, compile)
