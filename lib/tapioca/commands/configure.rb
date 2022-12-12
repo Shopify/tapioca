@@ -70,7 +70,7 @@ module Tapioca
           # typed: true
           # frozen_string_literal: true
 
-          # Add your extra requires here (`#{default_command(:require)}` can be used to boostrap this list)
+          # Add your extra requires here (`#{default_command(:require)}` can be used to bootstrap this list)
         CONTENT
       end
 
