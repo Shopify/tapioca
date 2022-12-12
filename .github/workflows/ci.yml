@@ -39,6 +39,7 @@ jobs:
           - Gemfile
           - gemfiles/Gemfile-rails-6-1
           - gemfiles/Gemfile-rails-main
+          - gemfiles/Gemfile-sorbet-minimum
         include:
           - gemfile: gemfiles/Gemfile-rails-main
             experimental: true

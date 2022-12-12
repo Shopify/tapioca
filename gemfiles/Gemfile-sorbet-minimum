@@ -1,0 +1,13 @@
+# frozen_string_literal: true
+
+# Extract minimum supported version from gemspec
+minimum_sorbet_version = File.read("tapioca.gemspec")[
+  # spec.add_dependency("sorbet-static-and-runtime", ">= 1.2.3456")
+  #                                                      ^^^^^^^^
+  /"sorbet-static-and-runtime", ">= ([^"]+)"/,
+  1,
+]
+
+gem("sorbet-static-and-runtime", minimum_sorbet_version)
+
+eval_gemfile "../Gemfile"
