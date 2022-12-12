@@ -120,8 +120,8 @@ module Tapioca
     end
 
     # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
-    sig { params(command: String, ignore_typechecking_errors: T::Boolean).returns(ExecResult) }
-    def tapioca(command, ignore_typechecking_errors: false)
+    sig { params(command: String, enforce_typechecking: T::Boolean).returns(ExecResult) }
+    def tapioca(command, enforce_typechecking: true)
       exec_command = ["tapioca", command]
       if command.start_with?(/gem/)
         exec_command << "--workers=1" unless command.match?("--workers")
@@ -132,11 +132,11 @@ module Tapioca
       end
 
       env = {}
-      env["ENFORCE_TYPECHECKING"] = if ignore_typechecking_errors
+      env["ENFORCE_TYPECHECKING"] = if enforce_typechecking
+        "1"
+      else
         warn("Ignoring typechecking errors in CLI test")
         "0"
-      else
-        "1"
       end
 
       bundle_exec(exec_command.join(" "), env)
