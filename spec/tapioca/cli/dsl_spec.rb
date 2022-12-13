@@ -1869,6 +1869,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveModelSecurePassword       enabled
               Tapioca::Dsl::Compilers::ActiveRecordAssociations        enabled
               Tapioca::Dsl::Compilers::ActiveRecordColumns             enabled
+              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes      enabled
               Tapioca::Dsl::Compilers::ActiveRecordEnum                enabled
               Tapioca::Dsl::Compilers::ActiveRecordRelations           enabled
               Tapioca::Dsl::Compilers::ActiveRecordScope               enabled
@@ -1897,6 +1898,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveModelSecurePassword       enabled
               Tapioca::Dsl::Compilers::ActiveRecordAssociations        enabled
               Tapioca::Dsl::Compilers::ActiveRecordColumns             enabled
+              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes      enabled
               Tapioca::Dsl::Compilers::ActiveRecordEnum                disabled
               Tapioca::Dsl::Compilers::ActiveRecordRelations           enabled
               Tapioca::Dsl::Compilers::ActiveRecordScope               enabled
@@ -1925,6 +1927,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveModelSecurePassword       disabled
               Tapioca::Dsl::Compilers::ActiveRecordAssociations        disabled
               Tapioca::Dsl::Compilers::ActiveRecordColumns             disabled
+              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes      disabled
               Tapioca::Dsl::Compilers::ActiveRecordEnum                enabled
               Tapioca::Dsl::Compilers::ActiveRecordRelations           disabled
               Tapioca::Dsl::Compilers::ActiveRecordScope               disabled
