@@ -109,19 +109,19 @@ module Tapioca
     end
 
     # Run a `command` with `bundle exec` in this project context (unbundled env)
-    sig { params(command: String).returns(ExecResult) }
-    def bundle_exec(command)
+    sig { params(command: String, env: T::Hash[String, String]).returns(ExecResult) }
+    def bundle_exec(command, env = {})
       opts = {}
       opts[:chdir] = path
       Bundler.with_unbundled_env do
-        out, err, status = Open3.capture3(["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
+        out, err, status = Open3.capture3(env, ["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
         ExecResult.new(out: out, err: err, status: T.must(status.success?))
       end
     end
 
     # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
-    sig { params(command: String).returns(ExecResult) }
-    def tapioca(command)
+    sig { params(command: String, enforce_typechecking: T::Boolean).returns(ExecResult) }
+    def tapioca(command, enforce_typechecking: true)
       exec_command = ["tapioca", command]
       if command.start_with?(/gem/)
         exec_command << "--workers=1" unless command.match?("--workers")
@@ -130,7 +130,16 @@ module Tapioca
       elsif command.start_with?(/dsl/)
         exec_command << "--workers=1" unless command.match?("--workers")
       end
-      bundle_exec(exec_command.join(" "))
+
+      env = {}
+      env["ENFORCE_TYPECHECKING"] = if enforce_typechecking
+        "1"
+      else
+        warn("Ignoring typechecking errors in CLI test")
+        "0"
+      end
+
+      bundle_exec(exec_command.join(" "), env)
     end
   end
 end
