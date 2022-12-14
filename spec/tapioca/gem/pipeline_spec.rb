@@ -10,6 +10,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::Helpers::Test::Content
   include Tapioca::Helpers::Test::Template
   include Tapioca::Helpers::Test::Isolation
+  include Tapioca::SorbetHelper
 
   describe Tapioca::Gem::Pipeline do
     sig { params(include_doc: T::Boolean, include_loc: T::Boolean).returns(String) }
@@ -1953,7 +1954,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
+        <% if sorbet_supports?(:non_generic_weak_map) %>
+        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
+        <% else %>
         Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
+        <% end %>
       RBI
 
       assert_equal(output, compile)
