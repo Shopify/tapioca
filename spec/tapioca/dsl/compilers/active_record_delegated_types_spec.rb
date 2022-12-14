@@ -57,162 +57,153 @@ module Tapioca
               )
             end
 
-            describe "with relations enabled" do
-              before do
-                require "tapioca/dsl/compilers/active_record_relations"
-                activate_other_dsl_compilers(ActiveRecordRelations)
-              end
-
-              describe "without errors" do
-                it "generates empty RBI file if there are no delegated_types" do
-                  add_ruby_file("post.rb", <<~RUBY)
-                    class Post < ActiveRecord::Base
-                    end
-                  RUBY
-
-                  expected = <<~RBI
-                    # typed: strong
-                  RBI
-
-                  assert_equal(expected, rbi_for(:Post))
+            it "generates empty RBI file if there are no delegated_types" do
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
                 end
+              RUBY
 
-                it "generates RBI file for delegated_type with default options" do
-                  add_ruby_file("schema.rb", <<~RUBY)
-                    ActiveRecord::Migration.suppress_messages do
-                      ActiveRecord::Schema.define do
-                        create_table :entries do |t|
-                          t.string :entryable_type
-                          t.integer :entryable_id
-                        end
-                      end
+              expected = <<~RBI
+                # typed: strong
+              RBI
+
+              assert_equal(expected, rbi_for(:Post))
+            end
+
+            it "generates RBI file for delegated_type with default options" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :entries do |t|
+                      t.string :entryable_type
+                      t.integer :entryable_id
                     end
-                  RUBY
-
-                  add_ruby_file("comment.rb", <<~RUBY)
-                    class Comment < ActiveRecord::Base
-                    end
-                  RUBY
-
-                  add_ruby_file("message.rb", <<~RUBY)
-                    class Message < ActiveRecord::Base
-                    end
-                  RUBY
-
-                  add_ruby_file("entry.rb", <<~RUBY)
-                    class Entry < ActiveRecord::Base
-                      delegated_type :entryable, types: %w[ Message Comment ]
-                    end
-                  RUBY
-
-                  expected = <<~RBI
-                    # typed: strong
-
-                    class Entry
-                      include GeneratedDelegatedTypeMethods
-
-                      module GeneratedDelegatedTypeMethods
-                        sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
-                        def build_entryable(*args); end
-
-                        sig { returns(T.nilable(Comment)) }
-                        def comment; end
-
-                        sig { returns(T::Boolean) }
-                        def comment?; end
-
-                        sig { returns(T.nilable(::Integer)) }
-                        def comment_id; end
-
-                        sig { returns(Class) }
-                        def entryable_class; end
-
-                        sig { returns(ActiveSupport::StringInquirer) }
-                        def entryable_name; end
-
-                        sig { returns(T.nilable(Message)) }
-                        def message; end
-
-                        sig { returns(T::Boolean) }
-                        def message?; end
-
-                        sig { returns(T.nilable(::Integer)) }
-                        def message_id; end
-                      end
-                    end
-                  RBI
-
-                  assert_equal(expected, rbi_for(:Entry))
+                  end
                 end
+              RUBY
 
-                it "generates RBI file for delegated_type with options" do
-                  add_ruby_file("schema.rb", <<~RUBY)
-                    ActiveRecord::Migration.suppress_messages do
-                      ActiveRecord::Schema.define do
-                        create_table :entries do |t|
-                          t.string :entryable_type
-                          t.string :entryable_uuid
-                        end
-                      end
-                    end
-                  RUBY
-
-                  add_ruby_file("comment.rb", <<~RUBY)
-                    class Comment < ActiveRecord::Base
-                    end
-                  RUBY
-
-                  add_ruby_file("message.rb", <<~RUBY)
-                    class Message < ActiveRecord::Base
-                    end
-                  RUBY
-
-                  add_ruby_file("entry.rb", <<~RUBY)
-                    class Entry < ActiveRecord::Base
-                      delegated_type :entryable, types: %w[ Message Comment ], primary_key: :uuid, foreign_key: :entryable_uuid
-                    end
-                  RUBY
-
-                  expected = <<~RBI
-                    # typed: strong
-
-                    class Entry
-                      include GeneratedDelegatedTypeMethods
-
-                      module GeneratedDelegatedTypeMethods
-                        sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
-                        def build_entryable(*args); end
-
-                        sig { returns(T.nilable(Comment)) }
-                        def comment; end
-
-                        sig { returns(T::Boolean) }
-                        def comment?; end
-
-                        sig { returns(T.nilable(::String)) }
-                        def comment_uuid; end
-
-                        sig { returns(Class) }
-                        def entryable_class; end
-
-                        sig { returns(ActiveSupport::StringInquirer) }
-                        def entryable_name; end
-
-                        sig { returns(T.nilable(Message)) }
-                        def message; end
-
-                        sig { returns(T::Boolean) }
-                        def message?; end
-
-                        sig { returns(T.nilable(::String)) }
-                        def message_uuid; end
-                      end
-                    end
-                  RBI
-
-                  assert_equal(expected, rbi_for(:Entry))
+              add_ruby_file("comment.rb", <<~RUBY)
+                class Comment < ActiveRecord::Base
                 end
-              end
+              RUBY
+
+              add_ruby_file("message.rb", <<~RUBY)
+                class Message < ActiveRecord::Base
+                end
+              RUBY
+
+              add_ruby_file("entry.rb", <<~RUBY)
+                class Entry < ActiveRecord::Base
+                  delegated_type :entryable, types: %w[ Message Comment ]
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Entry
+                  include GeneratedDelegatedTypeMethods
+
+                  module GeneratedDelegatedTypeMethods
+                    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+                    def build_entryable(*args); end
+
+                    sig { returns(T.nilable(Comment)) }
+                    def comment; end
+
+                    sig { returns(T::Boolean) }
+                    def comment?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def comment_id; end
+
+                    sig { returns(Class) }
+                    def entryable_class; end
+
+                    sig { returns(ActiveSupport::StringInquirer) }
+                    def entryable_name; end
+
+                    sig { returns(T.nilable(Message)) }
+                    def message; end
+
+                    sig { returns(T::Boolean) }
+                    def message?; end
+
+                    sig { returns(T.nilable(::Integer)) }
+                    def message_id; end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Entry))
+            end
+
+            it "generates RBI file for delegated_type with options" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :entries do |t|
+                      t.string :entryable_type
+                      t.string :entryable_uuid
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("comment.rb", <<~RUBY)
+                class Comment < ActiveRecord::Base
+                end
+              RUBY
+
+              add_ruby_file("message.rb", <<~RUBY)
+                class Message < ActiveRecord::Base
+                end
+              RUBY
+
+              add_ruby_file("entry.rb", <<~RUBY)
+                class Entry < ActiveRecord::Base
+                  delegated_type :entryable, types: %w[ Message Comment ], primary_key: :uuid, foreign_key: :entryable_uuid
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Entry
+                  include GeneratedDelegatedTypeMethods
+
+                  module GeneratedDelegatedTypeMethods
+                    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+                    def build_entryable(*args); end
+
+                    sig { returns(T.nilable(Comment)) }
+                    def comment; end
+
+                    sig { returns(T::Boolean) }
+                    def comment?; end
+
+                    sig { returns(T.nilable(::String)) }
+                    def comment_uuid; end
+
+                    sig { returns(Class) }
+                    def entryable_class; end
+
+                    sig { returns(ActiveSupport::StringInquirer) }
+                    def entryable_name; end
+
+                    sig { returns(T.nilable(Message)) }
+                    def message; end
+
+                    sig { returns(T::Boolean) }
+                    def message?; end
+
+                    sig { returns(T.nilable(::String)) }
+                    def message_uuid; end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Entry))
             end
           end
         end
