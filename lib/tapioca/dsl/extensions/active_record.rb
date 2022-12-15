@@ -21,6 +21,15 @@ module Tapioca
             super
           end
 
+          attr_reader :__tapioca_secure_tokens
+
+          def has_secure_token(attribute = :token, length: ::ActiveRecord::SecureToken::MINIMUM_TOKEN_LENGTH)
+            @__tapioca_secure_tokens ||= []
+            @__tapioca_secure_tokens << attribute
+
+            super
+          end
+
           ::ActiveRecord::Base.singleton_class.prepend(self)
         end
       end
