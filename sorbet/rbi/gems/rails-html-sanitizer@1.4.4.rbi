@@ -426,19 +426,11 @@ class Rails::Html::SafeListSanitizer < ::Rails::Html::Sanitizer
 
   private
 
-  # source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#165
+  # source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#148
   def allowed_attributes(options); end
 
-  # source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#157
-  def allowed_tags(options); end
-
-  # @return [Boolean]
-  #
   # source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#144
-  def loofah_using_html5?; end
-
-  # source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#149
-  def remove_safelist_tag_combinations(tags); end
+  def allowed_tags(options); end
 
   class << self
     # Returns the value of attribute allowed_attributes.
@@ -511,16 +503,16 @@ Rails::Html::Sanitizer::VERSION = T.let(T.unsafe(nil), String)
 # +attributes=+
 # If set, attributes included will be removed.
 #
-# source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#171
+# source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#169
 class Rails::Html::TargetScrubber < ::Rails::Html::PermitScrubber
   # @return [Boolean]
   #
-  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#172
+  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#170
   def allowed_node?(node); end
 
   # @return [Boolean]
   #
-  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#176
+  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#174
   def scrub_attribute?(name); end
 end
 
@@ -530,18 +522,18 @@ end
 #
 # Unallowed elements will be stripped, i.e. element is removed but its subtree kept.
 #
-# source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#186
+# source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#184
 class Rails::Html::TextOnlyScrubber < ::Loofah::Scrubber
   # @return [TextOnlyScrubber] a new instance of TextOnlyScrubber
   #
-  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#187
+  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#185
   def initialize; end
 
-  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#191
+  # source://rails-html-sanitizer//lib/rails/html/scrubbers.rb#189
   def scrub(node); end
 end
 
-# source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#170
+# source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#153
 Rails::Html::WhiteListSanitizer = Rails::Html::SafeListSanitizer
 
 # source://rails-html-sanitizer//lib/rails/html/sanitizer.rb#3
