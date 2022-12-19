@@ -337,7 +337,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RBI
 
-      compiled = compile
+      compiled = compile.gsub(/^\s+include ::PP::ObjectMixin\s/, "")
 
       assert_includes(compiled, basic_object_output)
       assert_includes(compiled, object_output)
@@ -373,7 +373,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RBI
 
-      assert_includes(compile, output)
+      compiled = compile.gsub(/^\s+include ::PP::ObjectMixin\s/, "")
+
+      assert_includes(compiled, output)
     end
 
     it "compiles mixins in the correct order" do
