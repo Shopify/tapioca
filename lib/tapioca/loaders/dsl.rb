@@ -18,10 +18,10 @@ module Tapioca
 
       sig { override.void }
       def load
+        load_dsl_compilers
         load_dsl_extensions
         load_application
         abort_if_pending_migrations!
-        load_dsl_compilers
       end
 
       protected
@@ -37,7 +37,7 @@ module Tapioca
 
       sig { void }
       def load_dsl_extensions
-        Dir["#{__dir__}/../dsl/extensions/*.rb"].sort.each { |f| require(f) }
+        Runtime::Reflection.descendants_of(Tapioca::Dsl::Compiler).each(&:register_interceptors)
       end
 
       sig { void }

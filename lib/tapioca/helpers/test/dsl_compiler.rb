@@ -21,6 +21,7 @@ module Tapioca
         sig { params(compiler_class: T.class_of(Tapioca::Dsl::Compiler)).void }
         def use_dsl_compiler(compiler_class)
           @context = T.let(CompilerContext.new(compiler_class), T.nilable(CompilerContext))
+          compiler_class.register_interceptors
         end
 
         sig { params(compiler_classes: T.class_of(Tapioca::Dsl::Compiler)).void }

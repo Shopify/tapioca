@@ -77,8 +77,8 @@ module Tapioca
           result = @project.tapioca("dsl User")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
           OUT
@@ -106,8 +106,8 @@ module Tapioca
           result = @project.tapioca("dsl Post")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -150,8 +150,8 @@ module Tapioca
           result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
             Error: Cannot find constant 'NonExistent::Foo'
@@ -175,8 +175,8 @@ module Tapioca
           result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
             Error: Cannot find constant 'NonExistent::Foo'
@@ -218,8 +218,8 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/namespace/comment.rbi
@@ -303,8 +303,8 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/foo/role.rbi
@@ -425,8 +425,8 @@ module Tapioca
           result = @project.tapioca("dsl --verbose --outdir rbis/")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
               processing  Namespace::Comment
@@ -477,8 +477,8 @@ module Tapioca
           result = @project.tapioca("dsl --verbose")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
               processing  Namespace::Comment
@@ -516,8 +516,8 @@ module Tapioca
           result = @project.tapioca("dsl --quiet")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
 
@@ -583,8 +583,8 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -700,8 +700,8 @@ module Tapioca
           result = @project.tapioca("dsl Post User")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -785,8 +785,8 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -877,8 +877,8 @@ module Tapioca
           result = @project.tapioca("dsl --only SidekiqWorker Foo::Compiler")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/job.rbi
@@ -926,8 +926,8 @@ module Tapioca
           result = @project.tapioca("dsl --only NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
           OUT
@@ -986,8 +986,8 @@ module Tapioca
           result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Compiler")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -1013,8 +1013,8 @@ module Tapioca
           result = @project.tapioca("dsl --exclude NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
           OUT
@@ -1049,8 +1049,8 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -1140,6 +1140,7 @@ module Tapioca
 
           # FIXME: print the error to the correct stream
           assert_equal(<<~OUT, result.out)
+            Loading DSL compiler classes... Done
             Loading Rails application... Done
             You have 1 pending migration:
             202001010000_create_articles.rb
@@ -1169,8 +1170,8 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                    force  sorbet/rbi/dsl/image.rbi
@@ -1255,8 +1256,8 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
           OUT
@@ -1288,8 +1289,8 @@ module Tapioca
           result = @project.tapioca("dsl Post --only=ActiveRecordTypedStore")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -1397,8 +1398,8 @@ module Tapioca
           result = @project.tapioca("dsl --verify --exclude SmartProperties")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Checking for out-of-date RBIs...
 
 
@@ -1433,8 +1434,8 @@ module Tapioca
           result = @project.tapioca("dsl --verify")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Checking for out-of-date RBIs...
 
 
@@ -1480,8 +1481,8 @@ module Tapioca
           result = @project.tapioca("dsl --verify")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Checking for out-of-date RBIs...
 
 
@@ -1561,7 +1562,6 @@ module Tapioca
 
           foo = mock_gem("foo", "0.0.1") do
             write("lib/tapioca/dsl/compilers/post_compiler.rb", <<~RB)
-              require "post"
               require "tapioca/dsl"
 
               class PostCompiler < Tapioca::Dsl::Compiler
@@ -1590,9 +1590,11 @@ module Tapioca
 
           result = @project.tapioca("dsl Post")
 
+          assert_empty_stderr(result)
+
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
             Compiling DSL RBI files...
 
                   create  sorbet/rbi/dsl/post.rbi
@@ -1620,7 +1622,6 @@ module Tapioca
             end
           RBI
 
-          assert_empty_stderr(result)
           assert_success_status(result)
         end
 
@@ -1859,8 +1860,8 @@ module Tapioca
           result = @project.tapioca("dsl --list-compilers")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
 
             Loaded DSL compiler classes:
 
@@ -1888,8 +1889,8 @@ module Tapioca
           result = @project.tapioca("dsl --list-compilers --exclude SmartProperties ActiveRecordEnum")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
 
             Loaded DSL compiler classes:
 
@@ -1917,8 +1918,8 @@ module Tapioca
           result = @project.tapioca("dsl --list-compilers --only SmartProperties ActiveRecordEnum")
 
           assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
             Loading DSL compiler classes... Done
+            Loading Rails application... Done
 
             Loaded DSL compiler classes:
 
@@ -1972,7 +1973,6 @@ module Tapioca
           Error during application loading
           Continuing RBI generation without loading the Rails application.
           Done
-          Loading DSL compiler classes... Done
           Compiling DSL RBI files...
         OUT
         assert_success_status(res)
