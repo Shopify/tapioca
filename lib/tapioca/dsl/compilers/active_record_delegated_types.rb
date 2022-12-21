@@ -71,15 +71,17 @@ module Tapioca
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
 
-        ConstantType = type_member { { fixed: T.all(T.class_of(ActiveRecord::Base), Extensions::ActiveRecord) } }
+        ConstantType = type_member { { fixed: T.class_of(ActiveRecord::Base) } }
+        EXTENSION_DATA_KEY = :delegated_types
 
         sig { override.void }
         def decorate
-          return if constant.__tapioca_delegated_types.nil?
+          delegated_types = fetch_extension_info(EXTENSION_DATA_KEY)
+          return if delegated_types.nil?
 
           root.create_path(constant) do |model|
             model.create_module(DelegatedTypesModuleName) do |mod|
-              constant.__tapioca_delegated_types.each do |role, data|
+              delegated_types.each do |role, data|
                 types = data.fetch(:types)
                 options = data.fetch(:options, {})
                 populate_role_accessors(mod, role, types)
@@ -156,6 +158,11 @@ module Tapioca
             parameters: [],
             return_type: as_nilable_type(getter_type),
           )
+        end
+
+        intercept_method("ActiveRecord::Base.delegated_type") do |constant, role, types:, **options|
+          extension_info = fetch_extension_info(constant, EXTENSION_DATA_KEY) { {} }
+          extension_info[role] = { types: types, options: options }
         end
       end
     end
