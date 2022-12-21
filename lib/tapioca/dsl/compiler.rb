@@ -41,7 +41,51 @@ module Tapioca
           )
         end
 
+        sig { void }
+        def register_interceptors
+          interceptors.each do |method_name, interceptor|
+            constant_name, method_name, singleton_class = if method_name.include?("#")
+              [*method_name.split("#", 2), false]
+            else
+              [*method_name.split(".", 2), true]
+            end
+
+            constant = T.cast(Tapioca::Runtime::Reflection.constantize(T.must(constant_name)), Module)
+            constant = constant.singleton_class if singleton_class
+
+            constant.prepend(Module.new do
+              define_method(T.must(method_name)) do |*args, **kwargs, &blk|
+                interceptor.call(self, *args, **kwargs, &blk)
+                super(*args, **kwargs, &blk)
+              end
+            end)
+          end
+        end
+
         private
+
+        sig { returns(T::Hash[Module, T::Hash[Symbol, T.untyped]]) }
+        def extension_info
+          @extension_info_lookup ||= T.let({}.compare_by_identity,
+            T.nilable(T::Hash[Module, T::Hash[Symbol, T.untyped]]))
+        end
+
+        sig { returns(T::Array[[String, Proc]]) }
+        def interceptors
+          @interceptors ||= T.let([], T.nilable(T::Array[[String, T.proc.params(args: T.untyped).void]]))
+        end
+
+        def store_extension_info(constant, extension_name, info)
+          extension_info[constant] ||= {}
+          extension_info[constant][extension_name] = info
+        end
+
+        def fetch_extension_info(constant, extension_name, &blk)
+          extension_info.dig(constant, extension_name).then do |info|
+            info = store_extension_info(constant, extension_name, blk.call) if blk && info.nil?
+            info
+          end
+        end
 
         sig { returns(T::Enumerable[Class]) }
         def all_classes
@@ -53,6 +97,11 @@ module Tapioca
         def all_modules
           @all_modules = T.let(@all_modules, T.nilable(T::Enumerable[Module]))
           @all_modules ||= T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module]).each
+        end
+
+        sig { params(method_name: String, blk: T.untyped).void }
+        def intercept_method(method_name, &blk)
+          interceptors << [method_name, blk]
         end
       end
 
@@ -79,6 +128,10 @@ module Tapioca
       end
 
       private
+
+      def fetch_extension_info(extension_name)
+        self.class.send(:fetch_extension_info, constant, extension_name)
+      end
 
       # Get the types of each parameter from a method signature
       sig do
