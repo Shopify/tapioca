@@ -1464,8 +1464,6 @@ class IRB::DefaultEncodings < ::Struct
   #
   # @param value [Object] the value to set the attribute external to.
   # @return [Object] the newly set value
-  #
-  # source://irb//lib/irb/init.rb#431
   def external=(_); end
 
   # Returns the value of attribute internal
@@ -1477,13 +1475,12 @@ class IRB::DefaultEncodings < ::Struct
   #
   # @param value [Object] the value to set the attribute internal to.
   # @return [Object] the newly set value
-  #
-  # source://irb//lib/irb/init.rb#431
   def internal=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end

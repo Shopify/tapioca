@@ -90,6 +90,18 @@ FileUtils::LN_SUPPORTED = T.let(T.unsafe(nil), Array)
 # source://rake//lib/rake/file_utils.rb#10
 FileUtils::RUBY = T.let(T.unsafe(nil), String)
 
+# == Attribute Accessors per Thread
+#
+# Extends the module object with class/module and instance accessors for
+# class/module attributes, just like the native attr* accessors for instance
+# attributes, but does so on a per-thread basis.
+#
+# So the values are scoped within the Thread.current space under the class name
+# of the module.
+#
+# Note that it can also be scoped per-fiber if +Rails.application.config.active_support.isolation_level+
+# is set to +:fiber+.
+#
 # source://rake//lib/rake/ext/core.rb#2
 class Module
   # Check for an existing method in the current class before extending.  If
@@ -3065,6 +3077,11 @@ class Rake::Win32::Win32HomeError < ::RuntimeError; end
 # source://rake//lib/rake.rb#71
 RakeFileUtils = Rake::FileUtilsExt
 
+# String inflections define new methods on the String class to transform names for different purposes.
+# For instance, you can figure out the name of a table from the name of a class.
+#
+#   'ScaleScore'.tableize # => "scale_scores"
+#
 # source://rake//lib/rake/ext/string.rb#4
 class String
   include ::Comparable

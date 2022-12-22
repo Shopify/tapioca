@@ -559,11 +559,6 @@ Rack::Request::ALLOWED_SCHEMES = T.let(T.unsafe(nil), Array)
 # source://rack/2.2.4/lib/rack/request.rb#21
 Rack::Request::SCHEME_WHITELIST = T.let(T.unsafe(nil), Array)
 
-# Allows Writing of '100'.to_money for +String+ types
-# Excess characters will be discarded
-#   '100'.to_money => #<Money @cents=10000>
-#   '100.37'.to_money => #<Money @cents=10037>
-#
 # source://yard//lib/yard/core_ext/string.rb#2
 class String
   include ::Comparable
