@@ -19,33 +19,7 @@ module Tapioca
 
           column_type = @constant.attribute_types[column_name]
 
-          getter_type =
-            case column_type
-            when defined?(MoneyColumn) && MoneyColumn::ActiveRecordType
-              "::Money"
-            when ActiveRecord::Type::Integer
-              "::Integer"
-            when ActiveRecord::Type::String
-              "::String"
-            when ActiveRecord::Type::Date
-              "::Date"
-            when ActiveRecord::Type::Decimal
-              "::BigDecimal"
-            when ActiveRecord::Type::Float
-              "::Float"
-            when ActiveRecord::Type::Boolean
-              "T::Boolean"
-            when ActiveRecord::Type::DateTime, ActiveRecord::Type::Time
-              "::Time"
-            when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
-              "::ActiveSupport::TimeWithZone"
-            when ActiveRecord::Enum::EnumType
-              "::String"
-            when ActiveRecord::Type::Serialized
-              serialized_column_type(column_type)
-            else
-              handle_unknown_type(column_type)
-            end
+          getter_type = type_for_activerecord_value(column_type)
 
           column = @constant.columns_hash[column_name]
           setter_type =
@@ -70,6 +44,42 @@ module Tapioca
         end
 
         private
+
+        sig { params(column_type: T.untyped).returns(String) }
+        def type_for_activerecord_value(column_type)
+          case column_type
+          when defined?(MoneyColumn) && MoneyColumn::ActiveRecordType
+            "::Money"
+          when ActiveRecord::Type::Integer
+            "::Integer"
+          when ActiveRecord::Type::String
+            "::String"
+          when ActiveRecord::Type::Date
+            "::Date"
+          when ActiveRecord::Type::Decimal
+            "::BigDecimal"
+          when ActiveRecord::Type::Float
+            "::Float"
+          when ActiveRecord::Type::Boolean
+            "T::Boolean"
+          when ActiveRecord::Type::DateTime, ActiveRecord::Type::Time
+            "::Time"
+          when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
+            "::ActiveSupport::TimeWithZone"
+          when ActiveRecord::Enum::EnumType
+            "::String"
+          when ActiveRecord::Type::Serialized
+            serialized_column_type(column_type)
+          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL) &&
+            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore
+            "T::Hash[::String, ::String]"
+          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL) &&
+            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array
+            "T::Array[#{type_for_activerecord_value(column_type.subtype)}]"
+          else
+            handle_unknown_type(column_type)
+          end
+        end
 
         sig { params(constant: Module).returns(T::Boolean) }
         def do_not_generate_strong_types?(constant)
