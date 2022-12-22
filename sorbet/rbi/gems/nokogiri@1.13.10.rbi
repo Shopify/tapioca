@@ -6518,8 +6518,6 @@ end
 
 class Object < ::BasicObject
   include ::Kernel
-  include ::ActiveSupport::ForkTracker::CoreExt
-  include ::ActiveSupport::ForkTracker::CoreExtPrivate
 
   private
 

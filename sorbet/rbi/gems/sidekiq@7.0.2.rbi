@@ -264,10 +264,10 @@ class Sidekiq::Config
   def initialize(options = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def [](*args, &block); end
+  def [](*args, **_arg1, &block); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def []=(*args, &block); end
+  def []=(*args, **_arg1, &block); end
 
   # How frequently Redis should be checked by a random Sidekiq process for
   # scheduled and retriable jobs. Each individual process will take turns by
@@ -331,7 +331,7 @@ class Sidekiq::Config
   def error_handlers; end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def fetch(*args, &block); end
+  def fetch(*args, **_arg1, &block); end
 
   # INTERNAL USE ONLY
   #
@@ -339,10 +339,10 @@ class Sidekiq::Config
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def has_key?(*args, &block); end
+  def has_key?(*args, **_arg1, &block); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def key?(*args, &block); end
+  def key?(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#234
   def logger; end
@@ -356,7 +356,7 @@ class Sidekiq::Config
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
-  def merge!(*args, &block); end
+  def merge!(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#129
   def new_redis_pool(size, name = T.unsafe(nil)); end
@@ -1128,7 +1128,7 @@ module Sidekiq::RedisClientAdapter::CompatMethods
   # redis-client's native `conn.call("hmset", ...)`
   #
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#26
-  def method_missing(*args, &block); end
+  def method_missing(*args, **_arg1, &block); end
 
   # @return [Boolean]
   #

@@ -1664,6 +1664,11 @@ SQLite3::VersionProxy::TINY = T.let(T.unsafe(nil), Integer)
 # source://sqlite3//lib/sqlite3/version.rb#13
 SQLite3::VersionProxy::VERSION = T.let(T.unsafe(nil), String)
 
+# Allows Writing of '100'.to_money for +String+ types
+# Excess characters will be discarded
+#   '100'.to_money => #<Money @cents=10000>
+#   '100.37'.to_money => #<Money @cents=10037>
+#
 # source://sqlite3//lib/sqlite3/statement.rb#4
 class String
   include ::Comparable

@@ -767,10 +767,10 @@ module RuboCop; end
 # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#4
 module RuboCop::Cop; end
 
-# source://rubocop/1.37.1/lib/rubocop/cop/mixin/allowed_methods.rb#38
+# source://rubocop/1.40.0/lib/rubocop/cop/mixin/allowed_methods.rb#38
 RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
 
-# source://rubocop/1.37.1/lib/rubocop/cop/mixin/allowed_pattern.rb#54
+# source://rubocop/1.40.0/lib/rubocop/cop/mixin/allowed_pattern.rb#54
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#5
@@ -841,13 +841,13 @@ end
 # source://shopify-money//lib/rubocop/cop/money/zero_money.rb#27
 RuboCop::Cop::Money::ZeroMoney::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop/1.37.1/lib/rubocop/ast_aliases.rb#5
+# source://rubocop/1.40.0/lib/rubocop/ast_aliases.rb#5
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 
-# source://rubocop/1.37.1/lib/rubocop/ast_aliases.rb#6
+# source://rubocop/1.40.0/lib/rubocop/ast_aliases.rb#6
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
-# source://rubocop/1.37.1/lib/rubocop/ast_aliases.rb#7
+# source://rubocop/1.40.0/lib/rubocop/ast_aliases.rb#7
 RuboCop::Token = RuboCop::AST::Token
 
 # Allows Writing of '100'.to_money for +String+ types
