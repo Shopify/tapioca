@@ -364,19 +364,19 @@ class Spoom::Context
 
   # Run a command with `bundle` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#150
+  # source://spoom//lib/spoom/context.rb#156
   sig { params(command: ::String, version: T.nilable(::String)).returns(::Spoom::ExecResult) }
   def bundle(command, version: T.unsafe(nil)); end
 
   # Run a command `bundle exec` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#163
+  # source://spoom//lib/spoom/context.rb#169
   sig { params(command: ::String, version: T.nilable(::String)).returns(::Spoom::ExecResult) }
   def bundle_exec(command, version: T.unsafe(nil)); end
 
   # Run `bundle install` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#157
+  # source://spoom//lib/spoom/context.rb#163
   sig { params(version: T.nilable(::String)).returns(::Spoom::ExecResult) }
   def bundle_install!(version: T.unsafe(nil)); end
 
@@ -384,67 +384,79 @@ class Spoom::Context
   #
   # Warning: it will `rm -rf` the context directory on the file system.
   #
-  # source://spoom//lib/spoom/context.rb#112
+  # source://spoom//lib/spoom/context.rb#118
   sig { void }
   def destroy!; end
 
   # Run a command in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#120
+  # source://spoom//lib/spoom/context.rb#126
   sig { params(command: ::String, capture_err: T::Boolean).returns(::Spoom::ExecResult) }
   def exec(command, capture_err: T.unsafe(nil)); end
 
+  # Does the context directory at `absolute_path` exist and is a directory?
+  #
+  # source://spoom//lib/spoom/context.rb#51
+  sig { returns(T::Boolean) }
+  def exist?; end
+
   # Does `relative_path` point to an existing file in this context directory?
   #
-  # source://spoom//lib/spoom/context.rb#72
+  # source://spoom//lib/spoom/context.rb#78
   sig { params(relative_path: ::String).returns(T::Boolean) }
   def file?(relative_path); end
 
   # Run a command prefixed by `git` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#171
+  # source://spoom//lib/spoom/context.rb#177
   sig { params(command: ::String).returns(::Spoom::ExecResult) }
   def git(command); end
 
   # Run `git checkout` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#183
+  # source://spoom//lib/spoom/context.rb#189
   sig { params(ref: ::String).returns(::Spoom::ExecResult) }
   def git_checkout!(ref: T.unsafe(nil)); end
 
   # Get the current git branch in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#189
+  # source://spoom//lib/spoom/context.rb#195
   sig { returns(T.nilable(::String)) }
   def git_current_branch; end
 
   # Run `git init` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#177
+  # source://spoom//lib/spoom/context.rb#183
   sig { params(branch: ::String).void }
   def git_init!(branch: T.unsafe(nil)); end
 
+  # Get the last commit in the currently checked out branch
+  #
+  # source://spoom//lib/spoom/context.rb#201
+  sig { params(short_sha: T::Boolean).returns(T.nilable(::Spoom::Git::Commit)) }
+  def git_last_commit(short_sha: T.unsafe(nil)); end
+
   # List all files in this context matching `pattern`
   #
-  # source://spoom//lib/spoom/context.rb#58
+  # source://spoom//lib/spoom/context.rb#64
   sig { params(pattern: ::String).returns(T::Array[::String]) }
   def glob(pattern = T.unsafe(nil)); end
 
   # List all files at the top level of this context directory
   #
-  # source://spoom//lib/spoom/context.rb#66
+  # source://spoom//lib/spoom/context.rb#72
   sig { returns(T::Array[::String]) }
   def list; end
 
   # Create the context directory at `absolute_path`
   #
-  # source://spoom//lib/spoom/context.rb#51
+  # source://spoom//lib/spoom/context.rb#57
   sig { void }
   def mkdir!; end
 
   # Move the file or directory from `from_relative_path` to `to_relative_path`
   #
-  # source://spoom//lib/spoom/context.rb#102
+  # source://spoom//lib/spoom/context.rb#108
   sig { params(from_relative_path: ::String, to_relative_path: ::String).void }
   def move!(from_relative_path, to_relative_path); end
 
@@ -452,37 +464,37 @@ class Spoom::Context
   #
   # Will raise if the file doesn't exist.
   #
-  # source://spoom//lib/spoom/context.rb#80
+  # source://spoom//lib/spoom/context.rb#86
   sig { params(relative_path: ::String).returns(::String) }
   def read(relative_path); end
 
   # Read the strictness sigil from the file at `relative_path` (returns `nil` if no sigil)
   #
-  # source://spoom//lib/spoom/context.rb#215
+  # source://spoom//lib/spoom/context.rb#227
   sig { params(relative_path: ::String).returns(T.nilable(::String)) }
   def read_file_strictness(relative_path); end
 
   # Read the `contents` of the Gemfile in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#138
+  # source://spoom//lib/spoom/context.rb#144
   sig { returns(T.nilable(::String)) }
   def read_gemfile; end
 
   # Read the contents of `sorbet/config` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#203
+  # source://spoom//lib/spoom/context.rb#215
   sig { returns(::String) }
   def read_sorbet_config; end
 
   # Remove the path at `relative_path` (recursive + force) in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#96
+  # source://spoom//lib/spoom/context.rb#102
   sig { params(relative_path: ::String).void }
   def remove!(relative_path); end
 
   # Run `bundle exec srb` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#197
+  # source://spoom//lib/spoom/context.rb#209
   sig { params(command: ::String).returns(::Spoom::ExecResult) }
   def srb(command); end
 
@@ -490,19 +502,19 @@ class Spoom::Context
   #
   # Append to the file if `append` is true.
   #
-  # source://spoom//lib/spoom/context.rb#88
+  # source://spoom//lib/spoom/context.rb#94
   sig { params(relative_path: ::String, contents: ::String, append: T::Boolean).void }
   def write!(relative_path, contents = T.unsafe(nil), append: T.unsafe(nil)); end
 
   # Set the `contents` of the Gemfile in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#144
+  # source://spoom//lib/spoom/context.rb#150
   sig { params(contents: ::String, append: T::Boolean).void }
   def write_gemfile!(contents, append: T.unsafe(nil)); end
 
   # Set the `contents` of `sorbet/config` in this context directory
   #
-  # source://spoom//lib/spoom/context.rb#209
+  # source://spoom//lib/spoom/context.rb#221
   sig { params(contents: ::String, append: T::Boolean).void }
   def write_sorbet_config!(contents, append: T.unsafe(nil)); end
 
@@ -1392,8 +1404,8 @@ module Spoom::Git
     # Get the last commit in the currently checked out branch
     #
     # source://spoom//lib/spoom/git.rb#79
-    sig { params(path: ::String).returns(T.nilable(::Spoom::Git::Commit)) }
-    def last_commit(path: T.unsafe(nil)); end
+    sig { params(path: ::String, short_sha: T::Boolean).returns(T.nilable(::Spoom::Git::Commit)) }
+    def last_commit(path: T.unsafe(nil), short_sha: T.unsafe(nil)); end
 
     # source://spoom//lib/spoom/git.rb#58
     sig { params(arg: ::String, path: ::String).returns(::Spoom::ExecResult) }
