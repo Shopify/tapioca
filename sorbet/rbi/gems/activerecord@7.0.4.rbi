@@ -12575,7 +12575,7 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
 end
 
 # source://activerecord//lib/active_record/connection_adapters/pool_config.rb#11
-ActiveRecord::ConnectionAdapters::PoolConfig::INSTANCES = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
+ActiveRecord::ConnectionAdapters::PoolConfig::INSTANCES = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
 
 # source://activerecord//lib/active_record/connection_adapters/pool_manager.rb#5
 class ActiveRecord::ConnectionAdapters::PoolManager
