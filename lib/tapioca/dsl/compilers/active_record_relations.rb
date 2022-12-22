@@ -217,7 +217,10 @@ module Tapioca
           T::Array[Symbol],
         )
         FINDER_METHODS = T.let(ActiveRecord::FinderMethods.instance_methods(false), T::Array[Symbol])
-        SIGNED_FINDER_METHODS = T.let(ActiveRecord::SignedId::ClassMethods.instance_methods(false), T::Array[Symbol])
+        SIGNED_FINDER_METHODS = T.let(
+          defined?(ActiveRecord::SignedId) ? ActiveRecord::SignedId::ClassMethods.instance_methods(false) : [],
+          T::Array[Symbol],
+        )
         CALCULATION_METHODS = T.let(ActiveRecord::Calculations.instance_methods(false), T::Array[Symbol])
         ENUMERABLE_QUERY_METHODS = T.let([:any?, :many?, :none?, :one?], T::Array[Symbol])
         FIND_OR_CREATE_METHODS = T.let(
