@@ -25,9 +25,12 @@ module Tapioca
 
     desc "init", "get project ready for type checking"
     def init
-      invoke(:configure)
-      invoke(:annotations)
-      invoke(:gem)
+      # We need to make sure that trackers stay enabled until the `gem` command is invoked
+      Runtime::Trackers.with_trackers_enabled do
+        invoke(:configure)
+        invoke(:annotations)
+        invoke(:gem)
+      end
       invoke(:todo)
 
       print_init_next_steps

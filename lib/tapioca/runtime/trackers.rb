@@ -13,6 +13,23 @@ module Tapioca
       class << self
         extend T::Sig
 
+        sig do
+          type_parameters(:Return)
+            .params(blk: T.proc.returns(T.type_parameter(:Return)))
+            .returns(T.type_parameter(:Return))
+        end
+        def with_trackers_enabled(&blk)
+          # Currently this is a dirty hack to ensure disabling trackers
+          # doesn't work while in the block passed to this method.
+          disable_all_method = method(:disable_all!)
+          define_singleton_method(:disable_all!) {}
+          blk.call
+        ensure
+          if disable_all_method
+            define_singleton_method(:disable_all!, disable_all_method)
+          end
+        end
+
         sig { void }
         def disable_all!
           @trackers.each(&:disable!)
