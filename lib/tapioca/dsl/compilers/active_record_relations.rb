@@ -224,6 +224,7 @@ module Tapioca
           defined?(ActiveRecord::SignedId) ? ActiveRecord::SignedId::ClassMethods.instance_methods(false) : [],
           T::Array[Symbol],
         )
+        BATCHES_METHODS = T.let(ActiveRecord::Batches.instance_methods(false), T::Array[Symbol])
         CALCULATION_METHODS = T.let(ActiveRecord::Calculations.instance_methods(false), T::Array[Symbol])
         ENUMERABLE_QUERY_METHODS = T.let([:any?, :many?, :none?, :one?], T::Array[Symbol])
         FIND_OR_CREATE_METHODS = T.let(
@@ -675,6 +676,62 @@ module Tapioca
                   create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
                 ],
                 return_type: "T.untyped",
+              )
+            end
+          end
+
+          BATCHES_METHODS.each do |method_name|
+            case method_name
+            when :find_each
+              order = ActiveRecord::Batches.instance_method(:find_each).parameters.include?([:key, :order])
+              create_common_method(
+                "find_each",
+                common_relation_methods_module,
+                parameters: [
+                  create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                  create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                  create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
+                  create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                  *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                  create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
+                ],
+                return_type: "T.nilable(T::Enumerator[#{constant_name}])",
+              )
+            when :find_in_batches
+              order = ActiveRecord::Batches.instance_method(:find_in_batches).parameters.include?([:key, :order])
+              create_common_method(
+                "find_in_batches",
+                common_relation_methods_module,
+                parameters: [
+                  create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                  create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                  create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
+                  create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                  *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                  create_block_param(
+                    "block",
+                    type: "T.nilable(T.proc.params(object: T::Array[#{constant_name}]).void)",
+                  ),
+                ],
+                return_type: "T.nilable(T::Enumerator[T::Enumerator[#{constant_name}]])",
+              )
+            when :in_batches
+              order = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :order])
+              use_ranges = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :use_ranges])
+              create_common_method(
+                "in_batches",
+                common_relation_methods_module,
+                parameters: [
+                  create_kw_opt_param("of", type: "Integer", default: "1000"),
+                  create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                  create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                  create_kw_opt_param("load", type: "T.untyped", default: "false"),
+                  create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                  *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                  *(create_kw_opt_param("use_ranges", type: "T.untyped", default: "nil") if use_ranges),
+                  create_block_param("block", type: "T.nilable(T.proc.params(object: #{RelationClassName}).void)"),
+                ],
+                return_type: "T.nilable(::ActiveRecord::Batches::BatchEnumerator)",
               )
             end
           end
