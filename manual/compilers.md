@@ -26,6 +26,7 @@ In the following section you will find all available DSL compilers:
 * [GraphqlInputObject](compiler_graphqlinputobject.md)
 * [GraphqlMutation](compiler_graphqlmutation.md)
 * [IdentityCache](compiler_identitycache.md)
+* [Kredis](compiler_kredis.md)
 * [MixedInClassAttributes](compiler_mixedinclassattributes.md)
 * [Protobuf](compiler_protobuf.md)
 * [RailsGenerators](compiler_railsgenerators.md)
