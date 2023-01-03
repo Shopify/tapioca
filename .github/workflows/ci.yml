@@ -56,6 +56,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
+          rubygems: 'latest'
       - name: Install latest Bundler version
         run: gem install bundler
       - name: Run tests
