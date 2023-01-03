@@ -899,7 +899,7 @@ class IRB::Context
   # History values are available via <code>__</code> variable, see
   # IRB::History.
   #
-  # source://irb//lib/irb/extend-command.rb#332
+  # source://irb//lib/irb/extend-command.rb#366
   def eval_history=(*opts, &b); end
 
   # source://irb//lib/irb/context.rb#481
@@ -1259,7 +1259,7 @@ class IRB::Context
   #
   #     IRB.conf[:SAVE_HISTORY] = 1000
   #
-  # source://irb//lib/irb/extend-command.rb#332
+  # source://irb//lib/irb/extend-command.rb#366
   def save_history=(*opts, &b); end
 
   # Sets the return value from the last statement evaluated in this context
@@ -1309,7 +1309,7 @@ class IRB::Context
   #
   # See #use_loader for more information.
   #
-  # source://irb//lib/irb/extend-command.rb#332
+  # source://irb//lib/irb/extend-command.rb#366
   def use_loader=(*opts, &b); end
 
   # Whether multiline editor mode is enabled or not.
@@ -1379,7 +1379,7 @@ class IRB::Context
   #
   # See +lib/tracer.rb+ for more information.
   #
-  # source://irb//lib/irb/extend-command.rb#332
+  # source://irb//lib/irb/extend-command.rb#366
   def use_tracer=(*opts, &b); end
 
   # Whether verbose messages are displayed or not.
@@ -1430,7 +1430,7 @@ IRB::Context::NO_INSPECTING_IVARS = T.let(T.unsafe(nil), Array)
 
 # Extends methods for the Context module
 #
-# source://irb//lib/irb/extend-command.rb#304
+# source://irb//lib/irb/extend-command.rb#338
 module IRB::ContextExtender
   class << self
     # Evaluate the given +command+ from the given +load_file+ on the Context
@@ -1438,7 +1438,7 @@ module IRB::ContextExtender
     #
     # Will also define any given +aliases+ for the method.
     #
-    # source://irb//lib/irb/extend-command.rb#330
+    # source://irb//lib/irb/extend-command.rb#364
     def def_extend_command(cmd_name, load_file, *aliases); end
 
     # Installs the default context extensions as irb commands:
@@ -1448,7 +1448,7 @@ module IRB::ContextExtender
     # Context#use_loader=::     +irb/ext/use-loader.rb+
     # Context#save_history=::   +irb/ext/save-history.rb+
     #
-    # source://irb//lib/irb/extend-command.rb#320
+    # source://irb//lib/irb/extend-command.rb#354
     def install_extend_commands; end
   end
 end
@@ -1493,22 +1493,22 @@ module IRB::ExtendCommandBundle
   # Installs alias methods for the default irb commands, see
   # ::install_extend_commands.
   #
-  # source://irb//lib/irb/extend-command.rb#265
+  # source://irb//lib/irb/extend-command.rb#299
   def install_alias_method(to, from, override = T.unsafe(nil)); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_backtrace(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_break(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_catch(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_change_workspace(*opts, **kwargs, &b); end
 
   # Displays current configuration.
@@ -1518,22 +1518,22 @@ module IRB::ExtendCommandBundle
   # source://irb//lib/irb/extend-command.rb#36
   def irb_context; end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_continue(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_current_working_workspace(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_debug(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_debug_info(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_delete(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_edit(*opts, **kwargs, &b); end
 
   # Quits the current irb context
@@ -1545,65 +1545,71 @@ module IRB::ExtendCommandBundle
   # source://irb//lib/irb/extend-command.rb#29
   def irb_exit(ret = T.unsafe(nil)); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_fg(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_finish(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_help(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_info(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_jobs(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_kill(*opts, **kwargs, &b); end
 
   # Loads the given file similarly to Kernel#load, see IrbLoader#irb_load
   #
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_load(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_ls(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_measure(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_next(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_pop_workspace(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_push_workspace(*opts, **kwargs, &b); end
 
   # Loads the given file similarly to Kernel#require
   #
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_require(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
+  def irb_show_cmds(*opts, **kwargs, &b); end
+
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_show_source(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_source(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_step(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_whereami(*opts, **kwargs, &b); end
 
-  # source://irb//lib/irb/extend-command.rb#232
+  # source://irb//lib/irb/extend-command.rb#266
   def irb_workspaces(*opts, **kwargs, &b); end
 
   class << self
+    # source://irb//lib/irb/extend-command.rb#201
+    def all_commands_info; end
+
     # Evaluate the given +cmd_name+ on the given +cmd_class+ Class.
     #
     # Will also define any given +aliases+ for the method.
@@ -1611,26 +1617,26 @@ module IRB::ExtendCommandBundle
     # The optional +load_file+ parameter will be required within the method
     # definition.
     #
-    # source://irb//lib/irb/extend-command.rb#220
+    # source://irb//lib/irb/extend-command.rb#254
     def def_extend_command(cmd_name, cmd_class, load_file = T.unsafe(nil), *aliases); end
 
     # Installs alias methods for the default irb commands on the given object
     # using #install_alias_method.
     #
-    # source://irb//lib/irb/extend-command.rb#291
+    # source://irb//lib/irb/extend-command.rb#325
     def extend_object(obj); end
 
     # Installs the default irb commands.
     #
-    # source://irb//lib/irb/extend-command.rb#208
+    # source://irb//lib/irb/extend-command.rb#242
     def install_extend_commands; end
 
-    # source://irb//lib/irb/extend-command.rb#285
+    # source://irb//lib/irb/extend-command.rb#319
     def irb_original_method_name(method_name); end
 
     # Convert a command name to its implementation class if such command exists
     #
-    # source://irb//lib/irb/extend-command.rb#194
+    # source://irb//lib/irb/extend-command.rb#228
     def load_command(command); end
   end
 end
@@ -2056,18 +2062,18 @@ IRB::MagicFile = T.let(T.unsafe(nil), Object)
 
 # A convenience module for extending Ruby methods.
 #
-# source://irb//lib/irb/extend-command.rb#347
+# source://irb//lib/irb/extend-command.rb#381
 module IRB::MethodExtender
   # Extends the given +base_method+ with a postfix call to the given
   # +extend_method+.
   #
-  # source://irb//lib/irb/extend-command.rb#366
+  # source://irb//lib/irb/extend-command.rb#400
   def def_post_proc(base_method, extend_method); end
 
   # Extends the given +base_method+ with a prefix call to the given
   # +extend_method+.
   #
-  # source://irb//lib/irb/extend-command.rb#350
+  # source://irb//lib/irb/extend-command.rb#384
   def def_pre_proc(base_method, extend_method); end
 
   # Returns a unique method name to use as an alias for the given +name+.
@@ -2078,7 +2084,7 @@ module IRB::MethodExtender
   #     def bar; end
   #     new_alias_name('bar') #=> __alias_of__bar__2
   #
-  # source://irb//lib/irb/extend-command.rb#387
+  # source://irb//lib/irb/extend-command.rb#421
   def new_alias_name(name, prefix = T.unsafe(nil), postfix = T.unsafe(nil)); end
 end
 

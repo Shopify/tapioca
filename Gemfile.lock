@@ -116,7 +116,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    debug (1.7.0)
+    debug (1.7.1)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
     deep_merge (1.2.2)
@@ -169,8 +169,8 @@ GEM
     identity_cache (1.2.0)
       activerecord (>= 5.2)
       ar_transaction_changes (~> 1.1)
-    io-console (0.5.11)
-    irb (1.5.1)
+    io-console (0.6.0)
+    irb (1.6.2)
       reline (>= 0.3.0)
     json (2.6.3)
     kramdown (2.4.0)
@@ -263,7 +263,7 @@ GEM
     redis-client (0.11.2)
       connection_pool
     regexp_parser (2.6.1)
-    reline (0.3.1)
+    reline (0.3.2)
       io-console (~> 0.5)
     rexml (3.2.5)
     rubocop (1.40.0)
