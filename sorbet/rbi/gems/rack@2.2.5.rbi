@@ -2193,8 +2193,6 @@ class Rack::MockResponse < ::Rack::Response
   end
 end
 
-# For backwards compatibility with 1.1.0 and below
-#
 # source://rack-test/2.0.2/lib/rack/test.rb#413
 Rack::MockSession = Rack::Test::Session
 

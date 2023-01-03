@@ -779,7 +779,7 @@ class Sprockets::Cache::MemoryStore
   #
   # Returns true
   #
-  # source://sprockets//lib/sprockets/cache/memory_store.rb#69
+  # source://sprockets//lib/sprockets/cache/memory_store.rb#76
   def clear(options = T.unsafe(nil)); end
 
   # Public: Retrieve value from cache.
@@ -790,14 +790,14 @@ class Sprockets::Cache::MemoryStore
   #
   # Returns Object or nil or the value is not set.
   #
-  # source://sprockets//lib/sprockets/cache/memory_store.rb#34
+  # source://sprockets//lib/sprockets/cache/memory_store.rb#35
   def get(key); end
 
   # Public: Pretty inspect
   #
   # Returns String.
   #
-  # source://sprockets//lib/sprockets/cache/memory_store.rb#62
+  # source://sprockets//lib/sprockets/cache/memory_store.rb#67
   def inspect; end
 
   # Public: Set a key and value in the cache.
@@ -809,7 +809,7 @@ class Sprockets::Cache::MemoryStore
   #
   # Returns Object value.
   #
-  # source://sprockets//lib/sprockets/cache/memory_store.rb#52
+  # source://sprockets//lib/sprockets/cache/memory_store.rb#55
   def set(key, value); end
 end
 
@@ -2387,11 +2387,11 @@ module Sprockets::Exporting
 
   # Public: Remove Exporting processor `klass` for `mime_type`.
   #
-  #     environment.unregister_exporter '*/*', Sprockets::Exporters::Zlib
+  #     environment.unregister_exporter '*/*', Sprockets::Exporters::ZlibExporter
   #
   # Can be called without a mime type
   #
-  #     environment.unregister_exporter Sprockets::Exporters::Zlib
+  #     environment.unregister_exporter Sprockets::Exporters::ZlibExporter
   #
   # Does not remove any exporters that depend on `klass`.
   #
@@ -5158,7 +5158,7 @@ module Sprockets::Utils
   #
   # Returns a Set of nodes.
   #
-  # source://sprockets//lib/sprockets/utils.rb#160
+  # source://sprockets//lib/sprockets/utils.rb#165
   def dfs(initial); end
 
   # Internal: Post-order Depth-First search algorithm that gathers all paths
@@ -5172,7 +5172,7 @@ module Sprockets::Utils
   #
   # Returns an Array of node Arrays.
   #
-  # source://sprockets//lib/sprockets/utils.rb#187
+  # source://sprockets//lib/sprockets/utils.rb#192
   def dfs_paths(path); end
 
   # Internal: Check if object can safely be .dup'd.
@@ -5227,7 +5227,7 @@ module Sprockets::Utils
   #
   # Returns result of block.
   #
-  # source://sprockets//lib/sprockets/utils.rb#126
+  # source://sprockets//lib/sprockets/utils.rb#129
   def module_include(base, mod); end
 
   # Internal: Check if string has a trailing semicolon.
@@ -5343,6 +5343,9 @@ module Sprockets::Utils::Gzip::ZopfliArchiver
     def call(file, source, mtime); end
   end
 end
+
+# source://sprockets//lib/sprockets/utils.rb#121
+Sprockets::Utils::MODULE_INCLUDE_MUTEX = T.let(T.unsafe(nil), Thread::Mutex)
 
 # source://sprockets//lib/sprockets/utils.rb#71
 Sprockets::Utils::WHITESPACE_ORDINALS = T.let(T.unsafe(nil), Hash)
