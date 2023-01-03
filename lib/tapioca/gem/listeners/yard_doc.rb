@@ -7,16 +7,19 @@ module Tapioca
       class YardDoc < Base
         extend T::Sig
 
-        IGNORED_COMMENTS = T.let([
-          ":doc:",
-          ":nodoc:",
-          "typed:",
-          "frozen_string_literal:",
-          "encoding:",
-          "warn_indent:",
-          "shareable_constant_value:",
-          "rubocop:",
-        ], T::Array[String])
+        IGNORED_COMMENTS = T.let(
+          [
+            ":doc:",
+            ":nodoc:",
+            "typed:",
+            "frozen_string_literal:",
+            "encoding:",
+            "warn_indent:",
+            "shareable_constant_value:",
+            "rubocop:",
+          ],
+          T::Array[String],
+        )
 
         IGNORED_SIG_TAGS = T.let(["param", "return"], T::Array[String])
 

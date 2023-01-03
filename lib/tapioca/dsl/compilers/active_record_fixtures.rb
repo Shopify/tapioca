@@ -72,11 +72,14 @@ module Tapioca
 
         sig { returns(Class) }
         def fixture_loader
-          @fixture_loader ||= T.let(Class.new do
-            T.unsafe(self).include(ActiveRecord::TestFixtures)
-            T.unsafe(self).fixture_path = Rails.root.join("test", "fixtures")
-            T.unsafe(self).fixtures(:all)
-          end, T.nilable(Class))
+          @fixture_loader ||= T.let(
+            Class.new do
+              T.unsafe(self).include(ActiveRecord::TestFixtures)
+              T.unsafe(self).fixture_path = Rails.root.join("test", "fixtures")
+              T.unsafe(self).fixtures(:all)
+            end,
+            T.nilable(Class),
+          )
         end
 
         sig { returns(T::Array[String]) }

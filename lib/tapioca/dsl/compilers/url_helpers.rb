@@ -102,10 +102,13 @@ module Tapioca
           end
         end
 
-        NON_DISCOVERABLE_INCLUDERS = T.let([
-          ActionDispatch::IntegrationTest,
-          ActionView::Helpers,
-        ], T::Array[Module])
+        NON_DISCOVERABLE_INCLUDERS = T.let(
+          [
+            ActionDispatch::IntegrationTest,
+            ActionView::Helpers,
+          ],
+          T::Array[Module],
+        )
 
         class << self
           extend T::Sig

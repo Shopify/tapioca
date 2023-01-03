@@ -85,18 +85,21 @@ module Tapioca
 
         private
 
-        TYPES = T.let({
-          boolean: "T::Boolean",
-          integer: "Integer",
-          string: "String",
-          float: "Float",
-          date: "Date",
-          time: "Time",
-          datetime: "DateTime",
-          decimal: "BigDecimal",
-          binary: "String",
-          text: "String",
-        }.freeze, T::Hash[Symbol, String])
+        TYPES = T.let(
+          {
+            boolean: "T::Boolean",
+            integer: "Integer",
+            string: "String",
+            float: "Float",
+            date: "Date",
+            time: "Time",
+            datetime: "DateTime",
+            decimal: "BigDecimal",
+            binary: "String",
+            text: "String",
+          }.freeze,
+          T::Hash[Symbol, String],
+        )
 
         sig { params(attr_type: Symbol).returns(String) }
         def type_for(attr_type)
@@ -109,9 +112,13 @@ module Tapioca
 
           klass.create_method(attribute, return_type: return_type)
           klass.create_method("#{attribute}?", return_type: "T::Boolean")
-          klass.create_method("#{attribute}=", parameters: [
-            create_param("value", type: return_type),
-          ], return_type: return_type)
+          klass.create_method(
+            "#{attribute}=",
+            parameters: [
+              create_param("value", type: return_type),
+            ],
+            return_type: return_type,
+          )
         end
       end
     end

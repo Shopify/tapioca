@@ -296,7 +296,9 @@ module Tapioca
     end
 
     desc "annotations", "Pull gem RBI annotations from remote sources"
-    option :sources, type: :array, default: [CENTRAL_REPO_ROOT_URI],
+    option :sources,
+      type: :array,
+      default: [CENTRAL_REPO_ROOT_URI],
       desc: "URIs of the sources to pull gem RBI annotations from"
     option :netrc, type: :boolean, default: true, desc: "Use .netrc to authenticate to private sources"
     option :netrc_file, type: :string, desc: "Path to .netrc file"

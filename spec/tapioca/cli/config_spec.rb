@@ -113,7 +113,7 @@ module Tapioca
           - invalid value for option only for key dsl - expected Array[String] but found [1, false]
           - invalid value for option exclude for key dsl - expected Array[String] but found [1, false]
           - invalid value for option exclude for key gem - expected Array[String] but found [1, false]
-          - invalid value for option typed_overrides for key gem - expected Hash[String, String] but found {\"msgpack\"=>false}
+          - invalid value for option typed_overrides for key gem - expected Hash[String, String] but found {"msgpack"=>false}
         ERR
 
         assert_empty_stdout(result)

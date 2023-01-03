@@ -196,22 +196,25 @@ module Tapioca
           T::Array[Symbol],
         )
 
-        QUERY_METHODS = T.let(begin
-          # Grab all Query methods
-          query_methods = ActiveRecord::QueryMethods.instance_methods(false)
-          # Grab all Spawn methods
-          query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
-          # Remove the ones we know are private API
-          query_methods -= [:arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
-          # Remove "where" which needs a custom return type for WhereChains
-          query_methods -= [:where]
-          # Remove the methods that ...
-          query_methods
-            .grep_v(/_clause$/) # end with "_clause"
-            .grep_v(/_values?$/) # end with "_value" or "_values"
-            .grep_v(/=$/) # end with "=""
-            .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
-        end, T::Array[Symbol])
+        QUERY_METHODS = T.let(
+          begin
+            # Grab all Query methods
+            query_methods = ActiveRecord::QueryMethods.instance_methods(false)
+            # Grab all Spawn methods
+            query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
+            # Remove the ones we know are private API
+            query_methods -= [:arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
+            # Remove "where" which needs a custom return type for WhereChains
+            query_methods -= [:where]
+            # Remove the methods that ...
+            query_methods
+              .grep_v(/_clause$/) # end with "_clause"
+              .grep_v(/_values?$/) # end with "_value" or "_values"
+              .grep_v(/=$/) # end with "=""
+              .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
+          end,
+          T::Array[Symbol],
+        )
         WHERE_CHAIN_QUERY_METHODS = T.let(
           ActiveRecord::QueryMethods::WhereChain.instance_methods(false),
           T::Array[Symbol],

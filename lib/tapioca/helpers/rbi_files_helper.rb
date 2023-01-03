@@ -212,16 +212,22 @@ module Tapioca
 
     sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }
     def extract_methods_and_attrs(nodes)
-      T.cast(nodes.select do |node|
-        node.is_a?(RBI::Method) || node.is_a?(RBI::Attr)
-      end, T::Array[T.any(RBI::Method, RBI::Attr)])
+      T.cast(
+        nodes.select do |node|
+          node.is_a?(RBI::Method) || node.is_a?(RBI::Attr)
+        end,
+        T::Array[T.any(RBI::Method, RBI::Attr)],
+      )
     end
 
     sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Mixin, RBI::RequiresAncestor)]) }
     def extract_mixins(nodes)
-      T.cast(nodes.select do |node|
-        node.is_a?(RBI::Mixin) || node.is_a?(RBI::RequiresAncestor)
-      end, T::Array[T.all(RBI::Mixin, RBI::RequiresAncestor)])
+      T.cast(
+        nodes.select do |node|
+          node.is_a?(RBI::Mixin) || node.is_a?(RBI::RequiresAncestor)
+        end,
+        T::Array[T.all(RBI::Mixin, RBI::RequiresAncestor)],
+      )
     end
 
     sig { params(nodes: T::Array[T.any(RBI::Method, RBI::Attr)]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }

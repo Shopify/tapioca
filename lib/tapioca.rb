@@ -43,11 +43,14 @@ module Tapioca
   DEFAULT_TODO_FILE = T.let("#{DEFAULT_RBI_DIR}/todo.rbi", String)
   DEFAULT_ANNOTATIONS_DIR = T.let("#{DEFAULT_RBI_DIR}/annotations", String)
 
-  DEFAULT_OVERRIDES = T.let({
-    # ActiveSupport overrides some core methods with different signatures
-    # so we generate a typed: false RBI for it to suppress errors
-    "activesupport" => "false",
-  }.freeze, T::Hash[String, String])
+  DEFAULT_OVERRIDES = T.let(
+    {
+      # ActiveSupport overrides some core methods with different signatures
+      # so we generate a typed: false RBI for it to suppress errors
+      "activesupport" => "false",
+    }.freeze,
+    T::Hash[String, String],
+  )
 
   DEFAULT_RBI_MAX_LINE_LENGTH = 120
   DEFAULT_ENVIRONMENT = "development"
