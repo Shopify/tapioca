@@ -154,21 +154,27 @@ module Tapioca
       end
 
       it "gets annotations from multiple repos" do
-        repo1 = create_repo({
-          rbi: <<~RBI,
-            # typed: true
+        repo1 = create_repo(
+          {
+            rbi: <<~RBI,
+              # typed: true
 
-            class AnnotationForRBI; end
-          RBI
-        }, repo_name: "repo1")
+              class AnnotationForRBI; end
+            RBI
+          },
+          repo_name: "repo1",
+        )
 
-        repo2 = create_repo({
-          spoom: <<~RBI,
-            # typed: strict
+        repo2 = create_repo(
+          {
+            spoom: <<~RBI,
+              # typed: strict
 
-            class AnnotationForSpoom; end
-          RBI
-        }, repo_name: "repo2")
+              class AnnotationForSpoom; end
+            RBI
+          },
+          repo_name: "repo2",
+        )
 
         result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
@@ -202,27 +208,33 @@ module Tapioca
       end
 
       it "merges annotations from multiple repos" do
-        repo1 = create_repo({
-          rbi: <<~RBI,
-            # typed: true
+        repo1 = create_repo(
+          {
+            rbi: <<~RBI,
+              # typed: true
 
-            class AnnotationForRBI
-              def foo; end
-              def bar; end
-            end
-          RBI
-        }, repo_name: "repo1")
+              class AnnotationForRBI
+                def foo; end
+                def bar; end
+              end
+            RBI
+          },
+          repo_name: "repo1",
+        )
 
-        repo2 = create_repo({
-          rbi: <<~RBI,
-            # typed: true
+        repo2 = create_repo(
+          {
+            rbi: <<~RBI,
+              # typed: true
 
-            class AnnotationForRBI
-              def foo; end
-              def baz; end
-            end
-          RBI
-        }, repo_name: "repo2")
+              class AnnotationForRBI
+                def foo; end
+                def baz; end
+              end
+            RBI
+          },
+          repo_name: "repo2",
+        )
 
         result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 
@@ -249,29 +261,35 @@ module Tapioca
       end
 
       it "handles conflicts with annotations from multiple repos" do
-        repo1 = create_repo({
-          spoom: <<~RBI,
-            # typed: true
+        repo1 = create_repo(
+          {
+            spoom: <<~RBI,
+              # typed: true
 
-            class AnnotationForSpoom
-              def foo(x, y); end
-              def bar; end
-              def baz; end
-            end
-          RBI
-        }, repo_name: "repo1")
+              class AnnotationForSpoom
+                def foo(x, y); end
+                def bar; end
+                def baz; end
+              end
+            RBI
+          },
+          repo_name: "repo1",
+        )
 
-        repo2 = create_repo({
-          spoom: <<~RBI,
-            # typed: true
+        repo2 = create_repo(
+          {
+            spoom: <<~RBI,
+              # typed: true
 
-            class AnnotationForSpoom
-              def foo(x); end
-              def bar(x); end
-              def baz; end
-            end
-          RBI
-        }, repo_name: "repo2")
+              class AnnotationForSpoom
+                def foo(x); end
+                def bar(x); end
+                def baz; end
+              end
+            RBI
+          },
+          repo_name: "repo2",
+        )
 
         result = @project.tapioca("annotations --sources #{repo1.path} #{repo2.path}")
 

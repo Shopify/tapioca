@@ -44,8 +44,17 @@ module Tapioca
         # https://github.com/aasm/aasm/blob/0e03746/lib/aasm/core/event.rb#L21-L29
         EVENT_CALLBACKS =
           T.let(
-            ["after", "after_commit", "after_transaction", "before", "before_transaction", "ensure", "error",
-             "before_success", "success",].freeze,
+            [
+              "after",
+              "after_commit",
+              "after_transaction",
+              "before",
+              "before_transaction",
+              "ensure",
+              "error",
+              "before_success",
+              "success",
+            ].freeze,
             T::Array[String],
           )
 

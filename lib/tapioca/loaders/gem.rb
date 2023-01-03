@@ -18,10 +18,12 @@ module Tapioca
           ).void
         end
         def load_application(bundle:, prerequire:, postrequire:, default_command:)
-          loader = new(bundle: bundle,
+          loader = new(
+            bundle: bundle,
             prerequire: prerequire,
             postrequire: postrequire,
-            default_command: default_command)
+            default_command: default_command,
+          )
           loader.load
         end
       end

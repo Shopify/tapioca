@@ -142,8 +142,10 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal(["TestCase::Bar", "TestCase::Baz", "TestCase::Qux"],
-                gathered_constants_in_namespace(:TestCase))
+              assert_equal(
+                ["TestCase::Bar", "TestCase::Baz", "TestCase::Qux"],
+                gathered_constants_in_namespace(:TestCase),
+              )
             end
           end
 

@@ -19,10 +19,13 @@ module Tapioca
 
     SORBET_PAYLOAD_URL = "https://github.com/sorbet/sorbet/tree/master/rbi"
 
-    FEATURE_REQUIREMENTS = T.let({
-      # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
-      non_generic_weak_map: ::Gem::Requirement.new(">= 0.5.10587"), # https://github.com/sorbet/sorbet/pull/6610
-    }.freeze, T::Hash[Symbol, ::Gem::Requirement])
+    FEATURE_REQUIREMENTS = T.let(
+      {
+        # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
+        non_generic_weak_map: ::Gem::Requirement.new(">= 0.5.10587"), # https://github.com/sorbet/sorbet/pull/6610
+      }.freeze,
+      T::Hash[Symbol, ::Gem::Requirement],
+    )
 
     sig { params(sorbet_args: String).returns(Spoom::ExecResult) }
     def sorbet(*sorbet_args)

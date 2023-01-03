@@ -91,8 +91,13 @@ module RBI
       return unless Tapioca::RBIHelper.valid_method_name?(name)
 
       sig = RBI::Sig.new(return_type: return_type)
-      method = RBI::Method.new(name, sigs: [sig], is_singleton: class_method, visibility: visibility,
-        comments: comments)
+      method = RBI::Method.new(
+        name,
+        sigs: [sig],
+        is_singleton: class_method,
+        visibility: visibility,
+        comments: comments,
+      )
       parameters.each do |param|
         method << param.param
         sig << RBI::SigParam.new(param.param.name, param.type)

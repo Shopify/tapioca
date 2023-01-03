@@ -119,10 +119,13 @@ module Tapioca
           mod.create_method(property.reader.to_s, return_type: type)
         end
 
-        BOOLEANS = T.let([
-          [true, false],
-          [false, true],
-        ].freeze, T::Array[[T::Boolean, T::Boolean]])
+        BOOLEANS = T.let(
+          [
+            [true, false],
+            [false, true],
+          ].freeze,
+          T::Array[[T::Boolean, T::Boolean]],
+        )
 
         sig { params(property: ::SmartProperties::Property).returns(String) }
         def type_for(property)

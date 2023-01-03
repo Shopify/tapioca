@@ -26,12 +26,15 @@ module Tapioca
     end
   end
 
-  DEFAULT_RBI_FORMATTER = T.let(RBIFormatter.new(
-    add_sig_templates: false,
-    group_nodes: true,
-    max_line_length: nil,
-    nest_singleton_methods: true,
-    nest_non_public_methods: true,
-    sort_nodes: true,
-  ), RBIFormatter)
+  DEFAULT_RBI_FORMATTER = T.let(
+    RBIFormatter.new(
+      add_sig_templates: false,
+      group_nodes: true,
+      max_line_length: nil,
+      nest_singleton_methods: true,
+      nest_non_public_methods: true,
+      sort_nodes: true,
+    ),
+    RBIFormatter,
+  )
 end

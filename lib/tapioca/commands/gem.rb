@@ -156,9 +156,11 @@ module Tapioca
 
         rbi = RBI::File.new(strictness: @typed_overrides[gem.name] || "true")
 
-        @rbi_formatter.write_header!(rbi,
+        @rbi_formatter.write_header!(
+          rbi,
           default_command(:gem, gem.name),
-          reason: "types exported from the `#{gem.name}` gem") if @file_header
+          reason: "types exported from the `#{gem.name}` gem",
+        ) if @file_header
 
         rbi.root = Tapioca::Gem::Pipeline.new(gem, include_doc: @include_doc, include_loc: @include_loc).compile
 

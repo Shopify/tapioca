@@ -48,8 +48,10 @@ module Tapioca
 
         ConstantType = type_member do
           {
-            fixed: T.all(Module,
-              ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods),
+            fixed: T.all(
+              Module,
+              ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods,
+            ),
           }
         end
 

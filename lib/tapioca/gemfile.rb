@@ -154,8 +154,12 @@ module Tapioca
 
       IGNORED_GEMS = T.let(
         [
-          "sorbet", "sorbet-static", "sorbet-runtime", "sorbet-static-and-runtime",
-          "debug", "fakefs",
+          "sorbet",
+          "sorbet-static",
+          "sorbet-runtime",
+          "sorbet-static-and-runtime",
+          "debug",
+          "fakefs",
         ].freeze,
         T::Array[String],
       )

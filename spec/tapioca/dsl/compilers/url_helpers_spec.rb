@@ -18,12 +18,15 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                ],
+                gathered_constants,
+              )
             end
 
             it "gathers constants that include url_helpers" do
@@ -36,13 +39,16 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-                "MyClass",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                  "MyClass",
+                ],
+                gathered_constants,
+              )
             end
 
             it "gathers constants that extend url_helpers" do
@@ -55,13 +61,16 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-                "MyClass",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                  "MyClass",
+                ],
+                gathered_constants,
+              )
             end
 
             it "gathers constants that have a singleton class that includes url_helpers" do
@@ -76,13 +85,16 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-                "MyClass",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                  "MyClass",
+                ],
+                gathered_constants,
+              )
             end
 
             it "does not gather constants when its superclass includes url_helpers" do
@@ -98,13 +110,16 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-                "SuperClass",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                  "SuperClass",
+                ],
+                gathered_constants,
+              )
             end
 
             it "gathers constants when its superclass extends url_helpers" do
@@ -120,13 +135,16 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-                "SuperClass",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                  "SuperClass",
+                ],
+                gathered_constants,
+              )
             end
 
             it "does not gather constants when the constant and its superclass includes url_helpers" do
@@ -143,13 +161,16 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-                "SuperClass",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                  "SuperClass",
+                ],
+                gathered_constants,
+              )
             end
 
             it "does not gather XPath" do
@@ -160,12 +181,15 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                ],
+                gathered_constants,
+              )
             end
 
             it "gathers constants even when `hash` is overriden" do
@@ -189,12 +213,15 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal([
-                "ActionDispatch::IntegrationTest",
-                "ActionView::Helpers",
-                "GeneratedPathHelpersModule",
-                "GeneratedUrlHelpersModule",
-              ], gathered_constants)
+              assert_equal(
+                [
+                  "ActionDispatch::IntegrationTest",
+                  "ActionView::Helpers",
+                  "GeneratedPathHelpersModule",
+                  "GeneratedUrlHelpersModule",
+                ],
+                gathered_constants,
+              )
             end
           end
 
