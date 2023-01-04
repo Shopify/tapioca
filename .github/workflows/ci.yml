@@ -42,8 +42,6 @@ jobs:
         include:
           - gemfile: gemfiles/Gemfile-rails-main
             experimental: true
-          - ruby: "3.2"
-            experimental: true
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
