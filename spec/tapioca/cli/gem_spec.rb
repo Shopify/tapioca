@@ -1880,7 +1880,7 @@ module Tapioca
         @project.require_mock_gem(type_variable)
         @project.bundle_install
 
-        result = @project.tapioca("gem")
+        result = @project.tapioca("gem type_variable")
 
         assert_stdout_includes(result, <<~OUT)
           Compiled type_variable
