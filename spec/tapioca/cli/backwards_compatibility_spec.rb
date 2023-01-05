@@ -96,16 +96,17 @@ module Tapioca
           end
         RBI
 
-        @generic_type = mock_gem("generic_type", "0.0.1") do
+        generic_type = mock_gem("generic_type", "0.0.1") do
           write("lib/generic_type.rb", GENERIC_TYPE_RB)
         end
-        @project.require_mock_gem(@generic_type)
+        @project.require_mock_gem(generic_type)
       end
 
       it "must succeed on sorbet-runtime < 0.5.10554" do
         @project.require_real_gem("sorbet-static-and-runtime", "=0.5.10539")
         @project.bundle_install
-        result = @project.tapioca("gem", enforce_typechecking: false)
+
+        result = @project.tapioca("gem generic_type", enforce_typechecking: false)
 
         assert_stdout_includes(result, @expected_out)
         assert_project_file_equal("sorbet/rbi/gems/generic_type@0.0.1.rbi", @expected_rbi)
@@ -116,7 +117,8 @@ module Tapioca
       it "must succeed on sorbet-runtime >= 0.5.10554" do
         @project.require_real_gem("sorbet-static-and-runtime", ">=0.5.10554")
         @project.bundle_install
-        result = @project.tapioca("gem", enforce_typechecking: false)
+
+        result = @project.tapioca("gem generic_type", enforce_typechecking: false)
 
         assert_stdout_includes(result, @expected_out)
         assert_project_file_equal("sorbet/rbi/gems/generic_type@0.0.1.rbi", @expected_rbi)
