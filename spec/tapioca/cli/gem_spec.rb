@@ -530,7 +530,7 @@ module Tapioca
             require "foo/secret"
           RB
 
-          result = @project.tapioca("gem --exclude bar")
+          result = @project.tapioca("gem foo --exclude bar")
 
           refute_includes(result.out, <<~OUT)
             Compiled bar
