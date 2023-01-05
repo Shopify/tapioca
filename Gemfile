@@ -4,6 +4,7 @@ source("https://rubygems.org")
 
 gemspec
 
+gem("bundler", "~> 2.4.2")
 gem("minitest")
 gem("minitest-hooks")
 gem("minitest-reporters")

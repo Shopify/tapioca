@@ -47,16 +47,12 @@ jobs:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
       - uses: actions/checkout@v3.2.0
-      - if: ${{ matrix.ruby == '3.2' }}
-        run: "rm -f ${{ matrix.gemfile }}.lock"
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           rubygems: 'latest'
-      - name: Install latest Bundler version
-        run: gem install bundler
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
