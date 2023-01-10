@@ -1466,6 +1466,25 @@ module Tapioca
           assert_empty_stderr(result)
           assert_success_status(result)
         end
+
+        it "generates correct RBIs for a Rails engine" do
+          @project.require_real_gem("rails", "7.0.4")
+          @project.require_real_gem("turbo-rails", "1.3.2")
+          @project.bundle_install
+
+          response = @project.tapioca("gem turbo-rails")
+
+          assert_includes(response.out, "Compiled turbo-rails")
+
+          turbo_streams_rbi = @project.read("sorbet/rbi/gems/turbo-rails@1.3.2.rbi")
+
+          # The Turbo::Streams constant is never defined on its own, only as a namespace for child constants.
+          # Because of this, tapioca cannot create an annotation for it using traditional auto-loading methods
+          # By leveraging Zeitwerk auto-loading, tapioca can discover this constant and correctly create an
+          # annotation for it.
+          assert_includes(turbo_streams_rbi, "module Turbo::Streams; end")
+          assert_includes(turbo_streams_rbi, "module Turbo::Streams::ActionHelper")
+        end
       end
 
       describe "sync" do

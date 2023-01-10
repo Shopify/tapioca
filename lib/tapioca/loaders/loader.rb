@@ -58,7 +58,27 @@ module Tapioca
 
       sig { void }
       def load_rails_engines
-        rails_engines.each do |engine|
+        return if rails_engines.empty?
+
+        with_rails_application do
+          rails_engines.each do |engine|
+            eager_load_engine(engine)
+          end
+        end
+
+        rails_autoloader&.setup
+      end
+
+      sig { params(engine: T.class_of(Rails::Engine)).void }
+      def eager_load_engine(engine)
+        if rails_autoloader
+          engine.config.eager_load_paths.each do |path|
+            # Zeitwerk only accepts existing directories in `push_dir`.
+            next unless File.directory?(path)
+
+            rails_autoloader.push_dir(path)
+          end
+        else
           errored_files = []
 
           engine.config.eager_load_paths.each do |load_path|
@@ -69,8 +89,6 @@ module Tapioca
             end
           end
 
-          # Try files that have errored one more time
-          # It might have been a load order problem
           errored_files.each do |file|
             require(file)
           rescue LoadError, StandardError
@@ -79,15 +97,39 @@ module Tapioca
         end
       end
 
-      sig { returns(T::Array[T.untyped]) }
+      sig { returns(T.untyped) }
+      def rails_autoloader
+        return @rails_autoloader if defined?(@rails_autoloader)
+
+        @rails_autoloader = T.let(Rails.autoloaders.once, T.untyped) if Rails.respond_to?(:autoloaders)
+      end
+
+      sig { params(blk: T.proc.void).void }
+      def with_rails_application(&blk)
+        # Store the current Rails.application object so that we can restore it
+        rails_application = Rails.application
+
+        # Create a new Rails::Application object, so that we can load the engines.
+        # Some engines and the `Rails.autoloaders` call might expect `Rails.application`
+        # to be set, so we need to create one here.
+        unless rails_application
+          Rails.application = Class.new(Rails::Application)
+        end
+
+        blk.call
+      ensure
+        Rails.app_class = Rails.application = rails_application
+      end
+
+      T::Sig::WithoutRuntime.sig { returns(T::Array[T.class_of(Rails::Engine)]) }
       def rails_engines
-        return [] unless Object.const_defined?("Rails::Engine")
+        return [] unless defined?(Rails::Engine)
 
         safe_require("active_support/core_ext/class/subclasses")
 
         project_path = Bundler.default_gemfile.parent.expand_path
         # We can use `Class#descendants` here, since we know Rails is loaded
-        Object.const_get("Rails::Engine")
+        Rails::Engine
           .descendants
           .reject(&:abstract_railtie?)
           .reject { |engine| gem_in_app_dir?(project_path, engine.config.root.to_path) }
@@ -103,30 +145,25 @@ module Tapioca
       sig { void }
       def silence_deprecations
         # Stop any ActiveSupport Deprecations from being reported
-        Object.const_get("ActiveSupport::Deprecation").silenced = true
-      rescue NameError
-        nil
+        if defined?(ActiveSupport::Deprecation)
+          ActiveSupport::Deprecation.silenced = true
+        end
       end
 
       sig { void }
       def eager_load_rails_app
-        rails = Object.const_get("Rails")
-        application = rails.application
+        application = Rails.application
 
-        if Object.const_defined?("ActiveSupport")
-          Object.const_get("ActiveSupport").run_load_hooks(
-            :before_eager_load,
-            application,
-          )
+        if defined?(ActiveSupport)
+          ActiveSupport.run_load_hooks(:before_eager_load, application)
         end
 
-        if Object.const_defined?("Zeitwerk::Loader")
-          zeitwerk_loader = Object.const_get("Zeitwerk::Loader")
-          zeitwerk_loader.eager_load_all
+        if defined?(Zeitwerk::Loader)
+          Zeitwerk::Loader.eager_load_all
         end
 
-        if rails.respond_to?(:autoloaders) && rails.autoloaders.zeitwerk_enabled?
-          rails.autoloaders.each(&:eager_load)
+        if Rails.respond_to?(:autoloaders)
+          Rails.autoloaders.each(&:eager_load)
         end
 
         if application.config.respond_to?(:eager_load_namespaces)
