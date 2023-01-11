@@ -122,6 +122,21 @@ module Tapioca
           refute_success_status(result)
         end
 
+        it "ignores duplicates that have a different superclass" do
+          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+            class Foo
+            end
+          RBI
+
+          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+            class Foo < Object
+            end
+          RBI
+
+          result = @project.tapioca("check-shims --no-payload")
+          assert_success_status(result)
+        end
+
         it "ignores duplicates that have a signature" do
           @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
@@ -344,10 +359,6 @@ module Tapioca
         end
 
         it "detects duplicates from Sorbet's payload" do
-          @project.write("sorbet/rbi/shims/core/object.rbi", <<~RBI)
-            class Object; end
-          RBI
-
           @project.write("sorbet/rbi/shims/core/string.rbi", <<~RBI)
             class String
               sig { returns(String) }
@@ -375,10 +386,6 @@ module Tapioca
           OUT
 
           assert_equal(<<~ERR, result.err)
-
-            Duplicated RBI for ::Object:
-             * https://github.com/sorbet/sorbet/tree/master/rbi/core/object.rbi#L27
-             * sorbet/rbi/shims/core/object.rbi:1:0-1:17
 
             Duplicated RBI for ::String#capitalize:
              * https://github.com/sorbet/sorbet/tree/master/rbi/core/string.rbi#L406

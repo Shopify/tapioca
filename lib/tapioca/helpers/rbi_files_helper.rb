@@ -175,7 +175,15 @@ module Tapioca
       return false if shims_or_todos.empty?
 
       shims_or_todos_empty_scopes = extract_empty_scopes(shims_or_todos)
-      return true unless shims_or_todos_empty_scopes.empty?
+      shims_or_todos_empty_scopes.each do |shim_or_todo|
+        return true unless shim_or_todo.is_a?(RBI::Class)
+
+        nodes.each do |node|
+          return true unless node.is_a?(RBI::Class)
+          next if node == shim_or_todo
+          return true if node.superclass_name == shim_or_todo.superclass_name
+        end
+      end
 
       mixins = extract_mixins(shims_or_todos)
       return true unless mixins.empty?
