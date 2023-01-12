@@ -28,6 +28,7 @@ module Tapioca
         assert_equal(<<~CONFIG, @project.read("sorbet/config"))
           --dir
           .
+          --ignore=tmp/
           --ignore=vendor/
         CONFIG
 
