@@ -41,6 +41,7 @@ module Tapioca
         create_file(@sorbet_config, <<~CONTENT, skip: true, force: false)
           --dir
           .
+          --ignore=tmp/
           --ignore=vendor/
         CONTENT
       end
