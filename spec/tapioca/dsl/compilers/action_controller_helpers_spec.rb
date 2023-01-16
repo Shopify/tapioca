@@ -307,6 +307,48 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:UserController))
             end
+
+            it "does not crash if the helper redefines `name`" do
+              add_ruby_file("greet_helper.rb", <<~RUBY)
+                module GreetHelper
+                  class << self
+                    def name(str)
+                      str
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("controller.rb", <<~RUBY)
+                class UserController < ActionController::Base
+                  helper GreetHelper
+
+                  def current_user_name
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class UserController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ActionController::Base::HelperMethods
+                    include ::GreetHelper
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:UserController))
+            end
           end
         end
       end
