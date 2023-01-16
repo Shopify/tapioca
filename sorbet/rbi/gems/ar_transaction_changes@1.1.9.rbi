@@ -15,6 +15,9 @@ module ArTransactionChanges
   # source://ar_transaction_changes//lib/ar_transaction_changes.rb#23
   def _write_attribute(attr_name, value); end
 
+  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#37
+  def attribute_will_change!(attr_name); end
+
   # source://ar_transaction_changes//lib/ar_transaction_changes.rb#19
   def transaction_changed_attributes; end
 
@@ -23,11 +26,17 @@ module ArTransactionChanges
 
   private
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#66
+  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#53
+  def _deserialize_transaction_change_value(attr_name, value); end
+
+  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#78
   def _read_attribute_for_transaction(attr_name); end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#39
+  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#59
   def _store_transaction_changed_attributes(attr_name); end
+
+  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#48
+  def init_internals; end
 end
 
 # source://ar_transaction_changes//lib/ar_transaction_changes/version.rb#4
