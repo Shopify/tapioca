@@ -554,7 +554,7 @@ class IdentityCache::Cached::Attribute
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#21
   def attribute; end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#50
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#54
   def cache_key(index_key); end
 
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#37
@@ -568,7 +568,7 @@ class IdentityCache::Cached::Attribute
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#7
   def key_fields; end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#55
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#59
   def load_one_from_db(key); end
 
   # Returns the value of attribute model.
@@ -586,40 +586,40 @@ class IdentityCache::Cached::Attribute
   # @abstract
   # @raise [NotImplementedError]
   #
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#80
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#84
   def cache_key_from_key_values(_key_values); end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#88
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#92
   def cache_key_prefix; end
 
   # @abstract
   # @raise [NotImplementedError]
   #
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#65
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#69
   def cast_db_key(_index_key); end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#118
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#122
   def fetch_method_suffix; end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#84
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#88
   def field_types; end
 
   # @abstract
   # @raise [NotImplementedError]
   #
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#75
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#79
   def load_from_db_where_conditions(_index_key_or_keys); end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#98
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#102
   def new_cache_key(record); end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#103
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#107
   def old_cache_key(record); end
 
   # @abstract
   # @raise [NotImplementedError]
   #
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#70
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#74
   def unhashed_values_cache_key_string(_index_key); end
 end
 
@@ -628,7 +628,7 @@ class IdentityCache::Cached::AttributeByMulti < ::IdentityCache::Cached::Attribu
   # source://identity_cache//lib/identity_cache/cached/attribute_by_multi.rb#6
   def build; end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#50
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#54
   def cache_key_from_key_values(index_key); end
 
   private
@@ -1385,21 +1385,21 @@ module IdentityCache::ParentModelExpiration
 
   mixes_in_class_methods GeneratedClassMethods
 
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#53
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#54
   def add_parents_to_cache_expiry_set(parents_to_expire); end
 
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#60
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#61
   def add_record_to_cache_expiry_set(parents_to_expire, record); end
 
   # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#45
   def expire_parent_caches; end
 
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#66
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#67
   def parents_to_expire_on_changes(parents_to_expire, association_name, cached_associations); end
 
   # @return [Boolean]
   #
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#100
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#101
   def should_expire_identity_cache_parent?(foreign_key, only_on_foreign_key_change); end
 
   class << self
@@ -1446,7 +1446,8 @@ module IdentityCache::QueryAPI
   # source://identity_cache//lib/identity_cache/query_api.rb#166
   def _run_commit_callbacks; end
 
-  # Invalidate the cache data associated with the record.
+  # Invalidate the cache data associated with the record. Returns `true` on success,
+  # `false` otherwise.
   #
   # source://identity_cache//lib/identity_cache/query_api.rb#175
   def expire_cache; end
@@ -1454,12 +1455,15 @@ module IdentityCache::QueryAPI
   # @api private
   # @return [Boolean]
   #
-  # source://identity_cache//lib/identity_cache/query_api.rb#181
+  # source://identity_cache//lib/identity_cache/query_api.rb#183
   def was_new_record?; end
 
   private
 
-  # source://identity_cache//lib/identity_cache/query_api.rb#188
+  # Even if we have problems with some attributes, carry over the results and expire
+  # all possible attributes without array allocation.
+  #
+  # source://identity_cache//lib/identity_cache/query_api.rb#192
   def expire_attribute_indexes; end
 end
 
@@ -1569,12 +1573,12 @@ module IdentityCache::WithPrimaryIndex
 
   # @api private
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#15
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#16
   def expire_primary_index; end
 
   # @api private
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#20
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#21
   def primary_cache_index_key; end
 
   module GeneratedClassMethods
@@ -1620,7 +1624,7 @@ module IdentityCache::WithPrimaryIndex
   end
 end
 
-# source://identity_cache//lib/identity_cache/with_primary_index.rb#24
+# source://identity_cache//lib/identity_cache/with_primary_index.rb#25
 module IdentityCache::WithPrimaryIndex::ClassMethods
   # Declares a new index in the cache for the class where IdentityCache was
   # included.
@@ -1644,12 +1648,12 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # == Options
   # * unique: if the index would only have unique values. Default is false
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#56
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#57
   def cache_index(*fields, unique: T.unsafe(nil)); end
 
   # @api private
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#26
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#27
   def cached_primary_index; end
 
   # Similar to ActiveRecord::Base#exists? will return true if the id can be
@@ -1657,12 +1661,12 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   #
   # @return [Boolean]
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#97
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#98
   def exists_with_identity_cache?(id); end
 
   # Invalidates the primary cache index for the associated record. Will not invalidate cached attributes.
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#158
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#159
   def expire_primary_key_cache_index(id); end
 
   # Fetch the record by its primary key from the cache or read from
@@ -1689,7 +1693,7 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   #   seconds for `lock_wait_tries` other clients to fill the cache.
   # @return [self] An instance of this model for the record with the specified id
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#140
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#141
   def fetch(id, **options); end
 
   # Fetch the record by its primary key from the cache or read from
@@ -1716,17 +1720,22 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # @return [self|nil] An instance of this model for the record with the specified id or
   #   `nil` if no record with this `id` exists in the database
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#124
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#125
   def fetch_by_id(id, includes: T.unsafe(nil), **cache_fetcher_options); end
 
   # Default fetcher added to the model on inclusion, if behaves like
   # ActiveRecord::Base.find_all_by_id
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#148
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#149
   def fetch_multi(*ids, includes: T.unsafe(nil)); end
 
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#30
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#31
   def primary_cache_index_enabled; end
+
+  private
+
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#165
+  def inherited(subclass); end
 end
 
 # source://identity_cache//lib/identity_cache/without_primary_index.rb#4
