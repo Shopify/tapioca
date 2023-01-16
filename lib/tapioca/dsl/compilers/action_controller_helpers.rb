@@ -156,7 +156,7 @@ module Tapioca
         sig { params(mod: Module).returns(T::Array[String]) }
         def gather_includes(mod)
           mod.ancestors
-            .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || ancestor.name.nil? }
+            .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || name_of(ancestor).nil? }
             .map { |ancestor| T.must(qualified_name_of(ancestor)) }
             .reverse
         end
