@@ -663,6 +663,94 @@ module Tapioca
                 assert_includes(output, expected)
               end
 
+              it "generates methods for virtual attributes" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    attribute :publication_date, :date
+                  end
+                RUBY
+
+                output = rbi_for(:Post)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(::Date) }
+                  def publication_date; end
+
+                  sig { params(value: ::Date).returns(::Date) }
+                  def publication_date=(value); end
+
+                  sig { returns(T::Boolean) }
+                  def publication_date?; end
+
+                  sig { returns(T.nilable(::Date)) }
+                  def publication_date_before_last_save; end
+
+                  sig { returns(T.untyped) }
+                  def publication_date_before_type_cast; end
+
+                  sig { returns(T::Boolean) }
+                  def publication_date_came_from_user?; end
+
+                  sig { returns(T.nilable([::Date, ::Date])) }
+                  def publication_date_change; end
+
+                  sig { returns(T.nilable([::Date, ::Date])) }
+                  def publication_date_change_to_be_saved; end
+
+                  sig { returns(T::Boolean) }
+                  def publication_date_changed?; end
+
+                  sig { returns(T.nilable(::Date)) }
+                  def publication_date_in_database; end
+
+                  sig { returns(T.nilable([::Date, ::Date])) }
+                  def publication_date_previous_change; end
+
+                  sig { returns(T::Boolean) }
+                  def publication_date_previously_changed?; end
+
+                  sig { returns(T.nilable(::Date)) }
+                  def publication_date_previously_was; end
+
+                  sig { returns(T.nilable(::Date)) }
+                  def publication_date_was; end
+
+                  sig { void }
+                  def publication_date_will_change!; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { void }
+                  def restore_publication_date!; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable([::Date, ::Date])) }
+                  def saved_change_to_publication_date; end
+
+                  sig { returns(T::Boolean) }
+                  def saved_change_to_publication_date?; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T::Boolean) }
+                  def will_save_change_to_publication_date?; end
+                RBI
+                assert_includes(output, expected)
+              end
+
               it "discovers custom type from signature on deserialize method" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do

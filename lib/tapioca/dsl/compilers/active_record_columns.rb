@@ -16,7 +16,8 @@ module Tapioca
       # `Tapioca::Dsl::Compilers::ActiveRecordColumns` refines RBI files for subclasses of
       # [`ActiveRecord::Base`](https://api.rubyonrails.org/classes/ActiveRecord/Base.html).
       # This compiler is only responsible for defining the attribute methods that would be
-      # created for the columns that are defined in the Active Record model.
+      # created for columns and virtual attributes that are defined in the Active Record
+      # model.
       #
       # For example, with the following model class:
       # ~~~rb
@@ -109,8 +110,7 @@ module Tapioca
 
           root.create_path(constant) do |model|
             model.create_module(AttributeMethodsModuleName) do |mod|
-              constant.columns_hash.each_key do |column_name|
-                column_name = column_name.to_s
+              constant.attribute_names.each do |column_name|
                 add_methods_for_attribute(mod, column_name)
               end
 
