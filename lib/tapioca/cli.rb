@@ -130,11 +130,15 @@ module Tapioca
       type: :string,
       desc: "The path to the Rails application",
       default: "."
-    def dsl(*constants)
+    def dsl(*constant_or_paths)
       set_environment(options)
+
+      # Assume anything starting with a capital letter or colon is a class, otherwise a path
+      constants, paths = constant_or_paths.partition { |c| c =~ /\A[A-Z:]/ }
 
       command = Commands::Dsl.new(
         requested_constants: constants,
+        requested_paths: paths.map { |p| Pathname.new(p) },
         outpath: Pathname.new(options[:outdir]),
         only: options[:only],
         exclude: options[:exclude],

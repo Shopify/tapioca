@@ -10,6 +10,7 @@ module Tapioca
       sig do
         params(
           requested_constants: T::Array[String],
+          requested_paths: T::Array[Pathname],
           outpath: Pathname,
           only: T::Array[String],
           exclude: T::Array[String],
@@ -27,6 +28,7 @@ module Tapioca
       end
       def initialize(
         requested_constants:,
+        requested_paths:,
         outpath:,
         only:,
         exclude:,
@@ -42,6 +44,7 @@ module Tapioca
         app_root: "."
       )
         @requested_constants = requested_constants
+        @requested_paths = requested_paths
         @outpath = outpath
         @only = only
         @exclude = exclude
@@ -63,7 +66,7 @@ module Tapioca
       def list_compilers
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty?,
+          eager_load: @requested_constants.empty? && @requested_paths.empty?,
           app_root: @app_root,
         )
 
@@ -100,6 +103,15 @@ module Tapioca
           say("Compiling DSL RBI files...")
         end
         say("")
+
+        unless @requested_paths.empty?
+          constants_from_paths = Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a
+          if constants_from_paths.empty?
+            say_error("\nWarning: No constants found in: #{@requested_paths.map(&:to_s).join(", ")}", :yellow)
+          end
+
+          @requested_constants += constants_from_paths
+        end
 
         outpath = @should_verify ? Pathname.new(Dir.mktmpdir) : @outpath
         rbi_files_to_purge = existing_rbi_filenames(@requested_constants)
@@ -153,6 +165,7 @@ module Tapioca
       def create_pipeline
         Tapioca::Dsl::Pipeline.new(
           requested_constants: constantize(@requested_constants),
+          requested_paths: @requested_paths,
           requested_compilers: constantize_compilers(@only),
           excluded_compilers: constantize_compilers(@exclude),
           error_handler: ->(error) {
@@ -167,8 +180,9 @@ module Tapioca
         filenames = if requested_constants.empty?
           Pathname.glob(path / "**/*.rbi")
         else
-          requested_constants.map do |constant_name|
-            dsl_rbi_filename(constant_name)
+          requested_constants.filter_map do |constant_name|
+            filename = dsl_rbi_filename(constant_name)
+            filename if File.exist?(filename)
           end
         end
 
