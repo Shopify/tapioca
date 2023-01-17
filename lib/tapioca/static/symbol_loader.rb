@@ -41,6 +41,20 @@ module Tapioca
           symbols_from_paths(gem.files)
         end
 
+        sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
+        def symbols_from_paths(paths)
+          output = Tempfile.create("sorbet") do |file|
+            file.write(Array(paths).join("\n"))
+            file.flush
+
+            symbol_table_json_from("@#{file.path.shellescape}")
+          end
+
+          return Set.new if output.empty?
+
+          SymbolTableParser.parse_json(output)
+        end
+
         private
 
         sig { returns(T::Array[T.class_of(Rails::Engine)]) }
@@ -58,20 +72,6 @@ module Tapioca
         sig { params(input: String, table_type: String).returns(String) }
         def symbol_table_json_from(input, table_type: "symbol-table-json")
           sorbet("--no-config", "--quiet", "--print=#{table_type}", input).out
-        end
-
-        sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
-        def symbols_from_paths(paths)
-          output = Tempfile.create("sorbet") do |file|
-            file.write(Array(paths).join("\n"))
-            file.flush
-
-            symbol_table_json_from("@#{file.path.shellescape}")
-          end
-
-          return Set.new if output.empty?
-
-          SymbolTableParser.parse_json(output)
         end
       end
     end
