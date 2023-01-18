@@ -3,7 +3,8 @@
 `Tapioca::Dsl::Compilers::ActiveRecordColumns` refines RBI files for subclasses of
 [`ActiveRecord::Base`](https://api.rubyonrails.org/classes/ActiveRecord/Base.html).
 This compiler is only responsible for defining the attribute methods that would be
-created for the columns that are defined in the Active Record model.
+created for columns and virtual attributes that are defined in the Active Record
+model.
 
 For example, with the following model class:
 ~~~rb
