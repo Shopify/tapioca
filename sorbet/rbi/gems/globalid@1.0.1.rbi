@@ -373,7 +373,7 @@ module URI
   include ::URI::RFC2396_REGEXP
 end
 
-# source://globalid//lib/global_id/uri/gid.rb#27
+# source://globalid//lib/global_id/uri/gid.rb#7
 class URI::GID < ::URI::Generic
   # URI::GID encodes an app unique reference to a specific model as an URI.
   # It has the components: app name, model class name, model id and params.
@@ -396,7 +396,7 @@ class URI::GID < ::URI::Generic
   #
   # Read the documentation for +parse+, +create+ and +build+ for more.
   #
-  # source://uri/0.11.0/uri/generic.rb#243
+  # source://uri/0.12.0/uri/generic.rb#243
   def app; end
 
   # Returns the value of attribute model_id.
@@ -437,29 +437,29 @@ class URI::GID < ::URI::Generic
 
   private
 
-  # source://globalid//lib/global_id/uri/gid.rb#129
+  # source://globalid//lib/global_id/uri/gid.rb#126
   def check_host(host); end
 
-  # source://globalid//lib/global_id/uri/gid.rb#134
+  # source://globalid//lib/global_id/uri/gid.rb#131
   def check_path(path); end
 
-  # source://globalid//lib/global_id/uri/gid.rb#139
+  # source://globalid//lib/global_id/uri/gid.rb#136
   def check_scheme(scheme); end
 
-  # source://globalid//lib/global_id/uri/gid.rb#171
+  # source://globalid//lib/global_id/uri/gid.rb#168
   def parse_query_params(query); end
 
-  # source://globalid//lib/global_id/uri/gid.rb#147
+  # source://globalid//lib/global_id/uri/gid.rb#144
   def set_model_components(path, validate = T.unsafe(nil)); end
 
   # @raise [URI::InvalidComponentError]
   #
-  # source://globalid//lib/global_id/uri/gid.rb#157
+  # source://globalid//lib/global_id/uri/gid.rb#154
   def validate_component(component); end
 
   # @raise [MissingModelIdError]
   #
-  # source://globalid//lib/global_id/uri/gid.rb#164
+  # source://globalid//lib/global_id/uri/gid.rb#161
   def validate_model_id(model_id, model_name); end
 
   class << self
@@ -521,7 +521,10 @@ URI::GID::COMPONENT = T.let(T.unsafe(nil), Array)
 # source://globalid//lib/global_id/uri/gid.rb#32
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
 
-# Extracts model_name and model_id from the URI path.
-#
-# source://globalid//lib/global_id/uri/gid.rb#127
-URI::GID::PATH_REGEXP = T.let(T.unsafe(nil), Regexp)
+# source://uri/0.12.0/uri/common.rb#303
+URI::TBLENCURICOMP_ = T.let(T.unsafe(nil), Hash)
+
+class URI::WSS < ::URI::WS; end
+
+# source://uri/0.12.0/uri/wss.rb#19
+URI::WSS::DEFAULT_PORT = T.let(T.unsafe(nil), Integer)
