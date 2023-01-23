@@ -45,7 +45,13 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          arguments = constant.all_argument_definitions
+          graphql_gem = T.must(Gemfile.new([]).gem("graphql"))
+
+          # Skip methods explicitly defined in code
+          arguments = constant.all_argument_definitions.select do |argument|
+            source_location = constant.instance_method(argument.keyword.to_s).source_location&.first
+            source_location && graphql_gem.contains_path?(source_location)
+          end
           return if arguments.empty?
 
           root.create_path(constant) do |input_object|

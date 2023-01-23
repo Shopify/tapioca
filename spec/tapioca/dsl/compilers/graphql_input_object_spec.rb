@@ -39,7 +39,7 @@ module Tapioca
           end
 
           describe "decorate" do
-            it "generates an empty RBI file if there is no resolve method" do
+            it "generates an empty RBI file if there are no arguments" do
               add_ruby_file("create_comment_input.rb", <<~RUBY)
                 class CreateCommentInput < GraphQL::Schema::InputObject
                 end
@@ -71,6 +71,33 @@ module Tapioca
                   sig { returns(::String) }
                   def body; end
 
+                  sig { returns(::String) }
+                  def post_id; end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateCommentInput))
+            end
+
+            it "skips methods that are explicitly defined" do
+              add_ruby_file("create_comment_input.rb", <<~RUBY)
+                class CreateCommentInput < GraphQL::Schema::InputObject
+                  argument :body, String, required: true
+                  argument :post_id, ID, required: true
+
+                  def resolve(body:, post_id:)
+                    # ...
+                  end
+
+                  def body
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateCommentInput
                   sig { returns(::String) }
                   def post_id; end
                 end
