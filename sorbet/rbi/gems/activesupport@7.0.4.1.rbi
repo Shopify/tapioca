@@ -13,6 +13,9 @@
 # source://yard/0.9.28/lib/yard.rb#62
 ::RUBY19 = T.let(T.unsafe(nil), TrueClass)
 
+# source://config/4.1.0/lib/config.rb#56
+::Settings = T.let(T.unsafe(nil), Config::Options)
+
 # source://activesupport//lib/active_support/lazy_load_hooks.rb#3
 module ActiveSupport
   extend ::ActiveSupport::LazyLoadHooks
@@ -181,7 +184,7 @@ class ActiveSupport::ActionableError::NonActionable < ::StandardError; end
 #   variants.tablet?   # => true
 #   variants.desktop?  # => false
 #
-# source://activesupport//lib/active_support/array_inquirer.rb#24
+# source://activesupport//lib/active_support/array_inquirer.rb#12
 class ActiveSupport::ArrayInquirer < ::Array
   # Passes each element of +candidates+ collection to ArrayInquirer collection.
   # The method returns true if any element from the ArrayInquirer collection
@@ -531,6 +534,15 @@ module ActiveSupport::Cache::Coders::Rails70Coder
 
   # source://activesupport//lib/active_support/cache.rb#895
   def dump_compressed(entry, threshold); end
+end
+
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#26
+module ActiveSupport::Cache::ConnectionPoolLike
+  # @yield [_self]
+  # @yieldparam _self [ActiveSupport::Cache::ConnectionPoolLike] the object that the method was called on
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#27
+  def with; end
 end
 
 # source://activesupport//lib/active_support/cache.rb#27
@@ -934,6 +946,274 @@ end
 #
 # source://activesupport//lib/active_support/cache.rb#30
 ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
+
+# Redis cache store.
+#
+# Deployment note: Take care to use a *dedicated Redis cache* rather
+# than pointing this at your existing Redis server. It won't cope well
+# with mixed usage patterns and it won't expire cache entries by default.
+#
+# Redis cache server setup guide: https://redis.io/topics/lru-cache
+#
+# * Supports vanilla Redis, hiredis, and Redis::Distributed.
+# * Supports Memcached-like sharding across Redises with Redis::Distributed.
+# * Fault tolerant. If the Redis server is unavailable, no exceptions are
+#   raised. Cache fetches are all misses and writes are dropped.
+# * Local cache. Hot in-memory primary cache within block/middleware scope.
+# * +read_multi+ and +write_multi+ support for Redis mget/mset. Use Redis::Distributed
+#   4.0.1+ for distributed mget support.
+# * +delete_matched+ support for Redis KEYS globs.
+#
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#51
+class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
+  include ::ActiveSupport::Cache::Strategy::LocalCache
+
+  # Creates a new Redis cache store.
+  #
+  # Handles four options: :redis block, :redis instance, single :url
+  # string, and multiple :url strings.
+  #
+  #   Option  Class       Result
+  #   :redis  Proc    ->  options[:redis].call
+  #   :redis  Object  ->  options[:redis]
+  #   :url    String  ->  Redis.new(url: …)
+  #   :url    Array   ->  Redis::Distributed.new([{ url: … }, { url: … }, …])
+  #
+  # No namespace is set by default. Provide one if the Redis cache
+  # server is shared with other apps: <tt>namespace: 'myapp-cache'</tt>.
+  #
+  # Compression is enabled by default with a 1kB threshold, so cached
+  # values larger than 1kB are automatically compressed. Disable by
+  # passing <tt>compress: false</tt> or change the threshold by passing
+  # <tt>compress_threshold: 4.kilobytes</tt>.
+  #
+  # No expiry is set on cache entries by default. Redis is expected to
+  # be configured with an eviction policy that automatically deletes
+  # least-recently or -frequently used keys when it reaches max memory.
+  # See https://redis.io/topics/lru-cache for cache server setup.
+  #
+  # Race condition TTL is not set by default. This can be used to avoid
+  # "thundering herd" cache writes when hot cache entries are expired.
+  # See ActiveSupport::Cache::Store#fetch for more.
+  #
+  # @return [RedisCacheStore] a new instance of RedisCacheStore
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#149
+  def initialize(namespace: T.unsafe(nil), compress: T.unsafe(nil), compress_threshold: T.unsafe(nil), coder: T.unsafe(nil), expires_in: T.unsafe(nil), race_condition_ttl: T.unsafe(nil), error_handler: T.unsafe(nil), **redis_options); end
+
+  # Cache Store API implementation.
+  #
+  # Removes expired entries. Handled natively by Redis least-recently-/
+  # least-frequently-used expiry, so manual cleanup is not supported.
+  #
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#81
+  def cleanup(**options); end
+
+  # Clear the entire cache on all Redis servers. Safe to use on
+  # shared servers if the cache is namespaced.
+  #
+  # Failsafe: Raises errors.
+  #
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#75
+  def clear(**options); end
+
+  # Cache Store API implementation.
+  #
+  # Decrement a cached value. This method uses the Redis decr atomic
+  # operator and can only be used on values written with the +:raw+ option.
+  # Calling it on a value not stored with +:raw+ will initialize that value
+  # to zero.
+  #
+  # Failsafe: Raises errors.
+  #
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#100
+  def decrement(name, amount = T.unsafe(nil), **options); end
+
+  # Cache Store API implementation.
+  #
+  # Supports Redis KEYS glob patterns:
+  #
+  #   h?llo matches hello, hallo and hxllo
+  #   h*llo matches hllo and heeeello
+  #   h[ae]llo matches hello and hallo, but not hillo
+  #   h[^e]llo matches hallo, hbllo, ... but not hello
+  #   h[a-b]llo matches hallo and hbllo
+  #
+  # Use \ to escape special characters if you want to match them verbatim.
+  #
+  # See https://redis.io/commands/KEYS for more.
+  #
+  # Failsafe: Raises errors.
+  #
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#87
+  def delete_matched(matcher, options = T.unsafe(nil)); end
+
+  # Cache Store API implementation.
+  #
+  # Increment a cached value. This method uses the Redis incr atomic
+  # operator and can only be used on values written with the +:raw+ option.
+  # Calling it on a value not stored with +:raw+ will initialize that value
+  # to zero.
+  #
+  # Failsafe: Raises errors.
+  #
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#93
+  def increment(name, amount = T.unsafe(nil), **options); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#174
+  def inspect; end
+
+  # Returns the value of attribute max_key_bytesize.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#120
+  def max_key_bytesize; end
+
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#304
+  def mget_capable?; end
+
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#309
+  def mset_capable?; end
+
+  # Cache Store API implementation.
+  #
+  # Read multiple values at once. Returns a hash of requested keys ->
+  # fetched values.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#183
+  def read_multi(*names); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#161
+  def redis; end
+
+  # Returns the value of attribute redis_options.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#119
+  def redis_options; end
+
+  # Get info from redis servers.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#300
+  def stats; end
+
+  private
+
+  # Delete an entry from the cache.
+  #
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#147
+  def delete_entry(key, **_arg1); end
+
+  # Deletes multiple entries in the cache. Returns the number of entries deleted.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#408
+  def delete_multi_entries(entries, **_options); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#443
+  def deserialize_entry(payload, raw: T.unsafe(nil), **_arg2); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#465
+  def failsafe(method, returning: T.unsafe(nil)); end
+
+  # Truncate keys that exceed 1kB.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#429
+  def normalize_key(key, options); end
+
+  # Store provider interface:
+  # Read an entry from the cache.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#328
+  def read_entry(key, **options); end
+
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#122
+  def read_multi_entries(keys, **options); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#346
+  def read_multi_mget(*names); end
+
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#108
+  def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#459
+  def serialize_entries(entries, **options); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#451
+  def serialize_entry(entry, raw: T.unsafe(nil), **options); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#315
+  def set_redis_capabilities; end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#433
+  def truncate_key(key); end
+
+  # Write an entry to the cache.
+  #
+  # Requires Redis 2.6.12+ for extended SET options.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#371
+  def write_entry(key, entry, raw: T.unsafe(nil), **options); end
+
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#394
+  def write_key_expiry(client, key, options); end
+
+  # Nonstandard store provider API to write multiple values at once.
+  #
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#413
+  def write_multi_entries(entries, expires_in: T.unsafe(nil), **options); end
+
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#138
+  def write_serialized_entry(key, payload, **_arg2); end
+
+  class << self
+    # Factory method to create a new Redis instance.
+    #
+    # Handles four options: :redis block, :redis instance, single :url
+    # string, and multiple :url strings.
+    #
+    #   Option  Class       Result
+    #   :redis  Proc    ->  options[:redis].call
+    #   :redis  Object  ->  options[:redis]
+    #   :url    String  ->  Redis.new(url: …)
+    #   :url    Array   ->  Redis::Distributed.new([{ url: … }, { url: … }, …])
+    #
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#91
+    def build_redis(redis: T.unsafe(nil), url: T.unsafe(nil), **redis_options); end
+
+    # Advertise cache versioning support.
+    #
+    # @return [Boolean]
+    #
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#73
+    def supports_cache_versioning?; end
+
+    private
+
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#114
+    def build_redis_client(**redis_options); end
+
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#108
+    def build_redis_distributed_client(urls:, **redis_options); end
+  end
+end
+
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#62
+ActiveSupport::Cache::RedisCacheStore::DEFAULT_ERROR_HANDLER = T.let(T.unsafe(nil), Proc)
+
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#55
+ActiveSupport::Cache::RedisCacheStore::DEFAULT_REDIS_OPTIONS = T.let(T.unsafe(nil), Hash)
+
+# Keys are truncated with the ActiveSupport digest if they exceed 1kB
+#
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#53
+ActiveSupport::Cache::RedisCacheStore::MAX_KEY_BYTESIZE = T.let(T.unsafe(nil), Integer)
+
+# The maximum number of entries to receive per SCAN call.
+#
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#69
+ActiveSupport::Cache::RedisCacheStore::SCAN_BATCH_SIZE = T.let(T.unsafe(nil), Integer)
 
 # An abstract cache store class. There are multiple cache store
 # implementations, each having its own additional features. See the classes
@@ -3298,6 +3578,8 @@ class ActiveSupport::Deprecation
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#21
     def gem_name=(arg); end
 
+    def new(*_arg0); end
+
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#21
     def silence(*_arg0, **_arg1, &_arg2); end
 
@@ -3309,6 +3591,10 @@ class ActiveSupport::Deprecation
 
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#26
     def warn(message = T.unsafe(nil), callstack = T.unsafe(nil)); end
+
+    private
+
+    def allocate; end
   end
 end
 
@@ -5077,6 +5363,11 @@ end
 # source://activesupport//lib/active_support/fork_tracker.rb#31
 module ActiveSupport::ForkTracker::CoreExtPrivate
   include ::ActiveSupport::ForkTracker::CoreExt
+
+  private
+
+  # source://activesupport//lib/active_support/fork_tracker.rb#16
+  def fork(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://activesupport//lib/active_support/fork_tracker.rb#5
@@ -5165,7 +5456,7 @@ end
 #
 # which will, in turn, require this file.
 #
-# source://activesupport//lib/active_support/hash_with_indifferent_access.rb#55
+# source://activesupport//lib/active_support/hash_with_indifferent_access.rb#53
 class ActiveSupport::HashWithIndifferentAccess < ::Hash
   # @return [HashWithIndifferentAccess] a new instance of HashWithIndifferentAccess
   #
@@ -6611,7 +6902,7 @@ end
 # flushes all logs when the request finishes
 # (via <tt>action_dispatch.callback</tt> notification) in a Rails environment.
 #
-# source://activesupport//lib/active_support/log_subscriber.rb#66
+# source://activesupport//lib/active_support/log_subscriber.rb#65
 class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   # source://activesupport//lib/active_support/log_subscriber.rb#80
   def colorize_logging; end
@@ -6771,7 +7062,7 @@ end
 
 # Simple formatter which only displays the message.
 #
-# source://activesupport//lib/active_support/logger.rb#87
+# source://activesupport//lib/active_support/logger.rb#86
 class ActiveSupport::Logger::SimpleFormatter < ::Logger::Formatter
   # This method is invoked when a log event occurs
   #
@@ -7994,10 +8285,10 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#117
   def listening?(name); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#93
+  # source://mutex_m/0.1.2/mutex_m.rb#93
   def lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#83
+  # source://mutex_m/0.1.2/mutex_m.rb#83
   def locked?; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#79
@@ -8012,13 +8303,13 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#34
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#78
+  # source://mutex_m/0.1.2/mutex_m.rb#78
   def synchronize(&block); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#88
+  # source://mutex_m/0.1.2/mutex_m.rb#88
   def try_lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#98
+  # source://mutex_m/0.1.2/mutex_m.rb#98
   def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#51
@@ -10267,48 +10558,48 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#940
   def _teardown_callbacks; end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#709
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#709
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#638
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#638
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#649
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#649
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#661
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#661
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#673
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#673
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#680
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#680
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#691
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#691
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#701
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#701
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#719
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#719
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#730
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#730
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#753
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#753
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#761
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#761
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#770
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#770
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # test/unit backwards compatibility methods
   #
-  # source://minitest/5.16.3/lib/minitest/assertions.rb#396
+  # source://minitest/5.17.0/lib/minitest/assertions.rb#396
   def assert_raise(*exp); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -10320,7 +10611,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#151
   def inspect; end
 
-  # source://minitest/5.16.3/lib/minitest.rb#304
+  # source://minitest/5.17.0/lib/minitest.rb#304
   def method_name; end
 
   class << self
@@ -12392,7 +12683,7 @@ ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/gem_version.rb#13
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/gem_version.rb#15
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
@@ -13519,7 +13810,7 @@ Date::DATE_FORMATS = T.let(T.unsafe(nil), Hash)
 # source://activesupport//lib/active_support/core_ext/date/deprecated_conversions.rb#6
 Date::NOT_SET = T.let(T.unsafe(nil), Object)
 
-# source://date/3.2.2/date.rb#7
+# source://date/3.3.3/date.rb#7
 Date::VERSION = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/core_ext/date_and_time/compatibility.rb#5
@@ -15566,38 +15857,57 @@ class IO::Buffer
 
   def initialize(*_arg0); end
 
+  def &(_arg0); end
   def <=>(_arg0); end
+  def ^(_arg0); end
+  def and!(_arg0); end
   def clear(*_arg0); end
   def copy(*_arg0); end
+  def each(*_arg0); end
+  def each_byte(*_arg0); end
   def empty?; end
   def external?; end
   def free; end
   def get_string(*_arg0); end
   def get_value(_arg0, _arg1); end
+  def get_values(_arg0, _arg1); end
   def hexdump; end
   def inspect; end
   def internal?; end
   def locked; end
   def locked?; end
   def mapped?; end
+  def not!; end
   def null?; end
-  def pread(_arg0, _arg1, _arg2); end
-  def pwrite(_arg0, _arg1, _arg2); end
-  def read(_arg0, _arg1); end
+  def or!(_arg0); end
+  def pread(*_arg0); end
+  def pwrite(*_arg0); end
+  def read(*_arg0); end
   def readonly?; end
   def resize(_arg0); end
   def set_string(*_arg0); end
   def set_value(_arg0, _arg1, _arg2); end
+  def set_values(_arg0, _arg1, _arg2); end
+  def shared?; end
   def size; end
-  def slice(_arg0, _arg1); end
+  def slice(*_arg0); end
   def to_s; end
   def transfer; end
   def valid?; end
-  def write(_arg0, _arg1); end
+  def values(*_arg0); end
+  def write(*_arg0); end
+  def xor!(_arg0); end
+  def |(_arg0); end
+  def ~; end
+
+  private
+
+  def initialize_copy(_arg0); end
 
   class << self
     def for(_arg0); end
     def map(*_arg0); end
+    def size_of(_arg0); end
   end
 end
 
@@ -15613,10 +15923,12 @@ IO::Buffer::LITTLE_ENDIAN = T.let(T.unsafe(nil), Integer)
 IO::Buffer::LOCKED = T.let(T.unsafe(nil), Integer)
 class IO::Buffer::LockedError < ::RuntimeError; end
 IO::Buffer::MAPPED = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::MaskError < ::ArgumentError; end
 IO::Buffer::NETWORK_ENDIAN = T.let(T.unsafe(nil), Integer)
 IO::Buffer::PAGE_SIZE = T.let(T.unsafe(nil), Integer)
 IO::Buffer::PRIVATE = T.let(T.unsafe(nil), Integer)
 IO::Buffer::READONLY = T.let(T.unsafe(nil), Integer)
+IO::Buffer::SHARED = T.let(T.unsafe(nil), Integer)
 
 class IO::ConsoleMode
   def echo=(_arg0); end
@@ -15648,6 +15960,7 @@ IO::EWOULDBLOCKWaitReadable = IO::EAGAINWaitReadable
 IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
 IO::PRIORITY = T.let(T.unsafe(nil), Integer)
 IO::READABLE = T.let(T.unsafe(nil), Integer)
+class IO::TimeoutError < ::IOError; end
 IO::WRITABLE = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#228
@@ -15656,7 +15969,7 @@ class IPAddr
   def as_json(options = T.unsafe(nil)); end
 end
 
-# source://ipaddr/1.2.4/ipaddr.rb#43
+# source://ipaddr/1.2.5/ipaddr.rb#43
 IPAddr::VERSION = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/core_ext/integer/time.rb#6
@@ -17228,6 +17541,7 @@ class Object < ::BasicObject
   include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   include ::ActiveSupport::Dependencies::RequireDependency
   include ::Kernel
+  include ::PP::ObjectMixin
   include ::ActiveSupport::Tryable
 
   # Provides a way to check whether some class acts like some other class based on the existence of
@@ -17555,6 +17869,30 @@ class Range
   def to_s(format = T.unsafe(nil)); end
 end
 
+class Redis
+  include ::Redis::Commands::Bitmaps
+  include ::Redis::Commands::Cluster
+  include ::Redis::Commands::Connection
+  include ::Redis::Commands::Geo
+  include ::Redis::Commands::Hashes
+  include ::Redis::Commands::HyperLogLog
+  include ::Redis::Commands::Keys
+  include ::Redis::Commands::Lists
+  include ::Redis::Commands::Pubsub
+  include ::Redis::Commands::Scripting
+  include ::Redis::Commands::Server
+  include ::Redis::Commands::Sets
+  include ::Redis::Commands::SortedSets
+  include ::Redis::Commands::Streams
+  include ::Redis::Commands::Strings
+  include ::Redis::Commands::Transactions
+  include ::ActiveSupport::Cache::ConnectionPoolLike
+end
+
+class Redis::Distributed
+  include ::ActiveSupport::Cache::ConnectionPoolLike
+end
+
 # source://activesupport//lib/active_support/core_ext/object/json.rb#133
 class Regexp
   # source://activesupport//lib/active_support/core_ext/object/json.rb#134
@@ -17576,6 +17914,48 @@ end
 
 # source://regexp_parser/2.6.1/lib/regexp_parser/token.rb#2
 Regexp::TOKEN_KEYS = T.let(T.unsafe(nil), Array)
+
+class Regexp::TimeoutError < ::RegexpError; end
+
+# source://activesupport//lib/active_support/core_ext/securerandom.rb#5
+module SecureRandom
+  class << self
+    # SecureRandom.base36 generates a random base36 string in lowercase.
+    #
+    # The argument _n_ specifies the length of the random string to be generated.
+    #
+    # If _n_ is not specified or is +nil+, 16 is assumed. It may be larger in the future.
+    # This method can be used over +base58+ if a deterministic case key is necessary.
+    #
+    # The result will contain alphanumeric characters in lowercase.
+    #
+    #   p SecureRandom.base36 # => "4kugl2pdqmscqtje"
+    #   p SecureRandom.base36(24) # => "77tmhrhjfvfdwodq8w7ev2m7"
+    #
+    # source://activesupport//lib/active_support/core_ext/securerandom.rb#38
+    def base36(n = T.unsafe(nil)); end
+
+    # SecureRandom.base58 generates a random base58 string.
+    #
+    # The argument _n_ specifies the length of the random string to be generated.
+    #
+    # If _n_ is not specified or is +nil+, 16 is assumed. It may be larger in the future.
+    #
+    # The result may contain alphanumeric characters except 0, O, I, and l.
+    #
+    #   p SecureRandom.base58 # => "4kUgL2pdQMSCQtjE"
+    #   p SecureRandom.base58(24) # => "77TMHrHJFvFDwodq8w7Ev2m7"
+    #
+    # source://activesupport//lib/active_support/core_ext/securerandom.rb#19
+    def base58(n = T.unsafe(nil)); end
+  end
+end
+
+# source://activesupport//lib/active_support/core_ext/securerandom.rb#7
+SecureRandom::BASE36_ALPHABET = T.let(T.unsafe(nil), Array)
+
+# source://activesupport//lib/active_support/core_ext/securerandom.rb#6
+SecureRandom::BASE58_ALPHABET = T.let(T.unsafe(nil), Array)
 
 # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#53
 module Singleton
@@ -18308,12 +18688,8 @@ class Struct
   def as_json(options = T.unsafe(nil)); end
 end
 
-Struct::Group = Etc::Group
-
-# source://nokogiri/1.13.10/lib/nokogiri/html4/element_description_defaults.rb#11
+# source://nokogiri/1.14.0/lib/nokogiri/html4/element_description_defaults.rb#11
 Struct::HTMLElementDescription = Struct
-
-Struct::Passwd = Etc::Passwd
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#98
 class Symbol

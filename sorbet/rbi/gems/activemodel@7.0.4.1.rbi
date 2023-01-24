@@ -2177,7 +2177,7 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#212
   def attribute_names; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def clear(*args, **_arg1, &block); end
 
   # Copies the errors from <tt>other</tt>.
@@ -2208,10 +2208,10 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#251
   def details; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def each(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def empty?(*args, **_arg1, &block); end
 
   # The actual array of +Error+ objects
@@ -2399,7 +2399,7 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#370
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def size(*args, **_arg1, &block); end
 
   # Returns all the full error messages in an array.
@@ -2425,7 +2425,7 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#231
   def to_hash(full_messages = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def uniq!(*args, **_arg1, &block); end
 
   # Search for errors matching +attribute+, +type+, or +options+.
@@ -3169,7 +3169,7 @@ class ActiveModel::NestedError < ::ActiveModel::Error
   # source://activemodel//lib/active_model/nested_error.rb#17
   def inner_error; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def message(*args, **_arg1, &block); end
 end
 
@@ -3207,6 +3207,13 @@ class ActiveModel::NullMutationTracker
 
   # source://activemodel//lib/active_model/attribute_mutation_tracker.rb#178
   def original_value(attr_name); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://activemodel//lib/active_model/railtie.rb#7
@@ -4337,7 +4344,7 @@ ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activemodel//lib/active_model/gem_version.rb#13
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # source://activemodel//lib/active_model/gem_version.rb#15
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
