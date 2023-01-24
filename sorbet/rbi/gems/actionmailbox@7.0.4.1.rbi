@@ -75,13 +75,13 @@ module ActionMailbox
     # source://actionmailbox//lib/action_mailbox.rb#16
     def queues=(val); end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#405
+    # source://railties/7.0.4.1/lib/rails/engine.rb#405
     def railtie_helpers_paths; end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#394
+    # source://railties/7.0.4.1/lib/rails/engine.rb#394
     def railtie_namespace; end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#409
+    # source://railties/7.0.4.1/lib/rails/engine.rb#409
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
 
     # source://actionmailbox//lib/action_mailbox.rb#17
@@ -90,10 +90,10 @@ module ActionMailbox
     # source://actionmailbox//lib/action_mailbox.rb#17
     def storage_service=(val); end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#397
+    # source://railties/7.0.4.1/lib/rails/engine.rb#397
     def table_name_prefix; end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#401
+    # source://railties/7.0.4.1/lib/rails/engine.rb#401
     def use_relative_model_naming?; end
   end
 end
@@ -170,16 +170,16 @@ class ActionMailbox::Base
   # source://actionmailbox//lib/action_mailbox/base.rb#76
   def initialize(inbound_email); end
 
-  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
-  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#940
   def _process_callbacks; end
 
-  # source://activesupport/7.0.4/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#928
   def _run_process_callbacks(&block); end
 
   # Enqueues the given +message+ for delivery and changes the inbound email's status to +:bounced+.
@@ -215,13 +215,13 @@ class ActionMailbox::Base
   # source://actionmailbox//lib/action_mailbox/base.rb#91
   def process; end
 
-  # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
   def rescue_handlers; end
 
-  # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
   def rescue_handlers?; end
 
   # source://actionmailbox//lib/action_mailbox/routing.rb#9
@@ -236,31 +236,31 @@ class ActionMailbox::Base
   def track_status_of_inbound_email; end
 
   class << self
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#932
     def _process_callbacks; end
 
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#936
     def _process_callbacks=(value); end
 
     # source://actionmailbox//lib/action_mailbox/base.rb#72
     def receive(inbound_email); end
 
-    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
 
-    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
     def rescue_handlers?; end
 
     # source://actionmailbox//lib/action_mailbox/routing.rb#9
@@ -274,7 +274,7 @@ end
 class ActionMailbox::BaseController < ::ActionController::Base
   private
 
-  # source://actionview/7.0.4/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   def authenticate_by_password; end
@@ -283,10 +283,10 @@ class ActionMailbox::BaseController < ::ActionController::Base
   def password; end
 
   class << self
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionpack/7.0.4/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -334,74 +334,160 @@ ActionMailbox::Callbacks::TERMINATOR = T.let(T.unsafe(nil), Proc)
 # source://actionmailbox//lib/action_mailbox/engine.rb#12
 class ActionMailbox::Engine < ::Rails::Engine; end
 
-class ActionMailbox::InboundEmail < ::ActionMailbox::Record
-  include ::ActionMailbox::InboundEmail::GeneratedAttributeMethods
-  include ::ActionMailbox::InboundEmail::GeneratedAssociationMethods
-
-  class << self
-    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
-    def _validators; end
-
-    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
-    def defined_enums; end
-  end
-end
-
-module ActionMailbox::InboundEmail::GeneratedAssociationMethods; end
-module ActionMailbox::InboundEmail::GeneratedAttributeMethods; end
-
-module ActionMailbox::InboundEmail::Incineratable
-  extend ::ActiveSupport::Concern
-
-  def incinerate; end
-  def incinerate_later; end
-end
-
-class ActionMailbox::InboundEmail::Incineratable::Incineration
-  def initialize(inbound_email); end
-
-  def run; end
-
-  private
-
-  def due?; end
-  def processed?; end
-end
-
-module ActionMailbox::InboundEmail::MessageId
-  extend ::ActiveSupport::Concern
-
-  mixes_in_class_methods ::ActionMailbox::InboundEmail::MessageId::ClassMethods
-end
-
-module ActionMailbox::InboundEmail::MessageId::ClassMethods
-  def create_and_extract_message_id!(source, **options); end
-
-  private
-
-  def create_and_upload_raw_email!(source); end
-  def extract_message_id(source); end
-  def generate_missing_message_id(message_checksum); end
-end
-
-module ActionMailbox::InboundEmail::Routable
-  extend ::ActiveSupport::Concern
-
-  def route; end
-  def route_later; end
-end
-
 class ActionMailbox::IncinerationJob < ::ActiveJob::Base
   def perform(inbound_email); end
 
   class << self
-    # source://activejob/7.0.4/lib/active_job/queue_name.rb#56
+    # source://activejob/7.0.4.1/lib/active_job/queue_name.rb#56
     def queue_name; end
 
-    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
 
     def schedule(inbound_email); end
+  end
+end
+
+module ActionMailbox::Ingresses; end
+module ActionMailbox::Ingresses::Mailgun; end
+
+class ActionMailbox::Ingresses::Mailgun::InboundEmailsController < ::ActionMailbox::BaseController
+  def create; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def authenticate; end
+  def authenticated?; end
+  def key; end
+  def mail; end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class ActionMailbox::Ingresses::Mailgun::InboundEmailsController::Authenticator
+  def initialize(key:, timestamp:, token:, signature:); end
+
+  def authenticated?; end
+  def key; end
+  def signature; end
+  def timestamp; end
+  def token; end
+
+  private
+
+  def expected_signature; end
+  def recent?; end
+  def signed?; end
+end
+
+module ActionMailbox::Ingresses::Mandrill; end
+
+class ActionMailbox::Ingresses::Mandrill::InboundEmailsController < ::ActionMailbox::BaseController
+  def create; end
+  def health_check; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def authenticate; end
+  def authenticated?; end
+  def events; end
+  def key; end
+  def raw_emails; end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class ActionMailbox::Ingresses::Mandrill::InboundEmailsController::Authenticator
+  def initialize(request, key); end
+
+  def authenticated?; end
+  def key; end
+  def request; end
+
+  private
+
+  def expected_signature; end
+  def given_signature; end
+  def message; end
+end
+
+module ActionMailbox::Ingresses::Postmark; end
+
+class ActionMailbox::Ingresses::Postmark::InboundEmailsController < ::ActionMailbox::BaseController
+  def create; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+module ActionMailbox::Ingresses::Relay; end
+
+class ActionMailbox::Ingresses::Relay::InboundEmailsController < ::ActionMailbox::BaseController
+  def create; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def require_valid_rfc822_message; end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+module ActionMailbox::Ingresses::Sendgrid; end
+
+class ActionMailbox::Ingresses::Sendgrid::InboundEmailsController < ::ActionMailbox::BaseController
+  def create; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def envelope; end
+  def mail; end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
   end
 end
 
@@ -410,10 +496,10 @@ class ActionMailbox::Record < ::ActiveRecord::Base
   include ::ActionMailbox::Record::GeneratedAssociationMethods
 
   class << self
-    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.4.1/lib/active_model/validations.rb#52
     def _validators; end
 
-    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
+    # source://activerecord/7.0.4.1/lib/active_record/enum.rb#116
     def defined_enums; end
   end
 end
@@ -502,7 +588,7 @@ class ActionMailbox::RoutingJob < ::ActiveJob::Base
   def perform(inbound_email); end
 
   class << self
-    # source://activejob/7.0.4/lib/active_job/queue_name.rb#56
+    # source://activejob/7.0.4.1/lib/active_job/queue_name.rb#56
     def queue_name; end
   end
 end
@@ -601,168 +687,166 @@ end
 # source://actionmailbox//lib/action_mailbox/mail_ext/address_equality.rb#3
 module Mail
   class << self
-    # source://mail/2.7.1/lib/mail/mail.rb#163
+    # source://mail/2.8.0.1/lib/mail/mail.rb#163
     def all(*args, &block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#183
+    # source://mail/2.8.0.1/lib/mail/mail.rb#183
     def connection(&block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#98
+    # source://mail/2.8.0.1/lib/mail/mail.rb#98
     def defaults(&block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#174
+    # source://mail/2.8.0.1/lib/mail/mail.rb#174
     def delete_all(*args, &block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#131
+    # source://mail/2.8.0.1/lib/mail/mail.rb#131
     def deliver(*args, &block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#103
+    # source://mail/2.8.0.1/lib/mail/mail.rb#103
     def delivery_method; end
 
-    # source://mail/2.7.1/lib/mail.rb#53
+    # source://mail/2.8.0.1/lib/mail.rb#35
     def eager_autoload!; end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#139
+    # source://mail/2.8.0.1/lib/mail/mail.rb#139
     def find(*args, &block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#145
+    # source://mail/2.8.0.1/lib/mail/mail.rb#145
     def find_and_delete(*args, &block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#151
+    # source://mail/2.8.0.1/lib/mail/mail.rb#151
     def first(*args, &block); end
 
     # source://actionmailbox//lib/action_mailbox/mail_ext/from_source.rb#4
     def from_source(source); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#233
+    # source://mail/2.8.0.1/lib/mail/mail.rb#233
     def inform_interceptors(mail); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#227
+    # source://mail/2.8.0.1/lib/mail/mail.rb#227
     def inform_observers(mail); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#157
+    # source://mail/2.8.0.1/lib/mail/mail.rb#157
     def last(*args, &block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#50
+    # source://mail/2.8.0.1/lib/mail/mail.rb#50
     def new(*args, &block); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#243
+    # source://mail/2.8.0.1/lib/mail/mail.rb#243
     def random_tag; end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#168
+    # source://mail/2.8.0.1/lib/mail/mail.rb#168
     def read(filename); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#179
+    # source://mail/2.8.0.1/lib/mail/mail.rb#179
     def read_from_string(mail_as_string); end
 
-    # source://mail/2.7.1/lib/mail.rb#41
+    # source://mail/2.8.0.1/lib/mail.rb#23
     def register_autoload(name, path); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#215
+    # source://mail/2.8.0.1/lib/mail/mail.rb#215
     def register_interceptor(interceptor); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#196
+    # source://mail/2.8.0.1/lib/mail/mail.rb#196
     def register_observer(observer); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#108
+    # source://mail/2.8.0.1/lib/mail/mail.rb#108
     def retriever_method; end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#252
+    # source://mail/2.8.0.1/lib/mail/mail.rb#252
     def something_random; end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#256
+    # source://mail/2.8.0.1/lib/mail/mail.rb#256
     def uniq; end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#223
+    # source://mail/2.8.0.1/lib/mail/mail.rb#223
     def unregister_interceptor(interceptor); end
 
-    # source://mail/2.7.1/lib/mail/mail.rb#204
+    # source://mail/2.8.0.1/lib/mail/mail.rb#204
     def unregister_observer(observer); end
   end
 end
 
 # source://actionmailbox//lib/action_mailbox/mail_ext/address_equality.rb#4
 class Mail::Address
-  include ::Mail::Constants
-
-  # source://mail/2.7.1/lib/mail/elements/address.rb#25
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#25
   def initialize(value = T.unsafe(nil)); end
 
   # source://actionmailbox//lib/action_mailbox/mail_ext/address_equality.rb#5
   def ==(other_address); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#65
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#65
   def address(output_type = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#79
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#79
   def address=(value); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#132
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#132
   def comments; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#173
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#173
   def decoded; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#87
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#87
   def display_name(output_type = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#99
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#99
   def display_name=(str); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#118
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#118
   def domain(output_type = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#169
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#169
   def encoded; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#47
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#47
   def format(output_type = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#177
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#177
   def group; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#164
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#164
   def inspect; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#108
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#108
   def local(output_type = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#147
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#147
   def name; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#36
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#36
   def raw; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#156
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#156
   def to_s; end
 
   private
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#237
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#237
   def format_comments; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#254
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#254
   def get_comments; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#218
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#218
   def get_display_name; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#250
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#250
   def get_domain; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#246
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#246
   def get_local; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#227
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#227
   def get_name; end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#183
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#183
   def parse(value = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#198
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#198
   def strip_all_comments(string); end
 
-  # source://mail/2.7.1/lib/mail/elements/address.rb#207
+  # source://mail/2.8.0.1/lib/mail/elements/address.rb#207
   def strip_domain_comments(value); end
 
   class << self
@@ -773,376 +857,364 @@ end
 
 # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#4
 class Mail::Message
-  # source://mail/2.7.1/lib/mail/message.rb#109
+  # source://mail/2.8.0.1/lib/mail/message.rb#107
   def initialize(*args, &block); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#341
+  # source://mail/2.8.0.1/lib/mail/message.rb#334
   def <=>(other); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#380
+  # source://mail/2.8.0.1/lib/mail/message.rb#373
   def ==(other); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1341
+  # source://mail/2.8.0.1/lib/mail/message.rb#1334
   def [](name); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1323
+  # source://mail/2.8.0.1/lib/mail/message.rb#1316
   def []=(name, value); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1589
+  # source://mail/2.8.0.1/lib/mail/message.rb#1558
   def action; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1484
+  # source://mail/2.8.0.1/lib/mail/message.rb#1472
   def add_charset; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1497
+  # source://mail/2.8.0.1/lib/mail/message.rb#1487
   def add_content_transfer_encoding; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1477
+  # source://mail/2.8.0.1/lib/mail/message.rb#1465
   def add_content_type; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1460
+  # source://mail/2.8.0.1/lib/mail/message.rb#1448
   def add_date(date_val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1788
+  # source://mail/2.8.0.1/lib/mail/message.rb#1757
   def add_file(values); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1450
+  # source://mail/2.8.0.1/lib/mail/message.rb#1438
   def add_message_id(msg_id_val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1470
+  # source://mail/2.8.0.1/lib/mail/message.rb#1458
   def add_mime_version(ver_val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1732
+  # source://mail/2.8.0.1/lib/mail/message.rb#1701
   def add_part(part); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1501
-  def add_transfer_encoding; end
-
-  # source://mail/2.7.1/lib/mail/message.rb#1944
+  # source://mail/2.8.0.1/lib/mail/message.rb#1927
   def all_parts; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1935
+  # source://mail/2.8.0.1/lib/mail/message.rb#1918
   def attachment; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1930
+  # source://mail/2.8.0.1/lib/mail/message.rb#1913
   def attachment?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1657
+  # source://mail/2.8.0.1/lib/mail/message.rb#1626
   def attachments; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#507
+  # source://mail/2.8.0.1/lib/mail/message.rb#500
   def bcc(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#519
+  # source://mail/2.8.0.1/lib/mail/message.rb#512
   def bcc=(val); end
 
   # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#21
   def bcc_addresses; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1313
+  # source://mail/2.8.0.1/lib/mail/message.rb#1306
   def bcc_addrs; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1258
+  # source://mail/2.8.0.1/lib/mail/message.rb#1251
   def body(value = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1244
+  # source://mail/2.8.0.1/lib/mail/message.rb#1237
   def body=(value); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1267
+  # source://mail/2.8.0.1/lib/mail/message.rb#1260
   def body_encoding(value = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1275
+  # source://mail/2.8.0.1/lib/mail/message.rb#1268
   def body_encoding=(value); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1585
+  # source://mail/2.8.0.1/lib/mail/message.rb#1554
   def bounced?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1614
+  # source://mail/2.8.0.1/lib/mail/message.rb#1583
   def boundary; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#548
+  # source://mail/2.8.0.1/lib/mail/message.rb#541
   def cc(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#560
+  # source://mail/2.8.0.1/lib/mail/message.rb#553
   def cc=(val); end
 
   # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#17
   def cc_addresses; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1307
+  # source://mail/2.8.0.1/lib/mail/message.rb#1300
   def cc_addrs; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1522
+  # source://mail/2.8.0.1/lib/mail/message.rb#1497
   def charset; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1531
+  # source://mail/2.8.0.1/lib/mail/message.rb#1506
   def charset=(value); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#564
+  # source://mail/2.8.0.1/lib/mail/message.rb#557
   def comments(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#568
+  # source://mail/2.8.0.1/lib/mail/message.rb#561
   def comments=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#572
+  # source://mail/2.8.0.1/lib/mail/message.rb#565
   def content_description(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#576
+  # source://mail/2.8.0.1/lib/mail/message.rb#569
   def content_description=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#580
+  # source://mail/2.8.0.1/lib/mail/message.rb#573
   def content_disposition(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#584
+  # source://mail/2.8.0.1/lib/mail/message.rb#577
   def content_disposition=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#588
+  # source://mail/2.8.0.1/lib/mail/message.rb#581
   def content_id(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#592
+  # source://mail/2.8.0.1/lib/mail/message.rb#585
   def content_id=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#596
+  # source://mail/2.8.0.1/lib/mail/message.rb#589
   def content_location(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#600
+  # source://mail/2.8.0.1/lib/mail/message.rb#593
   def content_location=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#604
+  # source://mail/2.8.0.1/lib/mail/message.rb#597
   def content_transfer_encoding(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#608
+  # source://mail/2.8.0.1/lib/mail/message.rb#601
   def content_transfer_encoding=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#612
+  # source://mail/2.8.0.1/lib/mail/message.rb#605
   def content_type(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#616
+  # source://mail/2.8.0.1/lib/mail/message.rb#609
   def content_type=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1554
+  # source://mail/2.8.0.1/lib/mail/message.rb#1523
   def content_type_parameters; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1801
+  # source://mail/2.8.0.1/lib/mail/message.rb#1773
   def convert_to_multipart; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#620
+  # source://mail/2.8.0.1/lib/mail/message.rb#613
   def date(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#624
+  # source://mail/2.8.0.1/lib/mail/message.rb#617
   def date=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1924
+  # source://mail/2.8.0.1/lib/mail/message.rb#1907
   def decode_body; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1903
+  # source://mail/2.8.0.1/lib/mail/message.rb#1886
   def decoded; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1211
+  # source://mail/2.8.0.1/lib/mail/message.rb#1204
   def default(sym, val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#257
+  # source://mail/2.8.0.1/lib/mail/message.rb#250
   def deliver; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#274
+  # source://mail/2.8.0.1/lib/mail/message.rb#267
   def deliver!; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#201
+  # source://mail/2.8.0.1/lib/mail/message.rb#199
   def delivery_handler; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#201
+  # source://mail/2.8.0.1/lib/mail/message.rb#199
   def delivery_handler=(_arg0); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#281
+  # source://mail/2.8.0.1/lib/mail/message.rb#274
   def delivery_method(method = T.unsafe(nil), settings = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1574
+  # source://mail/2.8.0.1/lib/mail/message.rb#1543
   def delivery_status_part; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1569
+  # source://mail/2.8.0.1/lib/mail/message.rb#1538
   def delivery_status_report?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1289
+  # source://mail/2.8.0.1/lib/mail/message.rb#1282
   def destinations; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1601
+  # source://mail/2.8.0.1/lib/mail/message.rb#1570
   def diagnostic_code; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1821
-  def encode!; end
-
-  # source://mail/2.7.1/lib/mail/message.rb#1829
+  # source://mail/2.8.0.1/lib/mail/message.rb#1803
   def encoded; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#425
+  # source://mail/2.8.0.1/lib/mail/message.rb#418
   def envelope_date; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#421
+  # source://mail/2.8.0.1/lib/mail/message.rb#414
   def envelope_from; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1597
+  # source://mail/2.8.0.1/lib/mail/message.rb#1566
   def error_status; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#478
+  # source://mail/2.8.0.1/lib/mail/message.rb#471
   def errors; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1940
+  # source://mail/2.8.0.1/lib/mail/message.rb#1923
   def filename; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1593
+  # source://mail/2.8.0.1/lib/mail/message.rb#1562
   def final_recipient; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1948
+  # source://mail/2.8.0.1/lib/mail/message.rb#1931
   def find_first_mime_type(mt); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#665
+  # source://mail/2.8.0.1/lib/mail/message.rb#658
   def from(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#677
+  # source://mail/2.8.0.1/lib/mail/message.rb#670
   def from=(val); end
 
   # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#5
   def from_address; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1295
+  # source://mail/2.8.0.1/lib/mail/message.rb#1288
   def from_addrs; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1661
+  # source://mail/2.8.0.1/lib/mail/message.rb#1630
   def has_attachments?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1430
+  # source://mail/2.8.0.1/lib/mail/message.rb#1423
   def has_charset?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1435
+  # source://mail/2.8.0.1/lib/mail/message.rb#1428
   def has_content_transfer_encoding?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1425
+  # source://mail/2.8.0.1/lib/mail/message.rb#1418
   def has_content_type?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1415
+  # source://mail/2.8.0.1/lib/mail/message.rb#1408
   def has_date?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1409
+  # source://mail/2.8.0.1/lib/mail/message.rb#1402
   def has_message_id?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1421
+  # source://mail/2.8.0.1/lib/mail/message.rb#1414
   def has_mime_version?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1439
-  def has_transfer_encoding?; end
-
-  # source://mail/2.7.1/lib/mail/message.rb#450
+  # source://mail/2.8.0.1/lib/mail/message.rb#443
   def header(value = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#435
+  # source://mail/2.8.0.1/lib/mail/message.rb#428
   def header=(value); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1403
+  # source://mail/2.8.0.1/lib/mail/message.rb#1396
   def header_fields; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#455
+  # source://mail/2.8.0.1/lib/mail/message.rb#448
   def headers(hash = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1666
+  # source://mail/2.8.0.1/lib/mail/message.rb#1635
   def html_part(&block); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1686
+  # source://mail/2.8.0.1/lib/mail/message.rb#1655
   def html_part=(msg); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#681
+  # source://mail/2.8.0.1/lib/mail/message.rb#674
   def in_reply_to(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#685
+  # source://mail/2.8.0.1/lib/mail/message.rb#678
   def in_reply_to=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#247
+  # source://mail/2.8.0.1/lib/mail/message.rb#240
   def inform_interceptors; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#243
+  # source://mail/2.8.0.1/lib/mail/message.rb#236
   def inform_observers; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1899
+  # source://mail/2.8.0.1/lib/mail/message.rb#1873
   def inspect; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1977
+  # source://mail/2.8.0.1/lib/mail/message.rb#1877
+  def inspect_structure; end
+
+  # source://mail/2.8.0.1/lib/mail/message.rb#1960
   def is_marked_for_delete?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#689
+  # source://mail/2.8.0.1/lib/mail/message.rb#682
   def keywords(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#693
+  # source://mail/2.8.0.1/lib/mail/message.rb#686
   def keywords=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1538
+  # source://mail/2.8.0.1/lib/mail/message.rb#1513
   def main_type; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1964
+  # source://mail/2.8.0.1/lib/mail/message.rb#1947
   def mark_for_delete=(value = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1516
-  def message_content_type; end
-
-  # source://mail/2.7.1/lib/mail/message.rb#710
+  # source://mail/2.8.0.1/lib/mail/message.rb#703
   def message_id(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#719
+  # source://mail/2.8.0.1/lib/mail/message.rb#712
   def message_id=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1384
+  # source://mail/2.8.0.1/lib/mail/message.rb#1377
   def method_missing(name, *args, &block); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1548
-  def mime_parameters; end
-
-  # source://mail/2.7.1/lib/mail/message.rb#1512
+  # source://mail/2.8.0.1/lib/mail/message.rb#1492
   def mime_type; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#736
+  # source://mail/2.8.0.1/lib/mail/message.rb#729
   def mime_version(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#746
+  # source://mail/2.8.0.1/lib/mail/message.rb#739
   def mime_version=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1559
+  # source://mail/2.8.0.1/lib/mail/message.rb#1528
   def multipart?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1564
+  # source://mail/2.8.0.1/lib/mail/message.rb#1533
   def multipart_report?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1753
+  # source://mail/2.8.0.1/lib/mail/message.rb#1722
   def part(params = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1619
+  # source://mail/2.8.0.1/lib/mail/message.rb#1588
   def parts; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#225
+  # source://mail/2.8.0.1/lib/mail/message.rb#223
   def perform_deliveries; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#225
+  # source://mail/2.8.0.1/lib/mail/message.rb#223
   def perform_deliveries=(_arg0); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#232
+  # source://mail/2.8.0.1/lib/mail/message.rb#230
   def raise_delivery_errors; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#232
+  # source://mail/2.8.0.1/lib/mail/message.rb#230
   def raise_delivery_errors=(_arg0); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#417
+  # source://mail/2.8.0.1/lib/mail/message.rb#410
   def raw_envelope; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#404
+  # source://mail/2.8.0.1/lib/mail/message.rb#397
   def raw_source; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1916
+  # source://mail/2.8.0.1/lib/mail/message.rb#1899
   def read; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1812
+  # source://mail/2.8.0.1/lib/mail/message.rb#1791
   def ready_to_send!; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#750
+  # source://mail/2.8.0.1/lib/mail/message.rb#743
   def received(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#758
+  # source://mail/2.8.0.1/lib/mail/message.rb#751
   def received=(val); end
 
   # source://actionmailbox//lib/action_mailbox/mail_ext/recipients.rb#5
@@ -1151,148 +1223,142 @@ class Mail::Message
   # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#9
   def recipients_addresses; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#762
+  # source://mail/2.8.0.1/lib/mail/message.rb#755
   def references(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#766
+  # source://mail/2.8.0.1/lib/mail/message.rb#759
   def references=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#238
-  def register_for_delivery_notification(observer); end
-
-  # source://mail/2.7.1/lib/mail/message.rb#1605
+  # source://mail/2.8.0.1/lib/mail/message.rb#1574
   def remote_mta; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#289
+  # source://mail/2.8.0.1/lib/mail/message.rb#282
   def reply(*args, &block); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#795
+  # source://mail/2.8.0.1/lib/mail/message.rb#788
   def reply_to(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#807
+  # source://mail/2.8.0.1/lib/mail/message.rb#800
   def reply_to=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#836
+  # source://mail/2.8.0.1/lib/mail/message.rb#829
   def resent_bcc(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#848
+  # source://mail/2.8.0.1/lib/mail/message.rb#841
   def resent_bcc=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#877
+  # source://mail/2.8.0.1/lib/mail/message.rb#870
   def resent_cc(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#889
+  # source://mail/2.8.0.1/lib/mail/message.rb#882
   def resent_cc=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#893
+  # source://mail/2.8.0.1/lib/mail/message.rb#886
   def resent_date(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#897
+  # source://mail/2.8.0.1/lib/mail/message.rb#890
   def resent_date=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#926
+  # source://mail/2.8.0.1/lib/mail/message.rb#919
   def resent_from(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#938
+  # source://mail/2.8.0.1/lib/mail/message.rb#931
   def resent_from=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#942
+  # source://mail/2.8.0.1/lib/mail/message.rb#935
   def resent_message_id(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#946
+  # source://mail/2.8.0.1/lib/mail/message.rb#939
   def resent_message_id=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#965
+  # source://mail/2.8.0.1/lib/mail/message.rb#958
   def resent_sender(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#975
+  # source://mail/2.8.0.1/lib/mail/message.rb#968
   def resent_sender=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1004
+  # source://mail/2.8.0.1/lib/mail/message.rb#997
   def resent_to(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1016
+  # source://mail/2.8.0.1/lib/mail/message.rb#1009
   def resent_to=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1609
+  # source://mail/2.8.0.1/lib/mail/message.rb#1578
   def retryable?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1021
+  # source://mail/2.8.0.1/lib/mail/message.rb#1014
   def return_path(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1026
+  # source://mail/2.8.0.1/lib/mail/message.rb#1019
   def return_path=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1044
+  # source://mail/2.8.0.1/lib/mail/message.rb#1037
   def sender(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1054
+  # source://mail/2.8.0.1/lib/mail/message.rb#1047
   def sender=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#409
+  # source://mail/2.8.0.1/lib/mail/message.rb#402
   def set_envelope(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1956
+  # source://mail/2.8.0.1/lib/mail/message.rb#1939
   def skip_deletion; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1074
+  # source://mail/2.8.0.1/lib/mail/message.rb#1067
   def smtp_envelope_from(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1088
+  # source://mail/2.8.0.1/lib/mail/message.rb#1081
   def smtp_envelope_from=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1107
+  # source://mail/2.8.0.1/lib/mail/message.rb#1100
   def smtp_envelope_to(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1124
+  # source://mail/2.8.0.1/lib/mail/message.rb#1117
   def smtp_envelope_to=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1543
+  # source://mail/2.8.0.1/lib/mail/message.rb#1518
   def sub_type; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1149
+  # source://mail/2.8.0.1/lib/mail/message.rb#1142
   def subject(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1159
+  # source://mail/2.8.0.1/lib/mail/message.rb#1152
   def subject=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1981
+  # source://mail/2.8.0.1/lib/mail/message.rb#1964
   def text?; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1675
+  # source://mail/2.8.0.1/lib/mail/message.rb#1644
   def text_part(&block); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1710
+  # source://mail/2.8.0.1/lib/mail/message.rb#1679
   def text_part=(msg); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1188
+  # source://mail/2.8.0.1/lib/mail/message.rb#1181
   def to(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1200
+  # source://mail/2.8.0.1/lib/mail/message.rb#1193
   def to=(val); end
 
   # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#13
   def to_addresses; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1301
+  # source://mail/2.8.0.1/lib/mail/message.rb#1294
   def to_addrs; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1895
+  # source://mail/2.8.0.1/lib/mail/message.rb#1869
   def to_s; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1849
+  # source://mail/2.8.0.1/lib/mail/message.rb#1823
   def to_yaml(opts = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1506
-  def transfer_encoding; end
-
-  # source://mail/2.7.1/lib/mail/message.rb#628
+  # source://mail/2.8.0.1/lib/mail/message.rb#621
   def transport_encoding(val = T.unsafe(nil)); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#636
+  # source://mail/2.8.0.1/lib/mail/message.rb#629
   def transport_encoding=(val); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1837
+  # source://mail/2.8.0.1/lib/mail/message.rb#1811
   def without_attachments!; end
 
   # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#25
@@ -1300,153 +1366,243 @@ class Mail::Message
 
   private
 
-  # source://mail/2.7.1/lib/mail/message.rb#2083
+  # source://mail/2.8.0.1/lib/mail/message.rb#2067
   def add_boundary; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2049
+  # source://mail/2.8.0.1/lib/mail/message.rb#2032
   def add_encoding_to_body; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2077
+  # source://mail/2.8.0.1/lib/mail/message.rb#2062
   def add_multipart_alternate_header; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2092
+  # source://mail/2.8.0.1/lib/mail/message.rb#2079
   def add_multipart_mixed_header; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2063
+  # source://mail/2.8.0.1/lib/mail/message.rb#2048
   def add_required_fields; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2071
+  # source://mail/2.8.0.1/lib/mail/message.rb#2056
   def add_required_message_fields; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2042
+  # source://mail/2.8.0.1/lib/mail/message.rb#2025
   def allowed_encodings; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2007
+  # source://mail/2.8.0.1/lib/mail/message.rb#1990
   def body_lazy(value); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2166
+  # source://mail/2.8.0.1/lib/mail/message.rb#2152
   def decode_body_as_text; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2156
+  # source://mail/2.8.0.1/lib/mail/message.rb#2142
   def do_delivery; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2138
+  # source://mail/2.8.0.1/lib/mail/message.rb#2124
   def find_attachment; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2055
+  # source://mail/2.8.0.1/lib/mail/message.rb#2038
   def identify_and_set_transfer_encoding; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2100
+  # source://mail/2.8.0.1/lib/mail/message.rb#2086
   def init_with_hash(hash); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2130
+  # source://mail/2.8.0.1/lib/mail/message.rb#2116
   def init_with_string(string); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#391
+  # source://mail/2.8.0.1/lib/mail/message.rb#384
   def initialize_copy(original); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#1996
+  # source://mail/2.8.0.1/lib/mail/message.rb#1979
   def parse_message; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2022
+  # source://mail/2.8.0.1/lib/mail/message.rb#2005
   def process_body_raw; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2002
+  # source://mail/2.8.0.1/lib/mail/message.rb#1985
   def raw_source=(value); end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2038
+  # source://mail/2.8.0.1/lib/mail/message.rb#2021
   def separate_parts; end
 
-  # source://mail/2.7.1/lib/mail/message.rb#2030
+  # source://mail/2.8.0.1/lib/mail/message.rb#2013
   def set_envelope_header; end
 
   class << self
-    # source://mail/2.7.1/lib/mail/message.rb#234
+    # source://mail/2.8.0.1/lib/mail/message.rb#232
     def default_charset; end
 
-    # source://mail/2.7.1/lib/mail/message.rb#235
+    # source://mail/2.8.0.1/lib/mail/message.rb#233
     def default_charset=(charset); end
 
-    # source://mail/2.7.1/lib/mail/message.rb#1891
+    # source://mail/2.8.0.1/lib/mail/message.rb#1865
     def from_hash(hash); end
 
-    # source://mail/2.7.1/lib/mail/message.rb#1869
+    # source://mail/2.8.0.1/lib/mail/message.rb#1843
     def from_yaml(str); end
   end
 end
 
-# source://mail/2.7.1/lib/mail/message.rb#1987
+# source://mail/2.8.0.1/lib/mail/message.rb#1970
 Mail::Message::HEADER_SEPARATOR = T.let(T.unsafe(nil), Regexp)
 
-# source://mail/2.7.1/lib/mail/mail.rb#241
+# source://mail/2.8.0.1/lib/mail/mail.rb#241
 Mail::RANDOM_TAG = T.let(T.unsafe(nil), String)
-
-# source://mail/2.7.1/lib/mail.rb#22
-Mail::RubyVer = Mail::Ruby19
 
 module Rails
   class << self
-    # source://railties/7.0.4/lib/rails.rb#38
+    # source://railties/7.0.4.1/lib/rails.rb#38
     def app_class; end
 
-    # source://railties/7.0.4/lib/rails.rb#38
+    # source://railties/7.0.4.1/lib/rails.rb#38
     def app_class=(_arg0); end
 
-    # source://railties/7.0.4/lib/rails.rb#39
+    # source://railties/7.0.4.1/lib/rails.rb#39
     def application; end
 
-    # source://railties/7.0.4/lib/rails.rb#37
+    # source://railties/7.0.4.1/lib/rails.rb#37
     def application=(_arg0); end
 
-    # source://railties/7.0.4/lib/rails.rb#123
+    # source://railties/7.0.4.1/lib/rails.rb#123
     def autoloaders; end
 
-    # source://railties/7.0.4/lib/rails.rb#50
+    # source://railties/7.0.4.1/lib/rails.rb#50
     def backtrace_cleaner; end
 
-    # source://railties/7.0.4/lib/rails.rb#38
+    # source://railties/7.0.4.1/lib/rails.rb#38
     def cache; end
 
-    # source://railties/7.0.4/lib/rails.rb#38
+    # source://railties/7.0.4.1/lib/rails.rb#38
     def cache=(_arg0); end
 
-    # source://railties/7.0.4/lib/rails.rb#46
+    # source://railties/7.0.4.1/lib/rails.rb#46
     def configuration; end
 
-    # source://railties/7.0.4/lib/rails.rb#72
+    # source://railties/7.0.4.1/lib/rails.rb#72
     def env; end
 
-    # source://railties/7.0.4/lib/rails.rb#79
+    # source://railties/7.0.4.1/lib/rails.rb#79
     def env=(environment); end
 
-    # source://railties/7.0.4/lib/rails.rb#90
+    # source://railties/7.0.4.1/lib/rails.rb#90
     def error; end
 
-    # source://railties/7.0.4/lib/rails/gem_version.rb#5
+    # source://railties/7.0.4.1/lib/rails/gem_version.rb#5
     def gem_version; end
 
-    # source://railties/7.0.4/lib/rails.rb#103
+    # source://railties/7.0.4.1/lib/rails.rb#103
     def groups(*groups); end
 
-    # source://railties/7.0.4/lib/rails.rb#43
+    # source://railties/7.0.4.1/lib/rails.rb#43
     def initialize!(*_arg0, **_arg1, &_arg2); end
 
-    # source://railties/7.0.4/lib/rails.rb#43
+    # source://railties/7.0.4.1/lib/rails.rb#43
     def initialized?(*_arg0, **_arg1, &_arg2); end
 
-    # source://railties/7.0.4/lib/rails.rb#38
+    # source://railties/7.0.4.1/lib/rails.rb#38
     def logger; end
 
-    # source://railties/7.0.4/lib/rails.rb#38
+    # source://railties/7.0.4.1/lib/rails.rb#38
     def logger=(_arg0); end
 
-    # source://railties/7.0.4/lib/rails.rb#119
+    # source://railties/7.0.4.1/lib/rails.rb#119
     def public_path; end
 
-    # source://railties/7.0.4/lib/rails.rb#63
+    # source://railties/7.0.4.1/lib/rails.rb#63
     def root; end
 
-    # source://railties/7.0.4/lib/rails/version.rb#7
+    # source://railties/7.0.4.1/lib/rails/version.rb#7
     def version; end
+  end
+end
+
+module Rails::Conductor; end
+module Rails::Conductor::ActionMailbox; end
+module Rails::Conductor::ActionMailbox::InboundEmails; end
+
+class Rails::Conductor::ActionMailbox::InboundEmails::SourcesController < ::Rails::Conductor::BaseController
+  def create; end
+  def new; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  class << self
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class Rails::Conductor::ActionMailbox::InboundEmailsController < ::Rails::Conductor::BaseController
+  def create; end
+  def index; end
+  def new; end
+  def show; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def create_inbound_email(mail); end
+  def mail_params; end
+  def new_mail; end
+
+  class << self
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class Rails::Conductor::ActionMailbox::IncineratesController < ::Rails::Conductor::BaseController
+  def create; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  class << self
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class Rails::Conductor::ActionMailbox::ReroutesController < ::Rails::Conductor::BaseController
+  def create; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def reroute(inbound_email); end
+
+  class << self
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class Rails::Conductor::BaseController < ::ActionController::Base
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def ensure_development_env; end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionview/7.0.4.1/lib/action_view/layouts.rb#209
+    def _layout; end
+
+    # source://actionview/7.0.4.1/lib/action_view/layouts.rb#210
+    def _layout_conditions; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
   end
 end

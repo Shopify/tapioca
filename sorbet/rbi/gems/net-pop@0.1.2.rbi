@@ -6,24 +6,24 @@
 
 # This class is equivalent to POP3, except that it uses APOP authentication.
 #
-# source://net-pop//lib/net/pop.rb#727
+# source://net-pop//lib/net/pop.rb#729
 class Net::APOP < ::Net::POP3
   # Always returns true.
   #
   # @return [Boolean]
   #
-  # source://net-pop//lib/net/pop.rb#728
+  # source://net-pop//lib/net/pop.rb#731
   def apop?; end
 end
 
 # class aliases
 #
-# source://net-pop//lib/net/pop.rb#734
+# source://net-pop//lib/net/pop.rb#737
 Net::APOPSession = Net::APOP
 
 # class aliases
 #
-# source://net-pop//lib/net/pop.rb#719
+# source://net-pop//lib/net/pop.rb#722
 Net::POP = Net::POP3
 
 # == What is This Library?
@@ -176,7 +176,7 @@ Net::POP = Net::POP3
 # The POPMail#unique_id() method returns the unique-id of the message as a
 # String. Normally the unique-id is a hash of the message.
 #
-# source://net-pop//lib/net/pop.rb#197
+# source://net-pop//lib/net/pop.rb#196
 class Net::POP3 < ::Net::Protocol
   # Creates a new POP3 object.
   #
@@ -238,7 +238,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#687
+  # source://net-pop//lib/net/pop.rb#690
   def delete_all; end
 
   # Disable SSL for all new instances.
@@ -255,7 +255,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#665
+  # source://net-pop//lib/net/pop.rb#668
   def each(&block); end
 
   # Yields each message to the passed-in block in turn.
@@ -267,7 +267,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#665
+  # source://net-pop//lib/net/pop.rb#668
   def each_mail(&block); end
 
   # :call-seq:
@@ -285,7 +285,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # @raise [IOError]
   #
-  # source://net-pop//lib/net/pop.rb#586
+  # source://net-pop//lib/net/pop.rb#589
   def finish; end
 
   # Provide human-readable stringification of class state.
@@ -295,7 +295,7 @@ class Net::POP3 < ::Net::Protocol
 
   # debugging output for +msg+
   #
-  # source://net-pop//lib/net/pop.rb#712
+  # source://net-pop//lib/net/pop.rb#715
   def logging(msg); end
 
   # Returns an array of Net::POPMail objects, representing all the
@@ -305,17 +305,17 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#643
+  # source://net-pop//lib/net/pop.rb#646
   def mails; end
 
   # Returns the total size in bytes of all the messages on the POP server.
   #
-  # source://net-pop//lib/net/pop.rb#631
+  # source://net-pop//lib/net/pop.rb#634
   def n_bytes; end
 
   # Returns the number of messages on the POP server.
   #
-  # source://net-pop//lib/net/pop.rb#624
+  # source://net-pop//lib/net/pop.rb#627
   def n_mails; end
 
   # Seconds to wait until a connection is opened.
@@ -353,10 +353,10 @@ class Net::POP3 < ::Net::Protocol
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#697
+  # source://net-pop//lib/net/pop.rb#700
   def reset; end
 
-  # source://net-pop//lib/net/pop.rb#706
+  # source://net-pop//lib/net/pop.rb#709
   def set_all_uids; end
 
   # *WARNING*: This method causes a serious security hole.
@@ -409,7 +409,7 @@ class Net::POP3 < ::Net::Protocol
   #
   # @raise [IOError]
   #
-  # source://net-pop//lib/net/pop.rb#612
+  # source://net-pop//lib/net/pop.rb#615
   def command; end
 
   # nil's out the:
@@ -418,7 +418,7 @@ class Net::POP3 < ::Net::Protocol
   # - number counter for bytes
   # - quits the current command, if any
   #
-  # source://net-pop//lib/net/pop.rb#596
+  # source://net-pop//lib/net/pop.rb#599
   def do_finish; end
 
   # internal method for Net::POP3.start
@@ -428,7 +428,7 @@ class Net::POP3 < ::Net::Protocol
 
   # Does nothing
   #
-  # source://net-pop//lib/net/pop.rb#581
+  # source://net-pop//lib/net/pop.rb#584
   def on_connect; end
 
   class << self
@@ -589,79 +589,79 @@ end
 # source://net-pop//lib/net/pop.rb#198
 Net::POP3::VERSION = T.let(T.unsafe(nil), String)
 
-# source://net-pop//lib/net/pop.rb#889
+# source://net-pop//lib/net/pop.rb#892
 class Net::POP3Command
   # @return [POP3Command] a new instance of POP3Command
   #
-  # source://net-pop//lib/net/pop.rb#891
+  # source://net-pop//lib/net/pop.rb#894
   def initialize(sock); end
 
   # @raise [POPAuthenticationError]
   #
-  # source://net-pop//lib/net/pop.rb#911
+  # source://net-pop//lib/net/pop.rb#914
   def apop(account, password); end
 
-  # source://net-pop//lib/net/pop.rb#904
+  # source://net-pop//lib/net/pop.rb#907
   def auth(account, password); end
 
-  # source://net-pop//lib/net/pop.rb#959
+  # source://net-pop//lib/net/pop.rb#962
   def dele(num); end
 
-  # source://net-pop//lib/net/pop.rb#900
+  # source://net-pop//lib/net/pop.rb#903
   def inspect; end
 
-  # source://net-pop//lib/net/pop.rb#921
+  # source://net-pop//lib/net/pop.rb#924
   def list; end
 
-  # source://net-pop//lib/net/pop.rb#980
+  # source://net-pop//lib/net/pop.rb#983
   def quit; end
 
-  # source://net-pop//lib/net/pop.rb#952
+  # source://net-pop//lib/net/pop.rb#955
   def retr(num, &block); end
 
-  # source://net-pop//lib/net/pop.rb#941
+  # source://net-pop//lib/net/pop.rb#944
   def rset; end
 
   # Returns the value of attribute socket.
   #
-  # source://net-pop//lib/net/pop.rb#898
+  # source://net-pop//lib/net/pop.rb#901
   def socket; end
 
-  # source://net-pop//lib/net/pop.rb#934
+  # source://net-pop//lib/net/pop.rb#937
   def stat; end
 
-  # source://net-pop//lib/net/pop.rb#945
+  # source://net-pop//lib/net/pop.rb#948
   def top(num, lines = T.unsafe(nil), &block); end
 
-  # source://net-pop//lib/net/pop.rb#963
+  # source://net-pop//lib/net/pop.rb#966
   def uidl(num = T.unsafe(nil)); end
 
   private
 
   # @raise [POPError]
   #
-  # source://net-pop//lib/net/pop.rb#1000
+  # source://net-pop//lib/net/pop.rb#1003
   def check_response(res); end
 
   # @raise [POPAuthenticationError]
   #
-  # source://net-pop//lib/net/pop.rb#1005
+  # source://net-pop//lib/net/pop.rb#1008
   def check_response_auth(res); end
 
-  # source://net-pop//lib/net/pop.rb#1010
+  # source://net-pop//lib/net/pop.rb#1013
   def critical; end
 
-  # source://net-pop//lib/net/pop.rb#991
+  # source://net-pop//lib/net/pop.rb#994
   def get_response(fmt, *fargs); end
 
-  # source://net-pop//lib/net/pop.rb#986
+  # source://net-pop//lib/net/pop.rb#989
   def getok(fmt, *fargs); end
 
-  # source://net-pop//lib/net/pop.rb#996
+  # source://net-pop//lib/net/pop.rb#999
   def recv_response; end
 end
 
-# source://net-pop//lib/net/pop.rb#721
+# source://net-pop//lib/net/pop.rb#724
 Net::POP3Session = Net::POP3
 
 # POP3 authentication error.
@@ -684,11 +684,11 @@ class Net::POPError < ::Net::ProtocolError; end
 # Instances of this class are created by the POP3 class; they should
 # not be directly created by the user.
 #
-# source://net-pop//lib/net/pop.rb#741
+# source://net-pop//lib/net/pop.rb#744
 class Net::POPMail
   # @return [POPMail] a new instance of POPMail
   #
-  # source://net-pop//lib/net/pop.rb#743
+  # source://net-pop//lib/net/pop.rb#746
   def initialize(num, len, pop, cmd); end
 
   # This method fetches the message.  If called with a block, the
@@ -728,7 +728,7 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#802
+  # source://net-pop//lib/net/pop.rb#805
   def all(dest = T.unsafe(nil), &block); end
 
   # Marks a message for deletion on the server.  Deletion does not
@@ -751,7 +751,7 @@ class Net::POPMail
   #       end
   #     end
   #
-  # source://net-pop//lib/net/pop.rb#858
+  # source://net-pop//lib/net/pop.rb#861
   def delete; end
 
   # Marks a message for deletion on the server.  Deletion does not
@@ -774,14 +774,14 @@ class Net::POPMail
   #       end
   #     end
   #
-  # source://net-pop//lib/net/pop.rb#858
+  # source://net-pop//lib/net/pop.rb#861
   def delete!; end
 
   # True if the mail has been deleted.
   #
   # @return [Boolean]
   #
-  # source://net-pop//lib/net/pop.rb#866
+  # source://net-pop//lib/net/pop.rb#869
   def deleted?; end
 
   # Fetches the message header.
@@ -790,17 +790,17 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#834
+  # source://net-pop//lib/net/pop.rb#837
   def header(dest = T.unsafe(nil)); end
 
   # Provide human-readable stringification of class state.
   #
-  # source://net-pop//lib/net/pop.rb#760
+  # source://net-pop//lib/net/pop.rb#763
   def inspect; end
 
   # The length of the message in octets.
   #
-  # source://net-pop//lib/net/pop.rb#756
+  # source://net-pop//lib/net/pop.rb#759
   def length; end
 
   # This method fetches the message.  If called with a block, the
@@ -840,12 +840,12 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#802
+  # source://net-pop//lib/net/pop.rb#805
   def mail(dest = T.unsafe(nil), &block); end
 
   # The sequence number of the message on the server.
   #
-  # source://net-pop//lib/net/pop.rb#753
+  # source://net-pop//lib/net/pop.rb#756
   def number; end
 
   # This method fetches the message.  If called with a block, the
@@ -885,12 +885,12 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#802
+  # source://net-pop//lib/net/pop.rb#805
   def pop(dest = T.unsafe(nil), &block); end
 
   # The length of the message in octets.
   #
-  # source://net-pop//lib/net/pop.rb#756
+  # source://net-pop//lib/net/pop.rb#759
   def size; end
 
   # Fetches the message header and +lines+ lines of body.
@@ -899,10 +899,10 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#822
+  # source://net-pop//lib/net/pop.rb#825
   def top(lines, dest = T.unsafe(nil)); end
 
-  # source://net-pop//lib/net/pop.rb#882
+  # source://net-pop//lib/net/pop.rb#885
   def uid=(uid); end
 
   # Returns the unique-id of the message.
@@ -910,7 +910,7 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#874
+  # source://net-pop//lib/net/pop.rb#877
   def uidl; end
 
   # Returns the unique-id of the message.
@@ -918,9 +918,9 @@ class Net::POPMail
   #
   # This method raises a POPError if an error occurs.
   #
-  # source://net-pop//lib/net/pop.rb#874
+  # source://net-pop//lib/net/pop.rb#877
   def unique_id; end
 end
 
-# source://net-pop//lib/net/pop.rb#720
+# source://net-pop//lib/net/pop.rb#723
 Net::POPSession = Net::POP3

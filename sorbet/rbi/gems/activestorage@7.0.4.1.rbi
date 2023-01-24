@@ -206,13 +206,13 @@ module ActiveStorage
     # source://activestorage//lib/active_storage.rb#49
     def queues=(val); end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#405
+    # source://railties/7.0.4.1/lib/rails/engine.rb#405
     def railtie_helpers_paths; end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#394
+    # source://railties/7.0.4.1/lib/rails/engine.rb#394
     def railtie_namespace; end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#409
+    # source://railties/7.0.4.1/lib/rails/engine.rb#409
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
 
     # source://activestorage//lib/active_storage.rb#360
@@ -251,7 +251,7 @@ module ActiveStorage
     # source://activestorage//lib/active_storage.rb#62
     def supported_image_processing_methods=(val); end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#397
+    # source://railties/7.0.4.1/lib/rails/engine.rb#397
     def table_name_prefix; end
 
     # source://activestorage//lib/active_storage.rb#361
@@ -272,7 +272,7 @@ module ActiveStorage
     # source://activestorage//lib/active_storage.rb#354
     def urls_expire_in=(val); end
 
-    # source://railties/7.0.4/lib/rails/engine.rb#401
+    # source://railties/7.0.4.1/lib/rails/engine.rb#401
     def use_relative_model_naming?; end
 
     # source://activestorage//lib/active_storage.rb#56
@@ -316,10 +316,10 @@ class ActiveStorage::AnalyzeJob < ::ActiveStorage::BaseJob
   def perform(blob); end
 
   class << self
-    # source://activejob/7.0.4/lib/active_job/queue_name.rb#56
+    # source://activejob/7.0.4.1/lib/active_job/queue_name.rb#56
     def queue_name; end
 
-    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
   end
 end
@@ -813,7 +813,7 @@ class ActiveStorage::Attached::Changes::PurgeOne
   def reset; end
 end
 
-# source://activestorage//lib/active_storage/attached/many.rb#10
+# source://activestorage//lib/active_storage/attached/many.rb#5
 class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/many.rb#49
   def attach(*attachables); end
@@ -830,7 +830,7 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/many.rb#23
   def detach(*_arg0, **_arg1, &_arg2); end
 
-  # source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#302
+  # source://activesupport/7.0.4.1/lib/active_support/core_ext/module/delegation.rb#302
   def method_missing(method, *args, **_arg2, &block); end
 
   # source://activestorage//lib/active_storage/attached/many.rb#11
@@ -847,7 +847,7 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/many.rb#70
   def purge_many; end
 
-  # source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#294
+  # source://activesupport/7.0.4.1/lib/active_support/core_ext/module/delegation.rb#294
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -886,7 +886,7 @@ module ActiveStorage::Attached::Model::ClassMethods
   def validate_service_configuration(association_name, service); end
 end
 
-# source://activestorage//lib/active_storage/attached/one.rb#10
+# source://activestorage//lib/active_storage/attached/one.rb#5
 class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/one.rb#56
   def attach(attachable); end
@@ -903,7 +903,7 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/one.rb#23
   def detach(*_arg0, **_arg1, &_arg2); end
 
-  # source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#302
+  # source://activesupport/7.0.4.1/lib/active_support/core_ext/module/delegation.rb#302
   def method_missing(method, *args, **_arg2, &block); end
 
   # source://activestorage//lib/active_storage/attached/one.rb#11
@@ -920,7 +920,7 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/one.rb#77
   def purge_one; end
 
-  # source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#294
+  # source://activesupport/7.0.4.1/lib/active_support/core_ext/module/delegation.rb#294
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -928,20 +928,20 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   include ::ActiveStorage::Attachment::GeneratedAttributeMethods
   include ::ActiveStorage::Attachment::GeneratedAssociationMethods
 
-  # source://activerecord/7.0.4/lib/active_record/autosave_association.rb#160
+  # source://activerecord/7.0.4.1/lib/active_record/autosave_association.rb#160
   def autosave_associated_records_for_blob(*args); end
 
-  # source://activerecord/7.0.4/lib/active_record/autosave_association.rb#160
+  # source://activerecord/7.0.4.1/lib/active_record/autosave_association.rb#160
   def autosave_associated_records_for_record(*args); end
 
-  # source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#302
+  # source://activesupport/7.0.4.1/lib/active_support/core_ext/module/delegation.rb#302
   def method_missing(method, *args, **_arg2, &block); end
 
   def purge; end
   def purge_later; end
   def signed_id(*_arg0, **_arg1, &_arg2); end
 
-  # source://activerecord/7.0.4/lib/active_record/autosave_association.rb#160
+  # source://activerecord/7.0.4.1/lib/active_record/autosave_association.rb#160
   def validate_associated_records_for_blob(*args); end
 
   def variant(transformations); end
@@ -953,67 +953,67 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   def mirror_blob_later; end
   def purge_dependent_blob_later; end
 
-  # source://activesupport/7.0.4/lib/active_support/core_ext/module/delegation.rb#294
+  # source://activesupport/7.0.4.1/lib/active_support/core_ext/module/delegation.rb#294
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   def variants; end
 
   class << self
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activerecord/7.0.4/lib/active_record/reflection.rb#11
+    # source://activerecord/7.0.4.1/lib/active_record/reflection.rb#11
     def _reflections; end
 
-    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.4.1/lib/active_model/validations.rb#52
     def _validators; end
 
-    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
+    # source://activerecord/7.0.4.1/lib/active_record/enum.rb#116
     def defined_enums; end
 
-    # source://activerecord/7.0.4/lib/active_record/scoping/named.rb#174
+    # source://activerecord/7.0.4.1/lib/active_record/scoping/named.rb#174
     def with_all_variant_records(*args, **_arg1); end
   end
 end
 
 module ActiveStorage::Attachment::GeneratedAssociationMethods
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/association.rb#103
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#103
   def blob; end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/association.rb#111
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#111
   def blob=(value); end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/belongs_to.rb#132
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/belongs_to.rb#132
   def blob_changed?; end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/belongs_to.rb#136
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/belongs_to.rb#136
   def blob_previously_changed?; end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#28
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/singular_association.rb#28
   def build_blob(*args, &block); end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#32
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/singular_association.rb#32
   def create_blob(*args, &block); end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#36
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/singular_association.rb#36
   def create_blob!(*args, &block); end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/association.rb#103
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#103
   def record; end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/association.rb#111
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#111
   def record=(value); end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/belongs_to.rb#132
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/belongs_to.rb#132
   def record_changed?; end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/belongs_to.rb#136
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/belongs_to.rb#136
   def record_previously_changed?; end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#19
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/singular_association.rb#19
   def reload_blob; end
 
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#19
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/singular_association.rb#19
   def reload_record; end
 end
 
@@ -1024,17 +1024,17 @@ class ActiveStorage::BaseController < ::ActionController::Base
 
   private
 
-  # source://actionview/7.0.4/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   class << self
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionpack/7.0.4/lib/action_controller/metal/etag_with_template_digest.rb#27
+    # source://actionpack/7.0.4.1/lib/action_controller/metal/etag_with_template_digest.rb#27
     def etag_with_template_digest; end
 
-    # source://actionpack/7.0.4/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -1044,13 +1044,106 @@ class ActiveStorage::BaseJob < ::ActiveJob::Base; end
 class ActiveStorage::Blob < ::ActiveStorage::Record
   include ::ActiveStorage::Blob::GeneratedAttributeMethods
   include ::ActiveStorage::Blob::GeneratedAssociationMethods
+  include ::ActiveStorage::Blob::Analyzable
+  include ::ActiveStorage::Blob::Identifiable
+  include ::ActiveStorage::Blob::Representable
+
+  def audio?; end
+
+  # source://activerecord/7.0.4.1/lib/active_record/autosave_association.rb#160
+  def autosave_associated_records_for_attachments(*args); end
+
+  # source://activerecord/7.0.4.1/lib/active_record/autosave_association.rb#160
+  def autosave_associated_records_for_variant_records(*args); end
+
+  def compose(keys); end
+  def content_type=(value); end
+  def content_type_for_serving; end
+  def custom_metadata; end
+  def custom_metadata=(metadata); end
+  def delete; end
+  def download(&block); end
+  def download_chunk(range); end
+  def filename; end
+  def forced_disposition_for_serving; end
+  def image?; end
+  def key; end
+  def mirror_later; end
+  def open(tmpdir: T.unsafe(nil), &block); end
+  def purge; end
+  def purge_later; end
+
+  # source://activerecord/7.0.4.1/lib/active_record/secure_token.rb#39
+  def regenerate_key; end
+
+  def service; end
+  def service_headers_for_direct_upload; end
+  def service_url_for_direct_upload(expires_in: T.unsafe(nil)); end
+  def services; end
+  def services=(_arg0); end
+  def services?; end
+  def signed_id(purpose: T.unsafe(nil), expires_in: T.unsafe(nil)); end
+  def text?; end
+  def unfurl(io, identify: T.unsafe(nil)); end
+  def upload(io, identify: T.unsafe(nil)); end
+  def upload_without_unfurling(io); end
+  def url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil), filename: T.unsafe(nil), **options); end
+
+  # source://activerecord/7.0.4.1/lib/active_record/autosave_association.rb#160
+  def validate_associated_records_for_attachments(*args); end
+
+  # source://activerecord/7.0.4.1/lib/active_record/autosave_association.rb#160
+  def validate_associated_records_for_variant_records(*args); end
+
+  def video?; end
+
+  private
+
+  def allowed_inline?; end
+  def compute_checksum_in_chunks(io); end
+  def extract_content_type(io); end
+  def forcibly_serve_as_binary?; end
+  def service_metadata; end
+  def update_service_metadata; end
+  def web_image?; end
 
   class << self
-    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://activerecord/7.0.4.1/lib/active_record/reflection.rb#11
+    def _reflections; end
+
+    # source://activemodel/7.0.4.1/lib/active_model/validations.rb#52
     def _validators; end
 
-    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
+    # source://activerecord/7.0.4.1/lib/active_record/attributes.rb#11
+    def attributes_to_define_after_schema_loads; end
+
+    def build_after_unfurling(io:, filename:, key: T.unsafe(nil), content_type: T.unsafe(nil), metadata: T.unsafe(nil), service_name: T.unsafe(nil), identify: T.unsafe(nil), record: T.unsafe(nil)); end
+    def combine_signed_id_purposes(purpose); end
+    def compose(blobs, filename:, content_type: T.unsafe(nil), metadata: T.unsafe(nil)); end
+    def create_after_unfurling!(io:, filename:, key: T.unsafe(nil), content_type: T.unsafe(nil), metadata: T.unsafe(nil), service_name: T.unsafe(nil), identify: T.unsafe(nil), record: T.unsafe(nil)); end
+    def create_and_upload!(io:, filename:, key: T.unsafe(nil), content_type: T.unsafe(nil), metadata: T.unsafe(nil), service_name: T.unsafe(nil), identify: T.unsafe(nil), record: T.unsafe(nil)); end
+    def create_before_direct_upload!(filename:, byte_size:, checksum:, key: T.unsafe(nil), content_type: T.unsafe(nil), metadata: T.unsafe(nil), service_name: T.unsafe(nil), record: T.unsafe(nil)); end
+
+    # source://activerecord/7.0.4.1/lib/active_record/enum.rb#116
     def defined_enums; end
+
+    def find_signed(id, record: T.unsafe(nil), purpose: T.unsafe(nil)); end
+    def find_signed!(id, record: T.unsafe(nil), purpose: T.unsafe(nil)); end
+    def generate_unique_secure_token(length: T.unsafe(nil)); end
+    def scope_for_strict_loading; end
+    def service; end
+    def service=(value); end
+    def service?; end
+    def services; end
+    def services=(value); end
+    def services?; end
+    def signed_id_verifier; end
+
+    # source://activerecord/7.0.4.1/lib/active_record/scoping/named.rb#174
+    def unattached(*args, **_arg1); end
   end
 end
 
@@ -1066,8 +1159,35 @@ module ActiveStorage::Blob::Analyzable
   def extract_metadata_via_analyzer; end
 end
 
-module ActiveStorage::Blob::GeneratedAssociationMethods; end
+module ActiveStorage::Blob::GeneratedAssociationMethods
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/collection_association.rb#62
+  def attachment_ids; end
+
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/collection_association.rb#72
+  def attachment_ids=(ids); end
+
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#103
+  def attachments; end
+
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#111
+  def attachments=(value); end
+
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/collection_association.rb#62
+  def variant_record_ids; end
+
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/collection_association.rb#72
+  def variant_record_ids=(ids); end
+
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#103
+  def variant_records; end
+
+  # source://activerecord/7.0.4.1/lib/active_record/associations/builder/association.rb#111
+  def variant_records=(value); end
+end
+
 module ActiveStorage::Blob::GeneratedAttributeMethods; end
+ActiveStorage::Blob::INVALID_VARIABLE_CONTENT_TYPES_DEPRECATED_IN_RAILS_7 = T.let(T.unsafe(nil), Array)
+ActiveStorage::Blob::INVALID_VARIABLE_CONTENT_TYPES_TO_SERVE_AS_BINARY_DEPRECATED_IN_RAILS_7 = T.let(T.unsafe(nil), Array)
 
 module ActiveStorage::Blob::Identifiable
   def identified?; end
@@ -1079,6 +1199,8 @@ module ActiveStorage::Blob::Identifiable
   def download_identifiable_chunk; end
   def identify_content_type; end
 end
+
+ActiveStorage::Blob::MINIMUM_TOKEN_LENGTH = T.let(T.unsafe(nil), Integer)
 
 module ActiveStorage::Blob::Representable
   extend ::ActiveSupport::Concern
@@ -1098,15 +1220,58 @@ module ActiveStorage::Blob::Representable
   def variant_class; end
 end
 
+module ActiveStorage::Blobs; end
+
+class ActiveStorage::Blobs::ProxyController < ::ActiveStorage::BaseController
+  include ::ActiveStorage::SetBlob
+  include ::ActionController::Live
+  include ::ActiveStorage::Streaming
+  extend ::ActionController::Live::ClassMethods
+
+  def show; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class ActiveStorage::Blobs::RedirectController < ::ActiveStorage::BaseController
+  include ::ActiveStorage::SetBlob
+
+  def show; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
 class ActiveStorage::Current < ::ActiveSupport::CurrentAttributes
   def host; end
   def host=(host); end
 
   class << self
-    # source://activesupport/7.0.4/lib/active_support/current_attributes.rb#118
+    # source://activesupport/7.0.4.1/lib/active_support/current_attributes.rb#118
     def url_options; end
 
-    # source://activesupport/7.0.4/lib/active_support/current_attributes.rb#118
+    # source://activesupport/7.0.4.1/lib/active_support/current_attributes.rb#118
     def url_options=(value); end
   end
 end
@@ -1116,17 +1281,14 @@ class ActiveStorage::DirectUploadsController < ::ActiveStorage::BaseController
 
   private
 
-  # source://actionview/7.0.4/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   def blob_args; end
   def direct_upload_json(blob); end
 
   class << self
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
-    def __callbacks; end
-
-    # source://actionpack/7.0.4/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -1139,7 +1301,7 @@ class ActiveStorage::DiskController < ::ActiveStorage::BaseController
 
   private
 
-  # source://actionview/7.0.4/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   def acceptable_content?(token); end
@@ -1148,10 +1310,10 @@ class ActiveStorage::DiskController < ::ActiveStorage::BaseController
   def named_disk_service(name); end
 
   class << self
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionpack/7.0.4/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -1264,10 +1426,10 @@ class ActiveStorage::FixtureSet
   include ::ActiveRecord::SecureToken
   extend ::ActiveRecord::SecureToken::ClassMethods
 
-  # source://activesupport/7.0.4/lib/active_support/testing/file_fixtures.rb#20
+  # source://activesupport/7.0.4.1/lib/active_support/testing/file_fixtures.rb#20
   def file_fixture_path; end
 
-  # source://activesupport/7.0.4/lib/active_support/testing/file_fixtures.rb#20
+  # source://activesupport/7.0.4.1/lib/active_support/testing/file_fixtures.rb#20
   def file_fixture_path?; end
 
   # source://activestorage//lib/active_storage/fixture_set.rb#67
@@ -1295,13 +1457,13 @@ class ActiveStorage::FixtureSet
     # source://activestorage//lib/active_storage/fixture_set.rb#63
     def blob(filename:, **attributes); end
 
-    # source://activesupport/7.0.4/lib/active_support/testing/file_fixtures.rb#20
+    # source://activesupport/7.0.4.1/lib/active_support/testing/file_fixtures.rb#20
     def file_fixture_path; end
 
-    # source://activesupport/7.0.4/lib/active_support/testing/file_fixtures.rb#20
+    # source://activesupport/7.0.4.1/lib/active_support/testing/file_fixtures.rb#20
     def file_fixture_path=(value); end
 
-    # source://activesupport/7.0.4/lib/active_support/testing/file_fixtures.rb#20
+    # source://activesupport/7.0.4.1/lib/active_support/testing/file_fixtures.rb#20
     def file_fixture_path?; end
   end
 end
@@ -1366,10 +1528,10 @@ class ActiveStorage::MirrorJob < ::ActiveStorage::BaseJob
   def perform(key, checksum:); end
 
   class << self
-    # source://activejob/7.0.4/lib/active_job/queue_name.rb#56
+    # source://activejob/7.0.4.1/lib/active_job/queue_name.rb#56
     def queue_name; end
 
-    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
   end
 end
@@ -1547,10 +1709,10 @@ class ActiveStorage::PurgeJob < ::ActiveStorage::BaseJob
   def perform(blob); end
 
   class << self
-    # source://activejob/7.0.4/lib/active_job/queue_name.rb#56
+    # source://activejob/7.0.4.1/lib/active_job/queue_name.rb#56
     def queue_name; end
 
-    # source://activesupport/7.0.4/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
   end
 end
@@ -1560,10 +1722,10 @@ class ActiveStorage::Record < ::ActiveRecord::Base
   include ::ActiveStorage::Record::GeneratedAssociationMethods
 
   class << self
-    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.4.1/lib/active_model/validations.rb#52
     def _validators; end
 
-    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
+    # source://activerecord/7.0.4.1/lib/active_record/enum.rb#116
     def defined_enums; end
   end
 end
@@ -1647,6 +1809,60 @@ module ActiveStorage::Reflection::ReflectionExtension
 
   # source://activestorage//lib/active_storage/reflection.rb#37
   def reflection_class_for(macro); end
+end
+
+module ActiveStorage::Representations; end
+
+class ActiveStorage::Representations::BaseController < ::ActiveStorage::BaseController
+  include ::ActiveStorage::SetBlob
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  def blob_scope; end
+  def set_representation; end
+
+  class << self
+    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class ActiveStorage::Representations::ProxyController < ::ActiveStorage::Representations::BaseController
+  include ::ActionController::Live
+  include ::ActiveStorage::Streaming
+  extend ::ActionController::Live::ClassMethods
+
+  def show; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  class << self
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
+end
+
+class ActiveStorage::Representations::RedirectController < ::ActiveStorage::Representations::BaseController
+  def show; end
+
+  private
+
+  # source://actionview/7.0.4.1/lib/action_view/layouts.rb#328
+  def _layout(lookup_context, formats); end
+
+  class << self
+    # source://actionpack/7.0.4.1/lib/action_controller/metal.rb#210
+    def middleware_stack; end
+  end
 end
 
 # Abstract class serving as an interface for concrete services.
@@ -1972,7 +2188,7 @@ ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activestorage//lib/active_storage/gem_version.rb#13
-ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # source://activestorage//lib/active_storage/gem_version.rb#15
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
@@ -2001,56 +2217,6 @@ class ActiveStorage::Variant
   def process; end
   def processed?; end
 end
-
-class ActiveStorage::VariantRecord < ::ActiveStorage::Record
-  include ::ActiveStorage::VariantRecord::GeneratedAttributeMethods
-  include ::ActiveStorage::VariantRecord::GeneratedAssociationMethods
-
-  # source://activerecord/7.0.4/lib/active_record/autosave_association.rb#160
-  def autosave_associated_records_for_blob(*args); end
-
-  class << self
-    # source://activesupport/7.0.4/lib/active_support/callbacks.rb#68
-    def __callbacks; end
-
-    # source://activerecord/7.0.4/lib/active_record/reflection.rb#11
-    def _reflections; end
-
-    # source://activemodel/7.0.4/lib/active_model/validations.rb#52
-    def _validators; end
-
-    # source://activerecord/7.0.4/lib/active_record/enum.rb#116
-    def defined_enums; end
-  end
-end
-
-module ActiveStorage::VariantRecord::GeneratedAssociationMethods
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/association.rb#103
-  def blob; end
-
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/association.rb#111
-  def blob=(value); end
-
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/belongs_to.rb#132
-  def blob_changed?; end
-
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/belongs_to.rb#136
-  def blob_previously_changed?; end
-
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#28
-  def build_blob(*args, &block); end
-
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#32
-  def create_blob(*args, &block); end
-
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#36
-  def create_blob!(*args, &block); end
-
-  # source://activerecord/7.0.4/lib/active_record/associations/builder/singular_association.rb#19
-  def reload_blob; end
-end
-
-module ActiveStorage::VariantRecord::GeneratedAttributeMethods; end
 
 class ActiveStorage::VariantWithRecord
   def initialize(blob, variation); end
