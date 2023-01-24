@@ -11,16 +11,16 @@ class RuboCop::AST::Node < ::Parser::AST::Node
   include ::RuboCop::RSpec::Node
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#4
+# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/final_end_location.rb#4
 module RuboCop::Cop; end
 
-# source://rubocop/1.40.0/lib/rubocop/cop/mixin/allowed_methods.rb#38
+# source://rubocop/1.44.0/lib/rubocop/cop/mixin/allowed_methods.rb#38
 RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
 
-# source://rubocop/1.40.0/lib/rubocop/cop/mixin/allowed_pattern.rb#54
+# source://rubocop/1.44.0/lib/rubocop/cop/mixin/allowed_pattern.rb#54
 RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#5
+# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/final_end_location.rb#5
 module RuboCop::Cop::RSpec; end
 
 # Checks that left braces for adjacent single line lets are aligned.
@@ -430,54 +430,8 @@ module RuboCop::Cop::RSpec::Capybara; end
 #   # good
 #   expect(page).to have_current_path('/callback')
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#32
-class RuboCop::Cop::RSpec::Capybara::CurrentPathExpectation < ::RuboCop::Cop::Base
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # Supported matchers: eq(...) / match(/regexp/) / match('regexp')
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#48
-  def as_is_matcher(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#42
-  def expectation_set_on_current_path(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#65
-  def on_send(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#55
-  def regexp_str_matcher(param0 = T.unsafe(nil)); end
-
-  private
-
-  # `have_current_path` with no options will include the querystring
-  # while `page.current_path` does not.
-  # This ensures the option `ignore_query: true` is added
-  # except when the expectation is a regexp or string
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#111
-  def add_ignore_query_options(corrector, node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#77
-  def autocorrect(corrector, node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#101
-  def convert_regexp_str_to_literal(corrector, matcher_node, regexp_str); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#88
-  def rewrite_expectation(corrector, node, to_symbol, matcher_node); end
-
-  class << self
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#61
-    def autocorrect_incompatible_with; end
-  end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#35
-RuboCop::Cop::RSpec::Capybara::CurrentPathExpectation::MSG = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#39
-RuboCop::Cop::RSpec::Capybara::CurrentPathExpectation::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#34
+RuboCop::Cop::RSpec::Capybara::CurrentPathExpectation = RuboCop::Cop::Capybara::CurrentPathExpectation
 
 # Checks for consistent method usage in feature specs.
 #
@@ -552,6 +506,32 @@ RuboCop::Cop::RSpec::Capybara::FeatureMethods::MAP = T.let(T.unsafe(nil), Hash)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/feature_methods.rb#48
 RuboCop::Cop::RSpec::Capybara::FeatureMethods::MSG = T.let(T.unsafe(nil), String)
 
+# Checks for usage of deprecated style methods.
+#
+# @example when using `assert_style`
+#   # bad
+#   page.find(:css, '#first').assert_style(display: 'block')
+#
+#   # good
+#   page.find(:css, '#first').assert_matches_style(display: 'block')
+# @example when using `has_style?`
+#   # bad
+#   expect(page.find(:css, 'first')
+#   .has_style?(display: 'block')).to be true
+#
+#   # good
+#   expect(page.find(:css, 'first')
+#   .matches_style?(display: 'block')).to be true
+# @example when using `have_style`
+#   # bad
+#   expect(page).to have_style(display: 'block')
+#
+#   # good
+#   expect(page).to match_style(display: 'block')
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/match_style.rb#34
+RuboCop::Cop::RSpec::Capybara::MatchStyle = RuboCop::Cop::Capybara::MatchStyle
+
 # Enforces use of `have_no_*` or `not_to` for negated expectations.
 #
 # @example EnforcedStyle: not_to (default)
@@ -571,54 +551,8 @@ RuboCop::Cop::RSpec::Capybara::FeatureMethods::MSG = T.let(T.unsafe(nil), String
 #   expect(page).to have_no_selector
 #   expect(page).to have_no_css('a')
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#27
-class RuboCop::Cop::RSpec::Capybara::NegationMatcher < ::RuboCop::Cop::Base
-  include ::RuboCop::Cop::ConfigurableEnforcedStyle
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#51
-  def have_no?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#45
-  def not_to?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#56
-  def on_send(node); end
-
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#79
-  def message(matcher); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#70
-  def offense?(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#75
-  def offense_range(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#94
-  def replaced_matcher(matcher); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#85
-  def replaced_runner; end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#32
-RuboCop::Cop::RSpec::Capybara::NegationMatcher::CAPYBARA_MATCHERS = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#31
-RuboCop::Cop::RSpec::Capybara::NegationMatcher::MSG = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#39
-RuboCop::Cop::RSpec::Capybara::NegationMatcher::NEGATIVE_MATCHERS = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#37
-RuboCop::Cop::RSpec::Capybara::NegationMatcher::POSITIVE_MATCHERS = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#42
-RuboCop::Cop::RSpec::Capybara::NegationMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/negation_matcher.rb#29
+RuboCop::Cop::RSpec::Capybara::NegationMatcher = RuboCop::Cop::Capybara::NegationMatcher
 
 # Checks for there is a more specific actions offered by Capybara.
 #
@@ -636,45 +570,8 @@ RuboCop::Cop::RSpec::Capybara::NegationMatcher::RESTRICT_ON_SEND = T.let(T.unsaf
 #   click_link(exact_text: 'foo')
 #   find('div').click_button
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#23
-class RuboCop::Cop::RSpec::Capybara::SpecificActions < ::RuboCop::Cop::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#32
-  def click_on_selector(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#36
-  def on_send(node); end
-
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#78
-  def good_action(action); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#64
-  def last_selector(arg); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#72
-  def message(action, selector); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#68
-  def offense_range(node, receiver); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#56
-  def specific_action(selector); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#60
-  def supported_selector?(selector); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#24
-RuboCop::Cop::RSpec::Capybara::SpecificActions::MSG = T.let(T.unsafe(nil), String)
-
 # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#25
-RuboCop::Cop::RSpec::Capybara::SpecificActions::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_actions.rb#26
-RuboCop::Cop::RSpec::Capybara::SpecificActions::SPECIFIC_ACTION = T.let(T.unsafe(nil), Hash)
+RuboCop::Cop::RSpec::Capybara::SpecificActions = RuboCop::Cop::Capybara::SpecificActions
 
 # Checks if there is a more specific finder offered by Capybara.
 #
@@ -687,51 +584,8 @@ RuboCop::Cop::RSpec::Capybara::SpecificActions::SPECIFIC_ACTION = T.let(T.unsafe
 #   find_by_id('some-id')
 #   find_by_id('some-id', visible: true)
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#18
-class RuboCop::Cop::RSpec::Capybara::SpecificFinders < ::RuboCop::Cop::Base
-  include ::RuboCop::Cop::RangeHelp
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#27
-  def find_argument(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#31
-  def on_send(node); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#52
-  def attribute?(arg); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#82
-  def end_pos(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#78
-  def offense_range(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#42
-  def on_attr(node, arg); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#48
-  def on_id(node, arg); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#57
-  def register_offense(node, arg_replacement); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#65
-  def replaced_arguments(arg, id); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#70
-  def to_options(attrs); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#23
-RuboCop::Cop::RSpec::Capybara::SpecificFinders::MSG = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#24
-RuboCop::Cop::RSpec::Capybara::SpecificFinders::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_finders.rb#20
+RuboCop::Cop::RSpec::Capybara::SpecificFinders = RuboCop::Cop::Capybara::SpecificFinders
 
 # Checks for there is a more specific matcher offered by Capybara.
 #
@@ -755,43 +609,18 @@ RuboCop::Cop::RSpec::Capybara::SpecificFinders::RESTRICT_ON_SEND = T.let(T.unsaf
 #   expect(page).to have_select
 #   expect(page).to have_field('foo')
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#29
-class RuboCop::Cop::RSpec::Capybara::SpecificMatcher < ::RuboCop::Cop::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#42
-  def first_argument(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#46
-  def on_send(node); end
-
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#70
-  def good_matcher(node, matcher); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#64
-  def message(node, matcher); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#59
-  def specific_matcher(arg); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#30
-RuboCop::Cop::RSpec::Capybara::SpecificMatcher::MSG = T.let(T.unsafe(nil), String)
-
 # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#31
-RuboCop::Cop::RSpec::Capybara::SpecificMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/specific_matcher.rb#33
-RuboCop::Cop::RSpec::Capybara::SpecificMatcher::SPECIFIC_MATCHER = T.let(T.unsafe(nil), Hash)
+RuboCop::Cop::RSpec::Capybara::SpecificMatcher = RuboCop::Cop::Capybara::SpecificMatcher
 
 # Checks for boolean visibility in Capybara finders.
 #
-# Capybara lets you find elements that match a certain visibility using
-# the `:visible` option. `:visible` accepts both boolean and symbols as
-# values, however using booleans can have unwanted effects. `visible:
-# false` does not find just invisible elements, but both visible and
-# invisible elements. For expressiveness and clarity, use one of the
-# symbol values, `:all`, `:hidden` or `:visible`.
+# Capybara lets you find elements that match a certain visibility
+# using the `:visible` option. `:visible` accepts both boolean and
+# symbols as values, however using booleans can have unwanted
+# effects. `visible: false` does not find just invisible elements,
+# but both visible and invisible elements. For expressiveness and
+# clarity, use one of the # symbol values, `:all`, `:hidden` or
+# `:visible`.
 # Read more in
 # https://www.rubydoc.info/gems/capybara/Capybara%2FNode%2FFinders:all[the documentation].
 #
@@ -806,143 +635,8 @@ RuboCop::Cop::RSpec::Capybara::SpecificMatcher::SPECIFIC_MATCHER = T.let(T.unsaf
 #   expect(page).to have_css('.foo', visible: :all)
 #   expect(page).to have_link('my link', visible: :hidden)
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#29
-class RuboCop::Cop::RSpec::Capybara::VisibilityMatcher < ::RuboCop::Cop::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#59
-  def on_send(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#55
-  def visible_false?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#50
-  def visible_true?(param0 = T.unsafe(nil)); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#66
-  def capybara_matcher?(method_name); end
-end
-
 # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#32
-RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::CAPYBARA_MATCHER_METHODS = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#30
-RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::MSG_FALSE = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#31
-RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::MSG_TRUE = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/visibility_matcher.rb#47
-RuboCop::Cop::RSpec::Capybara::VisibilityMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
-
-# Help methods for capybara.
-#
-# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#7
-module RuboCop::Cop::RSpec::CapybaraHelp
-  private
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param option [Symbol]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#74
-  def include_option?(node, option); end
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param element [String]
-  # @param attrs [Array<String>]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#57
-  def replaceable_element?(node, element, attrs); end
-
-  # @param pseudo_class [String]
-  # @param locator [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#34
-  def replaceable_pseudo_class?(pseudo_class, locator); end
-
-  # @param locator [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#45
-  def replaceable_pseudo_class_not?(locator); end
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param attrs [Array<String>]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#67
-  def replaceable_to_link?(node, attrs); end
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param locator [String]
-  # @param element [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#14
-  def specific_option?(node, locator, element); end
-
-  # @param locator [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#25
-  def specific_pseudo_classes?(locator); end
-
-  class << self
-    # @param node [RuboCop::AST::SendNode]
-    # @param option [Symbol]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#74
-    def include_option?(node, option); end
-
-    # @param node [RuboCop::AST::SendNode]
-    # @param element [String]
-    # @param attrs [Array<String>]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#57
-    def replaceable_element?(node, element, attrs); end
-
-    # @param pseudo_class [String]
-    # @param locator [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#34
-    def replaceable_pseudo_class?(pseudo_class, locator); end
-
-    # @param locator [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#45
-    def replaceable_pseudo_class_not?(locator); end
-
-    # @param node [RuboCop::AST::SendNode]
-    # @param attrs [Array<String>]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#67
-    def replaceable_to_link?(node, attrs); end
-
-    # @param node [RuboCop::AST::SendNode]
-    # @param locator [String]
-    # @param element [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#14
-    def specific_option?(node, locator, element); end
-
-    # @param locator [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/capybara_help.rb#25
-    def specific_pseudo_classes?(locator); end
-  end
-end
+RuboCop::Cop::RSpec::Capybara::VisibilityMatcher = RuboCop::Cop::Capybara::VisibilityMatcher
 
 # Prefer negated matchers over `to change.by(0)`.
 #
@@ -1165,14 +859,14 @@ class RuboCop::Cop::RSpec::ContextMethod < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/context_method.rb#33
   def context_method(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_method.rb#37
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_method.rb#41
   def on_block(node); end
 
   private
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_method.rb#47
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_method.rb#51
   def method_name?(description); end
 end
 
@@ -1225,233 +919,40 @@ RuboCop::Cop::RSpec::ContextMethod::MSG = T.let(T.unsafe(nil), String)
 #   context '条件を満たすとき' do
 #   # ...
 #   end
-# @see https://rspec.rubystyle.guide/#context-descriptions
 # @see http://www.betterspecs.org/#contexts
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#59
+# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#58
 class RuboCop::Cop::RSpec::ContextWording < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::AllowedPattern
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#65
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#64
   def context_wording(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#69
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#68
   def on_block(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#80
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#79
   def allowed_patterns; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#88
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#87
   def bad_pattern?(description); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#94
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#93
   def expect_patterns; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#84
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#83
   def prefix_regexes; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#104
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#103
   def prefixes; end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#62
+# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#61
 RuboCop::Cop::RSpec::ContextWording::MSG = T.let(T.unsafe(nil), String)
-
-# Helps parsing css selector.
-#
-# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#7
-module RuboCop::Cop::RSpec::CssSelector
-  private
-
-  # @example
-  #   attribute?('[attribute]') # => true
-  #   attribute?('attribute') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#77
-  def attribute?(selector); end
-
-  # @example
-  #   attributes('a[foo-bar_baz]') # => {"foo-bar_baz=>true}
-  #   attributes('button[foo][bar]') # => {"foo"=>true, "bar"=>true}
-  #   attributes('table[foo=bar]') # => {"foo"=>"'bar'"}
-  # @param selector [String]
-  # @return [Array<String>]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#87
-  def attributes(selector); end
-
-  # @example
-  #   common_attributes?('a[focused]') # => true
-  #   common_attributes?('button[focused][visible]') # => true
-  #   common_attributes?('table[id=some-id]') # => true
-  #   common_attributes?('h1[invalid]') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#101
-  def common_attributes?(selector); end
-
-  # @example
-  #   id?('#some-id') # => true
-  #   id?('.some-class') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#68
-  def id?(selector); end
-
-  # @example
-  #   multiple_selectors?('a.cls b#id') # => true
-  #   multiple_selectors?('a.cls') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#124
-  def multiple_selectors?(selector); end
-
-  # @example
-  #   normalize_value('true') # => true
-  #   normalize_value('false') # => false
-  #   normalize_value(nil) # => false
-  #   normalize_value("foo") # => "'foo'"
-  # @param value [String]
-  # @return [Boolean, String]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#135
-  def normalize_value(value); end
-
-  # @example
-  #   pseudo_classes('button:not([disabled])') # => ['not()']
-  #   pseudo_classes('a:enabled:not([valid])') # => ['enabled', 'not()']
-  # @param selector [String]
-  # @return [Array<String>]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#110
-  def pseudo_classes(selector); end
-
-  # @example
-  #   specific_pesudo_classes?('button', 'name') # => true
-  #   specific_pesudo_classes?('link', 'invalid') # => false
-  # @param element [String]
-  # @param attribute [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#50
-  def specific_options?(element, attribute); end
-
-  # @example
-  #   specific_pesudo_classes?('disabled') # => true
-  #   specific_pesudo_classes?('first-of-type') # => false
-  # @param pseudo_class [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#59
-  def specific_pesudo_classes?(pseudo_class); end
-
-  class << self
-    # @example
-    #   attribute?('[attribute]') # => true
-    #   attribute?('attribute') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#77
-    def attribute?(selector); end
-
-    # @example
-    #   attributes('a[foo-bar_baz]') # => {"foo-bar_baz=>true}
-    #   attributes('button[foo][bar]') # => {"foo"=>true, "bar"=>true}
-    #   attributes('table[foo=bar]') # => {"foo"=>"'bar'"}
-    # @param selector [String]
-    # @return [Array<String>]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#87
-    def attributes(selector); end
-
-    # @example
-    #   common_attributes?('a[focused]') # => true
-    #   common_attributes?('button[focused][visible]') # => true
-    #   common_attributes?('table[id=some-id]') # => true
-    #   common_attributes?('h1[invalid]') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#101
-    def common_attributes?(selector); end
-
-    # @example
-    #   id?('#some-id') # => true
-    #   id?('.some-class') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#68
-    def id?(selector); end
-
-    # @example
-    #   multiple_selectors?('a.cls b#id') # => true
-    #   multiple_selectors?('a.cls') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#124
-    def multiple_selectors?(selector); end
-
-    # @example
-    #   normalize_value('true') # => true
-    #   normalize_value('false') # => false
-    #   normalize_value(nil) # => false
-    #   normalize_value("foo") # => "'foo'"
-    # @param value [String]
-    # @return [Boolean, String]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#135
-    def normalize_value(value); end
-
-    # @example
-    #   pseudo_classes('button:not([disabled])') # => ['not()']
-    #   pseudo_classes('a:enabled:not([valid])') # => ['enabled', 'not()']
-    # @param selector [String]
-    # @return [Array<String>]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#110
-    def pseudo_classes(selector); end
-
-    # @example
-    #   specific_pesudo_classes?('button', 'name') # => true
-    #   specific_pesudo_classes?('link', 'invalid') # => false
-    # @param element [String]
-    # @param attribute [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#50
-    def specific_options?(element, attribute); end
-
-    # @example
-    #   specific_pesudo_classes?('disabled') # => true
-    #   specific_pesudo_classes?('first-of-type') # => false
-    # @param pseudo_class [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#59
-    def specific_pesudo_classes?(pseudo_class); end
-  end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#8
-RuboCop::Cop::RSpec::CssSelector::COMMON_OPTIONS = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#13
-RuboCop::Cop::RSpec::CssSelector::SPECIFIC_OPTIONS = T.let(T.unsafe(nil), Hash)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/mixin/css_selector.rb#38
-RuboCop::Cop::RSpec::CssSelector::SPECIFIC_PSEUDO_CLASSES = T.let(T.unsafe(nil), Array)
 
 # Check that the first argument to the top-level describe is a constant.
 #
@@ -2748,10 +2249,10 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   include ::RuboCop::RSpec::Language
   extend ::RuboCop::AST::NodePattern::Macros
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#159
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#182
   def predicate_matcher?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#168
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#191
   def predicate_matcher_block?(param0 = T.unsafe(nil)); end
 
   private
@@ -2762,25 +2263,40 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#139
   def check_explicit(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#191
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#215
   def corrector_explicit(corrector, to_node, actual, matcher, block_child); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#185
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#175
+  def heredoc_argument?(matcher); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#209
   def message_explicit(matcher); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#198
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#222
   def move_predicate(corrector, actual, matcher, block_child); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#177
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#200
   def predicate_matcher_name?(name); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#228
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#162
+  def replaceable_matcher?(matcher); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#252
   def replacement_matcher(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#210
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#234
   def to_predicate_method(matcher); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#171
+  def uncorrectable_matcher?(node, matcher); end
 end
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#127
@@ -5477,7 +4993,7 @@ RuboCop::Cop::RSpec::Pending::MSG = T.let(T.unsafe(nil), String)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#59
 class RuboCop::Cop::RSpec::PendingWithoutReason < ::RuboCop::Cop::RSpec::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#90
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#95
   def on_send(node); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#63
@@ -5495,26 +5011,19 @@ class RuboCop::Cop::RSpec::PendingWithoutReason < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#86
   def skipped_by_metadata_without_reason?(param0 = T.unsafe(nil)); end
 
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#91
+  def without_reason?(param0 = T.unsafe(nil)); end
+
   private
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#100
-  def pending_by_pending_step_without_reason?(node); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#104
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#108
   def pending_without_reason?(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#110
-  def skipped_by_skip_step_without_reason?(node); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#114
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#113
   def skipped_without_reason?(node); end
 end
 
@@ -5549,6 +5058,17 @@ RuboCop::Cop::RSpec::PendingWithoutReason::MSG = T.let(T.unsafe(nil), String)
 #
 #   # good - the above code is rewritten to it by this cop
 #   expect(foo.something?).to be(true)
+#
+#   # bad - no autocorrect
+#   expect(foo)
+#   .to be_something(<<~TEXT)
+#   bar
+#   TEXT
+#
+#   # good
+#   expect(foo.something?(<<~TEXT)).to be(true)
+#   bar
+#   TEXT
 # @example Strict: false, EnforcedStyle: explicit
 #   # bad
 #   expect(foo).to be_something
@@ -5556,17 +5076,17 @@ RuboCop::Cop::RSpec::PendingWithoutReason::MSG = T.let(T.unsafe(nil), String)
 #   # good - the above code is rewritten to it by this cop
 #   expect(foo.something?).to be_truthy
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#280
+# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#315
 class RuboCop::Cop::RSpec::PredicateMatcher < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RSpec::InflectedHelper
   include ::RuboCop::Cop::RSpec::ExplicitHelper
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#297
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#332
   def on_block(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#288
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#323
   def on_send(node); end
 
   private
@@ -5577,7 +5097,7 @@ class RuboCop::Cop::RSpec::PredicateMatcher < ::RuboCop::Cop::RSpec::Base
   #   foo 1, 2
   #   ^^^^^
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#307
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#342
   def args_loc(send_node); end
 
   # returns block location with whitespace
@@ -5586,11 +5106,11 @@ class RuboCop::Cop::RSpec::PredicateMatcher < ::RuboCop::Cop::RSpec::Base
   #   foo { bar }
   #   ^^^^^^^^
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#317
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#352
   def block_loc(send_node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#286
+# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#321
 RuboCop::Cop::RSpec::PredicateMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/avoid_setup_hook.rb#6
@@ -5885,6 +5405,44 @@ end
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/inferred_spec_type.rb#57
 RuboCop::Cop::RSpec::Rails::InferredSpecType::MSG = T.let(T.unsafe(nil), String)
+
+# Check if using Minitest matchers.
+#
+# @example
+#   # bad
+#   assert_equal(a, b)
+#   assert_equal a, b, "must be equal"
+#   refute_equal(a, b)
+#
+#   # good
+#   expect(a).to eq(b)
+#   expect(a).to(eq(b), "must be equal")
+#   expect(a).not_to eq(b)
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#20
+class RuboCop::Cop::RSpec::Rails::MinitestAssertions < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#27
+  def minitest_assertion(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#31
+  def on_send(node); end
+
+  private
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#53
+  def message(prefer); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#43
+  def replacement(node, expected, actual, failure_message); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#23
+RuboCop::Cop::RSpec::Rails::MinitestAssertions::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#24
+RuboCop::Cop::RSpec::Rails::MinitestAssertions::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Check for `once` and `twice` receive counts matchers usage.
 #
@@ -6960,15 +6518,14 @@ RuboCop::Cop::RSpec::SubjectDeclaration::MSG_REDUNDANT = T.let(T.unsafe(nil), St
 #   end
 # @see https://robots.thoughtbot.com/don-t-stub-the-system-under-test
 # @see https://penelope.zone/2015/12/27/introducing-rspec-smells-and-where-to-find-them.html#smell-1-stubjec
-# @see https://github.com/rubocop-hq/rspec-style-guide#dont-stub-subject
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#51
+# source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#50
 class RuboCop::Cop::RSpec::SubjectStub < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::TopLevelGroup
 
   # Find a memoized helper
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#81
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#80
   def let?(param0 = T.unsafe(nil)); end
 
   # Match `allow` and `expect(...).to receive`
@@ -6981,13 +6538,13 @@ class RuboCop::Cop::RSpec::SubjectStub < ::RuboCop::Cop::RSpec::Base
   #   expect(foo).to receive(:bar).with(1)
   #   expect(foo).to receive(:bar).with(1).and_return(2)
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#98
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#97
   def message_expectation?(param0 = T.unsafe(nil), param1); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#110
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#109
   def message_expectation_matcher?(param0); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#116
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#115
   def on_top_level_group(node); end
 
   # Find a named or unnamed subject definition
@@ -7003,19 +6560,19 @@ class RuboCop::Cop::RSpec::SubjectStub < ::RuboCop::Cop::RSpec::Base
   # @param node [RuboCop::AST::Node]
   # @yield [Symbol] subject name
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#72
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#71
   def subject?(param0 = T.unsafe(nil)); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#127
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#126
   def find_all_explicit(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#141
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#140
   def find_subject_expectations(node, subject_names = T.unsafe(nil), &block); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#54
+# source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#53
 RuboCop::Cop::RSpec::SubjectStub::MSG = T.let(T.unsafe(nil), String)
 
 # Helper methods for top level example group cops
@@ -7428,22 +6985,22 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RangeHelp
 
-  # source://rubocop/1.40.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#91
+  # source://rubocop/1.44.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_csend(node); end
 
-  # source://rubocop/1.40.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#91
+  # source://rubocop/1.44.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_send(node); end
 
   class << self
-    # source://rubocop-rspec//lib/rubocop-rspec.rb#61
+    # source://rubocop-rspec//lib/rubocop-rspec.rb#60
     def autocorrect_incompatible_with; end
   end
 end
 
-# source://rubocop/1.40.0/lib/rubocop/ast_aliases.rb#5
+# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#5
 RuboCop::NodePattern = RuboCop::AST::NodePattern
 
-# source://rubocop/1.40.0/lib/rubocop/ast_aliases.rb#6
+# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#6
 RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
 
 # RuboCop RSpec project namespace
@@ -7589,7 +7146,7 @@ end
 
 # Wrapper for RSpec examples
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example.rb#7
+# source://rubocop-rspec//lib/rubocop/rspec/example.rb#6
 class RuboCop::RSpec::Example < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example.rb#28
   def definition; end
@@ -7615,7 +7172,7 @@ end
 
 # Wrapper for RSpec example groups
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#12
+# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#6
 class RuboCop::RSpec::ExampleGroup < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#30
   def examples; end
@@ -7693,7 +7250,7 @@ RuboCop::RSpec::FactoryBot::UNPROXIED_METHODS = T.let(T.unsafe(nil), Array)
 
 # Wrapper for RSpec hook
 #
-# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#7
+# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#6
 class RuboCop::RSpec::Hook < ::RuboCop::RSpec::Concept
   # @return [Boolean]
   #
@@ -8039,5 +7596,5 @@ RuboCop::RSpec::Wording::SHOULDNT_BE_PREFIX = T.let(T.unsafe(nil), Regexp)
 # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#7
 RuboCop::RSpec::Wording::SHOULDNT_PREFIX = T.let(T.unsafe(nil), Regexp)
 
-# source://rubocop/1.40.0/lib/rubocop/ast_aliases.rb#7
+# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#7
 RuboCop::Token = RuboCop::AST::Token
