@@ -189,6 +189,8 @@ module Tapioca
 
       sig { params(name: String, content: String).returns(String) }
       def add_header(name, content)
+        # WARNING: Changing this header could impact how GitHub determines if the file should be hidden:
+        # https://github.com/github/linguist/pull/6143
         header = <<~COMMENT
           # DO NOT EDIT MANUALLY
           # This file was pulled from a central RBI files repository.
