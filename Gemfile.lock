@@ -297,7 +297,7 @@ GEM
       sorbet-runtime
       syntax_tree (>= 5.0.0, < 6)
     ruby-progressbar (1.11.0)
-    shopify-money (0.16.0)
+    shopify-money (1.1.2)
     sidekiq (7.0.2)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
