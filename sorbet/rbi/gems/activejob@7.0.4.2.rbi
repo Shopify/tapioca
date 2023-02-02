@@ -178,22 +178,22 @@ class ActiveJob::Base
   extend ::ActiveJob::Exceptions::ClassMethods
   extend ::ActiveJob::TestHelper::TestQueueAdapter::ClassMethods
 
-  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
-  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
   def _enqueue_callbacks; end
 
-  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
   def _perform_callbacks; end
 
-  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
   def _run_enqueue_callbacks(&block); end
 
-  # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
   def _run_perform_callbacks(&block); end
 
   # source://activejob//lib/active_job/logging.rb#11
@@ -214,35 +214,35 @@ class ActiveJob::Base
   # source://activejob//lib/active_job/queue_name.rb#58
   def queue_name_prefix?; end
 
-  # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
   def rescue_handlers; end
 
-  # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
   def rescue_handlers?; end
 
   class << self
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
     def _enqueue_callbacks; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
     def _enqueue_callbacks=(value); end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
     def _perform_callbacks; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
     def _perform_callbacks=(value); end
 
     # source://activejob//lib/active_job/queue_adapter.rb#13
@@ -314,13 +314,13 @@ class ActiveJob::Base
     # source://activejob//lib/active_job/queue_name.rb#58
     def queue_name_prefix?; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.0.4.1/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
     def rescue_handlers?; end
 
     # source://activejob//lib/active_job/exceptions.rb#11
@@ -329,10 +329,10 @@ class ActiveJob::Base
     # source://activejob//lib/active_job/exceptions.rb#11
     def retry_jitter=(value); end
 
-    # source://activesupport/7.0.4.1/lib/active_support/deprecation/method_wrappers.rb#63
+    # source://activesupport/7.0.4.2/lib/active_support/deprecation/method_wrappers.rb#63
     def skip_after_callbacks_if_terminated(*args, **_arg1, &block); end
 
-    # source://activesupport/7.0.4.1/lib/active_support/deprecation/method_wrappers.rb#63
+    # source://activesupport/7.0.4.2/lib/active_support/deprecation/method_wrappers.rb#63
     def skip_after_callbacks_if_terminated=(*args, **_arg1, &block); end
   end
 end
@@ -364,16 +364,16 @@ module ActiveJob::Callbacks
   mixes_in_class_methods ::ActiveJob::Callbacks::ClassMethods
 
   class << self
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#940
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
     def _execute_callbacks; end
 
-    # source://activesupport/7.0.4.1/lib/active_support/callbacks.rb#928
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
     def _run_execute_callbacks(&block); end
   end
 
