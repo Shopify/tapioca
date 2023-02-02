@@ -16,6 +16,4 @@ module URI
     sig { returns(String) }
     attr_reader :fragment
   end
-
-  class WS; end
 end
