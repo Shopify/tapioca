@@ -3639,7 +3639,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "handles class_env created classes and modules" do
+    it "handles class_eval created classes and modules" do
       add_ruby_file("container.rb", <<~RUBY)
         class Container
           class_eval <<~EOF
@@ -3651,12 +3651,18 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
             Bar = 42
           EOF
+
+          class_eval <<~EOF, __FILE__, __LINE__ + 1
+            class Baz
+            end
+          EOF
         end
       RUBY
 
       output = template(<<~RBI)
         class Container; end
         Container::Bar = T.let(T.unsafe(nil), Integer)
+        class Container::Baz; end
         class Container::FooClass; end
         module Container::FooModule; end
       RBI
