@@ -12,7 +12,7 @@ module Tapioca
         sig { override.params(event: ScopeNodeAdded).void }
         def on_scope(event)
           constant = event.constant
-          return unless T::Enum > event.constant
+          return unless T::Enum > event.constant # rubocop:disable Style/InvertibleUnlessCondition
 
           enums = T.unsafe(constant).values.map do |enum_type|
             enum_type.instance_variable_get(:@const_name).to_s
