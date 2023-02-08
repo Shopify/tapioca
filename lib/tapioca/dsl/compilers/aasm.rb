@@ -62,23 +62,46 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          aasm = constant.aasm
-          return if !aasm || aasm.states.empty?
+          state_machine_store = ::AASM::StateMachineStore.fetch(constant)
+          return unless state_machine_store
+
+          state_machines = state_machine_store.machine_names.map { |n| constant.aasm(n) }
+          return if state_machines.all? { |m| m.states.empty? }
 
           root.create_path(constant) do |model|
-            # Create all of the constants and methods for each state
-            aasm.states.each do |state|
-              model.create_constant("STATE_#{state.name.upcase}", value: "T.let(T.unsafe(nil), Symbol)")
-              model.create_method("#{state.name}?", return_type: "T::Boolean")
-            end
+            state_machines.each do |state_machine|
+              namespace = state_machine.__send__(:namespace)
 
-            # Create all of the methods for each event
-            parameters = [create_rest_param("opts", type: "T.untyped")]
-            aasm.events.each do |event|
-              model.create_method(event.name.to_s, parameters: parameters)
-              model.create_method("#{event.name}!", parameters: parameters)
-              model.create_method("#{event.name}_without_validation!", parameters: parameters)
-              model.create_method("may_#{event.name}?", return_type: "T::Boolean")
+              # Create all of the constants and methods for each state
+              state_machine.states.each do |state|
+                name = namespace ? "#{namespace}_#{state.name}" : state.name
+
+                model.create_constant("STATE_#{name.upcase}", value: "T.let(T.unsafe(nil), Symbol)")
+                model.create_method("#{name}?", return_type: "T::Boolean")
+              end
+
+              # Create all of the methods for each event
+              parameters = [create_rest_param("opts", type: "T.untyped")]
+              state_machine.events.each do |event|
+                model.create_method(event.name.to_s, parameters: parameters)
+                model.create_method("#{event.name}!", parameters: parameters)
+                model.create_method("#{event.name}_without_validation!", parameters: parameters)
+                model.create_method("may_#{event.name}?", return_type: "T::Boolean")
+
+                # For events, if there's a namespace the default methods are created in addition to
+                # namespaced ones.
+                next unless namespace
+
+                name = "#{event.name}_#{namespace}"
+
+                model.create_method(name.to_s, parameters: parameters)
+                model.create_method("#{name}!", parameters: parameters)
+                model.create_method("may_#{name}?", return_type: "T::Boolean")
+
+                # There's no namespaced method created for `_without_validation`. Explicitly
+                # leaving it commented out here to make it clear it's not an omission.
+                # model.create_method("#{name}_without_validation!", parameters: parameters)
+              end
             end
 
             # Create the overall state machine method, which will return an
