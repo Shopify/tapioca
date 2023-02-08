@@ -717,7 +717,7 @@ class AASM::Core::Invokers::LiteralInvoker < ::AASM::Core::Invokers::BaseInvoker
   # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#29
   def exec_subject; end
 
-  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#37
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#39
   def record_error; end
 
   # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#24
