@@ -136,7 +136,7 @@ module Tapioca
               assert_equal(expected, rbi_for(:StateMachine))
             end
 
-            it "generates correct RBI file with custom aasm name" do
+            it "generates correct RBI file with custom and default aasm names" do
               add_ruby_file("content.rb", <<~RUBY)
                 class StateMachine
                   include AASM
@@ -152,6 +152,10 @@ module Tapioca
                     end
                   end
 
+                  aasm do
+                    state  :existing, initial: true
+                  end
+
                   private
 
                   sig { void }
@@ -165,6 +169,9 @@ module Tapioca
                 class StateMachine
                   sig { returns(T::Boolean) }
                   def cleaning?; end
+
+                  sig { returns(T::Boolean) }
+                  def existing?; end
 
                   sig { returns(T::Boolean) }
                   def may_run?; end
@@ -224,6 +231,7 @@ module Tapioca
                   end
 
                   STATE_CLEANING = T.let(T.unsafe(nil), Symbol)
+                  STATE_EXISTING = T.let(T.unsafe(nil), Symbol)
                   STATE_RUNNING = T.let(T.unsafe(nil), Symbol)
                   STATE_SLEEPING = T.let(T.unsafe(nil), Symbol)
                 end

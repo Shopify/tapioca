@@ -74,7 +74,8 @@ module Tapioca
 
               # Create all of the constants and methods for each state
               state_machine.states.each do |state|
-                name = namespace ? "#{namespace}_#{state.name}" : state.name
+                name = state.name
+                name = "#{namespace}_#{name}" if namespace
 
                 model.create_constant("STATE_#{name.upcase}", value: "T.let(T.unsafe(nil), Symbol)")
                 model.create_method("#{name}?", return_type: "T::Boolean")
@@ -98,9 +99,9 @@ module Tapioca
                 model.create_method("#{name}!", parameters: parameters)
                 model.create_method("may_#{name}?", return_type: "T::Boolean")
 
-                # There's no namespaced method created for `_without_validation`. Explicitly
-                # leaving it commented out here to make it clear it's not an omission.
-                # model.create_method("#{name}_without_validation!", parameters: parameters)
+                # There's no namespaced method created for `_without_validation`, so skip
+                # defining a method for:
+                #   "#{name}_without_validation!"
               end
             end
 
