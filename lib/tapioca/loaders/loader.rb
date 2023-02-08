@@ -58,56 +58,89 @@ module Tapioca
 
       sig { void }
       def load_rails_engines
-        return if rails_engines.empty?
+        return if engines.empty?
 
         with_rails_application do
-          rails_engines.each do |engine|
-            eager_load_engine(engine)
+          run_initializers
+
+          if zeitwerk_mode?
+            load_engines_in_zeitwerk_mode
+          else
+            load_engines_in_classic_mode
           end
         end
-
-        rails_autoloader&.setup
       end
 
-      sig { params(engine: T.class_of(Rails::Engine)).void }
-      def eager_load_engine(engine)
-        if rails_autoloader
-          engine.config.eager_load_paths.each do |path|
-            # Zeitwerk only accepts existing directories in `push_dir`.
-            next unless File.directory?(path)
-
-            rails_autoloader.push_dir(path)
-          end
-        else
-          errored_files = []
-
-          engine.config.eager_load_paths.each do |load_path|
-            Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
-              require(file)
-            rescue LoadError, StandardError
-              errored_files << file
-            end
-          end
-
-          errored_files.each do |file|
-            require(file)
-          rescue LoadError, StandardError
+      def run_initializers
+        engines.each do |engine|
+          engine.instance.initializers.tsort_each do |initializer|
+            initializer.run(Rails.application)
+          rescue ScriptError, StandardError
             nil
           end
         end
       end
 
-      sig { returns(T.untyped) }
-      def rails_autoloader
-        return @rails_autoloader if defined?(@rails_autoloader)
+      sig { void }
+      def load_engines_in_zeitwerk_mode
+        autoloader = Rails.autoloaders.once
 
-        @rails_autoloader = T.let(Rails.autoloaders.once, T.untyped) if Rails.respond_to?(:autoloaders)
+        # This is code adapted from various Rails application initializers in
+        # - https://github.com/rails/rails/blob/bba0db73c1e96f00d5da45f166ee6b0183ec254d/railties/lib/rails/application/bootstrap.rb#L81-L92
+        # - https://github.com/rails/rails/blob/bba0db73c1e96f00d5da45f166ee6b0183ec254d/railties/lib/rails/application/finisher.rb#L21-L40
+        # - https://github.com/rails/rails/blob/bba0db73c1e96f00d5da45f166ee6b0183ec254d/railties/lib/rails/application/finisher.rb#L74
+
+        (
+          ActiveSupport::Dependencies.autoload_once_paths +
+          ActiveSupport::Dependencies.autoload_paths
+        ).uniq.each do |path|
+          # Zeitwerk only accepts existing directories in `push_dir`.
+          next unless File.directory?(path)
+
+          autoloader.push_dir(path)
+        end
+
+        autoloader.setup
+
+        # Unlike Rails code, we are not calling `Zeitwerk::Loader#eager_load_all` here because it will
+        # raise as soon as it encounters an error, which is not what we want. We want to try to eager load
+        # each loader independently, so that we can load as much as we can.
+        Zeitwerk::Registry.loaders.each do |loader|
+          loader.eager_load
+        rescue
+          # This is fine, we eager load what can be eager loaded.
+        end
+      end
+
+      sig { void }
+      def load_engines_in_classic_mode
+        # This is code adapted from `Rails::Engine#eager_load!` in
+        # https://github.com/rails/rails/blob/d9e188dbab81b412f73dfb7763318d52f360af49/railties/lib/rails/engine.rb#L489-L495
+        #
+        # We can't use `Rails::Engine#eager_load!` directly because it will raise as soon as it encounters
+        # an error, which is not what we want. We want to try to load as much as we can.
+        engines.each do |engine|
+          engine.config.eager_load_paths.each do |load_path|
+            Dir.glob("#{load_path}/**/*.rb").sort.each do |file|
+              require_dependency file
+            end
+          rescue ScriptError, StandardError
+            nil
+          end
+        end
+      end
+
+      sig { returns(T::Boolean) }
+      def zeitwerk_mode?
+        Rails.respond_to?(:autoloaders) &&
+          Rails.autoloaders.respond_to?(:zeitwerk_enabled?) &&
+          Rails.autoloaders.zeitwerk_enabled?
       end
 
       sig { params(blk: T.proc.void).void }
       def with_rails_application(&blk)
         # Store the current Rails.application object so that we can restore it
-        rails_application = Rails.application
+        rails_application = T.unsafe(Rails.application)
 
         # Create a new Rails::Application object, so that we can load the engines.
         # Some engines and the `Rails.autoloaders` call might expect `Rails.application`
@@ -122,7 +155,7 @@ module Tapioca
       end
 
       T::Sig::WithoutRuntime.sig { returns(T::Array[T.class_of(Rails::Engine)]) }
-      def rails_engines
+      def engines
         return [] unless defined?(Rails::Engine)
 
         safe_require("active_support/core_ext/class/subclasses")
