@@ -5,7 +5,7 @@ module RBI
   class Tree
     extend T::Sig
 
-    sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: Scope).void)).void }
+    sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: Scope).void)).returns(Scope) }
     def create_path(constant, &block)
       constant_name = Tapioca::Runtime::Reflection.name_of(constant)
       raise "given constant does not have a name" unless constant_name
