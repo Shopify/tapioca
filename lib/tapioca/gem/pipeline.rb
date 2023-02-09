@@ -106,6 +106,18 @@ module Tapioca
         @payload_symbols.include?(symbol_name)
       end
 
+      sig { params(name: T.any(String, Symbol)).returns(T::Boolean) }
+      def constant_in_gem?(name)
+        return true unless Object.respond_to?(:const_source_location)
+
+        source_location, _ = Object.const_source_location(name)
+        return true unless source_location
+        # If the source location of the constant is "(eval)", all bets are off.
+        return true if source_location == "(eval)"
+
+        gem.contains_path?(source_location)
+      end
+
       sig { params(method: UnboundMethod).returns(T::Boolean) }
       def method_in_gem?(method)
         source_location = method.source_location&.first
@@ -216,6 +228,7 @@ module Tapioca
         mark_seen(name)
 
         return if symbol_in_payload?(name)
+        return unless constant_in_gem?(name)
 
         target = name_of(constant)
         # If target has no name, let's make it an anonymous class or module with `Class.new` or `Module.new`
@@ -237,6 +250,7 @@ module Tapioca
         mark_seen(name)
 
         return if symbol_in_payload?(name)
+        return unless constant_in_gem?(name)
 
         klass = class_of(value)
 
