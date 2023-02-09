@@ -691,7 +691,6 @@ module Tapioca
               order = ActiveRecord::Batches.instance_method(:find_each).parameters.include?([:key, :order])
               create_common_method(
                 "find_each",
-                common_relation_methods_module,
                 parameters: [
                   create_kw_opt_param("start", type: "T.untyped", default: "nil"),
                   create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
@@ -706,7 +705,6 @@ module Tapioca
               order = ActiveRecord::Batches.instance_method(:find_in_batches).parameters.include?([:key, :order])
               create_common_method(
                 "find_in_batches",
-                common_relation_methods_module,
                 parameters: [
                   create_kw_opt_param("start", type: "T.untyped", default: "nil"),
                   create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
@@ -725,7 +723,6 @@ module Tapioca
               use_ranges = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :use_ranges])
               create_common_method(
                 "in_batches",
-                common_relation_methods_module,
                 parameters: [
                   create_kw_opt_param("of", type: "Integer", default: "1000"),
                   create_kw_opt_param("start", type: "T.untyped", default: "nil"),
