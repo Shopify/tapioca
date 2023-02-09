@@ -1,9 +1,20 @@
 # typed: strict
 # frozen_string_literal: true
 
+# On Ruby 3.2 or newer, Class defines an attached_object method that returns the
+# attached class of a singleton class without iterating ObjectSpace. On older
+# versions of Ruby, we fall back to iterating ObjectSpace.
+if Class.method_defined?(:attached_object)
+  require "tapioca/runtime/attached_class_of_32"
+else
+  require "tapioca/runtime/attached_class_of_legacy"
+end
+
 module Tapioca
   module Runtime
     module Reflection
+      include AttachedClassOf
+
       extend T::Sig
       extend self
 
@@ -172,16 +183,6 @@ module Tapioca
         return "" unless resolved_loc
 
         resolved_loc.absolute_path || ""
-      end
-
-      sig { params(singleton_class: Module).returns(T.nilable(Module)) }
-      def attached_class_of(singleton_class)
-        # https://stackoverflow.com/a/36622320/98634
-        result = ObjectSpace.each_object(singleton_class).find do |klass|
-          singleton_class_of(T.cast(klass, Module)) == singleton_class
-        end
-
-        T.cast(result, Module)
       end
 
       sig { params(constant: Module).returns(T::Set[String]) }
