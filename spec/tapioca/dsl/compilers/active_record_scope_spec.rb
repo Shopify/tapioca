@@ -13,7 +13,7 @@ module Tapioca
               assert_empty(gathered_constants)
             end
 
-            it "gathers only ActiveRecord constants with no abstract classes" do
+            it "gathers ActiveRecord constants including abstract classes" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Post < ActiveRecord::Base
                 end
@@ -26,7 +26,7 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal(["Post"], gathered_constants)
+              assert_equal(["Post", "Product"], gathered_constants)
             end
           end
 
@@ -174,7 +174,25 @@ module Tapioca
                   end
                 RUBY
 
-                expected = <<~RBI
+                expected_application_record = <<~RBI
+                  # typed: strong
+
+                  class ApplicationRecord
+                    extend GeneratedRelationMethods
+
+                    module GeneratedAssociationRelationMethods
+                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      def app_scope(*args, &blk); end
+                    end
+
+                    module GeneratedRelationMethods
+                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      def app_scope(*args, &blk); end
+                    end
+                  end
+                RBI
+
+                expected_post = <<~RBI
                   # typed: strong
 
                   class Post
@@ -198,7 +216,8 @@ module Tapioca
                   end
                 RBI
 
-                assert_equal(expected, rbi_for(:Post))
+                assert_equal(expected_application_record, rbi_for(:ApplicationRecord))
+                assert_equal(expected_post, rbi_for(:Post))
               end
             end
 
@@ -348,7 +367,20 @@ module Tapioca
                   end
                 RUBY
 
-                expected = <<~RBI
+                expected_application_record = <<~RBI
+                  # typed: strong
+
+                  class ApplicationRecord
+                    extend GeneratedRelationMethods
+
+                    module GeneratedRelationMethods
+                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      def app_scope(*args, &blk); end
+                    end
+                  end
+                RBI
+
+                expected_post = <<~RBI
                   # typed: strong
 
                   class Post
@@ -364,7 +396,8 @@ module Tapioca
                   end
                 RBI
 
-                assert_equal(expected, rbi_for(:Post))
+                assert_equal(expected_application_record, rbi_for(:ApplicationRecord))
+                assert_equal(expected_post, rbi_for(:Post))
               end
             end
           end
