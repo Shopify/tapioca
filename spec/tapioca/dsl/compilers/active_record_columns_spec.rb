@@ -211,6 +211,48 @@ module Tapioca
                 assert_includes(output, expected)
               end
 
+              it "tmp" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :shortcodes do |t|
+                        t.string :code, null: false
+                        # t.index :code, unique: true
+                        t.timestamps
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("short_code.rb", <<~RUBY)
+                  class Shortcode < ActiveRecord::Base
+                    # after_initialize :set_defaults, if: :new_record?
+
+                    # private
+
+                    # def set_defaults
+                    #   self.code ||= SecureRandom.urlsafe_base64(10)
+                    # end
+                  end
+                RUBY
+
+                output = rbi_for(:Shortcode)
+
+                puts output
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable(::String)) }
+                  def code; end
+
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  def code=(value); end
+
+                  sig { returns(T::Boolean) }
+                  def code?; end
+                RBI
+                assert_includes(output, expected)
+              end
+
               it "skips columns with names that can't be Ruby method names" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
