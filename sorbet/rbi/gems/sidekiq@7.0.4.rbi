@@ -752,10 +752,10 @@ end
 module Sidekiq::JobUtil
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/job_util.rb#35
+  # source://sidekiq//lib/sidekiq/job_util.rb#36
   def normalize_item(item); end
 
-  # source://sidekiq//lib/sidekiq/job_util.rb#56
+  # source://sidekiq//lib/sidekiq/job_util.rb#57
   def normalized_hash(item_class); end
 
   # @raise [ArgumentError]
@@ -770,9 +770,12 @@ module Sidekiq::JobUtil
 
   # @return [Boolean]
   #
-  # source://sidekiq//lib/sidekiq/job_util.rb#67
+  # source://sidekiq//lib/sidekiq/job_util.rb#87
   def json_safe?(item); end
 end
+
+# source://sidekiq//lib/sidekiq/job_util.rb#68
+Sidekiq::JobUtil::RECURSIVE_JSON_SAFE = T.let(T.unsafe(nil), Hash)
 
 # These functions encapsulate various job utilities.
 #
@@ -1004,7 +1007,7 @@ class Sidekiq::Middleware::Chain
   # @api private
   #
   # source://sidekiq//lib/sidekiq/middleware/chain.rb#169
-  def invoke(*args); end
+  def invoke(*args, &block); end
 
   # Identical to {#add} except the middleware is added to the front of the chain.
   #
@@ -1020,28 +1023,33 @@ class Sidekiq::Middleware::Chain
 
   # source://sidekiq//lib/sidekiq/middleware/chain.rb#159
   def retrieve; end
+
+  private
+
+  # source://sidekiq//lib/sidekiq/middleware/chain.rb#178
+  def traverse(chain, index, args, &block); end
 end
 
 # Represents each link in the middleware chain
 #
 # @api private
 #
-# source://sidekiq//lib/sidekiq/middleware/chain.rb#188
+# source://sidekiq//lib/sidekiq/middleware/chain.rb#191
 class Sidekiq::Middleware::Entry
   # @api private
   # @return [Entry] a new instance of Entry
   #
-  # source://sidekiq//lib/sidekiq/middleware/chain.rb#191
+  # source://sidekiq//lib/sidekiq/middleware/chain.rb#194
   def initialize(config, klass, *args); end
 
   # @api private
   #
-  # source://sidekiq//lib/sidekiq/middleware/chain.rb#189
+  # source://sidekiq//lib/sidekiq/middleware/chain.rb#192
   def klass; end
 
   # @api private
   #
-  # source://sidekiq//lib/sidekiq/middleware/chain.rb#197
+  # source://sidekiq//lib/sidekiq/middleware/chain.rb#200
   def make_new; end
 end
 
@@ -1049,7 +1057,12 @@ end
 Sidekiq::NAME = T.let(T.unsafe(nil), String)
 
 # source://sidekiq//lib/sidekiq/rails.rb#7
-class Sidekiq::Rails < ::Rails::Engine; end
+class Sidekiq::Rails < ::Rails::Engine
+  class << self
+    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    def __callbacks; end
+  end
+end
 
 # source://sidekiq//lib/sidekiq/rails.rb#8
 class Sidekiq::Rails::Reloader
@@ -1061,7 +1074,7 @@ class Sidekiq::Rails::Reloader
   # source://sidekiq//lib/sidekiq/rails.rb#13
   def call; end
 
-  # source://sidekiq//lib/sidekiq/rails.rb#19
+  # source://sidekiq//lib/sidekiq/rails.rb#20
   def inspect; end
 end
 
