@@ -58,6 +58,22 @@ module Tapioca
             T::Array[String],
           )
 
+        # Taken directly from the AASM::Base class, here:
+        # https://github.com/aasm/aasm/blob/0e03746a2b86558ee1bf7bd7db873938cbb3b29b/lib/aasm/base.rb#L145-L171
+        GLOBAL_CALLBACKS =
+          T.let(
+            [
+              "after_all_transitions",
+              "after_all_transactions",
+              "before_all_transactions",
+              "before_all_events",
+              "after_all_events",
+              "error_on_all_events",
+              "ensure_on_all_events",
+            ].freeze,
+            T::Array[String],
+          )
+
         ConstantType = type_member { { fixed: T.all(::AASM::ClassMethods, Class) } }
 
         sig { override.void }
@@ -129,6 +145,16 @@ module Tapioca
                   create_block_param("block", type: "T.proc.bind(PrivateAASMEvent).void"),
                 ],
               )
+
+              GLOBAL_CALLBACKS.each do |method|
+                machine.create_method(
+                  method,
+                  parameters: [
+                    create_opt_param("symbol", type: "T.nilable(Symbol)", default: "nil"),
+                    create_block_param("block", type: "T.nilable(T.proc.bind(#{name_of(constant)}).void)"),
+                  ],
+                )
+              end
 
               # Create a private event class that we can pass around for the
               # purpose of binding all of the callbacks without having to
