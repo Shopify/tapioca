@@ -43,6 +43,8 @@ module Tapioca
         else
           say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
         end
+      ensure
+        GitAttributes.create_generated_attribute_file(@outpath)
       end
     end
   end

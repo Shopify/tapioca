@@ -32,6 +32,8 @@ module Tapioca
 
         say("All operations performed in working directory.", [:green, :bold])
         say("Please review changes and commit them.", [:green, :bold])
+      ensure
+        GitAttributes.create_generated_attribute_file(@outpath)
       end
     end
   end

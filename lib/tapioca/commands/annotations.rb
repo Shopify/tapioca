@@ -23,6 +23,7 @@ module Tapioca
         typed_overrides: {}
       )
         super()
+        @outpath = T.let(Pathname.new(DEFAULT_ANNOTATIONS_DIR), Pathname)
         @central_repo_root_uris = central_repo_root_uris
         @auth = auth
         @netrc_file = netrc_file
@@ -38,8 +39,11 @@ module Tapioca
       def execute
         @indexes = fetch_indexes
         project_gems = list_gemfile_gems
+
         remove_expired_annotations(project_gems)
         fetch_annotations(project_gems)
+      ensure
+        GitAttributes.create_vendored_attribute_file(@outpath)
       end
 
       sig { returns(T::Array[String]) }
@@ -56,7 +60,7 @@ module Tapioca
       def remove_expired_annotations(project_gems)
         say("Removing annotations for gems that have been removed... ", [:blue, :bold])
 
-        annotations = Pathname.glob("#{DEFAULT_ANNOTATIONS_DIR}/*.rbi").map { |f| f.basename(".*").to_s }
+        annotations = Pathname.glob(@outpath.join("*.rbi")).map { |f| f.basename(".*").to_s }
         expired = annotations - project_gems
 
         if expired.empty?
@@ -67,7 +71,7 @@ module Tapioca
         say("\n")
         expired.each do |gem_name|
           say("\n")
-          path = "#{DEFAULT_ANNOTATIONS_DIR}/#{gem_name}.rbi"
+          path = @outpath.join("#{gem_name}.rbi")
           remove_file(path)
         end
         say("\nDone\n\n", :green)
@@ -140,10 +144,8 @@ module Tapioca
         content = apply_typed_override(gem_name, content)
         content = add_header(gem_name, content)
 
-        dir = DEFAULT_ANNOTATIONS_DIR
-        FileUtils.mkdir_p(dir)
         say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
-        create_file("#{dir}/#{gem_name}.rbi", content)
+        create_file(@outpath.join("#{gem_name}.rbi"), content)
       end
 
       sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
