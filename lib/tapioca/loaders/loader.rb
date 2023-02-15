@@ -83,33 +83,24 @@ module Tapioca
 
       sig { void }
       def load_engines_in_zeitwerk_mode
-        autoloader = Rails.autoloaders.once
+        # Collect all the directories that are already managed by all existing Zeitwerk loaders.
+        managed_dirs = Zeitwerk::Registry.loaders.flat_map(&:dirs).to_set
+        # We use a fresh loader to load the engine directories, so that we don't interfere with
+        # any of the existing loaders.
+        autoloader = Zeitwerk::Loader.new
 
-        # This is code adapted from various Rails application initializers in
-        # - https://github.com/rails/rails/blob/bba0db73c1e96f00d5da45f166ee6b0183ec254d/railties/lib/rails/application/bootstrap.rb#L81-L92
-        # - https://github.com/rails/rails/blob/bba0db73c1e96f00d5da45f166ee6b0183ec254d/railties/lib/rails/application/finisher.rb#L21-L40
-        # - https://github.com/rails/rails/blob/bba0db73c1e96f00d5da45f166ee6b0183ec254d/railties/lib/rails/application/finisher.rb#L74
+        engines.each do |engine|
+          engine.config.eager_load_paths.each do |path|
+            # Zeitwerk only accepts existing directories in `push_dir`.
+            next unless File.directory?(path)
+            # We should not add directories that are already managed by a Zeitwerk loader.
+            next if managed_dirs.member?(path)
 
-        (
-          ActiveSupport::Dependencies.autoload_once_paths +
-          ActiveSupport::Dependencies.autoload_paths
-        ).uniq.each do |path|
-          # Zeitwerk only accepts existing directories in `push_dir`.
-          next unless File.directory?(path)
-
-          autoloader.push_dir(path)
+            autoloader.push_dir(path)
+          end
         end
 
         autoloader.setup
-
-        # Unlike Rails code, we are not calling `Zeitwerk::Loader#eager_load_all` here because it will
-        # raise as soon as it encounters an error, which is not what we want. We want to try to eager load
-        # each loader independently, so that we can load as much as we can.
-        Zeitwerk::Registry.loaders.each do |loader|
-          loader.eager_load
-        rescue
-          # This is fine, we eager load what can be eager loaded.
-        end
       end
 
       sig { void }
