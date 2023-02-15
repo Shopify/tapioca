@@ -45,13 +45,11 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          graphql_gem = T.must(Gemfile.new([]).gem("graphql"))
-
           # Skip methods explicitly defined in code
           arguments = constant.all_argument_definitions.select do |argument|
-            source_location = constant.instance_method(argument.keyword.to_s).source_location&.first
-            source_location && graphql_gem.contains_path?(source_location)
+            method_defined_by_graphql?(argument.keyword.to_s)
           end
+
           return if arguments.empty?
 
           root.create_path(constant) do |input_object|
@@ -60,6 +58,22 @@ module Tapioca
               input_object.create_method(name, return_type: Helpers::GraphqlTypeHelper.type_for(argument.type))
             end
           end
+        end
+
+        private
+
+        sig { returns(T.nilable(String)) }
+        def graphql_input_object_argument_source_file
+          @graphql_input_object_argument_source_file ||= T.let(
+            GraphQL::Schema::InputObject.method(:argument).source_location&.first,
+            T.nilable(String),
+          )
+        end
+
+        sig { params(method_name: String).returns(T::Boolean) }
+        def method_defined_by_graphql?(method_name)
+          method_file = constant.instance_method(method_name).source_location&.first
+          !!(method_file && graphql_input_object_argument_source_file == method_file)
         end
 
         class << self
