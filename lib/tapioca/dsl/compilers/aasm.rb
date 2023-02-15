@@ -146,12 +146,14 @@ module Tapioca
                 ],
               )
 
+              constant_name = name_of(constant)
+
               GLOBAL_CALLBACKS.each do |method|
                 machine.create_method(
                   method,
                   parameters: [
                     create_opt_param("symbol", type: "T.nilable(Symbol)", default: "nil"),
-                    create_block_param("block", type: "T.nilable(T.proc.bind(#{name_of(constant)}).void)"),
+                    create_block_param("block", type: "T.nilable(T.proc.bind(#{constant_name}).void)"),
                   ],
                 )
               end
@@ -165,7 +167,7 @@ module Tapioca
                     method,
                     parameters: [
                       create_opt_param("symbol", type: "T.nilable(Symbol)", default: "nil"),
-                      create_block_param("block", type: "T.nilable(T.proc.bind(#{name_of(constant)}).void)"),
+                      create_block_param("block", type: "T.nilable(T.proc.bind(#{constant_name}).void)"),
                     ],
                   )
                 end
