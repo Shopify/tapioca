@@ -726,6 +726,125 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "can be called by path" do
+          @project.write("lib/models/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          @project.write("lib/models/nested/user.rb", <<~RB)
+            require "smart_properties"
+
+            module Nested
+              class User
+                include SmartProperties
+                property :name, accepts: String
+              end
+            end
+          RB
+
+          @project.write("lib/job.rb", <<~RB)
+            require "smart_properties"
+
+            class User
+              include SmartProperties
+              property :name, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl lib/models")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/nested/user.rbi
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_empty_stderr(result)
+
+          assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          assert_project_file_exist("sorbet/rbi/dsl/nested/user.rbi")
+          refute_project_file_exist("sorbet/rbi/dsl/job.rbi")
+
+          assert_success_status(result)
+        end
+
+        it "does not generate anything and errors for non-existent paths" do
+          @project.write("lib/models/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl path/to/nowhere.rb")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+          OUT
+
+          assert_equal(<<~ERR, result.err)
+
+            Warning: No constants found in: path/to/nowhere.rb
+            No classes/modules can be matched for RBI generation.
+            Please check that the requested classes/modules include processable DSL methods.
+          ERR
+
+          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
+
+          refute_success_status(result)
+        end
+
+        it "does not generate anything but succeeds for real paths with no processable DSL" do
+          @project.write("lib/models/post.rb", <<~RB)
+            class Foo
+            end
+          RB
+
+          result = @project.tapioca("dsl lib/models")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_empty_stderr(result)
+
+          refute_project_file_exist("sorbet/rbi/dsl/post.rbi")
+
+          assert_success_status(result)
+        end
+
         it "must run custom compilers" do
           @project.write("lib/post.rb", <<~RB)
             require "smart_properties"

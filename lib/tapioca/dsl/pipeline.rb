@@ -12,6 +12,9 @@ module Tapioca
       sig { returns(T::Array[Module]) }
       attr_reader :requested_constants
 
+      sig { returns(T::Array[Pathname]) }
+      attr_reader :requested_paths
+
       sig { returns(T.proc.params(error: String).void) }
       attr_reader :error_handler
 
@@ -21,6 +24,7 @@ module Tapioca
       sig do
         params(
           requested_constants: T::Array[Module],
+          requested_paths: T::Array[Pathname],
           requested_compilers: T::Array[T.class_of(Compiler)],
           excluded_compilers: T::Array[T.class_of(Compiler)],
           error_handler: T.proc.params(error: String).void,
@@ -29,6 +33,7 @@ module Tapioca
       end
       def initialize(
         requested_constants:,
+        requested_paths: [],
         requested_compilers: [],
         excluded_compilers: [],
         error_handler: $stderr.method(:puts).to_proc,
@@ -39,6 +44,7 @@ module Tapioca
           T::Enumerable[T.class_of(Compiler)],
         )
         @requested_constants = requested_constants
+        @requested_paths = requested_paths
         @error_handler = error_handler
         @number_of_workers = number_of_workers
         @errors = T.let([], T::Array[String])
@@ -50,11 +56,12 @@ module Tapioca
         ).returns(T::Array[T.type_parameter(:T)])
       end
       def run(&blk)
-        constants_to_process = gather_constants(requested_constants)
+        constants_to_process = gather_constants(requested_constants, requested_paths)
           .select { |c| Module === c } # Filter value constants out
           .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
 
-        if constants_to_process.empty?
+        # It's OK if there are no constants to process if we received a valid file/path.
+        if constants_to_process.empty? && requested_paths.select { |p| File.exist?(p) }.empty?
           report_error(<<~ERROR)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
@@ -115,12 +122,12 @@ module Tapioca
         active_compilers
       end
 
-      sig { params(requested_constants: T::Array[Module]).returns(T::Set[Module]) }
-      def gather_constants(requested_constants)
+      sig { params(requested_constants: T::Array[Module], requested_paths: T::Array[Pathname]).returns(T::Set[Module]) }
+      def gather_constants(requested_constants, requested_paths)
         constants = active_compilers.map(&:processable_constants).reduce(Set.new, :union)
         constants = filter_anonymous_and_reloaded_constants(constants)
 
-        constants &= requested_constants unless requested_constants.empty?
+        constants &= requested_constants unless requested_constants.empty? && requested_paths.empty?
         constants
       end
 
