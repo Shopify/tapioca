@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "rdbg",
+            "useBundler": true,
+            "name": "Debug current file with rdbg",
+            "request": "launch",
+            "command": "bin/test",
+            "script": "${relativeFile}",
+            "args": [],
+            "askParameters": true
+        },
+        {
+            "type": "rdbg",
+            "useBundler": true,
+            "name": "Debug current test with rdbg",
+            "request": "launch",
+            "command": "bin/test",
+            "script": "${relativeFile}:${lineNumber}",
+            "args": [],
+            "askParameters": true
+        }
+    ]
+}
