@@ -192,7 +192,7 @@ GEM
     minitest (5.17.0)
     minitest-hooks (1.5.0)
       minitest (> 5.3)
-    minitest-reporters (1.5.0)
+    minitest-reporters (1.6.0)
       ansi
       builder
       minitest (>= 5.0)
