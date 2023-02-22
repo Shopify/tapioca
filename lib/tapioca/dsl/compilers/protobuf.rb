@@ -91,7 +91,6 @@ module Tapioca
               create_type_members(klass, "Key", "Value")
             else
               descriptor = T.unsafe(constant).descriptor
-              next if descriptor.nil?
 
               case descriptor
               when Google::Protobuf::EnumDescriptor
@@ -163,7 +162,13 @@ module Tapioca
               T.cast(desc, Google::Protobuf::EnumDescriptor).enummodule
             end
 
-            results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module]).concat(enum_modules)
+            abstract_message_const = ::Google::Protobuf.const_get(:AbstractMessage)
+            abstract_message_descendants = descendants_of(abstract_message_const)
+
+            results = T.cast(
+              ObjectSpace.each_object(marker).to_a,
+              T::Array[Module],
+            ).concat(enum_modules).concat(abstract_message_descendants) - [abstract_message_const]
             results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
           end
         end
