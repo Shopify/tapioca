@@ -91,6 +91,7 @@ module Tapioca
               create_type_members(klass, "Key", "Value")
             else
               descriptor = T.unsafe(constant).descriptor
+              next if descriptor.nil?
 
               case descriptor
               when Google::Protobuf::EnumDescriptor
@@ -145,7 +146,7 @@ module Tapioca
                   klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
                 end
               else
-                raise TypeError, "Unexpected descriptor class: #{descriptor.class.name}"
+                raise TypeError, "Unexpected descriptor class `#{descriptor.class.name}` for constant `#{constant}`"
               end
             end
           end
