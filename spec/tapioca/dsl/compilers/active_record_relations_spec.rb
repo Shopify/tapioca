@@ -69,16 +69,16 @@ module Tapioca
                     sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
                     def any?(&block); end
 
-                    sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
+                    sig { params(column_name: T.any(String, Symbol)).returns(Numeric) }
                     def average(column_name); end
 
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def build(attributes = nil, &block); end
 
-                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.untyped) }
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(Numeric) }
                     def calculate(operation, column_name); end
 
-                    sig { params(column_name: T.untyped).returns(T.untyped) }
+                    sig { params(column_name: T.untyped).returns(Integer) }
                     def count(column_name = nil); end
 
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
@@ -229,7 +229,7 @@ module Tapioca
                     def sole; end
 
                 <% end %>
-                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T.untyped) }
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(Numeric) }
                     def sum(column_name = nil, &block); end
 
                     sig { params(limit: NilClass).returns(T.nilable(::Post)) }
@@ -288,7 +288,7 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def from(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationGroupChain) }
                     def group(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -459,7 +459,7 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def from(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationGroupChain) }
                     def group(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -589,6 +589,31 @@ module Tapioca
                     def to_ary; end
                   end
 
+                  class PrivateAssociationRelationGroupChain < PrivateAssociationRelation
+                    Elem = type_member { { fixed: ::Post } }
+
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    def average(column_name); end
+
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    def calculate(operation, column_name); end
+
+                    sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
+                    def count(column_name = nil); end
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(T.self_type) }
+                    def having(*args, &blk); end
+
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
+                    def maximum(column_name); end
+
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
+                    def minimum(column_name); end
+
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Numeric]) }
+                    def sum(column_name = nil, &block); end
+                  end
+
                   class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
                     Elem = type_member { { fixed: ::Post } }
 
@@ -664,6 +689,31 @@ module Tapioca
 
                     sig { returns(T::Array[::Post]) }
                     def to_ary; end
+                  end
+
+                  class PrivateRelationGroupChain < PrivateRelation
+                    Elem = type_member { { fixed: ::Post } }
+
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    def average(column_name); end
+
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    def calculate(operation, column_name); end
+
+                    sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
+                    def count(column_name = nil); end
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(T.self_type) }
+                    def having(*args, &blk); end
+
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
+                    def maximum(column_name); end
+
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
+                    def minimum(column_name); end
+
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Numeric]) }
+                    def sum(column_name = nil, &block); end
                   end
 
                   class PrivateRelationWhereChain < PrivateRelation
