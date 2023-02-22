@@ -179,6 +179,71 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:NotifierMailer))
             end
+
+            it "generates correct RBI file for subclasses of ActionMailer subclasses" do
+              add_ruby_file("mailer.rb", <<~RUBY)
+                class NotifierMailer < ActionMailer::Base
+                  def notify_customer(customer_id)
+                    # ...
+                  end
+                end
+
+                class SecondaryMailer < NotifierMailer
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class SecondaryMailer
+                  class << self
+                    sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    def notify_customer(customer_id); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:SecondaryMailer))
+            end
+
+            it "does not generate RBI for methods defined via helper" do
+              add_ruby_file("mailer.rb", <<~RUBY)
+                module Foo
+                  def foo_helper_method
+                  end
+                end
+
+                module Bar
+                  def bar_helper_method
+                  end
+                end
+
+                class NotifierMailer < ActionMailer::Base
+                  include Foo
+                  helper Bar
+
+                  def notify_customer(customer_id)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class NotifierMailer
+                  class << self
+                    sig { returns(::ActionMailer::MessageDelivery) }
+                    def foo_helper_method; end
+
+                    sig { params(customer_id: T.untyped).returns(::ActionMailer::MessageDelivery) }
+                    def notify_customer(customer_id); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:NotifierMailer))
+            end
           end
         end
       end
