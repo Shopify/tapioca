@@ -190,6 +190,8 @@ module Tapioca
             query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
             # Remove the ones we know are private API
             query_methods -= [:arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
+            # Remove "group" which needs a custom return type for GroupChains
+            query_methods -= [:group]
             # Remove "where" which needs a custom return type for WhereChains
             query_methods -= [:where]
             # Remove the methods that ...
@@ -294,6 +296,7 @@ module Tapioca
             end
           end
 
+          create_relation_group_chain_class
           create_relation_where_chain_class
         end
 
@@ -312,7 +315,85 @@ module Tapioca
             end
           end
 
+          create_association_relation_group_chain_class
           create_association_relation_where_chain_class
+        end
+
+        sig { void }
+        def create_relation_group_chain_class
+          model.create_class(RelationGroupChainClassName, superclass_name: RelationClassName) do |klass|
+            create_group_chain_methods(klass)
+            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+          end
+        end
+
+        sig { void }
+        def create_association_relation_group_chain_class
+          model.create_class(
+            AssociationRelationGroupChainClassName,
+            superclass_name: AssociationRelationClassName,
+          ) do |klass|
+            create_group_chain_methods(klass)
+            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+          end
+        end
+
+        sig { params(klass: RBI::Scope).void }
+        def create_group_chain_methods(klass)
+          # Calculation methods used with `group` return a hash where the keys cannot be typed
+          # but the values can. Technically a `group` anywhere in the query chain produces
+          # this behavior but to avoid needing to re-type every query method inside this module
+          # we make a simplifying assumption that the calculation method is called immediately
+          # after the group (e.g. `group().count` and not `group().where().count`). The one
+          # exception is `group().having().count` which is fairly idiomatic so that gets handled
+          # without breaking the chain.
+          klass.create_method(
+            "having",
+            parameters: [
+              create_rest_param("args", type: "T.untyped"),
+              create_block_param("blk", type: "T.untyped"),
+            ],
+            return_type: "T.self_type",
+          )
+
+          CALCULATION_METHODS.each do |method_name|
+            case method_name
+            when :average, :maximum, :minimum
+              klass.create_method(
+                method_name.to_s,
+                parameters: [
+                  create_param("column_name", type: "T.any(String, Symbol)"),
+                ],
+                return_type: "T::Hash[T.untyped, #{method_name == :average ? "Numeric" : "T.untyped"}]",
+              )
+            when :calculate
+              klass.create_method(
+                "calculate",
+                parameters: [
+                  create_param("operation", type: "Symbol"),
+                  create_param("column_name", type: "T.any(String, Symbol)"),
+                ],
+                return_type: "T::Hash[T.untyped, Numeric]",
+              )
+            when :count
+              klass.create_method(
+                "count",
+                parameters: [
+                  create_opt_param("column_name", type: "T.untyped", default: "nil"),
+                ],
+                return_type: "T::Hash[T.untyped, Integer]",
+              )
+            when :sum
+              klass.create_method(
+                "sum",
+                parameters: [
+                  create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
+                  create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
+                ],
+                return_type: "T::Hash[T.untyped, Numeric]",
+              )
+            end
+          end
         end
 
         sig { void }
@@ -458,6 +539,15 @@ module Tapioca
         sig { void }
         def create_relation_methods
           create_relation_method("all")
+          create_relation_method(
+            "group",
+            parameters: [
+              create_rest_param("args", type: "T.untyped"),
+              create_block_param("blk", type: "T.untyped"),
+            ],
+            relation_return_type: RelationGroupChainClassName,
+            association_return_type: AssociationRelationGroupChainClassName,
+          )
           create_relation_method(
             "where",
             parameters: [
@@ -668,7 +758,7 @@ module Tapioca
                 parameters: [
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: "T.untyped",
+                return_type: method_name == :average ? "Numeric" : "T.untyped",
               )
             when :calculate
               create_common_method(
@@ -677,7 +767,7 @@ module Tapioca
                   create_param("operation", type: "Symbol"),
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: "T.untyped",
+                return_type: "Numeric",
               )
             when :count
               create_common_method(
@@ -685,7 +775,7 @@ module Tapioca
                 parameters: [
                   create_opt_param("column_name", type: "T.untyped", default: "nil"),
                 ],
-                return_type: "T.untyped",
+                return_type: "Integer",
               )
             when :ids
               create_common_method("ids", return_type: "Array")
@@ -704,7 +794,7 @@ module Tapioca
                   create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
                   create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
                 ],
-                return_type: "T.untyped",
+                return_type: "Numeric",
               )
             end
           end
