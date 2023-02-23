@@ -162,13 +162,17 @@ module Tapioca
               T.cast(desc, Google::Protobuf::EnumDescriptor).enummodule
             end
 
-            abstract_message_const = ::Google::Protobuf.const_get(:AbstractMessage)
-            abstract_message_descendants = descendants_of(abstract_message_const)
+            results = if Google::Protobuf.const_defined?(:AbstractMessage)
+              abstract_message_const = ::Google::Protobuf.const_get(:AbstractMessage)
+              descendants_of(abstract_message_const) - [abstract_message_const]
+            else
+              T.cast(
+                ObjectSpace.each_object(marker).to_a,
+                T::Array[Module],
+              )
+            end
 
-            results = T.cast(
-              ObjectSpace.each_object(marker).to_a,
-              T::Array[Module],
-            ).concat(enum_modules).concat(abstract_message_descendants) - [abstract_message_const]
+            results = results.concat(enum_modules)
             results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
           end
         end
