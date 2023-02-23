@@ -41,7 +41,7 @@ module Tapioca
         sig { override.void }
         def decorate
           root.create_path(constant) do |mailer|
-            constant.action_methods.to_a.each do |mailer_method|
+            action_methods_for_constant.each do |mailer_method|
               method_def = constant.instance_method(mailer_method)
               parameters = compile_method_parameters_to_rbi(method_def)
               mailer.create_method(
@@ -61,6 +61,13 @@ module Tapioca
           def gather_constants
             descendants_of(::ActionMailer::Base).reject(&:abstract?)
           end
+        end
+
+        private
+
+        sig { returns(T::Array[String]) }
+        def action_methods_for_constant
+          constant.action_methods.to_a
         end
       end
     end
