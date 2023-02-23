@@ -145,7 +145,9 @@ module Tapioca
                   klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
                 end
               else
-                raise TypeError, "Unexpected descriptor class `#{descriptor.class.name}` for constant `#{constant}`"
+                add_error(<<~MSG.strip)
+                  Unexpected descriptor class `#{descriptor.class.name}` for `#{constant}`
+                MSG
               end
             end
           end
