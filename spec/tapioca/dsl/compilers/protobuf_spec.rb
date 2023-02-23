@@ -35,23 +35,6 @@ module Tapioca
               assert_equal(["Cart"], gathered_constants.reject { |constant| constant.start_with?("Google::Protobuf") })
               assert_includes(gathered_constants, "Google::Protobuf::Map")
               assert_includes(gathered_constants, "Google::Protobuf::RepeatedField")
-            end
-
-            it "skips AbstractMessage" do
-              add_ruby_file("content.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :shop_id, :int32, 1
-                      optional :customer_id, :int32, 2
-                    end
-                  end
-                end
-
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
-
-              assert_equal(["Cart"], gathered_constants.reject { |constant| constant.start_with?("Google::Protobuf") })
               refute_includes(gathered_constants, "Google::Protobuf::AbstractMessage")
             end
           end
