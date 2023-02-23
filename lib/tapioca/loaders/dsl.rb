@@ -11,7 +11,7 @@ module Tapioca
 
         sig { params(tapioca_path: String, eager_load: T::Boolean, app_root: String).void }
         def load_application(tapioca_path:, eager_load: true, app_root: ".")
-          loader = new(tapioca_path: tapioca_path, app_root: app_root)
+          loader = new(tapioca_path: tapioca_path, eager_load: eager_load, app_root: app_root)
           loader.load
         end
       end
