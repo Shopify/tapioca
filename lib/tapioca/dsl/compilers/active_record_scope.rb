@@ -55,7 +55,7 @@ module Tapioca
           return if method_names.empty?
 
           root.create_path(constant) do |model|
-            relations_enabled = compiler_enabled?("ActiveRecordRelations")
+            relations_enabled = compiler_enabled?("ActiveRecordRelations") && !constant.abstract_class?
 
             relation_methods_module = model.create_module(RelationMethodsModuleName)
             assoc_relation_methods_mod = model.create_module(AssociationRelationMethodsModuleName) if relations_enabled

@@ -180,13 +180,8 @@ module Tapioca
                   class ApplicationRecord
                     extend GeneratedRelationMethods
 
-                    module GeneratedAssociationRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-                      def app_scope(*args, &blk); end
-                    end
-
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
                       def app_scope(*args, &blk); end
                     end
                   end
