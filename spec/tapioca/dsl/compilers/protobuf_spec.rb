@@ -35,6 +35,7 @@ module Tapioca
               assert_equal(["Cart"], gathered_constants.reject { |constant| constant.start_with?("Google::Protobuf") })
               assert_includes(gathered_constants, "Google::Protobuf::Map")
               assert_includes(gathered_constants, "Google::Protobuf::RepeatedField")
+              refute_includes(gathered_constants, "Google::Protobuf::AbstractMessage")
             end
           end
 
@@ -499,6 +500,23 @@ module Tapioca
                 sig { returns(T.nilable(Symbol)) }
                 def contact_info; end
               RBI
+            end
+
+            it "shows an error for an unexpected descriptor class" do
+              expect_dsl_compiler_errors!
+
+              add_ruby_file("protobuf.rb", <<~RUBY)
+                Cart = Class.new(::Google::Protobuf.const_get(:AbstractMessage))
+              RUBY
+
+              rbi_output = rbi_for(:Cart)
+
+              assert_equal(<<~RBI, rbi_output)
+                # typed: strong
+
+                class Cart; end
+              RBI
+              assert_equal(["Unexpected descriptor class `NilClass` for `Cart`"], generated_errors)
             end
           end
         end

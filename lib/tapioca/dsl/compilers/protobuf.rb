@@ -145,7 +145,9 @@ module Tapioca
                   klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
                 end
               else
-                raise TypeError, "Unexpected descriptor class: #{descriptor.class.name}"
+                add_error(<<~MSG.strip)
+                  Unexpected descriptor class `#{descriptor.class.name}` for `#{constant}`
+                MSG
               end
             end
           end
@@ -162,7 +164,17 @@ module Tapioca
               T.cast(desc, Google::Protobuf::EnumDescriptor).enummodule
             end
 
-            results = T.cast(ObjectSpace.each_object(marker).to_a, T::Array[Module]).concat(enum_modules)
+            results = if Google::Protobuf.const_defined?(:AbstractMessage)
+              abstract_message_const = ::Google::Protobuf.const_get(:AbstractMessage)
+              descendants_of(abstract_message_const) - [abstract_message_const]
+            else
+              T.cast(
+                ObjectSpace.each_object(marker).to_a,
+                T::Array[Module],
+              )
+            end
+
+            results = results.concat(enum_modules)
             results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
           end
         end
