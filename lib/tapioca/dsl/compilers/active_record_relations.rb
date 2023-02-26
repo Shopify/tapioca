@@ -699,7 +699,7 @@ module Tapioca
                   *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
                   create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
                 ],
-                return_type: "T.nilable(T::Enumerator[#{constant_name}])",
+                return_type: "T::Enumerator[#{constant_name}]",
               )
             when :find_in_batches
               order = ActiveRecord::Batches.instance_method(:find_in_batches).parameters.include?([:key, :order])
@@ -716,7 +716,7 @@ module Tapioca
                     type: "T.nilable(T.proc.params(object: T::Array[#{constant_name}]).void)",
                   ),
                 ],
-                return_type: "T.nilable(T::Enumerator[T::Enumerator[#{constant_name}]])",
+                return_type: "T::Enumerator[T::Enumerator[#{constant_name}]]",
               )
             when :in_batches
               order = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :order])
@@ -733,7 +733,7 @@ module Tapioca
                   *(create_kw_opt_param("use_ranges", type: "T.untyped", default: "nil") if use_ranges),
                   create_block_param("block", type: "T.nilable(T.proc.params(object: #{RelationClassName}).void)"),
                 ],
-                return_type: "T.nilable(::ActiveRecord::Batches::BatchEnumerator)",
+                return_type: "::ActiveRecord::Batches::BatchEnumerator",
               )
             end
           end
