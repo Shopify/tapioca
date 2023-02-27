@@ -54,30 +54,27 @@ module Tapioca
 
           return if method_names.empty?
 
-          root.create_path(constant) do |model|
-            relations_enabled = compiler_enabled?("ActiveRecordRelations") && !constant.abstract_class?
+          relation_methods_module = model.create_module(RelationMethodsModuleName)
+          create_relation_class
 
-            relation_methods_module = model.create_module(RelationMethodsModuleName)
-            assoc_relation_methods_mod = model.create_module(AssociationRelationMethodsModuleName) if relations_enabled
+          method_names.each do |scope_method|
+            generate_scope_method(
+              relation_methods_module,
+              scope_method.to_s,
+              relations_enabled? ? RelationClassName : "T.untyped",
+            )
 
-            method_names.each do |scope_method|
-              generate_scope_method(
-                relation_methods_module,
-                scope_method.to_s,
-                relations_enabled ? RelationClassName : "T.untyped",
-              )
+            assoc_relation_methods_mod = association_relation_methods_module
+            next unless assoc_relation_methods_mod
 
-              next unless relations_enabled
-
-              generate_scope_method(
-                assoc_relation_methods_mod,
-                scope_method.to_s,
-                AssociationRelationClassName,
-              )
-            end
-
-            model.create_extend(RelationMethodsModuleName)
+            generate_scope_method(
+              assoc_relation_methods_mod,
+              scope_method.to_s,
+              AssociationRelationClassName,
+            )
           end
+
+          model.create_extend(RelationMethodsModuleName)
         end
 
         class << self
@@ -88,6 +85,38 @@ module Tapioca
         end
 
         private
+
+        sig { returns(RBI::Scope) }
+        def model
+          @model ||= T.let(
+            root.create_path(constant),
+            T.nilable(RBI::Scope),
+          )
+        end
+
+        sig { returns(T::Boolean) }
+        def relations_enabled?
+          compiler_enabled?("ActiveRecordRelations")
+        end
+
+        sig { returns(T.nilable(RBI::Scope)) }
+        def association_relation_methods_module
+          @association_relation_methods_module ||= T.let(
+            model.create_module(AssociationRelationMethodsModuleName),
+            T.nilable(RBI::Scope),
+          ) if relations_enabled? && !constant.abstract_class?
+        end
+
+        sig { void }
+        def create_relation_class
+          return unless relations_enabled? && constant.abstract_class?
+
+          superclass = "::ActiveRecord::Relation"
+
+          model.create_class(RelationClassName, superclass_name: superclass) do |klass|
+            klass.create_include(RelationMethodsModuleName)
+          end
+        end
 
         sig { returns(T::Array[Symbol]) }
         def scope_method_names

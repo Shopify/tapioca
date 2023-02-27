@@ -181,8 +181,12 @@ module Tapioca
                     extend GeneratedRelationMethods
 
                     module GeneratedRelationMethods
-                      sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                       def app_scope(*args, &blk); end
+                    end
+
+                    class PrivateRelation < ::ActiveRecord::Relation
+                      include GeneratedRelationMethods
                     end
                   end
                 RBI
