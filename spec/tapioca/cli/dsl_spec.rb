@@ -1211,64 +1211,65 @@ module Tapioca
           RBI
         end
 
-        it "aborts if there are pending migrations" do
-          @project.require_real_gem("rake", "13.0.6")
-          @project.bundle_install
-
-          @project.write("lib/post.rb", <<~RB)
-            require "smart_properties"
-
-            class Post
-              include SmartProperties
-              property :title, accepts: String
-            end
-          RB
-
-          @project.write("db/migrate/202001010000_create_articles.rb", <<~RB)
-            class CreateArticles < ActiveRecord::Migration[6.1]
-              def change
-                create_table(:articles) do |t|
-                  t.timestamps
-                end
-              end
-            end
-          RB
-
-          @project.write("lib/database.rb", <<~RB)
-            require "rake"
-
-            namespace :db do
-              task :abort_if_pending_migrations do
-                pending_migrations = Dir["\#{Kernel.__dir__}/../db/migrate/*.rb"]
-
-                if pending_migrations.any?
-                  Kernel.puts "You have \#{pending_migrations.size} pending migration:"
-
-                  pending_migrations.each do |pending_migration|
-                    name = pending_migration.split("/").last
-                    Kernel.puts name
+        describe "pending migrations" do
+          before do
+            @project.write("db/migrate/202001010000_create_articles.rb", <<~RB)
+              class CreateArticles < ActiveRecord::Migration[6.1]
+                def change
+                  create_table(:articles) do |t|
+                    t.timestamps
                   end
-
-                  Kernel.abort(%{Run `bin/rails db:migrate` to update your database then try again.})
                 end
               end
-            end
-          RB
+            RB
 
-          result = @project.tapioca("dsl")
+            @project.write("lib/database.rb", <<~RB)
+              require "rake"
 
-          # FIXME: print the error to the correct stream
-          assert_equal(<<~OUT, result.out)
-            Loading Rails application... Done
-            You have 1 pending migration:
-            202001010000_create_articles.rb
-          OUT
+              namespace :db do
+                task :abort_if_pending_migrations do
+                  pending_migrations = Dir["\#{Kernel.__dir__}/../db/migrate/*.rb"]
 
-          assert_equal(<<~ERR, result.err)
-            Run `bin/rails db:migrate` to update your database then try again.
-          ERR
+                  if pending_migrations.any?
+                    Kernel.puts "You have \#{pending_migrations.size} pending migration:"
 
-          refute_success_status(result)
+                    pending_migrations.each do |pending_migration|
+                      name = pending_migration.split("/").last
+                      Kernel.puts name
+                    end
+
+                    Kernel.abort(%{Run `bin/rails db:migrate` to update your database then try again.})
+                  end
+                end
+              end
+            RB
+
+            @project.require_real_gem("rake", "13.0.6")
+            @project.require_real_gem("activerecord")
+            @project.bundle_install
+          end
+
+          it "aborts if there are pending migrations" do
+            @project.write("lib/post.rb", <<~RB)
+              class Post < ActiveRecord::Base
+              end
+            RB
+
+            result = @project.tapioca("dsl")
+
+            # FIXME: print the error to the correct stream
+            assert_equal(<<~OUT, result.out)
+              Loading Rails application... Done
+              You have 1 pending migration:
+              202001010000_create_articles.rb
+            OUT
+
+            assert_equal(<<~ERR, result.err)
+              Run `bin/rails db:migrate` to update your database then try again.
+            ERR
+
+            refute_success_status(result)
+          end
         end
 
         it "overwrites existing RBIs without user input" do
