@@ -68,6 +68,10 @@ module Tapioca
           ERROR
         end
 
+        if defined?(::ActiveRecord::Base) && constants_to_process.any? { |c| ::ActiveRecord::Base > c }
+          abort_if_pending_migrations!
+        end
+
         result = Executor.new(
           constants_to_process,
           number_of_workers: @number_of_workers,
@@ -183,6 +187,16 @@ module Tapioca
         handler = error_handler
         handler.call(error)
         exit(1)
+      end
+
+      sig { void }
+      def abort_if_pending_migrations!
+        return unless defined?(::Rake)
+
+        Rails.application.load_tasks
+        if Rake::Task.task_defined?("db:abort_if_pending_migrations")
+          Rake::Task["db:abort_if_pending_migrations"].invoke
+        end
       end
     end
   end

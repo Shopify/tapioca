@@ -1255,11 +1255,14 @@ module Tapioca
               end
             RB
 
-            result = @project.tapioca("dsl")
+            result = @project.tapioca("dsl Post")
 
             # FIXME: print the error to the correct stream
             assert_equal(<<~OUT, result.out)
               Loading Rails application... Done
+              Loading DSL compiler classes... Done
+              Compiling DSL RBI files...
+
               You have 1 pending migration:
               202001010000_create_articles.rb
             OUT
@@ -1269,6 +1272,66 @@ module Tapioca
             ERR
 
             refute_success_status(result)
+          end
+
+          it "aborts if there are pending migrations and no arg was passed" do
+            @project.write("lib/post.rb", <<~RB)
+              class Post < ActiveRecord::Base
+              end
+            RB
+
+            result = @project.tapioca("dsl")
+
+            # FIXME: print the error to the correct stream
+            assert_equal(<<~OUT, result.out)
+              Loading Rails application... Done
+              Loading DSL compiler classes... Done
+              Compiling DSL RBI files...
+
+              You have 1 pending migration:
+              202001010000_create_articles.rb
+            OUT
+
+            assert_equal(<<~ERR, result.err)
+              Run `bin/rails db:migrate` to update your database then try again.
+            ERR
+
+            refute_success_status(result)
+          end
+
+          it "does not abort if there are pending migrations but no active record models" do
+            @project.write("lib/post.rb", <<~RB)
+              require "smart_properties"
+
+              class Post
+                include SmartProperties
+                property :title, accepts: String
+              end
+            RB
+
+            result = @project.tapioca("dsl Post")
+
+            assert_equal(<<~OUT, result.out)
+              Loading Rails application... Done
+              Loading DSL compiler classes... Done
+              Compiling DSL RBI files...
+
+                    create  sorbet/rbi/dsl/post.rbi
+
+              Done
+
+              Checking generated RBI files...  Done
+                No errors found
+
+              All operations performed in working directory.
+              Please review changes and commit them.
+            OUT
+
+            assert_empty_stderr(result)
+
+            assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+
+            assert_success_status(result)
           end
         end
 

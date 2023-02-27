@@ -20,7 +20,6 @@ module Tapioca
       def load
         load_dsl_extensions
         load_application
-        abort_if_pending_migrations!
         load_dsl_compilers
       end
 
@@ -69,17 +68,6 @@ module Tapioca
         )
 
         say("Done", :green)
-      end
-
-      sig { void }
-      def abort_if_pending_migrations!
-        return unless File.exist?("#{@app_root}/config/application.rb")
-        return unless defined?(::Rake)
-
-        Rails.application.load_tasks
-        if Rake::Task.task_defined?("db:abort_if_pending_migrations")
-          Rake::Task["db:abort_if_pending_migrations"].invoke
-        end
       end
     end
   end
