@@ -17,11 +17,9 @@ module Tapioca
         def type_for(column_name)
           return ["T.untyped", "T.untyped"] if do_not_generate_strong_types?(@constant)
 
-          column_type = @constant.attribute_types[column_name]
-
-          getter_type = type_for_activerecord_value(column_type)
-
           column = @constant.columns_hash[column_name]
+          column_type = @constant.attribute_types[column_name]
+          getter_type = type_for_activerecord_value(column_type)
           setter_type =
             case column_type
             when ActiveRecord::Enum::EnumType
@@ -31,7 +29,8 @@ module Tapioca
             end
 
           if column&.null
-            return [as_nilable_type(getter_type), as_nilable_type(setter_type)]
+            getter_type = as_nilable_type(getter_type) unless not_nilable_serialized_column?(column_type)
+            return [getter_type, as_nilable_type(setter_type)]
           end
 
           if column_name == @constant.primary_key ||
@@ -147,6 +146,14 @@ module Tapioca
           else
             "T.untyped"
           end
+        end
+
+        sig { params(column_type: T.untyped).returns(T::Boolean) }
+        def not_nilable_serialized_column?(column_type)
+          return false unless column_type.is_a?(ActiveRecord::Type::Serialized)
+          return false unless column_type.coder.is_a?(ActiveRecord::Coders::YAMLColumn)
+
+          [Array.singleton_class, Hash.singleton_class].include?(column_type.coder.object_class.singleton_class)
         end
       end
     end
