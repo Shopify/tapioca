@@ -29,6 +29,7 @@ module Tapioca
 
     sig { params(sorbet_args: String).returns(Spoom::ExecResult) }
     def sorbet(*sorbet_args)
+      puts "Running: sorbet #{sorbet_args.inspect}"
       Spoom::Sorbet.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path, capture_err: true)
     end
 

@@ -1120,8 +1120,8 @@ module Tapioca
 
           response = @project.tapioca("gem actionpack typed_parameters")
 
-          assert_includes(response.out, "Compiled actionpack")
-          assert_includes(response.out, "Compiled typed_parameters")
+          assert_stdout_includes(response, "Compiled actionpack")
+          assert_stdout_includes(response, "Compiled typed_parameters")
 
           actionpack_rbi = @project.read("sorbet/rbi/gems/actionpack@6.1.4.4.rbi")
           # actionpack RBI should have nothing in it about `TypedParameters`
@@ -1163,8 +1163,8 @@ module Tapioca
 
           response = @project.tapioca("gem actionpack some_engine")
 
-          assert_includes(response.out, "Compiled actionpack")
-          assert_includes(response.out, "Compiled some_engine")
+          assert_stdout_includes(response, "Compiled actionpack")
+          assert_stdout_includes(response, "Compiled some_engine")
 
           actionpack_rbi = @project.read("sorbet/rbi/gems/actionpack@6.1.4.4.rbi")
           # actionpack RBI should have nothing in it about `SomeEngine`
