@@ -2088,10 +2088,10 @@ module Tapioca
 
         out = "Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
           "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
-          "generating RBIs."
+          "generating RBIs.\nError during application loading"
         assert_includes(res.out, out)
+        assert_includes(res.out, "tapioca/tests/dsl_spec/project/config/application.rb:5:in `<class:Application>'")
         assert_includes(res.out, <<~OUT)
-          Error during application loading
           Continuing RBI generation without loading the Rails application.
           Done
           Loading DSL compiler classes... Done
