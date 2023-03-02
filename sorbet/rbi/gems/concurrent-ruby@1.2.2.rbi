@@ -558,55 +558,55 @@ Concurrent::AbstractExecutorService::FALLBACK_POLICIES = T.let(T.unsafe(nil), Ar
 # them. This is why we need to use a finalizer to clean up the locals array
 # when the EC goes out of scope.
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#34
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#35
 class Concurrent::AbstractLocals
   # @return [AbstractLocals] a new instance of AbstractLocals
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#35
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#36
   def initialize; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#88
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#89
   def fetch(index); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#70
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#71
   def free_index(index); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#54
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#55
   def next_index(local); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#101
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#102
   def set(index, value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#42
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#43
   def synchronize; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#47
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#48
   def weak_synchronize; end
 
   private
 
   # When the local goes out of scope, clean up that slot across all locals currently assigned.
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#111
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#112
   def local_finalizer(index); end
 
   # Returns the locals for the current scope, or nil if none exist.
   #
   # @raise [NotImplementedError]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#127
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#128
   def locals; end
 
   # Returns the locals for the current scope, creating them if necessary.
   #
   # @raise [NotImplementedError]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#132
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#133
   def locals!; end
 
   # When a thread/fiber goes out of scope, remove the array from @all_arrays.
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#118
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#119
   def thread_fiber_finalizer(array_object_id); end
 end
 
@@ -2024,7 +2024,7 @@ end
 #
 # @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicBoolean.html java.util.concurrent.atomic.AtomicBoolean
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_boolean.rb#119
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_boolean.rb#120
 class Concurrent::AtomicBoolean < ::Concurrent::MutexAtomicBoolean
   # @return [String] Short string representation.
   #
@@ -2108,7 +2108,7 @@ end
 #
 # @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicLong.html java.util.concurrent.atomic.AtomicLong
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_fixnum.rb#136
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_fixnum.rb#137
 class Concurrent::AtomicFixnum < ::Concurrent::MutexAtomicFixnum
   # @return [String] Short string representation.
   #
@@ -2765,7 +2765,7 @@ class Concurrent::Collection::MriMapBackend < ::Concurrent::Collection::NonConcu
   # @return [MriMapBackend] a new instance of MriMapBackend
   #
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/mri_map_backend.rb#12
-  def initialize(options = T.unsafe(nil)); end
+  def initialize(options = T.unsafe(nil), &default_proc); end
 
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/mri_map_backend.rb#17
   def []=(key, value); end
@@ -2811,78 +2811,75 @@ class Concurrent::Collection::NonConcurrentMapBackend
   # @return [NonConcurrentMapBackend] a new instance of NonConcurrentMapBackend
   #
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#15
-  def initialize(options = T.unsafe(nil)); end
+  def initialize(options = T.unsafe(nil), &default_proc); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#19
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#21
   def [](key); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#23
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#25
   def []=(key, value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#92
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#94
   def clear; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#57
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#59
   def compute(key); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#27
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#29
   def compute_if_absent(key); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#51
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#53
   def compute_if_present(key); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#79
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#81
   def delete(key); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#83
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#85
   def delete_pair(key, value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#97
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#99
   def each_pair; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#69
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#71
   def get_and_set(key, value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#108
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#110
   def get_or_default(key, default_value); end
 
   # @return [Boolean]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#75
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#77
   def key?(key); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#61
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#63
   def merge_pair(key, value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#44
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#46
   def replace_if_exists(key, new_value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#35
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#37
   def replace_pair(key, old_value, new_value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#104
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#106
   def size; end
 
   private
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#19
-  def _get(key); end
-
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#23
-  def _set(key, value); end
-
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#122
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#130
   def dupped_backend; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#116
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#124
   def initialize_copy(other); end
 
   # @return [Boolean]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#126
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#134
   def pair?(key, expected_value); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#130
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#116
+  def set_backend(default_proc); end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#138
   def store_computed_value(key, new_value); end
 end
 
@@ -3500,7 +3497,7 @@ module Concurrent::Concern::Observable
   def observers=(_arg0); end
 end
 
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/errors.rb#70
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/errors.rb#71
 class Concurrent::ConcurrentUpdateError < ::ThreadError; end
 
 # frozen pre-allocated backtrace to speed ConcurrentUpdateError
@@ -4066,12 +4063,12 @@ Concurrent::FiberLocalVar::LOCALS = T.let(T.unsafe(nil), Concurrent::FiberLocals
 
 # An array-backed storage of indexed variables per fiber.
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#165
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#166
 class Concurrent::FiberLocals < ::Concurrent::AbstractLocals
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#166
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#167
   def locals; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#170
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#171
   def locals!; end
 end
 
@@ -4576,7 +4573,7 @@ Concurrent::ImmutableStruct::FACTORY = T.let(T.unsafe(nil), T.untyped)
 #
 # @note Intended for use primarily in testing and debugging.
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/indirect_immediate_executor.rb#19
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/indirect_immediate_executor.rb#20
 class Concurrent::IndirectImmediateExecutor < ::Concurrent::ImmediateExecutor
   # Creates a new executor
   #
@@ -4934,28 +4931,6 @@ Concurrent::MVar::TIMEOUT = T.let(T.unsafe(nil), Object)
 #
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#39
 class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
-  # @return [Map] a new instance of Map
-  #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#123
-  def initialize(options = T.unsafe(nil), &block); end
-
-  # Get a value with key
-  #
-  # @param key [Object]
-  # @return [Object] the value
-  #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#137
-  def [](key); end
-
-  # Set a value with key
-  #
-  # @param key [Object]
-  # @param value [Object]
-  # @return [Object] the new value
-  #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#155
-  def []=(key, value); end
-
   # Iterates over each key value pair.
   # This method is atomic.
   #
@@ -4966,7 +4941,7 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @yieldparam key [Object]
   # @yieldparam value [Object]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#271
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#274
   def each; end
 
   # Iterates over each key.
@@ -4978,7 +4953,7 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @yield for each key in the map
   # @yieldparam key [Object]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#252
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#255
   def each_key; end
 
   # Iterates over each key value pair.
@@ -4991,7 +4966,7 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @yieldparam key [Object]
   # @yieldparam value [Object]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#271
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#274
   def each_pair; end
 
   # Iterates over each value.
@@ -5003,14 +4978,14 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @yield for each value in the map
   # @yieldparam value [Object]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#261
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#264
   def each_value; end
 
   # Is map empty?
   #
   # @return [true, false]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#288
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#291
   def empty?; end
 
   # Get a value with key, or default_value when key is absent,
@@ -5032,7 +5007,7 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @yieldparam key [Object]
   # @yieldreturn [Object] default value
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#180
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#183
   def fetch(key, default_value = T.unsafe(nil)); end
 
   # Fetch value with key, or store default value when key is absent,
@@ -5047,7 +5022,7 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @yieldparam key [Object]
   # @yieldreturn [Object] default value
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#202
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#205
   def fetch_or_store(key, default_value = T.unsafe(nil)); end
 
   # Get a value with key
@@ -5055,10 +5030,10 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @param key [Object]
   # @return [Object] the value
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#137
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/non_concurrent_map_backend.rb#21
   def get(key); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#318
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#321
   def inspect; end
 
   # Find key of a value.
@@ -5066,22 +5041,22 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @param value [Object]
   # @return [Object, nil] key or nil when not found
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#281
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#284
   def key(value); end
 
   # All keys
   #
   # @return [::Array<Object>] keys
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#233
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#236
   def keys; end
 
   # @raise [TypeError]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#302
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#305
   def marshal_dump; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#310
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#313
   def marshal_load(hash); end
 
   # Set a value with key
@@ -5090,7 +5065,7 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @param value [Object]
   # @return [Object] the new value
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#155
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/collection/map/mri_map_backend.rb#17
   def put(key, value); end
 
   # Insert value into map with key if key is absent in one atomic step.
@@ -5099,7 +5074,7 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @param value [Object]
   # @return [Object, nil] the previous value when key was present or nil when there was no key
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#212
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#215
   def put_if_absent(key, value); end
 
   # Is the value stored in the map. Iterates over all values.
@@ -5107,30 +5082,30 @@ class Concurrent::Map < ::Concurrent::Collection::MriMapBackend
   # @param value [Object]
   # @return [true, false]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#224
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#227
   def value?(value); end
 
   # All values
   #
   # @return [::Array<Object>] values
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#241
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#244
   def values; end
 
   private
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#328
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#331
   def initialize_copy(other); end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#333
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#336
   def populate_from(hash); end
 
   # @raise [KeyError]
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#324
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#327
   def raise_fetch_no_key; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#338
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/map.rb#341
   def validate_options_hash!(options); end
 end
 
@@ -8736,7 +8711,7 @@ class Concurrent::RejectedExecutionError < ::Concurrent::Error; end
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/errors.rb#52
 class Concurrent::ResourceLimitError < ::Concurrent::Error; end
 
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/exchanger.rb#129
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/exchanger.rb#134
 class Concurrent::RubyExchanger < ::Concurrent::AbstractExchanger
   extend ::Concurrent::Synchronization::SafeInitialization
 
@@ -10323,7 +10298,7 @@ end
 
 # TODO (pitr-ch 04-Dec-2016): should be in edge
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#8
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#9
 class Concurrent::Synchronization::Lock < ::Concurrent::Synchronization::LockableObject
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#31
   def broadcast; end
@@ -10790,12 +10765,12 @@ Concurrent::ThreadLocalVar::LOCALS = T.let(T.unsafe(nil), Concurrent::ThreadLoca
 
 # An array-backed storage of indexed variables per thread.
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#140
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#141
 class Concurrent::ThreadLocals < ::Concurrent::AbstractLocals
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#141
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#142
   def locals; end
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#145
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/locals.rb#146
   def locals!; end
 end
 

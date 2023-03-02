@@ -752,10 +752,10 @@ end
 module Sidekiq::JobUtil
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/job_util.rb#36
+  # source://sidekiq//lib/sidekiq/job_util.rb#40
   def normalize_item(item); end
 
-  # source://sidekiq//lib/sidekiq/job_util.rb#57
+  # source://sidekiq//lib/sidekiq/job_util.rb#61
   def normalized_hash(item_class); end
 
   # @raise [ArgumentError]
@@ -770,12 +770,12 @@ module Sidekiq::JobUtil
 
   # @return [Boolean]
   #
-  # source://sidekiq//lib/sidekiq/job_util.rb#87
-  def json_safe?(item); end
+  # source://sidekiq//lib/sidekiq/job_util.rb#101
+  def json_unsafe?(item); end
 end
 
-# source://sidekiq//lib/sidekiq/job_util.rb#68
-Sidekiq::JobUtil::RECURSIVE_JSON_SAFE = T.let(T.unsafe(nil), Hash)
+# source://sidekiq//lib/sidekiq/job_util.rb#72
+Sidekiq::JobUtil::RECURSIVE_JSON_UNSAFE = T.let(T.unsafe(nil), Hash)
 
 # These functions encapsulate various job utilities.
 #
