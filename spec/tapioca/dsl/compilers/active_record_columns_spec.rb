@@ -393,8 +393,20 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
+                  sig { returns(T::Array[T.untyped]) }
+                  def serialized_column_array; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
                   sig { params(value: T.untyped).returns(T.untyped) }
                   def serialized_column_custom=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.untyped) }
+                  def serialized_column_custom; end
                 RBI
                 assert_includes(output, expected)
 
@@ -405,8 +417,20 @@ module Tapioca
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
+                  sig { returns(T::Hash[T.untyped, T.untyped]) }
+                  def serialized_column_hash; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
                   sig { params(value: T.untyped).returns(T.untyped) }
                   def serialized_column_json=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.untyped) }
+                  def serialized_column_json; end
                 RBI
                 assert_includes(output, expected)
               end
