@@ -25,6 +25,7 @@ module Tapioca
 
         sig { params(pipeline: Pipeline).void }
         def initialize(pipeline)
+          YARD::Registry.clear
           super(pipeline)
           pipeline.gem.parse_yard_docs
         end

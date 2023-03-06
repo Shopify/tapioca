@@ -1551,6 +1551,51 @@ module Tapioca
           assert_includes(turbo_streams_rbi, "module Turbo::Streams; end")
           assert_includes(turbo_streams_rbi, "module Turbo::Streams::ActionHelper")
         end
+
+        it "generates documentation only for the gem that defines it" do
+          foo = mock_gem("foo", "0.0.2") do
+            write("lib/foo.rb", <<~RB)
+              # Most objects are cloneable
+              class Object
+                def foo; end
+              end
+            RB
+          end
+          bar = mock_gem("bar", "0.0.2") do
+            write("lib/bar.rb", <<~RB)
+              class Object
+                def bar; end
+              end
+            RB
+          end
+          baz = mock_gem("baz", "0.0.2") do
+            write("lib/baz.rb", <<~RB)
+              def baz; end
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.require_mock_gem(baz)
+          @project.bundle_install
+
+          result = @project.tapioca("gem bar foo baz --doc")
+
+          foo_rbi = @project.read("sorbet/rbi/gems/foo@0.0.2.rbi")
+          bar_rbi = @project.read("sorbet/rbi/gems/bar@0.0.2.rbi")
+          baz_rbi = @project.read("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          documentation = <<~RBI
+            # Most objects are cloneable
+          RBI
+
+          assert_includes(foo_rbi, documentation)
+          refute_includes(bar_rbi, documentation)
+          refute_includes(baz_rbi, documentation)
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
       end
 
       describe "sync" do
