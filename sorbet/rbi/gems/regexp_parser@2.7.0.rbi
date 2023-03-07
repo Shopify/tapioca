@@ -157,17 +157,22 @@ class Regexp::Expression::Backreference::Base < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#5
   def referenced_expression=(_arg0); end
 
+  # @return [Boolean]
+  #
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#24
+  def referential?; end
+
   private
 
   # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#7
   def initialize_copy(orig); end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#35
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#39
 class Regexp::Expression::Backreference::Name < ::Regexp::Expression::Backreference::Base
   # @return [Name] a new instance of Name
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#39
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#43
   def initialize(token, options = T.unsafe(nil)); end
 
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#23
@@ -175,39 +180,39 @@ class Regexp::Expression::Backreference::Name < ::Regexp::Expression::Backrefere
 
   # Returns the value of attribute name.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#36
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#40
   def name; end
 
   # Returns the value of attribute name.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#36
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#40
   def reference; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#51
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#55
 class Regexp::Expression::Backreference::NameCall < ::Regexp::Expression::Backreference::Name
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#24
   def human_name; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#63
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#67
 class Regexp::Expression::Backreference::NameRecursionLevel < ::Regexp::Expression::Backreference::Name
   # @return [NameRecursionLevel] a new instance of NameRecursionLevel
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#66
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#70
   def initialize(token, options = T.unsafe(nil)); end
 
   # Returns the value of attribute recursion_level.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#64
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#68
   def recursion_level; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#25
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#29
 class Regexp::Expression::Backreference::Number < ::Regexp::Expression::Backreference::Base
   # @return [Number] a new instance of Number
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#33
   def initialize(token, options = T.unsafe(nil)); end
 
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#25
@@ -215,52 +220,52 @@ class Regexp::Expression::Backreference::Number < ::Regexp::Expression::Backrefe
 
   # Returns the value of attribute number.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#26
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#30
   def number; end
 
   # Returns the value of attribute number.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#26
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#30
   def reference; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#50
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#54
 class Regexp::Expression::Backreference::NumberCall < ::Regexp::Expression::Backreference::Number
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#27
   def human_name; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#52
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#56
 class Regexp::Expression::Backreference::NumberCallRelative < ::Regexp::Expression::Backreference::NumberRelative
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#28
   def human_name; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#54
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#58
 class Regexp::Expression::Backreference::NumberRecursionLevel < ::Regexp::Expression::Backreference::NumberRelative
   # @return [NumberRecursionLevel] a new instance of NumberRecursionLevel
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#57
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#61
   def initialize(token, options = T.unsafe(nil)); end
 
   # Returns the value of attribute recursion_level.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#55
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#59
   def recursion_level; end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#45
+# source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#49
 class Regexp::Expression::Backreference::NumberRelative < ::Regexp::Expression::Backreference::Number
   # Returns the value of attribute effective_number.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#46
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#50
   def effective_number; end
 
   # Sets the attribute effective_number
   #
   # @param value the value to set the attribute effective_number to.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#46
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#50
   def effective_number=(_arg0); end
 
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#26
@@ -268,7 +273,7 @@ class Regexp::Expression::Backreference::NumberRelative < ::Regexp::Expression::
 
   # Returns the value of attribute effective_number.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#46
+  # source://regexp_parser//lib/regexp_parser/expression/classes/backreference.rb#50
   def reference; end
 end
 
@@ -709,7 +714,7 @@ end
 # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#2
 module Regexp::Expression::Conditional; end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#25
+# source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#29
 class Regexp::Expression::Conditional::Branch < ::Regexp::Expression::Sequence
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#34
   def human_name; end
@@ -741,34 +746,39 @@ class Regexp::Expression::Conditional::Condition < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#10
   def referenced_expression=(_arg0); end
 
+  # @return [Boolean]
+  #
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#24
+  def referential?; end
+
   private
 
   # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#19
   def initialize_copy(orig); end
 end
 
-# source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#27
+# source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#31
 class Regexp::Expression::Conditional::Expression < ::Regexp::Expression::Subexpression
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#30
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#34
   def <<(exp); end
 
   # @raise [TooManyBranches]
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#34
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#38
   def add_sequence(active_opts = T.unsafe(nil)); end
 
   # @raise [TooManyBranches]
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#34
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#38
   def branch(active_opts = T.unsafe(nil)); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#50
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#54
   def branches; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#46
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#50
   def condition; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#41
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#45
   def condition=(exp); end
 
   # source://regexp_parser//lib/regexp_parser/expression/methods/human_name.rb#36
@@ -777,27 +787,32 @@ class Regexp::Expression::Conditional::Expression < ::Regexp::Expression::Subexp
   # source://regexp_parser//lib/regexp_parser/expression/methods/match_length.rb#131
   def match_length; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#58
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#66
   def parts; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#54
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#58
   def reference; end
 
   # Returns the value of attribute referenced_expression.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#28
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#32
   def referenced_expression; end
 
   # Sets the attribute referenced_expression
   #
   # @param value the value to set the attribute referenced_expression to.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#28
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#32
   def referenced_expression=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#62
+  def referential?; end
 
   private
 
-  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#62
+  # source://regexp_parser//lib/regexp_parser/expression/classes/conditional.rb#70
   def initialize_copy(orig); end
 end
 
@@ -1268,13 +1283,13 @@ end
 #
 # source://regexp_parser//lib/regexp_parser/expression/sequence.rb#8
 class Regexp::Expression::Sequence < ::Regexp::Expression::Subexpression
-  # source://regexp_parser//lib/regexp_parser/expression/sequence.rb#28
+  # source://regexp_parser//lib/regexp_parser/expression/sequence.rb#27
   def quantify(*args); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/sequence.rb#23
+  # source://regexp_parser//lib/regexp_parser/expression/sequence.rb#22
   def starts_at; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/sequence.rb#23
+  # source://regexp_parser//lib/regexp_parser/expression/sequence.rb#22
   def ts; end
 
   class << self
@@ -1368,7 +1383,7 @@ module Regexp::Expression::Shared
   # source://regexp_parser//lib/regexp_parser/expression/methods/tests.rb#36
   def is?(test_token, test_type = T.unsafe(nil)); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/shared.rb#83
+  # source://regexp_parser//lib/regexp_parser/expression/shared.rb#87
   def nesting_level=(lvl); end
 
   # source://regexp_parser//lib/regexp_parser/expression/shared.rb#71
@@ -1426,11 +1441,16 @@ module Regexp::Expression::Shared
   # source://regexp_parser//lib/regexp_parser/expression/shared.rb#63
   def quantified?; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/shared.rb#89
+  # source://regexp_parser//lib/regexp_parser/expression/shared.rb#93
   def quantifier=(qtf); end
 
   # source://regexp_parser//lib/regexp_parser/expression/shared.rb#59
   def quantifier_affix(expression_format); end
+
+  # @return [Boolean]
+  #
+  # source://regexp_parser//lib/regexp_parser/expression/shared.rb#83
+  def referential?; end
 
   # source://regexp_parser//lib/regexp_parser/expression/shared.rb#38
   def starts_at; end
@@ -1509,25 +1529,25 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#18
   def <<(exp); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def [](*args, &block); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def at(*args, &block); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#35
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#34
   def dig(*indices); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def each(*args, &block); end
 
   # Iterates over the expressions of this expression as an array, passing
   # the expression and its index within its parent to the given block.
   #
   # source://regexp_parser//lib/regexp_parser/expression/methods/traverse.rb#39
-  def each_expression(include_self = T.unsafe(nil)); end
+  def each_expression(include_self = T.unsafe(nil), &block); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def empty?(*args, &block); end
 
   # Returns the value of attribute expressions.
@@ -1542,35 +1562,35 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#5
   def expressions=(_arg0); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def fetch(*args, &block); end
 
   # Returns a new array with the results of calling the given block once
   # for every expression. If a block is not given, returns an array with
   # each expression and its level index as an array.
   #
-  # source://regexp_parser//lib/regexp_parser/expression/methods/traverse.rb#50
+  # source://regexp_parser//lib/regexp_parser/expression/methods/traverse.rb#53
   def flat_map(include_self = T.unsafe(nil)); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def index(*args, &block); end
 
   # source://regexp_parser//lib/regexp_parser/expression/methods/match_length.rb#118
   def inner_match_length; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def join(*args, &block); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def last(*args, &block); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def length(*args, &block); end
 
   # source://regexp_parser//lib/regexp_parser/expression/methods/match_length.rb#111
   def match_length; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#45
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#44
   def parts; end
 
   # source://regexp_parser//lib/regexp_parser/expression/methods/strfregexp.rb#102
@@ -1579,10 +1599,15 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/methods/strfregexp.rb#102
   def strfregexp_tree(format = T.unsafe(nil), include_self = T.unsafe(nil), separator = T.unsafe(nil)); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#41
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#40
   def te; end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#49
+  # @return [Boolean]
+  #
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#55
+  def terminal?; end
+
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#48
   def to_h; end
 
   # Traverses the subexpression (depth-first, pre-order) and calls the given
@@ -1601,7 +1626,7 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/methods/traverse.rb#16
   def traverse(include_self = T.unsafe(nil), &block); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#29
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#28
   def values_at(*args, &block); end
 
   # Traverses the subexpression (depth-first, pre-order) and calls the given
@@ -1627,7 +1652,7 @@ class Regexp::Expression::Subexpression < ::Regexp::Expression::Base
   # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#13
   def initialize_copy(orig); end
 
-  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#58
+  # source://regexp_parser//lib/regexp_parser/expression/subexpression.rb#61
   def intersperse(expressions, separator); end
 end
 
@@ -1897,95 +1922,150 @@ end
 #
 # source://regexp_parser//lib/regexp_parser/lexer.rb#5
 class Regexp::Lexer
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#71
+  def emit(token); end
+
   # source://regexp_parser//lib/regexp_parser/lexer.rb#20
-  def lex(input, syntax = T.unsafe(nil), options: T.unsafe(nil), &block); end
+  def lex(input, syntax = T.unsafe(nil), options: T.unsafe(nil), collect_tokens: T.unsafe(nil), &block); end
 
   private
 
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#71
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#91
   def ascend(type, token); end
 
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#108
+  # Returns the value of attribute block.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def block; end
+
+  # Sets the attribute block
+  #
+  # @param value the value to set the attribute block to.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def block=(_arg0); end
+
+  # if a codepoint list is followed by a quantifier, that quantifier applies
+  # to the last codepoint, e.g. /\u{61 62 63}{3}/ =~ 'abccc'
+  # c.f. #break_literal.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#135
   def break_codepoint_list(token); end
 
   # called by scan to break a literal run that is longer than one character
   # into two separate tokens when it is followed by a quantifier
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#95
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#115
   def break_literal(token); end
+
+  # Returns the value of attribute collect_tokens.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def collect_tokens; end
+
+  # Sets the attribute collect_tokens
+  #
+  # @param value the value to set the attribute collect_tokens to.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def collect_tokens=(_arg0); end
 
   # Returns the value of attribute conditional_nesting.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def conditional_nesting; end
 
   # Sets the attribute conditional_nesting
   #
   # @param value the value to set the attribute conditional_nesting to.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def conditional_nesting=(_arg0); end
 
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#82
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#102
   def descend(type, token); end
 
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#123
-  def merge_condition(current); end
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#154
+  def merge_condition(current, last); end
 
   # Returns the value of attribute nesting.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def nesting; end
 
   # Sets the attribute nesting
   #
   # @param value the value to set the attribute nesting to.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def nesting=(_arg0); end
+
+  # Returns the value of attribute preprev_token.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def preprev_token; end
+
+  # Sets the attribute preprev_token
+  #
+  # @param value the value to set the attribute preprev_token to.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def preprev_token=(_arg0); end
+
+  # Returns the value of attribute prev_token.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def prev_token; end
+
+  # Sets the attribute prev_token
+  #
+  # @param value the value to set the attribute prev_token to.
+  #
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
+  def prev_token=(_arg0); end
 
   # Returns the value of attribute set_nesting.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def set_nesting; end
 
   # Sets the attribute set_nesting
   #
   # @param value the value to set the attribute set_nesting to.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def set_nesting=(_arg0); end
 
   # Returns the value of attribute shift.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def shift; end
 
   # Sets the attribute shift
   #
   # @param value the value to set the attribute shift to.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def shift=(_arg0); end
 
   # Returns the value of attribute tokens.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def tokens; end
 
   # Sets the attribute tokens
   #
   # @param value the value to set the attribute tokens to.
   #
-  # source://regexp_parser//lib/regexp_parser/lexer.rb#69
+  # source://regexp_parser//lib/regexp_parser/lexer.rb#87
   def tokens=(_arg0); end
 
   class << self
     # source://regexp_parser//lib/regexp_parser/lexer.rb#16
-    def lex(input, syntax = T.unsafe(nil), options: T.unsafe(nil), &block); end
+    def lex(input, syntax = T.unsafe(nil), options: T.unsafe(nil), collect_tokens: T.unsafe(nil), &block); end
 
     # source://regexp_parser//lib/regexp_parser/lexer.rb#16
-    def scan(input, syntax = T.unsafe(nil), options: T.unsafe(nil), &block); end
+    def scan(input, syntax = T.unsafe(nil), options: T.unsafe(nil), collect_tokens: T.unsafe(nil), &block); end
   end
 end
 
@@ -2375,175 +2455,197 @@ Regexp::Parser::VERSION = T.let(T.unsafe(nil), String)
 class Regexp::Scanner
   # Emits an array with the details of the scanned pattern
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2555
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2591
   def emit(type, token, text); end
+
+  # only public for #||= to work on ruby <= 2.5
+  #
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2616
+  def literal_run; end
+
+  # only public for #||= to work on ruby <= 2.5
+  #
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2616
+  def literal_run=(_arg0); end
 
   # @raise [PrematureEndError]
   #
   # source://regexp_parser//lib/regexp_parser/scanner.rb#84
-  def scan(input_object, options: T.unsafe(nil), &block); end
+  def scan(input_object, options: T.unsafe(nil), collect_tokens: T.unsafe(nil), &block); end
 
   private
 
   # Appends one or more characters to the literal buffer, to be emitted later
   # by a call to emit_literal.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2606
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2653
   def append_literal(data, ts, te); end
 
   # Returns the value of attribute block.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def block; end
 
   # Sets the attribute block
   #
   # @param value the value to set the attribute block to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def block=(_arg0); end
 
   # Returns the value of attribute char_pos.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def char_pos; end
 
   # Sets the attribute char_pos
   #
   # @param value the value to set the attribute char_pos to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def char_pos=(_arg0); end
+
+  # Returns the value of attribute collect_tokens.
+  #
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
+  def collect_tokens; end
+
+  # Sets the attribute collect_tokens
+  #
+  # @param value the value to set the attribute collect_tokens to.
+  #
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
+  def collect_tokens=(_arg0); end
 
   # Returns the value of attribute conditional_stack.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def conditional_stack; end
 
   # Sets the attribute conditional_stack
   #
   # @param value the value to set the attribute conditional_stack to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def conditional_stack=(_arg0); end
 
   # Copy from ts to te from data as text
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2600
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2647
   def copy(data, ts, te); end
 
   # Emits the literal run collected by calls to the append_literal method.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2612
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2658
   def emit_literal; end
 
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2647
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2693
   def emit_meta_control_sequence(data, ts, te, token); end
 
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2618
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2664
   def emit_options(text); end
 
   # Returns the value of attribute free_spacing.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def free_spacing; end
 
   # Sets the attribute free_spacing
   #
   # @param value the value to set the attribute free_spacing to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def free_spacing=(_arg0); end
 
   # @return [Boolean]
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2579
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2626
   def free_spacing?(input_object, options); end
 
   # Returns the value of attribute group_depth.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def group_depth; end
 
   # Sets the attribute group_depth
   #
   # @param value the value to set the attribute group_depth to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def group_depth=(_arg0); end
 
   # @return [Boolean]
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2591
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2638
   def in_group?; end
 
   # @return [Boolean]
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2595
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2642
   def in_set?; end
 
-  # Returns the value of attribute literal.
+  # Returns the value of attribute prev_token.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
-  def literal; end
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
+  def prev_token; end
 
-  # Sets the attribute literal
+  # Sets the attribute prev_token
   #
-  # @param value the value to set the attribute literal to.
+  # @param value the value to set the attribute prev_token to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
-  def literal=(_arg0); end
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
+  def prev_token=(_arg0); end
 
   # Returns the value of attribute set_depth.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def set_depth; end
 
   # Sets the attribute set_depth
   #
   # @param value the value to set the attribute set_depth to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def set_depth=(_arg0); end
 
   # Returns the value of attribute spacing_stack.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def spacing_stack; end
 
   # Sets the attribute spacing_stack
   #
   # @param value the value to set the attribute spacing_stack to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def spacing_stack=(_arg0); end
 
   # Returns the value of attribute tokens.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def tokens; end
 
   # Sets the attribute tokens
   #
   # @param value the value to set the attribute tokens to.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2576
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2620
   def tokens=(_arg0); end
 
   # Centralizes and unifies the handling of validation related
   # errors.
   #
-  # source://regexp_parser//lib/regexp_parser/scanner.rb#2656
+  # source://regexp_parser//lib/regexp_parser/scanner.rb#2702
   def validation_error(type, what, reason = T.unsafe(nil)); end
 
   class << self
-    # source://regexp_parser//lib/regexp_parser/scanner.rb#2541
+    # source://regexp_parser//lib/regexp_parser/scanner.rb#2577
     def long_prop_map; end
 
-    # source://regexp_parser//lib/regexp_parser/scanner.rb#2545
+    # source://regexp_parser//lib/regexp_parser/scanner.rb#2581
     def parse_prop_map(name); end
 
-    # source://regexp_parser//lib/regexp_parser/scanner.rb#2549
+    # source://regexp_parser//lib/regexp_parser/scanner.rb#2585
     def posix_classes; end
 
     # Scans the given regular expression text, or Regexp object and collects the
@@ -2554,11 +2656,11 @@ class Regexp::Scanner
     # --------------------------------------------------------------------------
     #
     # source://regexp_parser//lib/regexp_parser/scanner.rb#80
-    def scan(input_object, options: T.unsafe(nil), &block); end
+    def scan(input_object, options: T.unsafe(nil), collect_tokens: T.unsafe(nil), &block); end
 
     # lazy-load property maps when first needed
     #
-    # source://regexp_parser//lib/regexp_parser/scanner.rb#2537
+    # source://regexp_parser//lib/regexp_parser/scanner.rb#2573
     def short_prop_map; end
   end
 end
@@ -2656,13 +2758,13 @@ end
 module Regexp::Syntax
   private
 
-  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#62
+  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#61
   def comparable(name); end
 
-  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#45
+  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#44
   def const_missing(const_name); end
 
-  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#52
+  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#51
   def fallback_version_class(version); end
 
   # Returns the syntax specification class for the given syntax
@@ -2674,7 +2776,7 @@ module Regexp::Syntax
   # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#26
   def new(name); end
 
-  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#58
+  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#57
   def specified_versions; end
 
   # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#32
@@ -2683,17 +2785,14 @@ module Regexp::Syntax
   # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#36
   def version_class(version); end
 
-  # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#67
-  def warn_if_future_version(const_name); end
-
   class << self
-    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#62
+    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#61
     def comparable(name); end
 
-    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#45
+    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#44
     def const_missing(const_name); end
 
-    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#52
+    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#51
     def fallback_version_class(version); end
 
     # Returns the syntax specification class for the given syntax
@@ -2705,7 +2804,7 @@ module Regexp::Syntax
     # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#26
     def new(name); end
 
-    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#58
+    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#57
     def specified_versions; end
 
     # @return [Boolean]
@@ -2715,9 +2814,6 @@ module Regexp::Syntax
 
     # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#36
     def version_class(version); end
-
-    # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#67
-    def warn_if_future_version(const_name); end
   end
 end
 
@@ -2821,6 +2917,9 @@ class Regexp::Syntax::Base
     def removed_features; end
   end
 end
+
+# source://regexp_parser//lib/regexp_parser/syntax/versions.rb#8
+Regexp::Syntax::CURRENT = Regexp::Syntax::V3_1_0
 
 # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#6
 class Regexp::Syntax::InvalidVersionNameError < ::Regexp::Syntax::SyntaxError

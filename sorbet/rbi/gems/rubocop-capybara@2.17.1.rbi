@@ -10,8 +10,329 @@ module RuboCop; end
 # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#4
 module RuboCop::Cop; end
 
-# source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#5
+# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#5
 module RuboCop::Cop::Capybara; end
+
+# Help methods for capybara.
+#
+# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#7
+module RuboCop::Cop::Capybara::CapybaraHelp
+  private
+
+  # @example
+  #   common_attributes?('a[focused]') # => true
+  #   common_attributes?('button[focused][visible]') # => true
+  #   common_attributes?('table[id=some-id]') # => true
+  #   common_attributes?('h1[invalid]') # => false
+  # @param selector [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#60
+  def common_attributes?(selector); end
+
+  # @param node [RuboCop::AST::SendNode]
+  # @param option [Symbol]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#124
+  def include_option?(node, option); end
+
+  # @example
+  #   replaceable_attributes?('table[id=some-id]') # => true
+  #   replaceable_attributes?('a[focused]') # => false
+  # @param attrs [Array<String>]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#69
+  def replaceable_attributes?(attrs); end
+
+  # @param node [RuboCop::AST::SendNode]
+  # @param element [String]
+  # @param attrs [Array<String>]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#107
+  def replaceable_element?(node, element, attrs); end
+
+  # @param node [RuboCop::AST::SendNode]
+  # @param locator [String]
+  # @param element [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#44
+  def replaceable_option?(node, locator, element); end
+
+  # @param pseudo_class [String]
+  # @param locator [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#84
+  def replaceable_pseudo_class?(pseudo_class, locator); end
+
+  # @param locator [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#95
+  def replaceable_pseudo_class_not?(locator); end
+
+  # @param locator [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#75
+  def replaceable_pseudo_classes?(locator); end
+
+  # @param node [RuboCop::AST::SendNode]
+  # @param attrs [Array<String>]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#117
+  def replaceable_to_link?(node, attrs); end
+
+  class << self
+    # @example
+    #   common_attributes?('a[focused]') # => true
+    #   common_attributes?('button[focused][visible]') # => true
+    #   common_attributes?('table[id=some-id]') # => true
+    #   common_attributes?('h1[invalid]') # => false
+    # @param selector [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#60
+    def common_attributes?(selector); end
+
+    # @param node [RuboCop::AST::SendNode]
+    # @param option [Symbol]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#124
+    def include_option?(node, option); end
+
+    # @example
+    #   replaceable_attributes?('table[id=some-id]') # => true
+    #   replaceable_attributes?('a[focused]') # => false
+    # @param attrs [Array<String>]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#69
+    def replaceable_attributes?(attrs); end
+
+    # @param node [RuboCop::AST::SendNode]
+    # @param element [String]
+    # @param attrs [Array<String>]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#107
+    def replaceable_element?(node, element, attrs); end
+
+    # @param node [RuboCop::AST::SendNode]
+    # @param locator [String]
+    # @param element [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#44
+    def replaceable_option?(node, locator, element); end
+
+    # @param pseudo_class [String]
+    # @param locator [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#84
+    def replaceable_pseudo_class?(pseudo_class, locator); end
+
+    # @param locator [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#95
+    def replaceable_pseudo_class_not?(locator); end
+
+    # @param locator [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#75
+    def replaceable_pseudo_classes?(locator); end
+
+    # @param node [RuboCop::AST::SendNode]
+    # @param attrs [Array<String>]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#117
+    def replaceable_to_link?(node, attrs); end
+  end
+end
+
+# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#8
+RuboCop::Cop::Capybara::CapybaraHelp::COMMON_OPTIONS = T.let(T.unsafe(nil), Array)
+
+# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#11
+RuboCop::Cop::Capybara::CapybaraHelp::SPECIFIC_OPTIONS = T.let(T.unsafe(nil), Hash)
+
+# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#34
+RuboCop::Cop::Capybara::CapybaraHelp::SPECIFIC_PSEUDO_CLASSES = T.let(T.unsafe(nil), Array)
+
+# Helps parsing css selector.
+#
+# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#7
+module RuboCop::Cop::Capybara::CssSelector
+  private
+
+  # @example
+  #   attribute?('[attribute]') # => true
+  #   attribute?('attribute') # => false
+  # @param selector [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#47
+  def attribute?(selector); end
+
+  # @example
+  #   attributes('a[foo-bar_baz]') # => {"foo-bar_baz=>nil}
+  #   attributes('button[foo][bar=baz]') # => {"foo"=>nil, "bar"=>"'baz'"}
+  #   attributes('table[foo=bar]') # => {"foo"=>"'bar'"}
+  # @param selector [String]
+  # @return [Array<String>]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#57
+  def attributes(selector); end
+
+  # @example
+  #   classes('#some-id') # => []
+  #   classes('.some-cls') # => ['some-cls']
+  #   classes('#some-id.some-cls') # => ['some-cls']
+  #   classes('#some-id.cls1.cls2') # => ['cls1', 'cls2']
+  # @param selector [String]
+  # @return [Array<String>]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#38
+  def classes(selector); end
+
+  # @example
+  #   id('#some-id') # => some-id
+  #   id('.some-cls') # => nil
+  #   id('#some-id.cls') # => some-id
+  # @param selector [String]
+  # @return [String]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#16
+  def id(selector); end
+
+  # @example
+  #   id?('#some-id') # => true
+  #   id?('.some-cls') # => false
+  # @param selector [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#27
+  def id?(selector); end
+
+  # @example
+  #   multiple_selectors?('a.cls b#id') # => true
+  #   multiple_selectors?('a.cls') # => false
+  # @param selector [String]
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#87
+  def multiple_selectors?(selector); end
+
+  # @example
+  #   normalize_value('true') # => true
+  #   normalize_value('false') # => false
+  #   normalize_value(nil) # => nil
+  #   normalize_value("foo") # => "'foo'"
+  # @param value [String]
+  # @return [Boolean, String]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#99
+  def normalize_value(value); end
+
+  # @example
+  #   pseudo_classes('button:not([disabled])') # => ['not()']
+  #   pseudo_classes('a:enabled:not([valid])') # => ['enabled', 'not()']
+  # @param selector [String]
+  # @return [Array<String>]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#73
+  def pseudo_classes(selector); end
+
+  class << self
+    # @example
+    #   attribute?('[attribute]') # => true
+    #   attribute?('attribute') # => false
+    # @param selector [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#47
+    def attribute?(selector); end
+
+    # @example
+    #   attributes('a[foo-bar_baz]') # => {"foo-bar_baz=>nil}
+    #   attributes('button[foo][bar=baz]') # => {"foo"=>nil, "bar"=>"'baz'"}
+    #   attributes('table[foo=bar]') # => {"foo"=>"'bar'"}
+    # @param selector [String]
+    # @return [Array<String>]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#57
+    def attributes(selector); end
+
+    # @example
+    #   classes('#some-id') # => []
+    #   classes('.some-cls') # => ['some-cls']
+    #   classes('#some-id.some-cls') # => ['some-cls']
+    #   classes('#some-id.cls1.cls2') # => ['cls1', 'cls2']
+    # @param selector [String]
+    # @return [Array<String>]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#38
+    def classes(selector); end
+
+    # @example
+    #   id('#some-id') # => some-id
+    #   id('.some-cls') # => nil
+    #   id('#some-id.cls') # => some-id
+    # @param selector [String]
+    # @return [String]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#16
+    def id(selector); end
+
+    # @example
+    #   id?('#some-id') # => true
+    #   id?('.some-cls') # => false
+    # @param selector [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#27
+    def id?(selector); end
+
+    # @example
+    #   multiple_selectors?('a.cls b#id') # => true
+    #   multiple_selectors?('a.cls') # => false
+    # @param selector [String]
+    # @return [Boolean]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#87
+    def multiple_selectors?(selector); end
+
+    # @example
+    #   normalize_value('true') # => true
+    #   normalize_value('false') # => false
+    #   normalize_value(nil) # => nil
+    #   normalize_value("foo") # => "'foo'"
+    # @param value [String]
+    # @return [Boolean, String]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#99
+    def normalize_value(value); end
+
+    # @example
+    #   pseudo_classes('button:not([disabled])') # => ['not()']
+    #   pseudo_classes('a:enabled:not([valid])') # => ['enabled', 'not()']
+    # @param selector [String]
+    # @return [Array<String>]
+    #
+    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#73
+    def pseudo_classes(selector); end
+  end
+end
 
 # Checks that no expectations are set on Capybara's `current_path`.
 #
@@ -54,7 +375,7 @@ class RuboCop::Cop::Capybara::CurrentPathExpectation < ::RuboCop::Cop::Base
   def on_send(node); end
 
   # source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#54
-  def regexp_str_matcher(param0 = T.unsafe(nil)); end
+  def regexp_node_matcher(param0 = T.unsafe(nil)); end
 
   private
 
@@ -63,14 +384,17 @@ class RuboCop::Cop::Capybara::CurrentPathExpectation < ::RuboCop::Cop::Base
   # This ensures the option `ignore_query: true` is added
   # except when the expectation is a regexp or string
   #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#110
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#118
   def add_ignore_query_options(corrector, node); end
 
   # source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#76
   def autocorrect(corrector, node); end
 
   # source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#100
-  def convert_regexp_str_to_literal(corrector, matcher_node, regexp_str); end
+  def convert_regexp_node_to_literal(corrector, matcher_node, regexp_node); end
+
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#106
+  def regexp_node_to_regexp_expr(regexp_node); end
 
   # source://rubocop-capybara//lib/rubocop/cop/capybara/current_path_expectation.rb#87
   def rewrite_expectation(corrector, node, to_symbol, matcher_node); end
@@ -226,24 +550,34 @@ class RuboCop::Cop::Capybara::SpecificActions < ::RuboCop::Cop::Base
 
   private
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#77
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#87
   def good_action(action); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#63
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#73
   def last_selector(arg); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#71
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#81
   def message(action, selector); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#67
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#77
   def offense_range(node, receiver); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#55
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#57
+  def replaceable?(node, arg, action); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#63
+  def replaceable_attributes?(selector); end
+
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#53
   def specific_action(selector); end
 
   # @return [Boolean]
   #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#59
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_actions.rb#69
   def supported_selector?(selector); end
 end
 
@@ -272,38 +606,50 @@ class RuboCop::Cop::Capybara::SpecificFinders < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
   extend ::RuboCop::Cop::AutoCorrector
 
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#31
+  def class_options(param0); end
+
   # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#26
   def find_argument(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#30
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#35
   def on_send(node); end
 
   private
 
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#89
+  def append_options(classes, options); end
+
   # @return [Boolean]
   #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#51
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#63
   def attribute?(arg); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#81
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#79
+  def autocorrect_classes(corrector, node, classes); end
+
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#116
   def end_pos(node); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#77
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#94
+  def keyword_argument_class(classes); end
+
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#112
   def offense_range(node); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#41
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#47
   def on_attr(node, arg); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#47
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#55
   def on_id(node, arg); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#56
-  def register_offense(node, arg_replacement); end
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#68
+  def register_offense(node, id, classes = T.unsafe(nil)); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#64
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#99
   def replaced_arguments(arg, id); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#69
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_finders.rb#104
   def to_options(attrs); end
 end
 
@@ -345,13 +691,23 @@ class RuboCop::Cop::Capybara::SpecificMatcher < ::RuboCop::Cop::Base
 
   private
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#69
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#80
   def good_matcher(node, matcher); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#63
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#74
   def message(node, matcher); end
 
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#58
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#62
+  def replaceable?(node, arg, matcher); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#68
+  def replaceable_attributes?(selector); end
+
+  # source://rubocop-capybara//lib/rubocop/cop/capybara/specific_matcher.rb#57
   def specific_matcher(arg); end
 end
 
@@ -416,317 +772,3 @@ RuboCop::Cop::Capybara::VisibilityMatcher::MSG_TRUE = T.let(T.unsafe(nil), Strin
 
 # source://rubocop-capybara//lib/rubocop/cop/capybara/visibility_matcher.rb#46
 RuboCop::Cop::Capybara::VisibilityMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
-
-# Help methods for capybara.
-#
-# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#6
-module RuboCop::Cop::CapybaraHelp
-  private
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param option [Symbol]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#73
-  def include_option?(node, option); end
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param element [String]
-  # @param attrs [Array<String>]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#56
-  def replaceable_element?(node, element, attrs); end
-
-  # @param pseudo_class [String]
-  # @param locator [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#33
-  def replaceable_pseudo_class?(pseudo_class, locator); end
-
-  # @param locator [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#44
-  def replaceable_pseudo_class_not?(locator); end
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param attrs [Array<String>]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#66
-  def replaceable_to_link?(node, attrs); end
-
-  # @param node [RuboCop::AST::SendNode]
-  # @param locator [String]
-  # @param element [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#13
-  def specific_option?(node, locator, element); end
-
-  # @param locator [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#24
-  def specific_pseudo_classes?(locator); end
-
-  class << self
-    # @param node [RuboCop::AST::SendNode]
-    # @param option [Symbol]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#73
-    def include_option?(node, option); end
-
-    # @param node [RuboCop::AST::SendNode]
-    # @param element [String]
-    # @param attrs [Array<String>]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#56
-    def replaceable_element?(node, element, attrs); end
-
-    # @param pseudo_class [String]
-    # @param locator [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#33
-    def replaceable_pseudo_class?(pseudo_class, locator); end
-
-    # @param locator [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#44
-    def replaceable_pseudo_class_not?(locator); end
-
-    # @param node [RuboCop::AST::SendNode]
-    # @param attrs [Array<String>]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#66
-    def replaceable_to_link?(node, attrs); end
-
-    # @param node [RuboCop::AST::SendNode]
-    # @param locator [String]
-    # @param element [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#13
-    def specific_option?(node, locator, element); end
-
-    # @param locator [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/capybara_help.rb#24
-    def specific_pseudo_classes?(locator); end
-  end
-end
-
-# Helps parsing css selector.
-#
-# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#6
-module RuboCop::Cop::CssSelector
-  private
-
-  # @example
-  #   attribute?('[attribute]') # => true
-  #   attribute?('attribute') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#76
-  def attribute?(selector); end
-
-  # @example
-  #   attributes('a[foo-bar_baz]') # => {"foo-bar_baz=>true}
-  #   attributes('button[foo][bar]') # => {"foo"=>true, "bar"=>true}
-  #   attributes('table[foo=bar]') # => {"foo"=>"'bar'"}
-  # @param selector [String]
-  # @return [Array<String>]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#86
-  def attributes(selector); end
-
-  # @example
-  #   common_attributes?('a[focused]') # => true
-  #   common_attributes?('button[focused][visible]') # => true
-  #   common_attributes?('table[id=some-id]') # => true
-  #   common_attributes?('h1[invalid]') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#100
-  def common_attributes?(selector); end
-
-  # @example
-  #   id?('#some-id') # => true
-  #   id?('.some-class') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#67
-  def id?(selector); end
-
-  # @example
-  #   multiple_selectors?('a.cls b#id') # => true
-  #   multiple_selectors?('a.cls') # => false
-  # @param selector [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#123
-  def multiple_selectors?(selector); end
-
-  # @example
-  #   normalize_value('true') # => true
-  #   normalize_value('false') # => false
-  #   normalize_value(nil) # => false
-  #   normalize_value("foo") # => "'foo'"
-  # @param value [String]
-  # @return [Boolean, String]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#134
-  def normalize_value(value); end
-
-  # @example
-  #   pseudo_classes('button:not([disabled])') # => ['not()']
-  #   pseudo_classes('a:enabled:not([valid])') # => ['enabled', 'not()']
-  # @param selector [String]
-  # @return [Array<String>]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#109
-  def pseudo_classes(selector); end
-
-  # @example
-  #   specific_pesudo_classes?('button', 'name') # => true
-  #   specific_pesudo_classes?('link', 'invalid') # => false
-  # @param element [String]
-  # @param attribute [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#49
-  def specific_options?(element, attribute); end
-
-  # @example
-  #   specific_pesudo_classes?('disabled') # => true
-  #   specific_pesudo_classes?('first-of-type') # => false
-  # @param pseudo_class [String]
-  # @return [Boolean]
-  #
-  # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#58
-  def specific_pesudo_classes?(pseudo_class); end
-
-  class << self
-    # @example
-    #   attribute?('[attribute]') # => true
-    #   attribute?('attribute') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#76
-    def attribute?(selector); end
-
-    # @example
-    #   attributes('a[foo-bar_baz]') # => {"foo-bar_baz=>true}
-    #   attributes('button[foo][bar]') # => {"foo"=>true, "bar"=>true}
-    #   attributes('table[foo=bar]') # => {"foo"=>"'bar'"}
-    # @param selector [String]
-    # @return [Array<String>]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#86
-    def attributes(selector); end
-
-    # @example
-    #   common_attributes?('a[focused]') # => true
-    #   common_attributes?('button[focused][visible]') # => true
-    #   common_attributes?('table[id=some-id]') # => true
-    #   common_attributes?('h1[invalid]') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#100
-    def common_attributes?(selector); end
-
-    # @example
-    #   id?('#some-id') # => true
-    #   id?('.some-class') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#67
-    def id?(selector); end
-
-    # @example
-    #   multiple_selectors?('a.cls b#id') # => true
-    #   multiple_selectors?('a.cls') # => false
-    # @param selector [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#123
-    def multiple_selectors?(selector); end
-
-    # @example
-    #   normalize_value('true') # => true
-    #   normalize_value('false') # => false
-    #   normalize_value(nil) # => false
-    #   normalize_value("foo") # => "'foo'"
-    # @param value [String]
-    # @return [Boolean, String]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#134
-    def normalize_value(value); end
-
-    # @example
-    #   pseudo_classes('button:not([disabled])') # => ['not()']
-    #   pseudo_classes('a:enabled:not([valid])') # => ['enabled', 'not()']
-    # @param selector [String]
-    # @return [Array<String>]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#109
-    def pseudo_classes(selector); end
-
-    # @example
-    #   specific_pesudo_classes?('button', 'name') # => true
-    #   specific_pesudo_classes?('link', 'invalid') # => false
-    # @param element [String]
-    # @param attribute [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#49
-    def specific_options?(element, attribute); end
-
-    # @example
-    #   specific_pesudo_classes?('disabled') # => true
-    #   specific_pesudo_classes?('first-of-type') # => false
-    # @param pseudo_class [String]
-    # @return [Boolean]
-    #
-    # source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#58
-    def specific_pesudo_classes?(pseudo_class); end
-  end
-end
-
-# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#7
-RuboCop::Cop::CssSelector::COMMON_OPTIONS = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#12
-RuboCop::Cop::CssSelector::SPECIFIC_OPTIONS = T.let(T.unsafe(nil), Hash)
-
-# source://rubocop-capybara//lib/rubocop/cop/capybara/mixin/css_selector.rb#37
-RuboCop::Cop::CssSelector::SPECIFIC_PSEUDO_CLASSES = T.let(T.unsafe(nil), Array)
-
-# source://rubocop/1.44.0/lib/rubocop/cop/mixin/allowed_methods.rb#38
-RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
-
-# source://rubocop/1.44.0/lib/rubocop/cop/mixin/allowed_pattern.rb#54
-RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
-
-# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#5
-RuboCop::NodePattern = RuboCop::AST::NodePattern
-
-# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#6
-RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
-
-# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#7
-RuboCop::Token = RuboCop::AST::Token
