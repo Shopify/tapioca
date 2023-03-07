@@ -320,7 +320,7 @@ GEM
     sorbet-static-and-runtime (0.5.10696)
       sorbet (= 0.5.10696)
       sorbet-runtime (= 0.5.10696)
-    spoom (1.1.15)
+    spoom (1.1.16)
       sorbet (>= 0.5.10187)
       sorbet-runtime (>= 0.5.9204)
       thor (>= 0.19.2)

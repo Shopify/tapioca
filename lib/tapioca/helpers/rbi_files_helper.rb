@@ -96,7 +96,7 @@ module Tapioca
       )
       say(" Done", :green)
 
-      errors = Spoom::Sorbet::Errors::Parser.parse_string(res.err)
+      errors = Spoom::Sorbet::Errors::Parser.parse_string(res.err || "")
 
       if errors.empty?
         say("  No errors found\n\n", [:green, :bold])
