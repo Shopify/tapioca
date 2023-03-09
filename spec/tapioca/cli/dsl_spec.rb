@@ -804,8 +804,6 @@ module Tapioca
           OUT
 
           assert_equal(<<~ERR, result.err)
-
-            Warning: No constants found in: path/to/nowhere.rb
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -818,6 +816,9 @@ module Tapioca
         it "does not generate anything but succeeds for real paths with no processable DSL" do
           @project.write("lib/models/post.rb", <<~RB)
             class Foo
+              class << self
+                BAR = nil
+              end
             end
           RB
 

@@ -93,7 +93,7 @@ module Tapioca
       def execute
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty?,
+          eager_load: @requested_constants.empty? && @requested_paths.empty?,
           app_root: @app_root,
         )
 
@@ -104,17 +104,10 @@ module Tapioca
         end
         say("")
 
-        unless @requested_paths.empty?
-          constants_from_paths = Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a
-          if constants_from_paths.empty?
-            say_error("\nWarning: No constants found in: #{@requested_paths.map(&:to_s).join(", ")}", :yellow)
-          end
-
-          @requested_constants += constants_from_paths
-        end
+        all_requested_constants = @requested_constants + constants_from_requested_paths
 
         outpath = @should_verify ? Pathname.new(Dir.mktmpdir) : @outpath
-        rbi_files_to_purge = existing_rbi_filenames(@requested_constants)
+        rbi_files_to_purge = existing_rbi_filenames(all_requested_constants)
 
         pipeline = create_pipeline
 
@@ -146,7 +139,7 @@ module Tapioca
           if @auto_strictness
             say("")
             validate_rbi_files(
-              command: default_command(:dsl, @requested_constants.join(" ")),
+              command: default_command(:dsl, all_requested_constants.join(" ")),
               gem_dir: @gem_dir,
               dsl_dir: @outpath.to_s,
               auto_strictness: @auto_strictness,
@@ -164,7 +157,8 @@ module Tapioca
       sig { returns(Tapioca::Dsl::Pipeline) }
       def create_pipeline
         Tapioca::Dsl::Pipeline.new(
-          requested_constants: constantize(@requested_constants),
+          requested_constants:
+            constantize(@requested_constants) + constantize(constants_from_requested_paths, ignore_missing: true),
           requested_paths: @requested_paths,
           requested_compilers: constantize_compilers(@only),
           excluded_compilers: constantize_compilers(@exclude),
@@ -189,17 +183,17 @@ module Tapioca
         filenames.to_set
       end
 
-      sig { params(constant_names: T::Array[String]).returns(T::Array[Module]) }
-      def constantize(constant_names)
+      sig { params(constant_names: T::Array[String], ignore_missing: T::Boolean).returns(T::Array[Module]) }
+      def constantize(constant_names, ignore_missing: false)
         constant_map = constant_names.to_h do |name|
           [name, Object.const_get(name)]
         rescue NameError
           [name, nil]
         end
 
-        unprocessable_constants = constant_map.select { |_, v| v.nil? }
+        processable_constants, unprocessable_constants = constant_map.partition { |_, v| !v.nil? }
 
-        unless unprocessable_constants.empty?
+        unless unprocessable_constants.empty? || ignore_missing
           unprocessable_constants.each do |name, _|
             say("Error: Cannot find constant '#{name}'", :red)
             filename = dsl_rbi_filename(name)
@@ -209,7 +203,7 @@ module Tapioca
           raise Thor::Error, ""
         end
 
-        constant_map.values
+        processable_constants.map { |_, constant| constant }
       end
 
       sig { params(compiler_names: T::Array[String]).returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
@@ -383,6 +377,14 @@ module Tapioca
       sig { params(constant: String).returns(String) }
       def generate_command_for(constant)
         default_command(:dsl, constant)
+      end
+
+      sig { returns(T::Array[String]) }
+      def constants_from_requested_paths
+        @constants_from_requested_paths ||= T.let(
+          Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a,
+          T.nilable(T::Array[String]),
+        )
       end
     end
   end
