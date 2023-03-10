@@ -343,6 +343,8 @@ module Tapioca
             #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
               #{set_color("`#{default_command(command)}`", :green, :bold)}
             #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
+            If you don't observe any changes after running the command locally, ensure your database is in a good
+            state e.g. run `bin/rails db:reset`
 
             #{set_color("Reason:", :red)}
             #{reasons}

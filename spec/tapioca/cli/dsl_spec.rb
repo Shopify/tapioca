@@ -1592,6 +1592,8 @@ module Tapioca
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
+            If you don't observe any changes after running the command locally, ensure your database is in a good
+            state e.g. run `bin/rails db:reset`
 
             Reason:
               File(s) removed:
@@ -1628,6 +1630,8 @@ module Tapioca
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
+            If you don't observe any changes after running the command locally, ensure your database is in a good
+            state e.g. run `bin/rails db:reset`
 
             Reason:
               File(s) added:
@@ -1675,6 +1679,8 @@ module Tapioca
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
+            If you don't observe any changes after running the command locally, ensure your database is in a good
+            state e.g. run `bin/rails db:reset`
 
             Reason:
               File(s) changed:
