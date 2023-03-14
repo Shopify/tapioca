@@ -11,4 +11,4 @@ jobs:
         with:
           mode: minimum
           count: 1
-          labels: "documentation, bug, bugfix, chore, enhancement, feature, ignore-for-release, security, sorbet"
+          labels: "documentation, bugfix, chore, enhancement, ignore-for-release, security, sorbet"
