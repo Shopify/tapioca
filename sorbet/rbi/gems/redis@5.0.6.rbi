@@ -145,7 +145,7 @@ Redis::BASE_PATH = T.let(T.unsafe(nil), String)
 
 # Base error for connection related errors.
 #
-# source://redis//lib/redis/errors.rb#36
+# source://redis//lib/redis/errors.rb#33
 class Redis::BaseConnectionError < ::Redis::BaseError; end
 
 # Base error for all redis-rb errors.
@@ -155,7 +155,7 @@ class Redis::BaseError < ::StandardError; end
 
 # Raised when connection to a Redis server cannot be made.
 #
-# source://redis//lib/redis/errors.rb#40
+# source://redis//lib/redis/errors.rb#37
 class Redis::CannotConnectError < ::Redis::BaseConnectionError; end
 
 # source://redis//lib/redis/client.rb#6
@@ -260,7 +260,7 @@ module Redis::Commands
   #
   # Redis error replies are raised as Ruby exceptions.
   #
-  # source://redis//lib/redis/commands.rb#200
+  # source://redis//lib/redis/commands.rb#202
   def call(*command); end
 
   # Interact with the sentinel command (masters, master, slaves, failover)
@@ -269,12 +269,12 @@ module Redis::Commands
   # @param args [Array<String>] depends on subcommand
   # @return [Array<String>, Hash<String, String>, String] depends on subcommand
   #
-  # source://redis//lib/redis/commands.rb#209
+  # source://redis//lib/redis/commands.rb#211
   def sentinel(subcommand, *args); end
 
   private
 
-  # source://redis//lib/redis/commands.rb#231
+  # source://redis//lib/redis/commands.rb#233
   def method_missing(*command); end
 end
 
@@ -694,16 +694,16 @@ end
 # source://redis//lib/redis/commands.rb#57
 Redis::Commands::Hashify = T.let(T.unsafe(nil), Proc)
 
-# source://redis//lib/redis/commands.rb#153
+# source://redis//lib/redis/commands.rb#155
 Redis::Commands::HashifyClusterNodeInfo = T.let(T.unsafe(nil), Proc)
 
-# source://redis//lib/redis/commands.rb#182
+# source://redis//lib/redis/commands.rb#184
 Redis::Commands::HashifyClusterNodes = T.let(T.unsafe(nil), Proc)
 
-# source://redis//lib/redis/commands.rb#186
+# source://redis//lib/redis/commands.rb#188
 Redis::Commands::HashifyClusterSlaves = T.let(T.unsafe(nil), Proc)
 
-# source://redis//lib/redis/commands.rb#168
+# source://redis//lib/redis/commands.rb#170
 Redis::Commands::HashifyClusterSlots = T.let(T.unsafe(nil), Proc)
 
 # source://redis//lib/redis/commands.rb#94
@@ -712,16 +712,16 @@ Redis::Commands::HashifyInfo = T.let(T.unsafe(nil), Proc)
 # source://redis//lib/redis/commands.rb#119
 Redis::Commands::HashifyStreamAutoclaim = T.let(T.unsafe(nil), Proc)
 
-# source://redis//lib/redis/commands.rb#126
+# source://redis//lib/redis/commands.rb#128
 Redis::Commands::HashifyStreamAutoclaimJustId = T.let(T.unsafe(nil), Proc)
 
 # source://redis//lib/redis/commands.rb#113
 Redis::Commands::HashifyStreamEntries = T.let(T.unsafe(nil), Proc)
 
-# source://redis//lib/redis/commands.rb#142
+# source://redis//lib/redis/commands.rb#144
 Redis::Commands::HashifyStreamPendingDetails = T.let(T.unsafe(nil), Proc)
 
-# source://redis//lib/redis/commands.rb#133
+# source://redis//lib/redis/commands.rb#135
 Redis::Commands::HashifyStreamPendings = T.let(T.unsafe(nil), Proc)
 
 # source://redis//lib/redis/commands.rb#101
@@ -1313,7 +1313,7 @@ module Redis::Commands::Lists
   def _normalize_move_wheres(where_source, where_destination); end
 end
 
-# source://redis//lib/redis/commands.rb#190
+# source://redis//lib/redis/commands.rb#192
 Redis::Commands::Noop = T.let(T.unsafe(nil), Proc)
 
 # source://redis//lib/redis/commands.rb#65
@@ -2301,15 +2301,16 @@ module Redis::Commands::Streams
   # @param ids [Array<String>] one or multiple entry ids
   # @return [Integer] the number of entries successfully acknowledged
   #
-  # source://redis//lib/redis/commands/streams.rb#248
+  # source://redis//lib/redis/commands/streams.rb#266
   def xack(key, group, *ids); end
 
   # Add new entry to the stream.
   #
   # @example With options
-  #   redis.xadd('mystream', { f1: 'v1', f2: 'v2' }, id: '0-0', maxlen: 1000, approximate: true)
+  #   redis.xadd('mystream', { f1: 'v1', f2: 'v2' }, id: '0-0', maxlen: 1000, approximate: true, nomkstream: true)
   # @example Without options
   #   redis.xadd('mystream', f1: 'v1', f2: 'v2')
+  # @option opts
   # @option opts
   # @option opts
   # @option opts
@@ -2318,8 +2319,8 @@ module Redis::Commands::Streams
   # @param opts [Hash] several options for `XADD` command
   # @return [String] the entry id
   #
-  # source://redis//lib/redis/commands/streams.rb#48
-  def xadd(key, entry, approximate: T.unsafe(nil), maxlen: T.unsafe(nil), id: T.unsafe(nil)); end
+  # source://redis//lib/redis/commands/streams.rb#49
+  def xadd(key, entry, approximate: T.unsafe(nil), maxlen: T.unsafe(nil), nomkstream: T.unsafe(nil), id: T.unsafe(nil)); end
 
   # Transfers ownership of pending stream entries that match the specified criteria.
   #
@@ -2342,7 +2343,7 @@ module Redis::Commands::Streams
   # @return [Hash{String => Hash}] the entries successfully claimed
   # @return [Array<String>] the entry ids successfully claimed if justid option is `true`
   #
-  # source://redis//lib/redis/commands/streams.rb#318
+  # source://redis//lib/redis/commands/streams.rb#336
   def xautoclaim(key, group, consumer, min_idle_time, start, count: T.unsafe(nil), justid: T.unsafe(nil)); end
 
   # Changes the ownership of a pending entry
@@ -2375,7 +2376,7 @@ module Redis::Commands::Streams
   # @return [Hash{String => Hash}] the entries successfully claimed
   # @return [Array<String>] the entry ids successfully claimed if justid option is `true`
   #
-  # source://redis//lib/redis/commands/streams.rb#285
+  # source://redis//lib/redis/commands/streams.rb#303
   def xclaim(key, group, consumer, min_idle_time, *ids, **opts); end
 
   # Delete entries by entry ids.
@@ -2388,7 +2389,7 @@ module Redis::Commands::Streams
   # @param ids [Array<String>] one or multiple entry ids
   # @return [Integer] the number of entries actually deleted
   #
-  # source://redis//lib/redis/commands/streams.rb#88
+  # source://redis//lib/redis/commands/streams.rb#106
   def xdel(key, *ids); end
 
   # Manages the consumer group of the stream.
@@ -2410,7 +2411,7 @@ module Redis::Commands::Streams
   # @return [String] `OK` if subcommand is `create` or `setid`
   # @return [Integer] effected count if subcommand is `destroy` or `delconsumer`
   #
-  # source://redis//lib/redis/commands/streams.rb#196
+  # source://redis//lib/redis/commands/streams.rb#214
   def xgroup(subcommand, key, group, id_or_consumer = T.unsafe(nil), mkstream: T.unsafe(nil)); end
 
   # Returns the stream information each subcommand.
@@ -2438,7 +2439,7 @@ module Redis::Commands::Streams
   # @param key [String] the stream key
   # @return [Integer] the number of entries
   #
-  # source://redis//lib/redis/commands/streams.rb#147
+  # source://redis//lib/redis/commands/streams.rb#165
   def xlen(key); end
 
   # Fetches not acknowledging pending entries
@@ -2462,7 +2463,7 @@ module Redis::Commands::Streams
   # @return [Hash] the summary of pending entries
   # @return [Array<Hash>] the pending entries details if options were specified
   #
-  # source://redis//lib/redis/commands/streams.rb#350
+  # source://redis//lib/redis/commands/streams.rb#368
   def xpending(key, group, *args, idle: T.unsafe(nil)); end
 
   # Fetches entries of the stream in ascending order.
@@ -2481,7 +2482,7 @@ module Redis::Commands::Streams
   # @param count [Integer] the number of entries as limit
   # @return [Array<Array<String, Hash>>] the ids and entries pairs
   #
-  # source://redis//lib/redis/commands/streams.rb#110
+  # source://redis//lib/redis/commands/streams.rb#128
   def xrange(key, start = T.unsafe(nil), range_end = T.unsafe(nil), count: T.unsafe(nil)); end
 
   # Fetches entries from one or multiple streams. Optionally blocking.
@@ -2500,7 +2501,7 @@ module Redis::Commands::Streams
   # @param block [Integer] the number of milliseconds as blocking timeout
   # @return [Hash{String => Hash{String => Hash}}] the entries
   #
-  # source://redis//lib/redis/commands/streams.rb#168
+  # source://redis//lib/redis/commands/streams.rb#186
   def xread(keys, ids, count: T.unsafe(nil), block: T.unsafe(nil)); end
 
   # Fetches a subset of the entries from one or multiple streams related with the consumer group.
@@ -2526,7 +2527,7 @@ module Redis::Commands::Streams
   # @param opts [Hash] several options for `XREADGROUP` command
   # @return [Hash{String => Hash{String => Hash}}] the entries
   #
-  # source://redis//lib/redis/commands/streams.rb#226
+  # source://redis//lib/redis/commands/streams.rb#244
   def xreadgroup(group, consumer, keys, ids, count: T.unsafe(nil), block: T.unsafe(nil), noack: T.unsafe(nil)); end
 
   # Fetches entries of the stream in descending order.
@@ -2544,7 +2545,7 @@ module Redis::Commands::Streams
   # @param start [String] last entry id of range, default value is `-`
   # @return [Array<Array<String, Hash>>] the ids and entries pairs
   #
-  # source://redis//lib/redis/commands/streams.rb#133
+  # source://redis//lib/redis/commands/streams.rb#151
   def xrevrange(key, range_end = T.unsafe(nil), start = T.unsafe(nil), count: T.unsafe(nil)); end
 
   # Trims older entries of the stream if needed.
@@ -2553,17 +2554,18 @@ module Redis::Commands::Streams
   #   redis.xtrim('mystream', 1000)
   # @example With options
   #   redis.xtrim('mystream', 1000, approximate: true)
-  # @param key [String] the stream key
-  # @param mexlen [Integer] max length of entries
-  # @param approximate [Boolean] whether to add `~` modifier of maxlen or not
+  # @example With strategy
+  #   redis.xtrim('mystream', '1-0', strategy: 'MINID')
+  # @overload xtrim
+  # @overload xtrim
   # @return [Integer] the number of entries actually deleted
   #
-  # source://redis//lib/redis/commands/streams.rb#72
-  def xtrim(key, maxlen, approximate: T.unsafe(nil)); end
+  # source://redis//lib/redis/commands/streams.rb#85
+  def xtrim(key, len_or_id, strategy: T.unsafe(nil), approximate: T.unsafe(nil), limit: T.unsafe(nil)); end
 
   private
 
-  # source://redis//lib/redis/commands/streams.rb#367
+  # source://redis//lib/redis/commands/streams.rb#385
   def _xread(args, keys, ids, blocking_timeout_msec); end
 end
 
@@ -2924,7 +2926,7 @@ end
 
 # Raised when connection to a Redis server is lost.
 #
-# source://redis//lib/redis/errors.rb#44
+# source://redis//lib/redis/errors.rb#41
 class Redis::ConnectionError < ::Redis::BaseConnectionError; end
 
 # source://redis//lib/redis.rb#9
@@ -3940,12 +3942,12 @@ Redis::HashRing::POINTS_PER_SERVER = T.let(T.unsafe(nil), Integer)
 
 # Raised when the connection was inherited by a child process.
 #
-# source://redis//lib/redis/errors.rb#52
+# source://redis//lib/redis/errors.rb#49
 class Redis::InheritedError < ::Redis::BaseConnectionError; end
 
 # Raised when client options are invalid.
 #
-# source://redis//lib/redis/errors.rb#56
+# source://redis//lib/redis/errors.rb#57
 class Redis::InvalidClientOptionError < ::Redis::BaseError; end
 
 # source://redis//lib/redis/pipeline.rb#58
@@ -3976,7 +3978,7 @@ class Redis::MultiFuture < ::Redis::Future
   def _set(replies); end
 end
 
-# source://redis//lib/redis/errors.rb#32
+# source://redis//lib/redis/errors.rb#29
 class Redis::OutOfMemoryError < ::Redis::CommandError; end
 
 # source://redis//lib/redis/errors.rb#23
@@ -4055,8 +4057,10 @@ class Redis::ProtocolError < ::Redis::BaseError
   def initialize(reply_type); end
 end
 
-# source://redis//lib/redis/errors.rb#29
-class Redis::ReadOnlyError < ::Redis::CommandError; end
+# Generally raised during Redis failover scenarios
+#
+# source://redis//lib/redis/errors.rb#53
+class Redis::ReadOnlyError < ::Redis::BaseConnectionError; end
 
 # source://redis//lib/redis.rb#37
 Redis::SERVER_URL_OPTIONS = T.let(T.unsafe(nil), Array)
@@ -4131,12 +4135,12 @@ class Redis::Subscription
   def unsubscribe(&block); end
 end
 
-# source://redis//lib/redis/errors.rb#59
+# source://redis//lib/redis/errors.rb#60
 class Redis::SubscriptionError < ::Redis::BaseError; end
 
 # Raised when performing I/O times out.
 #
-# source://redis//lib/redis/errors.rb#48
+# source://redis//lib/redis/errors.rb#45
 class Redis::TimeoutError < ::Redis::BaseConnectionError; end
 
 # source://redis//lib/redis/version.rb#4
