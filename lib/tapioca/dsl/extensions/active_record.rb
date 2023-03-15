@@ -1,11 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-begin
-  require "active_record"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveRecord)
 
 module Tapioca
   module Dsl
