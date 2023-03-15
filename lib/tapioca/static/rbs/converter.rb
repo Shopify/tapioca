@@ -1,32 +1,175 @@
 # typed: strict
 # frozen_string_literal: true
 
+require_relative "./visitor.rb"
+
 module Tapioca
   module Static
     module Rbs
-      class Converter
+      class Converter < RBS::AST::Visitor
         extend T::Sig
         include Tapioca::RBIHelper
 
         sig { params(gem_name: String, gem_version: String).void }
         def initialize(gem_name, gem_version)
+          super
           @gem_name = gem_name
           @gem_version = gem_version
           @env = T.let(load_environment, ::RBS::Environment)
           @declarations = T.let(@env.declarations, T::Array[T.untyped])
           @foreign_decls = T.let(Set.new.compare_by_identity, T::Set[T.untyped])
           @root = T.let(RBI::Tree.new, RBI::Tree)
+          @scope_stack = T.let([], T::Array[RBI::Scope])
+          @include_foreign = T.let(false, T::Boolean)
+          @current_visibility = T.let(:public, Symbol)
         end
 
         sig { returns(RBI::Tree) }
         def convert
-          @declarations.each { |decl| process_declaration(decl) }
-          index = 0
-          while (index < @foreign_decls.size)
-            process_declaration(@foreign_decls.to_a[index], include_foreign: true)
-            index += 1
-          end
+          visit_all(@declarations)
+          @include_foreign = true
+          visit_all(@foreign_decls)
+
           @root
+        end
+
+        sig { params(node: T.any(RBS::AST::Members::Base, RBS::AST::Declarations::Base)).void }
+        def visit(node)
+          return if skip_declaration?(node)
+
+          super
+        end
+
+        sig { params(member: RBS::AST::Members::MethodDefinition).void }
+        def visit_member_method_definition(member)
+          converter = MethodConverter.new(
+            self,
+            T.must(member.types.first),
+            member.name.to_s,
+            member.singleton?,
+            member.visibility || @current_visibility
+          )
+          current_scope << converter.to_rbi_method do |method|
+            method.comments = rbi_comments(member.comment)
+          end
+        end
+
+        sig { params(member: RBS::AST::Members::Alias).void }
+        def visit_member_alias(member)
+          current_scope << RBI::Send.new("alias") do |node|
+            node << RBI::Arg.new("#{member.new_name} #{member.old_name}")
+          end
+        end
+
+        sig { params(member: RBS::AST::Members::AttrReader).void }
+        def visit_member_attr_reader(member)
+          current_scope.create_method(
+            member.name.to_s,
+            return_type: type_converter.to_string(member.type),
+            visibility: type_converter.visibility(member.visibility || @current_visibility)
+          )
+        end
+
+        sig { params(member: RBS::AST::Members::AttrWriter).void }
+        def visit_member_attr_writer(member)
+          current_scope.create_method(
+            "#{member.name}=",
+            parameters: [
+              create_param(member.name.to_s, type: type_converter.to_string(member.type)),
+            ],
+            return_type: type_converter.to_string(member.type),
+            visibility: type_converter.visibility(member.visibility || @current_visibility)
+          )
+        end
+
+        sig { params(member: RBS::AST::Members::AttrAccessor).void }
+        def visit_member_attr_accessor(member)
+          current_scope.create_method(
+            member.name.to_s,
+            return_type: type_converter.to_string(member.type),
+            visibility: type_converter.visibility(member.visibility || @current_visibility)
+          )
+
+          current_scope.create_method(
+            "#{member.name}=",
+            parameters: [
+              create_param(member.name.to_s, type: type_converter.to_string(member.type)),
+            ],
+            return_type: type_converter.to_string(member.type),
+            visibility: type_converter.visibility(member.visibility || @current_visibility)
+          )
+        end
+
+        sig { params(member: RBS::AST::Members::Private).void }
+        def visit_member_private(member)
+          @current_visibility = :private
+        end
+
+        sig { params(member: RBS::AST::Members::Public).void }
+        def visit_member_public(member)
+          @current_visibility = :public
+        end
+
+        sig { params(member: RBS::AST::Members::Include).void }
+        def visit_member_include(member)
+          current_scope.create_include(member.name.to_s)
+          push_foreign_name(member.name)
+        end
+
+        alias_method :visit_member_prepend, :visit_member_include
+
+        sig { params(member: RBS::AST::Members::Extend).void }
+        def visit_member_extend(member)
+          current_scope.create_extend(member.name.to_s)
+          push_foreign_name(member.name)
+        end
+
+        sig { params(decl: RBS::AST::Declarations::Class).void }
+        def visit_declaration_class(decl)
+          scope = RBI::Class.new(decl.name.to_s, superclass_name: decl.super_class&.name&.to_s)
+          scope.comments = rbi_comments(decl.comment)
+          add_type_variables(scope, decl)
+
+          @root << scope
+
+          visit_scope(scope) { super }
+        end
+
+        sig { params(decl: RBS::AST::Declarations::Module).void }
+        def visit_declaration_module(decl)
+          # We don't want to generate a definition for ::Enumerable ever,
+          # since it crashes Sorbet, if we do so.
+          return if decl.name.to_s == "::Enumerable"
+
+          scope = RBI::Module.new(decl.name.to_s)
+          scope.comments = rbi_comments(decl.comment)
+          add_type_variables(scope, decl)
+
+          @root << scope
+
+          visit_scope(scope) { super }
+        end
+
+        alias_method :visit_declaration_interface, :visit_declaration_module
+
+        sig { params(decl: RBS::AST::Declarations::Constant).void }
+        def visit_declaration_constant(decl)
+          @root << RBI::Const.new(
+            decl.name.to_s,
+            "T.let(T.unsafe(nil), #{type_converter.convert(decl.type)})"
+          )
+        end
+
+        sig { params(decl: RBS::AST::Declarations::Alias).void }
+        def visit_declaration_alias(decl)
+          name = decl.name.to_s
+          value = type_converter.convert(decl.type).to_s
+          value = "T.untyped" if value.include?(name)
+
+          @root << RBI::Const.new(
+            name,
+            "T.type_alias { #{value} }"
+          )
         end
 
         sig { params(name: RBS::TypeName).void }
@@ -44,6 +187,21 @@ module Tapioca
 
         private
 
+        sig { params(scope: RBI::Scope, block: T.proc.void).void }
+        def visit_scope(scope, &block)
+          @current_visibility = :public
+          @scope_stack << scope
+
+          block.call
+
+          @scope_stack.pop
+        end
+
+        sig { returns(RBI::Scope) }
+        def current_scope
+          T.must(@scope_stack.last)
+        end
+
         sig { returns(RBS::Environment) }
         def load_environment
           loader = RBS::EnvironmentLoader.new
@@ -58,58 +216,7 @@ module Tapioca
             @env.interface_decls[name].decl
           elsif @env.alias_decls.key?(name)
             @env.alias_decls[name].decl
-          # elsif @env.constant_decls.key?(name)
-          #   Array(@env.constant_decls[name].decl)
-          else
-            nil
           end
-        end
-
-        sig do
-          params(
-            scope: RBI::Scope,
-            member:
-              T.any(
-                RBS::AST::Members::AttrReader,
-                RBS::AST::Members::AttrAccessor
-              ),
-            current_visibility: Symbol
-          ).void
-        end
-        def create_attr_reader_method(scope, member, current_visibility)
-          return_type = type_converter.to_string(member.type)
-          visibility = type_converter.visibility(member.visibility || current_visibility)
-
-          scope.create_method(
-            member.name.to_s,
-            return_type: return_type,
-            visibility: visibility
-          )
-        end
-
-        sig do
-          params(
-            scope: RBI::Scope,
-            member:
-              T.any(
-                RBS::AST::Members::AttrWriter,
-                RBS::AST::Members::AttrAccessor
-              ),
-            current_visibility: Symbol
-          ).void
-        end
-        def create_attr_writer_method(scope, member, current_visibility)
-          parameters = [
-            create_param(member.name.to_s, type: type_converter.to_string(member.type)),
-          ]
-          visibility = type_converter.visibility(member.visibility || current_visibility)
-
-          scope.create_method(
-            member.name.to_s,
-            parameters: parameters,
-            return_type: "void",
-            visibility: visibility
-          )
         end
 
         sig do
@@ -137,64 +244,12 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            scope: RBI::Scope,
-            decl:
-              T.any(
-                ::RBS::AST::Declarations::Class,
-                ::RBS::AST::Declarations::Interface,
-                ::RBS::AST::Declarations::Module
-              )
-          ).void
-        end
-        def process_scope(scope, decl)
-          add_comments(scope, decl.comment)
-          add_type_variables(scope, decl)
+        sig { params(rbs_comment: T.nilable(RBS::AST::Comment)).returns(T::Array[RBI::Comment]) }
+        def rbi_comments(rbs_comment)
+          return [] unless rbs_comment
 
-          current_visibility = T.let(:public, Symbol)
-
-          decl.members.each do |member|
-            case member
-            when RBS::AST::Members::Alias
-              scope << RBI::Send.new("alias") do |node|
-                node << RBI::Arg.new("#{member.new_name} #{member.old_name}")
-              end
-            when RBS::AST::Members::ClassInstanceVariable
-            when RBS::AST::Members::ClassVariable
-            when RBS::AST::Members::InstanceVariable
-            when RBS::AST::Members::Private
-              current_visibility = :private
-            when RBS::AST::Members::Public
-              current_visibility = :public
-            when RBS::AST::Members::MethodDefinition
-              converter = MethodConverter.new(
-                self,
-                T.must(member.types.first),
-                member.name.to_s,
-                member.singleton?,
-                member.visibility || current_visibility
-              )
-              scope << converter.to_rbi_method do |method|
-                add_comments(method, member.comment)
-              end
-            when RBS::AST::Members::AttrReader
-              create_attr_reader_method(scope, member, current_visibility)
-            when RBS::AST::Members::AttrWriter
-              create_attr_writer_method(scope, member, current_visibility)
-            when RBS::AST::Members::AttrAccessor
-              create_attr_reader_method(scope, member, current_visibility)
-              create_attr_writer_method(scope, member, current_visibility)
-            when RBS::AST::Members::Include, RBS::AST::Members::Prepend
-              scope.create_include(member.name.to_s)
-              push_foreign_name(member.name)
-            when RBS::AST::Members::Extend
-              name = member.name.to_s
-              scope.create_extend(member.name.to_s)
-            else
-              # This is a nested declaration, hoist it to top level.
-              process_declaration(T.unsafe(member))
-            end
+          rbs_comment.string.lines.map do |line|
+            RBI::Comment.new(line)
           end
         end
 
@@ -203,61 +258,15 @@ module Tapioca
           @type_converter ||= T.let(TypeConverter.new(self), T.nilable(TypeConverter))
         end
 
-        sig { params(location: T.untyped).returns(T::Boolean) }
-        def skipped?(location)
-          location.buffer.name.start_with?(
-            RBS::Repository::DEFAULT_STDLIB_ROOT.to_s,
-            RBS::EnvironmentLoader::DEFAULT_CORE_ROOT.to_s
-          )
-        end
-
-        sig { params(decl: T.untyped, include_foreign: T::Boolean).void }
-        def process_declaration(decl, include_foreign: false)
-          return if !include_foreign && skipped?(decl.location)
-
-          case decl
-          when RBS::AST::Declarations::Global
-          when RBS::AST::Declarations::Class
-            @root.create_class(decl.name.to_s, superclass_name: decl.super_class&.name&.to_s) do |scope|
-              process_scope(scope, decl)
-            end
-          when RBS::AST::Declarations::Module
-            # We don't want to generate a definition for ::Enumerable ever,
-            # since it crashes Sorbet, if we do so.
-            return if decl.name.to_s == "::Enumerable"
-
-            @root.create_module(decl.name.to_s) do |scope|
-              process_scope(scope, decl)
-            end
-          when RBS::AST::Declarations::Constant
-            node = RBI::Const.new(
-              decl.name.to_s,
-              "T.let(T.unsafe(nil), #{type_converter.convert(decl.type)})"
+        sig { params(node: T.any(RBS::AST::Declarations::Base, RBS::AST::Members::Base)).returns(T::Boolean) }
+        def skip_declaration?(node)
+          RBS::AST::Declarations::Base === node &&
+            !@include_foreign &&
+            node.respond_to?(:location) &&
+            T.unsafe(node).location.buffer.name.start_with?(
+              RBS::Repository::DEFAULT_STDLIB_ROOT.to_s,
+              RBS::EnvironmentLoader::DEFAULT_CORE_ROOT.to_s
             )
-            @root << node
-          when RBS::AST::Declarations::Alias
-            name = decl.name.to_s
-            value = type_converter.convert(decl.type).to_s
-            value = "T.untyped" if value.include?(name)
-
-            node = RBI::Const.new(
-              name,
-              "T.type_alias { #{value} }"
-            )
-            @root << node
-          when RBS::AST::Declarations::Interface
-            name = decl.name.to_s
-            @root.create_module(name) { |scope| process_scope(scope, decl) }
-          end
-        end
-
-        sig { params(scope: RBI::NodeWithComments, comment: T.nilable(RBS::AST::Comment)).void }
-        def add_comments(scope, comment)
-          return unless comment
-
-          comment.string.lines.each do |line|
-            scope.comments << RBI::Comment.new(line)
-          end
         end
       end
     end
