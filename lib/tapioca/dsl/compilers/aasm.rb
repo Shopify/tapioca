@@ -1,8 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
+return unless defined?(ActiveRecord)
+
 begin
-  require "active_record"
   require "aasm"
 rescue LoadError
   return

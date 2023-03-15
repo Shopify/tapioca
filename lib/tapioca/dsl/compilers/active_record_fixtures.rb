@@ -1,14 +1,11 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "rails"
-  require "active_record"
-  require "active_record/fixtures"
-  require "active_support/test_case"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveRecord)
+
+require "rails"
+require "active_record/fixtures"
+require "active_support/test_case"
 
 module Tapioca
   module Dsl
