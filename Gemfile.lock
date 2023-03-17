@@ -178,7 +178,6 @@ GEM
     kredis (1.3.0.1)
       activesupport (>= 6.0.0)
       redis (>= 4.2, < 6)
-    language_server-protocol (3.17.0.3)
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -218,7 +217,6 @@ GEM
     parallel (1.22.1)
     parser (3.2.1.0)
       ast (~> 2.4.1)
-    prettier_print (1.2.0)
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -292,10 +290,6 @@ GEM
       rubocop (~> 1.44)
     rubocop-sorbet (0.7.0)
       rubocop (>= 0.90.0)
-    ruby-lsp (0.4.1)
-      language_server-protocol (~> 3.17.0)
-      sorbet-runtime
-      syntax_tree (>= 6, < 7)
     ruby-progressbar (1.13.0)
     shopify-money (1.1.2)
     sidekiq (7.0.4)
@@ -331,8 +325,6 @@ GEM
     sqlite3 (1.6.1-x86_64-darwin)
     sqlite3 (1.6.1-x86_64-linux)
     state_machines (0.5.0)
-    syntax_tree (6.0.1)
-      prettier_print (>= 1.2.0)
     thor (1.2.1)
     timeout (0.3.1)
     tzinfo (2.0.6)
@@ -389,7 +381,6 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
-  ruby-lsp
   shopify-money
   sidekiq
   smart_properties
