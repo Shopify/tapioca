@@ -105,14 +105,13 @@ module Tapioca
     sig { returns([T::Enumerable[Spec], T::Array[String]]) }
     def materialize_deps
       deps = definition.locked_gems.dependencies.values
-      missing_specs = T::Array[String].new
-      materialized_dependencies = if definition.resolve.method(:materialize).arity == 1 # Support bundler >= v2.2.25
-        md = definition.resolve.materialize(deps)
-        missing_spec_names = md.missing_specs.map(&:name)
-        missing_specs = T.cast(md.missing_specs.map { |spec| "#{spec.name} (#{spec.version})" }, T::Array[String])
-        md.to_a.reject { |spec| missing_spec_names.include?(spec.name) }
-      else
-        definition.resolve.materialize(deps, missing_specs)
+      materialized_dependencies = definition.resolve.materialize(deps)
+      missing_spec_names = materialized_dependencies.missing_specs.map(&:name).to_set
+      missing_specs = materialized_dependencies.missing_specs.map do |spec|
+        "#{spec.name} (#{spec.version})"
+      end
+      materialized_dependencies = materialized_dependencies.to_a.reject do |spec|
+        missing_spec_names.include?(spec.name)
       end
       [materialized_dependencies, missing_specs]
     end

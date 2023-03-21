@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
-  spec.add_dependency("bundler", ">= 1.17.3")
+  spec.add_dependency("bundler", ">= 2.2.25")
   spec.add_dependency("netrc", ">= 0.11.0")
   spec.add_dependency("parallel", ">= 1.21.0")
   spec.add_dependency("rbi", "~> 0.0.0", ">= 0.0.16")
