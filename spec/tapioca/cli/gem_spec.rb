@@ -596,6 +596,7 @@ module Tapioca
         end
 
         it "must not include `rbi` definitions into `tapioca` RBI" do
+          @project.bundle_install
           result = @project.tapioca("gem tapioca")
 
           assert_stdout_includes(result, <<~OUT)
@@ -686,24 +687,6 @@ module Tapioca
           refute_includes(result.out, "Compiled ruby2_keywords")
 
           assert_empty_stderr(result)
-          assert_success_status(result)
-        end
-
-        it "must not generate RBIs for missing gem specs on Bundler 2.2.22" do
-          @project.gemfile(<<~GEMFILE, append: true)
-            platform :rbx do
-              gem "ruby2_keywords", "0.0.5"
-            end
-          GEMFILE
-
-          @project.bundle_install(version: "2.2.22")
-
-          result = @project.tapioca("gem --all")
-
-          assert_stdout_includes(result, "completed with missing specs: ruby2_keywords (0.0.5)")
-          refute_includes(result.out, "Compiled ruby2_keywords")
-
-          # StdErr will have some messages about incompatibilities, so we don't check for clean err
           assert_success_status(result)
         end
 
