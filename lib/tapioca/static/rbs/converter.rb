@@ -22,14 +22,11 @@ module Tapioca
           @env = T.let(load_environment, ::RBS::Environment)
           @declarations = T.let(@env.declarations, T::Array[T.untyped])
           @foreign_decls = T.let(Set.new.compare_by_identity, T::Set[T.untyped])
-          @visitor = T.let(ConverterVisitor.new(self), ConverterVisitor)
         end
 
         sig { returns(RBI::Tree) }
         def convert
-          @visitor.process
-
-          @visitor.root
+          ConverterVisitor.new(self).process
         end
 
         sig { params(name: RBS::TypeName).void }

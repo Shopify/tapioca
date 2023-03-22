@@ -29,11 +29,12 @@ module Tapioca
           @current_visibility = T.let(:public, Symbol)
         end
 
-        sig { void }
+        sig { returns(RBI::Tree) }
         def process
           visit_all(@converter.declarations)
           @include_foreign = true
           visit_all(@converter.foreign_decls)
+          @root
         end
 
         sig { params(node: T.any(RBS::AST::Members::Base, RBS::AST::Declarations::Base)).void }
