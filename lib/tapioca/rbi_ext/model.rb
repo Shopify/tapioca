@@ -115,6 +115,15 @@ module RBI
       self << method
     end
 
+    sig { params(new_name: String, old_name: String).returns(RBI::Send) }
+    def create_method_alias(new_name, old_name)
+      alias_def = RBI::Send.new("alias") do |node|
+        node << RBI::Arg.new("#{new_name} #{old_name}")
+      end
+      self << alias_def
+      alias_def
+    end
+
     private
 
     sig { returns(T::Hash[String, RBI::Node]) }
