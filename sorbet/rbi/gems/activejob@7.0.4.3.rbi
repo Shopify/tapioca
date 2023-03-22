@@ -164,6 +164,7 @@ class ActiveJob::Base
   include ::ActiveJob::Logging
   include ::ActiveJob::Timezones
   include ::ActiveJob::Translation
+  include ::Sidekiq::Job::Options
   include ::ActiveJob::TestHelper::TestQueueAdapter
   extend ::ActiveJob::Core::ClassMethods
   extend ::ActiveJob::QueueAdapter::ClassMethods
@@ -176,24 +177,25 @@ class ActiveJob::Base
   extend ::ActiveSupport::DescendantsTracker
   extend ::ActiveJob::Callbacks::ClassMethods
   extend ::ActiveJob::Exceptions::ClassMethods
+  extend ::Sidekiq::Job::Options::ClassMethods
   extend ::ActiveJob::TestHelper::TestQueueAdapter::ClassMethods
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#940
   def _enqueue_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#940
   def _perform_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#928
   def _run_enqueue_callbacks(&block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#928
   def _run_perform_callbacks(&block); end
 
   # source://activejob//lib/active_job/logging.rb#11
@@ -203,7 +205,7 @@ class ActiveJob::Base
   def logger=(val); end
 
   # source://activejob//lib/active_job/queue_adapter.rb#15
-  def queue_adapter(*_arg0, **_arg1, &_arg2); end
+  def queue_adapter(*_arg0, &_arg1); end
 
   # source://activejob//lib/active_job/queue_name.rb#58
   def queue_name_prefix; end
@@ -214,35 +216,53 @@ class ActiveJob::Base
   # source://activejob//lib/active_job/queue_name.rb#58
   def queue_name_prefix?; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.3/lib/active_support/rescuable.rb#13
   def rescue_handlers; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.3/lib/active_support/rescuable.rb#13
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
+  # source://activesupport/7.0.4.3/lib/active_support/rescuable.rb#13
   def rescue_handlers?; end
 
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#137
+  def sidekiq_options_hash; end
+
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#149
+  def sidekiq_options_hash=(_arg0); end
+
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#137
+  def sidekiq_retries_exhausted_block; end
+
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#149
+  def sidekiq_retries_exhausted_block=(_arg0); end
+
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#137
+  def sidekiq_retry_in_block; end
+
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#149
+  def sidekiq_retry_in_block=(_arg0); end
+
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#932
     def _enqueue_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#936
     def _enqueue_callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#932
     def _perform_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#936
     def _perform_callbacks=(value); end
 
     # source://activejob//lib/active_job/queue_adapter.rb#13
@@ -314,13 +334,13 @@ class ActiveJob::Base
     # source://activejob//lib/active_job/queue_name.rb#58
     def queue_name_prefix?; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.3/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.3/lib/active_support/rescuable.rb#13
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/rescuable.rb#13
+    # source://activesupport/7.0.4.3/lib/active_support/rescuable.rb#13
     def rescue_handlers?; end
 
     # source://activejob//lib/active_job/exceptions.rb#11
@@ -329,11 +349,40 @@ class ActiveJob::Base
     # source://activejob//lib/active_job/exceptions.rb#11
     def retry_jitter=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/deprecation/method_wrappers.rb#63
-    def skip_after_callbacks_if_terminated(*args, **_arg1, &block); end
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#104
+    def sidekiq_options_hash; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/deprecation/method_wrappers.rb#63
-    def skip_after_callbacks_if_terminated=(*args, **_arg1, &block); end
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#112
+    def sidekiq_options_hash=(val); end
+
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#104
+    def sidekiq_retries_exhausted_block; end
+
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#112
+    def sidekiq_retries_exhausted_block=(val); end
+
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#104
+    def sidekiq_retry_in_block; end
+
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#112
+    def sidekiq_retry_in_block=(val); end
+
+    # source://activesupport/7.0.4.3/lib/active_support/deprecation/method_wrappers.rb#63
+    def skip_after_callbacks_if_terminated(*args, &block); end
+
+    # source://activesupport/7.0.4.3/lib/active_support/deprecation/method_wrappers.rb#63
+    def skip_after_callbacks_if_terminated=(*args, &block); end
+
+    private
+
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#99
+    def __synchronized_sidekiq_options_hash; end
+
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#99
+    def __synchronized_sidekiq_retries_exhausted_block; end
+
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#99
+    def __synchronized_sidekiq_retry_in_block; end
   end
 end
 
@@ -364,16 +413,16 @@ module ActiveJob::Callbacks
   mixes_in_class_methods ::ActiveJob::Callbacks::ClassMethods
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#940
     def _execute_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#928
     def _run_execute_callbacks(&block); end
   end
 
@@ -527,10 +576,10 @@ class ActiveJob::ConfiguredJob
   def initialize(job_class, options = T.unsafe(nil)); end
 
   # source://activejob//lib/active_job/configured_job.rb#14
-  def perform_later(*_arg0, **_arg1, &_arg2); end
+  def perform_later(*_arg0, &_arg1); end
 
   # source://activejob//lib/active_job/configured_job.rb#10
-  def perform_now(*_arg0, **_arg1, &_arg2); end
+  def perform_now(*_arg0, &_arg1); end
 end
 
 # Provides general behavior that will be included into every Active Job
@@ -546,7 +595,7 @@ module ActiveJob::Core
   # passed to the perform method.
   #
   # source://activejob//lib/active_job/core.rb#91
-  def initialize(*arguments, **_arg1); end
+  def initialize(*arguments); end
 
   # Job arguments
   #
@@ -838,12 +887,12 @@ module ActiveJob::Enqueuing::ClassMethods
   # @yield [job]
   #
   # source://activejob//lib/active_job/enqueuing.rb#28
-  def perform_later(*_arg0, **_arg1, &_arg2); end
+  def perform_later(*_arg0, &_arg1); end
 
   private
 
   # source://activejob//lib/active_job/enqueuing.rb#38
-  def job_or_instantiate(*args, **_arg1); end
+  def job_or_instantiate(*args); end
 end
 
 # Provides behavior for retrying and discarding jobs on exceptions.
@@ -1033,7 +1082,7 @@ module ActiveJob::Execution::ClassMethods
   #   MyJob.perform_now("mike")
   #
   # source://activejob//lib/active_job/execution.rb#17
-  def perform_now(*_arg0, **_arg1, &_arg2); end
+  def perform_now(*_arg0, &_arg1); end
 end
 
 # source://activejob//lib/active_job/instrumentation.rb#4
@@ -1466,52 +1515,52 @@ class ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper
   # source://activejob//lib/active_job/queue_adapters/sidekiq_adapter.rb#41
   def perform(job_data); end
 
-  # source://sidekiq/7.0.2/lib/sidekiq/job.rb#137
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#137
   def sidekiq_options_hash; end
 
-  # source://sidekiq/7.0.2/lib/sidekiq/job.rb#149
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#149
   def sidekiq_options_hash=(_arg0); end
 
-  # source://sidekiq/7.0.2/lib/sidekiq/job.rb#137
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#137
   def sidekiq_retries_exhausted_block; end
 
-  # source://sidekiq/7.0.2/lib/sidekiq/job.rb#149
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#149
   def sidekiq_retries_exhausted_block=(_arg0); end
 
-  # source://sidekiq/7.0.2/lib/sidekiq/job.rb#137
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#137
   def sidekiq_retry_in_block; end
 
-  # source://sidekiq/7.0.2/lib/sidekiq/job.rb#149
+  # source://sidekiq/7.0.4/lib/sidekiq/job.rb#149
   def sidekiq_retry_in_block=(_arg0); end
 
   class << self
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#104
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#104
     def sidekiq_options_hash; end
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#112
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#112
     def sidekiq_options_hash=(val); end
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#104
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#104
     def sidekiq_retries_exhausted_block; end
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#112
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#112
     def sidekiq_retries_exhausted_block=(val); end
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#104
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#104
     def sidekiq_retry_in_block; end
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#112
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#112
     def sidekiq_retry_in_block=(val); end
 
     private
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#99
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#99
     def __synchronized_sidekiq_options_hash; end
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#99
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#99
     def __synchronized_sidekiq_retries_exhausted_block; end
 
-    # source://sidekiq/7.0.2/lib/sidekiq/job.rb#99
+    # source://sidekiq/7.0.4/lib/sidekiq/job.rb#99
     def __synchronized_sidekiq_retry_in_block; end
   end
 end
@@ -1983,18 +2032,13 @@ class ActiveJob::Serializers::ObjectSerializer
 
   class << self
     # source://activejob//lib/active_job/serializers/object_serializer.rb#28
-    def deserialize(*_arg0, **_arg1, &_arg2); end
+    def deserialize(*_arg0, &_arg1); end
 
     # source://activejob//lib/active_job/serializers/object_serializer.rb#28
-    def serialize(*_arg0, **_arg1, &_arg2); end
+    def serialize(*_arg0, &_arg1); end
 
     # source://activejob//lib/active_job/serializers/object_serializer.rb#28
-    def serialize?(*_arg0, **_arg1, &_arg2); end
-
-    private
-
-    def allocate; end
-    def new(*_arg0); end
+    def serialize?(*_arg0, &_arg1); end
   end
 end
 
@@ -2440,7 +2484,7 @@ module ActiveJob::TestHelper
   def before_setup; end
 
   # source://activejob//lib/active_job/test_helper.rb#9
-  def enqueued_jobs(*_arg0, **_arg1, &_arg2); end
+  def enqueued_jobs(*_arg0, &_arg1); end
 
   # source://activejob//lib/active_job/test_helper.rb#9
   def enqueued_jobs=(arg); end
@@ -2507,7 +2551,7 @@ module ActiveJob::TestHelper
   def perform_enqueued_jobs(only: T.unsafe(nil), except: T.unsafe(nil), queue: T.unsafe(nil), at: T.unsafe(nil), &block); end
 
   # source://activejob//lib/active_job/test_helper.rb#9
-  def performed_jobs(*_arg0, **_arg1, &_arg2); end
+  def performed_jobs(*_arg0, &_arg1); end
 
   # source://activejob//lib/active_job/test_helper.rb#9
   def performed_jobs=(arg); end

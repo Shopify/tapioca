@@ -101,10 +101,10 @@ module Rails
     def groups(*groups); end
 
     # source://railties//lib/rails.rb#43
-    def initialize!(*_arg0, **_arg1, &_arg2); end
+    def initialize!(*_arg0, &_arg1); end
 
     # source://railties//lib/rails.rb#43
-    def initialized?(*_arg0, **_arg1, &_arg2); end
+    def initialized?(*_arg0, &_arg1); end
 
     # Returns the value of attribute logger.
     #
@@ -290,7 +290,7 @@ class Rails::Application < ::Rails::Engine
   def credentials=(_arg0); end
 
   # source://railties//lib/rails/application.rb#101
-  def default_url_options(*_arg0, **_arg1, &_arg2); end
+  def default_url_options(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/application.rb#101
   def default_url_options=(arg); end
@@ -585,8 +585,6 @@ class Rails::Application < ::Rails::Engine
 
     # source://railties//lib/rails/application.rb#77
     def instance; end
-
-    def new(*_arg0); end
   end
 end
 
@@ -1310,10 +1308,10 @@ class Rails::Application::RoutesReloader
   # source://railties//lib/rails/application/routes_reloader.rb#15
   def initialize; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
   # Returns the value of attribute eager_load.
@@ -1329,10 +1327,10 @@ class Rails::Application::RoutesReloader
   def eager_load=(_arg0); end
 
   # source://railties//lib/rails/application/routes_reloader.rb#13
-  def execute(*_arg0, **_arg1, &_arg2); end
+  def execute(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/application/routes_reloader.rb#13
-  def execute_if_updated(*_arg0, **_arg1, &_arg2); end
+  def execute_if_updated(*_arg0, &_arg1); end
 
   # Returns the value of attribute external_routes.
   #
@@ -1356,7 +1354,7 @@ class Rails::Application::RoutesReloader
   def run_after_load_paths=(_arg0); end
 
   # source://railties//lib/rails/application/routes_reloader.rb#13
-  def updated?(*_arg0, **_arg1, &_arg2); end
+  def updated?(*_arg0, &_arg1); end
 
   private
 
@@ -1379,13 +1377,13 @@ class Rails::Application::RoutesReloader
   def updater; end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks?; end
   end
 end
@@ -1394,7 +1392,7 @@ end
 class Rails::ApplicationController < ::ActionController::Base
   private
 
-  # source://actionview/7.0.4.2/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.3/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   # source://railties//lib/rails/application_controller.rb#25
@@ -1409,16 +1407,16 @@ class Rails::ApplicationController < ::ActionController::Base
   def require_local!; end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionview/7.0.4.2/lib/action_view/layouts.rb#209
+    # source://actionview/7.0.4.3/lib/action_view/layouts.rb#209
     def _layout; end
 
-    # source://actionview/7.0.4.2/lib/action_view/layouts.rb#210
+    # source://actionview/7.0.4.3/lib/action_view/layouts.rb#210
     def _layout_conditions; end
 
-    # source://actionpack/7.0.4.2/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.3/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -1871,37 +1869,37 @@ class Rails::Configuration::MiddlewareStackProxy
   def +(other); end
 
   # source://railties//lib/rails/configuration.rb#70
-  def delete(*_arg0, **_arg1, &_arg2); end
+  def delete(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#52
-  def insert(*_arg0, **_arg1, &_arg2); end
+  def insert(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#58
-  def insert_after(*_arg0, **_arg1, &_arg2); end
+  def insert_after(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#52
-  def insert_before(*_arg0, **_arg1, &_arg2); end
+  def insert_before(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#88
   def merge_into(other); end
 
   # source://railties//lib/rails/configuration.rb#74
-  def move(*_arg0, **_arg1, &_arg2); end
+  def move(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#80
-  def move_after(*_arg0, **_arg1, &_arg2); end
+  def move_after(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#74
-  def move_before(*_arg0, **_arg1, &_arg2); end
+  def move_before(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#62
-  def swap(*_arg0, **_arg1, &_arg2); end
+  def swap(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#84
-  def unshift(*_arg0, **_arg1, &_arg2); end
+  def unshift(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/configuration.rb#66
-  def use(*_arg0, **_arg1, &_arg2); end
+  def use(*_arg0, &_arg1); end
 
   protected
 
@@ -2264,16 +2262,16 @@ class Rails::Engine < ::Rails::Railtie
   # source://railties//lib/rails/engine.rb#432
   def initialize; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#940
   def _load_seed_callbacks; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#928
   def _run_load_seed_callbacks(&block); end
 
   # Returns the underlying Rack application for this engine.
@@ -2301,7 +2299,7 @@ class Rails::Engine < ::Rails::Railtie
   def endpoint; end
 
   # source://railties//lib/rails/engine.rb#430
-  def engine_name(*_arg0, **_arg1, &_arg2); end
+  def engine_name(*_arg0, &_arg1); end
 
   # Defines additional Rack env configuration that is added on each call.
   #
@@ -2319,7 +2317,7 @@ class Rails::Engine < ::Rails::Railtie
   def helpers_paths; end
 
   # source://railties//lib/rails/engine.rb#430
-  def isolated?(*_arg0, **_arg1, &_arg2); end
+  def isolated?(*_arg0, &_arg1); end
 
   # Load console and invoke the registered hooks.
   # Check Rails::Railtie.console for more info.
@@ -2360,16 +2358,16 @@ class Rails::Engine < ::Rails::Railtie
   def load_tasks(app = T.unsafe(nil)); end
 
   # source://railties//lib/rails/engine.rb#429
-  def middleware(*_arg0, **_arg1, &_arg2); end
+  def middleware(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/engine.rb#429
-  def paths(*_arg0, **_arg1, &_arg2); end
+  def paths(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/engine.rb#489
   def railties; end
 
   # source://railties//lib/rails/engine.rb#429
-  def root(*_arg0, **_arg1, &_arg2); end
+  def root(*_arg0, &_arg1); end
 
   # Defines the routes for this engine. If a block is given to
   # routes, it is appended to the engine.
@@ -2416,19 +2414,19 @@ class Rails::Engine < ::Rails::Railtie
   def load_config_initializer(initializer); end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#932
     def _load_seed_callbacks; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#936
     def _load_seed_callbacks=(value); end
 
     # Returns the value of attribute called_from.
@@ -2444,7 +2442,7 @@ class Rails::Engine < ::Rails::Railtie
     def called_from=(_arg0); end
 
     # source://railties//lib/rails/engine.rb#358
-    def eager_load!(*_arg0, **_arg1, &_arg2); end
+    def eager_load!(*_arg0, &_arg1); end
 
     # source://railties//lib/rails/engine.rb#378
     def endpoint(endpoint = T.unsafe(nil)); end
@@ -4000,7 +3998,7 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
   def class_path; end
 
   # source://railties//lib/rails/generators/named_base.rb#105
-  def edit_helper(*_arg0, **_arg1, &_arg2); end
+  def edit_helper(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/generators/named_base.rb#54
   def file_path; end
@@ -4583,7 +4581,7 @@ class Rails::InfoController < ::Rails::ApplicationController
 
   private
 
-  # source://actionview/7.0.4.2/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.3/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   # source://railties//lib/rails/info_controller.rb#8
@@ -4596,16 +4594,16 @@ class Rails::InfoController < ::Rails::ApplicationController
   def with_leading_slash(path); end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionview/7.0.4.2/lib/action_view/layouts.rb#209
+    # source://actionview/7.0.4.3/lib/action_view/layouts.rb#209
     def _layout; end
 
-    # source://actionview/7.0.4.2/lib/action_view/layouts.rb#210
+    # source://actionview/7.0.4.3/lib/action_view/layouts.rb#210
     def _layout_conditions; end
 
-    # source://actionpack/7.0.4.2/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.3/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -4710,7 +4708,7 @@ class Rails::MailersController < ::Rails::ApplicationController
 
   private
 
-  # source://actionview/7.0.4.2/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.3/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   # source://railties//lib/rails/mailers_controller.rb#80
@@ -4737,26 +4735,28 @@ class Rails::MailersController < ::Rails::ApplicationController
   def show_previews?; end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionpack/7.0.4.2/lib/abstract_controller/helpers.rb#11
+    # source://actionpack/7.0.4.3/lib/abstract_controller/helpers.rb#11
     def _helper_methods; end
 
-    # source://actionpack/7.0.4.2/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.3/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
 
 # source://railties//lib/rails/mailers_controller.rb#0
 module Rails::MailersController::HelperMethods
+  include ::ActionText::ContentHelper
+  include ::ActionText::TagHelper
   include ::ActionController::Base::HelperMethods
 
   # source://railties//lib/rails/mailers_controller.rb#12
-  def locale_query(*args, **_arg1, &block); end
+  def locale_query(*args, &block); end
 
   # source://railties//lib/rails/mailers_controller.rb#12
-  def part_query(*args, **_arg1, &block); end
+  def part_query(*args, &block); end
 end
 
 # source://railties//lib/rails/paths.rb#6
@@ -5167,7 +5167,7 @@ class Rails::Railtie
   def inspect; end
 
   # source://railties//lib/rails/railtie.rb#244
-  def railtie_name(*_arg0, **_arg1, &_arg2); end
+  def railtie_name(*_arg0, &_arg1); end
 
   # source://railties//lib/rails/railtie.rb#267
   def railtie_namespace; end
@@ -5206,7 +5206,7 @@ class Rails::Railtie
     def abstract_railtie?; end
 
     # source://railties//lib/rails/railtie.rb#146
-    def config(*_arg0, **_arg1, &_arg2); end
+    def config(*_arg0, &_arg1); end
 
     # Allows you to configure the railtie. This is the same method seen in
     # Railtie::Configurable, but this module is no longer required for all
@@ -5266,9 +5266,7 @@ class Rails::Railtie
     # to the Railtie instance.
     #
     # source://railties//lib/rails/railtie.rb#224
-    def method_missing(name, *args, **_arg2, &block); end
-
-    def new(*_arg0); end
+    def method_missing(name, *args, &block); end
 
     # receives an instance variable identifier, set the variable value if is
     # blank and append given block to value, which will be used later in
@@ -5686,20 +5684,20 @@ class Rails::WelcomeController < ::Rails::ApplicationController
 
   private
 
-  # source://actionview/7.0.4.2/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.4.3/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionview/7.0.4.2/lib/action_view/layouts.rb#209
+    # source://actionview/7.0.4.3/lib/action_view/layouts.rb#209
     def _layout; end
 
-    # source://actionview/7.0.4.2/lib/action_view/layouts.rb#210
+    # source://actionview/7.0.4.3/lib/action_view/layouts.rb#210
     def _layout_conditions; end
 
-    # source://actionpack/7.0.4.2/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.4.3/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
