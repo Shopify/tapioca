@@ -48,12 +48,12 @@ module RBS
         end
       end
 
-      class Alias
+      class TypeAlias
         extend T::Sig
 
         sig { params(visitor: RBS::AST::Visitor).void }
         def visit(visitor)
-          visitor.visit_declaration_alias(self)
+          visitor.visit_declaration_type_alias(self)
         end
       end
 
@@ -215,8 +215,8 @@ module RBS
       def visit_declaration_constant(node)
       end
 
-      sig { params(node: Declarations::Alias).void }
-      def visit_declaration_alias(node)
+      sig { params(node: Declarations::TypeAlias).void }
+      def visit_declaration_type_alias(node)
       end
 
       sig { params(node: Declarations::Interface).void }

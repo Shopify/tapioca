@@ -46,7 +46,7 @@ module Tapioca
         def skipped?(decl)
           decl.location.buffer.name.start_with?(
             RBS::Repository::DEFAULT_STDLIB_ROOT.to_s,
-            RBS::EnvironmentLoader::DEFAULT_CORE_ROOT.to_s
+            RBS::EnvironmentLoader::DEFAULT_CORE_ROOT.to_s,
           )
         end
 
@@ -70,11 +70,7 @@ module Tapioca
 
         sig { params(name: RBS::TypeName).returns(T.untyped) }
         def lookup_declaration_for_name(name)
-          if @env.interface_decls.key?(name)
-            @env.interface_decls[name].decl
-          elsif @env.alias_decls.key?(name)
-            @env.alias_decls[name].decl
-          end
+          @env.interface_decls[name]&.decl || @env.type_alias_decls[name]&.decl
         end
       end
     end

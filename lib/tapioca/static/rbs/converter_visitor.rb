@@ -48,11 +48,11 @@ module Tapioca
         def visit_member_method_definition(member)
           converter = MethodConverter.new(
             @converter,
-            T.must(member.types.first),
+            T.must(member.overloads.first).method_type,
             member.name.to_s,
             member.singleton?,
             member.visibility || @current_visibility,
-            rbi_comments(member.comment)
+            rbi_comments(member.comment),
           )
           current_scope << converter.to_rbi_method
         end
@@ -67,7 +67,7 @@ module Tapioca
           current_scope.create_method(
             member.name.to_s,
             return_type: type_converter.to_string(member.type),
-            visibility: type_converter.visibility(member.visibility || @current_visibility)
+            visibility: type_converter.visibility(member.visibility || @current_visibility),
           )
         end
 
@@ -79,7 +79,7 @@ module Tapioca
               create_param(member.name.to_s, type: type_converter.to_string(member.type)),
             ],
             return_type: type_converter.to_string(member.type),
-            visibility: type_converter.visibility(member.visibility || @current_visibility)
+            visibility: type_converter.visibility(member.visibility || @current_visibility),
           )
         end
 
@@ -88,7 +88,7 @@ module Tapioca
           current_scope.create_method(
             member.name.to_s,
             return_type: type_converter.to_string(member.type),
-            visibility: type_converter.visibility(member.visibility || @current_visibility)
+            visibility: type_converter.visibility(member.visibility || @current_visibility),
           )
 
           current_scope.create_method(
@@ -97,7 +97,7 @@ module Tapioca
               create_param(member.name.to_s, type: type_converter.to_string(member.type)),
             ],
             return_type: type_converter.to_string(member.type),
-            visibility: type_converter.visibility(member.visibility || @current_visibility)
+            visibility: type_converter.visibility(member.visibility || @current_visibility),
           )
         end
 
@@ -130,7 +130,7 @@ module Tapioca
           scope = @root.create_class(
             decl.name.to_s,
             superclass_name: decl.super_class&.name&.to_s,
-            comments: rbi_comments(decl.comment)
+            comments: rbi_comments(decl.comment),
           )
           add_type_variables(scope, decl)
 
@@ -156,12 +156,12 @@ module Tapioca
           @root.create_constant(
             decl.name.to_s,
             value: "T.let(T.unsafe(nil), #{type_converter.convert(decl.type)})",
-            comments: rbi_comments(decl.comment)
+            comments: rbi_comments(decl.comment),
           )
         end
 
-        sig { params(decl: RBS::AST::Declarations::Alias).void }
-        def visit_declaration_alias(decl)
+        sig { params(decl: RBS::AST::Declarations::TypeAlias).void }
+        def visit_declaration_type_alias(decl)
           name = decl.name.to_s
           value = type_converter.convert(decl.type).to_s
           value = "T.untyped" if value.include?(name)
@@ -199,8 +199,8 @@ module Tapioca
             decl: T.any(
               ::RBS::AST::Declarations::Class,
               ::RBS::AST::Declarations::Interface,
-              ::RBS::AST::Declarations::Module
-            )
+              ::RBS::AST::Declarations::Module,
+            ),
           ).void
         end
         def add_type_variables(scope, decl)
