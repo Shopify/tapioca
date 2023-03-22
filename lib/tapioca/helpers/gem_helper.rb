@@ -10,12 +10,17 @@ module Tapioca
       app_dir = to_realpath(app_dir)
       full_gem_path = to_realpath(full_gem_path)
 
-      !gem_in_bundle_path?(full_gem_path) && path_in_dir?(full_gem_path, app_dir)
+      !gem_in_bundle_path?(full_gem_path) && !gem_in_ruby_path?(full_gem_path) && path_in_dir?(full_gem_path, app_dir)
     end
 
     sig { params(full_gem_path: String).returns(T::Boolean) }
     def gem_in_bundle_path?(full_gem_path)
       path_in_dir?(full_gem_path, Bundler.bundle_path) || path_in_dir?(full_gem_path, Bundler.app_cache)
+    end
+
+    sig { params(full_gem_path: String).returns(T::Boolean) }
+    def gem_in_ruby_path?(full_gem_path)
+      path_in_dir?(full_gem_path, RbConfig::CONFIG["rubylibprefix"])
     end
 
     sig { params(path: T.any(String, Pathname)).returns(String) }
