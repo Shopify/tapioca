@@ -51,18 +51,15 @@ module Tapioca
             T.must(member.types.first),
             member.name.to_s,
             member.singleton?,
-            member.visibility || @current_visibility
+            member.visibility || @current_visibility,
+            rbi_comments(member.comment)
           )
-          current_scope << converter.to_rbi_method do |method|
-            method.comments = rbi_comments(member.comment)
-          end
+          current_scope << converter.to_rbi_method
         end
 
         sig { params(member: RBS::AST::Members::Alias).void }
         def visit_member_alias(member)
-          current_scope << RBI::Send.new("alias") do |node|
-            node << RBI::Arg.new("#{member.new_name} #{member.old_name}")
-          end
+          current_scope.create_method_alias(member.new_name.to_s, member.old_name.to_s)
         end
 
         sig { params(member: RBS::AST::Members::AttrReader).void }
@@ -130,11 +127,12 @@ module Tapioca
 
         sig { params(decl: RBS::AST::Declarations::Class).void }
         def visit_declaration_class(decl)
-          scope = RBI::Class.new(decl.name.to_s, superclass_name: decl.super_class&.name&.to_s)
-          scope.comments = rbi_comments(decl.comment)
+          scope = @root.create_class(
+            decl.name.to_s,
+            superclass_name: decl.super_class&.name&.to_s,
+            comments: rbi_comments(decl.comment)
+          )
           add_type_variables(scope, decl)
-
-          @root << scope
 
           visit_scope(scope) { super }
         end
@@ -145,11 +143,8 @@ module Tapioca
           # since it crashes Sorbet, if we do so.
           return if decl.name.to_s == "::Enumerable"
 
-          scope = RBI::Module.new(decl.name.to_s)
-          scope.comments = rbi_comments(decl.comment)
+          scope = @root.create_module(decl.name.to_s, comments: rbi_comments(decl.comment))
           add_type_variables(scope, decl)
-
-          @root << scope
 
           visit_scope(scope) { super }
         end
@@ -158,9 +153,10 @@ module Tapioca
 
         sig { params(decl: RBS::AST::Declarations::Constant).void }
         def visit_declaration_constant(decl)
-          @root << RBI::Const.new(
+          @root.create_constant(
             decl.name.to_s,
-            "T.let(T.unsafe(nil), #{type_converter.convert(decl.type)})"
+            value: "T.let(T.unsafe(nil), #{type_converter.convert(decl.type)})",
+            comments: rbi_comments(decl.comment)
           )
         end
 
@@ -170,10 +166,7 @@ module Tapioca
           value = type_converter.convert(decl.type).to_s
           value = "T.untyped" if value.include?(name)
 
-          @root << RBI::Const.new(
-            name,
-            "T.type_alias { #{value} }"
-          )
+          @root.create_constant(name, value: "T.type_alias { #{value} }")
         end
 
         private

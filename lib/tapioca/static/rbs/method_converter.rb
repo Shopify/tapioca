@@ -7,8 +7,17 @@ module Tapioca
       class MethodConverter
         extend T::Sig
 
-        sig { params(converter: Converter, method_type: RBS::MethodType, name: String, is_singleton: T::Boolean, visibility: Symbol).void }
-        def initialize(converter, method_type, name = "", is_singleton = false, visibility = :public)
+        sig do
+          params(
+            converter: Converter,
+            method_type: RBS::MethodType,
+            name: String,
+            is_singleton: T::Boolean,
+            visibility: Symbol,
+            comments: T::Array[RBI::Comment]
+          ).void
+        end
+        def initialize(converter, method_type, name = "", is_singleton = false, visibility = :public, comments = [])
           @converter = converter
           @name = name
           @is_singleton = is_singleton
@@ -19,14 +28,14 @@ module Tapioca
           )
           @return_type = T.let(@type_converter.to_string(method_type.type.return_type), String)
           @visibility = T.let(@type_converter.visibility(visibility), RBI::Visibility)
+          @comments = comments
         end
 
-        sig { params(block: T.nilable(T.proc.params(method: RBI::Method).void)).returns(RBI::Method) }
-        def to_rbi_method(&block)
-          RBI::Method.new(@name, is_singleton: @is_singleton, visibility: @visibility) do |method|
+        sig { returns(RBI::Method) }
+        def to_rbi_method
+          RBI::Method.new(@name, is_singleton: @is_singleton, visibility: @visibility, comments: @comments) do |method|
             each_param { |param| method << param }
             method.sigs << signature
-            block&.call(method)
           end
         end
 
