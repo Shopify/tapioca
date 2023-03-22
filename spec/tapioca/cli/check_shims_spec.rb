@@ -381,7 +381,7 @@ module Tapioca
              * sorbet/rbi/shims/core/object.rbi:1:0-1:17
 
             Duplicated RBI for ::String#capitalize:
-             * https://github.com/sorbet/sorbet/tree/master/rbi/core/string.rbi#L406
+             * https://github.com/sorbet/sorbet/tree/master/rbi/core/string.rbi#L572
              * sorbet/rbi/shims/core/string.rbi:3:2-3:23
 
             Duplicated RBI for ::Base64::decode64:
