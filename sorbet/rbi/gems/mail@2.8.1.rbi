@@ -127,7 +127,7 @@ module Mail
     # source://mail//lib/mail/mail.rb#151
     def first(*args, &block); end
 
-    # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/from_source.rb#4
+    # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/from_source.rb#4
     def from_source(source); end
 
     # source://mail//lib/mail/mail.rb#233
@@ -276,7 +276,7 @@ class Mail::Address
   # source://mail//lib/mail/elements/address.rb#25
   def initialize(value = T.unsafe(nil)); end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/address_equality.rb#5
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/address_equality.rb#5
   def ==(other_address); end
 
   # Returns the address that is in the address itself.  That is, the
@@ -425,7 +425,7 @@ class Mail::Address
   def strip_domain_comments(value); end
 
   class << self
-    # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/address_wrapping.rb#5
+    # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/address_wrapping.rb#5
     def wrap(address); end
   end
 end
@@ -849,12 +849,12 @@ module Mail::CheckDeliveryParams
     # source://mail//lib/mail/check_delivery_params.rb#38
     def _deprecated_validate_smtp_addr(addr); end
 
-    def check(*args, **_arg1, &block); end
-    def check_addr(*args, **_arg1, &block); end
-    def check_from(*args, **_arg1, &block); end
-    def check_message(*args, **_arg1, &block); end
-    def check_to(*args, **_arg1, &block); end
-    def validate_smtp_addr(*args, **_arg1, &block); end
+    def check(*args, &block); end
+    def check_addr(*args, &block); end
+    def check_from(*args, &block); end
+    def check_message(*args, &block); end
+    def check_to(*args, &block); end
+    def validate_smtp_addr(*args, &block); end
   end
 end
 
@@ -1171,13 +1171,6 @@ class Mail::Configuration
 
   # source://mail//lib/mail/configuration.rb#52
   def retriever_method(method = T.unsafe(nil), settings = T.unsafe(nil)); end
-
-  class << self
-    private
-
-    def allocate; end
-    def new(*_arg0); end
-  end
 end
 
 # source://mail//lib/mail/constants.rb#4
@@ -3550,7 +3543,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#512
   def bcc=(val); end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/addresses.rb#21
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/addresses.rb#21
   def bcc_addresses; end
 
   # Returns an array of addresses (the encoded value) in the Bcc field,
@@ -3659,7 +3652,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#553
   def cc=(val); end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/addresses.rb#17
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/addresses.rb#17
   def cc_addresses; end
 
   # Returns an array of addresses (the encoded value) in the Cc field,
@@ -3978,7 +3971,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#670
   def from=(val); end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/addresses.rb#5
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/addresses.rb#5
   def from_address; end
 
   # Returns an array of addresses (the encoded value) in the From field,
@@ -4371,10 +4364,10 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#751
   def received=(val); end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/recipients.rb#5
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/recipients.rb#5
   def recipients; end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/addresses.rb#9
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/addresses.rb#9
   def recipients_addresses; end
 
   # source://mail//lib/mail/message.rb#755
@@ -4845,7 +4838,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#1193
   def to=(val); end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/addresses.rb#13
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/addresses.rb#13
   def to_addresses; end
 
   # Returns an array of addresses (the encoded value) in the To field,
@@ -4869,7 +4862,7 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#1811
   def without_attachments!; end
 
-  # source://actionmailbox/7.0.4.1/lib/action_mailbox/mail_ext/addresses.rb#25
+  # source://actionmailbox/7.0.4.3/lib/action_mailbox/mail_ext/addresses.rb#25
   def x_original_to_addresses; end
 
   private
@@ -6020,16 +6013,23 @@ end
 # source://mail//lib/mail/parsers/address_lists_parser.rb#13
 class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
   def addresses; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def addresses=(_); end
+
   def error; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def error=(_); end
+
   def group_names; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def group_names=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6038,26 +6038,48 @@ end
 # source://mail//lib/mail/parsers/address_lists_parser.rb#14
 class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
   def comments; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def comments=(_); end
+
   def display_name; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def display_name=(_); end
+
   def domain; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def domain=(_); end
+
   def error; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def error=(_); end
+
   def group; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def group=(_); end
+
   def local; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def local=(_); end
+
   def obs_domain_list; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def obs_domain_list=(_); end
+
   def raw; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def raw=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6150,16 +6172,23 @@ end
 # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
 class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Struct
   def disposition_type; end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def disposition_type=(_); end
+
   def error; end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def error=(_); end
+
   def parameters; end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def parameters=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6252,14 +6281,18 @@ end
 # source://mail//lib/mail/parsers/content_location_parser.rb#13
 class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
   def error; end
+
+  # source://mail//lib/mail/parsers/content_location_parser.rb#13
   def error=(_); end
+
   def location; end
+
+  # source://mail//lib/mail/parsers/content_location_parser.rb#13
   def location=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6352,14 +6385,18 @@ end
 # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
 class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruct < ::Struct
   def encoding; end
+
+  # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
   def encoding=(_); end
+
   def error; end
+
+  # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
   def error=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6452,18 +6489,28 @@ end
 # source://mail//lib/mail/parsers/content_type_parser.rb#13
 class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
   def error; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def error=(_); end
+
   def main_type; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def main_type=(_); end
+
   def parameters; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def parameters=(_); end
+
   def sub_type; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def sub_type=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6556,16 +6603,23 @@ end
 # source://mail//lib/mail/parsers/date_time_parser.rb#13
 class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
   def date_string; end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def date_string=(_); end
+
   def error; end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def error=(_); end
+
   def time_string; end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def time_string=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6658,16 +6712,23 @@ end
 # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
 class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
   def address; end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def address=(_); end
+
   def ctime_date; end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def ctime_date=(_); end
+
   def error; end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def error=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6760,14 +6821,18 @@ end
 # source://mail//lib/mail/parsers/message_ids_parser.rb#13
 class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
   def error; end
+
+  # source://mail//lib/mail/parsers/message_ids_parser.rb#13
   def error=(_); end
+
   def message_ids; end
+
+  # source://mail//lib/mail/parsers/message_ids_parser.rb#13
   def message_ids=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6860,16 +6925,23 @@ end
 # source://mail//lib/mail/parsers/mime_version_parser.rb#13
 class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
   def error; end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def error=(_); end
+
   def major; end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def major=(_); end
+
   def minor; end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def minor=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -6962,14 +7034,18 @@ end
 # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
 class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
   def error; end
+
+  # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
   def error=(_); end
+
   def phrases; end
+
+  # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
   def phrases=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -7062,24 +7138,34 @@ end
 # source://mail//lib/mail/parsers/received_parser.rb#13
 class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
   def date; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def date=(_); end
+
   def error; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def error=(_); end
+
   def info; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def info=(_); end
+
   def time; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def time=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
-    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
 end
 
-# source://mail//lib/mail/part.rb#7
+# source://mail//lib/mail/part.rb#13
 class Mail::Part < ::Mail::Message
   # Either returns the action if the message has just a single report, or an
   # array of all the actions, one for each report
@@ -7941,16 +8027,15 @@ Mail::SenderField::NAME = T.let(T.unsafe(nil), String)
 #
 # source://mail//lib/mail/network/delivery_methods/sendmail.rb#40
 class Mail::Sendmail
-  # @raise [ArgumentError]
   # @return [Sendmail] a new instance of Sendmail
   #
   # source://mail//lib/mail/network/delivery_methods/sendmail.rb#51
   def initialize(values); end
 
-  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#60
+  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#64
   def deliver!(mail); end
 
-  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#56
+  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#60
   def destinations_for(envelope); end
 
   # Returns the value of attribute settings.
@@ -7967,8 +8052,28 @@ class Mail::Sendmail
 
   private
 
-  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#79
+  # - support for delivery using string arguments
+  #
+  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#129
+  def deprecation_warn; end
+
+  # + support for delivery using string arguments (deprecated)
+  #
+  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#97
+  def old_deliver(envelope); end
+
+  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#88
   def popen(command, &block); end
+
+  # The following is an adaptation of ruby 1.9.2's shellwords.rb file,
+  # with the following modifications:
+  #
+  # - Wraps in double quotes
+  # - Allows '+' to accept email addresses with them
+  # - Allows '~' as it is not unescaped in double quotes
+  #
+  # source://mail//lib/mail/network/delivery_methods/sendmail.rb#118
+  def shellquote(address); end
 end
 
 # source://mail//lib/mail/network/delivery_methods/sendmail.rb#41
@@ -8609,7 +8714,7 @@ module Mail::VERSION
 end
 
 # source://mail//lib/mail/version.rb#8
-Mail::VERSION::BUILD = T.let(T.unsafe(nil), Integer)
+Mail::VERSION::BUILD = T.let(T.unsafe(nil), T.untyped)
 
 # source://mail//lib/mail/version.rb#5
 Mail::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
