@@ -21,9 +21,15 @@ module RBI
       end
     end
 
-    sig { params(name: String, block: T.nilable(T.proc.params(scope: Scope).void)).returns(Scope) }
-    def create_module(name, &block)
-      T.cast(create_node(RBI::Module.new(name)), RBI::Scope).tap do |node|
+    sig do
+      params(
+        name: String,
+        comments: T::Array[RBI::Comment],
+        block: T.nilable(T.proc.params(scope: Scope).void),
+      ).returns(Scope)
+    end
+    def create_module(name, comments: [], &block)
+      T.cast(create_node(RBI::Module.new(name, comments: comments)), RBI::Scope).tap do |node|
         block&.call(node)
       end
     end
@@ -32,18 +38,22 @@ module RBI
       params(
         name: String,
         superclass_name: T.nilable(String),
+        comments: T::Array[RBI::Comment],
         block: T.nilable(T.proc.params(scope: RBI::Scope).void),
       ).returns(Scope)
     end
-    def create_class(name, superclass_name: nil, &block)
-      T.cast(create_node(RBI::Class.new(name, superclass_name: superclass_name)), RBI::Scope).tap do |node|
+    def create_class(name, superclass_name: nil, comments: [], &block)
+      T.cast(
+        create_node(RBI::Class.new(name, superclass_name: superclass_name, comments: comments)),
+        RBI::Scope,
+      ).tap do |node|
         block&.call(node)
       end
     end
 
-    sig { params(name: String, value: String).void }
-    def create_constant(name, value:)
-      create_node(RBI::Const.new(name, value))
+    sig { params(name: String, value: String, comments: T::Array[RBI::Comment]).void }
+    def create_constant(name, value:, comments: [])
+      create_node(RBI::Const.new(name, value, comments: comments))
     end
 
     sig { params(name: String).void }
