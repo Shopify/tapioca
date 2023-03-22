@@ -65,6 +65,13 @@ module Tapioca
           return unless method_owned_by_constant?(method, constant)
           return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
 
+          if method.original_name
+            RBI::Send.new("alias") do |node|
+              node << RBI::Arg.new("#{method.name} #{method.original_name}")
+            end
+            return
+          end
+
           signature = signature_of(method)
           method = T.let(signature.method, UnboundMethod) if signature
 
