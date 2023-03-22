@@ -204,10 +204,10 @@ module Tapioca
           ).void
         end
         def add_type_variables(scope, decl)
-          if decl.type_params.any?
-            decl.type_params.each do |type_param|
-              scope.create_constant(type_param.name.to_s, value: "type_member")
-            end
+          scope.create_extend("T::Generic") unless decl.type_params.empty?
+
+          decl.type_params.each do |type_param|
+            scope.create_constant(type_param.name.to_s, value: "type_member")
           end
 
           if RBS::AST::Declarations::Class === decl && superclass = decl.super_class
