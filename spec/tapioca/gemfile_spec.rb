@@ -125,6 +125,20 @@ module Tapioca
       end
     end
 
+    it "ignore? returns false for gems within Ruby even when Ruby is installed inside the project" do
+      # Imitate Ruby being installed inside the project
+      original_rubylibprefix = RbConfig::CONFIG["rubylibprefix"]
+      mock_rubylibprefix = "#{File.realpath(@project.path)}/vendor/ruby/lib"
+      RbConfig::CONFIG["rubylibprefix"] = mock_rubylibprefix
+
+      foo_gem = mock_gem("foo", "0.0.1", path: "#{mock_rubylibprefix}/ruby/gems")
+      foo_spec = make_spec(foo_gem)
+
+      refute(foo_spec.ignore?(@project.path))
+    ensure
+      RbConfig::CONFIG["rubylibprefix"] = original_rubylibprefix
+    end
+
     private
 
     sig { params(gem: MockGem).returns(Gemfile::GemSpec) }
@@ -153,6 +167,11 @@ module Tapioca
     sig { returns(T::Array[String]) }
     def full_require_paths
       []
+    end
+
+    sig { returns(String) }
+    def name
+      ""
     end
   end
 end
