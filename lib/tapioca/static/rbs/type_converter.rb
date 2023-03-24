@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Tapioca
@@ -15,12 +15,17 @@ module Tapioca
           @type_param_names = T.let(type_params.map(&:to_s), T::Array[String])
         end
 
+        sig { params(type_params: T::Array[RBS::AST::TypeParam]).returns(T.self_type) }
+        def with_type_params(type_params)
+          self.class.new(@converter, type_params)
+        end
+
         sig { returns(T::Array[RBS::AST::TypeParam]) }
         attr_reader :type_params
 
         sig { params(type: T.untyped).returns(T::Types::Base) }
         def convert(type)
-          @converter.push_foreign_name(type.name) if type.respond_to?(:name)
+          @converter.push_foreign_name(T.unsafe(type).name) if type.respond_to?(:name)
 
           case type
           when RBS::Types::Alias
@@ -48,8 +53,15 @@ module Tapioca
             if !type.args.empty? &&
                 name.namespace.empty? &&
                 name.class? &&
-                ["Hash", "Array", "Set", "Enumerable", "Enumerable::Lazy", "Enumerator",
-                 "Range",].include?(name.relative!.to_s)
+                [
+                  "Hash",
+                  "Array",
+                  "Set",
+                  "Enumerable",
+                  "Enumerable::Lazy",
+                  "Enumerator",
+                  "Range",
+                ].include?(name.relative!.to_s)
               name = name.relative!.with_prefix(Namespace("::T"))
             end
             name = name.to_s
@@ -70,7 +82,7 @@ module Tapioca
 
             string_holder(name)
           when RBS::Types::Intersection
-            T.unsafe(T).all(*convert_all(type.types))
+            T.unsafe(T).all(*type.types.map { |type| convert(type) })
           when RBS::Types::Literal
             T.untyped
           when RBS::Types::Optional
@@ -86,9 +98,9 @@ module Tapioca
           when RBS::Types::Record
             T::Utils.coerce(type.fields.to_h { |key, type| [key, convert(type)] })
           when RBS::Types::Tuple
-            T::Utils.coerce(convert_all(type.types))
+            T::Utils.coerce(type.types.map { |type| convert(type) })
           when RBS::Types::Union
-            union_type = T.unsafe(T).any(*convert_all(type.types))
+            union_type = T.unsafe(T).any(*type.types.map { |type| convert(type) })
 
             if union_type.to_s == "T.nilable(T.untyped)"
               T.untyped
@@ -110,7 +122,7 @@ module Tapioca
             block = T.nilable(T.unsafe(block)) unless type.required
             block
           else
-            raise "Unknown RBS type: #{type.class}>"
+            raise "Unknown RBS type: <#{type.class}>"
           end
         end
 
@@ -137,10 +149,7 @@ module Tapioca
           end
         end
 
-        def convert_all(types)
-          types.map { |type| convert(type) }
-        end
-
+        sig { params(type: T.untyped).returns(String) }
         def to_string(type)
           type = convert(type) unless T::Types::Base === type
           sanitize_signature_types(type.to_s)
@@ -190,7 +199,7 @@ module Tapioca
 
         sig { params(type_name: String).returns(T::Private::Types::StringHolder) }
         def string_holder(type_name)
-          T.unsafe(T::Private::Types::StringHolder).new(type_name)
+          T::Private::Types::StringHolder.new(type_name)
         end
       end
     end

@@ -23,7 +23,10 @@ module T
 
     module Types
       class NotTyped < T::Types::Base; end
-      class StringHolder < T::Types::Base; end
+
+      class StringHolder < T::Types::Base
+        def initialize(str); end
+      end
     end
 
     module Methods
