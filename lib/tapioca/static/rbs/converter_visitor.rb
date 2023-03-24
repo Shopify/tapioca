@@ -46,8 +46,8 @@ module Tapioca
 
         sig { params(member: RBS::AST::Members::MethodDefinition).void }
         def visit_member_method_definition(member)
+          method_type = T.must(member.overloads.first).method_type
           visibility = type_converter.visibility(member.visibility || @current_visibility)
-          sig, params = build_signature_and_params_for_method(member)
 
           current_scope << RBI::Method.new(
             member.name.to_s,
@@ -55,8 +55,7 @@ module Tapioca
             visibility: visibility,
             comments: rbi_comments(member.comment),
           ) do |method|
-            params.each { |param| method << param }
-            method.sigs << sig
+            attach_signature_and_params(method, method_type)
           end
         end
 
@@ -224,29 +223,36 @@ module Tapioca
           end
         end
 
-        sig { params(method_def: RBS::AST::Members::MethodDefinition).returns([RBI::Sig, T::Array[RBI::Param]]) }
-        def build_signature_and_params_for_method(method_def)
-          method_type = T.must(method_def.overloads.first).method_type
-          tc = TypeConverter.new(@converter, method_type.type_params)
+        require "debug"
 
+        sig do
+          params(
+            method: RBI::Method,
+            method_type: RBS::MethodType,
+          ).void
+        end
+        def attach_signature_and_params(method, method_type)
+          tc = type_converter.with_type_params(method_type.type_params)
+
+          parameters = tc.convert_parameters(method_type.type, method_type.block)
           return_type = tc.to_string(method_type.type.return_type)
 
-          sig = RBI::Sig.new do |sig|
+          method.sigs << sig = RBI::Sig.new do |sig|
             tc.type_params.each do |type_param|
               sig.type_params << type_param.to_s
             end
 
             # Return type
-            sig.return_type = if method_def.name.to_s == "initialize"
+            sig.return_type = if method.name.to_s == "initialize"
               "void"
-            elsif return_type == "T.attached_class" && !method_def.singleton?
+            elsif return_type == "T.attached_class" && !method.is_singleton
               "T.untyped"
             else
               return_type
             end
           end
 
-          params = tc.convert_parameters(method_type.type, method_type.block).map do |param|
+          parameters.each do |param|
             name = param.name
 
             rbi_param = case param.kind
@@ -267,10 +273,8 @@ module Tapioca
             end
 
             sig << RBI::SigParam.new(param.name, tc.to_string(param.type))
-            T.must(rbi_param)
+            method << T.must(rbi_param)
           end
-
-          [sig, params]
         end
 
         sig { params(rbs_comment: T.nilable(RBS::AST::Comment)).returns(T::Array[RBI::Comment]) }
