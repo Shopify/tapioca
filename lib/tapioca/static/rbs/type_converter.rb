@@ -81,8 +81,7 @@ module Tapioca
               T.nilable(T.unsafe(type))
             end
           when RBS::Types::Proc
-            converter = ParameterConverter.new(self, type.type, type.block)
-            params = converter.convert.to_h { |p| [p.name, p.type] }
+            params = convert_parameters(type.type, type.block).to_h { |p| [p.name, p.type] }
             T::Types::Proc.new(params, convert(type.type.return_type))
           when RBS::Types::Record
             T::Utils.coerce(type.fields.to_h { |key, type| [key, convert(type)] })
@@ -106,13 +105,35 @@ module Tapioca
             # Don't know how to handle this...
             T.untyped
           when RBS::Types::Block
-            converter = ParameterConverter.new(self, type.type, nil)
-            params = converter.convert.to_h { |p| [p.name, p.type] }
+            params = convert_parameters(type.type, nil).to_h { |p| [p.name, p.type] }
             block = T::Types::Proc.new(params, convert(type.type.return_type))
             block = T.nilable(T.unsafe(block)) unless type.required
             block
           else
             raise "Unknown RBS type: #{type.class}>"
+          end
+        end
+
+        sig do
+          params(
+            type: RBS::Types::Function,
+            block: T.nilable(RBS::Types::Block),
+          ).returns(T::Array[ParameterResult])
+        end
+        def convert_parameters(type, block)
+          parameters = [
+            *type.required_positionals.map { |param| [:req, param.name, param] },
+            *type.optional_positionals.map { |param| [:opt, param.name, param] },
+            *Array(type.rest_positionals).map { |param| [:rest, param.name, param] },
+            *type.trailing_positionals.map { |param| [:opt, param.name, param] },
+            *type.required_keywords.map { |name, param| [:keyreq, name, param] },
+            *type.optional_keywords.map { |name, param| [:key, name, param] },
+            *Array(type.rest_keywords).map { |param| [:keyrest, param.name, param] },
+            *Array(block).map { |param| [:block, :blk, param] },
+          ]
+
+          parameters.map.with_index do |(kind, name, param), index|
+            create_param_result(kind, name, param, index)
           end
         end
 
@@ -138,6 +159,34 @@ module Tapioca
         end
 
         private
+
+        class ParameterResult < T::Struct
+          const :kind, Symbol
+          const :name, String
+          const :type, T::Types::Base
+        end
+
+        sig do
+          params(
+            kind: Symbol,
+            name: T.nilable(Symbol),
+            param: T.any(RBS::Types::Function::Param, RBS::Types::Block),
+            index: Integer,
+          ).returns(ParameterResult)
+        end
+        def create_param_result(kind, name, param, index)
+          name = nil if [:module, :class, :end, :if, :unless].include?(name)
+          name = (name || "_arg#{index}").to_s
+
+          param_type = case param
+          when RBS::Types::Block
+            param
+          else
+            param.type
+          end
+
+          ParameterResult.new(kind: kind, name: name, type: convert(param_type))
+        end
 
         sig { params(type_name: String).returns(T::Private::Types::StringHolder) }
         def string_holder(type_name)

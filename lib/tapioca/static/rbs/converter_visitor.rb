@@ -46,11 +46,8 @@ module Tapioca
 
         sig { params(member: RBS::AST::Members::MethodDefinition).void }
         def visit_member_method_definition(member)
-          method_type = T.must(member.overloads.first).method_type
-          type_converter = TypeConverter.new(@converter, method_type.type_params)
-          param_converter = ParameterConverter.new(type_converter, method_type.type, method_type.block)
-          return_type = type_converter.to_string(method_type.type.return_type)
           visibility = type_converter.visibility(member.visibility || @current_visibility)
+          sig, params = build_signature_and_params_for_method(member)
 
           current_scope << RBI::Method.new(
             member.name.to_s,
@@ -58,49 +55,8 @@ module Tapioca
             visibility: visibility,
             comments: rbi_comments(member.comment),
           ) do |method|
-            param_converter.convert.each do |param|
-              name = param.name
-
-              rbi_param = case param.kind
-              when :req
-                RBI::Param.new(name)
-              when :opt
-                RBI::OptParam.new(name, "T.unsafe(nil)")
-              when :rest
-                RBI::RestParam.new(name)
-              when :keyreq
-                RBI::KwParam.new(name)
-              when :key
-                RBI::KwOptParam.new(name, "T.unsafe(nil)")
-              when :keyrest
-                RBI::KwRestParam.new(name)
-              when :block
-                RBI::BlockParam.new(name)
-              end
-
-              method << T.must(rbi_param)
-            end
-
-            method.sigs << RBI::Sig.new do |sig|
-              # Type parameters
-              type_converter.type_params.each do |type_param|
-                sig.type_params << type_param.to_s
-              end
-
-              # Parameters
-              param_converter.convert.each do |param|
-                sig << RBI::SigParam.new(param.name, type_converter.to_string(param.type))
-              end
-
-              # Return type
-              sig.return_type = if method.name == "initialize"
-                "void"
-              elsif return_type == "T.attached_class" && !method.is_singleton
-                "T.untyped"
-              else
-                return_type
-              end
-            end
+            params.each { |param| method << param }
+            method.sigs << sig
           end
         end
 
@@ -266,6 +222,55 @@ module Tapioca
               scope.create_constant(type_param.name.to_s, value: value)
             end
           end
+        end
+
+        sig { params(method_def: RBS::AST::Members::MethodDefinition).returns([RBI::Sig, T::Array[RBI::Param]]) }
+        def build_signature_and_params_for_method(method_def)
+          method_type = T.must(method_def.overloads.first).method_type
+          tc = TypeConverter.new(@converter, method_type.type_params)
+
+          return_type = tc.to_string(method_type.type.return_type)
+
+          sig = RBI::Sig.new do |sig|
+            tc.type_params.each do |type_param|
+              sig.type_params << type_param.to_s
+            end
+
+            # Return type
+            sig.return_type = if method_def.name.to_s == "initialize"
+              "void"
+            elsif return_type == "T.attached_class" && !method_def.singleton?
+              "T.untyped"
+            else
+              return_type
+            end
+          end
+
+          params = tc.convert_parameters(method_type.type, method_type.block).map do |param|
+            name = param.name
+
+            rbi_param = case param.kind
+            when :req
+              RBI::Param.new(name)
+            when :opt
+              RBI::OptParam.new(name, "T.unsafe(nil)")
+            when :rest
+              RBI::RestParam.new(name)
+            when :keyreq
+              RBI::KwParam.new(name)
+            when :key
+              RBI::KwOptParam.new(name, "T.unsafe(nil)")
+            when :keyrest
+              RBI::KwRestParam.new(name)
+            when :block
+              RBI::BlockParam.new(name)
+            end
+
+            sig << RBI::SigParam.new(param.name, tc.to_string(param.type))
+            T.must(rbi_param)
+          end
+
+          [sig, params]
         end
 
         sig { params(rbs_comment: T.nilable(RBS::AST::Comment)).returns(T::Array[RBI::Comment]) }
