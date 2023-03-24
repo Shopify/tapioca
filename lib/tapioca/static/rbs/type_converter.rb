@@ -50,20 +50,7 @@ module Tapioca
             # unhandled
           when RBS::Types::ClassInstance
             name = type.name
-            if !type.args.empty? &&
-                name.namespace.empty? &&
-                name.class? &&
-                [
-                  "Hash",
-                  "Array",
-                  "Set",
-                  "Enumerable",
-                  "Enumerable::Lazy",
-                  "Enumerator",
-                  "Range",
-                ].include?(name.relative!.to_s)
-              name = name.relative!.with_prefix(Namespace("::T"))
-            end
+            name = name.relative!.with_prefix(Namespace("::T")) if should_prefix_with_t?(type)
             name = name.to_s
 
             type_variables = type.args.map { |arg| convert(arg).to_s }.join(", ")
@@ -195,6 +182,29 @@ module Tapioca
           end
 
           ParameterResult.new(kind: kind, name: name, type: convert(param_type))
+        end
+
+        T_GENERIC_TYPES = T.let(
+          [
+            "Hash",
+            "Array",
+            "Set",
+            "Enumerable",
+            "Enumerable::Lazy",
+            "Enumerator",
+            "Range",
+          ].to_set.freeze,
+          T::Set[String],
+        )
+
+        sig { params(type: RBS::Types::ClassInstance).returns(T::Boolean) }
+        def should_prefix_with_t?(type)
+          name = type.name
+
+          name.class? &&
+            name.namespace.empty? &&
+            T_GENERIC_TYPES.include?(name.relative!.to_s) &&
+            !type.args.empty?
         end
 
         sig { params(type_name: String).returns(T::Private::Types::StringHolder) }
