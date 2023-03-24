@@ -25,7 +25,7 @@ module Tapioca
 
         sig { params(type: T.untyped).returns(T::Types::Base) }
         def convert(type)
-          @converter.push_foreign_name(T.unsafe(type).name) if type.respond_to?(:name)
+          @converter.push_foreign_name(type.name) if type.respond_to?(:name)
 
           case type
           when RBS::Types::Alias
@@ -61,7 +61,8 @@ module Tapioca
 
             string_holder(name)
           when RBS::Types::Intersection
-            T.unsafe(T).all(*type.types.map { |type| convert(type) })
+            types = T.unsafe(type.types.map { |type| convert(type) })
+            T.all(*types)
           when RBS::Types::Literal
             T.untyped
           when RBS::Types::Optional
@@ -79,7 +80,8 @@ module Tapioca
           when RBS::Types::Tuple
             T::Utils.coerce(type.types.map { |type| convert(type) })
           when RBS::Types::Union
-            union_type = T.unsafe(T).any(*type.types.map { |type| convert(type) })
+            types = T.unsafe(type.types.map { |type| convert(type) })
+            union_type = T.any(*types)
 
             if union_type.to_s == "T.nilable(T.untyped)"
               T.untyped
