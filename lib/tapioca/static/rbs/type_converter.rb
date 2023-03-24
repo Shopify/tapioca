@@ -51,21 +51,13 @@ module Tapioca
           when RBS::Types::ClassInstance
             name = type.name
             name = name.relative!.with_prefix(Namespace("::T")) if should_prefix_with_t?(type)
-            name = name.to_s
-
-            type_variables = type.args.map { |arg| convert(arg).to_s }.join(", ")
-            name += "[#{type_variables}]" unless type_variables.empty?
+            name = append_type_variables(name.to_s, type.args)
 
             string_holder(name)
           when RBS::Types::Interface
-            name = case type.name.name.to_s
-            when "_Each"
-              "T::Enumerable"
-            else
-              type.name.to_s
-            end
-            type_variables = type.args.map { |arg| convert(arg).to_s }.join(", ")
-            name += "[#{type_variables}]" unless type_variables.empty?
+            name = type.name
+            name = "T::Enumerable" if name.to_s == "_Each"
+            name = append_type_variables(name.to_s, type.args)
 
             string_holder(name)
           when RBS::Types::Intersection
@@ -205,6 +197,17 @@ module Tapioca
             name.namespace.empty? &&
             T_GENERIC_TYPES.include?(name.relative!.to_s) &&
             !type.args.empty?
+        end
+
+        sig { params(name: String, type_args: T::Array[T.untyped]).returns(String) }
+        def append_type_variables(name, type_args)
+          type_variables = type_args.map { |arg| to_string(arg) }.join(", ")
+
+          if type_variables.empty?
+            name
+          else
+            "#{name}[#{type_variables}]"
+          end
         end
 
         sig { params(type_name: String).returns(T::Private::Types::StringHolder) }
