@@ -46,15 +46,62 @@ module Tapioca
 
         sig { params(member: RBS::AST::Members::MethodDefinition).void }
         def visit_member_method_definition(member)
-          converter = MethodConverter.new(
-            @converter,
-            T.must(member.overloads.first).method_type,
+          method_type = T.must(member.overloads.first).method_type
+          type_converter = TypeConverter.new(@converter, method_type.type_params)
+          param_converter = ParameterConverter.new(type_converter, method_type.type, method_type.block)
+          return_type = type_converter.to_string(method_type.type.return_type)
+          visibility = type_converter.visibility(member.visibility || @current_visibility)
+
+          current_scope << RBI::Method.new(
             member.name.to_s,
-            member.singleton?,
-            member.visibility || @current_visibility,
-            rbi_comments(member.comment),
-          )
-          current_scope << converter.to_rbi_method
+            is_singleton: member.singleton?,
+            visibility: visibility,
+            comments: rbi_comments(member.comment),
+          ) do |method|
+            param_converter.convert.each do |param|
+              name = param.name
+
+              rbi_param = case param.kind
+              when :req
+                RBI::Param.new(name)
+              when :opt
+                RBI::OptParam.new(name, "T.unsafe(nil)")
+              when :rest
+                RBI::RestParam.new(name)
+              when :keyreq
+                RBI::KwParam.new(name)
+              when :key
+                RBI::KwOptParam.new(name, "T.unsafe(nil)")
+              when :keyrest
+                RBI::KwRestParam.new(name)
+              when :block
+                RBI::BlockParam.new(name)
+              end
+
+              method << T.must(rbi_param)
+            end
+
+            method.sigs << RBI::Sig.new do |sig|
+              # Type parameters
+              type_converter.type_params.each do |type_param|
+                sig.type_params << type_param.to_s
+              end
+
+              # Parameters
+              param_converter.convert.each do |param|
+                sig << RBI::SigParam.new(param.name, type_converter.to_string(param.type))
+              end
+
+              # Return type
+              sig.return_type = if method.name == "initialize"
+                "void"
+              elsif return_type == "T.attached_class" && !method.is_singleton
+                "T.untyped"
+              else
+                return_type
+              end
+            end
+          end
         end
 
         sig { params(member: RBS::AST::Members::Alias).void }
