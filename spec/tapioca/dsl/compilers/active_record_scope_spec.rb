@@ -200,6 +200,48 @@ module Tapioca
 
                 assert_equal(expected, rbi_for(:Post))
               end
+
+              it "does not duplicate relation includes from abstract parent models" do
+                add_ruby_file("post.rb", <<~RUBY)
+                  class ApplicationRecord < ActiveRecord::Base
+                    self.abstract_class = true
+
+                    default_scope { max_execution_time(100) }
+                  end
+
+                  class ConfigurationRecord < ApplicationRecord
+                    self.abstract_class = true
+
+                    scope :post_scope, -> { where.not(kind: 'private') }
+
+                    default_scope { max_execution_time(200) }
+                  end
+
+                  class Post < ConfigurationRecord
+                    scope :post_scope, -> { where.not(kind: 'private') }
+                  end
+                RUBY
+
+                expected = <<~RBI
+                  # typed: strong
+
+                  class Post
+                    extend GeneratedRelationMethods
+
+                    module GeneratedAssociationRelationMethods
+                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                      def post_scope(*args, &blk); end
+                    end
+
+                    module GeneratedRelationMethods
+                      sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                      def post_scope(*args, &blk); end
+                    end
+                  end
+                RBI
+
+                assert_equal(expected, rbi_for(:Post))
+              end
             end
 
             describe "without relations enabled" do
