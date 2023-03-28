@@ -1443,19 +1443,19 @@ module IdentityCache::QueryAPI
   # callback enqueues a background job, then we don't want it to be possible for the
   # background job to run and load data from the cache before it is invalidated.
   #
-  # source://identity_cache//lib/identity_cache/query_api.rb#166
+  # source://identity_cache//lib/identity_cache/query_api.rb#168
   def _run_commit_callbacks; end
 
   # Invalidate the cache data associated with the record. Returns `true` on success,
   # `false` otherwise.
   #
-  # source://identity_cache//lib/identity_cache/query_api.rb#175
+  # source://identity_cache//lib/identity_cache/query_api.rb#177
   def expire_cache; end
 
   # @api private
   # @return [Boolean]
   #
-  # source://identity_cache//lib/identity_cache/query_api.rb#183
+  # source://identity_cache//lib/identity_cache/query_api.rb#185
   def was_new_record?; end
 
   private
@@ -1463,7 +1463,7 @@ module IdentityCache::QueryAPI
   # Even if we have problems with some attributes, carry over the results and expire
   # all possible attributes without array allocation.
   #
-  # source://identity_cache//lib/identity_cache/query_api.rb#192
+  # source://identity_cache//lib/identity_cache/query_api.rb#194
   def expire_attribute_indexes; end
 end
 
@@ -1486,16 +1486,16 @@ module IdentityCache::QueryAPI::ClassMethods
 
   private
 
-  # source://identity_cache//lib/identity_cache/query_api.rb#137
+  # source://identity_cache//lib/identity_cache/query_api.rb#139
   def cache_fetch_includes; end
 
   # source://identity_cache//lib/identity_cache/query_api.rb#32
   def check_association_scope(association_name); end
 
-  # source://identity_cache//lib/identity_cache/query_api.rb#120
+  # source://identity_cache//lib/identity_cache/query_api.rb#122
   def each_id_embedded_association; end
 
-  # source://identity_cache//lib/identity_cache/query_api.rb#133
+  # source://identity_cache//lib/identity_cache/query_api.rb#135
   def embedded_associations; end
 
   # source://identity_cache//lib/identity_cache/query_api.rb#43
@@ -1504,13 +1504,13 @@ module IdentityCache::QueryAPI::ClassMethods
   # source://identity_cache//lib/identity_cache/query_api.rb#25
   def raise_if_scoped; end
 
-  # source://identity_cache//lib/identity_cache/query_api.rb#112
+  # source://identity_cache//lib/identity_cache/query_api.rb#114
   def readonly_copy(record_or_records); end
 
-  # source://identity_cache//lib/identity_cache/query_api.rb#106
+  # source://identity_cache//lib/identity_cache/query_api.rb#108
   def readonly_record_copy(record); end
 
-  # source://identity_cache//lib/identity_cache/query_api.rb#129
+  # source://identity_cache//lib/identity_cache/query_api.rb#131
   def recursively_embedded_associations; end
 
   # source://identity_cache//lib/identity_cache/query_api.rb#69
