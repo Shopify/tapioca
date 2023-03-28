@@ -112,7 +112,7 @@ GEM
     config (4.1.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
-    connection_pool (2.3.0)
+    connection_pool (2.4.0)
     crack (0.4.5)
       rexml
     crass (1.0.6)
@@ -292,7 +292,7 @@ GEM
       rubocop (>= 0.90.0)
     ruby-progressbar (1.13.0)
     shopify-money (1.1.2)
-    sidekiq (7.0.4)
+    sidekiq (7.0.7)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)

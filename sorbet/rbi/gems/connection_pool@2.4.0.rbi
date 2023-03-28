@@ -37,46 +37,49 @@ class ConnectionPool
   # @raise [ArgumentError]
   # @return [ConnectionPool] a new instance of ConnectionPool
   #
-  # source://connection_pool//lib/connection_pool.rb#47
+  # source://connection_pool//lib/connection_pool.rb#88
   def initialize(options = T.unsafe(nil), &block); end
 
   # Number of pool entries available for checkout at this instant.
   #
-  # source://connection_pool//lib/connection_pool.rb#122
+  # source://connection_pool//lib/connection_pool.rb#164
   def available; end
 
-  # source://connection_pool//lib/connection_pool.rb#84
-  def checkin; end
+  # source://connection_pool//lib/connection_pool.rb#126
+  def checkin(force: T.unsafe(nil)); end
 
-  # source://connection_pool//lib/connection_pool.rb#74
+  # source://connection_pool//lib/connection_pool.rb#116
   def checkout(options = T.unsafe(nil)); end
 
   # Reloads the ConnectionPool by passing each connection to +block+ and then
   # removing it the pool. Subsequent checkouts will create new connections as
   # needed.
   #
-  # source://connection_pool//lib/connection_pool.rb#114
+  # source://connection_pool//lib/connection_pool.rb#156
   def reload(&block); end
 
   # Shuts down the ConnectionPool by passing each connection to +block+ and
   # then removing it from the pool. Attempting to checkout a connection after
   # shutdown will raise +ConnectionPool::PoolShuttingDownError+.
   #
-  # source://connection_pool//lib/connection_pool.rb#105
+  # source://connection_pool//lib/connection_pool.rb#147
   def shutdown(&block); end
 
   # Size of this connection pool
   #
-  # source://connection_pool//lib/connection_pool.rb#119
+  # source://connection_pool//lib/connection_pool.rb#161
   def size; end
 
-  # source://connection_pool//lib/connection_pool.rb#60
+  # source://connection_pool//lib/connection_pool.rb#102
   def then(options = T.unsafe(nil)); end
 
-  # source://connection_pool//lib/connection_pool.rb#60
+  # source://connection_pool//lib/connection_pool.rb#102
   def with(options = T.unsafe(nil)); end
 
   class << self
+    # source://connection_pool//lib/connection_pool.rb#51
+    def after_fork; end
+
     # source://connection_pool//lib/connection_pool.rb#43
     def wrap(options, &block); end
   end
@@ -87,6 +90,15 @@ ConnectionPool::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
 # source://connection_pool//lib/connection_pool.rb#5
 class ConnectionPool::Error < ::RuntimeError; end
+
+# source://connection_pool//lib/connection_pool.rb#68
+module ConnectionPool::ForkTracker
+  # source://connection_pool//lib/connection_pool.rb#69
+  def _fork; end
+end
+
+# source://connection_pool//lib/connection_pool.rb#48
+ConnectionPool::INSTANCES = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
 
 # source://connection_pool//lib/connection_pool.rb#7
 class ConnectionPool::PoolShuttingDownError < ::ConnectionPool::Error; end
@@ -248,3 +260,9 @@ end
 
 # source://connection_pool//lib/connection_pool/wrapper.rb#3
 ConnectionPool::Wrapper::METHODS = T.let(T.unsafe(nil), Array)
+
+module Process
+  extend ::ConnectionPool::ForkTracker
+  extend ::RedisClient::PIDCache::CoreExt
+  extend ::ActiveSupport::ForkTracker::ModernCoreExt
+end
