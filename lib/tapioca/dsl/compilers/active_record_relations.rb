@@ -689,6 +689,7 @@ module Tapioca
             case method_name
             when :find_each
               order = ActiveRecord::Batches.instance_method(:find_each).parameters.include?([:key, :order])
+              return_type = "T::Enumerator[#{constant_name}]"
               create_common_method(
                 "find_each",
                 parameters: [
@@ -699,10 +700,11 @@ module Tapioca
                   *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
                   create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
                 ],
-                return_type: "T.nilable(T::Enumerator[#{constant_name}])",
+                return_type: weak_find_each?(constant_name) ? as_nilable_type(return_type) : return_type,
               )
             when :find_in_batches
               order = ActiveRecord::Batches.instance_method(:find_in_batches).parameters.include?([:key, :order])
+              return_type = "T::Enumerator[T::Enumerator[#{constant_name}]]"
               create_common_method(
                 "find_in_batches",
                 parameters: [
@@ -716,11 +718,12 @@ module Tapioca
                     type: "T.nilable(T.proc.params(object: T::Array[#{constant_name}]).void)",
                   ),
                 ],
-                return_type: "T.nilable(T::Enumerator[T::Enumerator[#{constant_name}]])",
+                return_type: weak_find_each?(constant_name) ? as_nilable_type(return_type) : return_type,
               )
             when :in_batches
               order = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :order])
               use_ranges = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :use_ranges])
+              return_type = "::ActiveRecord::Batches::BatchEnumerator"
               create_common_method(
                 "in_batches",
                 parameters: [
@@ -733,7 +736,7 @@ module Tapioca
                   *(create_kw_opt_param("use_ranges", type: "T.untyped", default: "nil") if use_ranges),
                   create_block_param("block", type: "T.nilable(T.proc.params(object: #{RelationClassName}).void)"),
                 ],
-                return_type: "T.nilable(::ActiveRecord::Batches::BatchEnumerator)",
+                return_type: weak_find_each?(constant_name) ? as_nilable_type(return_type) : return_type,
               )
             end
           end
@@ -812,6 +815,12 @@ module Tapioca
             parameters: parameters,
             return_type: association_return_type,
           )
+        end
+
+        sig { params(constant: Module).returns(T::Boolean) }
+        def weak_find_each?(constant)
+          Object.const_defined?(:TapiocaWeakFindEach) &&
+            !(constant.singleton_class < Object.const_get(:TapiocaWeakFindEach))
         end
       end
     end
