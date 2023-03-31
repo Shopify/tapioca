@@ -87,7 +87,7 @@ module Zeitwerk::ExplicitNamespace
   end
 end
 
-# source://zeitwerk//lib/zeitwerk/gem_inflector.rb#5
+# source://zeitwerk//lib/zeitwerk/gem_inflector.rb#4
 class Zeitwerk::GemInflector < ::Zeitwerk::Inflector
   # @return [GemInflector] a new instance of GemInflector
   #
@@ -100,7 +100,7 @@ end
 
 # @private
 #
-# source://zeitwerk//lib/zeitwerk/gem_loader.rb#7
+# source://zeitwerk//lib/zeitwerk/gem_loader.rb#5
 class Zeitwerk::GemLoader < ::Zeitwerk::Loader
   # @return [GemLoader] a new instance of GemLoader
   #
@@ -120,6 +120,10 @@ class Zeitwerk::GemLoader < ::Zeitwerk::Loader
     #
     # source://zeitwerk//lib/zeitwerk/gem_loader.rb#12
     def _new(root_file, warn_on_extra_files:); end
+
+    private
+
+    def new(*_arg0); end
   end
 end
 

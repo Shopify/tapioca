@@ -226,6 +226,11 @@ class Kramdown::Converter::Base
     #
     # source://kramdown//lib/kramdown/converter/base.rb#139
     def get_template(template); end
+
+    private
+
+    def allocate; end
+    def new(*_arg0); end
   end
 end
 
@@ -1956,6 +1961,11 @@ class Kramdown::Parser::Base
     #
     # source://kramdown//lib/kramdown/parser/base.rb#67
     def parse(source, options = T.unsafe(nil)); end
+
+    private
+
+    def allocate; end
+    def new(*_arg0); end
   end
 end
 

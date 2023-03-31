@@ -530,7 +530,7 @@ module ActiveModel::AttributeMethods
   # attribute. This method can be overloaded to customize the behavior.
   #
   # source://activemodel//lib/active_model/attribute_methods.rb#467
-  def attribute_missing(match, *args, &block); end
+  def attribute_missing(match, *args, **_arg2, &block); end
 
   # Allows access to the object attributes, which are held in the hash
   # returned by <tt>attributes</tt>, as though they were first-class
@@ -544,7 +544,7 @@ module ActiveModel::AttributeMethods
   # can instantiate master through <tt>Client#master</tt>.
   #
   # source://activemodel//lib/active_model/attribute_methods.rb#453
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   # @return [Boolean]
   #
@@ -936,8 +936,6 @@ class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher::Attri
   #
   # @param value [Object] the value to set the attribute attr_name to.
   # @return [Object] the newly set value
-  #
-  # source://activemodel//lib/active_model/attribute_methods.rb#420
   def attr_name=(_); end
 
   # Returns the value of attribute target
@@ -949,13 +947,12 @@ class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodMatcher::Attri
   #
   # @param value [Object] the value to set the attribute target to.
   # @return [Object] the newly set value
-  #
-  # source://activemodel//lib/active_model/attribute_methods.rb#420
   def target=(_); end
 
   class << self
     def [](*_arg0); end
     def inspect; end
+    def keyword_init?; end
     def members; end
     def new(*_arg0); end
   end
@@ -1058,13 +1055,13 @@ class ActiveModel::AttributeSet
   def deep_dup; end
 
   # source://activemodel//lib/active_model/attribute_set.rb#10
-  def each_value(*_arg0, &_arg1); end
+  def each_value(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/attribute_set.rb#10
-  def except(*_arg0, &_arg1); end
+  def except(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/attribute_set.rb#10
-  def fetch(*_arg0, &_arg1); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/attribute_set.rb#45
   def fetch_value(name, &block); end
@@ -2180,8 +2177,8 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#212
   def attribute_names; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
-  def clear(*args, &block); end
+  # source://forwardable/1.3.3/forwardable.rb#231
+  def clear(*args, **_arg1, &block); end
 
   # Copies the errors from <tt>other</tt>.
   # For copying errors but keep <tt>@base</tt> as is.
@@ -2211,11 +2208,11 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#251
   def details; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
-  def each(*args, &block); end
+  # source://forwardable/1.3.3/forwardable.rb#231
+  def each(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
-  def empty?(*args, &block); end
+  # source://forwardable/1.3.3/forwardable.rb#231
+  def empty?(*args, **_arg1, &block); end
 
   # The actual array of +Error+ objects
   # This method is aliased to <tt>objects</tt>.
@@ -2402,8 +2399,8 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#370
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
-  def size(*args, &block); end
+  # source://forwardable/1.3.3/forwardable.rb#231
+  def size(*args, **_arg1, &block); end
 
   # Returns all the full error messages in an array.
   #
@@ -2428,8 +2425,8 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#231
   def to_hash(full_messages = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
-  def uniq!(*args, &block); end
+  # source://forwardable/1.3.3/forwardable.rb#231
+  def uniq!(*args, **_arg1, &block); end
 
   # Search for errors matching +attribute+, +type+, or +options+.
   #
@@ -2553,13 +2550,13 @@ class ActiveModel::LazyAttributeHash
   def each_key(&block); end
 
   # source://activemodel//lib/active_model/attribute_set/builder.rb#95
-  def each_value(*_arg0, &_arg1); end
+  def each_value(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/attribute_set/builder.rb#95
-  def except(*_arg0, &_arg1); end
+  def except(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/attribute_set/builder.rb#95
-  def fetch(*_arg0, &_arg1); end
+  def fetch(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
@@ -2573,7 +2570,7 @@ class ActiveModel::LazyAttributeHash
   def marshal_load(values); end
 
   # source://activemodel//lib/active_model/attribute_set/builder.rb#95
-  def transform_values(*_arg0, &_arg1); end
+  def transform_values(*_arg0, **_arg1, &_arg2); end
 
   protected
 
@@ -2877,10 +2874,10 @@ class ActiveModel::Name
   def initialize(klass, namespace = T.unsafe(nil), name = T.unsafe(nil), locale = T.unsafe(nil)); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def !~(*_arg0, &_arg1); end
+  def !~(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def <=>(*_arg0, &_arg1); end
+  def <=>(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/naming.rb#151
   def ==(arg); end
@@ -2889,10 +2886,10 @@ class ActiveModel::Name
   def ===(arg); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def =~(*_arg0, &_arg1); end
+  def =~(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def as_json(*_arg0, &_arg1); end
+  def as_json(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute collection.
   #
@@ -2924,7 +2921,7 @@ class ActiveModel::Name
   def element=(_arg0); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def eql?(*_arg0, &_arg1); end
+  def eql?(*_arg0, **_arg1, &_arg2); end
 
   # Transform the model name into a more human format, using I18n. By default,
   # it will underscore then humanize the class name.
@@ -2953,7 +2950,7 @@ class ActiveModel::Name
   def i18n_key=(_arg0); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def match?(*_arg0, &_arg1); end
+  def match?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute name.
   #
@@ -3028,10 +3025,10 @@ class ActiveModel::Name
   def singular_route_key=(_arg0); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def to_s(*_arg0, &_arg1); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel//lib/active_model/naming.rb#151
-  def to_str(*_arg0, &_arg1); end
+  def to_str(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
@@ -3172,8 +3169,8 @@ class ActiveModel::NestedError < ::ActiveModel::Error
   # source://activemodel//lib/active_model/nested_error.rb#17
   def inner_error; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
-  def message(*args, &block); end
+  # source://forwardable/1.3.3/forwardable.rb#231
+  def message(*args, **_arg1, &block); end
 end
 
 # source://activemodel//lib/active_model/attribute_mutation_tracker.rb#148
@@ -3210,6 +3207,13 @@ class ActiveModel::NullMutationTracker
 
   # source://activemodel//lib/active_model/attribute_mutation_tracker.rb#178
   def original_value(attr_name); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://activemodel//lib/active_model/railtie.rb#7
@@ -3705,7 +3709,7 @@ module ActiveModel::Type
     def default_value; end
 
     # source://activemodel//lib/active_model/type.rb#33
-    def lookup(*_arg0, &_arg1); end
+    def lookup(*_arg0, **_arg1, &_arg2); end
 
     # Add a new type to the registry, allowing it to be referenced as a
     # symbol by {attribute}[rdoc-ref:Attributes::ClassMethods#attribute].
@@ -4101,7 +4105,7 @@ class ActiveModel::Type::Registry
   def initialize; end
 
   # source://activemodel//lib/active_model/type/registry.rb#23
-  def lookup(symbol, *args); end
+  def lookup(symbol, *args, **_arg2); end
 
   # source://activemodel//lib/active_model/type/registry.rb#15
   def register(type_name, klass = T.unsafe(nil), &block); end

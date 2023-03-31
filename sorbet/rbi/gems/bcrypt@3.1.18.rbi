@@ -169,7 +169,7 @@ class BCrypt::Errors::InvalidSecret < ::BCrypt::Error; end
 #   @db_password == "my grand secret" #=> true
 #   @db_password == "a paltry guess"  #=> false
 #
-# source://bcrypt//lib/bcrypt/password.rb#24
+# source://bcrypt//lib/bcrypt/password.rb#23
 class BCrypt::Password < ::String
   # Initializes a BCrypt::Password instance with the data from a stored hash.
   #

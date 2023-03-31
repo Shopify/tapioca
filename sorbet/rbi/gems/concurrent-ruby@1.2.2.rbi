@@ -2024,7 +2024,7 @@ end
 #
 # @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicBoolean.html java.util.concurrent.atomic.AtomicBoolean
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_boolean.rb#120
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_boolean.rb#119
 class Concurrent::AtomicBoolean < ::Concurrent::MutexAtomicBoolean
   # @return [String] Short string representation.
   #
@@ -2108,7 +2108,7 @@ end
 #
 # @see http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/atomic/AtomicLong.html java.util.concurrent.atomic.AtomicLong
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_fixnum.rb#137
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/atomic/atomic_fixnum.rb#136
 class Concurrent::AtomicFixnum < ::Concurrent::MutexAtomicFixnum
   # @return [String] Short string representation.
   #
@@ -3497,7 +3497,7 @@ module Concurrent::Concern::Observable
   def observers=(_arg0); end
 end
 
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/errors.rb#71
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/errors.rb#70
 class Concurrent::ConcurrentUpdateError < ::ThreadError; end
 
 # frozen pre-allocated backtrace to speed ConcurrentUpdateError
@@ -4573,7 +4573,7 @@ Concurrent::ImmutableStruct::FACTORY = T.let(T.unsafe(nil), T.untyped)
 #
 # @note Intended for use primarily in testing and debugging.
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/indirect_immediate_executor.rb#20
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/indirect_immediate_executor.rb#19
 class Concurrent::IndirectImmediateExecutor < ::Concurrent::ImmediateExecutor
   # Creates a new executor
   #
@@ -5329,6 +5329,11 @@ class Concurrent::Maybe < ::Concurrent::Synchronization::Object
     #
     # source://concurrent-ruby//lib/concurrent-ruby/concurrent/maybe.rb#164
     def nothing(error = T.unsafe(nil)); end
+
+    private
+
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/safe_initialization.rb#29
+    def new(*args, &block); end
   end
 end
 
@@ -6910,6 +6915,11 @@ class Concurrent::Promises::BlockedPromise < ::Concurrent::Promises::InnerPromis
 
     # source://concurrent-ruby//lib/concurrent-ruby/concurrent/promises.rb#1620
     def new_blocked_by2(blocker1, blocker2, *args, &block); end
+
+    private
+
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/safe_initialization.rb#29
+    def new(*args, &block); end
   end
 end
 
@@ -8207,6 +8217,9 @@ class Concurrent::Promises::ResolvableFuturePromise < ::Concurrent::Promises::Ab
   #
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/promises.rb#1597
   def initialize(default_executor); end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/promises.rb#1582
+  def evaluate_to(*args, block); end
 end
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/promises.rb#1899
@@ -8698,7 +8711,7 @@ class Concurrent::RejectedExecutionError < ::Concurrent::Error; end
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/errors.rb#52
 class Concurrent::ResourceLimitError < ::Concurrent::Error; end
 
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/exchanger.rb#134
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/exchanger.rb#129
 class Concurrent::RubyExchanger < ::Concurrent::AbstractExchanger
   extend ::Concurrent::Synchronization::SafeInitialization
 
@@ -9399,6 +9412,9 @@ class Concurrent::ScheduledTask < ::Concurrent::IVar
 
   protected
 
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/ivar.rb#135
+  def fail(reason = T.unsafe(nil)); end
+
   # Reschedule the task using the given delay and the current time.
   # A task can only be reset while it is `:pending`.
   #
@@ -9415,6 +9431,12 @@ class Concurrent::ScheduledTask < ::Concurrent::IVar
   #
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/scheduled_task.rb#312
   def ns_schedule(delay); end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/ivar.rb#113
+  def set(value = T.unsafe(nil)); end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/ivar.rb#145
+  def try_set(value = T.unsafe(nil), &block); end
 
   class << self
     # Create a new `ScheduledTask` object with the given block, execute it, and return the
@@ -10255,6 +10277,11 @@ class Concurrent::Synchronization::Condition < ::Concurrent::Synchronization::Lo
   class << self
     # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/safe_initialization.rb#29
     def private_new(*args, &block); end
+
+    private
+
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/safe_initialization.rb#29
+    def new(*args, &block); end
   end
 end
 
@@ -10271,13 +10298,28 @@ end
 
 # TODO (pitr-ch 04-Dec-2016): should be in edge
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#9
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#8
 class Concurrent::Synchronization::Lock < ::Concurrent::Synchronization::LockableObject
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#31
   def broadcast; end
 
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/mutex_lockable_object.rb#16
+  def ns_broadcast; end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/mutex_lockable_object.rb#11
+  def ns_signal; end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/mutex_lockable_object.rb#52
+  def ns_wait(timeout = T.unsafe(nil)); end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/abstract_lockable_object.rb#37
+  def ns_wait_until(timeout = T.unsafe(nil), &condition); end
+
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#25
   def signal; end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/mutex_lockable_object.rb#44
+  def synchronize; end
 
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/synchronization/lock.rb#13
   def wait(timeout = T.unsafe(nil)); end
@@ -10897,6 +10939,9 @@ class Concurrent::TimerSet < ::Concurrent::RubyExecutorService
 
   private
 
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/executor_service.rb#166
+  def <<(task); end
+
   # Initialize the object.
   #
   # @param opts [Hash] the options to create the object with.
@@ -11141,6 +11186,9 @@ class Concurrent::TimerTask < ::Concurrent::RubyExecutorService
 
   private
 
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/executor_service.rb#166
+  def <<(task); end
+
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/timer_task.rb#297
   def execute_task(completion); end
 
@@ -11152,6 +11200,9 @@ class Concurrent::TimerTask < ::Concurrent::RubyExecutorService
 
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/timer_task.rb#279
   def ns_shutdown_execution; end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/ruby_executor_service.rb#17
+  def post(*args, &task); end
 
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/timer_task.rb#291
   def schedule_next_task(interval = T.unsafe(nil)); end

@@ -525,10 +525,4 @@ URI::GID::COMPONENT = T.let(T.unsafe(nil), Array)
 # source://globalid//lib/global_id/uri/gid.rb#32
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
 
-# source://uri/0.12.0/uri/common.rb#303
-URI::TBLENCURICOMP_ = T.let(T.unsafe(nil), Hash)
-
 class URI::WSS < ::URI::WS; end
-
-# source://uri/0.12.0/uri/wss.rb#19
-URI::WSS::DEFAULT_PORT = T.let(T.unsafe(nil), Integer)

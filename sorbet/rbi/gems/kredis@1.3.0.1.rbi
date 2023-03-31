@@ -700,10 +700,10 @@ class Kredis::Types::Proxy
   # source://kredis//lib/kredis/types/proxy.rb#14
   def multi(*args, **kwargs, &block); end
 
-  # source://activesupport/7.0.4.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#56
+  # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#56
   def pipeline; end
 
-  # source://activesupport/7.0.4.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#100
+  # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#100
   def pipeline=(obj); end
 
   private
@@ -715,10 +715,10 @@ class Kredis::Types::Proxy
   def redis; end
 
   class << self
-    # source://activesupport/7.0.4.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#48
+    # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#48
     def pipeline; end
 
-    # source://activesupport/7.0.4.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#92
+    # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#92
     def pipeline=(obj); end
   end
 end

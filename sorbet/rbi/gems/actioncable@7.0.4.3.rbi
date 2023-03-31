@@ -179,7 +179,7 @@ class ActionCable::Channel::Base
   def identifier; end
 
   # source://actioncable//lib/action_cable/channel/base.rb#106
-  def logger(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute params.
   #
@@ -362,10 +362,10 @@ module ActionCable::Channel::Broadcasting
   mixes_in_class_methods ::ActionCable::Channel::Broadcasting::ClassMethods
 
   # source://actioncable//lib/action_cable/channel/broadcasting.rb#10
-  def broadcast_to(*_arg0, &_arg1); end
+  def broadcast_to(*_arg0, **_arg1, &_arg2); end
 
   # source://actioncable//lib/action_cable/channel/broadcasting.rb#10
-  def broadcasting_for(*_arg0, &_arg1); end
+  def broadcasting_for(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://actioncable//lib/action_cable/channel/broadcasting.rb#12
@@ -515,7 +515,7 @@ module ActionCable::Channel::Naming
   mixes_in_class_methods ::ActionCable::Channel::Naming::ClassMethods
 
   # source://actioncable//lib/action_cable/channel/naming.rb#22
-  def channel_name(*_arg0, &_arg1); end
+  def channel_name(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://actioncable//lib/action_cable/channel/naming.rb#8
@@ -660,7 +660,7 @@ module ActionCable::Channel::Streams
   extend ::ActiveSupport::Concern
 
   # source://actioncable//lib/action_cable/channel/streams.rb#138
-  def pubsub(*_arg0, &_arg1); end
+  def pubsub(*_arg0, **_arg1, &_arg2); end
 
   # Unsubscribes all streams associated with this channel from the pubsub queue.
   #
@@ -1097,7 +1097,7 @@ class ActionCable::Connection::Base
   def env; end
 
   # source://actioncable//lib/action_cable/connection/base.rb#53
-  def event_loop(*_arg0, &_arg1); end
+  def event_loop(*_arg0, **_arg1, &_arg2); end
 
   # source://actioncable//lib/action_cable/connection/identification.rb#11
   def identifiers; end
@@ -1137,7 +1137,7 @@ class ActionCable::Connection::Base
   def protocol; end
 
   # source://actioncable//lib/action_cable/connection/base.rb#53
-  def pubsub(*_arg0, &_arg1); end
+  def pubsub(*_arg0, **_arg1, &_arg2); end
 
   # Decodes WebSocket messages and dispatches them to subscribed channels.
   # WebSocket message transfer encoding is always JSON.
@@ -1565,7 +1565,7 @@ class ActionCable::Connection::Subscriptions
   def identifiers; end
 
   # source://actioncable//lib/action_cable/connection/subscriptions.rb#69
-  def logger(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
 
   # source://actioncable//lib/action_cable/connection/subscriptions.rb#55
   def perform_action(data); end
@@ -2091,7 +2091,7 @@ class ActionCable::Server::Base
   def event_loop; end
 
   # source://actioncable//lib/action_cable/server/base.rb#20
-  def logger(*_arg0, &_arg1); end
+  def logger(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute mutex.
   #
@@ -2726,10 +2726,10 @@ module ActionCable::TestHelper
   def before_setup; end
 
   # source://actioncable//lib/action_cable/test_helper.rb#126
-  def broadcasts(*_arg0, &_arg1); end
+  def broadcasts(*_arg0, **_arg1, &_arg2); end
 
   # source://actioncable//lib/action_cable/test_helper.rb#126
-  def clear_messages(*_arg0, &_arg1); end
+  def clear_messages(*_arg0, **_arg1, &_arg2); end
 
   # source://actioncable//lib/action_cable/test_helper.rb#122
   def pubsub_adapter; end

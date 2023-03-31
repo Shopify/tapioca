@@ -148,7 +148,7 @@ class ActiveRecord::Base
   def collection_cache_versioning?; end
 
   # source://activerecord/7.0.4.3/lib/active_record/model_schema.rb#171
-  def column_for_attribute(*_arg0, &_arg1); end
+  def column_for_attribute(*_arg0, **_arg1, &_arg2); end
 
   # source://activerecord/7.0.4.3/lib/active_record/core.rb#74
   def default_connection_handler; end
@@ -211,7 +211,7 @@ class ActiveRecord::Base
   def logger?; end
 
   # source://activemodel/7.0.4.3/lib/active_model/naming.rb#244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # source://activerecord/7.0.4.3/lib/active_record/nested_attributes.rb#15
   def nested_attributes_options; end
@@ -301,7 +301,7 @@ class ActiveRecord::Base
   def time_zone_aware_types?; end
 
   # source://activerecord/7.0.4.3/lib/active_record/model_schema.rb#171
-  def type_for_attribute(*_arg0, &_arg1); end
+  def type_for_attribute(*_arg0, **_arg1, &_arg2); end
 
   # source://activemodel/7.0.4.3/lib/active_model/validations.rb#48
   def validation_context; end
@@ -1728,7 +1728,7 @@ class ActiveStorage::Attached::Changes::PurgeOne
   def reset; end
 end
 
-# source://activestorage//lib/active_storage/attached/many.rb#10
+# source://activestorage//lib/active_storage/attached/many.rb#5
 class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/many.rb#49
   def attach(*attachables); end
@@ -1743,16 +1743,16 @@ class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   def blobs; end
 
   # source://activestorage//lib/active_storage/attached/many.rb#23
-  def detach(*_arg0, &_arg1); end
+  def detach(*_arg0, **_arg1, &_arg2); end
 
   # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/delegation.rb#302
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   # source://activestorage//lib/active_storage/attached/many.rb#11
-  def purge(*_arg0, &_arg1); end
+  def purge(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage//lib/active_storage/attached/many.rb#17
-  def purge_later(*_arg0, &_arg1); end
+  def purge_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -1801,7 +1801,7 @@ module ActiveStorage::Attached::Model::ClassMethods
   def validate_service_configuration(association_name, service); end
 end
 
-# source://activestorage//lib/active_storage/attached/one.rb#10
+# source://activestorage//lib/active_storage/attached/one.rb#5
 class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/one.rb#56
   def attach(attachable); end
@@ -1816,16 +1816,16 @@ class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   def blank?; end
 
   # source://activestorage//lib/active_storage/attached/one.rb#23
-  def detach(*_arg0, &_arg1); end
+  def detach(*_arg0, **_arg1, &_arg2); end
 
   # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/delegation.rb#302
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   # source://activestorage//lib/active_storage/attached/one.rb#11
-  def purge(*_arg0, &_arg1); end
+  def purge(*_arg0, **_arg1, &_arg2); end
 
   # source://activestorage//lib/active_storage/attached/one.rb#17
-  def purge_later(*_arg0, &_arg1); end
+  def purge_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -1850,11 +1850,11 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
   def autosave_associated_records_for_record(*args); end
 
   # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/delegation.rb#302
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   def purge; end
   def purge_later; end
-  def signed_id(*_arg0, &_arg1); end
+  def signed_id(*_arg0, **_arg1, &_arg2); end
 
   # source://activerecord/7.0.4.3/lib/active_record/autosave_association.rb#160
   def validate_associated_records_for_blob(*args); end
@@ -1887,7 +1887,7 @@ class ActiveStorage::Attachment < ::ActiveStorage::Record
     def defined_enums; end
 
     # source://activerecord/7.0.4.3/lib/active_record/scoping/named.rb#174
-    def with_all_variant_records(*args); end
+    def with_all_variant_records(*args, **_arg1); end
   end
 end
 
@@ -2940,15 +2940,15 @@ class ActiveStorage::Variant
   def initialize(blob, variation_or_variation_key); end
 
   def blob; end
-  def content_type(*_arg0, &_arg1); end
-  def content_type_for_serving(*_arg0, &_arg1); end
+  def content_type(*_arg0, **_arg1, &_arg2); end
+  def content_type_for_serving(*_arg0, **_arg1, &_arg2); end
   def download(&block); end
   def filename; end
   def forced_disposition_for_serving; end
   def image; end
   def key; end
   def processed; end
-  def service(*_arg0, &_arg1); end
+  def service(*_arg0, **_arg1, &_arg2); end
   def url(expires_in: T.unsafe(nil), disposition: T.unsafe(nil)); end
   def variation; end
 
@@ -2988,7 +2988,7 @@ class ActiveStorage::VariantRecord < ::ActiveStorage::Record
     def defined_enums; end
 
     # source://activerecord/7.0.4.3/lib/active_record/scoping/named.rb#174
-    def with_attached_image(*args); end
+    def with_attached_image(*args, **_arg1); end
   end
 end
 
@@ -3066,14 +3066,14 @@ class ActiveStorage::VariantWithRecord
   def initialize(blob, variation); end
 
   def blob; end
-  def download(*_arg0, &_arg1); end
+  def download(*_arg0, **_arg1, &_arg2); end
   def image; end
-  def key(*_arg0, &_arg1); end
+  def key(*_arg0, **_arg1, &_arg2); end
   def process; end
   def processed; end
   def processed?; end
-  def service(*_arg0, &_arg1); end
-  def url(*_arg0, &_arg1); end
+  def service(*_arg0, **_arg1, &_arg2); end
+  def url(*_arg0, **_arg1, &_arg2); end
   def variation; end
 
   private

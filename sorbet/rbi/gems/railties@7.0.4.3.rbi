@@ -101,10 +101,10 @@ module Rails
     def groups(*groups); end
 
     # source://railties//lib/rails.rb#43
-    def initialize!(*_arg0, &_arg1); end
+    def initialize!(*_arg0, **_arg1, &_arg2); end
 
     # source://railties//lib/rails.rb#43
-    def initialized?(*_arg0, &_arg1); end
+    def initialized?(*_arg0, **_arg1, &_arg2); end
 
     # Returns the value of attribute logger.
     #
@@ -290,7 +290,7 @@ class Rails::Application < ::Rails::Engine
   def credentials=(_arg0); end
 
   # source://railties//lib/rails/application.rb#101
-  def default_url_options(*_arg0, &_arg1); end
+  def default_url_options(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/application.rb#101
   def default_url_options=(arg); end
@@ -585,6 +585,8 @@ class Rails::Application < ::Rails::Engine
 
     # source://railties//lib/rails/application.rb#77
     def instance; end
+
+    def new(*_arg0); end
   end
 end
 
@@ -1327,10 +1329,10 @@ class Rails::Application::RoutesReloader
   def eager_load=(_arg0); end
 
   # source://railties//lib/rails/application/routes_reloader.rb#13
-  def execute(*_arg0, &_arg1); end
+  def execute(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/application/routes_reloader.rb#13
-  def execute_if_updated(*_arg0, &_arg1); end
+  def execute_if_updated(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute external_routes.
   #
@@ -1354,7 +1356,7 @@ class Rails::Application::RoutesReloader
   def run_after_load_paths=(_arg0); end
 
   # source://railties//lib/rails/application/routes_reloader.rb#13
-  def updated?(*_arg0, &_arg1); end
+  def updated?(*_arg0, **_arg1, &_arg2); end
 
   private
 
@@ -1869,37 +1871,37 @@ class Rails::Configuration::MiddlewareStackProxy
   def +(other); end
 
   # source://railties//lib/rails/configuration.rb#70
-  def delete(*_arg0, &_arg1); end
+  def delete(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#52
-  def insert(*_arg0, &_arg1); end
+  def insert(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#58
-  def insert_after(*_arg0, &_arg1); end
+  def insert_after(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#52
-  def insert_before(*_arg0, &_arg1); end
+  def insert_before(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#88
   def merge_into(other); end
 
   # source://railties//lib/rails/configuration.rb#74
-  def move(*_arg0, &_arg1); end
+  def move(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#80
-  def move_after(*_arg0, &_arg1); end
+  def move_after(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#74
-  def move_before(*_arg0, &_arg1); end
+  def move_before(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#62
-  def swap(*_arg0, &_arg1); end
+  def swap(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#84
-  def unshift(*_arg0, &_arg1); end
+  def unshift(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/configuration.rb#66
-  def use(*_arg0, &_arg1); end
+  def use(*_arg0, **_arg1, &_arg2); end
 
   protected
 
@@ -2299,7 +2301,7 @@ class Rails::Engine < ::Rails::Railtie
   def endpoint; end
 
   # source://railties//lib/rails/engine.rb#430
-  def engine_name(*_arg0, &_arg1); end
+  def engine_name(*_arg0, **_arg1, &_arg2); end
 
   # Defines additional Rack env configuration that is added on each call.
   #
@@ -2317,7 +2319,7 @@ class Rails::Engine < ::Rails::Railtie
   def helpers_paths; end
 
   # source://railties//lib/rails/engine.rb#430
-  def isolated?(*_arg0, &_arg1); end
+  def isolated?(*_arg0, **_arg1, &_arg2); end
 
   # Load console and invoke the registered hooks.
   # Check Rails::Railtie.console for more info.
@@ -2358,16 +2360,16 @@ class Rails::Engine < ::Rails::Railtie
   def load_tasks(app = T.unsafe(nil)); end
 
   # source://railties//lib/rails/engine.rb#429
-  def middleware(*_arg0, &_arg1); end
+  def middleware(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/engine.rb#429
-  def paths(*_arg0, &_arg1); end
+  def paths(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/engine.rb#489
   def railties; end
 
   # source://railties//lib/rails/engine.rb#429
-  def root(*_arg0, &_arg1); end
+  def root(*_arg0, **_arg1, &_arg2); end
 
   # Defines the routes for this engine. If a block is given to
   # routes, it is appended to the engine.
@@ -2442,7 +2444,7 @@ class Rails::Engine < ::Rails::Railtie
     def called_from=(_arg0); end
 
     # source://railties//lib/rails/engine.rb#358
-    def eager_load!(*_arg0, &_arg1); end
+    def eager_load!(*_arg0, **_arg1, &_arg2); end
 
     # source://railties//lib/rails/engine.rb#378
     def endpoint(endpoint = T.unsafe(nil)); end
@@ -3998,7 +4000,7 @@ class Rails::Generators::NamedBase < ::Rails::Generators::Base
   def class_path; end
 
   # source://railties//lib/rails/generators/named_base.rb#105
-  def edit_helper(*_arg0, &_arg1); end
+  def edit_helper(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/generators/named_base.rb#54
   def file_path; end
@@ -4753,10 +4755,10 @@ module Rails::MailersController::HelperMethods
   include ::ActionController::Base::HelperMethods
 
   # source://railties//lib/rails/mailers_controller.rb#12
-  def locale_query(*args, &block); end
+  def locale_query(*args, **_arg1, &block); end
 
   # source://railties//lib/rails/mailers_controller.rb#12
-  def part_query(*args, &block); end
+  def part_query(*args, **_arg1, &block); end
 end
 
 # source://railties//lib/rails/paths.rb#6
@@ -5167,7 +5169,7 @@ class Rails::Railtie
   def inspect; end
 
   # source://railties//lib/rails/railtie.rb#244
-  def railtie_name(*_arg0, &_arg1); end
+  def railtie_name(*_arg0, **_arg1, &_arg2); end
 
   # source://railties//lib/rails/railtie.rb#267
   def railtie_namespace; end
@@ -5206,7 +5208,7 @@ class Rails::Railtie
     def abstract_railtie?; end
 
     # source://railties//lib/rails/railtie.rb#146
-    def config(*_arg0, &_arg1); end
+    def config(*_arg0, **_arg1, &_arg2); end
 
     # Allows you to configure the railtie. This is the same method seen in
     # Railtie::Configurable, but this module is no longer required for all
@@ -5266,7 +5268,9 @@ class Rails::Railtie
     # to the Railtie instance.
     #
     # source://railties//lib/rails/railtie.rb#224
-    def method_missing(name, *args, &block); end
+    def method_missing(name, *args, **_arg2, &block); end
+
+    def new(*_arg0); end
 
     # receives an instance variable identifier, set the variable value if is
     # blank and append given block to value, which will be used later in

@@ -3194,7 +3194,7 @@ CodeRay::TokenKinds = T.let(T.unsafe(nil), Hash)
 # You can serialize it to a JSON string and store it in a database, pass it
 # around to encode it more than once, send it to other algorithms...
 #
-# source://coderay//lib/coderay/tokens.rb#43
+# source://coderay//lib/coderay/tokens.rb#41
 class CodeRay::Tokens < ::Array
   # source://coderay//lib/coderay/tokens.rb#156
   def begin_group(kind); end

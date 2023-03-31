@@ -10,16 +10,6 @@ module RuboCop; end
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/binding_constants_without_type_alias.rb#6
 module RuboCop::Cop; end
 
-# @deprecated IgnoredMethods class has been replaced with AllowedMethods.
-#
-# source://rubocop/1.44.1/lib/rubocop/cop/mixin/allowed_methods.rb#38
-RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
-
-# @deprecated IgnoredPattern class has been replaced with AllowedPattern.
-#
-# source://rubocop/1.44.1/lib/rubocop/cop/mixin/allowed_pattern.rb#54
-RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
-
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/binding_constants_without_type_alias.rb#7
 module RuboCop::Cop::Sorbet; end
 
@@ -1023,12 +1013,6 @@ class RuboCop::Cop::Style::MutableConstant < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::Sorbet::MutableConstantSorbetAwareBehaviour
 end
 
-# source://rubocop/1.44.1/lib/rubocop/ast_aliases.rb#5
-RuboCop::NodePattern = RuboCop::AST::NodePattern
-
-# source://rubocop/1.44.1/lib/rubocop/ast_aliases.rb#6
-RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
-
 # source://rubocop-sorbet//lib/rubocop/sorbet/version.rb#3
 module RuboCop::Sorbet; end
 
@@ -1057,6 +1041,3 @@ RuboCop::Sorbet::PROJECT_ROOT = T.let(T.unsafe(nil), Pathname)
 
 # source://rubocop-sorbet//lib/rubocop/sorbet/version.rb#4
 RuboCop::Sorbet::VERSION = T.let(T.unsafe(nil), String)
-
-# source://rubocop/1.44.1/lib/rubocop/ast_aliases.rb#7
-RuboCop::Token = RuboCop::AST::Token

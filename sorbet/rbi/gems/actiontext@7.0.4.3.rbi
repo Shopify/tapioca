@@ -133,7 +133,7 @@ class ActionText::Attachables::ContentAttachment
   def attachable_plain_text_representation(caption); end
 
   # source://activemodel/7.0.4.3/lib/active_model/naming.rb#244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute name.
   #
@@ -196,7 +196,7 @@ module ActionText::Attachables::MissingAttachable
   extend ::ActiveModel::Naming
 
   # source://activemodel/7.0.4.3/lib/active_model/naming.rb#244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   class << self
     # source://actiontext//lib/action_text/attachables/missing_attachable.rb#8
@@ -227,7 +227,7 @@ class ActionText::Attachables::RemoteImage
   def height; end
 
   # source://activemodel/7.0.4.3/lib/active_model/naming.rb#244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext//lib/action_text/attachables/remote_image.rb#41
   def to_partial_path; end
@@ -286,7 +286,7 @@ class ActionText::Attachment
   def inspect; end
 
   # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/delegation.rb#302
-  def method_missing(method, *args, &block); end
+  def method_missing(method, *args, **_arg2, &block); end
 
   # Returns the value of attribute node.
   #
@@ -303,7 +303,7 @@ class ActionText::Attachment
   def to_html; end
 
   # source://actiontext//lib/action_text/attachment.rb#52
-  def to_param(*_arg0, &_arg1); end
+  def to_param(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext//lib/action_text/attachment.rb#72
   def to_plain_text; end
@@ -412,7 +412,7 @@ class ActionText::AttachmentGallery
   def inspect; end
 
   # source://activemodel/7.0.4.3/lib/active_model/naming.rb#244
-  def model_name(*_arg0, &_arg1); end
+  def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute node.
   #
@@ -581,10 +581,10 @@ class ActionText::Content
   def attachments; end
 
   # source://actiontext//lib/action_text/content.rb#9
-  def blank?(*_arg0, &_arg1); end
+  def blank?(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext//lib/action_text/content.rb#9
-  def empty?(*_arg0, &_arg1); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute fragment.
   #
@@ -595,7 +595,7 @@ class ActionText::Content
   def gallery_attachments; end
 
   # source://actiontext//lib/action_text/content.rb#9
-  def html_safe(*_arg0, &_arg1); end
+  def html_safe(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext//lib/action_text/content.rb#102
   def inspect; end
@@ -604,10 +604,10 @@ class ActionText::Content
   def links; end
 
   # source://actiontext//lib/action_text/content.rb#9
-  def present?(*_arg0, &_arg1); end
+  def present?(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext//lib/action_text/rendering.rb#13
-  def render(*_arg0, &_arg1); end
+  def render(*_arg0, **_arg1, &_arg2); end
 
   # source://actiontext//lib/action_text/content.rb#67
   def render_attachment_galleries(&block); end
@@ -988,12 +988,12 @@ class ActionText::RichText < ::ActionText::Record
   # source://activerecord/7.0.4.3/lib/active_record/autosave_association.rb#160
   def autosave_associated_records_for_record(*args); end
 
-  def blank?(*_arg0, &_arg1); end
-  def empty?(*_arg0, &_arg1); end
-  def nil?(*_arg0, &_arg1); end
-  def present?(*_arg0, &_arg1); end
+  def blank?(*_arg0, **_arg1, &_arg2); end
+  def empty?(*_arg0, **_arg1, &_arg2); end
+  def nil?(*_arg0, **_arg1, &_arg2); end
+  def present?(*_arg0, **_arg1, &_arg2); end
   def to_plain_text; end
-  def to_s(*_arg0, &_arg1); end
+  def to_s(*_arg0, **_arg1, &_arg2); end
   def to_trix_html; end
 
   # source://activerecord/7.0.4.3/lib/active_record/autosave_association.rb#160
@@ -1022,7 +1022,7 @@ class ActionText::RichText < ::ActionText::Record
     def defined_enums; end
 
     # source://activerecord/7.0.4.3/lib/active_record/scoping/named.rb#174
-    def with_attached_embeds(*args); end
+    def with_attached_embeds(*args, **_arg1); end
   end
 end
 
@@ -1567,6 +1567,6 @@ module ActionView::Helpers::Tags; end
 class ActionView::Helpers::Tags::ActionText < ::ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::Tags::Placeholderable
 
-  def dom_id(*_arg0, &_arg1); end
+  def dom_id(*_arg0, **_arg1, &_arg2); end
   def render; end
 end

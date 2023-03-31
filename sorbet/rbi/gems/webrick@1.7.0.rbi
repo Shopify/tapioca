@@ -1463,7 +1463,7 @@ end
 
 # An HTTP Server
 #
-# source://webrick//lib/webrick/httpserver.rb#44
+# source://webrick//lib/webrick/httpserver.rb#27
 class WEBrick::HTTPServer < ::WEBrick::GenericServer
   # Creates a new HTTP server according to +config+
   #

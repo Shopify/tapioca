@@ -858,7 +858,7 @@ class ActionMailer::Base < ::AbstractController::Base
   def preview_path; end
 
   # source://actionmailer//lib/action_mailer/base.rb#638
-  def process(method_name, *args); end
+  def process(method_name, *args, **_arg2); end
 
   # source://actionmailer//lib/action_mailer/delivery_methods.rb#13
   def raise_delivery_errors; end
@@ -1343,7 +1343,7 @@ class ActionMailer::Base < ::AbstractController::Base
     private
 
     # source://actionmailer//lib/action_mailer/base.rb#616
-    def method_missing(method_name, *args); end
+    def method_missing(method_name, *args, **_arg2); end
 
     # source://actionmailer//lib/action_mailer/base.rb#546
     def observer_class_for(value); end
@@ -1365,10 +1365,10 @@ module ActionMailer::Base::HelperMethods
   include ::ActionText::TagHelper
 
   # source://actionpack/7.0.4.3/lib/abstract_controller/caching/fragments.rb#31
-  def combined_fragment_cache_key(*args, &block); end
+  def combined_fragment_cache_key(*args, **_arg1, &block); end
 
   # source://actionpack/7.0.4.3/lib/abstract_controller/caching.rb#43
-  def view_cache_dependencies(*args, &block); end
+  def view_cache_dependencies(*args, **_arg1, &block); end
 end
 
 # source://actionmailer//lib/action_mailer/base.rb#757
@@ -1507,7 +1507,7 @@ module ActionMailer::DeliveryMethods::ClassMethods
   def add_delivery_method(symbol, klass, default_options = T.unsafe(nil)); end
 
   # source://actionmailer//lib/action_mailer/delivery_methods.rb#42
-  def deliveries(*_arg0, &_arg1); end
+  def deliveries(*_arg0, **_arg1, &_arg2); end
 
   # source://actionmailer//lib/action_mailer/delivery_methods.rb#42
   def deliveries=(arg); end
@@ -1565,7 +1565,7 @@ ActionMailer::InlinePreviewInterceptor::PATTERN = T.let(T.unsafe(nil), Regexp)
 # Implements the ActiveSupport::LogSubscriber for logging notifications when
 # email is delivered or received.
 #
-# source://actionmailer//lib/action_mailer/log_subscriber.rb#9
+# source://actionmailer//lib/action_mailer/log_subscriber.rb#8
 class ActionMailer::LogSubscriber < ::ActiveSupport::LogSubscriber
   # An email was delivered.
   #
@@ -1681,7 +1681,7 @@ class ActionMailer::MessageDelivery
   # @return [MessageDelivery] a new instance of MessageDelivery
   #
   # source://actionmailer//lib/action_mailer/message_delivery.rb#18
-  def initialize(mailer_class, action, *args); end
+  def initialize(mailer_class, action, *args, **_arg3); end
 
   # Method calls are delegated to the Mail::Message that's ready to deliver.
   #
@@ -1907,7 +1907,7 @@ class ActionMailer::Parameterized::Mailer
   private
 
   # source://actionmailer//lib/action_mailer/parameterized.rb#111
-  def method_missing(method_name, *args); end
+  def method_missing(method_name, *args, **_arg2); end
 
   # @return [Boolean]
   #
@@ -1920,7 +1920,7 @@ class ActionMailer::Parameterized::MessageDelivery < ::ActionMailer::MessageDeli
   # @return [MessageDelivery] a new instance of MessageDelivery
   #
   # source://actionmailer//lib/action_mailer/parameterized.rb#126
-  def initialize(mailer_class, action, params, *args); end
+  def initialize(mailer_class, action, params, *args, **_arg4); end
 
   private
 
@@ -2064,7 +2064,7 @@ module ActionMailer::Rescuable
   private
 
   # source://actionmailer//lib/action_mailer/rescuable.rb#23
-  def process(*_arg0, &_arg1); end
+  def process(*_arg0, **_arg1, &_arg2); end
 
   module GeneratedClassMethods
     def rescue_handlers; end

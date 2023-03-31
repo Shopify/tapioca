@@ -5,6 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem redis-client`.
 
 module Process
+  extend ::ConnectionPool::ForkTracker
   extend ::RedisClient::PIDCache::CoreExt
   extend ::ActiveSupport::ForkTracker::ModernCoreExt
 end

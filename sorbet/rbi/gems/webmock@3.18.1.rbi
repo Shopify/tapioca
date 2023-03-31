@@ -478,6 +478,13 @@ class WebMock::Config
   #
   # source://webmock//lib/webmock/config.rb#14
   def show_stubbing_instructions=(_arg0); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/deprecation.rb#2
@@ -585,6 +592,13 @@ class WebMock::HttpLibAdapterRegistry
 
   # source://webmock//lib/webmock/http_lib_adapters/http_lib_adapter_registry.rb#11
   def register(lib, adapter); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#8
@@ -985,6 +999,13 @@ class WebMock::RequestRegistry
 
   # source://webmock//lib/webmock/request_registry.rb#22
   def to_s; end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/request_signature.rb#3
@@ -1345,6 +1366,13 @@ class WebMock::StubRegistry
 
   # source://webmock//lib/webmock/stub_registry.rb#70
   def request_stub_for(request_signature); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/stub_request_snippet.rb#2

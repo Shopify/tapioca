@@ -501,31 +501,31 @@ class Byebug::Command
   # source://byebug//lib/byebug/command.rb#51
   def arguments; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def confirm(*args, **_arg1, &block); end
 
   # source://byebug//lib/byebug/command.rb#43
   def context; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def errmsg(*args, **_arg1, &block); end
 
   # source://byebug//lib/byebug/command.rb#47
   def frame; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def help(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def match(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def pr(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def prc(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def print(*args, **_arg1, &block); end
 
   # Returns the value of attribute processor.
@@ -533,10 +533,10 @@ class Byebug::Command
   # source://byebug//lib/byebug/command.rb#36
   def processor; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def prv(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def puts(*args, **_arg1, &block); end
 
   class << self
@@ -677,10 +677,10 @@ class Byebug::CommandProcessor
   # source://byebug//lib/byebug/processors/command_processor.rb#50
   def command_list; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def commands(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def confirm(*args, **_arg1, &block); end
 
   # Returns the value of attribute context.
@@ -688,10 +688,10 @@ class Byebug::CommandProcessor
   # source://byebug//lib/byebug/processors/command_processor.rb#21
   def context; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def errmsg(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def frame(*args, **_arg1, &block); end
 
   # Returns the value of attribute interface.
@@ -699,10 +699,10 @@ class Byebug::CommandProcessor
   # source://byebug//lib/byebug/processors/command_processor.rb#21
   def interface; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def pr(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def prc(*args, **_arg1, &block); end
 
   # Returns the value of attribute prev_line.
@@ -730,10 +730,10 @@ class Byebug::CommandProcessor
   # source://byebug//lib/byebug/processors/command_processor.rb#94
   def process_commands; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def prv(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def puts(*args, **_arg1, &block); end
 
   protected
@@ -842,7 +842,7 @@ class Byebug::Context
   def backtrace; end
   def dead?; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def file(*args, **_arg1, &block); end
 
   # Reader for the current frame
@@ -872,7 +872,7 @@ class Byebug::Context
   # source://byebug//lib/byebug/context.rb#87
   def interrupt; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def line(*args, **_arg1, &block); end
 
   # Current file & line information
@@ -988,7 +988,7 @@ end
 
 # Processes commands when there's not program running
 #
-# source://byebug//lib/byebug/processors/control_processor.rb#12
+# source://byebug//lib/byebug/processors/control_processor.rb#9
 class Byebug::ControlProcessor < ::Byebug::CommandProcessor
   # Available commands
   #
@@ -1051,7 +1051,7 @@ end
 
 # Disabling custom display expressions or breakpoints.
 #
-# source://byebug//lib/byebug/commands/disable/breakpoints.rb#12
+# source://byebug//lib/byebug/commands/disable/breakpoints.rb#9
 class Byebug::DisableCommand < ::Byebug::Command
   include ::Byebug::Subcommands
   extend ::Byebug::Helpers::ReflectionHelper
@@ -1199,7 +1199,7 @@ end
 
 # Enabling custom display expressions or breakpoints.
 #
-# source://byebug//lib/byebug/commands/enable/breakpoints.rb#12
+# source://byebug//lib/byebug/commands/enable/breakpoints.rb#9
 class Byebug::EnableCommand < ::Byebug::Command
   include ::Byebug::Subcommands
   extend ::Byebug::Helpers::ReflectionHelper
@@ -1964,7 +1964,7 @@ Byebug::HistsizeSetting::DEFAULT = T.let(T.unsafe(nil), Integer)
 
 # Shows info about different aspects of the debugger.
 #
-# source://byebug//lib/byebug/commands/info/breakpoints.rb#10
+# source://byebug//lib/byebug/commands/info/breakpoints.rb#7
 class Byebug::InfoCommand < ::Byebug::Command
   include ::Byebug::Subcommands
   extend ::Byebug::Helpers::ReflectionHelper
@@ -2311,16 +2311,16 @@ class Byebug::ListCommand < ::Byebug::Command
   include ::Byebug::Helpers::FileHelper
   include ::Byebug::Helpers::ParseHelper
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def amend_final(*args, **_arg1, &block); end
 
   # source://byebug//lib/byebug/commands/list.rb#40
   def execute; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def max_line(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def size(*args, **_arg1, &block); end
 
   private
@@ -2817,7 +2817,7 @@ end
 
 # Processes commands from a file
 #
-# source://byebug//lib/byebug/processors/script_processor.rb#12
+# source://byebug//lib/byebug/processors/script_processor.rb#9
 class Byebug::ScriptProcessor < ::Byebug::CommandProcessor
   # source://byebug//lib/byebug/processors/script_processor.rb#28
   def after_repl; end
@@ -3141,7 +3141,7 @@ module Byebug::Subcommands
   # source://byebug//lib/byebug/subcommands.rb#23
   def execute; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def subcommand_list(*args, **_arg1, &block); end
 
   class << self
@@ -3171,7 +3171,7 @@ end
 
 # Manipulation of Ruby threads
 #
-# source://byebug//lib/byebug/commands/thread/current.rb#12
+# source://byebug//lib/byebug/commands/thread/current.rb#9
 class Byebug::ThreadCommand < ::Byebug::Command
   include ::Byebug::Subcommands
   extend ::Byebug::Helpers::ReflectionHelper
@@ -3384,7 +3384,7 @@ end
 
 # Shows variables and its values
 #
-# source://byebug//lib/byebug/commands/var/all.rb#12
+# source://byebug//lib/byebug/commands/var/all.rb#9
 class Byebug::VarCommand < ::Byebug::Command
   include ::Byebug::Subcommands
   extend ::Byebug::Helpers::ReflectionHelper

@@ -873,35 +873,11 @@ class Numeric
   def to_money(currency = T.unsafe(nil)); end
 end
 
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/numeric/bytes.rb#9
-Numeric::EXABYTE = T.let(T.unsafe(nil), Integer)
-
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/numeric/bytes.rb#6
-Numeric::GIGABYTE = T.let(T.unsafe(nil), Integer)
-
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/numeric/bytes.rb#4
-Numeric::KILOBYTE = T.let(T.unsafe(nil), Integer)
-
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/numeric/bytes.rb#5
-Numeric::MEGABYTE = T.let(T.unsafe(nil), Integer)
-
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/numeric/bytes.rb#8
-Numeric::PETABYTE = T.let(T.unsafe(nil), Integer)
-
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/numeric/bytes.rb#7
-Numeric::TERABYTE = T.let(T.unsafe(nil), Integer)
-
 # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#3
 module RuboCop; end
 
 # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#4
 module RuboCop::Cop; end
-
-# source://rubocop/1.44.0/lib/rubocop/cop/mixin/allowed_methods.rb#38
-RuboCop::Cop::IgnoredMethods = RuboCop::Cop::AllowedMethods
-
-# source://rubocop/1.44.0/lib/rubocop/cop/mixin/allowed_pattern.rb#54
-RuboCop::Cop::IgnoredPattern = RuboCop::Cop::AllowedPattern
 
 # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#5
 module RuboCop::Cop::Money; end
@@ -971,15 +947,6 @@ end
 # source://shopify-money//lib/rubocop/cop/money/zero_money.rb#27
 RuboCop::Cop::Money::ZeroMoney::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#5
-RuboCop::NodePattern = RuboCop::AST::NodePattern
-
-# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#6
-RuboCop::ProcessedSource = RuboCop::AST::ProcessedSource
-
-# source://rubocop/1.44.0/lib/rubocop/ast_aliases.rb#7
-RuboCop::Token = RuboCop::AST::Token
-
 # Allows Writing of '100'.to_money for +String+ types
 # Excess characters will be discarded
 #   '100'.to_money => #<Money @cents=10000>
@@ -992,9 +959,3 @@ class String
   # source://shopify-money//lib/money/core_extensions.rb#16
   def to_money(currency = T.unsafe(nil)); end
 end
-
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/object/blank.rb#104
-String::BLANK_RE = T.let(T.unsafe(nil), Regexp)
-
-# source://activesupport/7.0.4.1/lib/active_support/core_ext/object/blank.rb#105
-String::ENCODED_BLANKS = T.let(T.unsafe(nil), Concurrent::Map)
