@@ -19,6 +19,8 @@ module Tapioca
 
     SORBET_PAYLOAD_URL = "https://github.com/sorbet/sorbet/tree/master/rbi"
 
+    SPOOM_CONTEXT = T.let(Spoom::Context.new("."), Spoom::Context)
+
     FEATURE_REQUIREMENTS = T.let(
       {
         # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
@@ -29,7 +31,7 @@ module Tapioca
 
     sig { params(sorbet_args: String).returns(Spoom::ExecResult) }
     def sorbet(*sorbet_args)
-      Spoom::Sorbet.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path, capture_err: true)
+      SPOOM_CONTEXT.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path)
     end
 
     sig { returns(String) }

@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "rbi"
+require "spoom"
 
 require "tapioca"
 require "tapioca/runtime/reflection"
