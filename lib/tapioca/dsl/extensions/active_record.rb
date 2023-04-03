@@ -23,7 +23,7 @@ module Tapioca
 
           attr_reader :__tapioca_secure_tokens
 
-          def has_secure_token(attribute = :token, length: ::ActiveRecord::SecureToken::MINIMUM_TOKEN_LENGTH)
+          def has_secure_token(attribute = :token, **)
             @__tapioca_secure_tokens ||= []
             @__tapioca_secure_tokens << attribute
 
