@@ -21,10 +21,10 @@ class Spoom::Cli::Bump < ::Thor
 
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/cli/bump.rb#171
+  # source://spoom//lib/spoom/cli/bump.rb#170
   def print_changes(files, command:, from: T.unsafe(nil), to: T.unsafe(nil), dry: T.unsafe(nil), path: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/cli/bump.rb#193
+  # source://spoom//lib/spoom/cli/bump.rb#192
   def undo_changes(files, from_strictness); end
 end
 
@@ -218,7 +218,7 @@ class Spoom::Cli::Main < ::Thor
   include ::Spoom::Colorize
   include ::Spoom::Cli::Helper
 
-  # source://spoom//lib/spoom/cli.rb#65
+  # source://spoom//lib/spoom/cli.rb#61
   def __print_version; end
 
   # source://thor/1.2.1/lib/thor.rb#239
@@ -242,7 +242,7 @@ class Spoom::Cli::Main < ::Thor
   class << self
     # @return [Boolean]
     #
-    # source://spoom//lib/spoom/cli.rb#72
+    # source://spoom//lib/spoom/cli.rb#68
     def exit_on_failure?; end
   end
 end
@@ -562,35 +562,35 @@ module Spoom::Context::Sorbet
 
   # Does this context has a `sorbet/config` file?
   #
-  # source://spoom//lib/spoom/context/sorbet.rb#84
+  # source://spoom//lib/spoom/context/sorbet.rb#102
   sig { returns(T::Boolean) }
   def has_sorbet_config?; end
 
   # Read the strictness sigil from the file at `relative_path` (returns `nil` if no sigil)
   #
-  # source://spoom//lib/spoom/context/sorbet.rb#107
+  # source://spoom//lib/spoom/context/sorbet.rb#125
   sig { params(relative_path: ::String).returns(T.nilable(::String)) }
   def read_file_strictness(relative_path); end
 
   # Read the contents of `sorbet/config` in this context directory
   #
-  # source://spoom//lib/spoom/context/sorbet.rb#95
+  # source://spoom//lib/spoom/context/sorbet.rb#113
   sig { returns(::String) }
   def read_sorbet_config; end
 
-  # source://spoom//lib/spoom/context/sorbet.rb#89
+  # source://spoom//lib/spoom/context/sorbet.rb#107
   sig { returns(::Spoom::Sorbet::Config) }
   def sorbet_config; end
 
   # Get the commit introducing the `sorbet/config` file
   #
-  # source://spoom//lib/spoom/context/sorbet.rb#113
+  # source://spoom//lib/spoom/context/sorbet.rb#131
   sig { returns(T.nilable(::Spoom::Git::Commit)) }
   def sorbet_intro_commit; end
 
   # Get the commit removing the `sorbet/config` file
   #
-  # source://spoom//lib/spoom/context/sorbet.rb#125
+  # source://spoom//lib/spoom/context/sorbet.rb#143
   sig { returns(T.nilable(::Spoom::Git::Commit)) }
   def sorbet_removal_commit; end
 
@@ -603,8 +603,20 @@ module Spoom::Context::Sorbet
   # List all files typechecked by Sorbet from its `config`
   #
   # source://spoom//lib/spoom/context/sorbet.rb#65
-  sig { params(with_config: T.nilable(::Spoom::Sorbet::Config)).returns(T::Array[::String]) }
-  def srb_files(with_config: T.unsafe(nil)); end
+  sig { params(with_config: T.nilable(::Spoom::Sorbet::Config), include_rbis: T::Boolean).returns(T::Array[::String]) }
+  def srb_files(with_config: T.unsafe(nil), include_rbis: T.unsafe(nil)); end
+
+  # List all files typechecked by Sorbet from its `config` that matches `strictness`
+  #
+  # source://spoom//lib/spoom/context/sorbet.rb#87
+  sig do
+    params(
+      strictness: ::String,
+      with_config: T.nilable(::Spoom::Sorbet::Config),
+      include_rbis: T::Boolean
+    ).returns(T::Array[::String])
+  end
+  def srb_files_with_strictness(strictness, with_config: T.unsafe(nil), include_rbis: T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/context/sorbet.rb#45
   sig do
@@ -620,13 +632,13 @@ module Spoom::Context::Sorbet
   sig { params(arg: ::String, sorbet_bin: T.nilable(::String), capture_err: T::Boolean).returns(::Spoom::ExecResult) }
   def srb_tc(*arg, sorbet_bin: T.unsafe(nil), capture_err: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/context/sorbet.rb#75
+  # source://spoom//lib/spoom/context/sorbet.rb#93
   sig { params(arg: ::String, sorbet_bin: T.nilable(::String), capture_err: T::Boolean).returns(T.nilable(::String)) }
   def srb_version(*arg, sorbet_bin: T.unsafe(nil), capture_err: T.unsafe(nil)); end
 
   # Set the `contents` of `sorbet/config` in this context directory
   #
-  # source://spoom//lib/spoom/context/sorbet.rb#101
+  # source://spoom//lib/spoom/context/sorbet.rb#119
   sig { params(contents: ::String, append: T::Boolean).void }
   def write_sorbet_config!(contents, append: T.unsafe(nil)); end
 end
@@ -634,6 +646,10 @@ end
 # source://spoom//lib/spoom/coverage/snapshot.rb#5
 module Spoom::Coverage
   class << self
+    # source://spoom//lib/spoom/coverage.rb#103
+    sig { params(context: ::Spoom::Context).returns(::Spoom::FileTree) }
+    def file_tree(context); end
+
     # source://spoom//lib/spoom/coverage.rb#83
     sig do
       params(
@@ -643,10 +659,6 @@ module Spoom::Coverage
       ).returns(::Spoom::Coverage::Report)
     end
     def report(context, snapshots, palette:); end
-
-    # source://spoom//lib/spoom/coverage.rb#97
-    sig { params(context: ::Spoom::Context).returns(::Spoom::FileTree) }
-    def sigils_tree(context); end
 
     # source://spoom//lib/spoom/coverage.rb#16
     sig do
@@ -705,9 +717,16 @@ end
 
 # source://spoom//lib/spoom/coverage/report.rb#153
 class Spoom::Coverage::Cards::Map < ::Spoom::Coverage::Cards::Card
-  # source://spoom//lib/spoom/coverage/report.rb#157
-  sig { params(sigils_tree: ::Spoom::FileTree, title: ::String).void }
-  def initialize(sigils_tree:, title: T.unsafe(nil)); end
+  # source://spoom//lib/spoom/coverage/report.rb#164
+  sig do
+    params(
+      file_tree: ::Spoom::FileTree,
+      nodes_strictnesses: T::Hash[::Spoom::FileTree::Node, T.nilable(::String)],
+      nodes_strictness_scores: T::Hash[::Spoom::FileTree::Node, ::Float],
+      title: ::String
+    ).void
+  end
+  def initialize(file_tree:, nodes_strictnesses:, nodes_strictness_scores:, title: T.unsafe(nil)); end
 end
 
 # source://spoom//lib/spoom/coverage/report.rb#123
@@ -736,62 +755,62 @@ end
 # source://spoom//lib/spoom/coverage/report.rb#126
 Spoom::Coverage::Cards::Snapshot::TEMPLATE = T.let(T.unsafe(nil), String)
 
-# source://spoom//lib/spoom/coverage/report.rb#225
+# source://spoom//lib/spoom/coverage/report.rb#240
 class Spoom::Coverage::Cards::SorbetIntro < ::Spoom::Coverage::Cards::Erb
-  # source://spoom//lib/spoom/coverage/report.rb#229
+  # source://spoom//lib/spoom/coverage/report.rb#244
   sig { params(sorbet_intro_commit: T.nilable(::String), sorbet_intro_date: T.nilable(::Time)).void }
   def initialize(sorbet_intro_commit: T.unsafe(nil), sorbet_intro_date: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/coverage/report.rb#235
+  # source://spoom//lib/spoom/coverage/report.rb#250
   sig { override.returns(::String) }
   def erb; end
 end
 
-# source://spoom//lib/spoom/coverage/report.rb#162
+# source://spoom//lib/spoom/coverage/report.rb#177
 class Spoom::Coverage::Cards::Timeline < ::Spoom::Coverage::Cards::Card
-  # source://spoom//lib/spoom/coverage/report.rb#166
+  # source://spoom//lib/spoom/coverage/report.rb#181
   sig { params(title: ::String, timeline: ::Spoom::Coverage::D3::Timeline).void }
   def initialize(title:, timeline:); end
 end
 
-# source://spoom//lib/spoom/coverage/report.rb#179
+# source://spoom//lib/spoom/coverage/report.rb#194
 class Spoom::Coverage::Cards::Timeline::Calls < ::Spoom::Coverage::Cards::Timeline
-  # source://spoom//lib/spoom/coverage/report.rb#183
+  # source://spoom//lib/spoom/coverage/report.rb#198
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
 end
 
-# source://spoom//lib/spoom/coverage/report.rb#197
+# source://spoom//lib/spoom/coverage/report.rb#212
 class Spoom::Coverage::Cards::Timeline::RBIs < ::Spoom::Coverage::Cards::Timeline
-  # source://spoom//lib/spoom/coverage/report.rb#201
+  # source://spoom//lib/spoom/coverage/report.rb#216
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
 end
 
-# source://spoom//lib/spoom/coverage/report.rb#215
+# source://spoom//lib/spoom/coverage/report.rb#230
 class Spoom::Coverage::Cards::Timeline::Runtimes < ::Spoom::Coverage::Cards::Timeline
-  # source://spoom//lib/spoom/coverage/report.rb#219
+  # source://spoom//lib/spoom/coverage/report.rb#234
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
 end
 
-# source://spoom//lib/spoom/coverage/report.rb#170
+# source://spoom//lib/spoom/coverage/report.rb#185
 class Spoom::Coverage::Cards::Timeline::Sigils < ::Spoom::Coverage::Cards::Timeline
-  # source://spoom//lib/spoom/coverage/report.rb#174
+  # source://spoom//lib/spoom/coverage/report.rb#189
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
 end
 
-# source://spoom//lib/spoom/coverage/report.rb#188
+# source://spoom//lib/spoom/coverage/report.rb#203
 class Spoom::Coverage::Cards::Timeline::Sigs < ::Spoom::Coverage::Cards::Timeline
-  # source://spoom//lib/spoom/coverage/report.rb#192
+  # source://spoom//lib/spoom/coverage/report.rb#207
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
 end
 
-# source://spoom//lib/spoom/coverage/report.rb#206
+# source://spoom//lib/spoom/coverage/report.rb#221
 class Spoom::Coverage::Cards::Timeline::Versions < ::Spoom::Coverage::Cards::Timeline
-  # source://spoom//lib/spoom/coverage/report.rb#210
+  # source://spoom//lib/spoom/coverage/report.rb#225
   sig { params(snapshots: T::Array[::Spoom::Coverage::Snapshot], title: ::String).void }
   def initialize(snapshots:, title: T.unsafe(nil)); end
 end
@@ -882,19 +901,18 @@ end
 
 # source://spoom//lib/spoom/coverage/d3/circle_map.rb#148
 class Spoom::Coverage::D3::CircleMap::Sigils < ::Spoom::Coverage::D3::CircleMap
-  # source://spoom//lib/spoom/coverage/d3/circle_map.rb#152
-  sig { params(id: ::String, sigils_tree: ::Spoom::FileTree).void }
-  def initialize(id, sigils_tree); end
+  # source://spoom//lib/spoom/coverage/d3/circle_map.rb#159
+  sig do
+    params(
+      id: ::String,
+      file_tree: ::Spoom::FileTree,
+      nodes_strictnesses: T::Hash[::Spoom::FileTree::Node, T.nilable(::String)],
+      nodes_scores: T::Hash[::Spoom::FileTree::Node, ::Float]
+    ).void
+  end
+  def initialize(id, file_tree, nodes_strictnesses, nodes_scores); end
 
-  # source://spoom//lib/spoom/coverage/d3/circle_map.rb#181
-  sig { params(node: ::Spoom::FileTree::Node).returns(::Float) }
-  def tree_node_score(node); end
-
-  # source://spoom//lib/spoom/coverage/d3/circle_map.rb#173
-  sig { params(node: ::Spoom::FileTree::Node).returns(T.nilable(::String)) }
-  def tree_node_strictness(node); end
-
-  # source://spoom//lib/spoom/coverage/d3/circle_map.rb#160
+  # source://spoom//lib/spoom/coverage/d3/circle_map.rb#166
   sig { params(node: ::Spoom::FileTree::Node).returns(T::Hash[::Symbol, T.untyped]) }
   def tree_node_to_json(node); end
 end
@@ -1186,48 +1204,30 @@ end
 # source://spoom//lib/spoom/coverage/report.rb#44
 Spoom::Coverage::Page::TEMPLATE = T.let(T.unsafe(nil), String)
 
-# source://spoom//lib/spoom/coverage/report.rb#246
+# source://spoom//lib/spoom/coverage/report.rb#261
 class Spoom::Coverage::Report < ::Spoom::Coverage::Page
-  # source://spoom//lib/spoom/coverage/report.rb#274
+  # source://spoom//lib/spoom/coverage/report.rb#276
   sig do
     params(
       project_name: ::String,
       palette: ::Spoom::Coverage::D3::ColorPalette,
       snapshots: T::Array[::Spoom::Coverage::Snapshot],
-      sigils_tree: ::Spoom::FileTree,
+      file_tree: ::Spoom::FileTree,
+      nodes_strictnesses: T::Hash[::Spoom::FileTree::Node, T.nilable(::String)],
+      nodes_strictness_scores: T::Hash[::Spoom::FileTree::Node, ::Float],
       sorbet_intro_commit: T.nilable(::String),
       sorbet_intro_date: T.nilable(::Time)
     ).void
   end
-  def initialize(project_name:, palette:, snapshots:, sigils_tree:, sorbet_intro_commit: T.unsafe(nil), sorbet_intro_date: T.unsafe(nil)); end
+  def initialize(project_name:, palette:, snapshots:, file_tree:, nodes_strictnesses:, nodes_strictness_scores:, sorbet_intro_commit: T.unsafe(nil), sorbet_intro_date: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/coverage/report.rb#302
+  # source://spoom//lib/spoom/coverage/report.rb#308
   sig { override.returns(T::Array[::Spoom::Coverage::Cards::Card]) }
   def cards; end
 
-  # source://spoom//lib/spoom/coverage/report.rb#291
+  # source://spoom//lib/spoom/coverage/report.rb#297
   sig { override.returns(::String) }
   def header_html; end
-
-  # source://spoom//lib/spoom/coverage/report.rb#250
-  sig { returns(::String) }
-  def project_name; end
-
-  # source://spoom//lib/spoom/coverage/report.rb#262
-  sig { returns(::Spoom::FileTree) }
-  def sigils_tree; end
-
-  # source://spoom//lib/spoom/coverage/report.rb#259
-  sig { returns(T::Array[::Spoom::Coverage::Snapshot]) }
-  def snapshots; end
-
-  # source://spoom//lib/spoom/coverage/report.rb#253
-  sig { returns(T.nilable(::String)) }
-  def sorbet_intro_commit; end
-
-  # source://spoom//lib/spoom/coverage/report.rb#256
-  sig { returns(T.nilable(::Time)) }
-  def sorbet_intro_date; end
 end
 
 # source://spoom//lib/spoom/coverage/snapshot.rb#6
@@ -1341,76 +1341,183 @@ class Spoom::ExecResult < ::T::Struct
   end
 end
 
+# source://spoom//lib/spoom/file_collector.rb#5
+class Spoom::FileCollector
+  # Initialize a new file collector
+  #
+  # If `allow_extensions` is empty, all files are collected.
+  # If `allow_extensions` is an array of extensions, only files with one of these extensions are collected.
+  #
+  # source://spoom//lib/spoom/file_collector.rb#21
+  sig { params(allow_extensions: T::Array[::String], exclude_patterns: T::Array[::String]).void }
+  def initialize(allow_extensions: T.unsafe(nil), exclude_patterns: T.unsafe(nil)); end
+
+  # source://spoom//lib/spoom/file_collector.rb#9
+  sig { returns(T::Array[::String]) }
+  def files; end
+
+  # source://spoom//lib/spoom/file_collector.rb#33
+  sig { params(path: ::String).void }
+  def visit_path(path); end
+
+  # source://spoom//lib/spoom/file_collector.rb#28
+  sig { params(paths: T::Array[::String]).void }
+  def visit_paths(paths); end
+
+  private
+
+  # source://spoom//lib/spoom/file_collector.rb#50
+  sig { params(path: ::String).returns(::String) }
+  def clean_path(path); end
+
+  # source://spoom//lib/spoom/file_collector.rb#67
+  sig { params(path: ::String).returns(T::Boolean) }
+  def excluded_file?(path); end
+
+  # source://spoom//lib/spoom/file_collector.rb#75
+  sig { params(path: ::String).returns(T::Boolean) }
+  def excluded_path?(path); end
+
+  # source://spoom//lib/spoom/file_collector.rb#62
+  sig { params(path: ::String).void }
+  def visit_directory(path); end
+
+  # source://spoom//lib/spoom/file_collector.rb#55
+  sig { params(path: ::String).void }
+  def visit_file(path); end
+end
+
 # Build a file hierarchy from a set of file paths.
 #
 # source://spoom//lib/spoom/file_tree.rb#6
 class Spoom::FileTree
-  # source://spoom//lib/spoom/file_tree.rb#13
-  sig { params(paths: T::Enumerable[::String], strip_prefix: T.nilable(::String)).void }
-  def initialize(paths = T.unsafe(nil), strip_prefix: T.unsafe(nil)); end
+  # source://spoom//lib/spoom/file_tree.rb#10
+  sig { params(paths: T::Enumerable[::String]).void }
+  def initialize(paths = T.unsafe(nil)); end
 
   # Add a `path` to the tree
   #
   # This will create all nodes until the root of `path`.
   #
-  # source://spoom//lib/spoom/file_tree.rb#29
+  # source://spoom//lib/spoom/file_tree.rb#25
   sig { params(path: ::String).returns(::Spoom::FileTree::Node) }
   def add_path(path); end
 
   # Add all `paths` to the tree
   #
-  # source://spoom//lib/spoom/file_tree.rb#21
+  # source://spoom//lib/spoom/file_tree.rb#17
   sig { params(paths: T::Enumerable[::String]).void }
   def add_paths(paths); end
 
   # All the nodes in this tree
   #
-  # source://spoom//lib/spoom/file_tree.rb#51
+  # source://spoom//lib/spoom/file_tree.rb#45
   sig { returns(T::Array[::Spoom::FileTree::Node]) }
   def nodes; end
 
-  # All the paths in this tree
+  # Return a map of typing scores for each node in the tree
+  #
+  # source://spoom//lib/spoom/file_tree.rb#67
+  sig { params(context: ::Spoom::Context).returns(T::Hash[::Spoom::FileTree::Node, ::Float]) }
+  def nodes_strictness_scores(context); end
+
+  # Return a map of strictnesses for each node in the tree
   #
   # source://spoom//lib/spoom/file_tree.rb#59
+  sig { params(context: ::Spoom::Context).returns(T::Hash[::Spoom::FileTree::Node, T.nilable(::String)]) }
+  def nodes_strictnesses(context); end
+
+  # All the paths in this tree
+  #
+  # source://spoom//lib/spoom/file_tree.rb#53
   sig { returns(T::Array[::String]) }
   def paths; end
 
-  # source://spoom//lib/spoom/file_tree.rb#71
-  sig do
-    params(
-      out: T.any(::IO, ::StringIO),
-      show_strictness: T::Boolean,
-      colors: T::Boolean,
-      indent_level: ::Integer
-    ).void
-  end
-  def print(out: T.unsafe(nil), show_strictness: T.unsafe(nil), colors: T.unsafe(nil), indent_level: T.unsafe(nil)); end
+  # Return a map of typing scores for each path in the tree
+  #
+  # source://spoom//lib/spoom/file_tree.rb#75
+  sig { params(context: ::Spoom::Context).returns(T::Hash[::String, ::Float]) }
+  def paths_strictness_scores(context); end
+
+  # source://spoom//lib/spoom/file_tree.rb#80
+  sig { params(out: T.any(::IO, ::StringIO), colors: T::Boolean).void }
+  def print(out: T.unsafe(nil), colors: T.unsafe(nil)); end
+
+  # source://spoom//lib/spoom/file_tree.rb#86
+  sig { params(context: ::Spoom::Context, out: T.any(::IO, ::StringIO), colors: T::Boolean).void }
+  def print_with_strictnesses(context, out: T.unsafe(nil), colors: T.unsafe(nil)); end
 
   # All root nodes
   #
-  # source://spoom//lib/spoom/file_tree.rb#45
+  # source://spoom//lib/spoom/file_tree.rb#39
   sig { returns(T::Array[::Spoom::FileTree::Node]) }
   def roots; end
+end
 
-  # source://spoom//lib/spoom/file_tree.rb#10
-  sig { returns(T.nilable(::String)) }
-  def strip_prefix; end
+# A visitor that collects all the nodes in a tree
+#
+# source://spoom//lib/spoom/file_tree.rb#140
+class Spoom::FileTree::CollectNodes < ::Spoom::FileTree::Visitor
+  # source://spoom//lib/spoom/file_tree.rb#147
+  sig { void }
+  def initialize; end
+
+  # source://spoom//lib/spoom/file_tree.rb#144
+  sig { returns(T::Array[::Spoom::FileTree::Node]) }
+  def nodes; end
+
+  # source://spoom//lib/spoom/file_tree.rb#153
+  sig { override.params(node: ::Spoom::FileTree::Node).void }
+  def visit_node(node); end
+end
+
+# A visitor that collects the typing score of each node in a tree
+#
+# source://spoom//lib/spoom/file_tree.rb#183
+class Spoom::FileTree::CollectScores < ::Spoom::FileTree::CollectStrictnesses
+  # source://spoom//lib/spoom/file_tree.rb#190
+  sig { params(context: ::Spoom::Context).void }
+  def initialize(context); end
+
+  # source://spoom//lib/spoom/file_tree.rb#187
+  sig { returns(T::Hash[::Spoom::FileTree::Node, ::Float]) }
+  def scores; end
+
+  # source://spoom//lib/spoom/file_tree.rb#197
+  sig { override.params(node: ::Spoom::FileTree::Node).void }
+  def visit_node(node); end
 
   private
 
-  # source://spoom//lib/spoom/file_tree.rb#85
-  sig do
-    params(
-      node: ::Spoom::FileTree::Node,
-      collected_nodes: T::Array[::Spoom::FileTree::Node]
-    ).returns(T::Array[::Spoom::FileTree::Node])
-  end
-  def collect_nodes(node, collected_nodes = T.unsafe(nil)); end
+  # source://spoom//lib/spoom/file_tree.rb#206
+  sig { params(node: ::Spoom::FileTree::Node).returns(::Float) }
+  def node_score(node); end
+
+  # source://spoom//lib/spoom/file_tree.rb#215
+  sig { params(strictness: T.nilable(::String)).returns(::Float) }
+  def strictness_score(strictness); end
+end
+
+# A visitor that collects the strictness of each node in a tree
+#
+# source://spoom//lib/spoom/file_tree.rb#160
+class Spoom::FileTree::CollectStrictnesses < ::Spoom::FileTree::Visitor
+  # source://spoom//lib/spoom/file_tree.rb#167
+  sig { params(context: ::Spoom::Context).void }
+  def initialize(context); end
+
+  # source://spoom//lib/spoom/file_tree.rb#164
+  sig { returns(T::Hash[::Spoom::FileTree::Node, T.nilable(::String)]) }
+  def strictnesses; end
+
+  # source://spoom//lib/spoom/file_tree.rb#174
+  sig { override.params(node: ::Spoom::FileTree::Node).void }
+  def visit_node(node); end
 end
 
 # A node representing either a file or a directory inside a FileTree
 #
-# source://spoom//lib/spoom/file_tree.rb#92
+# source://spoom//lib/spoom/file_tree.rb#94
 class Spoom::FileTree::Node < ::T::Struct
   const :parent, T.nilable(::Spoom::FileTree::Node)
   const :name, ::String
@@ -1418,7 +1525,7 @@ class Spoom::FileTree::Node < ::T::Struct
 
   # Full path to this node from root
   #
-  # source://spoom//lib/spoom/file_tree.rb#106
+  # source://spoom//lib/spoom/file_tree.rb#108
   sig { returns(::String) }
   def path; end
 
@@ -1432,45 +1539,51 @@ end
 #
 # See `FileTree#print`
 #
-# source://spoom//lib/spoom/file_tree.rb#117
-class Spoom::FileTree::TreePrinter < ::Spoom::Printer
-  # source://spoom//lib/spoom/file_tree.rb#132
+# source://spoom//lib/spoom/file_tree.rb#228
+class Spoom::FileTree::Printer < ::Spoom::FileTree::Visitor
+  # source://spoom//lib/spoom/file_tree.rb#238
   sig do
     params(
-      tree: ::Spoom::FileTree,
+      strictnesses: T::Hash[::Spoom::FileTree::Node, T.nilable(::String)],
       out: T.any(::IO, ::StringIO),
-      show_strictness: T::Boolean,
-      colors: T::Boolean,
-      indent_level: ::Integer
+      colors: T::Boolean
     ).void
   end
-  def initialize(tree:, out: T.unsafe(nil), show_strictness: T.unsafe(nil), colors: T.unsafe(nil), indent_level: T.unsafe(nil)); end
+  def initialize(strictnesses, out: T.unsafe(nil), colors: T.unsafe(nil)); end
 
-  # source://spoom//lib/spoom/file_tree.rb#144
-  sig { params(node: ::Spoom::FileTree::Node).void }
-  def print_node(node); end
-
-  # source://spoom//lib/spoom/file_tree.rb#171
-  sig { params(nodes: T::Array[::Spoom::FileTree::Node]).void }
-  def print_nodes(nodes); end
-
-  # source://spoom//lib/spoom/file_tree.rb#139
-  sig { void }
-  def print_tree; end
-
-  # source://spoom//lib/spoom/file_tree.rb#121
-  sig { returns(::Spoom::FileTree) }
-  def tree; end
+  # source://spoom//lib/spoom/file_tree.rb#246
+  sig { override.params(node: ::Spoom::FileTree::Node).void }
+  def visit_node(node); end
 
   private
 
-  # source://spoom//lib/spoom/file_tree.rb#178
-  sig { params(node: ::Spoom::FileTree::Node).returns(T.nilable(::String)) }
-  def node_strictness(node); end
-
-  # source://spoom//lib/spoom/file_tree.rb#186
+  # source://spoom//lib/spoom/file_tree.rb#271
   sig { params(strictness: T.nilable(::String)).returns(::Spoom::Color) }
   def strictness_color(strictness); end
+end
+
+# An abstract visitor for FileTree
+#
+# @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
+#
+# source://spoom//lib/spoom/file_tree.rb#117
+class Spoom::FileTree::Visitor
+  abstract!
+
+  # source://sorbet-runtime/0.5.10736/lib/types/private/abstract/declare.rb#37
+  def initialize(*args, **_arg1, &blk); end
+
+  # source://spoom//lib/spoom/file_tree.rb#129
+  sig { params(node: ::Spoom::FileTree::Node).void }
+  def visit_node(node); end
+
+  # source://spoom//lib/spoom/file_tree.rb#134
+  sig { params(nodes: T::Array[::Spoom::FileTree::Node]).void }
+  def visit_nodes(nodes); end
+
+  # source://spoom//lib/spoom/file_tree.rb#124
+  sig { params(tree: ::Spoom::FileTree).void }
+  def visit_tree(tree); end
 end
 
 # source://spoom//lib/spoom/context/git.rb#5
@@ -2049,31 +2162,41 @@ Spoom::Sorbet::CONFIG_PATH = T.let(T.unsafe(nil), String)
 #
 # source://spoom//lib/spoom/sorbet/config.rb#26
 class Spoom::Sorbet::Config
-  # source://spoom//lib/spoom/sorbet/config.rb#36
+  # source://spoom//lib/spoom/sorbet/config.rb#38
   sig { void }
   def initialize; end
 
   # @return [Array<String>]
   #
-  # source://spoom//lib/spoom/sorbet/config.rb#30
+  # source://spoom//lib/spoom/sorbet/config.rb#32
   def allowed_extensions; end
 
-  # source://spoom//lib/spoom/sorbet/config.rb#44
+  # @return [Array<String>]
+  #
+  # source://spoom//lib/spoom/sorbet/config.rb#32
+  def allowed_extensions=(_arg0); end
+
+  # source://spoom//lib/spoom/sorbet/config.rb#46
   sig { returns(::Spoom::Sorbet::Config) }
   def copy; end
 
   # @return [Array<String>]
   #
-  # source://spoom//lib/spoom/sorbet/config.rb#30
+  # source://spoom//lib/spoom/sorbet/config.rb#32
   def ignore; end
 
-  # source://spoom//lib/spoom/sorbet/config.rb#33
+  # @return [Array<String>]
+  #
+  # source://spoom//lib/spoom/sorbet/config.rb#32
+  def ignore=(_arg0); end
+
+  # source://spoom//lib/spoom/sorbet/config.rb#35
   sig { returns(T::Boolean) }
   def no_stdlib; end
 
   # @return [Boolean]
   #
-  # source://spoom//lib/spoom/sorbet/config.rb#33
+  # source://spoom//lib/spoom/sorbet/config.rb#35
   def no_stdlib=(_arg0); end
 
   # Returns self as a string of options that can be passed to Sorbet
@@ -2089,30 +2212,38 @@ class Spoom::Sorbet::Config
   # puts config.options_string # "/foo /bar --ignore /baz --allowed-extension .rb"
   # ~~~
   #
-  # source://spoom//lib/spoom/sorbet/config.rb#66
+  # source://spoom//lib/spoom/sorbet/config.rb#68
   sig { returns(::String) }
   def options_string; end
 
-  # source://spoom//lib/spoom/sorbet/config.rb#30
+  # source://spoom//lib/spoom/sorbet/config.rb#32
   sig { returns(T::Array[::String]) }
   def paths; end
 
+  # @return [Array<String>]
+  #
+  # source://spoom//lib/spoom/sorbet/config.rb#32
+  def paths=(_arg0); end
+
   class << self
-    # source://spoom//lib/spoom/sorbet/config.rb#79
+    # source://spoom//lib/spoom/sorbet/config.rb#81
     sig { params(sorbet_config_path: ::String).returns(::Spoom::Sorbet::Config) }
     def parse_file(sorbet_config_path); end
 
-    # source://spoom//lib/spoom/sorbet/config.rb#84
+    # source://spoom//lib/spoom/sorbet/config.rb#86
     sig { params(sorbet_config: ::String).returns(::Spoom::Sorbet::Config) }
     def parse_string(sorbet_config); end
 
     private
 
-    # source://spoom//lib/spoom/sorbet/config.rb#148
+    # source://spoom//lib/spoom/sorbet/config.rb#150
     sig { params(line: ::String).returns(::String) }
     def parse_option(line); end
   end
 end
+
+# source://spoom//lib/spoom/sorbet/config.rb#29
+Spoom::Sorbet::Config::DEFAULT_ALLOWED_EXTENSIONS = T.let(T.unsafe(nil), Array)
 
 # source://spoom//lib/spoom/sorbet.rb#14
 class Spoom::Sorbet::Error < ::StandardError
@@ -2292,18 +2423,6 @@ module Spoom::Sorbet::Sigils
     # source://spoom//lib/spoom/sorbet/sigils.rb#63
     sig { params(path: T.any(::Pathname, ::String)).returns(T.nilable(::String)) }
     def file_strictness(path); end
-
-    # finds all files in the specified directory with the passed strictness
-    #
-    # source://spoom//lib/spoom/sorbet/sigils.rb#97
-    sig do
-      params(
-        directory: T.any(::Pathname, ::String),
-        strictness: ::String,
-        extension: ::String
-      ).returns(T::Array[::String])
-    end
-    def files_with_sigil_strictness(directory, strictness, extension: T.unsafe(nil)); end
 
     # returns the full sigil comment string for the passed strictness
     #
