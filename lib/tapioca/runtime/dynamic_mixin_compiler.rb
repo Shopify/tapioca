@@ -145,7 +145,7 @@ module Tapioca
 
           class_attribute_writers.each do |attribute|
             mod << RBI::Method.new("#{attribute}=") do |method|
-              method << RBI::Param.new("value")
+              method << RBI::ReqParam.new("value")
             end
           end
 
@@ -162,7 +162,7 @@ module Tapioca
 
           instance_attribute_writers.each do |attribute|
             mod << RBI::Method.new("#{attribute}=") do |method|
-              method << RBI::Param.new("value")
+              method << RBI::ReqParam.new("value")
             end
           end
 
