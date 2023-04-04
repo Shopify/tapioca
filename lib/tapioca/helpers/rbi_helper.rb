@@ -40,7 +40,7 @@ module Tapioca
 
     sig { params(name: String, type: String).returns(RBI::TypedParam) }
     def create_param(name, type:)
-      create_typed_param(RBI::Param.new(name), type)
+      create_typed_param(RBI::ReqParam.new(name), type)
     end
 
     sig { params(name: String, type: String, default: String).returns(RBI::TypedParam) }

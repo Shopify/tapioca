@@ -118,7 +118,7 @@ module Tapioca
           sanitized_parameters.each do |type, name|
             case type
             when :req
-              rbi_method << RBI::Param.new(name)
+              rbi_method << RBI::ReqParam.new(name)
             when :opt
               rbi_method << RBI::OptParam.new(name, "T.unsafe(nil)")
             when :rest
