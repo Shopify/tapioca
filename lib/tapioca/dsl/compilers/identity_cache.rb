@@ -172,7 +172,6 @@ module Tapioca
           ).void
         end
         def create_index_fetch_by_methods(field, klass)
-          field_length = field.key_fields.length
           fields_name = field.key_fields.join("_and_")
           name = "fetch_by_#{fields_name}"
           parameters = field.key_fields.map do |arg|
@@ -205,17 +204,15 @@ module Tapioca
             )
           end
 
-          if field_length == 1
-            klass.create_method(
-              "fetch_multi_by_#{fields_name}",
-              class_method: true,
-              parameters: [
-                create_param("index_values", type: "T::Enumerable[T.untyped]"),
-                create_kw_opt_param("includes", default: "nil", type: "T.untyped"),
-              ],
-              return_type: COLLECTION_TYPE.call(constant),
-            )
-          end
+          klass.create_method(
+            "fetch_multi_by_#{fields_name}",
+            class_method: true,
+            parameters: [
+              create_param("index_values", type: "T::Enumerable[T.untyped]"),
+              create_kw_opt_param("includes", default: "nil", type: "T.untyped"),
+            ],
+            return_type: COLLECTION_TYPE.call(constant),
+          )
         end
 
         sig do
