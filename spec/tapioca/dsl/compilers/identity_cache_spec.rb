@@ -214,6 +214,9 @@ module Tapioca
                     sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title(index_values, includes: nil); end
 
+                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    def fetch_multi_by_title_and_review_date(index_values, includes: nil); end
+
                     sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_title(keys); end
                   end
