@@ -117,7 +117,7 @@ GEM
       rexml
     crass (1.0.6)
     date (3.3.3)
-    debug (1.7.1)
+    debug (1.7.2)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
     deep_merge (1.2.2)
@@ -170,7 +170,7 @@ GEM
       activerecord (>= 5.2)
       ar_transaction_changes (~> 1.1)
     io-console (0.6.0)
-    irb (1.6.2)
+    irb (1.6.4)
       reline (>= 0.3.0)
     json (2.6.3)
     kramdown (2.4.0)
@@ -266,7 +266,7 @@ GEM
     redis-client (0.14.0)
       connection_pool
     regexp_parser (2.7.0)
-    reline (0.3.2)
+    reline (0.3.3)
       io-console (~> 0.5)
     rexml (3.2.5)
     rubocop (1.48.0)
