@@ -105,7 +105,7 @@ module Tapioca
             constant = T.cast(superclass, T.class_of(ActiveRecord::Base))
           end
 
-          scope_methods
+          scope_methods.uniq
         end
 
         sig do
