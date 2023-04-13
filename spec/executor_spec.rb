@@ -36,6 +36,43 @@ module Tapioca
 
         assert_equal(queue, result.sort)
       end
+
+      it "limits_parallel_work_to_nprocessors_by_default" do
+        ENV["PARALLEL_PROCESSOR_COUNT"] = nil
+        nprocessors = 3
+
+        T.unsafe(Etc).stub(:nprocessors, -> { nprocessors }) do
+          T.unsafe(Parallel).stub(:map, assert_parallel_count(nprocessors)) do
+            executor = Executor.new(@queue)
+            executor.run_in_parallel {}
+          end
+        end
+      end
+
+      it "limits_parallel_work_to_PARALLEL_PROCESS_COUNT" do
+        env_limit = 2
+        ENV["PARALLEL_PROCESSOR_COUNT"] = env_limit.to_s
+
+        T.unsafe(Etc).stub(:nprocessors, -> { env_limit + 1 }) do
+          T.unsafe(Parallel).stub(:map, assert_parallel_count(env_limit)) do
+            executor = Executor.new(@queue)
+            executor.run_in_parallel {}
+          end
+        end
+      end
+
+      sig do
+        params(expected_count: Integer).returns(T.proc.params(
+          _arg1: T.untyped,
+          _arg2: T.untyped,
+        ).returns(T::Array[Integer]))
+      end
+      def assert_parallel_count(expected_count)
+        ->(_, options) {
+          assert_equal(expected_count, options[:in_processes])
+          []
+        }
+      end
     end
   end
 end

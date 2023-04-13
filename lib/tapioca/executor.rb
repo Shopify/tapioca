@@ -15,7 +15,7 @@ module Tapioca
       # be the minimum between the number of available processors (max) or the number of workers to make sure that each
       # one has at least 4 items to process
       @number_of_workers = T.let(
-        number_of_workers || [Etc.nprocessors, (queue.length.to_f / MINIMUM_ITEMS_PER_WORKER).ceil].min,
+        number_of_workers || [max_processors, (queue.length.to_f / MINIMUM_ITEMS_PER_WORKER).ceil].min,
         Integer,
       )
     end
@@ -29,6 +29,14 @@ module Tapioca
       # To have the parallel gem run jobs in the parent process, you must pass 0 as the number of processes
       number_of_processes = @number_of_workers == 1 ? 0 : @number_of_workers
       Parallel.map(@queue, { in_processes: number_of_processes }, &block)
+    end
+
+    private
+
+    sig { returns(Integer) }
+    def max_processors
+      env_max_processors = ENV["PARALLEL_PROCESSOR_COUNT"].to_i
+      env_max_processors.positive? ? env_max_processors : Etc.nprocessors
     end
   end
 end
