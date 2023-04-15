@@ -18,11 +18,11 @@ module Tapioca
         AssociationRelationMethodsModuleName = T.let("GeneratedAssociationRelationMethods", String)
         CommonRelationMethodsModuleName = T.let("CommonRelationMethods", String)
 
-        RelationClassName = T.let("PrivateRelation", String)
+        RelationClassName = T.let("ActiveRecord_Relation", String)
         RelationWhereChainClassName = T.let("PrivateRelationWhereChain", String)
-        AssociationRelationClassName = T.let("PrivateAssociationRelation", String)
+        AssociationRelationClassName = T.let("ActiveRecord_AssociationRelation", String)
         AssociationRelationWhereChainClassName = T.let("PrivateAssociationRelationWhereChain", String)
-        AssociationsCollectionProxyClassName = T.let("PrivateCollectionProxy", String)
+        AssociationsCollectionProxyClassName = T.let("ActiveRecord_Associations_CollectionProxy", String)
       end
     end
   end
