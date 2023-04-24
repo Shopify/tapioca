@@ -214,7 +214,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.14.3-x86_64-linux)
       racc (~> 1.4)
-    parallel (1.22.1)
+    parallel (1.23.0)
     parser (3.2.2.0)
       ast (~> 2.4.1)
     pry (0.14.2)
