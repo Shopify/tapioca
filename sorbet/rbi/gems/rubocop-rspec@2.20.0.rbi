@@ -226,6 +226,33 @@ RuboCop::Cop::RSpec::Be::MSG = T.let(T.unsafe(nil), String)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/be.rb#24
 RuboCop::Cop::RSpec::Be::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Prefer using `be_empty` when checking for an empty array.
+#
+# @example
+#   # bad
+#   expect(array).to contain_exactly
+#   expect(array).to match_array([])
+#
+#   # good
+#   expect(array).to be_empty
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/be_empty.rb#16
+class RuboCop::Cop::RSpec::BeEmpty < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/be_empty.rb#23
+  def expect_array_matcher?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/be_empty.rb#34
+  def on_send(node); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/be_empty.rb#19
+RuboCop::Cop::RSpec::BeEmpty::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/be_empty.rb#20
+RuboCop::Cop::RSpec::BeEmpty::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Check for expectations where `be(...)` can replace `eq(...)`.
 #
 # The `be` matcher compares by identity while the `eq` matcher compares
@@ -825,7 +852,11 @@ module RuboCop::Cop::RSpec::CommentsHelp
   def start_line_position(node); end
 end
 
-# Prefer `match_array` when matching array values.
+# Checks where `contain_exactly` is used.
+#
+# This cop checks for the following:
+# - Prefer `match_array` when matching array values.
+# - Prefer `be_empty` when using `contain_exactly` with no arguments.
 #
 # @example
 #   # bad
@@ -837,23 +868,26 @@ end
 #   # good
 #   it { is_expected.to contain_exactly(content, *array) }
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#17
+# source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#22
 class RuboCop::Cop::RSpec::ContainExactly < ::RuboCop::Cop::RSpec::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#23
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#28
   def on_send(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#33
-  def autocorrect(node, corrector); end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#44
+  def autocorrect_for_populated_array(node, corrector); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#36
+  def check_populated_collection(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#20
+# source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#25
 RuboCop::Cop::RSpec::ContainExactly::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#21
+# source://rubocop-rspec//lib/rubocop/cop/rspec/contain_exactly.rb#26
 RuboCop::Cop::RSpec::ContainExactly::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # `context` should not be used for specifying methods.
@@ -1273,7 +1307,7 @@ RuboCop::Cop::RSpec::DescribedClass::MSG = T.let(T.unsafe(nil), String)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class_module_wrapping.rb#22
 class RuboCop::Cop::RSpec::DescribedClassModuleWrapping < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class_module_wrapping.rb#26
-  def find_rspec_blocks(param0); end
+  def include_rspec_blocks?(param0); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class_module_wrapping.rb#30
   def on_module(node); end
@@ -2325,10 +2359,10 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#162
   def replaceable_matcher?(matcher); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#252
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#251
   def replacement_matcher(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#234
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#233
   def to_predicate_method(matcher); end
 
   # @return [Boolean]
@@ -2481,7 +2515,7 @@ class RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle < ::RuboCop::C
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#103
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#105
   def ambiguous_without_parentheses?(node); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#84
@@ -2498,6 +2532,9 @@ class RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle < ::RuboCop::C
     def autocorrect_incompatible_with; end
   end
 end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#103
+RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::AMBIGUOUS_TYPES = T.let(T.unsafe(nil), Array)
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#56
 RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::FACTORY_CALLS = T.let(T.unsafe(nil), Set)
@@ -3405,6 +3442,58 @@ RuboCop::Cop::RSpec::ImplicitSubject::MSG_REQUIRE_IMPLICIT = T.let(T.unsafe(nil)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/implicit_subject.rb#73
 RuboCop::Cop::RSpec::ImplicitSubject::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Do not set up test data using indexes (e.g., `item_1`, `item_2`).
+#
+# It makes reading the test harder because it's not clear what exactly
+# is tested by this particular example.
+#
+# @example `Max: 1 (default)`
+#   # bad
+#   let(:item_1) { create(:item) }
+#   let(:item_2) { create(:item) }
+#
+#   let(:item1) { create(:item) }
+#   let(:item2) { create(:item) }
+#
+#   # good
+#
+#   let(:visible_item) { create(:item, visible: true) }
+#   let(:invisible_item) { create(:item, visible: false) }
+# @example `Max: 2`
+#   # bad
+#   let(:item_1) { create(:item) }
+#   let(:item_2) { create(:item) }
+#   let(:item_3) { create(:item) }
+#
+#   # good
+#   let(:item_1) { create(:item) }
+#   let(:item_2) { create(:item) }
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#34
+class RuboCop::Cop::RSpec::IndexedLet < ::RuboCop::Cop::RSpec::Base
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#39
+  def let_name(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#46
+  def on_block(node); end
+
+  private
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#61
+  def filter_indexed_lets(candidates); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#70
+  def indexed_let?(node); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#59
+RuboCop::Cop::RSpec::IndexedLet::INDEX_REGEX = T.let(T.unsafe(nil), Regexp)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#35
+RuboCop::Cop::RSpec::IndexedLet::MSG = T.let(T.unsafe(nil), String)
+
 # A helper for `inflected` style
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#7
@@ -4011,7 +4100,11 @@ module RuboCop::Cop::RSpec::LocationHelp
   end
 end
 
-# Prefer `contain_exactly` when matching an array literal.
+# Checks where `match_array` is used.
+#
+# This cop checks for the following:
+# - Prefer `contain_exactly` when matching an array with values.
+# - Prefer `eq` when using `match_array` with an empty array literal.
 #
 # @example
 #   # bad
@@ -4026,18 +4119,26 @@ end
 #   # good
 #   it { is_expected.to match_array(%w(tremble in fear foolish mortals)) }
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#20
+# source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#25
 class RuboCop::Cop::RSpec::MatchArray < ::RuboCop::Cop::RSpec::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#26
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#32
+  def match_array_with_empty_array?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#36
   def on_send(node); end
+
+  private
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#45
+  def check_populated_array(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#23
+# source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#28
 RuboCop::Cop::RSpec::MatchArray::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#24
+# source://rubocop-rspec//lib/rubocop/cop/rspec/match_array.rb#29
 RuboCop::Cop::RSpec::MatchArray::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Check that chains of messages are not being stubbed.
@@ -5105,20 +5206,23 @@ RuboCop::Cop::RSpec::Pending::MSG = T.let(T.unsafe(nil), String)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#59
 class RuboCop::Cop::RSpec::PendingWithoutReason < ::RuboCop::Cop::RSpec::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#77
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#82
   def metadata_without_reason?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#97
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#102
   def on_send(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#93
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#98
   def pending_step_without_reason?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#88
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#93
   def skipped_by_example_group_method?(param0 = T.unsafe(nil)); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#72
   def skipped_by_example_method?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#77
+  def skipped_by_example_method_with_block?(param0 = T.unsafe(nil)); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#63
   def skipped_in_example?(param0 = T.unsafe(nil)); end
@@ -5127,22 +5231,22 @@ class RuboCop::Cop::RSpec::PendingWithoutReason < ::RuboCop::Cop::RSpec::Base
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#118
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#123
   def block_node_example_group?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#130
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#135
   def on_pending_by_metadata(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#142
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#151
   def on_skipped_by_example_group_method(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#136
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#141
   def on_skipped_by_example_method(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#124
-  def on_skipped_by_in_example_method(node, _direct_parent); end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#129
+  def on_skipped_by_in_example_method(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#111
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#116
   def parent_node(node); end
 end
 
@@ -5195,21 +5299,21 @@ RuboCop::Cop::RSpec::PendingWithoutReason::MSG = T.let(T.unsafe(nil), String)
 #   # good - the above code is rewritten to it by this cop
 #   expect(foo.something?).to be_truthy
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#315
+# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#314
 class RuboCop::Cop::RSpec::PredicateMatcher < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RSpec::InflectedHelper
   include ::RuboCop::Cop::RSpec::ExplicitHelper
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#332
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#331
   def on_block(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#323
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#322
   def on_send(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#321
+# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#320
 RuboCop::Cop::RSpec::PredicateMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/avoid_setup_hook.rb#6
@@ -5247,31 +5351,37 @@ RuboCop::Cop::RSpec::Rails::AvoidSetupHook::MSG = T.let(T.unsafe(nil), String)
 # @example
 #   # bad
 #   expect(response.status).to be(200)
+#   expect(response.code).to eq("200")
 #
 #   # good
 #   expect(response).to have_http_status(200)
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#16
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#17
 class RuboCop::Cop::RSpec::Rails::HaveHttpStatus < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#27
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#28
   def match_status(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#37
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#38
   def on_send(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#19
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#20
 RuboCop::Cop::RSpec::Rails::HaveHttpStatus::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#24
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#25
 RuboCop::Cop::RSpec::Rails::HaveHttpStatus::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#23
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/have_http_status.rb#24
 RuboCop::Cop::RSpec::Rails::HaveHttpStatus::RUNNERS = T.let(T.unsafe(nil), Set)
 
 # Enforces use of symbolic or numeric value to describe HTTP status.
+#
+# This cop inspects only `have_http_status` calls.
+# So, this cop does not check if a method starting with `be_*` is used
+# when setting for `EnforcedStyle: symbolic` or
+# `EnforcedStyle: numeric`.
 #
 # @example `EnforcedStyle: symbolic` (default)
 #   # bad
@@ -5293,109 +5403,142 @@ RuboCop::Cop::RSpec::Rails::HaveHttpStatus::RUNNERS = T.let(T.unsafe(nil), Set)
 #   it { is_expected.to have_http_status 404 }
 #   it { is_expected.to have_http_status :success }
 #   it { is_expected.to have_http_status :error }
+# @example `EnforcedStyle: be_status`
+#   # bad
+#   it { is_expected.to have_http_status :ok }
+#   it { is_expected.to have_http_status :not_found }
+#   it { is_expected.to have_http_status 200 }
+#   it { is_expected.to have_http_status 404 }
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#33
+#   # good
+#   it { is_expected.to be_ok }
+#   it { is_expected.to be_not_found }
+#   it { is_expected.to have_http_status :success }
+#   it { is_expected.to have_http_status :error }
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#51
 class RuboCop::Cop::RSpec::Rails::HttpStatus < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#39
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#57
   def http_status(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#43
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#61
   def on_send(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#56
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#75
   def checker_class; end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#105
-class RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker
-  # @return [NumericStyleChecker] a new instance of NumericStyleChecker
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#113
-  def initialize(node); end
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#167
+class RuboCop::Cop::RSpec::Rails::HttpStatus::BeStatusStyleChecker < ::RuboCop::Cop::RSpec::Rails::HttpStatus::StyleCheckerBase
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#185
+  def current; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#121
-  def message; end
-
-  # Returns the value of attribute node.
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#111
-  def node; end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#173
+  def offense_range; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#117
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#168
   def offensive?; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#125
-  def preferred_style; end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#177
+  def prefer; end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#139
-  def allowed_symbol?; end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#131
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#195
   def number; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#135
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#191
   def symbol; end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#109
-RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker::ALLOWED_STATUSES = T.let(T.unsafe(nil), Array)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#142
+class RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker < ::RuboCop::Cop::RSpec::Rails::HttpStatus::StyleCheckerBase
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#151
+  def current; end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#106
-RuboCop::Cop::RSpec::Rails::HttpStatus::NumericStyleChecker::MSG = T.let(T.unsafe(nil), String)
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#143
+  def offensive?; end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#36
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#147
+  def prefer; end
+
+  private
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#161
+  def number; end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#157
+  def symbol; end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#54
 RuboCop::Cop::RSpec::Rails::HttpStatus::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#66
-class RuboCop::Cop::RSpec::Rails::HttpStatus::SymbolicStyleChecker
-  # @return [SymbolicStyleChecker] a new instance of SymbolicStyleChecker
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#87
+class RuboCop::Cop::RSpec::Rails::HttpStatus::StyleCheckerBase
+  # @return [StyleCheckerBase] a new instance of StyleCheckerBase
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#72
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#94
   def initialize(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#80
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#106
+  def allowed_symbol?; end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#110
+  def custom_http_status_code?; end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#98
   def message; end
 
   # Returns the value of attribute node.
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#70
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#92
   def node; end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#102
+  def offense_range; end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#90
+RuboCop::Cop::RSpec::Rails::HttpStatus::StyleCheckerBase::ALLOWED_STATUSES = T.let(T.unsafe(nil), Array)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#88
+RuboCop::Cop::RSpec::Rails::HttpStatus::StyleCheckerBase::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#117
+class RuboCop::Cop::RSpec::Rails::HttpStatus::SymbolicStyleChecker < ::RuboCop::Cop::RSpec::Rails::HttpStatus::StyleCheckerBase
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#126
+  def current; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#76
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#118
   def offensive?; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#84
-  def preferred_style; end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#122
+  def prefer; end
 
   private
 
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#98
-  def custom_http_status_code?; end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#94
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#136
   def number; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#90
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#132
   def symbol; end
 end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/http_status.rb#67
-RuboCop::Cop::RSpec::Rails::HttpStatus::SymbolicStyleChecker::MSG = T.let(T.unsafe(nil), String)
 
 # Identifies redundant spec type.
 #
@@ -5514,9 +5657,9 @@ RuboCop::Cop::RSpec::Rails::InferredSpecType::MSG = T.let(T.unsafe(nil), String)
 #   refute_equal(a, b)
 #
 #   # good
-#   expect(a).to eq(b)
-#   expect(a).to(eq(b), "must be equal")
-#   expect(a).not_to eq(b)
+#   expect(b).to eq(a)
+#   expect(b).to(eq(a), "must be equal")
+#   expect(b).not_to eq(a)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/minitest_assertions.rb#20
 class RuboCop::Cop::RSpec::Rails::MinitestAssertions < ::RuboCop::Cop::RSpec::Base
@@ -5691,7 +5834,7 @@ class RuboCop::Cop::RSpec::RedundantAround < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_around.rb#43
   def match_redundant_around_hook_block?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_around.rb#52
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_around.rb#48
   def match_redundant_around_hook_send?(param0 = T.unsafe(nil)); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_around.rb#23
@@ -5705,7 +5848,7 @@ class RuboCop::Cop::RSpec::RedundantAround < ::RuboCop::Cop::RSpec::Base
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_around.rb#63
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_around.rb#59
   def autocorrect(corrector, node); end
 end
 
@@ -6242,19 +6385,28 @@ RuboCop::Cop::RSpec::ScatteredLet::MSG = T.let(T.unsafe(nil), String)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#25
 class RuboCop::Cop::RSpec::ScatteredSetup < ::RuboCop::Cop::RSpec::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#29
+  include ::RuboCop::Cop::RangeHelp
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#32
   def on_block(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#59
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#75
+  def autocorrect(corrector, first_occurrence, occurrence); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#60
   def lines_msg(numbers); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#46
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#68
+  def message(occurrences, occurrence); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#47
   def repeated_hooks(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#26
+# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#29
 RuboCop::Cop::RSpec::ScatteredSetup::MSG = T.let(T.unsafe(nil), String)
 
 # Checks for proper shared_context and shared_examples usage.
@@ -7224,10 +7376,10 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RangeHelp
 
-  # source://rubocop/1.48.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
+  # source://rubocop/1.50.2/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_csend(node); end
 
-  # source://rubocop/1.48.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
+  # source://rubocop/1.50.2/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_send(node); end
 
   class << self
@@ -7379,7 +7531,7 @@ end
 
 # Wrapper for RSpec examples
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/example.rb#7
 class RuboCop::RSpec::Example < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example.rb#28
   def definition; end
@@ -7405,7 +7557,7 @@ end
 
 # Wrapper for RSpec example groups
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#12
 class RuboCop::RSpec::ExampleGroup < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#28
   def examples; end
@@ -7483,7 +7635,7 @@ RuboCop::RSpec::FactoryBot::UNPROXIED_METHODS = T.let(T.unsafe(nil), Array)
 
 # Wrapper for RSpec hook
 #
-# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#7
 class RuboCop::RSpec::Hook < ::RuboCop::RSpec::Concept
   # @return [Boolean]
   #
