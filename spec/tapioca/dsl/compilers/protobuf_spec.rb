@@ -518,6 +518,31 @@ module Tapioca
               RBI
               assert_equal(["Unexpected descriptor class `NilClass` for `Cart`"], generated_errors)
             end
+
+            it "handles FieldsEntry types just like MapEntry types" do
+              add_ruby_file("content.rb", <<~RUBY)
+                require 'google/protobuf/struct_pb'
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Google::Protobuf::Struct
+                  sig { params(fields: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::Value], T::Hash[String, Google::Protobuf::Value]))).void }
+                  def initialize(fields: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::Value)); end
+
+                  sig { void }
+                  def clear_fields; end
+
+                  sig { returns(Google::Protobuf::Map[String, Google::Protobuf::Value]) }
+                  def fields; end
+
+                  sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::Value]).void }
+                  def fields=(value); end
+                end
+              RBI
+              assert_equal(expected, rbi_for("Google::Protobuf::Struct"))
+            end
           end
         end
       end
