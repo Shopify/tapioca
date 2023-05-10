@@ -206,7 +206,7 @@ module Tapioca
             # > field, even if it was not defined in the enum.
             "T.any(Symbol, Integer)"
           when :message
-            descriptor.subtype.msgclass.name
+            descriptor.subtype.msgclass.name || "T.untyped"
           when :int32, :int64, :uint32, :uint64
             "Integer"
           when :double, :float
