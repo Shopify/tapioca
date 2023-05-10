@@ -149,14 +149,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Bar
           abstract!
 
-        <% if ruby_version(">= 3.1") %>
-          def initialize(*args, **_arg1, &blk); end
-        <% else %>
-          def initialize(*args, &blk); end
-        <% end %>
-
           sig { abstract.void }
           def foo; end
+
+          class << self
+        <% if ruby_version(">= 3.1") %>
+            def new(*args, **_arg1, &blk); end
+        <% else %>
+            def new(*args, &blk); end
+        <% end %>
+          end
         end
       RBI
 
@@ -180,15 +182,15 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Bar
           abstract!
 
-        <% if ruby_version(">= 3.1") %>
-          def initialize(*args, **_arg1, &blk); end
-        <% else %>
-          def initialize(*args, &blk); end
-        <% end %>
-
           class << self
             sig { abstract.void }
             def foo; end
+
+        <% if ruby_version(">= 3.1") %>
+            def new(*args, **_arg1, &blk); end
+        <% else %>
+            def new(*args, &blk); end
+        <% end %>
           end
         end
       RBI
@@ -216,15 +218,15 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Bar
           abstract!
 
-        <% if ruby_version(">= 3.1") %>
-          def initialize(*args, **_arg1, &blk); end
-        <% else %>
-          def initialize(*args, &blk); end
-        <% end %>
-
           class << self
             sig { abstract.void }
             def foo; end
+
+        <% if ruby_version(">= 3.1") %>
+            def new(*args, **_arg1, &blk); end
+        <% else %>
+            def new(*args, &blk); end
+        <% end %>
           end
         end
       RBI
@@ -2884,14 +2886,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Baz
           abstract!
 
-        <% if ruby_version(">= 3.1") %>
-          def initialize(*args, **_arg1, &blk); end
-        <% else %>
-          def initialize(*args, &blk); end
-        <% end %>
-
           sig { abstract.void }
           def do_it; end
+
+          class << self
+        <% if ruby_version(">= 3.1") %>
+            def new(*args, **_arg1, &blk); end
+        <% else %>
+            def new(*args, &blk); end
+        <% end %>
+          end
         end
 
         class Buzz
@@ -4105,12 +4109,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Baz
           abstract!
 
-          # source://sorbet-runtime/#{sorbet_runtime_version}/lib/types/private/abstract/declare.rb#37
+          class << self
+            # source://sorbet-runtime/#{sorbet_runtime_version}/lib/types/private/abstract/declare.rb#37
         <% if ruby_version(">= 3.1") %>
-          def initialize(*args, **_arg1, &blk); end
+            def new(*args, **_arg1, &blk); end
         <% else %>
-          def initialize(*args, &blk); end
+            def new(*args, &blk); end
         <% end %>
+          end
         end
 
         # source://the-dep//lib/foo.rb#1
