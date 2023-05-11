@@ -716,43 +716,49 @@ RuboCop::Cop::RSpec::Capybara::VisibilityMatcher = RuboCop::Cop::Capybara::Visib
 class RuboCop::Cop::RSpec::ChangeByZero < ::RuboCop::Cop::RSpec::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#85
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#86
   def change_nodes(param0); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#68
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#69
   def expect_change_with_arguments(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#75
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#76
   def expect_change_with_block(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#89
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#90
   def on_send(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#118
-  def autocorrect(corrector, node); end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#131
+  def autocorrect(corrector, node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#124
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#138
   def autocorrect_compound(corrector, node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#101
-  def check_offense(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#114
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#118
   def compound_expectations?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#138
-  def message_compound; end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#122
+  def message(change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#134
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#126
+  def message_compound(change_node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#148
   def negated_matcher; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#142
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#152
   def preferred_method; end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#103
+  def register_offense(node, change_node); end
 end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#65
+RuboCop::Cop::RSpec::ChangeByZero::CHANGE_METHODS = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#62
 RuboCop::Cop::RSpec::ChangeByZero::MSG = T.let(T.unsafe(nil), String)
@@ -760,8 +766,8 @@ RuboCop::Cop::RSpec::ChangeByZero::MSG = T.let(T.unsafe(nil), String)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#63
 RuboCop::Cop::RSpec::ChangeByZero::MSG_COMPOUND = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#65
-RuboCop::Cop::RSpec::ChangeByZero::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#66
+RuboCop::Cop::RSpec::ChangeByZero::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 
 # Enforces consistent use of `be_a` or `be_kind_of`.
 #
@@ -2401,69 +2407,8 @@ module RuboCop::Cop::RSpec::FactoryBot; end
 #   # good
 #   count { 1 }
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#28
-class RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically < ::RuboCop::Cop::Base
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#86
-  def association?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#39
-  def factory_attributes(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#43
-  def on_block(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#34
-  def value_matcher(param0 = T.unsafe(nil)); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#120
-  def attribute_defining_method?(method_name); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#59
-  def autocorrect(corrector, node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#88
-  def autocorrect_replacing_parens(corrector, node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#95
-  def autocorrect_without_parens(corrector, node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#104
-  def braces(node); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#67
-  def offensive_receiver?(receiver, node); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#81
-  def proc?(attribute); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#73
-  def receiver_matches_first_block_argument?(receiver, node); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#116
-  def reserved_method?(method_name); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#112
-  def value_hash_without_braces?(node); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#31
-RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically::MSG = T.let(T.unsafe(nil), String)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/attribute_defined_statically.rb#30
+RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically = RuboCop::Cop::FactoryBot::AttributeDefinedStatically
 
 # Use a consistent style for parentheses in factory bot calls.
 #
@@ -2499,54 +2444,8 @@ RuboCop::Cop::RSpec::FactoryBot::AttributeDefinedStatically::MSG = T.let(T.unsaf
 #   name: 'foo'
 #   )
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#43
-class RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle < ::RuboCop::Cop::Base
-  include ::RuboCop::Cop::ConfigurableEnforcedStyle
-  include ::RuboCop::RSpec::FactoryBot::Language
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#61
-  def factory_call(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#68
-  def on_send(node); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#105
-  def ambiguous_without_parentheses?(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#84
-  def process_with_parentheses(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#94
-  def process_without_parentheses(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#109
-  def remove_parentheses(corrector, node); end
-
-  class << self
-    # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#49
-    def autocorrect_incompatible_with; end
-  end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#103
-RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::AMBIGUOUS_TYPES = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#56
-RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::FACTORY_CALLS = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#54
-RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::MSG_OMIT_PARENS = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#53
-RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::MSG_REQUIRE_PARENS = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#58
-RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/consistent_parentheses_style.rb#45
+RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle = RuboCop::Cop::FactoryBot::ConsistentParenthesesStyle
 
 # Checks for create_list usage.
 #
@@ -2574,141 +2473,15 @@ RuboCop::Cop::RSpec::FactoryBot::ConsistentParenthesesStyle::RESTRICT_ON_SEND = 
 #   # good
 #   3.times { create :user }
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#34
-class RuboCop::Cop::RSpec::FactoryBot::CreateList < ::RuboCop::Cop::Base
-  include ::RuboCop::Cop::ConfigurableEnforcedStyle
-  include ::RuboCop::RSpec::FactoryBot::Language
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#64
-  def arguments_include_method_call?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#44
-  def array_new_or_n_times_block?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#55
-  def block_with_arg_and_used?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#69
-  def factory_call(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#74
-  def factory_list_call(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#78
-  def on_block(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#92
-  def on_send(node); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#105
-  def contains_only_factory?(node); end
-end
-
-# :nodoc
-#
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#114
-module RuboCop::Cop::RSpec::FactoryBot::CreateList::Corrector
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#117
-  def build_options_string(options); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#121
-  def format_method_call(node, method, arguments); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#129
-  def format_receiver(receiver); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#174
-class RuboCop::Cop::RSpec::FactoryBot::CreateList::CreateListCorrector
-  include ::RuboCop::Cop::RSpec::FactoryBot::CreateList::Corrector
-
-  # @return [CreateListCorrector] a new instance of CreateListCorrector
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#177
-  def initialize(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#181
-  def call(corrector); end
-
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#204
-  def build_arguments(node, count); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#213
-  def call_replacement(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#195
-  def call_with_block_replacement(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#226
-  def count_from(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#236
-  def format_block(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#244
-  def format_multiline_block(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#252
-  def format_singleline_block(node); end
-
-  # Returns the value of attribute node.
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#193
-  def node; end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#39
-RuboCop::Cop::RSpec::FactoryBot::CreateList::MSG_CREATE_LIST = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#40
-RuboCop::Cop::RSpec::FactoryBot::CreateList::MSG_N_TIMES = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#41
-RuboCop::Cop::RSpec::FactoryBot::CreateList::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
-
-# :nodoc
-#
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#137
-class RuboCop::Cop::RSpec::FactoryBot::CreateList::TimesCorrector
-  include ::RuboCop::Cop::RSpec::FactoryBot::CreateList::Corrector
-
-  # @return [TimesCorrector] a new instance of TimesCorrector
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#140
-  def initialize(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#144
-  def call(corrector); end
-
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#166
-  def factory_call_block_source; end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#153
-  def generate_n_times_block(node); end
-
-  # Returns the value of attribute node.
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#151
-  def node; end
-end
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/create_list.rb#36
+RuboCop::Cop::RSpec::FactoryBot::CreateList = RuboCop::Cop::FactoryBot::CreateList
 
 # Use string value when setting the class attribute explicitly.
 #
 # This cop would promote faster tests by lazy-loading of
-# application files. Also, this could help you suppress potential bugs
-# in combination with external libraries by avoiding a preload of
-# application files from the factory files.
+# application files. Also, this could help you suppress potential
+# bugs in combination with external libraries by avoiding a preload
+# of application files from the factory files.
 #
 # @example
 #   # bad
@@ -2719,32 +2492,8 @@ end
 #   factory :foo, class: 'Foo' do
 #   end
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#23
-class RuboCop::Cop::RSpec::FactoryBot::FactoryClassName < ::RuboCop::Cop::Base
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#32
-  def class_name(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#36
-  def on_send(node); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#49
-  def allowed?(const_name); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#28
-RuboCop::Cop::RSpec::FactoryBot::FactoryClassName::ALLOWED_CONSTANTS = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#26
-RuboCop::Cop::RSpec::FactoryBot::FactoryClassName::MSG = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#29
-RuboCop::Cop::RSpec::FactoryBot::FactoryClassName::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_class_name.rb#25
+RuboCop::Cop::RSpec::FactoryBot::FactoryClassName = RuboCop::Cop::FactoryBot::FactoryClassName
 
 # Checks for name style for argument of FactoryBot::Syntax::Methods.
 #
@@ -2765,42 +2514,8 @@ RuboCop::Cop::RSpec::FactoryBot::FactoryClassName::RESTRICT_ON_SEND = T.let(T.un
 #   create('user')
 #   build "user", username: "NAME"
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#27
-class RuboCop::Cop::RSpec::FactoryBot::FactoryNameStyle < ::RuboCop::Cop::Base
-  include ::RuboCop::Cop::ConfigurableEnforcedStyle
-  include ::RuboCop::RSpec::FactoryBot::Language
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#37
-  def factory_call(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#44
-  def on_send(node); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#60
-  def offense_for_string_style?(name); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#56
-  def offense_for_symbol_style?(name); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#64
-  def register_offense(name, prefer); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#33
-RuboCop::Cop::RSpec::FactoryBot::FactoryNameStyle::FACTORY_CALLS = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#32
-RuboCop::Cop::RSpec::FactoryBot::FactoryNameStyle::MSG = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#34
-RuboCop::Cop::RSpec::FactoryBot::FactoryNameStyle::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/factory_name_style.rb#29
+RuboCop::Cop::RSpec::FactoryBot::FactoryNameStyle = RuboCop::Cop::FactoryBot::FactoryNameStyle
 
 # Use shorthands from `FactoryBot::Syntax::Methods` in your specs.
 #
@@ -2815,35 +2530,13 @@ RuboCop::Cop::RSpec::FactoryBot::FactoryNameStyle::RESTRICT_ON_SEND = T.let(T.un
 #   build(:bar)
 #   attributes_for(:bar)
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/syntax_methods.rb#49
-class RuboCop::Cop::RSpec::FactoryBot::SyntaxMethods < ::RuboCop::Cop::RSpec::Base
-  include ::RuboCop::Cop::RSpec::InsideExampleGroup
-  include ::RuboCop::Cop::RangeHelp
-  include ::RuboCop::RSpec::FactoryBot::Language
-  extend ::RuboCop::Cop::AutoCorrector
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/syntax_methods.rb#59
-  def on_send(node); end
-
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/syntax_methods.rb#72
-  def crime_scene(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/syntax_methods.rb#79
-  def offense(node); end
-end
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/syntax_methods.rb#55
-RuboCop::Cop::RSpec::FactoryBot::SyntaxMethods::MSG = T.let(T.unsafe(nil), String)
-
-# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/syntax_methods.rb#57
-RuboCop::Cop::RSpec::FactoryBot::SyntaxMethods::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/factory_bot/syntax_methods.rb#51
+RuboCop::Cop::RSpec::FactoryBot::SyntaxMethods = RuboCop::Cop::FactoryBot::SyntaxMethods
 
 # Checks that spec file paths are consistent and well-formed.
 #
 # By default, this checks that spec file paths are consistent with the
-# test subject and and enforces that it reflects the described
+# test subject and enforces that it reflects the described
 # class/module and its optionally called out method.
 #
 # With the configuration option `IgnoreMethods` the called out method will
@@ -3479,20 +3172,26 @@ class RuboCop::Cop::RSpec::IndexedLet < ::RuboCop::Cop::RSpec::Base
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#61
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#62
   def filter_indexed_lets(candidates); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#70
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#71
   def indexed_let?(node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#75
+  def let_name_stripped_index(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#59
+# source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#60
 RuboCop::Cop::RSpec::IndexedLet::INDEX_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#35
 RuboCop::Cop::RSpec::IndexedLet::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/indexed_let.rb#59
+RuboCop::Cop::RSpec::IndexedLet::SUFFIX_INDEX_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # A helper for `inflected` style
 #
@@ -7383,7 +7082,7 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   def on_send(node); end
 
   class << self
-    # source://rubocop-rspec//lib/rubocop-rspec.rb#61
+    # source://rubocop-rspec//lib/rubocop-rspec.rb#59
     def autocorrect_incompatible_with; end
   end
 end
@@ -7594,44 +7293,6 @@ class RuboCop::RSpec::ExampleGroup < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#50
   def find_all_in_scope(node, predicate); end
 end
-
-# RuboCop FactoryBot project namespace
-#
-# source://rubocop-rspec//lib/rubocop/rspec/factory_bot/language.rb#5
-module RuboCop::RSpec::FactoryBot
-  class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/factory_bot.rb#55
-    def attribute_defining_methods; end
-
-    # source://rubocop-rspec//lib/rubocop/rspec/factory_bot.rb#59
-    def reserved_methods; end
-  end
-end
-
-# source://rubocop-rspec//lib/rubocop/rspec/factory_bot.rb#7
-RuboCop::RSpec::FactoryBot::ATTRIBUTE_DEFINING_METHODS = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/rspec/factory_bot.rb#30
-RuboCop::RSpec::FactoryBot::DEFINITION_PROXY_METHODS = T.let(T.unsafe(nil), Array)
-
-# Contains node matchers for common FactoryBot DSL.
-#
-# source://rubocop-rspec//lib/rubocop/rspec/factory_bot/language.rb#7
-module RuboCop::RSpec::FactoryBot::Language
-  extend ::RuboCop::AST::NodePattern::Macros
-
-  # source://rubocop-rspec//lib/rubocop/rspec/factory_bot/language.rb#31
-  def factory_bot?(param0 = T.unsafe(nil)); end
-end
-
-# source://rubocop-rspec//lib/rubocop/rspec/factory_bot/language.rb#10
-RuboCop::RSpec::FactoryBot::Language::METHODS = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-rspec//lib/rubocop/rspec/factory_bot.rb#43
-RuboCop::RSpec::FactoryBot::RESERVED_METHODS = T.let(T.unsafe(nil), Array)
-
-# source://rubocop-rspec//lib/rubocop/rspec/factory_bot.rb#15
-RuboCop::RSpec::FactoryBot::UNPROXIED_METHODS = T.let(T.unsafe(nil), Array)
 
 # Wrapper for RSpec hook
 #
