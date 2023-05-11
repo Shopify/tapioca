@@ -231,7 +231,8 @@ module Tapioca
             # Here we're going to check if the submsg_name is named according to
             # how Google names map entries.
             # https://github.com/protocolbuffers/protobuf/blob/f82e26/ruby/ext/google/protobuf_c/defs.c#L1963-L1966
-            if descriptor.submsg_name.to_s.end_with?("_MapEntry_#{descriptor.name}")
+            if descriptor.submsg_name.to_s.end_with?("_MapEntry_#{descriptor.name}") ||
+                descriptor.submsg_name.to_s.end_with?("FieldsEntry")
               key = descriptor.subtype.lookup("key")
               value = descriptor.subtype.lookup("value")
 
