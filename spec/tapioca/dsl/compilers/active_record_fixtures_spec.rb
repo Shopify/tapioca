@@ -107,6 +107,22 @@ module Tapioca
 
               assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
             end
+
+            it "generates no methods for file fixtures" do
+              add_content_file("test/fixtures/files/posts.yml", <<~YAML)
+                super_post:
+                  title: An incredible Ruby post
+                  author: Johnny Developer
+                  created_at: 2021-09-08 11:00:00
+                  updated_at: 2021-09-08 11:00:00
+              YAML
+
+              expected = <<~RBI
+                # typed: strong
+              RBI
+
+              assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+            end
           end
         end
 
