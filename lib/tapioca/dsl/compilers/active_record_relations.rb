@@ -461,10 +461,9 @@ module Tapioca
           create_relation_method("all")
           create_relation_method(
             "where",
-            parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
-            ],
+            parameters: constant.column_names.map do |column_name|
+              create_kw_opt_param(column_name, type: 'T.untyped', default: 'nil')
+            end,
             relation_return_type: RelationWhereChainClassName,
             association_return_type: AssociationRelationWhereChainClassName,
           )
