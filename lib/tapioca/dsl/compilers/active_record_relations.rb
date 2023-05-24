@@ -461,9 +461,13 @@ module Tapioca
           create_relation_method("all")
           create_relation_method(
             "where",
-            parameters: constant.column_names.map do |column_name|
-              create_kw_opt_param(column_name, type: 'T.untyped', default: 'nil')
-            end,
+            parameters: [
+              create_opt_param('string_query', type: 'String', default: 'nil'),
+            ] + constant.column_names.map do |column_name|
+              create_kw_opt_param(column_name, type: 'T.any(String, Integer, Symbol, T::Array[T.any(String, Integer, Symbol)])', default: 'nil')
+            end + [
+              create_kw_rest_param('nested', type: 'T::Hash[T.untyped, T.untyped]'),
+            ],
             relation_return_type: RelationWhereChainClassName,
             association_return_type: AssociationRelationWhereChainClassName,
           )
