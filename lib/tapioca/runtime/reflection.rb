@@ -52,7 +52,7 @@ module Tapioca
         UNDEFINED_CONSTANT
       end
 
-      sig { params(object: BasicObject).returns(Class).checked(:never) }
+      sig { params(object: BasicObject).returns(T::Class[T.anything]).checked(:never) }
       def class_of(object)
         CLASS_METHOD.bind_call(object)
       end
@@ -68,7 +68,7 @@ module Tapioca
         name&.start_with?("#<") ? nil : name
       end
 
-      sig { params(constant: Module).returns(Class) }
+      sig { params(constant: Module).returns(T::Class[T.anything]) }
       def singleton_class_of(constant)
         SINGLETON_CLASS_METHOD.bind_call(constant)
       end
@@ -78,7 +78,7 @@ module Tapioca
         ANCESTORS_METHOD.bind_call(constant)
       end
 
-      sig { params(constant: Class).returns(T.nilable(Class)) }
+      sig { params(constant: T::Class[T.anything]).returns(T.nilable(T::Class[T.anything])) }
       def superclass_of(constant)
         SUPERCLASS_METHOD.bind_call(constant)
       end
@@ -161,7 +161,7 @@ module Tapioca
       #   descendants_of(C) # => [B, A, D]
       sig do
         type_parameters(:U)
-          .params(klass: T.all(Class, T.type_parameter(:U)))
+          .params(klass: T.all(T::Class[T.anything], T.type_parameter(:U)))
           .returns(T::Array[T.type_parameter(:U)])
       end
       def descendants_of(klass)
