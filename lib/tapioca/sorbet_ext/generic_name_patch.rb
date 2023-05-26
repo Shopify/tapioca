@@ -49,6 +49,21 @@ module T
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
+
+      def has_attached_class!(variance = :invariant, &bounds_proc)
+        Tapioca::Runtime::GenericTypeRegistry.register_type_variable(
+          self,
+          Tapioca::TypeVariableModule.new(
+            T.cast(self, Module),
+            Tapioca::TypeVariableModule::Type::HasAttachedClass,
+            variance,
+            nil,
+            nil,
+            nil,
+            bounds_proc,
+          ),
+        )
+      end
     end
 
     prepend TypeStoragePatch
@@ -140,8 +155,12 @@ module Tapioca
       enums do
         Member = new("type_member")
         Template = new("type_template")
+        HasAttachedClass = new("has_attached_class!")
       end
     end
+
+    sig { returns(Type) }
+    attr_reader :type
 
     # rubocop:disable Metrics/ParameterLists
     sig do
