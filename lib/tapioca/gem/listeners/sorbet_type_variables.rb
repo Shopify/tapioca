@@ -31,19 +31,32 @@ module Tapioca
 
           # Map each type variable to its string representation.
           #
-          # Each entry of `type_variables` maps a Module to a String,
-          # and the order they are inserted into the hash is the order they should be
-          # defined in the source code.
-          type_variable_declarations = type_variables.map do |type_variable|
-            type_variable_name = type_variable.name
-            next unless type_variable_name
+          # Each entry of `type_variables` maps a Module to a String, or
+          # is a `has_attached_class!` declaration, and the order they are inserted
+          # into the hash is the order they should be defined in the source code.
+          type_variable_declarations = type_variables.filter_map do |type_variable|
+            node = node_from_type_variable(type_variable)
+            next unless node
 
-            tree << RBI::TypeMember.new(type_variable_name, type_variable.serialize)
+            tree << node
           end
 
           return if type_variable_declarations.empty?
 
           tree << RBI::Extend.new("T::Generic")
+        end
+
+        sig { params(type_variable: Tapioca::TypeVariableModule).returns(T.nilable(RBI::Node)) }
+        def node_from_type_variable(type_variable)
+          case type_variable.type
+          when Tapioca::TypeVariableModule::Type::HasAttachedClass
+            RBI::Send.new(type_variable.serialize)
+          else
+            type_variable_name = type_variable.name
+            return unless type_variable_name
+
+            RBI::TypeMember.new(type_variable_name, type_variable.serialize)
+          end
         end
 
         sig { override.params(event: NodeAdded).returns(T::Boolean) }

@@ -2786,6 +2786,20 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RUBY
 
+      add_ruby_file("class_methods.rb", <<~RUBY)
+        module ClassMethods
+          extend(T::Generic)
+
+          has_attached_class!
+        end
+
+        module ClassMethodsWithVariance
+          extend(T::Generic)
+
+          has_attached_class!(:out) { {upper: String} }
+        end
+      RUBY
+
       add_ruby_file("generic.rb", <<~RUBY)
         module Generics
           class ComplexGenericType
@@ -2910,6 +2924,18 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :foo, ::Integer
           prop :bar, ::String
           const :baz, T.proc.params(arg0: ::String).void
+        end
+
+        module ClassMethods
+          extend T::Generic
+
+          has_attached_class!
+        end
+
+        module ClassMethodsWithVariance
+          extend T::Generic
+
+          has_attached_class!(:out) { { upper: String } }
         end
 
         class Foo
