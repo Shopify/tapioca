@@ -24,7 +24,6 @@ module Tapioca
     FEATURE_REQUIREMENTS = T.let(
       {
         # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
-        non_generic_weak_map: ::Gem::Requirement.new(">= 0.5.10587"), # https://github.com/sorbet/sorbet/pull/6610
       }.freeze,
       T::Hash[Symbol, ::Gem::Requirement],
     )

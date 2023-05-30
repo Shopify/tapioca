@@ -255,7 +255,7 @@ module Tapioca
         klass = class_of(value)
 
         klass_name = if klass == ObjectSpace::WeakMap
-          sorbet_supports?(:non_generic_weak_map) ? "ObjectSpace::WeakMap" : "ObjectSpace::WeakMap[T.untyped]"
+          "ObjectSpace::WeakMap"
         elsif T::Generic === klass
           generic_name_of(klass)
         else
