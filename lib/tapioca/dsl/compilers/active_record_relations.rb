@@ -464,7 +464,7 @@ module Tapioca
             parameters: [
               create_opt_param('string_query', type: 'String', default: 'nil'),
             ] + constant.column_names.map do |column_name|
-              create_kw_opt_param(column_name, type: 'T.any(String, Integer, Symbol, T::Array[T.any(String, Integer, Symbol)])', default: 'nil')
+              create_kw_opt_param(column_name, type: 'T.any(String, Integer, Symbol, NilClass, T::Array[T.any(String, Integer, Symbol)])', default: 'nil')
             end + [
               create_kw_rest_param('nested', type: 'T::Hash[T.untyped, T.untyped]'),
             ],
