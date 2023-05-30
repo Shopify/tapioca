@@ -31,73 +31,79 @@
 # Accepts the following options:
 # - :size - number of connections to pool, defaults to 5
 # - :timeout - amount of time to wait for a connection if none currently available, defaults to 5 seconds
+# - :auto_reload_after_fork - automatically drop all connections after fork, defaults to true
 #
 # source://connection_pool//lib/connection_pool/version.rb#1
 class ConnectionPool
   # @raise [ArgumentError]
   # @return [ConnectionPool] a new instance of ConnectionPool
   #
-  # source://connection_pool//lib/connection_pool.rb#88
+  # source://connection_pool//lib/connection_pool.rb#90
   def initialize(options = T.unsafe(nil), &block); end
+
+  # Automatically drop all connections after fork
+  #
+  # source://connection_pool//lib/connection_pool.rb#166
+  def auto_reload_after_fork; end
 
   # Number of pool entries available for checkout at this instant.
   #
-  # source://connection_pool//lib/connection_pool.rb#164
+  # source://connection_pool//lib/connection_pool.rb#169
   def available; end
 
-  # source://connection_pool//lib/connection_pool.rb#126
+  # source://connection_pool//lib/connection_pool.rb#129
   def checkin(force: T.unsafe(nil)); end
 
-  # source://connection_pool//lib/connection_pool.rb#116
+  # source://connection_pool//lib/connection_pool.rb#119
   def checkout(options = T.unsafe(nil)); end
 
   # Reloads the ConnectionPool by passing each connection to +block+ and then
   # removing it the pool. Subsequent checkouts will create new connections as
   # needed.
   #
-  # source://connection_pool//lib/connection_pool.rb#156
+  # source://connection_pool//lib/connection_pool.rb#159
   def reload(&block); end
 
   # Shuts down the ConnectionPool by passing each connection to +block+ and
   # then removing it from the pool. Attempting to checkout a connection after
   # shutdown will raise +ConnectionPool::PoolShuttingDownError+.
   #
-  # source://connection_pool//lib/connection_pool.rb#147
+  # source://connection_pool//lib/connection_pool.rb#150
   def shutdown(&block); end
 
   # Size of this connection pool
   #
-  # source://connection_pool//lib/connection_pool.rb#161
+  # source://connection_pool//lib/connection_pool.rb#164
   def size; end
 
-  # source://connection_pool//lib/connection_pool.rb#102
+  # source://connection_pool//lib/connection_pool.rb#105
   def then(options = T.unsafe(nil)); end
 
-  # source://connection_pool//lib/connection_pool.rb#102
+  # source://connection_pool//lib/connection_pool.rb#105
   def with(options = T.unsafe(nil)); end
 
   class << self
-    # source://connection_pool//lib/connection_pool.rb#51
+    # source://connection_pool//lib/connection_pool.rb#52
     def after_fork; end
 
-    # source://connection_pool//lib/connection_pool.rb#43
+    # source://connection_pool//lib/connection_pool.rb#44
     def wrap(options, &block); end
   end
 end
 
-# source://connection_pool//lib/connection_pool.rb#41
+# source://connection_pool//lib/connection_pool.rb#42
 ConnectionPool::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
 # source://connection_pool//lib/connection_pool.rb#5
 class ConnectionPool::Error < ::RuntimeError; end
 
-# source://connection_pool//lib/connection_pool.rb#68
+# source://connection_pool//lib/connection_pool.rb#70
 module ConnectionPool::ForkTracker
-  # source://connection_pool//lib/connection_pool.rb#69
+  # source://connection_pool//lib/connection_pool.rb#71
   def _fork; end
 end
 
-# source://connection_pool//lib/connection_pool.rb#48
+# source://connection_pool//lib/connection_pool.rb#49
 ConnectionPool::INSTANCES = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
 
 # source://connection_pool//lib/connection_pool.rb#7
