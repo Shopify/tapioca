@@ -192,6 +192,22 @@ module Tapioca
         end.to_set
       end
 
+      sig { params(constant: Module).returns(T.untyped) }
+      def abstract_type_of(constant)
+        T::Private::Abstract::Data.get(constant, :abstract_type) ||
+          T::Private::Abstract::Data.get(singleton_class_of(constant), :abstract_type)
+      end
+
+      sig { params(constant: Module).returns(T::Boolean) }
+      def final_module?(constant)
+        T::Private::Final.final_module?(constant)
+      end
+
+      sig { params(constant: Module).returns(T::Boolean) }
+      def sealed_module?(constant)
+        T::Private::Sealed.sealed_module?(constant)
+      end
+
       private
 
       sig { params(constant: Module).returns(T::Array[UnboundMethod]) }
