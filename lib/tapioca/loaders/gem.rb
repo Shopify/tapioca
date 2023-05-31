@@ -15,14 +15,16 @@ module Tapioca
             prerequire: T.nilable(String),
             postrequire: String,
             default_command: String,
+            halt_upon_load_error: T::Boolean,
           ).void
         end
-        def load_application(bundle:, prerequire:, postrequire:, default_command:)
+        def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
           loader = new(
             bundle: bundle,
             prerequire: prerequire,
             postrequire: postrequire,
             default_command: default_command,
+            halt_upon_load_error: halt_upon_load_error,
           )
           loader.load
         end
@@ -41,22 +43,24 @@ module Tapioca
           prerequire: T.nilable(String),
           postrequire: String,
           default_command: String,
+          halt_upon_load_error: T::Boolean,
         ).void
       end
-      def initialize(bundle:, prerequire:, postrequire:, default_command:)
+      def initialize(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
         super()
 
         @bundle = bundle
         @prerequire = prerequire
         @postrequire = postrequire
         @default_command = default_command
+        @halt_upon_load_error = halt_upon_load_error
       end
 
       sig { void }
       def require_gem_file
         say("Requiring all gems to prepare for compiling... ")
         begin
-          load_bundle(@bundle, @prerequire, @postrequire)
+          load_bundle(@bundle, @prerequire, @postrequire, @halt_upon_load_error)
         rescue LoadError => e
           explain_failed_require(@postrequire, e)
           exit(1)

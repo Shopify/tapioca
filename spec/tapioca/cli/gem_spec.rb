@@ -2078,5 +2078,67 @@ module Tapioca
         end
       end
     end
+
+    describe "custom application.rb" do
+      before(:all) do
+        @project.write("config/environment.rb", <<~RB)
+          require_relative "application.rb"
+        RB
+
+        @project.write("config/application.rb", <<~RB)
+          require "rails"
+
+          module Test
+            class Application < Rails::Application
+              raise "Error during application loading"
+            end
+          end
+        RB
+
+        foo = mock_gem("foo", "0.0.1") do
+          write("lib/foo.rb", FOO_RB)
+        end
+
+        @project.require_mock_gem(foo)
+        @project.require_real_gem("rails")
+        @project.bundle_install
+      end
+
+      it "halts upon load errors when rails application cannot be loaded" do
+        result = @project.tapioca("gem foo")
+
+        out = "Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
+          "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
+          "generating RBIs. If your application does not use Rails and you wish to continue RBI generation " \
+          "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
+          "\nError during application loading"
+        assert_stdout_includes(result, out)
+        err = "/tmp/tapioca/tests/gem_spec/project/config/application.rb:5:in `<class:Application>': Error during " \
+          "application loading (RuntimeError)"
+        assert_stderr_includes(result, err)
+        refute_success_status(result)
+      end
+
+      it "output errors when rails application cannot be loaded with --no-halt-upon-load-error flag" do
+        result = @project.tapioca("gem foo --no-halt-upon-load-error")
+
+        out = "Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
+          "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
+          "generating RBIs. If your application does not use Rails and you wish to continue RBI generation " \
+          "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
+          "\nError during application loading"
+        assert_stdout_includes(result, out)
+        assert_stdout_includes(
+          result,
+          "/tmp/tapioca/tests/gem_spec/project/config/application.rb:5:in `<class:Application>'",
+        )
+        assert_stdout_includes(result, <<~OUT)
+          Continuing RBI generation without loading the Rails application.
+           Done
+        OUT
+        puts result.err
+        assert_success_status(result)
+      end
+    end
   end
 end

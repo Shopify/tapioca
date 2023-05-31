@@ -23,6 +23,7 @@ module Tapioca
           auto_strictness: T::Boolean,
           dsl_dir: String,
           rbi_formatter: RBIFormatter,
+          halt_upon_load_error: T::Boolean,
         ).void
       end
       def initialize(
@@ -39,7 +40,8 @@ module Tapioca
         number_of_workers: nil,
         auto_strictness: true,
         dsl_dir: DEFAULT_DSL_DIR,
-        rbi_formatter: DEFAULT_RBI_FORMATTER
+        rbi_formatter: DEFAULT_RBI_FORMATTER,
+        halt_upon_load_error: true
       )
         @gem_names = gem_names
         @exclude = exclude
@@ -61,6 +63,7 @@ module Tapioca
         @include_doc = T.let(include_doc, T::Boolean)
         @include_loc = T.let(include_loc, T::Boolean)
         @include_exported_rbis = include_exported_rbis
+        @halt_upon_load_error = halt_upon_load_error
       end
 
       sig { override.void }
@@ -70,6 +73,7 @@ module Tapioca
           prerequire: @prerequire,
           postrequire: @postrequire,
           default_command: default_command(:require),
+          halt_upon_load_error: @halt_upon_load_error,
         )
 
         gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
@@ -245,6 +249,7 @@ module Tapioca
               prerequire: @prerequire,
               postrequire: @postrequire,
               default_command: default_command(:require),
+              halt_upon_load_error: @halt_upon_load_error,
             )
 
             Executor.new(gems, number_of_workers: @number_of_workers).run_in_parallel do |gem_name|

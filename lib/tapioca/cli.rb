@@ -130,6 +130,10 @@ module Tapioca
       type: :string,
       desc: "The path to the Rails application",
       default: "."
+    option :halt_upon_load_error,
+      type: :boolean,
+      desc: "Halt upon a load error while loading the Rails application",
+      default: true
     def dsl(*constant_or_paths)
       set_environment(options)
 
@@ -150,6 +154,7 @@ module Tapioca
         number_of_workers: options[:workers],
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],
+        halt_upon_load_error: options[:halt_upon_load_error],
       )
 
       Tapioca.silence_warnings do
@@ -235,6 +240,10 @@ module Tapioca
       type: :string,
       desc: "The Rack/Rails environment to use when generating RBIs",
       default: DEFAULT_ENVIRONMENT
+    option :halt_upon_load_error,
+      type: :boolean,
+      desc: "Halt upon a load error while loading the Rails application",
+      default: true
     def gem(*gems)
       Tapioca.silence_warnings do
         set_environment(options)
@@ -257,6 +266,7 @@ module Tapioca
           auto_strictness: options[:auto_strictness],
           dsl_dir: options[:dsl_dir],
           rbi_formatter: rbi_formatter(options),
+          halt_upon_load_error: options[:halt_upon_load_error],
         )
 
         raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
