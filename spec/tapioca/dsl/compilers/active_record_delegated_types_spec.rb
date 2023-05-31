@@ -117,7 +117,7 @@ module Tapioca
                     sig { returns(T.nilable(::Integer)) }
                     def comment_id; end
 
-                    sig { returns(Class) }
+                    sig { returns(T::Class[T.anything]) }
                     def entryable_class; end
 
                     sig { returns(ActiveSupport::StringInquirer) }
@@ -185,7 +185,7 @@ module Tapioca
                     sig { returns(T.nilable(::String)) }
                     def comment_uuid; end
 
-                    sig { returns(Class) }
+                    sig { returns(T::Class[T.anything]) }
                     def entryable_class; end
 
                     sig { returns(ActiveSupport::StringInquirer) }

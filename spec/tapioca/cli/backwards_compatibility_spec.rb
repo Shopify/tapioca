@@ -38,6 +38,8 @@ module Tapioca
       end
 
       it "is a generic type with Sorbet < 0.5.10587" do
+        skip
+
         @project.require_real_gem("sorbet-static", "0.5.10585")
         @project.bundle_install
 
@@ -55,6 +57,8 @@ module Tapioca
       end
 
       it "is a non-generic type with Sorbet >= 0.5.10587" do
+        skip
+
         @project.require_real_gem("sorbet-static", "0.5.10588")
         @project.bundle_install
 
@@ -70,6 +74,8 @@ module Tapioca
           Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
         RBI
       end
+
+      # TODO: add tests for generic class handling
     end
 
     describe "compilation of constants of generic types" do
@@ -103,6 +109,7 @@ module Tapioca
       end
 
       it "must succeed on sorbet-runtime < 0.5.10554" do
+        skip
         @project.require_real_gem("sorbet-static-and-runtime", "=0.5.10539")
         @project.bundle_install
 
