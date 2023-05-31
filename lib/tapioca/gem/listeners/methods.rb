@@ -20,7 +20,7 @@ module Tapioca
 
           compile_method(node, symbol, constant, initialize_method_for(constant))
           compile_directly_owned_methods(node, symbol, constant)
-          compile_directly_owned_methods(node, symbol, singleton_class_of(constant))
+          compile_directly_owned_methods(node, symbol, singleton_class_of(constant), attached_class: constant)
         end
 
         sig do
@@ -29,14 +29,22 @@ module Tapioca
             module_name: String,
             mod: Module,
             for_visibility: T::Array[Symbol],
+            attached_class: T.nilable(Module),
           ).void
         end
-        def compile_directly_owned_methods(tree, module_name, mod, for_visibility = [:public, :protected, :private])
+        def compile_directly_owned_methods(
+          tree,
+          module_name,
+          mod,
+          for_visibility = [:public, :protected, :private],
+          attached_class: nil
+        )
           method_names_by_visibility(mod)
             .delete_if { |visibility, _method_list| !for_visibility.include?(visibility) }
             .each do |visibility, method_list|
               method_list.sort!.map do |name|
                 next if name == :initialize
+                next if method_new_in_abstract_class?(attached_class, name)
 
                 vis = case visibility
                 when :protected
@@ -178,6 +186,19 @@ module Tapioca
             .props
             .keys
             .include?(method_name.gsub(/=$/, "").to_sym)
+        end
+
+        sig do
+          params(
+            attached_class: T.nilable(Module),
+            method_name: Symbol,
+          ).returns(T.nilable(T::Boolean))
+        end
+        def method_new_in_abstract_class?(attached_class, method_name)
+          attached_class &&
+            method_name == :new &&
+            !!abstract_type_of(attached_class) &&
+            Class === attached_class.singleton_class
         end
 
         sig { params(constant: Module).returns(T.nilable(UnboundMethod)) }
