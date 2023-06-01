@@ -16,12 +16,11 @@ module Tapioca
           constant = event.constant
           node = event.node
 
-          abstract_type = T::Private::Abstract::Data.get(constant, :abstract_type) ||
-            T::Private::Abstract::Data.get(singleton_class_of(constant), :abstract_type)
+          abstract_type = abstract_type_of(constant)
 
           node << RBI::Helper.new(abstract_type.to_s) if abstract_type
-          node << RBI::Helper.new("final") if T::Private::Final.final_module?(constant)
-          node << RBI::Helper.new("sealed") if T::Private::Sealed.sealed_module?(constant)
+          node << RBI::Helper.new("final") if final_module?(constant)
+          node << RBI::Helper.new("sealed") if sealed_module?(constant)
         end
 
         sig { override.params(event: NodeAdded).returns(T::Boolean) }

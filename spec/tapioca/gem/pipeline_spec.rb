@@ -151,14 +151,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           sig { abstract.void }
           def foo; end
-
-          class << self
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
-          end
         end
       RBI
 
@@ -185,12 +177,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             sig { abstract.void }
             def foo; end
-
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
           end
         end
       RBI
@@ -221,12 +207,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             sig { abstract.void }
             def foo; end
-
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
           end
         end
       RBI
@@ -256,6 +236,56 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             sig { abstract.void }
             def foo; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "correctly compiles new method definitions in classes and modules" do
+      add_ruby_file("abstract.rb", <<~RUBY)
+        module Foo
+          extend T::Helpers
+
+          abstract!
+        end
+
+        class Bar
+          extend T::Helpers
+
+          abstract!
+        end
+
+        class Baz
+          def self.new(a, b)
+          end
+        end
+
+        module Quux
+          def self.new(a, b)
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          abstract!
+        end
+
+        class Baz
+          class << self
+            def new(a, b); end
+          end
+        end
+
+        module Foo
+          abstract!
+        end
+
+        module Quux
+          class << self
+            def new(a, b); end
           end
         end
       RBI
@@ -2902,14 +2932,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           sig { abstract.void }
           def do_it; end
-
-          class << self
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
-          end
         end
 
         class Buzz
@@ -4134,15 +4156,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         # source://the-dep//lib/foo.rb#11
         class Baz
           abstract!
-
-          class << self
-            # source://sorbet-runtime/#{sorbet_runtime_version}/lib/types/private/abstract/declare.rb#37
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
-          end
         end
 
         # source://the-dep//lib/foo.rb#1
