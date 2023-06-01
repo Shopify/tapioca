@@ -120,13 +120,20 @@ module Tapioca
     end
 
     # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
-    sig { params(command: String, enforce_typechecking: T::Boolean).returns(ExecResult) }
-    def tapioca(command, enforce_typechecking: true)
+    sig do
+      params(
+        command: String,
+        enforce_typechecking: T::Boolean,
+        exclude: T::Array[String],
+      ).returns(ExecResult)
+    end
+    def tapioca(command, enforce_typechecking: true, exclude: tapioca_dependencies)
       exec_command = ["tapioca", command]
       if command.start_with?(/gem/)
         exec_command << "--workers=1" unless command.match?("--workers")
         exec_command << "--no-doc" unless command.match?("--doc")
         exec_command << "--no-loc" unless command.match?("--loc")
+        exec_command << "--exclude #{exclude.join(" ")}" unless command.match?("--exclude") || exclude.empty?
       elsif command.start_with?(/dsl/)
         exec_command << "--workers=1" unless command.match?("--workers")
       end
@@ -140,6 +147,25 @@ module Tapioca
       end
 
       bundle_exec(exec_command.join(" "), env)
+    end
+
+    private
+
+    sig { params(spec: ::Gem::Specification).returns(T::Array[::Gem::Specification]) }
+    def transitive_runtime_deps(spec)
+      spec.runtime_dependencies.concat(
+        spec.runtime_dependencies.flat_map do |dep|
+          transitive_runtime_deps(dep.to_spec)
+        end,
+      )
+    end
+
+    sig { returns(T::Array[String]) }
+    def tapioca_dependencies
+      @tapioca_dependencies ||= T.let(
+        transitive_runtime_deps(::Gem.loaded_specs["tapioca"]).map(&:name).uniq,
+        T.nilable(T::Array[String]),
+      )
     end
   end
 end

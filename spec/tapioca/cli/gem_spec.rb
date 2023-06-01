@@ -597,7 +597,7 @@ module Tapioca
 
         it "must not include `rbi` definitions into `tapioca` RBI" do
           @project.bundle_install
-          result = @project.tapioca("gem tapioca")
+          result = @project.tapioca("gem tapioca", exclude: [])
 
           assert_stdout_includes(result, <<~OUT)
             Compiled tapioca
@@ -1757,7 +1757,7 @@ module Tapioca
         end
 
         it "is aware of exclude option and does not error due to removed files" do
-          @project.tapioca("gem")
+          @project.tapioca("gem", exclude: [])
 
           result = @project.tapioca("gem --verify --exclude foo bar")
 
