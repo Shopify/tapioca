@@ -139,12 +139,7 @@ module Tapioca
         "0"
       end
 
-      exec_result = bundle_exec(exec_command.join(" "), env)
-      unless exec_result.status
-        raise exec_result.err
-      end
-
-      exec_result
+      bundle_exec(exec_command.join(" "), env)
     end
   end
 end
