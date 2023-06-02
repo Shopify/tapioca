@@ -59,15 +59,3 @@ end
 class T::Enum
   def values; end
 end
-
-class T::Types::TypedClass::Anything::Private;
-  INSTANCE = nil
-end
-
-class T::Types::TypedClass::Untyped::Private;
-  INSTANCE = nil
-end
-
-class T::Types::TypedClass::Private::Pool;
-  def self.type_for_module(*); end
-end
