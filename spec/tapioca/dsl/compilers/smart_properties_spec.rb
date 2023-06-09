@@ -87,10 +87,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(title: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def title=(title); end
                   end
                 end
@@ -114,10 +114,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(title: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def title=(title); end
                   end
                 end
@@ -168,10 +168,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def title; end
 
-                    sig { params(title: T.untyped).returns(T.untyped) }
+                    sig { params(title: ::T.untyped).returns(::T.untyped) }
                     def title=(title); end
                   end
                 end
@@ -195,10 +195,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(T::Array[T.untyped])) }
+                    sig { returns(::T.nilable(T::Array[::T.untyped])) }
                     def categories; end
 
-                    sig { params(categories: T.nilable(T::Array[T.untyped])).returns(T.nilable(T::Array[T.untyped])) }
+                    sig { params(categories: ::T.nilable(T::Array[::T.untyped])).returns(::T.nilable(T::Array[::T.untyped])) }
                     def categories=(categories); end
                   end
                 end
@@ -222,10 +222,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(T::Boolean)) }
+                    sig { returns(::T.nilable(T::Boolean)) }
                     def published; end
 
-                    sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+                    sig { params(published: ::T.nilable(T::Boolean)).returns(::T.nilable(T::Boolean)) }
                     def published=(published); end
                   end
                 end
@@ -249,10 +249,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(T.any(::String, ::Integer))) }
+                    sig { returns(::T.nilable(::T.any(::String, ::Integer))) }
                     def status; end
 
-                    sig { params(status: T.nilable(T.any(::String, ::Integer))).returns(T.nilable(T.any(::String, ::Integer))) }
+                    sig { params(status: ::T.nilable(::T.any(::String, ::Integer))).returns(::T.nilable(::T.any(::String, ::Integer))) }
                     def status=(status); end
                   end
                 end
@@ -276,10 +276,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def status; end
 
-                    sig { params(status: T.untyped).returns(T.untyped) }
+                    sig { params(status: ::T.untyped).returns(::T.untyped) }
                     def status=(status); end
                   end
                 end
@@ -303,10 +303,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::Integer)) }
+                    sig { returns(::T.nilable(::Integer)) }
                     def status; end
 
-                    sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                    sig { params(status: ::T.nilable(::Integer)).returns(::T.nilable(::Integer)) }
                     def status=(status); end
                   end
                 end
@@ -330,10 +330,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def status; end
 
-                    sig { params(status: T.untyped).returns(T.untyped) }
+                    sig { params(status: ::T.untyped).returns(::T.untyped) }
                     def status=(status); end
                   end
                 end
@@ -357,10 +357,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::Integer)) }
+                    sig { returns(::T.nilable(::Integer)) }
                     def reader_for_status; end
 
-                    sig { params(status: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                    sig { params(status: ::T.nilable(::Integer)).returns(::T.nilable(::Integer)) }
                     def status=(status); end
                   end
                 end
@@ -384,10 +384,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(T::Boolean)) }
+                    sig { returns(::T.nilable(T::Boolean)) }
                     def enabled; end
 
-                    sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+                    sig { params(enabled: ::T.nilable(T::Boolean)).returns(::T.nilable(T::Boolean)) }
                     def enabled=(enabled); end
                   end
                 end
@@ -411,10 +411,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(T::Boolean)) }
+                    sig { returns(::T.nilable(T::Boolean)) }
                     def enabled; end
 
-                    sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+                    sig { params(enabled: ::T.nilable(T::Boolean)).returns(::T.nilable(T::Boolean)) }
                     def enabled=(enabled); end
                   end
                 end
@@ -438,10 +438,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(title: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def title=(title); end
                   end
                 end
@@ -465,10 +465,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(title: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def title=(title); end
                   end
                 end
@@ -492,10 +492,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def title; end
 
-                    sig { params(title: T.untyped).returns(T.untyped) }
+                    sig { params(title: ::T.untyped).returns(::T.untyped) }
                     def title=(title); end
                   end
                 end
@@ -533,16 +533,16 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def body; end
 
-                    sig { params(body: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(body: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def body=(body); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(title: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def title=(title); end
                   end
                 end
@@ -575,10 +575,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::Post::TrackingInfoInput)) }
+                    sig { returns(::T.nilable(::Post::TrackingInfoInput)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::Post::TrackingInfoInput)).returns(T.nilable(::Post::TrackingInfoInput)) }
+                    sig { params(title: ::T.nilable(::Post::TrackingInfoInput)).returns(::T.nilable(::Post::TrackingInfoInput)) }
                     def title=(title); end
                   end
                 end
@@ -593,10 +593,10 @@ module Tapioca
                   include SmartPropertiesGeneratedMethods
 
                   module SmartPropertiesGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def carrier_id; end
 
-                    sig { params(carrier_id: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(carrier_id: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def carrier_id=(carrier_id); end
 
                     sig { returns(::String) }
@@ -605,10 +605,10 @@ module Tapioca
                     sig { params(number: ::String).returns(::String) }
                     def number=(number); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def url; end
 
-                    sig { params(url: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(url: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def url=(url); end
                   end
                 end
