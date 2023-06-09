@@ -52,13 +52,13 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(customer_id: T.nilable(Integer), shop_id: T.nilable(Integer)).void }
+                  sig { params(customer_id: ::T.nilable(::Integer), shop_id: ::T.nilable(::Integer)).void }
                   def initialize(customer_id: nil, shop_id: nil); end
 
-                  sig { returns(T.nilable(Symbol)) }
+                  sig { returns(::T.nilable(::Symbol)) }
                   def _customer_id; end
 
-                  sig { returns(T.nilable(Symbol)) }
+                  sig { returns(::T.nilable(::Symbol)) }
                   def _shop_id; end
 
                   sig { void }
@@ -67,22 +67,22 @@ module Tapioca
                   sig { void }
                   def clear_shop_id; end
 
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def customer_id; end
 
-                  sig { params(value: Integer).void }
+                  sig { params(value: ::Integer).void }
                   def customer_id=(value); end
 
-                  sig { returns(Object) }
+                  sig { returns(::Object) }
                   def has_customer_id?; end
 
-                  sig { returns(Object) }
+                  sig { returns(::Object) }
                   def has_shop_id?; end
 
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def shop_id; end
 
-                  sig { params(value: Integer).void }
+                  sig { params(value: ::Integer).void }
                   def shop_id=(value); end
                 end
               RBI
@@ -103,22 +103,22 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(events: T.nilable(String)).void }
+                  sig { params(events: ::T.nilable(::String)).void }
                   def initialize(events: nil); end
 
-                  sig { returns(T.nilable(Symbol)) }
+                  sig { returns(::T.nilable(::Symbol)) }
                   def _events; end
 
                   sig { void }
                   def clear_events; end
 
-                  sig { returns(String) }
+                  sig { returns(::String) }
                   def events; end
 
-                  sig { params(value: String).void }
+                  sig { params(value: ::String).void }
                   def events=(value); end
 
-                  sig { returns(Object) }
+                  sig { returns(::Object) }
                   def has_events?; end
                 end
               RBI
@@ -140,22 +140,22 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(cart_item_index: T.nilable(Google::Protobuf::UInt64Value)).void }
+                  sig { params(cart_item_index: ::T.nilable(::Google::Protobuf::UInt64Value)).void }
                   def initialize(cart_item_index: nil); end
 
-                  sig { returns(T.nilable(Symbol)) }
+                  sig { returns(::T.nilable(::Symbol)) }
                   def _cart_item_index; end
 
-                  sig { returns(T.nilable(Google::Protobuf::UInt64Value)) }
+                  sig { returns(::T.nilable(::Google::Protobuf::UInt64Value)) }
                   def cart_item_index; end
 
-                  sig { params(value: T.nilable(Google::Protobuf::UInt64Value)).void }
+                  sig { params(value: ::T.nilable(::Google::Protobuf::UInt64Value)).void }
                   def cart_item_index=(value); end
 
                   sig { void }
                   def clear_cart_item_index; end
 
-                  sig { returns(Object) }
+                  sig { returns(::Object) }
                   def has_cart_item_index?; end
                 end
               RBI
@@ -182,22 +182,22 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
+                  sig { params(value_type: ::T.nilable(::T.any(::Symbol, ::Integer))).void }
                   def initialize(value_type: nil); end
 
-                  sig { returns(T.nilable(Symbol)) }
+                  sig { returns(::T.nilable(::Symbol)) }
                   def _value_type; end
 
                   sig { void }
                   def clear_value_type; end
 
-                  sig { returns(Object) }
+                  sig { returns(::Object) }
                   def has_value_type?; end
 
-                  sig { returns(T.any(Symbol, Integer)) }
+                  sig { returns(::T.any(::Symbol, ::Integer)) }
                   def value_type; end
 
-                  sig { params(value: T.any(Symbol, Integer)).void }
+                  sig { params(value: ::T.any(::Symbol, ::Integer)).void }
                   def value_type=(value); end
                 end
               RBI
@@ -207,13 +207,13 @@ module Tapioca
 
                 module Cart::VALUE_TYPE
                   class << self
-                    sig { returns(Google::Protobuf::EnumDescriptor) }
+                    sig { returns(::Google::Protobuf::EnumDescriptor) }
                     def descriptor; end
 
-                    sig { params(number: Integer).returns(T.nilable(Symbol)) }
+                    sig { params(number: ::Integer).returns(::T.nilable(::Symbol)) }
                     def lookup(number); end
 
-                    sig { params(symbol: Symbol).returns(T.nilable(Integer)) }
+                    sig { params(symbol: ::Symbol).returns(::T.nilable(::Integer)) }
                     def resolve(symbol); end
                   end
                 end
@@ -242,7 +242,7 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(customer_ids: T.nilable(T::Array[Integer]), indices: T.nilable(T::Array[Google::Protobuf::UInt64Value])).void }
+                  sig { params(customer_ids: ::T.nilable(::T.any(Google::Protobuf::RepeatedField[::Integer], Array[::Integer])), indices: ::T.nilable(::T.any(Google::Protobuf::RepeatedField[::Google::Protobuf::UInt64Value], Array[::Google::Protobuf::UInt64Value]))).void }
                   def initialize(customer_ids: T.unsafe(nil), indices: T.unsafe(nil)); end
 
                   sig { void }
@@ -251,16 +251,16 @@ module Tapioca
                   sig { void }
                   def clear_indices; end
 
-                  sig { returns(Google::Protobuf::RepeatedField[Integer]) }
+                  sig { returns(Google::Protobuf::RepeatedField[::Integer]) }
                   def customer_ids; end
 
-                  sig { params(value: Google::Protobuf::RepeatedField[Integer]).void }
+                  sig { params(value: Google::Protobuf::RepeatedField[::Integer]).void }
                   def customer_ids=(value); end
 
-                  sig { returns(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]) }
+                  sig { returns(Google::Protobuf::RepeatedField[::Google::Protobuf::UInt64Value]) }
                   def indices; end
 
-                  sig { params(value: Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]).void }
+                  sig { params(value: Google::Protobuf::RepeatedField[::Google::Protobuf::UInt64Value]).void }
                   def indices=(value); end
                 end
               RBI
@@ -281,16 +281,16 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(shop_id: T.nilable(Integer)).void }
+                  sig { params(shop_id: ::T.nilable(::Integer)).void }
                   def initialize(shop_id: nil); end
 
                   sig { void }
                   def clear_shop_id; end
 
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def shop_id; end
 
-                  sig { params(value: Integer).void }
+                  sig { params(value: ::Integer).void }
                   def shop_id=(value); end
                 end
               RBI
@@ -313,7 +313,7 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(customers: T.nilable(T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer])), stores: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value]))).void }
+                  sig { params(customers: ::T.nilable(::T.any(Google::Protobuf::Map[::String, ::Integer], Hash[::String, ::Integer])), stores: ::T.nilable(::T.any(Google::Protobuf::Map[::String, ::Google::Protobuf::UInt64Value], Hash[::String, ::Google::Protobuf::UInt64Value]))).void }
                   def initialize(customers: T.unsafe(nil), stores: T.unsafe(nil)); end
 
                   sig { void }
@@ -322,16 +322,16 @@ module Tapioca
                   sig { void }
                   def clear_stores; end
 
-                  sig { returns(Google::Protobuf::Map[String, Integer]) }
+                  sig { returns(Google::Protobuf::Map[::String, ::Integer]) }
                   def customers; end
 
-                  sig { params(value: Google::Protobuf::Map[String, Integer]).void }
+                  sig { params(value: Google::Protobuf::Map[::String, ::Integer]).void }
                   def customers=(value); end
 
-                  sig { returns(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]) }
+                  sig { returns(Google::Protobuf::Map[::String, ::Google::Protobuf::UInt64Value]) }
                   def stores; end
 
-                  sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::UInt64Value]).void }
+                  sig { params(value: Google::Protobuf::Map[::String, ::Google::Protobuf::UInt64Value]).void }
                   def stores=(value); end
                 end
               RBI
@@ -365,42 +365,42 @@ module Tapioca
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: String).void }
+                sig { params(value: ::String).void }
                 def byte_value=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).void }
+                sig { params(value: ::Integer).void }
                 def customer_id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).void }
+                sig { params(value: ::Integer).void }
                 def id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).void }
+                sig { params(value: ::Integer).void }
                 def item_id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Float).void }
+                sig { params(value: ::Float).void }
                 def money_value=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Float).void }
+                sig { params(value: ::Float).void }
                 def number_value=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).void }
+                sig { params(value: ::Integer).void }
                 def shop_id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: String).void }
+                sig { params(value: ::String).void }
                 def string_value=(value); end
               RBI
             end
@@ -419,25 +419,25 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(fields: T.untyped).void }
+                  sig { params(fields: ::T.untyped).void }
                   def initialize(**fields); end
 
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def ShopID; end
 
-                  sig { params(value: Integer).void }
+                  sig { params(value: ::Integer).void }
                   def ShopID=(value); end
 
-                  sig { returns(String) }
+                  sig { returns(::String) }
                   def ShopName; end
 
-                  sig { params(value: String).void }
+                  sig { params(value: ::String).void }
                   def ShopName=(value); end
 
-                  sig { returns(T.nilable(Symbol)) }
+                  sig { returns(::T.nilable(::Symbol)) }
                   def _ShopID; end
 
-                  sig { returns(T.nilable(Symbol)) }
+                  sig { returns(::T.nilable(::Symbol)) }
                   def _ShopName; end
 
                   sig { void }
@@ -446,10 +446,10 @@ module Tapioca
                   sig { void }
                   def clear_ShopName; end
 
-                  sig { returns(Object) }
+                  sig { returns(::Object) }
                   def has_ShopID?; end
 
-                  sig { returns(Object) }
+                  sig { returns(::Object) }
                   def has_ShopName?; end
                 end
               RBI
@@ -479,7 +479,7 @@ module Tapioca
                 sig { void }
                 def clear_phone_number; end
 
-                sig { returns(T.nilable(Symbol)) }
+                sig { returns(::T.nilable(::Symbol)) }
                 def contact_info; end
               RBI
             end
@@ -510,16 +510,16 @@ module Tapioca
                 # typed: strong
 
                 class Google::Protobuf::Struct < Google::Protobuf::AbstractMessage
-                  sig { params(fields: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::Value], T::Hash[String, Google::Protobuf::Value]))).void }
+                  sig { params(fields: ::T.nilable(::T.any(Google::Protobuf::Map[::String, ::Google::Protobuf::Value], Hash[::String, ::Google::Protobuf::Value]))).void }
                   def initialize(fields: T.unsafe(nil)); end
 
                   sig { void }
                   def clear_fields; end
 
-                  sig { returns(Google::Protobuf::Map[String, Google::Protobuf::Value]) }
+                  sig { returns(Google::Protobuf::Map[::String, ::Google::Protobuf::Value]) }
                   def fields; end
 
-                  sig { params(value: Google::Protobuf::Map[String, Google::Protobuf::Value]).void }
+                  sig { params(value: Google::Protobuf::Map[::String, ::Google::Protobuf::Value]).void }
                   def fields=(value); end
                 end
               RBI
@@ -569,16 +569,16 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(progress: T.nilable(T.any(Google::Protobuf::Map[String, Cart::Progress], T::Hash[String, Cart::Progress]))).void }
+                  sig { params(progress: ::T.nilable(::T.any(Google::Protobuf::Map[::String, ::Cart::Progress], Hash[::String, ::Cart::Progress]))).void }
                   def initialize(progress: T.unsafe(nil)); end
 
                   sig { void }
                   def clear_progress; end
 
-                  sig { returns(Google::Protobuf::Map[String, Cart::Progress]) }
+                  sig { returns(Google::Protobuf::Map[::String, ::Cart::Progress]) }
                   def progress; end
 
-                  sig { params(value: Google::Protobuf::Map[String, Cart::Progress]).void }
+                  sig { params(value: Google::Protobuf::Map[::String, ::Cart::Progress]).void }
                   def progress=(value); end
                 end
               RBI
