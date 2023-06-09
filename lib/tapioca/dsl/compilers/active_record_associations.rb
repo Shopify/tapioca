@@ -149,8 +149,8 @@ module Tapioca
           constant.nested_attributes_options.keys.each do |association_name|
             mod.create_method(
               "#{association_name}_attributes=",
-              parameters: [create_param("attributes", type: "T.untyped")],
-              return_type: "T.untyped",
+              parameters: [create_param("attributes", type: RBI::Type.untyped)],
+              return_type: RBI::Type.untyped,
             )
           end
         end
@@ -177,7 +177,7 @@ module Tapioca
         #: (RBI::Scope klass, (String | Symbol) association_name, ReflectionType reflection) -> void
         def populate_single_assoc_getter_setter(klass, association_name, reflection)
           association_class = type_for(reflection)
-          association_type = as_nilable_type(association_class)
+          association_type = association_class.nilable
           association_methods_module = constant.generated_association_methods
 
           klass.create_method(
@@ -187,7 +187,7 @@ module Tapioca
           klass.create_method(
             "#{association_name}=",
             parameters: [create_param("value", type: association_type)],
-            return_type: "void",
+            return_type: RBI::Type.void,
           )
           klass.create_method(
             "reload_#{association_name}",
@@ -195,42 +195,42 @@ module Tapioca
           )
           klass.create_method(
             "reset_#{association_name}",
-            return_type: "void",
+            return_type: RBI::Type.void,
           )
           if association_methods_module.method_defined?("#{association_name}_changed?")
             klass.create_method(
               "#{association_name}_changed?",
-              return_type: "T::Boolean",
+              return_type: RBI::Type.boolean,
             )
           end
           if association_methods_module.method_defined?("#{association_name}_previously_changed?")
             klass.create_method(
               "#{association_name}_previously_changed?",
-              return_type: "T::Boolean",
+              return_type: RBI::Type.boolean,
             )
           end
           unless reflection.polymorphic?
             klass.create_method(
               "build_#{association_name}",
               parameters: [
-                create_rest_param("args", type: "T.untyped"),
-                create_block_param("blk", type: "T.untyped"),
+                create_rest_param("args", type: RBI::Type.untyped),
+                create_block_param("blk", type: RBI::Type.untyped),
               ],
               return_type: association_class,
             )
             klass.create_method(
               "create_#{association_name}",
               parameters: [
-                create_rest_param("args", type: "T.untyped"),
-                create_block_param("blk", type: "T.untyped"),
+                create_rest_param("args", type: RBI::Type.untyped),
+                create_block_param("blk", type: RBI::Type.untyped),
               ],
               return_type: association_class,
             )
             klass.create_method(
               "create_#{association_name}!",
               parameters: [
-                create_rest_param("args", type: "T.untyped"),
-                create_block_param("blk", type: "T.untyped"),
+                create_rest_param("args", type: RBI::Type.untyped),
+                create_block_param("blk", type: RBI::Type.untyped),
               ],
               return_type: association_class,
             )
@@ -249,27 +249,27 @@ module Tapioca
           )
           klass.create_method(
             "#{association_name}=",
-            parameters: [create_param("value", type: "T::Enumerable[#{association_class}]")],
-            return_type: "void",
+            parameters: [create_param("value", type: RBI::Type.generic("T::Enumerable", association_class))],
+            return_type: RBI::Type.void,
           )
           klass.create_method(
             "#{association_name.to_s.singularize}_ids",
-            return_type: "T::Array[T.untyped]",
+            return_type: RBI::Type.generic("T::Array", RBI::Type.untyped),
           )
           klass.create_method(
             "#{association_name.to_s.singularize}_ids=",
-            parameters: [create_param("ids", type: "T::Array[T.untyped]")],
-            return_type: "T::Array[T.untyped]",
+            parameters: [create_param("ids", type: RBI::Type.generic("T::Array", RBI::Type.untyped))],
+            return_type: RBI::Type.generic("T::Array", RBI::Type.untyped),
           )
         end
 
-        #: (ReflectionType reflection) -> String
+        #: (ReflectionType reflection) -> RBI::Type
         def type_for(reflection)
           validate_reflection!(reflection)
 
-          return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
+          return RBI::Type.untyped if !constant.table_exists? || polymorphic_association?(reflection)
 
-          T.must(qualified_name_of(reflection.klass))
+          RBI::Type.simple(T.must(qualified_name_of(reflection.klass)))
         end
 
         #: (ReflectionType reflection) -> void
@@ -350,7 +350,7 @@ module Tapioca
           end
         end
 
-        #: (ReflectionType reflection) -> String
+        #: (ReflectionType reflection) -> RBI::Type
         def relation_type_for(reflection)
           validate_reflection!(reflection)
 
@@ -359,14 +359,17 @@ module Tapioca
 
           if relations_enabled
             if polymorphic_association
-              "ActiveRecord::Associations::CollectionProxy"
+              RBI::Type.simple("::ActiveRecord::Associations::CollectionProxy")
             else
-              "#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}"
+              RBI::Type.simple("#{qualified_name_of(reflection.klass)}::#{AssociationsCollectionProxyClassName}")
             end
           elsif polymorphic_association
-            "ActiveRecord::Associations::CollectionProxy[T.untyped]"
+            RBI::Type.generic("::ActiveRecord::Associations::CollectionProxy", RBI::Type.untyped)
           else
-            "::ActiveRecord::Associations::CollectionProxy[#{qualified_name_of(reflection.klass)}]"
+            RBI::Type.generic(
+              "::ActiveRecord::Associations::CollectionProxy",
+              RBI::Type.simple(T.must(qualified_name_of(reflection.klass))),
+            )
           end
         end
 
