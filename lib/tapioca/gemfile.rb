@@ -23,13 +23,15 @@ module Tapioca
     sig { returns(T::Array[String]) }
     attr_reader(:missing_specs)
 
-    sig { params(exclude: T::Array[String]).void }
-    def initialize(exclude)
-      Tapioca::BundlerExt::AutoRequireHook.exclude = exclude
+    sig { params(excluded_gems: T::Array[String]).void }
+    def initialize(excluded_gems)
       @gemfile = T.let(File.new(Bundler.default_gemfile), File)
       @lockfile = T.let(File.new(Bundler.default_lockfile), File)
       @definition = T.let(Bundler::Dsl.evaluate(gemfile, lockfile, {}), Bundler::Definition)
+      @excluded_gems = excluded_gems
+
       dependencies, missing_specs = load_dependencies
+
       @dependencies = T.let(dependencies, T::Array[GemSpec])
       @missing_specs = T.let(missing_specs, T::Array[String])
     end
@@ -41,7 +43,9 @@ module Tapioca
 
     sig { void }
     def require_bundle
-      T.unsafe(runtime).require(*groups)
+      BundlerExt::AutoRequireHook.override_require_false(exclude: @excluded_gems) do
+        T.unsafe(runtime).require(*groups)
+      end
     end
 
     private

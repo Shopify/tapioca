@@ -13,22 +13,41 @@ module Tapioca
       requires_ancestor { ::Bundler::Dependency }
 
       @exclude = T.let([], T::Array[String])
+      @enabled = T.let(false, T::Boolean)
 
       class << self
         extend T::Sig
 
-        sig { params(exclude: T::Array[String]).returns(T::Array[String]) }
-        attr_writer :exclude
-
         sig { params(name: T.untyped).returns(T::Boolean) }
         def excluded?(name)
           @exclude.include?(name)
+        end
+
+        def enabled?
+          @enabled
+        end
+
+        sig do
+          type_parameters(:Result).params(
+            exclude: T::Array[String],
+            blk: T.proc.returns(T.type_parameter(:Result)),
+          ).returns(T.type_parameter(:Result))
+        end
+        def override_require_false(exclude:, &blk)
+          @enabled = true
+          @exclude = exclude
+          blk.call
+        ensure
+          @enabled = false
         end
       end
 
       sig { returns(T.untyped).checked(:never) }
       def autorequire
         value = super
+
+        # If autorequire is not enabled, we don't want to force require gems
+        return value unless AutoRequireHook.enabled?
 
         # If the gem is excluded, we don't want to force require it, in case
         # it has side-effects users don't want. For example, `fakefs` gem, if
