@@ -15,7 +15,7 @@ module RBI
         rbi.create_extend("E")
         rbi.create_mixes_in_class_methods("F")
         rbi.create_type_variable("G", type: "type_member")
-        rbi.create_type_variable("H", type: "type_template", variance: :in, fixed: "Foo")
+        rbi.create_type_variable("H", type: "type_template", variance: :in, fixed: RBI::Type.simple("Foo"))
         rbi.create_method("foo")
 
         assert_equal(<<~RBI, rbi.string)

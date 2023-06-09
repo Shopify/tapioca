@@ -111,27 +111,29 @@ module Tapioca
       private
 
       # Get the types of each parameter from a method signature
-      #: ((Method | UnboundMethod) method_def, untyped signature) -> Array[String]
+      #: ((Method | UnboundMethod) method_def, untyped signature) -> Array[RBI::Type]
       def parameters_types_from_signature(method_def, signature)
-        params = [] #: Array[String]
+        params = [] #: Array[RBI::Type]
 
-        return method_def.parameters.map { "T.untyped" } unless signature
+        return method_def.parameters.map { RBI::Type.untyped } unless signature
 
         # parameters types
-        signature.arg_types.each { |arg_type| params << arg_type[1].to_s }
+        signature.arg_types.each { |arg_type| params << RBI::Type.verbatim(sanitize_signature_types(arg_type[1].to_s)) }
 
         # keyword parameters types
-        signature.kwarg_types.each { |_, kwarg_type| params << kwarg_type.to_s }
+        signature.kwarg_types.each do |_, kwarg_type|
+          params << RBI::Type.verbatim(sanitize_signature_types(kwarg_type.to_s))
+        end
 
         # rest parameter type
-        params << signature.rest_type.to_s if signature.has_rest
+        params << RBI::Type.verbatim(sanitize_signature_types(signature.rest_type.to_s)) if signature.has_rest
 
         # keyrest parameter type
-        params << signature.keyrest_type.to_s if signature.has_keyrest
+        params << RBI::Type.verbatim(sanitize_signature_types(signature.keyrest_type.to_s)) if signature.has_keyrest
 
         # special case `.void` in a proc
         unless signature.block_name.nil?
-          params << signature.block_type.to_s.gsub("returns(<VOID>)", "void")
+          params << RBI::Type.verbatim(sanitize_signature_types(signature.block_type.to_s))
         end
 
         params
@@ -183,11 +185,14 @@ module Tapioca
         end
       end
 
-      #: ((Method | UnboundMethod) method_def) -> String
+      #: ((Method | UnboundMethod) method_def) -> RBI::Type
       def compile_method_return_type_to_rbi(method_def)
         signature = signature_of(method_def)
-        return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)
-        sanitize_signature_types(return_type)
+        if signature.nil?
+          RBI::Type.untyped
+        else
+          RBI::Type.verbatim(sanitize_signature_types(name_of_type(signature.return_type)))
+        end
       end
     end
   end
