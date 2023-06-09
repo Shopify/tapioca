@@ -88,22 +88,22 @@ module Tapioca
           T.cast(ancestor, T.class_of(::Rails::Generators::Base))
         end
 
-        #: ((Thor::Argument | Thor::Option) arg) -> String
+        #: ((Thor::Argument | Thor::Option) arg) -> RBI::Type
         def type_for(arg)
           type =
             case arg.type
-            when :array then "T::Array[::String]"
-            when :boolean then "T::Boolean"
-            when :hash then "T::Hash[::String, ::String]"
-            when :numeric then "::Numeric"
-            when :string then "::String"
-            else "T.untyped"
+            when :array then RBI::Type.generic("T::Array", RBI::Type.simple("::String"))
+            when :boolean then RBI::Type.boolean
+            when :hash then RBI::Type.generic("T::Hash", RBI::Type.simple("::String"), RBI::Type.simple("::String"))
+            when :numeric then RBI::Type.simple("::Numeric")
+            when :string then RBI::Type.simple("::String")
+            else RBI::Type.untyped
             end
 
           if arg.required || arg.default
             type
           else
-            as_nilable_type(type)
+            type.nilable
           end
         end
       end

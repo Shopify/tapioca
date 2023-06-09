@@ -119,19 +119,19 @@ module Tapioca
                 # typed: strong
 
                 class OptionGenerator
-                  sig { returns(T.nilable(T::Array[::String])) }
+                  sig { returns(::T.nilable(T::Array[::String])) }
                   def array; end
 
-                  sig { returns(T.nilable(T::Boolean)) }
+                  sig { returns(::T.nilable(T::Boolean)) }
                   def bool; end
 
-                  sig { returns(T.nilable(T::Hash[::String, ::String])) }
+                  sig { returns(::T.nilable(T::Hash[::String, ::String])) }
                   def hash; end
 
-                  sig { returns(T.nilable(::Numeric)) }
+                  sig { returns(::T.nilable(::Numeric)) }
                   def numeric; end
 
-                  sig { returns(T.nilable(::String)) }
+                  sig { returns(::T.nilable(::String)) }
                   def string; end
                 end
               RBI
@@ -173,7 +173,7 @@ module Tapioca
                 # typed: strong
 
                 class OverrideGenerator
-                  sig { returns(T.nilable(::Numeric)) }
+                  sig { returns(::T.nilable(::Numeric)) }
                   def force; end
                 end
               RBI
@@ -201,10 +201,10 @@ module Tapioca
                   sig { returns(::String) }
                   def child_arg; end
 
-                  sig { returns(T.nilable(::String)) }
+                  sig { returns(::T.nilable(::String)) }
                   def child_opt; end
 
-                  sig { returns(T.nilable(::Numeric)) }
+                  sig { returns(::T.nilable(::Numeric)) }
                   def number; end
 
                   sig { returns(::String) }
