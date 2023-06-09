@@ -124,10 +124,10 @@ module Tapioca
                   module HelperMethods
                     include ::ActionController::Base::HelperMethods
 
-                    sig { params(args: T.untyped, kwargs: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, kwargs: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def current_user_name(*args, **kwargs, &blk); end
 
-                    sig { params(args: T.untyped, kwargs: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, kwargs: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def notify_user(*args, **kwargs, &blk); end
                   end
 
@@ -169,7 +169,7 @@ module Tapioca
                   module HelperMethods
                     include ::ActionController::Base::HelperMethods
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def current_user_name; end
 
                     sig { params(user_id: ::Integer).void }
@@ -214,7 +214,7 @@ module Tapioca
                   module HelperMethods
                     include ::ActionController::Base::HelperMethods
 
-                    sig { params(user: T.untyped).returns(T.untyped) }
+                    sig { params(user: ::T.untyped).returns(::T.untyped) }
                     def greet(user); end
 
                     sig { params(user_id: ::Integer).void }
@@ -352,7 +352,7 @@ module Tapioca
                   module HelperMethods
                     include ::ActionController::Base::HelperMethods
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def foo; end
                   end
 
