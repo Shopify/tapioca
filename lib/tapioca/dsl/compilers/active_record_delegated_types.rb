@@ -101,19 +101,23 @@ module Tapioca
           mod.create_method(
             "#{role}_name",
             parameters: [],
-            return_type: "ActiveSupport::StringInquirer",
+            return_type: RBI::Type.simple("ActiveSupport::StringInquirer"),
           )
 
           mod.create_method(
             "#{role}_class",
             parameters: [],
-            return_type: "T::Class[T.anything]",
+            return_type: RBI::Type.t_class(RBI::Type.anything),
           )
 
           mod.create_method(
             "build_#{role}",
-            parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: types.size == 1 ? types.first : "T.any(#{types.join(", ")})",
+            parameters: [create_rest_param("args", type: RBI::Type.untyped)],
+            return_type: if types.size == 1
+              RBI::Type.simple(types.first)
+            else
+              RBI::Type.any(*types.map { |type| RBI::Type.simple(type) })
+            end,
           )
         end
 
@@ -136,19 +140,19 @@ module Tapioca
           mod.create_method(
             query,
             parameters: [],
-            return_type: "T::Boolean",
+            return_type: RBI::Type.boolean,
           )
 
           mod.create_method(
             singular,
             parameters: [],
-            return_type: "T.nilable(#{type})",
+            return_type: RBI::Type.simple(type).nilable,
           )
 
           mod.create_method(
             "#{singular}_#{primary_key}",
             parameters: [],
-            return_type: as_nilable_type(getter_type),
+            return_type: getter_type.nilable,
           )
         end
       end
