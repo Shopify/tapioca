@@ -76,19 +76,15 @@ module Tapioca
         .gsub(".params()", "")
     end
 
-    #: (String type) -> String
+    #: (RBI::Type type) -> RBI::Type
     def as_nilable_type(type)
-      if type.start_with?("T.nilable(", "::T.nilable(") || type == "T.untyped" || type == "::T.untyped"
-        type
-      else
-        "T.nilable(#{type})"
-      end
+      type.nilable
     end
 
-    #: (String type) -> String
+    #: (RBI::Type type) -> RBI::Type
     def as_non_nilable_type(type)
-      if type.match(/\A(?:::)?T.nilable\((.+)\)\z/)
-        T.must(::Regexp.last_match(1))
+      if type.nilable?
+        type.non_nilable
       else
         type
       end
