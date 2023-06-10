@@ -52,7 +52,7 @@ module Tapioca
               assert_equal(expected, rbi_for(:UserController))
             end
 
-            it "generates correct RBI file for subclass with methods" do
+            it "generates correct RBI file for subclass with private methods" do
               add_ruby_file("job.rb", <<~RUBY)
                 class UserController < ActionController::Base
                   def index
@@ -62,6 +62,35 @@ module Tapioca
 
                   private
                   def private_index
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class UserController
+                  sig { void }
+                  def index; end
+
+                  sig { void }
+                  def show; end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:UserController))
+            end
+
+            it "generates correct RBI file for subclass with protected methods" do
+              add_ruby_file("job.rb", <<~RUBY)
+                class UserController < ActionController::Base
+                  def index
+                  end
+                  def show
+                  end
+
+                  protected
+                  def protected_index
                   end
                 end
               RUBY

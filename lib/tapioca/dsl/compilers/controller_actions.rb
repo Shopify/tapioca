@@ -47,11 +47,11 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          public_methods = constant.instance_methods(false)
-          return if public_methods.empty?
+          action_methods = constant.action_methods
+          return if action_methods.empty?
 
           root.create_path(constant) do |klass|
-            public_methods.each do |method_name|
+            action_methods.each do |method_name|
               method = constant.instance_method(method_name)
               signature = signature_of(method)
               next if signature
