@@ -113,7 +113,7 @@ module Tapioca
         if Class === constant
           ancestors_of(superclass_of(constant) || Object)
         else
-          Module.ancestors
+          Module.new.ancestors
         end
       end
 
