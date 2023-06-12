@@ -1276,6 +1276,61 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles a module with mixins" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def foo
+          end
+        end
+      RUBY
+
+      add_ruby_file("bar.rb", <<~RUBY)
+        module Bar
+          def bar
+          end
+        end
+      RUBY
+
+      add_ruby_file("quux.rb", <<~RUBY)
+        module Quux
+        end
+      RUBY
+
+      add_ruby_file("baz.rb", <<~RUBY)
+        module Baz
+          include Foo
+          extend Bar
+          prepend Quux
+          include Kernel
+           # The following should be ignored
+           # since `Kernel` is already included into `Module`
+           # and the singleton class of `Baz` is a subclass of `Module`
+          extend Kernel
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Bar
+          def bar; end
+        end
+
+        module Baz
+          include ::Quux
+          include ::Foo
+          include ::Kernel
+          extend ::Bar
+        end
+
+        module Foo
+          def foo; end
+        end
+
+        module Quux; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles Structs, Classes, and Modules" do
       add_ruby_file("structs.rb", <<~RUBY)
         class S1 < Struct.new(:foo)
