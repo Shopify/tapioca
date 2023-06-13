@@ -12,10 +12,10 @@ class DslSpec < Minitest::Spec
   class << self
     extend T::Sig
 
-    sig { returns(Class) }
+    sig { returns(T.class_of(DslSpec)) }
     def spec_test_class
       # It should be the one that directly inherits from DslSpec
-      class_ancestors = T.cast(ancestors.grep(Class), T::Array[Class])
+      class_ancestors = T.cast(ancestors.grep(Class), T::Array[T.class_of(DslSpec)])
 
       klass = class_ancestors
         .take_while { |ancestor| ancestor != DslSpec }
@@ -28,7 +28,7 @@ class DslSpec < Minitest::Spec
     def target_class_name
       # Get the name of the class under test from the name of the
       # test class
-      T.must(spec_test_class.name).gsub(/Spec$/, "")
+      spec_test_class.name.gsub(/Spec$/, "")
     end
 
     sig { returns(T.class_of(Tapioca::Dsl::Compiler)) }

@@ -43,10 +43,10 @@ module Tapioca
 
         private
 
-        sig { returns(T::Enumerable[Class]) }
+        sig { returns(T::Enumerable[T::Class[T.anything]]) }
         def all_classes
-          @all_classes = T.let(@all_classes, T.nilable(T::Enumerable[Class]))
-          @all_classes ||= T.cast(ObjectSpace.each_object(Class), T::Enumerable[Class]).each
+          @all_classes = T.let(@all_classes, T.nilable(T::Enumerable[T::Class[T.anything]]))
+          @all_classes ||= T.cast(ObjectSpace.each_object(Class), T::Enumerable[T::Class[T.anything]]).each
         end
 
         sig { returns(T::Enumerable[Module]) }

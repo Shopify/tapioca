@@ -304,9 +304,9 @@ module Tapioca
         @root << scope
       end
 
-      sig { params(constant: Class).returns(T.nilable(String)) }
+      sig { params(constant: T::Class[T.anything]).returns(T.nilable(String)) }
       def compile_superclass(constant)
-        superclass = T.let(nil, T.nilable(Class)) # rubocop:disable Lint/UselessAssignment
+        superclass = T.let(nil, T.nilable(T::Class[T.anything])) # rubocop:disable Lint/UselessAssignment
 
         while (superclass = superclass_of(constant))
           constant_name = name_of(constant)

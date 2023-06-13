@@ -70,7 +70,9 @@ module Tapioca
       class Kredis < Compiler
         extend T::Sig
 
-        ConstantType = type_member { { fixed: T.all(Class, ::Kredis::Attributes::ClassMethods, Extensions::Kredis) } }
+        ConstantType = type_member do
+          { fixed: T.all(T::Class[::Kredis::Attributes], ::Kredis::Attributes::ClassMethods, Extensions::Kredis) }
+        end
 
         sig { override.void }
         def decorate

@@ -30,6 +30,7 @@ require "tapioca/helpers/gem_helper"
 
 require "tapioca/helpers/sorbet_helper"
 require "tapioca/helpers/rbi_helper"
+require "tapioca/sorbet_ext/backcompat_patches"
 require "tapioca/sorbet_ext/fixed_hash_patch"
 require "tapioca/sorbet_ext/name_patch"
 require "tapioca/sorbet_ext/generic_name_patch"

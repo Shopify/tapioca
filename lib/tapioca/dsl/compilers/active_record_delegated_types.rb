@@ -110,10 +110,11 @@ module Tapioca
             return_type: "ActiveSupport::StringInquirer",
           )
 
+          return_type = sorbet_supports?(:generic_class) ? "T::Class[T.anything]" : "Class"
           mod.create_method(
             "#{role}_class",
             parameters: [],
-            return_type: "Class",
+            return_type: return_type,
           )
 
           mod.create_method(
