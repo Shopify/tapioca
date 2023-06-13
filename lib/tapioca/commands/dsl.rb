@@ -24,6 +24,7 @@ module Tapioca
           gem_dir: String,
           rbi_formatter: RBIFormatter,
           app_root: String,
+          halt_upon_load_error: T::Boolean,
         ).void
       end
       def initialize(
@@ -41,7 +42,8 @@ module Tapioca
         auto_strictness: true,
         gem_dir: DEFAULT_GEM_DIR,
         rbi_formatter: DEFAULT_RBI_FORMATTER,
-        app_root: "."
+        app_root: ".",
+        halt_upon_load_error: true
       )
         @requested_constants = requested_constants
         @requested_paths = requested_paths
@@ -58,6 +60,7 @@ module Tapioca
         @gem_dir = gem_dir
         @rbi_formatter = rbi_formatter
         @app_root = app_root
+        @halt_upon_load_error = halt_upon_load_error
 
         super()
       end
@@ -68,6 +71,7 @@ module Tapioca
           tapioca_path: @tapioca_path,
           eager_load: @requested_constants.empty? && @requested_paths.empty?,
           app_root: @app_root,
+          halt_upon_load_error: @halt_upon_load_error,
         )
 
         pipeline = create_pipeline
@@ -95,6 +99,7 @@ module Tapioca
           tapioca_path: @tapioca_path,
           eager_load: @requested_constants.empty? && @requested_paths.empty?,
           app_root: @app_root,
+          halt_upon_load_error: @halt_upon_load_error,
         )
 
         if @should_verify

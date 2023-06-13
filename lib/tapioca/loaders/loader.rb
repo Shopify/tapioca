@@ -19,12 +19,17 @@ module Tapioca
       private
 
       sig do
-        params(gemfile: Tapioca::Gemfile, initialize_file: T.nilable(String), require_file: T.nilable(String)).void
+        params(
+          gemfile: Tapioca::Gemfile,
+          initialize_file: T.nilable(String),
+          require_file: T.nilable(String),
+          halt_upon_load_error: T::Boolean,
+        ).void
       end
-      def load_bundle(gemfile, initialize_file, require_file)
+      def load_bundle(gemfile, initialize_file, require_file, halt_upon_load_error)
         require_helper(initialize_file)
 
-        load_rails_application
+        load_rails_application(halt_upon_load_error: halt_upon_load_error)
 
         gemfile.require_bundle
 
@@ -33,8 +38,15 @@ module Tapioca
         load_rails_engines
       end
 
-      sig { params(environment_load: T::Boolean, eager_load: T::Boolean, app_root: String).void }
-      def load_rails_application(environment_load: false, eager_load: false, app_root: ".")
+      sig do
+        params(
+          environment_load: T::Boolean,
+          eager_load: T::Boolean,
+          app_root: String,
+          halt_upon_load_error: T::Boolean,
+        ).void
+      end
+      def load_rails_application(environment_load: false, eager_load: false, app_root: ".", halt_upon_load_error: true)
         return unless File.exist?("#{app_root}/config/application.rb")
 
         silence_deprecations
@@ -50,9 +62,13 @@ module Tapioca
         say(
           "\nTapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
             "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
-            "generating RBIs.\n#{e}",
+            "generating RBIs. If your application does not use Rails and you wish to continue RBI generation " \
+            "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
+            "\n#{e}",
           :yellow,
         )
+        raise e if halt_upon_load_error
+
         if e.backtrace
           backtrace = T.must(e.backtrace).join("\n")
           say(backtrace, :cyan) # TODO: Check verbose flag to print backtrace.

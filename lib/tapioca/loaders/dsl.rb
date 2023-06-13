@@ -9,9 +9,16 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig { params(tapioca_path: String, eager_load: T::Boolean, app_root: String).void }
-        def load_application(tapioca_path:, eager_load: true, app_root: ".")
-          loader = new(tapioca_path: tapioca_path, eager_load: eager_load, app_root: app_root)
+        sig do
+          params(tapioca_path: String, eager_load: T::Boolean, app_root: String, halt_upon_load_error: T::Boolean).void
+        end
+        def load_application(tapioca_path:, eager_load: true, app_root: ".", halt_upon_load_error: true)
+          loader = new(
+            tapioca_path: tapioca_path,
+            eager_load: eager_load,
+            app_root: app_root,
+            halt_upon_load_error: halt_upon_load_error,
+          )
           loader.load
         end
       end
@@ -25,13 +32,16 @@ module Tapioca
 
       protected
 
-      sig { params(tapioca_path: String, eager_load: T::Boolean, app_root: String).void }
-      def initialize(tapioca_path:, eager_load: true, app_root: ".")
+      sig do
+        params(tapioca_path: String, eager_load: T::Boolean, app_root: String, halt_upon_load_error: T::Boolean).void
+      end
+      def initialize(tapioca_path:, eager_load: true, app_root: ".", halt_upon_load_error: true)
         super()
 
         @tapioca_path = tapioca_path
         @eager_load = eager_load
         @app_root = app_root
+        @halt_upon_load_error = halt_upon_load_error
       end
 
       sig { void }
@@ -65,6 +75,7 @@ module Tapioca
           environment_load: true,
           eager_load: @eager_load,
           app_root: @app_root,
+          halt_upon_load_error: @halt_upon_load_error,
         )
 
         say("Done", :green)
