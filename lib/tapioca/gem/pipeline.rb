@@ -252,12 +252,14 @@ module Tapioca
         return if symbol_in_payload?(name)
         return unless constant_in_gem?(name)
 
-        klass = class_of(value)
+        klass = Tapioca::Runtime::Trackers::ConstantType.type_for_constant(name, value)
 
         klass_name = if klass == ObjectSpace::WeakMap
           sorbet_supports?(:non_generic_weak_map) ? "ObjectSpace::WeakMap" : "ObjectSpace::WeakMap[T.untyped]"
         elsif T::Generic === klass
           generic_name_of(klass)
+        elsif T::Types::Base === klass
+          klass.to_s
         else
           name_of(klass)
         end
