@@ -754,6 +754,30 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles constants assignments with T.let" do
+      add_ruby_file("a.rb", <<~RUBY)
+        module A
+          B = T.let(123.45, Numeric)
+          C = T.let([], T::Array[Symbol])
+          D = T.let(false, T::Boolean)
+          E = false
+          X =
+            T.let({}, T::Enumerable[[Symbol, Integer]])
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module A; end
+        A::B = T.let(T.unsafe(nil), Numeric)
+        A::C = T.let(T.unsafe(nil), T::Array[::Symbol])
+        A::D = T.let(T.unsafe(nil), T::Boolean)
+        A::E = T.let(T.unsafe(nil), FalseClass)
+        A::X = T.let(T.unsafe(nil), Hash)
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles simple arguments" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
