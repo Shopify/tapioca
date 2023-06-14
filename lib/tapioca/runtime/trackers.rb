@@ -54,5 +54,6 @@ end
 # are performed.
 require "tapioca/runtime/trackers/mixin"
 require "tapioca/runtime/trackers/constant_definition"
+require "tapioca/runtime/trackers/constant_type"
 require "tapioca/runtime/trackers/autoload"
 require "tapioca/runtime/trackers/required_ancestor"
