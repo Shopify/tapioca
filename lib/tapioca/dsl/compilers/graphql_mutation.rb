@@ -57,13 +57,13 @@ module Tapioca
           end
 
           root.create_path(constant) do |mutation|
-            mutation.create_method("resolve", parameters: params, return_type: "T.untyped")
+            mutation.create_method("resolve", parameters: params, return_type: RBI::Type.untyped)
           end
         end
 
-        #: (GraphQL::Schema::Argument? argument, singleton(GraphQL::Schema::Mutation) constant) -> String
+        #: (GraphQL::Schema::Argument? argument, singleton(GraphQL::Schema::Mutation) constant) -> RBI::Type
         def argument_type(argument, constant)
-          return "T.untyped" unless argument
+          return RBI::Type.untyped unless argument
 
           Helpers::GraphqlTypeHelper.type_for_argument(argument, constant)
         end
