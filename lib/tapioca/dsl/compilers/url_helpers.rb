@@ -171,8 +171,8 @@ module Tapioca
             constant.instance_methods(false).each do |method|
               mod.create_method(
                 method.to_s,
-                parameters: [create_rest_param("args", type: "T.untyped")],
-                return_type: "String",
+                parameters: [create_rest_param("args", type: RBI::Type.untyped)],
+                return_type: RBI::Type.simple("::String"),
               )
             end
           end
