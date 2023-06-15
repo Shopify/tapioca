@@ -74,19 +74,19 @@ module Tapioca
                   include FrozenRecordAttributeMethods
 
                   module FrozenRecordAttributeMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def first_name; end
 
                     sig { returns(T::Boolean) }
                     def first_name?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def id; end
 
                     sig { returns(T::Boolean) }
                     def id?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def last_name; end
 
                     sig { returns(T::Boolean) }
@@ -122,13 +122,13 @@ module Tapioca
                   extend GeneratedRelationMethods
 
                   module FrozenRecordAttributeMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def course; end
 
                     sig { returns(T::Boolean) }
                     def course?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def id; end
 
                     sig { returns(T::Boolean) }
@@ -136,7 +136,7 @@ module Tapioca
                   end
 
                   module GeneratedRelationMethods
-                    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def programmers(*args, &blk); end
                   end
                 end
