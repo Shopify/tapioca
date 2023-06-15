@@ -103,18 +103,18 @@ module Tapioca
             create_enum_class(mod, klass_name, data.fetch(:values))
             return_type = klass_name
           when "Kredis::Types::Flag"
-            mod.create_method("#{method}?", return_type: "T::Boolean")
+            mod.create_method("#{method}?", return_type: RBI::Type.boolean)
           end
 
-          mod.create_method(method, return_type: return_type)
+          mod.create_method(method, return_type: RBI::Type.simple(return_type))
         end
 
         #: (RBI::Scope mod, String klass_name, Array[untyped] values) -> void
         def create_enum_class(mod, klass_name, values)
           klass = mod.create_class(klass_name, superclass_name: "Kredis::Types::Enum")
           values.each do |value|
-            klass.create_method("#{value}!", return_type: "void")
-            klass.create_method("#{value}?", return_type: "T::Boolean")
+            klass.create_method("#{value}!", return_type: RBI::Type.void)
+            klass.create_method("#{value}?", return_type: RBI::Type.boolean)
           end
         end
       end
