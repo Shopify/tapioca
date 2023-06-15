@@ -48,10 +48,10 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def id; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: ::Integer).returns(::Integer) }
                   def id=(value); end
 
                   sig { returns(T::Boolean) }
@@ -75,28 +75,28 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def id; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: ::Integer).returns(::Integer) }
                   def id=(value); end
 
                   sig { returns(T::Boolean) }
                   def id?; end
 
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def month; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: ::Integer).returns(::Integer) }
                   def month=(value); end
 
                   sig { returns(T::Boolean) }
                   def month?; end
 
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def year; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: ::Integer).returns(::Integer) }
                   def year=(value); end
 
                   sig { returns(T::Boolean) }
@@ -121,19 +121,19 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def month; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: ::Integer).returns(::Integer) }
                   def month=(value); end
 
                   sig { returns(T::Boolean) }
                   def month?; end
 
-                  sig { returns(String) }
+                  sig { returns(::String) }
                   def title; end
 
-                  sig { params(value: String).returns(String) }
+                  sig { params(value: ::String).returns(::String) }
                   def title=(value); end
 
                   sig { returns(T::Boolean) }
@@ -157,10 +157,10 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def id; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: ::T.untyped).returns(::T.untyped) }
                   def id=(value); end
 
                   sig { returns(T::Boolean) }
@@ -197,47 +197,47 @@ module Tapioca
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Integer).returns(Integer) }
+                sig { params(value: ::Integer).returns(::Integer) }
                 def id=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: String).returns(String) }
+                sig { params(value: ::String).returns(::String) }
                 def title=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Float).returns(Float) }
+                sig { params(value: ::Float).returns(::Float) }
                 def price=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Date).returns(Date) }
+                sig { params(value: ::Date).returns(::Date) }
                 def month=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: Time).returns(Time) }
+                sig { params(value: ::Time).returns(::Time) }
                 def post_time=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: DateTime).returns(DateTime) }
+                sig { params(value: ::DateTime).returns(::DateTime) }
                 def review_time=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: BigDecimal).returns(BigDecimal) }
+                sig { params(value: ::BigDecimal).returns(::BigDecimal) }
                 def credit_point=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: String).returns(String) }
+                sig { params(value: ::String).returns(::String) }
                 def active=(value); end
               RBI
 
               assert_includes(rbi_output, indented(<<~RBI, 2))
-                sig { params(value: String).returns(String) }
+                sig { params(value: ::String).returns(::String) }
                 def message=(value); end
               RBI
             end
