@@ -55,8 +55,8 @@ module Tapioca
               )
               scope.create_method(
                 "#{name}=",
-                parameters: [create_param("attachable", type: "T.untyped")],
-                return_type: "T.untyped",
+                parameters: [create_param("attachable", type: RBI::Type.untyped)],
+                return_type: RBI::Type.untyped,
               )
             end
           end
@@ -74,15 +74,15 @@ module Tapioca
 
         private
 
-        #: (ActiveRecord::Reflection::MacroReflection reflection) -> String
+        #: (ActiveRecord::Reflection::MacroReflection reflection) -> RBI::Type
         def type_of(reflection)
           case reflection
           when ::ActiveStorage::Reflection::HasOneAttachedReflection
-            "ActiveStorage::Attached::One"
+            RBI::Type.simple("::ActiveStorage::Attached::One")
           when ::ActiveStorage::Reflection::HasManyAttachedReflection
-            "ActiveStorage::Attached::Many"
+            RBI::Type.simple("::ActiveStorage::Attached::Many")
           else
-            "T.untyped"
+            RBI::Type.untyped
           end
         end
       end
