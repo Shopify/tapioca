@@ -71,20 +71,20 @@ module Tapioca
             # enumerates the entries, we don't make any assumptions about their
             # types.
             mod.create_extend("T::Generic")
-            mod.create_type_variable("Elem", type: "type_member", fixed: "T.untyped")
+            mod.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.untyped)
 
             method_names.each do |method_name|
               # Create getter method
               mod.create_method(
                 method_name.to_s,
-                return_type: "T.untyped",
+                return_type: RBI::Type.untyped,
               )
 
               # Create setter method
               mod.create_method(
                 "#{method_name}=",
-                parameters: [create_param("value", type: "T.untyped")],
-                return_type: "T.untyped",
+                parameters: [create_param("value", type: RBI::Type.untyped)],
+                return_type: RBI::Type.untyped,
               )
             end
           end
