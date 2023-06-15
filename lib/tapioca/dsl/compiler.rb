@@ -118,22 +118,22 @@ module Tapioca
         return method_def.parameters.map { RBI::Type.untyped } unless signature
 
         # parameters types
-        signature.arg_types.each { |arg_type| params << RBI::Type.verbatim(sanitize_signature_types(arg_type[1].to_s)) }
+        signature.arg_types.each { |arg_type| params << RBI::Type.parse_string(sanitize_signature_types(arg_type[1].to_s)) }
 
         # keyword parameters types
         signature.kwarg_types.each do |_, kwarg_type|
-          params << RBI::Type.verbatim(sanitize_signature_types(kwarg_type.to_s))
+          params << RBI::Type.parse_string(sanitize_signature_types(kwarg_type.to_s))
         end
 
         # rest parameter type
-        params << RBI::Type.verbatim(sanitize_signature_types(signature.rest_type.to_s)) if signature.has_rest
+        params << RBI::Type.parse_string(sanitize_signature_types(signature.rest_type.to_s)) if signature.has_rest
 
         # keyrest parameter type
-        params << RBI::Type.verbatim(sanitize_signature_types(signature.keyrest_type.to_s)) if signature.has_keyrest
+        params << RBI::Type.parse_string(sanitize_signature_types(signature.keyrest_type.to_s)) if signature.has_keyrest
 
         # special case `.void` in a proc
         unless signature.block_name.nil?
-          params << RBI::Type.verbatim(sanitize_signature_types(signature.block_type.to_s))
+          params << RBI::Type.parse_string(sanitize_signature_types(signature.block_type.to_s))
         end
 
         params
@@ -191,7 +191,7 @@ module Tapioca
         if signature.nil?
           RBI::Type.untyped
         else
-          RBI::Type.verbatim(sanitize_signature_types(name_of_type(signature.return_type)))
+          RBI::Type.parse_string(sanitize_signature_types(name_of_type(signature.return_type)))
         end
       end
     end

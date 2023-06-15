@@ -73,10 +73,10 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: ::T.untyped, block: ::T.nilable(::T.proc.params(job: NotifyJob).void)).returns(::T.any(::NotifyJob, ::FalseClass)) }
                     def perform_later(user_id, &block); end
 
-                    sig { params(user_id: T.untyped).returns(T.untyped) }
+                    sig { params(user_id: ::T.untyped).returns(::T.untyped) }
                     def perform_now(user_id); end
                   end
                 end
@@ -100,7 +100,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: ::Integer, block: ::T.nilable(::T.proc.params(job: NotifyJob).void)).returns(::T.any(::NotifyJob, ::FalseClass)) }
                     def perform_later(user_id, &block); end
 
                     sig { params(user_id: ::Integer).void }
@@ -125,10 +125,10 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: ::T.untyped, block: ::T.nilable(::T.proc.params(job: NotifyJob).void)).returns(::T.any(::NotifyJob, ::FalseClass)) }
                     def perform_later(user_id, &block); end
 
-                    sig { params(user_id: T.untyped).returns(T.untyped) }
+                    sig { params(user_id: ::T.untyped).returns(::T.untyped) }
                     def perform_now(user_id); end
                   end
                 end
@@ -153,7 +153,7 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    sig { params(user_id: ::Integer, block: ::T.nilable(::T.proc.params(job: NotifyJob).void)).returns(::T.any(::NotifyJob, ::FalseClass)) }
                     def perform_later(user_id, &block); end
 
                     sig { params(user_id: ::Integer).void }
