@@ -63,10 +63,10 @@ module Tapioca
                   extend StateMachineClassHelperModule
 
                   module StateMachineClassHelperModule
-                    sig { params(event: T.any(String, Symbol)).returns(String) }
+                    sig { params(event: ::T.any(::String, ::Symbol)).returns(::String) }
                     def human_alarm_state_event_name(event); end
 
-                    sig { params(state: T.any(String, Symbol)).returns(String) }
+                    sig { params(state: ::T.any(::String, ::Symbol)).returns(::String) }
                     def human_alarm_state_name(state); end
                   end
 
@@ -77,25 +77,25 @@ module Tapioca
                     sig { returns(T::Boolean) }
                     def alarm_off?; end
 
-                    sig { returns(Integer) }
+                    sig { returns(::Integer) }
                     def alarm_state; end
 
-                    sig { params(value: Integer).returns(Integer) }
+                    sig { params(value: ::Integer).returns(::Integer) }
                     def alarm_state=(value); end
 
-                    sig { params(state: T.any(String, Symbol)).returns(T::Boolean) }
+                    sig { params(state: ::T.any(::String, ::Symbol)).returns(T::Boolean) }
                     def alarm_state?(state); end
 
-                    sig { params(args: T.untyped).returns(T::Array[T.any(String, Symbol)]) }
+                    sig { params(args: ::T.untyped).returns(T::Array[::T.any(::String, ::Symbol)]) }
                     def alarm_state_events(*args); end
 
-                    sig { returns(T.any(String, Symbol)) }
+                    sig { returns(::T.any(::String, ::Symbol)) }
                     def alarm_state_name; end
 
-                    sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+                    sig { params(args: ::T.untyped).returns(T::Array[::StateMachines::Transition]) }
                     def alarm_state_paths(*args); end
 
-                    sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+                    sig { params(args: ::T.untyped).returns(T::Array[::StateMachines::Transition]) }
                     def alarm_state_transitions(*args); end
 
                     sig { returns(T::Boolean) }
@@ -104,28 +104,28 @@ module Tapioca
                     sig { returns(T::Boolean) }
                     def can_enable_alarm?; end
 
-                    sig { params(args: T.untyped).returns(T::Boolean) }
+                    sig { params(args: ::T.untyped).returns(T::Boolean) }
                     def disable_alarm(*args); end
 
-                    sig { params(args: T.untyped).returns(T::Boolean) }
+                    sig { params(args: ::T.untyped).returns(T::Boolean) }
                     def disable_alarm!(*args); end
 
-                    sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
+                    sig { params(args: ::T.untyped).returns(::T.nilable(::StateMachines::Transition)) }
                     def disable_alarm_transition(*args); end
 
-                    sig { params(args: T.untyped).returns(T::Boolean) }
+                    sig { params(args: ::T.untyped).returns(T::Boolean) }
                     def enable_alarm(*args); end
 
-                    sig { params(args: T.untyped).returns(T::Boolean) }
+                    sig { params(args: ::T.untyped).returns(T::Boolean) }
                     def enable_alarm!(*args); end
 
-                    sig { params(args: T.untyped).returns(T.nilable(::StateMachines::Transition)) }
+                    sig { params(args: ::T.untyped).returns(::T.nilable(::StateMachines::Transition)) }
                     def enable_alarm_transition(*args); end
 
-                    sig { params(event: T.any(String, Symbol), args: T.untyped).returns(T::Boolean) }
+                    sig { params(event: ::T.any(::String, ::Symbol), args: ::T.untyped).returns(T::Boolean) }
                     def fire_alarm_state_event(event, *args); end
 
-                    sig { returns(String) }
+                    sig { returns(::String) }
                     def human_alarm_state_name; end
                   end
                 end
@@ -155,10 +155,10 @@ module Tapioca
                   extend StateMachineClassHelperModule
 
                   module StateMachineClassHelperModule
-                    sig { params(event: T.any(String, Symbol)).returns(String) }
+                    sig { params(event: ::T.any(::String, ::Symbol)).returns(::String) }
                     def human_alarm_state_event_name(event); end
 
-                    sig { params(state: T.any(String, Symbol)).returns(String) }
+                    sig { params(state: ::T.any(::String, ::Symbol)).returns(::String) }
                     def human_alarm_state_name(state); end
                   end
               RBI
@@ -184,31 +184,31 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def alarm_off?; end
 
-                  sig { returns(Integer) }
+                  sig { returns(::Integer) }
                   def alarm_state; end
 
-                  sig { params(value: Integer).returns(Integer) }
+                  sig { params(value: ::Integer).returns(::Integer) }
                   def alarm_state=(value); end
 
-                  sig { params(state: T.any(String, Symbol)).returns(T::Boolean) }
+                  sig { params(state: ::T.any(::String, ::Symbol)).returns(T::Boolean) }
                   def alarm_state?(state); end
 
-                  sig { params(args: T.untyped).returns(T::Array[T.any(String, Symbol)]) }
+                  sig { params(args: ::T.untyped).returns(T::Array[::T.any(::String, ::Symbol)]) }
                   def alarm_state_events(*args); end
 
-                  sig { returns(T.any(String, Symbol)) }
+                  sig { returns(::T.any(::String, ::Symbol)) }
                   def alarm_state_name; end
 
-                  sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+                  sig { params(args: ::T.untyped).returns(T::Array[::StateMachines::Transition]) }
                   def alarm_state_paths(*args); end
 
-                  sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+                  sig { params(args: ::T.untyped).returns(T::Array[::StateMachines::Transition]) }
                   def alarm_state_transitions(*args); end
 
-                  sig { params(event: T.any(String, Symbol), args: T.untyped).returns(T::Boolean) }
+                  sig { params(event: ::T.any(::String, ::Symbol), args: ::T.untyped).returns(T::Boolean) }
                   def fire_alarm_state_event(event, *args); end
 
-                  sig { returns(String) }
+                  sig { returns(::String) }
                   def human_alarm_state_name; end
                 end
               RBI
@@ -228,7 +228,7 @@ module Tapioca
               RUBY
 
               expected = indented(<<~RBI, 4)
-                sig { params(args: T.untyped).returns(T::Array[::StateMachines::Transition]) }
+                sig { params(args: ::T.untyped).returns(T::Array[::StateMachines::Transition]) }
                 def state_paths(*args); end
               RBI
 
@@ -261,16 +261,16 @@ module Tapioca
               RUBY
 
               expected = indented(<<~RBI, 4)
-                sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+                sig { params(states: ::T.any(::String, ::Symbol)).returns(::T.untyped) }
                 def with_state(*states); end
 
-                sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+                sig { params(states: ::T.any(::String, ::Symbol)).returns(::T.untyped) }
                 def with_states(*states); end
 
-                sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+                sig { params(states: ::T.any(::String, ::Symbol)).returns(::T.untyped) }
                 def without_state(*states); end
 
-                sig { params(states: T.any(String, Symbol)).returns(T.untyped) }
+                sig { params(states: ::T.any(::String, ::Symbol)).returns(::T.untyped) }
                 def without_states(*states); end
               RBI
 
@@ -297,13 +297,13 @@ module Tapioca
               RUBY
 
               expected = indented(<<~RBI, 4)
-                sig { returns(T.nilable(Symbol)) }
+                sig { returns(::T.nilable(::Symbol)) }
                 def state_event; end
 
-                sig { params(value: T.any(String, Symbol)).returns(T.any(String, Symbol)) }
+                sig { params(value: ::T.any(::String, ::Symbol)).returns(::T.any(::String, ::Symbol)) }
                 def state_event=(value); end
 
-                sig { returns(T.nilable(::StateMachines::Transition)) }
+                sig { returns(::T.nilable(::StateMachines::Transition)) }
                 def state_event_transition; end
 
                 sig { params(value: ::StateMachines::Transition).returns(::StateMachines::Transition) }
