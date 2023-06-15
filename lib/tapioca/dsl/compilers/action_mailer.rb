@@ -41,7 +41,7 @@ module Tapioca
               mailer.create_method(
                 mailer_method,
                 parameters: parameters,
-                return_type: "::ActionMailer::MessageDelivery",
+                return_type: RBI::Type.simple("::ActionMailer::MessageDelivery"),
                 class_method: true,
               )
             end
