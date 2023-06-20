@@ -636,17 +636,17 @@ module Tapioca
                 # typed: strong
 
                 class Cart
-                  sig { params(tables: T.nilable(T.any(Google::Protobuf::Map[String, MyCart.TableProgress], T::Hash[String, MyCart.TableProgress]))).void }
-                  def initialize(tables: Google::Protobuf::Map.new(:string, :message, MyCart.TableProgress)); end
+                  sig { params(progress: T.nilable(T.any(Google::Protobuf::Map[String, MyCart.Progress], T::Hash[String, MyCart.Progress]))).void }
+                  def initialize(progress: Google::Protobuf::Map.new(:string, :message, MyCart.Progress)); end
 
                   sig { void }
-                  def clear_tables; end
+                  def clear_progress; end
 
-                  sig { returns(Google::Protobuf::Map[String, MyCart.TableProgress]) }
-                  def tables; end
+                  sig { returns(Google::Protobuf::Map[String, MyCart.Progress]) }
+                  def progress; end
 
-                  sig { params(value: Google::Protobuf::Map[String, MyCart.TableProgress]).void }
-                  def tables=(value); end
+                  sig { params(value: Google::Protobuf::Map[String, MyCart.Progress]).void }
+                  def progress=(value); end
                 end
               RBI
 
