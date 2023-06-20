@@ -228,14 +228,17 @@ module Tapioca
         sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
         def field_of(descriptor)
           if descriptor.label == :repeated
-            # Here we're going to check if the submsg_name is named according to
-            # how Google names map entries.
-            # https://github.com/protocolbuffers/protobuf/blob/f82e26/ruby/ext/google/protobuf_c/defs.c#L1963-L1966
-            if descriptor.submsg_name.to_s.end_with?("_MapEntry_#{descriptor.name}") ||
-                descriptor.submsg_name.to_s.end_with?("FieldsEntry")
+            # Here we're going to check if the descriptor supports the `lookup` method, and if so,
+            # we will look up the key and value types, that should be available if this is a map type.
+            if descriptor.subtype.respond_to?(:lookup)
               key = descriptor.subtype.lookup("key")
               value = descriptor.subtype.lookup("value")
+            end
 
+            # We use the existence of both the key and value types to determine if this is a map type.
+            is_map_type = !key.nil? && !value.nil?
+
+            if is_map_type
               key_type = type_of(key)
               value_type = type_of(value)
               type = "Google::Protobuf::Map[#{key_type}, #{value_type}]"
