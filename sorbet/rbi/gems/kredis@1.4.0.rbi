@@ -636,6 +636,9 @@ class Kredis::Types::List < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/proxying.rb#7
   def exists?(*_arg0, **_arg1, &_arg2); end
 
+  # source://kredis//lib/kredis/types/list.rb#28
+  def last(n = T.unsafe(nil)); end
+
   # source://kredis//lib/kredis/types/proxying.rb#7
   def lpush(*_arg0, **_arg1, &_arg2); end
 
@@ -700,10 +703,10 @@ class Kredis::Types::Proxy
   # source://kredis//lib/kredis/types/proxy.rb#14
   def multi(*args, **kwargs, &block); end
 
-  # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#56
+  # source://activesupport/7.0.5/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#56
   def pipeline; end
 
-  # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#100
+  # source://activesupport/7.0.5/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#100
   def pipeline=(obj); end
 
   private
@@ -715,10 +718,10 @@ class Kredis::Types::Proxy
   def redis; end
 
   class << self
-    # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#48
+    # source://activesupport/7.0.5/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#48
     def pipeline; end
 
-    # source://activesupport/7.0.4.3/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#92
+    # source://activesupport/7.0.5/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#92
     def pipeline=(obj); end
   end
 end
@@ -911,6 +914,9 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/proxying.rb#7
   def sadd(*_arg0, **_arg1, &_arg2); end
 
+  # source://kredis//lib/kredis/types/set.rb#43
+  def sample(count = T.unsafe(nil)); end
+
   # source://kredis//lib/kredis/types/proxying.rb#7
   def scard(*_arg0, **_arg1, &_arg2); end
 
@@ -925,6 +931,9 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
 
   # source://kredis//lib/kredis/types/proxying.rb#7
   def spop(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def srandmember(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/proxying.rb#7
   def srem(*_arg0, **_arg1, &_arg2); end
