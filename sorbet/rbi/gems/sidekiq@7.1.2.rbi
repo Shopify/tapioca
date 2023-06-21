@@ -279,14 +279,14 @@ class Sidekiq::Config
   #
   # See sidekiq/scheduled.rb for an in-depth explanation of this value
   #
-  # source://sidekiq//lib/sidekiq/config.rb#209
+  # source://sidekiq//lib/sidekiq/config.rb#213
   def average_scheduled_poll_interval=(interval); end
 
   # register a new queue processing subsystem
   #
   # @yield [cap]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#108
+  # source://sidekiq//lib/sidekiq/config.rb#112
   def capsule(name); end
 
   # Returns the value of attribute capsules.
@@ -296,16 +296,16 @@ class Sidekiq::Config
 
   # @yield [@client_chain]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#91
+  # source://sidekiq//lib/sidekiq/config.rb#95
   def client_middleware; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#65
+  # source://sidekiq//lib/sidekiq/config.rb#69
   def concurrency; end
 
   # LEGACY: edits the default capsule
   # config.concurrency = 5
   #
-  # source://sidekiq//lib/sidekiq/config.rb#61
+  # source://sidekiq//lib/sidekiq/config.rb#65
   def concurrency=(val); end
 
   # Death handlers are called when all retries for a job have been exhausted and
@@ -317,10 +317,10 @@ class Sidekiq::Config
   #   end
   # end
   #
-  # source://sidekiq//lib/sidekiq/config.rb#200
+  # source://sidekiq//lib/sidekiq/config.rb#204
   def death_handlers; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#103
+  # source://sidekiq//lib/sidekiq/config.rb#107
   def default_capsule(&block); end
 
   # Register a proc to handle any error which occurs within the Sidekiq process.
@@ -331,7 +331,7 @@ class Sidekiq::Config
   #
   # The default error handler logs errors to @logger.
   #
-  # source://sidekiq//lib/sidekiq/config.rb#220
+  # source://sidekiq//lib/sidekiq/config.rb#224
   def error_handlers; end
 
   # source://forwardable/1.3.2/forwardable.rb#229
@@ -339,7 +339,7 @@ class Sidekiq::Config
 
   # INTERNAL USE ONLY
   #
-  # source://sidekiq//lib/sidekiq/config.rb#259
+  # source://sidekiq//lib/sidekiq/config.rb#263
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
@@ -348,21 +348,21 @@ class Sidekiq::Config
   # source://forwardable/1.3.2/forwardable.rb#229
   def key?(*args, **_arg1, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#238
+  # source://sidekiq//lib/sidekiq/config.rb#242
   def logger; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#249
+  # source://sidekiq//lib/sidekiq/config.rb#253
   def logger=(logger); end
 
   # find a singleton
   #
-  # source://sidekiq//lib/sidekiq/config.rb#183
+  # source://sidekiq//lib/sidekiq/config.rb#187
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # source://forwardable/1.3.2/forwardable.rb#229
   def merge!(*args, **_arg1, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#133
+  # source://sidekiq//lib/sidekiq/config.rb#137
   def new_redis_pool(size, name = T.unsafe(nil)); end
 
   # Register a block to run at a point in the Sidekiq lifecycle.
@@ -376,10 +376,10 @@ class Sidekiq::Config
   #
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#232
+  # source://sidekiq//lib/sidekiq/config.rb#236
   def on(event, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#87
+  # source://sidekiq//lib/sidekiq/config.rb#91
   def queues; end
 
   # Edit the default capsule.
@@ -393,41 +393,44 @@ class Sidekiq::Config
   # are ridiculous and unnecessarily expensive. You can get random queue ordering
   # by explicitly setting all weights to 1.
   #
-  # source://sidekiq//lib/sidekiq/config.rb#83
+  # source://sidekiq//lib/sidekiq/config.rb#87
   def queues=(val); end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#155
+  # source://sidekiq//lib/sidekiq/config.rb#159
   def redis; end
 
   # All capsules must use the same Redis configuration
   #
-  # source://sidekiq//lib/sidekiq/config.rb#119
+  # source://sidekiq//lib/sidekiq/config.rb#123
   def redis=(hash); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#139
+  # source://sidekiq//lib/sidekiq/config.rb#143
   def redis_info; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#123
+  # source://sidekiq//lib/sidekiq/config.rb#127
   def redis_pool; end
 
   # register global singletons which can be accessed elsewhere
   #
-  # source://sidekiq//lib/sidekiq/config.rb#178
+  # source://sidekiq//lib/sidekiq/config.rb#182
   def register(name, instance); end
 
   # @yield [@server_chain]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#97
+  # source://sidekiq//lib/sidekiq/config.rb#101
   def server_middleware; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#69
+  # source://sidekiq//lib/sidekiq/config.rb#59
+  def to_json(*_arg0); end
+
+  # source://sidekiq//lib/sidekiq/config.rb#73
   def total_concurrency; end
 
   private
 
-  # source://sidekiq//lib/sidekiq/config.rb#127
+  # source://sidekiq//lib/sidekiq/config.rb#131
   def local_redis_pool; end
 end
 
@@ -1063,7 +1066,7 @@ Sidekiq::NAME = T.let(T.unsafe(nil), String)
 # source://sidekiq//lib/sidekiq/rails.rb#7
 class Sidekiq::Rails < ::Rails::Engine
   class << self
-    # source://activesupport/7.0.4.3/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
     def __callbacks; end
   end
 end
@@ -1080,6 +1083,9 @@ class Sidekiq::Rails::Reloader
 
   # source://sidekiq//lib/sidekiq/rails.rb#20
   def inspect; end
+
+  # source://sidekiq//lib/sidekiq/rails.rb#24
+  def to_json(*_arg0); end
 end
 
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#8
