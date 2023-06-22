@@ -206,7 +206,7 @@ module Tapioca
             # > field, even if it was not defined in the enum.
             "T.any(Symbol, Integer)"
           when :message
-            descriptor.subtype.msgclass.name
+            descriptor.subtype.msgclass.name || descriptor.submsg_name
           when :int32, :int64, :uint32, :uint64
             "Integer"
           when :double, :float
@@ -228,41 +228,18 @@ module Tapioca
         sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
         def field_of(descriptor)
           if descriptor.label == :repeated
-            # Here we're going to check if the submsg_name is named according to
-            # how Google names map entries.
-            # https://github.com/protocolbuffers/protobuf/blob/f82e26/ruby/ext/google/protobuf_c/defs.c#L1963-L1966
-            if descriptor.submsg_name.to_s.end_with?("_MapEntry_#{descriptor.name}") ||
-                descriptor.submsg_name.to_s.end_with?("FieldsEntry")
-              key = descriptor.subtype.lookup("key")
-              value = descriptor.subtype.lookup("value")
+            elem_type = type_of(descriptor)
+            type = "Google::Protobuf::RepeatedField[#{elem_type}]"
 
-              key_type = type_of(key)
-              value_type = type_of(value)
-              type = "Google::Protobuf::Map[#{key_type}, #{value_type}]"
+            default_args = [descriptor.type.inspect]
+            default_args << elem_type if [:enum, :message].include?(descriptor.type)
 
-              default_args = [key.type.inspect, value.type.inspect]
-              default_args << value_type if [:enum, :message].include?(value.type)
-
-              Field.new(
-                name: descriptor.name,
-                type: type,
-                init_type: "T.nilable(T.any(#{type}, T::Hash[#{key_type}, #{value_type}]))",
-                default: "Google::Protobuf::Map.new(#{default_args.join(", ")})",
-              )
-            else
-              elem_type = type_of(descriptor)
-              type = "Google::Protobuf::RepeatedField[#{elem_type}]"
-
-              default_args = [descriptor.type.inspect]
-              default_args << elem_type if [:enum, :message].include?(descriptor.type)
-
-              Field.new(
-                name: descriptor.name,
-                type: type,
-                init_type: "T.nilable(T.any(#{type}, T::Array[#{elem_type}]))",
-                default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})",
-              )
-            end
+            Field.new(
+              name: descriptor.name,
+              type: type,
+              init_type: "T.nilable(T.any(#{type}, T::Array[#{elem_type}]))",
+              default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})",
+            )
           else
             type = type_of(descriptor)
             nilable_type = as_nilable_type(type)
