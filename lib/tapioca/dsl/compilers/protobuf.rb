@@ -78,7 +78,7 @@ module Tapioca
 
         extend T::Sig
 
-        ConstantType = type_member { { fixed: Module } }
+        ConstantType = type_member { { fixed: T::Class[T.anything] } }
 
         FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
 
@@ -206,7 +206,7 @@ module Tapioca
             # > field, even if it was not defined in the enum.
             "T.any(Symbol, Integer)"
           when :message
-            descriptor.subtype.msgclass.name
+            descriptor.subtype.msgclass.name || "T.untyped"
           when :int32, :int64, :uint32, :uint64
             "Integer"
           when :double, :float
@@ -225,14 +225,24 @@ module Tapioca
           descriptor.label == :optional && descriptor.type == :message
         end
 
+        sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(T::Boolean) }
+        def map_type?(descriptor)
+          # Defensively make sure that we are dealing with a repeated field
+          return false unless descriptor.label == :repeated
+
+          # Try to create a new instance with the field that maps to the descriptor name
+          # being assinged a hash value. If this goes through, then it's a map type.
+          constant.new(**{ descriptor.name => {} })
+          true
+        rescue ArgumentError
+          # This means the descriptor is not a map type
+          false
+        end
+
         sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
         def field_of(descriptor)
           if descriptor.label == :repeated
-            # Here we're going to check if the submsg_name is named according to
-            # how Google names map entries.
-            # https://github.com/protocolbuffers/protobuf/blob/f82e26/ruby/ext/google/protobuf_c/defs.c#L1963-L1966
-            if descriptor.submsg_name.to_s.end_with?("_MapEntry_#{descriptor.name}") ||
-                descriptor.submsg_name.to_s.end_with?("FieldsEntry")
+            if map_type?(descriptor)
               key = descriptor.subtype.lookup("key")
               value = descriptor.subtype.lookup("value")
 

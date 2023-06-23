@@ -543,6 +543,120 @@ module Tapioca
               RBI
               assert_equal(expected, rbi_for("Google::Protobuf::Struct"))
             end
+
+            it "handles map and repeating types with anonymous subtype message classes by mapping them to T.untyped" do
+              add_ruby_file("protobuf.rb", <<~RUBY)
+                Google::Protobuf::DescriptorPool.generated_pool.build do
+                  add_file("cart.proto", :syntax => :proto3) do
+                    add_message "CartEntry" do
+                      optional :key, :string, 1
+                      optional :value, :string, 2
+                    end
+                    add_message "NonMapEntry" do
+                      optional :key, :string, 1
+                      optional :value, :string, 2
+                    end
+                    add_message "MyCart" do
+                      map :tables, :string, :message, 1, "CartEntry"
+                      repeated :items, :message, 2, "NonMapEntry"
+                    end
+                  end
+                end
+
+                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
+                # we intentionally don't define `CartEntry` or `NonMapEntry` as constants, so that
+                # those message classes stay anonymous, which we expect to be mapped to `T.untyped`
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Cart
+                  sig { params(items: T.nilable(T.any(Google::Protobuf::RepeatedField[T.untyped], T::Array[T.untyped])), tables: T.nilable(T.any(Google::Protobuf::Map[String, T.untyped], T::Hash[String, T.untyped]))).void }
+                  def initialize(items: Google::Protobuf::RepeatedField.new(:message, T.untyped), tables: Google::Protobuf::Map.new(:string, :message, T.untyped)); end
+
+                  sig { void }
+                  def clear_items; end
+
+                  sig { void }
+                  def clear_tables; end
+
+                  sig { returns(Google::Protobuf::RepeatedField[T.untyped]) }
+                  def items; end
+
+                  sig { params(value: Google::Protobuf::RepeatedField[T.untyped]).void }
+                  def items=(value); end
+
+                  sig { returns(Google::Protobuf::Map[String, T.untyped]) }
+                  def tables; end
+
+                  sig { params(value: Google::Protobuf::Map[String, T.untyped]).void }
+                  def tables=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Cart))
+            end
+
+            it "handles map types regardless of their name" do
+              # This is test is based on this definition from `google-cloud-bigtable` gem that was causing issues:
+              # https://github.com/googleapis/google-cloud-ruby/blob/9de1ce5bf74105383fc46060600d5293f8692035/google-cloud-bigtable-admin-v2/lib/google/bigtable/admin/v2/bigtable_instance_admin_pb.rb#L20
+              add_ruby_file("protobuf.rb", <<~RUBY)
+                require "base64"
+                require 'google/protobuf'
+
+                # This is how the new protobuf compiler (protoc) generates `xx_pb.rb` files.
+                # It embeds the descriptor data as binary into a string and parses it into the pool.
+                # The following is a simplified result of running `protoc --ruby_out=. cart.proto` with `cart.proto` as:
+                # ```
+                # syntax = "proto3";
+                #
+                # message MyCart {
+                #   message Progress {
+                #     enum State {
+                #       STATE_UNSPECIFIED = 0;
+                #       PENDING = 1;
+                #       COMPLETED = 2;
+                #     }
+                #
+                #     State state = 4;
+                #   }
+                #
+                #   map<string, Progress> progress = 4;
+                # }
+                # ```
+                # which is based on the failing case from https://github.com/googleapis/googleapis/blob/master/google/bigtable/admin/v2/bigtable_instance_admin.proto#L486-L536
+                #
+                # I encoded the data as Base64 since embedding the binary string was giving me invalid byte sequence errors.
+                descriptor_data = Base64.decode64("CgpjYXJ0LnByb3RvIuMBCgZNeUNhcnQSJwoIcHJvZ3Jlc3MYBCADKAsyFS5NeUNhcnQuUHJvZ3Jlc3NFbnRyeRptCghQcm9ncmVzcxIlCgVzdGF0ZRgEIAEoDjIWLk15Q2FydC5Qcm9ncmVzcy5TdGF0ZSI6CgVTdGF0ZRIVChFTVEFURV9VTlNQRUNJRklFRBAAEgsKB1BFTkRJTkcQARINCglDT01QTEVURUQQAhpBCg1Qcm9ncmVzc0VudHJ5EgsKA2tleRgBIAEoCRIfCgV2YWx1ZRgCIAEoCzIQLk15Q2FydC5Qcm9ncmVzczoCOAFiBnByb3RvMw==")
+                pool = Google::Protobuf::DescriptorPool.generated_pool
+                pool.add_serialized_file(descriptor_data)
+
+                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
+                Cart::Progress = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart.Progress").msgclass
+                Cart::Progress::State = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart.Progress.State").enummodule
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Cart
+                  sig { params(progress: T.nilable(T.any(Google::Protobuf::Map[String, Cart::Progress], T::Hash[String, Cart::Progress]))).void }
+                  def initialize(progress: Google::Protobuf::Map.new(:string, :message, Cart::Progress)); end
+
+                  sig { void }
+                  def clear_progress; end
+
+                  sig { returns(Google::Protobuf::Map[String, Cart::Progress]) }
+                  def progress; end
+
+                  sig { params(value: Google::Protobuf::Map[String, Cart::Progress]).void }
+                  def progress=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Cart))
+            end
           end
         end
       end
