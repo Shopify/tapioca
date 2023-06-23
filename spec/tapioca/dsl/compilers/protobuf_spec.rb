@@ -284,7 +284,7 @@ module Tapioca
 
                 class Cart
                   sig { params(customer_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer])), indices: T.nilable(T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value]))).void }
-                  def initialize(customer_ids: Google::Protobuf::RepeatedField.new(:int32), indices: Google::Protobuf::RepeatedField.new(:message, Google::Protobuf::UInt64Value)); end
+                  def initialize(customer_ids: T.unsafe(nil), indices: T.unsafe(nil)); end
 
                   sig { void }
                   def clear_customer_ids; end
@@ -330,7 +330,7 @@ module Tapioca
 
                 class Cart
                   sig { params(customers: T.nilable(T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer])), stores: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value]))).void }
-                  def initialize(customers: Google::Protobuf::Map.new(:string, :int32), stores: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::UInt64Value)); end
+                  def initialize(customers: T.unsafe(nil), stores: T.unsafe(nil)); end
 
                   sig { void }
                   def clear_customers; end
@@ -529,7 +529,7 @@ module Tapioca
 
                 class Google::Protobuf::Struct
                   sig { params(fields: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::Value], T::Hash[String, Google::Protobuf::Value]))).void }
-                  def initialize(fields: Google::Protobuf::Map.new(:string, :message, Google::Protobuf::Value)); end
+                  def initialize(fields: T.unsafe(nil)); end
 
                   sig { void }
                   def clear_fields; end
@@ -573,7 +573,7 @@ module Tapioca
 
                 class Cart
                   sig { params(items: T.nilable(T.any(Google::Protobuf::RepeatedField[T.untyped], T::Array[T.untyped])), tables: T.nilable(T.any(Google::Protobuf::Map[String, T.untyped], T::Hash[String, T.untyped]))).void }
-                  def initialize(items: Google::Protobuf::RepeatedField.new(:message, T.untyped), tables: Google::Protobuf::Map.new(:string, :message, T.untyped)); end
+                  def initialize(items: T.unsafe(nil), tables: T.unsafe(nil)); end
 
                   sig { void }
                   def clear_items; end
@@ -642,7 +642,7 @@ module Tapioca
 
                 class Cart
                   sig { params(progress: T.nilable(T.any(Google::Protobuf::Map[String, Cart::Progress], T::Hash[String, Cart::Progress]))).void }
-                  def initialize(progress: Google::Protobuf::Map.new(:string, :message, Cart::Progress)); end
+                  def initialize(progress: T.unsafe(nil)); end
 
                   sig { void }
                   def clear_progress; end
