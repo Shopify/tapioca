@@ -250,27 +250,21 @@ module Tapioca
               value_type = type_of(value)
               type = "Google::Protobuf::Map[#{key_type}, #{value_type}]"
 
-              default_args = [key.type.inspect, value.type.inspect]
-              default_args << value_type if [:enum, :message].include?(value.type)
-
               Field.new(
                 name: descriptor.name,
                 type: type,
                 init_type: "T.nilable(T.any(#{type}, T::Hash[#{key_type}, #{value_type}]))",
-                default: "Google::Protobuf::Map.new(#{default_args.join(", ")})",
+                default: "T.unsafe(nil)",
               )
             else
               elem_type = type_of(descriptor)
               type = "Google::Protobuf::RepeatedField[#{elem_type}]"
 
-              default_args = [descriptor.type.inspect]
-              default_args << elem_type if [:enum, :message].include?(descriptor.type)
-
               Field.new(
                 name: descriptor.name,
                 type: type,
                 init_type: "T.nilable(T.any(#{type}, T::Array[#{elem_type}]))",
-                default: "Google::Protobuf::RepeatedField.new(#{default_args.join(", ")})",
+                default: "T.unsafe(nil)",
               )
             end
           else
