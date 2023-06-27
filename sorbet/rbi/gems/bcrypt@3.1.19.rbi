@@ -17,7 +17,7 @@ class BCrypt::Engine
   class << self
     # Autodetects the cost from the salt string.
     #
-    # source://bcrypt//lib/bcrypt/engine.rb#122
+    # source://bcrypt//lib/bcrypt/engine.rb#129
     def autodetect_cost(salt); end
 
     # Returns the cost factor which will result in computation times less than +upper_time_limit_in_ms+.
@@ -33,7 +33,7 @@ class BCrypt::Engine
     #   # should take less than 1000ms
     #   BCrypt::Password.create("woo", :cost => 12)
     #
-    # source://bcrypt//lib/bcrypt/engine.rb#112
+    # source://bcrypt//lib/bcrypt/engine.rb#119
     def calibrate(upper_time_limit_in_ms); end
 
     # Returns the cost factor that will be used if one is not specified when
@@ -61,7 +61,7 @@ class BCrypt::Engine
 
     # Generates a random salt with a given computational cost.
     #
-    # source://bcrypt//lib/bcrypt/engine.rb#74
+    # source://bcrypt//lib/bcrypt/engine.rb#81
     def generate_salt(cost = T.unsafe(nil)); end
 
     # Given a secret and a valid salt (see BCrypt::Engine.generate_salt) calculates
@@ -74,14 +74,14 @@ class BCrypt::Engine
     #
     # @return [Boolean]
     #
-    # source://bcrypt//lib/bcrypt/engine.rb#91
+    # source://bcrypt//lib/bcrypt/engine.rb#98
     def valid_salt?(salt); end
 
     # Returns true if +secret+ is a valid bcrypt() secret, false if not.
     #
     # @return [Boolean]
     #
-    # source://bcrypt//lib/bcrypt/engine.rb#96
+    # source://bcrypt//lib/bcrypt/engine.rb#103
     def valid_secret?(secret); end
 
     private
