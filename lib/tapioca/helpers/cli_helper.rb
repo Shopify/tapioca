@@ -31,8 +31,8 @@ module Tapioca
 
     sig { params(options: T::Hash[Symbol, T.untyped]).returns(T.nilable(String)) }
     def netrc_file(options)
-      return nil if options[:auth]
-      return nil unless options[:netrc]
+      return if options[:auth]
+      return unless options[:netrc]
 
       options[:netrc_file] || ENV["TAPIOCA_NETRC_FILE"] || File.join(ENV["HOME"].to_s, ".netrc")
     end

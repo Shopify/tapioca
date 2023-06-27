@@ -58,7 +58,7 @@ module Tapioca
         # value will be `[]`. But, we want those gems to be loaded for our
         # purposes as well, so we return `nil` in those cases, instead, which
         # means `require: true`.
-        return nil if value == []
+        return if value == []
 
         value
       end

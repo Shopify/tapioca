@@ -98,7 +98,7 @@ module Tapioca
       def fetch_index(repo_uri, repo_number:)
         say("Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ", [:blue, :bold])
         content = fetch_file(repo_uri, CENTRAL_REPO_INDEX_PATH)
-        return nil unless content
+        return unless content
 
         index = RepoIndex.from_json(content)
         say("Done", :green)
@@ -221,7 +221,7 @@ module Tapioca
 
       sig { params(gem_name: String, contents: T::Array[String]).returns(T.nilable(String)) }
       def merge_files(gem_name, contents)
-        return nil if contents.empty?
+        return if contents.empty?
 
         rewriter = RBI::Rewriters::Merge.new(keep: RBI::Rewriters::Merge::Keep::NONE)
 
@@ -260,16 +260,16 @@ module Tapioca
 
       sig { params(repo_uri: String).returns(T.nilable(String)) }
       def token_for(repo_uri)
-        return nil unless @netrc_info
+        return unless @netrc_info
 
         host = URI(repo_uri).host
-        return nil unless host
+        return unless host
 
         creds = @netrc_info[host]
-        return nil unless creds
+        return unless creds
 
         token = creds.to_a.last
-        return nil unless token
+        return unless token
 
         "token #{token}"
       end
