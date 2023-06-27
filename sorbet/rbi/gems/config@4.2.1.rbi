@@ -39,7 +39,7 @@ end
 
 # The main configuration backbone
 #
-# source://config//lib/config/configuration.rb#6
+# source://config//lib/config/configuration.rb#3
 class Config::Configuration < ::Module
   # Accepts configuration options,
   # initializing a module that can be used to extend
@@ -151,6 +151,9 @@ class Config::Options < ::OpenStruct
 
   # source://config//lib/config/options.rb#129
   def select; end
+
+  # source://config//lib/config/options.rb#129
+  def table; end
 
   # source://config//lib/config/options.rb#129
   def test; end
