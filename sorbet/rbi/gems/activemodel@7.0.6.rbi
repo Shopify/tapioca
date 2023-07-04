@@ -2172,7 +2172,7 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#212
   def attribute_names; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def clear(*args, **_arg1, &block); end
 
   # Copies the errors from <tt>other</tt>.
@@ -2203,10 +2203,10 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#251
   def details; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def each(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def empty?(*args, **_arg1, &block); end
 
   # The actual array of +Error+ objects
@@ -2394,7 +2394,7 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#370
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def size(*args, **_arg1, &block); end
 
   # Returns all the full error messages in an array.
@@ -2420,7 +2420,7 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#231
   def to_hash(full_messages = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def uniq!(*args, **_arg1, &block); end
 
   # Search for errors matching +attribute+, +type+, or +options+.
@@ -3167,7 +3167,7 @@ class ActiveModel::NestedError < ::ActiveModel::Error
   # source://activemodel//lib/active_model/nested_error.rb#17
   def inner_error; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def message(*args, **_arg1, &block); end
 end
 
@@ -3205,6 +3205,13 @@ class ActiveModel::NullMutationTracker
 
   # source://activemodel//lib/active_model/attribute_mutation_tracker.rb#186
   def original_value(attr_name); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://activemodel//lib/active_model/railtie.rb#7
@@ -3736,33 +3743,33 @@ class ActiveModel::Type::Binary < ::ActiveModel::Type::Value
 
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/type/binary.rb#27
+  # source://activemodel//lib/active_model/type/binary.rb#29
   def changed_in_place?(raw_old_value, value); end
 
-  # source://activemodel//lib/active_model/type/binary.rb#22
+  # source://activemodel//lib/active_model/type/binary.rb#24
   def serialize(value); end
 
   # source://activemodel//lib/active_model/type/binary.rb#6
   def type; end
 end
 
-# source://activemodel//lib/active_model/type/binary.rb#32
+# source://activemodel//lib/active_model/type/binary.rb#34
 class ActiveModel::Type::Binary::Data
   # @return [Data] a new instance of Data
   #
-  # source://activemodel//lib/active_model/type/binary.rb#33
+  # source://activemodel//lib/active_model/type/binary.rb#35
   def initialize(value); end
 
-  # source://activemodel//lib/active_model/type/binary.rb#48
+  # source://activemodel//lib/active_model/type/binary.rb#50
   def ==(other); end
 
-  # source://activemodel//lib/active_model/type/binary.rb#44
+  # source://activemodel//lib/active_model/type/binary.rb#46
   def hex; end
 
-  # source://activemodel//lib/active_model/type/binary.rb#39
+  # source://activemodel//lib/active_model/type/binary.rb#41
   def to_s; end
 
-  # source://activemodel//lib/active_model/type/binary.rb#39
+  # source://activemodel//lib/active_model/type/binary.rb#41
   def to_str; end
 end
 
