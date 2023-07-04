@@ -908,6 +908,28 @@ class RuboCop::Cop::Money::MissingCurrency < ::RuboCop::Cop::Cop
   def replacement_currency; end
 end
 
+# Prevents the use of `to_money` because it has inconsistent behaviour.
+# Use `Money.new` instead.
+#
+# @example
+#   # bad
+#   "2.000".to_money("USD")     #<Money value:2000.00 currency:USD>
+#
+#   # good
+#   Money.new("2.000", "USD")   #<Money value:2.00 currency:USD>
+#
+# source://shopify-money//lib/rubocop/cop/money/unsafe_to_money.rb#14
+class RuboCop::Cop::Money::UnsafeToMoney < ::RuboCop::Cop::Cop
+  # source://shopify-money//lib/rubocop/cop/money/unsafe_to_money.rb#24
+  def autocorrect(node); end
+
+  # source://shopify-money//lib/rubocop/cop/money/unsafe_to_money.rb#17
+  def on_send(node); end
+end
+
+# source://shopify-money//lib/rubocop/cop/money/unsafe_to_money.rb#15
+RuboCop::Cop::Money::UnsafeToMoney::MSG = T.let(T.unsafe(nil), String)
+
 # source://shopify-money//lib/rubocop/cop/money/zero_money.rb#6
 class RuboCop::Cop::Money::ZeroMoney < ::RuboCop::Cop::Cop
   # source://shopify-money//lib/rubocop/cop/money/zero_money.rb#39
