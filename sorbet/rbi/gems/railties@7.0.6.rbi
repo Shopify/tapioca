@@ -580,6 +580,8 @@ class Rails::Application < ::Rails::Engine
 
     # source://railties//lib/rails/application.rb#77
     def instance; end
+
+    def new(*_arg0); end
   end
 end
 
@@ -1303,10 +1305,10 @@ class Rails::Application::RoutesReloader
   # source://railties//lib/rails/application/routes_reloader.rb#15
   def initialize; end
 
-  # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
   # Returns the value of attribute eager_load.
@@ -1372,13 +1374,13 @@ class Rails::Application::RoutesReloader
   def updater; end
 
   class << self
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks?; end
   end
 end
@@ -1387,7 +1389,7 @@ end
 class Rails::ApplicationController < ::ActionController::Base
   private
 
-  # source://actionview/7.0.5/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.6/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   # source://railties//lib/rails/application_controller.rb#25
@@ -1402,16 +1404,16 @@ class Rails::ApplicationController < ::ActionController::Base
   def require_local!; end
 
   class << self
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionview/7.0.5/lib/action_view/layouts.rb#209
+    # source://actionview/7.0.6/lib/action_view/layouts.rb#209
     def _layout; end
 
-    # source://actionview/7.0.5/lib/action_view/layouts.rb#210
+    # source://actionview/7.0.6/lib/action_view/layouts.rb#210
     def _layout_conditions; end
 
-    # source://actionpack/7.0.5/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.6/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -2257,16 +2259,16 @@ class Rails::Engine < ::Rails::Railtie
   # source://railties//lib/rails/engine.rb#432
   def initialize; end
 
-  # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
-  # source://activesupport/7.0.5/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#940
   def _load_seed_callbacks; end
 
-  # source://activesupport/7.0.5/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#928
   def _run_load_seed_callbacks(&block); end
 
   # Returns the underlying Rack application for this engine.
@@ -2409,19 +2411,19 @@ class Rails::Engine < ::Rails::Railtie
   def load_config_initializer(initializer); end
 
   class << self
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#932
     def _load_seed_callbacks; end
 
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#936
     def _load_seed_callbacks=(value); end
 
     # Returns the value of attribute called_from.
@@ -2745,42 +2747,98 @@ module Rails::Generators::Actions
   #     gem "rspec-rails"
   #   end
   #
-  # source://railties//lib/rails/generators/actions.rb#106
+  # source://railties//lib/rails/generators/actions.rb#151
   def add_source(source, options = T.unsafe(nil), &block); end
 
-  # Adds a line inside the Application class for <tt>config/application.rb</tt>.
+  # Adds configuration code to a Rails runtime environment.
   #
-  # If options <tt>:env</tt> is specified, the line is appended to the corresponding
-  # file in <tt>config/environments</tt>.
+  # By default, adds code inside the +Application+ class in
+  # +config/application.rb+ so that it applies to all environments.
+  #
+  #   environment %(config.asset_host = "cdn.provider.com")
+  #
+  # Results in:
+  #
+  #   # config/application.rb
+  #   class Application < Rails::Application
+  #     config.asset_host = "cdn.provider.com"
+  #     # ...
+  #   end
+  #
+  # If the +:env+ option is specified, the code will be added to the
+  # corresponding file in +config/environments+ instead.
+  #
+  #   environment %(config.asset_host = "localhost:3000"), env: "development"
+  #
+  # Results in:
+  #
+  #   # config/environments/development.rb
+  #   Rails.application.configure do
+  #     config.asset_host = "localhost:3000"
+  #     # ...
+  #   end
+  #
+  # +:env+ can also be an array. In which case, the code is added to each
+  # corresponding file in +config/environments+.
+  #
+  # The code can also be specified as the return value of the block:
   #
   #   environment do
-  #     "config.asset_host = 'cdn.provider.com'"
+  #     %(config.asset_host = "cdn.provider.com")
   #   end
   #
   #   environment(nil, env: "development") do
-  #     "config.asset_host = 'localhost:3000'"
+  #     %(config.asset_host = "localhost:3000")
   #   end
   #
-  # source://railties//lib/rails/generators/actions.rb#132
+  # source://railties//lib/rails/generators/actions.rb#206
   def application(data = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # Adds a line inside the Application class for <tt>config/application.rb</tt>.
+  # Adds configuration code to a Rails runtime environment.
   #
-  # If options <tt>:env</tt> is specified, the line is appended to the corresponding
-  # file in <tt>config/environments</tt>.
+  # By default, adds code inside the +Application+ class in
+  # +config/application.rb+ so that it applies to all environments.
+  #
+  #   environment %(config.asset_host = "cdn.provider.com")
+  #
+  # Results in:
+  #
+  #   # config/application.rb
+  #   class Application < Rails::Application
+  #     config.asset_host = "cdn.provider.com"
+  #     # ...
+  #   end
+  #
+  # If the +:env+ option is specified, the code will be added to the
+  # corresponding file in +config/environments+ instead.
+  #
+  #   environment %(config.asset_host = "localhost:3000"), env: "development"
+  #
+  # Results in:
+  #
+  #   # config/environments/development.rb
+  #   Rails.application.configure do
+  #     config.asset_host = "localhost:3000"
+  #     # ...
+  #   end
+  #
+  # +:env+ can also be an array. In which case, the code is added to each
+  # corresponding file in +config/environments+.
+  #
+  # The code can also be specified as the return value of the block:
   #
   #   environment do
-  #     "config.asset_host = 'cdn.provider.com'"
+  #     %(config.asset_host = "cdn.provider.com")
   #   end
   #
   #   environment(nil, env: "development") do
-  #     "config.asset_host = 'localhost:3000'"
+  #     %(config.asset_host = "localhost:3000")
   #   end
   #
-  # source://railties//lib/rails/generators/actions.rb#132
+  # source://railties//lib/rails/generators/actions.rb#206
   def environment(data = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # Adds an entry into +Gemfile+ for the supplied gem.
+  # Adds a +gem+ declaration to the +Gemfile+ for the specified gem.
   #
   #   gem "rspec", group: :test
   #   gem "technoweenie-restful-authentication", lib: "restful-authentication", source: "http://gems.github.com/"
@@ -2788,7 +2846,51 @@ module Rails::Generators::Actions
   #   gem "RedCloth", ">= 4.1.0", "< 4.2.0"
   #   gem "rspec", comment: "Put this comment above the gem declaration"
   #
-  # source://railties//lib/rails/generators/actions.rb#22
+  # Note that this method only adds the gem to the +Gemfile+; it does not
+  # install the gem.
+  #
+  # ==== Options
+  #
+  # [+:version+]
+  #   The version constraints for the gem, specified as a string or an
+  #   array of strings:
+  #
+  #     gem "my_gem", version: "~> 1.1"
+  #     gem "my_gem", version: [">= 1.1", "< 2.0"]
+  #
+  #   Alternatively, can be specified as one or more arguments following the
+  #   gem name:
+  #
+  #     gem "my_gem", ">= 1.1", "< 2.0"
+  #
+  # [+:comment+]
+  #   Outputs a comment above the +gem+ declaration in the +Gemfile+.
+  #
+  #     gem "my_gem", comment: "First line.\nSecond line."
+  #
+  #   Outputs:
+  #
+  #     # First line.
+  #     # Second line.
+  #     gem "my_gem"
+  #
+  # [+:group+]
+  #   The gem group in the +Gemfile+ that the gem belongs to.
+  #
+  # [+:git+]
+  #   The URL of the git repository for the gem.
+  #
+  # Any additional options passed to this method will be appended to the
+  # +gem+ declaration in the +Gemfile+. For example:
+  #
+  #   gem "my_gem", comment: "Edge my_gem", git: "https://example.com/my_gem.git", branch: "master"
+  #
+  # Outputs:
+  #
+  #   # Edge my_gem
+  #   gem "my_gem", git: "https://example.com/my_gem.git", branch: "master"
+  #
+  # source://railties//lib/rails/generators/actions.rb#67
   def gem(*args); end
 
   # Wraps gem entries inside a group.
@@ -2797,103 +2899,151 @@ module Rails::Generators::Actions
   #     gem "rspec-rails"
   #   end
   #
-  # source://railties//lib/rails/generators/actions.rb#66
+  # source://railties//lib/rails/generators/actions.rb#111
   def gem_group(*names, &block); end
 
-  # Generate something using a generator from Rails or a plugin.
-  # The second parameter is the argument string that is passed to
-  # the generator or an Array that is joined.
+  # Runs another generator.
   #
-  #   generate(:authenticated, "user session")
+  #   generate "scaffold", "Post title:string body:text"
+  #   generate "scaffold", "Post", "title:string", "body:text"
   #
-  # source://railties//lib/rails/generators/actions.rb#238
+  # The first argument is the generator name, and the remaining arguments
+  # are joined together and passed to the generator.
+  #
+  # source://railties//lib/rails/generators/actions.rb#332
   def generate(what, *args); end
 
-  # Run a command in git.
+  # Runs one or more git commands.
   #
   #   git :init
-  #   git add: "this.file that.rb"
-  #   git add: "onefile.rb", rm: "badfile.cxx"
+  #   # => runs `git init`
   #
-  # source://railties//lib/rails/generators/actions.rb#154
+  #   git add: "this.file that.rb"
+  #   # => runs `git add this.file that.rb`
+  #
+  #   git commit: "-m 'First commit'"
+  #   # => runs `git commit -m 'First commit'`
+  #
+  #   git add: "good.rb", rm: "bad.cxx"
+  #   # => runs `git add good.rb; git rm bad.cxx`
+  #
+  # source://railties//lib/rails/generators/actions.rb#237
   def git(commands = T.unsafe(nil)); end
 
-  # source://railties//lib/rails/generators/actions.rb#80
+  # source://railties//lib/rails/generators/actions.rb#125
   def github(repo, options = T.unsafe(nil), &block); end
 
-  # Create a new initializer with the provided code (either in a block or a string).
+  # Creates an initializer file in +config/initializers/+. The code can be
+  # specified as an argument or as the return value of the block.
   #
-  #   initializer("globals.rb") do
-  #     data = ""
+  #   initializer "api.rb", <<~RUBY
+  #     API_KEY = "123456"
+  #   RUBY
   #
-  #     ['MY_WORK', 'ADMINS', 'BEST_COMPANY_EVAR'].each do |const|
-  #       data << "#{const} = :entp\n"
-  #     end
-  #
-  #     data
+  #   initializer "api.rb" do
+  #     %(API_KEY = "123456")
   #   end
   #
-  #   initializer("api.rb", "API_KEY = '123456'")
-  #
-  # source://railties//lib/rails/generators/actions.rb#227
+  # source://railties//lib/rails/generators/actions.rb#319
   def initializer(filename, data = T.unsafe(nil)); end
 
-  # Create a new file in the <tt>lib/</tt> directory. Code can be specified
-  # in a block or a data string can be given.
+  # Creates a file in +lib/+. The contents can be specified as an argument
+  # or as the return value of the block.
   #
-  #   lib("crypto.rb") do
-  #     "crypted_special_value = '#{rand}--#{Time.now}--#{rand(1337)}--'"
+  #   lib "foreign.rb", <<~RUBY
+  #     # Foreign code is fun
+  #   RUBY
+  #
+  #   lib "foreign.rb" do
+  #     "# Foreign code is fun"
   #   end
   #
-  #   lib("foreign.rb", "# Foreign code is fun")
-  #
-  # source://railties//lib/rails/generators/actions.rb#187
+  # source://railties//lib/rails/generators/actions.rb#275
   def lib(filename, data = T.unsafe(nil)); end
 
-  # Runs the supplied rake task (invoked with 'rails ...')
+  # Runs the specified Rails command.
   #
-  #   rails_command("db:migrate")
-  #   rails_command("db:migrate", env: "production")
-  #   rails_command("gems:install", sudo: true)
-  #   rails_command("gems:install", capture: true)
+  #   rails_command "db:migrate"
+  #   rails_command "db:migrate", env: "production"
+  #   rails_command "db:migrate", abort_on_failure: true
+  #   rails_command "stats", capture: true
+  #   rails_command "gems:install", sudo: true
   #
-  # source://railties//lib/rails/generators/actions.rb#263
+  # ==== Options
+  #
+  # [+:env+]
+  #   The Rails environment in which to run the command. Defaults to
+  #   <tt>ENV["RAILS_ENV"] || "development"</tt>.
+  #
+  # [+:abort_on_failure+]
+  #   Whether to halt the generator if the command exits with a non-success
+  #   exit status.
+  #
+  # [+:capture+]
+  #   Whether to capture and return the output of the command.
+  #
+  # [+:sudo+]
+  #   Whether to run the command using +sudo+.
+  #
+  # source://railties//lib/rails/generators/actions.rb#391
   def rails_command(command, options = T.unsafe(nil)); end
 
-  # Runs the supplied rake task (invoked with 'rake ...')
+  # Runs the specified Rake task.
   #
-  #   rake("db:migrate")
-  #   rake("db:migrate", env: "production")
-  #   rake("gems:install", sudo: true)
-  #   rake("gems:install", capture: true)
+  #   rake "db:migrate"
+  #   rake "db:migrate", env: "production"
+  #   rake "db:migrate", abort_on_failure: true
+  #   rake "stats", capture: true
+  #   rake "gems:install", sudo: true
   #
-  # source://railties//lib/rails/generators/actions.rb#253
+  # ==== Options
+  #
+  # [+:env+]
+  #   The Rails environment in which to run the task. Defaults to
+  #   <tt>ENV["RAILS_ENV"] || "development"</tt>.
+  #
+  # [+:abort_on_failure+]
+  #   Whether to halt the generator if the task exits with a non-success
+  #   exit status.
+  #
+  # [+:capture+]
+  #   Whether to capture and return the output of the task.
+  #
+  # [+:sudo+]
+  #   Whether to run the task using +sudo+.
+  #
+  # source://railties//lib/rails/generators/actions.rb#364
   def rake(command, options = T.unsafe(nil)); end
 
-  # Create a new +Rakefile+ with the provided code (either in a block or a string).
+  # Creates a Rake tasks file in +lib/tasks/+. The code can be specified as
+  # an argument or as the return value of the block.
   #
-  #   rakefile("bootstrap.rake") do
+  #   rakefile "bootstrap.rake", <<~RUBY
+  #     task :bootstrap do
+  #       puts "Boots! Boots! Boots!"
+  #     end
+  #   RUBY
+  #
+  #   rakefile "bootstrap.rake" do
   #     project = ask("What is the UNIX name of your project?")
   #
-  #     <<-TASK
+  #     <<~RUBY
   #       namespace :#{project} do
   #         task :bootstrap do
-  #           puts "I like boots!"
+  #           puts "Boots! Boots! Boots!"
   #         end
   #       end
-  #     TASK
+  #     RUBY
   #   end
   #
-  #   rakefile('seed.rake', 'puts "Planting seeds"')
-  #
-  # source://railties//lib/rails/generators/actions.rb#208
+  # source://railties//lib/rails/generators/actions.rb#302
   def rakefile(filename, data = T.unsafe(nil)); end
 
   # Reads the given file at the source root and prints it in the console.
   #
   #   readme "README"
   #
-  # source://railties//lib/rails/generators/actions.rb#314
+  # source://railties//lib/rails/generators/actions.rb#442
   def readme(path); end
 
   # Make an entry in Rails routing file <tt>config/routes.rb</tt>
@@ -2901,76 +3051,77 @@ module Rails::Generators::Actions
   #   route "root 'welcome#index'"
   #   route "root 'admin#index'", namespace: :admin
   #
-  # source://railties//lib/rails/generators/actions.rb#281
+  # source://railties//lib/rails/generators/actions.rb#409
   def route(routing_code, namespace: T.unsafe(nil)); end
 
-  # Create a new file in the <tt>vendor/</tt> directory. Code can be specified
-  # in a block or a data string can be given.
+  # Creates a file in +vendor/+. The contents can be specified as an
+  # argument or as the return value of the block.
   #
-  #   vendor("sekrit.rb") do
-  #     sekrit_salt = "#{Time.now}--#{3.years.ago}--#{rand}--"
-  #     "salt = '#{sekrit_salt}'"
+  #   vendor "foreign.rb", <<~RUBY
+  #     # Foreign code is fun
+  #   RUBY
+  #
+  #   vendor "foreign.rb" do
+  #     "# Foreign code is fun"
   #   end
   #
-  #   vendor("foreign.rb", "# Foreign code is fun")
-  #
-  # source://railties//lib/rails/generators/actions.rb#173
+  # source://railties//lib/rails/generators/actions.rb#258
   def vendor(filename, data = T.unsafe(nil)); end
 
   private
 
   # Append string to a file with a newline if necessary
   #
-  # source://railties//lib/rails/generators/actions.rb#388
+  # source://railties//lib/rails/generators/actions.rb#516
   def append_file_with_newline(path, str, options = T.unsafe(nil)); end
 
   # Runs the supplied command using either "rake ..." or "rails ..."
   # based on the executor parameter provided.
   #
-  # source://railties//lib/rails/generators/actions.rb#333
+  # source://railties//lib/rails/generators/actions.rb#461
   def execute_command(executor, command, options = T.unsafe(nil)); end
 
   # Add an extension to the given name based on the platform.
   #
-  # source://railties//lib/rails/generators/actions.rb#347
+  # source://railties//lib/rails/generators/actions.rb#475
   def extify(name); end
 
   # Indent the +Gemfile+ to the depth of @indentation
   #
-  # source://railties//lib/rails/generators/actions.rb#375
+  # source://railties//lib/rails/generators/actions.rb#503
   def indentation; end
 
   # Define log for backwards compatibility. If just one argument is sent,
   # invoke say, otherwise invoke say_status. Differently from say and
   # similarly to say_status, this method respects the quiet? option given.
   #
-  # source://railties//lib/rails/generators/actions.rb#322
+  # source://railties//lib/rails/generators/actions.rb#450
   def log(*args); end
 
-  # source://railties//lib/rails/generators/actions.rb#394
+  # source://railties//lib/rails/generators/actions.rb#522
   def match_file(path, pattern); end
 
   # Returns optimized string with indentation
   #
-  # source://railties//lib/rails/generators/actions.rb#368
+  # source://railties//lib/rails/generators/actions.rb#496
   def optimize_indentation(value, amount = T.unsafe(nil)); end
 
   # Always returns value in double quotes.
   #
-  # source://railties//lib/rails/generators/actions.rb#356
+  # source://railties//lib/rails/generators/actions.rb#484
   def quote(value); end
 
   # Returns optimized string with indentation
   #
-  # source://railties//lib/rails/generators/actions.rb#368
+  # source://railties//lib/rails/generators/actions.rb#496
   def rebase_indentation(value, amount = T.unsafe(nil)); end
 
-  # source://railties//lib/rails/generators/actions.rb#398
+  # source://railties//lib/rails/generators/actions.rb#526
   def route_namespace_pattern(namespace); end
 
   # Manage +Gemfile+ indentation for a DSL action block
   #
-  # source://railties//lib/rails/generators/actions.rb#380
+  # source://railties//lib/rails/generators/actions.rb#508
   def with_indentation(&block); end
 end
 
@@ -4576,7 +4727,7 @@ class Rails::InfoController < ::Rails::ApplicationController
 
   private
 
-  # source://actionview/7.0.5/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.6/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   # source://railties//lib/rails/info_controller.rb#8
@@ -4589,16 +4740,16 @@ class Rails::InfoController < ::Rails::ApplicationController
   def with_leading_slash(path); end
 
   class << self
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionview/7.0.5/lib/action_view/layouts.rb#209
+    # source://actionview/7.0.6/lib/action_view/layouts.rb#209
     def _layout; end
 
-    # source://actionview/7.0.5/lib/action_view/layouts.rb#210
+    # source://actionview/7.0.6/lib/action_view/layouts.rb#210
     def _layout_conditions; end
 
-    # source://actionpack/7.0.5/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.6/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -4703,7 +4854,7 @@ class Rails::MailersController < ::Rails::ApplicationController
 
   private
 
-  # source://actionview/7.0.5/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.6/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   # source://railties//lib/rails/mailers_controller.rb#80
@@ -4730,13 +4881,13 @@ class Rails::MailersController < ::Rails::ApplicationController
   def show_previews?; end
 
   class << self
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionpack/7.0.5/lib/abstract_controller/helpers.rb#11
+    # source://actionpack/7.0.6/lib/abstract_controller/helpers.rb#11
     def _helper_methods; end
 
-    # source://actionpack/7.0.5/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.6/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -5263,6 +5414,8 @@ class Rails::Railtie
     # source://railties//lib/rails/railtie.rb#224
     def method_missing(name, *args, **_arg2, &block); end
 
+    def new(*_arg0); end
+
     # receives an instance variable identifier, set the variable value if is
     # blank and append given block to value, which will be used later in
     # `#each_registered_block(type, &block)`
@@ -5679,20 +5832,20 @@ class Rails::WelcomeController < ::Rails::ApplicationController
 
   private
 
-  # source://actionview/7.0.5/lib/action_view/layouts.rb#328
+  # source://actionview/7.0.6/lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   class << self
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionview/7.0.5/lib/action_view/layouts.rb#209
+    # source://actionview/7.0.6/lib/action_view/layouts.rb#209
     def _layout; end
 
-    # source://actionview/7.0.5/lib/action_view/layouts.rb#210
+    # source://actionview/7.0.6/lib/action_view/layouts.rb#210
     def _layout_conditions; end
 
-    # source://actionpack/7.0.5/lib/action_controller/metal.rb#210
+    # source://actionpack/7.0.6/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end

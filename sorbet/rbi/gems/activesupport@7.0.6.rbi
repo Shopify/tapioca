@@ -172,7 +172,7 @@ class ActiveSupport::ActionableError::NonActionable < ::StandardError; end
 #   variants.tablet?   # => true
 #   variants.desktop?  # => false
 #
-# source://activesupport//lib/active_support/array_inquirer.rb#24
+# source://activesupport//lib/active_support/array_inquirer.rb#12
 class ActiveSupport::ArrayInquirer < ::Array
   # Passes each element of +candidates+ collection to ArrayInquirer collection.
   # The method returns true if any element from the ArrayInquirer collection
@@ -952,7 +952,7 @@ ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
 #   4.0.1+ for distributed mget support.
 # * +delete_matched+ support for Redis KEYS globs.
 #
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#52
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#51
 class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   include ::ActiveSupport::Cache::Strategy::LocalCache
 
@@ -3566,6 +3566,8 @@ class ActiveSupport::Deprecation
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#21
     def gem_name=(arg); end
 
+    def new(*_arg0); end
+
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#21
     def silence(*_arg0, **_arg1, &_arg2); end
 
@@ -3577,6 +3579,10 @@ class ActiveSupport::Deprecation
 
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#26
     def warn(message = T.unsafe(nil), callstack = T.unsafe(nil)); end
+
+    private
+
+    def allocate; end
   end
 end
 
@@ -5375,6 +5381,11 @@ end
 # source://activesupport//lib/active_support/fork_tracker.rb#31
 module ActiveSupport::ForkTracker::CoreExtPrivate
   include ::ActiveSupport::ForkTracker::CoreExt
+
+  private
+
+  # source://activesupport//lib/active_support/fork_tracker.rb#16
+  def fork(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://activesupport//lib/active_support/fork_tracker.rb#5
@@ -5463,7 +5474,7 @@ end
 #
 # which will, in turn, require this file.
 #
-# source://activesupport//lib/active_support/hash_with_indifferent_access.rb#55
+# source://activesupport//lib/active_support/hash_with_indifferent_access.rb#53
 class ActiveSupport::HashWithIndifferentAccess < ::Hash
   # @return [HashWithIndifferentAccess] a new instance of HashWithIndifferentAccess
   #
@@ -5932,7 +5943,7 @@ module ActiveSupport::Inflector
   #
   #   classify('calculus')     # => "Calculu"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#208
+  # source://activesupport//lib/active_support/inflector/methods.rb#206
   def classify(table_name); end
 
   # Tries to find a constant with the name specified in the argument string.
@@ -5954,14 +5965,14 @@ module ActiveSupport::Inflector
   # NameError is raised when the name is not in CamelCase or the constant is
   # unknown.
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#279
+  # source://activesupport//lib/active_support/inflector/methods.rb#277
   def constantize(camel_cased_word); end
 
   # Replaces underscores with dashes in the string.
   #
   #   dasherize('puni_puni') # => "puni-puni"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#216
+  # source://activesupport//lib/active_support/inflector/methods.rb#214
   def dasherize(underscored_word); end
 
   # Removes the rightmost segment from the constant expression in the string.
@@ -5974,7 +5985,7 @@ module ActiveSupport::Inflector
   #
   # See also #demodulize.
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#246
+  # source://activesupport//lib/active_support/inflector/methods.rb#244
   def deconstantize(path); end
 
   # Removes the module part from the expression in the string.
@@ -5986,7 +5997,7 @@ module ActiveSupport::Inflector
   #
   # See also #deconstantize.
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#228
+  # source://activesupport//lib/active_support/inflector/methods.rb#226
   def demodulize(path); end
 
   # Creates a foreign key name from a class name.
@@ -5997,7 +6008,7 @@ module ActiveSupport::Inflector
   #   foreign_key('Message', false) # => "messageid"
   #   foreign_key('Admin::Post')    # => "post_id"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#257
+  # source://activesupport//lib/active_support/inflector/methods.rb#255
   def foreign_key(class_name, separate_class_name_and_id_with_underscore = T.unsafe(nil)); end
 
   # Tweaks an attribute name for display to end users.
@@ -6051,7 +6062,7 @@ module ActiveSupport::Inflector
   #   ordinal(-11)   # => "th"
   #   ordinal(-1021) # => "st"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#324
+  # source://activesupport//lib/active_support/inflector/methods.rb#322
   def ordinal(number); end
 
   # Turns a number into an ordinal string used to denote the position in an
@@ -6064,7 +6075,7 @@ module ActiveSupport::Inflector
   #   ordinalize(-11)   # => "-11th"
   #   ordinalize(-1021) # => "-1021st"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#337
+  # source://activesupport//lib/active_support/inflector/methods.rb#335
   def ordinalize(number); end
 
   # Replaces special characters in a string so that it may be used as part of
@@ -6136,7 +6147,7 @@ module ActiveSupport::Inflector
   #   safe_constantize('UnknownModule')            # => nil
   #   safe_constantize('UnknownModule::Foo::Bar')  # => nil
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#305
+  # source://activesupport//lib/active_support/inflector/methods.rb#303
   def safe_constantize(camel_cased_word); end
 
   # The reverse of #pluralize, returns the singular form of a word in a
@@ -6163,7 +6174,7 @@ module ActiveSupport::Inflector
   #   tableize('ham_and_egg')     # => "ham_and_eggs"
   #   tableize('fancyCategory')   # => "fancy_categories"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#194
+  # source://activesupport//lib/active_support/inflector/methods.rb#192
   def tableize(class_name); end
 
   # Capitalizes all the words and replaces some characters in the string to
@@ -6174,15 +6185,13 @@ module ActiveSupport::Inflector
   # optional parameter +keep_id_suffix+ to true.
   # By default, this parameter is false.
   #
-  # +titleize+ is also aliased as +titlecase+.
-  #
   #   titleize('man from the boondocks')                       # => "Man From The Boondocks"
   #   titleize('x-men: the last stand')                        # => "X Men: The Last Stand"
   #   titleize('TheManWithoutAPast')                           # => "The Man Without A Past"
   #   titleize('raiders_of_the_lost_ark')                      # => "Raiders Of The Lost Ark"
   #   titleize('string_ending_with_id', keep_id_suffix: true)  # => "String Ending With Id"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#182
+  # source://activesupport//lib/active_support/inflector/methods.rb#180
   def titleize(word, keep_id_suffix: T.unsafe(nil)); end
 
   # Replaces non-ASCII characters with an ASCII approximation, or if none
@@ -6279,7 +6288,7 @@ module ActiveSupport::Inflector
   #   apply_inflections('post', inflections.plurals, :en)    # => "posts"
   #   apply_inflections('posts', inflections.singulars, :en) # => "post"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#366
+  # source://activesupport//lib/active_support/inflector/methods.rb#364
   def apply_inflections(word, rules, locale = T.unsafe(nil)); end
 
   # Mounts a regular expression, returned as a string to ease interpolation,
@@ -6288,7 +6297,7 @@ module ActiveSupport::Inflector
   #   const_regexp("Foo::Bar::Baz") # => "Foo(::Bar(::Baz)?)?"
   #   const_regexp("::")            # => "::"
   #
-  # source://activesupport//lib/active_support/inflector/methods.rb#347
+  # source://activesupport//lib/active_support/inflector/methods.rb#345
   def const_regexp(camel_cased_word); end
 end
 
@@ -6909,7 +6918,7 @@ end
 # flushes all logs when the request finishes
 # (via <tt>action_dispatch.callback</tt> notification) in a Rails environment.
 #
-# source://activesupport//lib/active_support/log_subscriber.rb#66
+# source://activesupport//lib/active_support/log_subscriber.rb#65
 class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   # source://activesupport//lib/active_support/log_subscriber.rb#80
   def colorize_logging; end
@@ -7069,7 +7078,7 @@ end
 
 # Simple formatter which only displays the message.
 #
-# source://activesupport//lib/active_support/logger.rb#87
+# source://activesupport//lib/active_support/logger.rb#86
 class ActiveSupport::Logger::SimpleFormatter < ::Logger::Formatter
   # This method is invoked when a log event occurs
   #
@@ -8292,10 +8301,10 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#117
   def listening?(name); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#93
+  # source://mutex_m/0.1.2/mutex_m.rb#93
   def lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#83
+  # source://mutex_m/0.1.2/mutex_m.rb#83
   def locked?; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#79
@@ -8310,13 +8319,13 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#34
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#78
+  # source://mutex_m/0.1.2/mutex_m.rb#78
   def synchronize(&block); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#88
+  # source://mutex_m/0.1.2/mutex_m.rb#88
   def try_lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#98
+  # source://mutex_m/0.1.2/mutex_m.rb#98
   def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#51
@@ -10572,48 +10581,48 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#940
   def _teardown_callbacks; end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#735
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#735
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#664
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#664
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#675
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#675
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#687
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#687
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#699
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#699
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#706
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#706
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#717
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#717
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#727
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#727
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#745
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#745
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#780
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#780
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#803
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#803
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#811
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#811
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#820
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#820
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # test/unit backwards compatibility methods
   #
-  # source://minitest/5.18.0/lib/minitest/assertions.rb#422
+  # source://minitest/5.18.1/lib/minitest/assertions.rb#422
   def assert_raise(*exp); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -10625,7 +10634,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#151
   def inspect; end
 
-  # source://minitest/5.18.0/lib/minitest.rb#304
+  # source://minitest/5.18.1/lib/minitest.rb#304
   def method_name; end
 
   class << self
@@ -15043,6 +15052,7 @@ ERB::Util::TAG_NAME_START_REGEXP_SET = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#139
 module Enumerable
+  include ::ActiveSupport::ToJsonWithActiveSupportEncoder
   extend ::ActiveSupport::EnumerableCoreExt::Constants
 
   # source://activesupport//lib/active_support/core_ext/object/json.rb#140
@@ -15586,9 +15596,7 @@ class Hash
   # The string pairs "key=value" that conform the query string
   # are sorted lexicographically in ascending order.
   #
-  # This method is also aliased as +to_param+.
-  #
-  # source://activesupport//lib/active_support/core_ext/object/to_query.rb#77
+  # source://activesupport//lib/active_support/core_ext/object/to_query.rb#75
   def to_param(namespace = T.unsafe(nil)); end
 
   # Returns a string representation of the receiver suitable for use as a URL
@@ -15605,9 +15613,7 @@ class Hash
   # The string pairs "key=value" that conform the query string
   # are sorted lexicographically in ascending order.
   #
-  # This method is also aliased as +to_param+.
-  #
-  # source://activesupport//lib/active_support/core_ext/object/to_query.rb#77
+  # source://activesupport//lib/active_support/core_ext/object/to_query.rb#75
   def to_query(namespace = T.unsafe(nil)); end
 
   # Returns a string containing an XML representation of its receiver:
@@ -15776,46 +15782,46 @@ HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
 # source://activesupport//lib/active_support/i18n_railtie.rb#8
 module I18n
   class << self
-    # source://i18n/1.13.0/lib/i18n/backend/cache.rb#64
+    # source://i18n/1.14.1/lib/i18n/backend/cache.rb#64
     def cache_key_digest; end
 
-    # source://i18n/1.13.0/lib/i18n/backend/cache.rb#68
+    # source://i18n/1.14.1/lib/i18n/backend/cache.rb#68
     def cache_key_digest=(key_digest); end
 
-    # source://i18n/1.13.0/lib/i18n/backend/cache.rb#56
+    # source://i18n/1.14.1/lib/i18n/backend/cache.rb#56
     def cache_namespace; end
 
-    # source://i18n/1.13.0/lib/i18n/backend/cache.rb#60
+    # source://i18n/1.14.1/lib/i18n/backend/cache.rb#60
     def cache_namespace=(namespace); end
 
-    # source://i18n/1.13.0/lib/i18n/backend/cache.rb#48
+    # source://i18n/1.14.1/lib/i18n/backend/cache.rb#48
     def cache_store; end
 
-    # source://i18n/1.13.0/lib/i18n/backend/cache.rb#52
+    # source://i18n/1.14.1/lib/i18n/backend/cache.rb#52
     def cache_store=(store); end
 
-    # source://i18n/1.13.0/lib/i18n/backend/fallbacks.rb#17
+    # source://i18n/1.14.1/lib/i18n/backend/fallbacks.rb#17
     def fallbacks; end
 
-    # source://i18n/1.13.0/lib/i18n/backend/fallbacks.rb#23
+    # source://i18n/1.14.1/lib/i18n/backend/fallbacks.rb#23
     def fallbacks=(fallbacks); end
 
-    # source://i18n/1.13.0/lib/i18n/interpolate/ruby.rb#23
+    # source://i18n/1.14.1/lib/i18n/interpolate/ruby.rb#23
     def interpolate(string, values); end
 
-    # source://i18n/1.13.0/lib/i18n/interpolate/ruby.rb#29
+    # source://i18n/1.14.1/lib/i18n/interpolate/ruby.rb#29
     def interpolate_hash(string, values); end
 
-    # source://i18n/1.13.0/lib/i18n.rb#37
+    # source://i18n/1.14.1/lib/i18n.rb#37
     def new_double_nested_cache; end
 
-    # source://i18n/1.13.0/lib/i18n/backend/cache.rb#72
+    # source://i18n/1.14.1/lib/i18n/backend/cache.rb#72
     def perform_caching?; end
 
-    # source://i18n/1.13.0/lib/i18n.rb#45
+    # source://i18n/1.14.1/lib/i18n.rb#45
     def reserve_key(key); end
 
-    # source://i18n/1.13.0/lib/i18n.rb#50
+    # source://i18n/1.14.1/lib/i18n.rb#50
     def reserved_keys_pattern; end
   end
 end
@@ -15859,38 +15865,57 @@ class IO::Buffer
 
   def initialize(*_arg0); end
 
+  def &(_arg0); end
   def <=>(_arg0); end
+  def ^(_arg0); end
+  def and!(_arg0); end
   def clear(*_arg0); end
   def copy(*_arg0); end
+  def each(*_arg0); end
+  def each_byte(*_arg0); end
   def empty?; end
   def external?; end
   def free; end
   def get_string(*_arg0); end
   def get_value(_arg0, _arg1); end
+  def get_values(_arg0, _arg1); end
   def hexdump; end
   def inspect; end
   def internal?; end
   def locked; end
   def locked?; end
   def mapped?; end
+  def not!; end
   def null?; end
-  def pread(_arg0, _arg1, _arg2); end
-  def pwrite(_arg0, _arg1, _arg2); end
-  def read(_arg0, _arg1); end
+  def or!(_arg0); end
+  def pread(*_arg0); end
+  def pwrite(*_arg0); end
+  def read(*_arg0); end
   def readonly?; end
   def resize(_arg0); end
   def set_string(*_arg0); end
   def set_value(_arg0, _arg1, _arg2); end
+  def set_values(_arg0, _arg1, _arg2); end
+  def shared?; end
   def size; end
-  def slice(_arg0, _arg1); end
+  def slice(*_arg0); end
   def to_s; end
   def transfer; end
   def valid?; end
-  def write(_arg0, _arg1); end
+  def values(*_arg0); end
+  def write(*_arg0); end
+  def xor!(_arg0); end
+  def |(_arg0); end
+  def ~; end
+
+  private
+
+  def initialize_copy(_arg0); end
 
   class << self
     def for(_arg0); end
     def map(*_arg0); end
+    def size_of(_arg0); end
   end
 end
 
@@ -15906,10 +15931,12 @@ IO::Buffer::LITTLE_ENDIAN = T.let(T.unsafe(nil), Integer)
 IO::Buffer::LOCKED = T.let(T.unsafe(nil), Integer)
 class IO::Buffer::LockedError < ::RuntimeError; end
 IO::Buffer::MAPPED = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::MaskError < ::ArgumentError; end
 IO::Buffer::NETWORK_ENDIAN = T.let(T.unsafe(nil), Integer)
 IO::Buffer::PAGE_SIZE = T.let(T.unsafe(nil), Integer)
 IO::Buffer::PRIVATE = T.let(T.unsafe(nil), Integer)
 IO::Buffer::READONLY = T.let(T.unsafe(nil), Integer)
+IO::Buffer::SHARED = T.let(T.unsafe(nil), Integer)
 
 class IO::ConsoleMode
   def echo=(_arg0); end
@@ -15941,6 +15968,7 @@ IO::EWOULDBLOCKWaitReadable = IO::EAGAINWaitReadable
 IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
 IO::PRIORITY = T.let(T.unsafe(nil), Integer)
 IO::READABLE = T.let(T.unsafe(nil), Integer)
+class IO::TimeoutError < ::IOError; end
 IO::WRITABLE = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#228
@@ -17891,6 +17919,8 @@ class Regexp
   def multiline?; end
 end
 
+class Regexp::TimeoutError < ::RegexpError; end
+
 # source://activesupport//lib/active_support/core_ext/securerandom.rb#5
 module SecureRandom
   class << self
@@ -18019,11 +18049,9 @@ class String
   #   'active_record/errors'.camelize         # => "ActiveRecord::Errors"
   #   'active_record/errors'.camelize(:lower) # => "activeRecord::Errors"
   #
-  # +camelize+ is also aliased as +camelcase+.
-  #
   # See ActiveSupport::Inflector.camelize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#103
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#101
   def camelcase(first_letter = T.unsafe(nil)); end
 
   # By default, +camelize+ converts strings to UpperCamelCase. If the argument to camelize
@@ -18036,11 +18064,9 @@ class String
   #   'active_record/errors'.camelize         # => "ActiveRecord::Errors"
   #   'active_record/errors'.camelize(:lower) # => "activeRecord::Errors"
   #
-  # +camelize+ is also aliased as +camelcase+.
-  #
   # See ActiveSupport::Inflector.camelize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#103
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#101
   def camelize(first_letter = T.unsafe(nil)); end
 
   # Creates a class name from a plural table name like Rails does for table names to models.
@@ -18052,7 +18078,7 @@ class String
   #
   # See ActiveSupport::Inflector.classify.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#243
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#239
   def classify; end
 
   # +constantize+ tries to find a declared constant with the name specified
@@ -18074,7 +18100,7 @@ class String
   #
   # See ActiveSupport::Inflector.dasherize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#152
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#148
   def dasherize; end
 
   # Removes the rightmost segment from the constant expression in the string.
@@ -18089,7 +18115,7 @@ class String
   #
   # See also +demodulize+.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#181
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#177
   def deconstantize; end
 
   # Removes the module part from the constant expression in the string.
@@ -18103,7 +18129,7 @@ class String
   #
   # See also +deconstantize+.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#166
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#162
   def demodulize; end
 
   # Returns the first character. If a limit is supplied, returns a substring
@@ -18130,7 +18156,7 @@ class String
   #
   # See ActiveSupport::Inflector.foreign_key.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#290
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#286
   def foreign_key(separate_class_name_and_id_with_underscore = T.unsafe(nil)); end
 
   # Returns a substring from the given position to the end of the string.
@@ -18179,7 +18205,7 @@ class String
   #
   # See ActiveSupport::Inflector.humanize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#266
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#262
   def humanize(capitalize: T.unsafe(nil), keep_id_suffix: T.unsafe(nil)); end
 
   # Converts String to a TimeWithZone in the current zone if Time.zone or Time.zone_default
@@ -18334,7 +18360,7 @@ class String
   #
   # See ActiveSupport::Inflector.parameterize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#219
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#215
   def parameterize(separator: T.unsafe(nil), preserve_case: T.unsafe(nil), locale: T.unsafe(nil)); end
 
   # Returns the plural form of the word in the string.
@@ -18466,7 +18492,7 @@ class String
   #
   # See ActiveSupport::Inflector.tableize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#231
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#227
   def tableize; end
 
   # Capitalizes all the words and replaces some characters in the string to create
@@ -18481,11 +18507,9 @@ class String
   #   'x-men: the last stand'.titleize                        # => "X Men: The Last Stand"
   #   'string_ending_with_id'.titleize(keep_id_suffix: true)  # => "String Ending With Id"
   #
-  # +titleize+ is also aliased as +titlecase+.
-  #
   # See ActiveSupport::Inflector.titleize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#130
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#126
   def titlecase(keep_id_suffix: T.unsafe(nil)); end
 
   # Capitalizes all the words and replaces some characters in the string to create
@@ -18500,11 +18524,9 @@ class String
   #   'x-men: the last stand'.titleize                        # => "X Men: The Last Stand"
   #   'string_ending_with_id'.titleize(keep_id_suffix: true)  # => "String Ending With Id"
   #
-  # +titleize+ is also aliased as +titlecase+.
-  #
   # See ActiveSupport::Inflector.titleize.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#130
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#126
   def titleize(keep_id_suffix: T.unsafe(nil)); end
 
   # Returns a substring from the beginning of the string to the given position.
@@ -18630,7 +18652,7 @@ class String
   #
   # See ActiveSupport::Inflector.underscore.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#143
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#139
   def underscore; end
 
   # Converts just the first character to uppercase.
@@ -18641,7 +18663,7 @@ class String
   #
   # See ActiveSupport::Inflector.upcase_first.
   #
-  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#277
+  # source://activesupport//lib/active_support/core_ext/string/inflections.rb#273
   def upcase_first; end
 end
 

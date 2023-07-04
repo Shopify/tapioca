@@ -492,10 +492,8 @@
 #
 # - #greeting: The server's initial untagged response, which can indicate a
 #   pre-authenticated connection.
-# - #responses: The untagged responses, as a hash.  Keys are the untagged
-#   response type (e.g. "OK", "FETCH", "FLAGS") and response code (e.g.
-#   "ALERT", "UIDVALIDITY", "UIDNEXT", "TRYCREATE", etc).  Values are arrays
-#   of UntaggedResponse or ResponseCode.
+# - #responses: A hash with arrays of unhandled <em>non-+nil+</em>
+#   UntaggedResponse and ResponseCode +#data+, keyed by +#name+.
 # - #add_response_handler: Add a block to be called inside the receiver thread
 #   with every server response.
 # - #remove_response_handler: Remove a previously added response handler.
@@ -681,7 +679,7 @@
 #   +imap+
 # * {Character sets}[https://www.iana.org/assignments/character-sets/character-sets.xhtml]
 #
-# source://net-imap//lib/net/imap.rb#703
+# source://net-imap//lib/net/imap.rb#701
 class Net::IMAP < ::Net::Protocol
   include ::MonitorMixin
   include ::OpenSSL
@@ -1111,7 +1109,7 @@ class Net::IMAP < ::Net::Protocol
 
   # Returns the initial greeting the server, an UntaggedResponse.
   #
-  # source://net-imap//lib/net/imap.rb#713
+  # source://net-imap//lib/net/imap.rb#711
   def greeting; end
 
   # Sends an {ID command [RFC2971 §3.1]}[https://www.rfc-editor.org/rfc/rfc2971#section-3.1]
@@ -1384,7 +1382,9 @@ class Net::IMAP < ::Net::Protocol
   # source://net-imap//lib/net/imap.rb#727
   def response_handlers; end
 
-  # Returns recorded untagged responses.
+  # Returns a hash with arrays of unhandled <em>non-+nil+</em>
+  # UntaggedResponse#data keyed by UntaggedResponse#name, and
+  # ResponseCode#data keyed by ResponseCode#name.
   #
   # For example:
   #
@@ -3761,7 +3761,7 @@ end
 # source://net-imap//lib/net/imap/errors.rb#51
 class Net::IMAP::UnknownResponseError < ::Net::IMAP::ResponseError; end
 
-# source://net-imap//lib/net/imap.rb#704
+# source://net-imap//lib/net/imap.rb#702
 Net::IMAP::VERSION = T.let(T.unsafe(nil), String)
 
 # source://net-imap//lib/net/imap/authenticators/xoauth2.rb#3
@@ -3769,7 +3769,7 @@ class Net::IMAP::XOauth2Authenticator
   # @return [XOauth2Authenticator] a new instance of XOauth2Authenticator
   #
   # source://net-imap//lib/net/imap/authenticators/xoauth2.rb#10
-  def initialize(user, oauth2_token); end
+  def initialize(user, oauth2_token, **_); end
 
   # source://net-imap//lib/net/imap/authenticators/xoauth2.rb#4
   def process(_data); end
