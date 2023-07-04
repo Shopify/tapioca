@@ -322,6 +322,9 @@ module Kredis::Types
   # source://kredis//lib/kredis/types.rb#62
   def list(key, typed: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil)); end
 
+  # source://kredis//lib/kredis/types.rb#74
+  def ordered_set(key, typed: T.unsafe(nil), limit: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil)); end
+
   # source://kredis//lib/kredis/types.rb#4
   def proxy(key, config: T.unsafe(nil), after_change: T.unsafe(nil)); end
 
@@ -331,10 +334,10 @@ module Kredis::Types
   # source://kredis//lib/kredis/types.rb#70
   def set(key, typed: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil)); end
 
-  # source://kredis//lib/kredis/types.rb#74
+  # source://kredis//lib/kredis/types.rb#78
   def slot(key, config: T.unsafe(nil), after_change: T.unsafe(nil)); end
 
-  # source://kredis//lib/kredis/types.rb#78
+  # source://kredis//lib/kredis/types.rb#82
   def slots(key, available:, config: T.unsafe(nil), after_change: T.unsafe(nil)); end
 
   # source://kredis//lib/kredis/types.rb#13
@@ -345,7 +348,7 @@ module Kredis::Types
 
   private
 
-  # source://kredis//lib/kredis/types.rb#83
+  # source://kredis//lib/kredis/types.rb#87
   def type_from(type_klass, config, key, after_change: T.unsafe(nil), **options); end
 end
 
@@ -676,6 +679,88 @@ class Kredis::Types::List < ::Kredis::Types::Proxying
   def typed=(_arg0); end
 end
 
+# source://kredis//lib/kredis/types/ordered_set.rb#1
+class Kredis::Types::OrderedSet < ::Kredis::Types::Proxying
+  # source://kredis//lib/kredis/types/ordered_set.rb#20
+  def <<(elements); end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#20
+  def append(elements); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def del(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#7
+  def elements; end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def exists?(*_arg0, **_arg1, &_arg2); end
+
+  # Returns the value of attribute limit.
+  #
+  # source://kredis//lib/kredis/types/ordered_set.rb#5
+  def limit; end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#25
+  def limit=(limit); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def multi(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#16
+  def prepend(elements); end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#12
+  def remove(*elements); end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#7
+  def to_a; end
+
+  # Returns the value of attribute typed.
+  #
+  # source://kredis//lib/kredis/types/ordered_set.rb#4
+  def typed; end
+
+  # Sets the attribute typed
+  #
+  # @param value the value to set the attribute typed to.
+  #
+  # source://kredis//lib/kredis/types/ordered_set.rb#4
+  def typed=(_arg0); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def zadd(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def zcard(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def zrange(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def zrem(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#7
+  def zremrangebyrank(*_arg0, **_arg1, &_arg2); end
+
+  private
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#54
+  def base_score; end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#32
+  def insert(elements, prepending: T.unsafe(nil)); end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#58
+  def process_start_time; end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#62
+  def process_uptime; end
+
+  # source://kredis//lib/kredis/types/ordered_set.rb#66
+  def trim(from_beginning:); end
+end
+
 # source://kredis//lib/kredis/types/proxy.rb#1
 class Kredis::Types::Proxy
   include ::Kredis::Types::Proxy::Failsafe
@@ -752,7 +837,7 @@ class Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/proxying.rb#10
   def initialize(redis, key, **options); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#16
+  # source://kredis//lib/kredis/types/proxying.rb#17
   def failsafe(returning: T.unsafe(nil), &block); end
 
   # Returns the value of attribute key.
@@ -779,17 +864,20 @@ class Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/proxying.rb#4
   def proxy=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#21
+  # source://kredis//lib/kredis/types/proxying.rb#28
   def string_to_type(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#21
+  # source://kredis//lib/kredis/types/proxying.rb#28
   def strings_to_types(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#21
+  # source://kredis//lib/kredis/types/proxying.rb#28
   def type_to_string(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#21
+  # source://kredis//lib/kredis/types/proxying.rb#28
   def types_to_strings(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#21
+  def unproxied_redis; end
 
   class << self
     # source://kredis//lib/kredis/types/proxying.rb#6
