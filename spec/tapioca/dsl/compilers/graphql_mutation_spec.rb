@@ -100,6 +100,10 @@ module Tapioca
 
             it "generates correct RBI for all graphql types" do
               add_ruby_file("create_comment.rb", <<~RUBY)
+                class LoadedType < GraphQL::Schema::Object
+                  field "foo", type: String
+                end
+
                 class EnumA < GraphQL::Schema::Enum
                   value "foo"
                 end
@@ -127,8 +131,9 @@ module Tapioca
                   argument :enum_b, EnumB, required: true
                   argument :input_object, CreateCommentInput, required: true
                   argument :custom_scalar, CustomScalar, required: true
+                  argument :loaded_argument_id, ID, required: true, loads: LoadedType
 
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:)
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:)
                     # ...
                   end
                 end
@@ -138,8 +143,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped).returns(T.untyped) }
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:); end
+                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped, loaded_argument: T.untyped).returns(T.untyped) }
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:); end
                 end
               RBI
 

@@ -42,7 +42,7 @@ module Tapioca
       class GraphqlMutation < Compiler
         extend T::Sig
 
-        ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::InputObject) } }
+        ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::Mutation) } }
 
         sig { override.void }
         def decorate
@@ -59,7 +59,11 @@ module Tapioca
           params = compile_method_parameters_to_rbi(method_def).map do |param|
             name = param.param.name
             argument = arguments_by_name.fetch(name, nil)
-            create_typed_param(param.param, argument ? Helpers::GraphqlTypeHelper.type_for(argument.type) : "T.untyped")
+            type = argument.loads ? GraphQL::Schema::Wrapper.new(argument.loads) : argument.type if argument
+            create_typed_param(
+              param.param,
+              argument ? Helpers::GraphqlTypeHelper.type_for(type) : "T.untyped",
+            )
           end
 
           root.create_path(constant) do |mutation|
