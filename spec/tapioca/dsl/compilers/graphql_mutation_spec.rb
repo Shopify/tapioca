@@ -132,8 +132,9 @@ module Tapioca
                   argument :input_object, CreateCommentInput, required: true
                   argument :custom_scalar, CustomScalar, required: true
                   argument :loaded_argument_id, ID, required: true, loads: LoadedType
+                  argument :loaded_argument_optional_id, ID, required: false, loads: LoadedType
 
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:)
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_argument_optional: nil)
                     # ...
                   end
                 end
@@ -143,8 +144,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped, loaded_argument: T.untyped).returns(T.untyped) }
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:); end
+                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped, loaded_argument: T.untyped, loaded_argument_optional: T.untyped).returns(T.untyped) }
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_argument_optional: T.unsafe(nil)); end
                 end
               RBI
 

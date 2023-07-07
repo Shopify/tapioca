@@ -59,16 +59,24 @@ module Tapioca
           params = compile_method_parameters_to_rbi(method_def).map do |param|
             name = param.param.name
             argument = arguments_by_name.fetch(name, nil)
-            type = argument.loads ? GraphQL::Schema::Wrapper.new(argument.loads) : argument.type if argument
             create_typed_param(
               param.param,
-              argument ? Helpers::GraphqlTypeHelper.type_for(type) : "T.untyped",
+              argument ? Helpers::GraphqlTypeHelper.type_for(argument_type(argument)) : "T.untyped",
             )
           end
 
           root.create_path(constant) do |mutation|
             mutation.create_method("resolve", parameters: params, return_type: "T.untyped")
           end
+        end
+
+        sig { params(argument: GraphQL::Schema::Argument).returns(GraphQL::Schema::Wrapper) }
+        def argument_type(argument)
+          return argument.type unless argument.loads
+
+          return GraphQL::Schema::NonNull.new(argument.loads) if argument.type.is_a?(GraphQL::Schema::NonNull)
+
+          GraphQL::Schema::Wrapper.new(argument.loads)
         end
 
         class << self
