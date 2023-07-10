@@ -132,9 +132,11 @@ module Tapioca
                   argument :input_object, CreateCommentInput, required: true
                   argument :custom_scalar, CustomScalar, required: true
                   argument :loaded_argument_id, ID, required: true, loads: LoadedType
-                  argument :loaded_argument_optional_id, ID, required: false, loads: LoadedType
+                  argument :optional_loaded_argument_id, ID, required: false, loads: LoadedType
+                  argument :loaded_argument_ids, [ID], required: true, loads: LoadedType
+                  argument :optional_loaded_argument_ids, [ID], required: false, loads: LoadedType
 
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_argument_optional: nil)
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_arguments:, optional_loaded_argument: nil, optional_loaded_arguments: nil)
                     # ...
                   end
                 end
@@ -144,8 +146,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped, loaded_argument: T.untyped, loaded_argument_optional: T.untyped).returns(T.untyped) }
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_argument_optional: T.unsafe(nil)); end
+                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped, loaded_argument: T.untyped, loaded_arguments: T::Array[T.untyped], optional_loaded_argument: T.untyped, optional_loaded_arguments: T.nilable(T::Array[T.untyped])).returns(T.untyped) }
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_arguments:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
                 end
               RBI
 

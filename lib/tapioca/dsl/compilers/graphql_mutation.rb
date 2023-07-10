@@ -72,7 +72,16 @@ module Tapioca
           return "T.untyped" unless argument
 
           argument_type = if argument.loads
-            if GraphQL::Schema::NonNull === argument.type
+            non_null = GraphQL::Schema::NonNull === argument.type
+            if argument.type.list?
+              if non_null
+                GraphQL::Schema::NonNull.new(
+                  GraphQL::Schema::List.new(GraphQL::Schema::NonNull.new(argument.loads)),
+                )
+              else
+                GraphQL::Schema::List.new(argument.loads)
+              end
+            elsif non_null
               GraphQL::Schema::NonNull.new(argument.loads)
             else
               GraphQL::Schema::Wrapper.new(argument.loads)
