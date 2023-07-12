@@ -283,25 +283,20 @@ module Tapioca
             end
 
             describe "with custom type" do
-              let(:custom_type) do
-                Class.new do
-                  class << self
-                    def cast(value, default)
-                      value
+              before do
+                add_ruby_file("custom_type.rb", <<~RB)
+                  class CustomType
+                    class << self
+                      def cast(value, default)
+                        value
+                      end
                     end
                   end
-                end
-              end
 
-              before do
-                ::JsonApiClient::Schema::TypeFactory.register({
-                  custom_type: custom_type,
-                })
-              end
-
-              after do
-                types = ::JsonApiClient::Schema::TypeFactory.class_variable_get(:@@types)
-                types.delete(:custom_type)
+                  ::JsonApiClient::Schema::TypeFactory.register({
+                    custom_type: CustomType,
+                  })
+                RB
               end
 
               it "generates untyped properties for custom types" do
@@ -331,11 +326,13 @@ module Tapioca
               end
 
               it "honours types that declare sorbet_type" do
-                def custom_type.sorbet_type
-                  "Integer"
-                end
-
                 add_ruby_file("post.rb", <<~RUBY)
+                  class CustomType
+                    def self.sorbet_type
+                      "Integer"
+                    end
+                  end
+
                   class Post < JsonApiClient::Resource
                     property :comment_count, type: :custom_type
                     property :tag_count, type: :custom_type, default: 0
