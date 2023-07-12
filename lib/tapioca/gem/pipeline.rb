@@ -236,7 +236,7 @@ module Tapioca
       def compile_alias(name, constant)
         return if seen?(name)
 
-        mark_seen(name)
+        seen!(name)
 
         return if symbol_in_payload?(name)
         return unless constant_in_gem?(name)
@@ -258,7 +258,7 @@ module Tapioca
       def compile_object(name, value)
         return if seen?(name)
 
-        mark_seen(name)
+        seen!(name)
 
         return if symbol_in_payload?(name)
         return unless constant_in_gem?(name)
@@ -296,7 +296,7 @@ module Tapioca
         return if Tapioca::TypeVariableModule === constant
         return if seen?(name)
 
-        mark_seen(name)
+        seen!(name)
 
         scope = compile_scope(name, constant)
         push_scope(name, constant, scope)
@@ -399,7 +399,7 @@ module Tapioca
       end
 
       sig { params(name: String).void }
-      def mark_seen(name)
+      def seen!(name)
         @seen.add(name)
       end
 
