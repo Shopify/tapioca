@@ -366,7 +366,7 @@ module Tapioca
         symbol_in_payload?(name) && !@bootstrap_symbols.include?(name)
       end
 
-      sig { params(name: String, constant: BasicObject).returns(T::Boolean).checked(:never) }
+      sig { params(name: String, constant: T.anything).returns(T::Boolean).checked(:never) }
       def skip_constant?(name, constant)
         return true if name.strip.empty?
         return true if name.start_with?("#<")
