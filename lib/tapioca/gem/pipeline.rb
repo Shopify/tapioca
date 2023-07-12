@@ -50,6 +50,8 @@ module Tapioca
         @root
       end
 
+      # Events handling
+
       sig { params(symbol: String).void }
       def push_symbol(symbol)
         @events << Gem::SymbolFound.new(symbol)
@@ -98,6 +100,8 @@ module Tapioca
         @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end
 
+      # Constants and properties filtering
+
       sig { params(symbol_name: String).returns(T::Boolean) }
       def symbol_in_payload?(symbol_name)
         symbol_name = symbol_name[2..-1] if symbol_name.start_with?("::")
@@ -126,6 +130,8 @@ module Tapioca
         @gem.contains_path?(source_location)
       end
 
+      # Helpers
+
       sig { params(constant: Module).returns(T.nilable(String)) }
       def name_of(constant)
         name = name_of_proxy_target(constant, super(class_of(constant)))
@@ -148,6 +154,8 @@ module Tapioca
 
         gem_symbols.union(engine_symbols)
       end
+
+      # Events handling
 
       sig { returns(Gem::Event) }
       def next_event
@@ -200,7 +208,7 @@ module Tapioca
         @node_listeners.each { |listener| listener.dispatch(event) }
       end
 
-      # Compile
+      # Compiling
 
       sig { params(symbol: String, constant: Module).void }
       def compile_foreign_constant(symbol, constant)
@@ -353,6 +361,8 @@ module Tapioca
         "::#{name}"
       end
 
+      # Constants and properties filtering
+
       sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
       def defined_in_gem?(constant, strict: true)
         files = get_file_candidates(constant)
@@ -393,6 +403,8 @@ module Tapioca
       def seen?(name)
         @seen.include?(name)
       end
+
+      # Helpers
 
       sig { params(constant: T.all(Module, T::Generic)).returns(String) }
       def generic_name_of(constant)
