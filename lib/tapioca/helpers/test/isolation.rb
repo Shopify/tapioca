@@ -29,7 +29,9 @@ module Tapioca
 
         module Forking
           extend T::Sig
-          include Kernel
+          extend T::Helpers
+
+          requires_ancestor { Kernel }
 
           sig { params(_blk: T.untyped).returns(String) }
           def run_in_isolation(&_blk)
@@ -72,7 +74,10 @@ module Tapioca
 
         module Subprocess
           extend T::Sig
-          include Kernel
+          extend T::Helpers
+
+          requires_ancestor { Kernel }
+
           ORIG_ARGV = T.let(ARGV.dup, T::Array[T.untyped]) unless defined?(ORIG_ARGV)
 
           # Crazy H4X to get this working in windows / jruby with
