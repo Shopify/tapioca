@@ -40,6 +40,7 @@ module Tapioca
   DEFAULT_DSL_DIR = T.let("#{DEFAULT_RBI_DIR}/dsl", String)
   DEFAULT_GEM_DIR = T.let("#{DEFAULT_RBI_DIR}/gems", String)
   DEFAULT_SHIM_DIR = T.let("#{DEFAULT_RBI_DIR}/shims", String)
+  DEFAULT_PAYLOAD_DIR = T.let("#{DEFAULT_RBI_DIR}/payload", String)
   DEFAULT_TODO_FILE = T.let("#{DEFAULT_RBI_DIR}/todo.rbi", String)
   DEFAULT_ANNOTATIONS_DIR = T.let("#{DEFAULT_RBI_DIR}/annotations", String)
 

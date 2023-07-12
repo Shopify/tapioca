@@ -5,8 +5,8 @@ module Tapioca
   module Commands
     class Payload < Command
       class PayloadPipeline < Tapioca::Gem::Pipeline
-        sig { params(gem_name: T.nilable(String), include_doc: T::Boolean).void }
-        def initialize(gem_name, include_doc: false)
+        sig { params(gem_name: T.nilable(String), core_constants: T::Set[String], include_doc: T::Boolean).void }
+        def initialize(gem_name, core_constants:, include_doc: false)
           gem = if gem_name
             Kernel.gem(gem_name)
             require gem_name
@@ -15,6 +15,7 @@ module Tapioca
           else
             ::Gem::Specification.new
           end
+          @core_constants = core_constants
           super(Tapioca::Gemfile::GemSpec.new(gem), include_doc: include_doc)
           @bootstrap_symbols.clear
           @events.clear
@@ -27,7 +28,7 @@ module Tapioca
 
         sig { override.params(symbol_name: String).returns(T::Boolean) }
         def symbol_in_payload?(symbol_name)
-          false
+          @core_constants.include?(symbol_name)
         end
 
         sig { override.params(method: UnboundMethod).returns(T::Boolean) }
@@ -36,65 +37,88 @@ module Tapioca
         end
       end
 
-      sig { void }
-      def initialize
+      sig { params(outpath: Pathname, rbi_formatter: RBIFormatter).void }
+      def initialize(outpath:, rbi_formatter: DEFAULT_RBI_FORMATTER)
         super()
+        @outpath = outpath
+        @rbi_formatter = rbi_formatter
       end
 
       sig { override.void }
       def execute
         core_constants = list_top_level_constants
-        puts core_constants.sort
-        exit
+        compile_rbi("core", [], core_constants, core_constants: Set.new)
 
-        # core_constants.each do |constant|
-        #   @pipeline.push_symbol(constant.to_s)
-        # end
+        # TODO: should we also generate docs?
+        # TODO: import existing sigs from existing payload?
 
-        # puts @pipeline.compile.string
-
-        stdlib_libraries
         stdlib_libraries.each do |lib_name, library_requires|
-          lib_constants = list_top_level_constants(library_requires) - core_constants
-          puts compile_rbi(lib_name, library_requires, lib_constants).string
+          lib_constants = list_top_level_constants(library_requires)
+          compile_rbi(lib_name, library_requires, lib_constants, core_constants: core_constants)
         end
       end
 
       private
 
-      sig { params(name: String, requires: T::Array[String], constants: T::Array[Symbol]).returns(RBI::Tree) }
-      def compile_rbi(name, requires, constants)
+      sig do
+        params(
+          name: String,
+          requires: T::Array[String],
+          constants: T::Set[String],
+          core_constants: T::Set[String],
+        ).void
+      end
+      def compile_rbi(name, requires, constants, core_constants:)
+        # Kernel.gem(name)
         requires.each { |require_name| require require_name }
-        pipeline = PayloadPipeline.new(nil, include_doc: true)
+        pipeline = PayloadPipeline.new(nil, core_constants: core_constants, include_doc: true)
         constants.each do |constant|
           pipeline.push_symbol(constant.to_s)
         end
-        pipeline.compile
+
+        rbi = RBI::File.new(strictness: "__STDLIB_INTERNAL")
+
+        # @rbi_formatter.write_header!(
+        #   rbi,
+        #   default_command(:gem, name),
+        #   reason: "types exported from the `#{name}` gem",
+        # ) # if @file_header
+
+        rbi.root = pipeline.compile
+
+        if rbi.empty?
+          @rbi_formatter.write_empty_body_comment!(rbi)
+          say("Compiled #{name} (empty output)", :yellow)
+        else
+          say("Compiled #{name}", :green)
+        end
+
+        rbi_string = @rbi_formatter.print_file(rbi)
+        create_file(@outpath / "#{name}.rbi", rbi_string)
       rescue RuntimeError, LoadError, NameError => e
         say_error("Can't require #{name}: (#{e.message})", :bold, :red)
-        RBI::Tree.new
       end
 
-      sig { params(libraries: T.nilable(T::Array[String])).returns(T::Array[Symbol]) }
+      sig { params(libraries: T.nilable(T::Array[String])).returns(T::Set[String]) }
       def list_top_level_constants(libraries = nil)
         code = String.new
         libraries&.each do |library|
           code << "require '#{library}'; "
         end
-        code << "p Object.constants"
+        code << "p Object.constants.map(&:to_s)"
 
         out, err, status = run_in_ruby_process(code)
 
         if status.success?
-          eval(out) # rubocop:disable Security/Eval
+          Set.new(eval(out)) # rubocop:disable Security/Eval
         else
           say_error("Can't list top level constants:", :bold, :red)
           say_error(err)
-          []
+          Set.new
         end
       rescue SyntaxError => e
         say_error("Can't list top level constants (#{e.message})", :bold, :red)
-        []
+        Set.new
       end
 
       sig { params(command: String).returns([String, String, Process::Status]) }

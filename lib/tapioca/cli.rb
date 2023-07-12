@@ -341,8 +341,16 @@ module Tapioca
     end
 
     desc "payload", "Generate RBI files for Ruby's core and standard library"
+    option :outdir,
+      aliases: ["--out", "-o"],
+      banner: "directory",
+      desc: "The output directory for generated payload RBI files",
+      default: DEFAULT_PAYLOAD_DIR
     def payload
-      command = Commands::Payload.new
+      command = Commands::Payload.new(
+        outpath: Pathname.new(options[:outdir]),
+        rbi_formatter: rbi_formatter(options),
+      )
       command.execute
     end
 
