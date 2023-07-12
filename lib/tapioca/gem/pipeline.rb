@@ -191,7 +191,7 @@ module Tapioca
         return if skip_constant?(name, event.constant)
         return if seen?(name)
 
-        mark_seen(name)
+        seen!(name)
 
         if event.is_a?(Gem::ForeignConstantFound)
           compile_foreign_constant(name, event.constant)
@@ -428,7 +428,7 @@ module Tapioca
       end
 
       sig { params(name: String).void }
-      def mark_seen(name)
+      def seen!(name)
         @seen.add(name)
       end
 
