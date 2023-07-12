@@ -155,6 +155,31 @@ GEM
       dry-schema (>= 1.12, < 2)
       zeitwerk (~> 2.6)
     erubi (1.12.0)
+    faraday (1.10.3)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0)
+      faraday-multipart (~> 1.0)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.0)
+      faraday-patron (~> 1.0)
+      faraday-rack (~> 1.0)
+      faraday-retry (~> 1.0)
+      ruby2_keywords (>= 0.0.4)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.2.0)
+    faraday-patron (1.0.0)
+    faraday-rack (1.0.0)
+    faraday-retry (1.0.3)
+    faraday_middleware (1.2.0)
+      faraday (~> 1.0)
     frozen_record (0.27.0)
       activemodel
     globalid (1.1.0)
@@ -173,6 +198,13 @@ GEM
     irb (1.6.4)
       reline (>= 0.3.0)
     json (2.6.3)
+    json_api_client (1.21.1)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
+      addressable (~> 2.2)
+      faraday (>= 0.15.2, < 2.0)
+      faraday_middleware (>= 0.9.0, < 2.0)
+      rack (>= 0.2)
     kramdown (2.4.0)
       rexml
     kredis (1.5.0)
@@ -198,6 +230,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    multipart-post (2.3.0)
     net-imap (0.3.6)
       date
       net-protocol
@@ -298,6 +331,7 @@ GEM
     rubocop-sorbet (0.7.0)
       rubocop (>= 0.90.0)
     ruby-progressbar (1.13.0)
+    ruby2_keywords (0.0.5)
     shopify-money (1.2.1)
     sidekiq (7.1.2)
       concurrent-ruby (< 2)
@@ -374,6 +408,7 @@ DEPENDENCIES
   google-protobuf
   graphql
   identity_cache
+  json_api_client
   kramdown (~> 2.4)
   kredis
   minitest

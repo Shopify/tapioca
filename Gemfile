@@ -20,6 +20,7 @@ end
 
 group :development, :test do
   gem "smart_properties", require: false
+  gem "json_api_client", require: false
   gem "frozen_record", require: false
   gem "sprockets", require: false
   gem "rails", require: false
