@@ -153,12 +153,18 @@ module Tapioca
             methods_to_add: T.nilable(T::Array[String]),
             return_type: String,
             parameters: T::Array[[String, String]],
+            kw_parameters: T::Array[[String, String, String]],
           ).void
         end
-        def add_method(klass, name, methods_to_add, return_type: "void", parameters: [])
+        def add_method(klass, name, methods_to_add, return_type: "void", parameters: [], kw_parameters: [])
+          all_parameters = parameters.map { |param, type| create_param(param, type: type) }
+          all_parameters += kw_parameters.map do |param, type, default|
+            create_kw_opt_param(param, type: type, default: default)
+          end
+
           klass.create_method(
             name,
-            parameters: parameters.map { |param, type| create_param(param, type: type) },
+            parameters: all_parameters,
             return_type: return_type,
           ) if methods_to_add.nil? || methods_to_add.include?(name)
         end
@@ -254,6 +260,7 @@ module Tapioca
             "#{attribute_name}_changed?",
             methods_to_add,
             return_type: "T::Boolean",
+            kw_parameters: [["from", setter_type, "T.unsafe(nil)"], ["to", setter_type, "T.unsafe(nil)"]],
           )
           add_method(
             klass,
@@ -277,6 +284,7 @@ module Tapioca
             "#{attribute_name}_previously_changed?",
             methods_to_add,
             return_type: "T::Boolean",
+            kw_parameters: [["from", setter_type, "T.unsafe(nil)"], ["to", setter_type, "T.unsafe(nil)"]],
           )
           add_method(
             klass,
