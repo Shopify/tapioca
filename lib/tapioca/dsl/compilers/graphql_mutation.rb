@@ -42,7 +42,7 @@ module Tapioca
       class GraphqlMutation < Compiler
         extend T::Sig
 
-        ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::InputObject) } }
+        ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::Mutation) } }
 
         sig { override.void }
         def decorate
@@ -59,12 +59,37 @@ module Tapioca
           params = compile_method_parameters_to_rbi(method_def).map do |param|
             name = param.param.name
             argument = arguments_by_name.fetch(name, nil)
-            create_typed_param(param.param, argument ? Helpers::GraphqlTypeHelper.type_for(argument.type) : "T.untyped")
+            create_typed_param(param.param, argument_type(argument))
           end
 
           root.create_path(constant) do |mutation|
             mutation.create_method("resolve", parameters: params, return_type: "T.untyped")
           end
+        end
+
+        sig { params(argument: T.nilable(GraphQL::Schema::Argument)).returns(String) }
+        def argument_type(argument)
+          return "T.untyped" unless argument
+
+          argument_type = if argument.loads
+            non_null = GraphQL::Schema::NonNull === argument.type
+            if argument.type.list?
+              if non_null
+                GraphQL::Schema::NonNull.new(
+                  GraphQL::Schema::List.new(GraphQL::Schema::NonNull.new(argument.loads)),
+                )
+              else
+                GraphQL::Schema::List.new(argument.loads)
+              end
+            elsif non_null
+              GraphQL::Schema::NonNull.new(argument.loads)
+            else
+              GraphQL::Schema::Wrapper.new(argument.loads)
+            end
+          else
+            argument.type
+          end
+          Helpers::GraphqlTypeHelper.type_for(argument_type)
         end
 
         class << self
