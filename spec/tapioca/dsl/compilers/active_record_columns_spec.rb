@@ -96,8 +96,8 @@ module Tapioca
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def id_change_to_be_saved; end
 
-                      sig { returns(T::Boolean) }
-                      def id_changed?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                       sig { returns(T.nilable(::Integer)) }
                       def id_in_database; end
@@ -105,8 +105,8 @@ module Tapioca
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def id_previous_change; end
 
-                      sig { returns(T::Boolean) }
-                      def id_previously_changed?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
@@ -552,8 +552,8 @@ module Tapioca
                     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
                     def author_change_to_be_saved; end
 
-                    sig { returns(T::Boolean) }
-                    def author_changed?; end
+                    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                    def author_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                     sig { returns(T.nilable(::String)) }
                     def author_in_database; end
@@ -561,8 +561,8 @@ module Tapioca
                     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
                     def author_previous_change; end
 
-                    sig { returns(T::Boolean) }
-                    def author_previously_changed?; end
+                    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                    def author_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                     sig { returns(T.nilable(::String)) }
                     def author_previously_was; end
@@ -642,8 +642,8 @@ module Tapioca
                     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
                     def body_change_to_be_saved; end
 
-                    sig { returns(T::Boolean) }
-                    def body_changed?; end
+                    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                    def body_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                     sig { returns(T.nilable(::String)) }
                     def body_in_database; end
@@ -651,8 +651,8 @@ module Tapioca
                     sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
                     def body_previous_change; end
 
-                    sig { returns(T::Boolean) }
-                    def body_previously_changed?; end
+                    sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                    def body_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                     sig { returns(T.nilable(::String)) }
                     def body_previously_was; end
@@ -730,8 +730,8 @@ module Tapioca
                   sig { returns(T.nilable([::Date, ::Date])) }
                   def publication_date_change_to_be_saved; end
 
-                  sig { returns(T::Boolean) }
-                  def publication_date_changed?; end
+                  sig { params(from: ::Date, to: ::Date).returns(T::Boolean) }
+                  def publication_date_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                   sig { returns(T.nilable(::Date)) }
                   def publication_date_in_database; end
@@ -739,8 +739,8 @@ module Tapioca
                   sig { returns(T.nilable([::Date, ::Date])) }
                   def publication_date_previous_change; end
 
-                  sig { returns(T::Boolean) }
-                  def publication_date_previously_changed?; end
+                  sig { params(from: ::Date, to: ::Date).returns(T::Boolean) }
+                  def publication_date_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                   sig { returns(T.nilable(::Date)) }
                   def publication_date_previously_was; end
@@ -1108,8 +1108,8 @@ module Tapioca
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def id_change_to_be_saved; end
 
-                      sig { returns(T::Boolean) }
-                      def id_changed?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                       sig { returns(T.nilable(::Integer)) }
                       def id_in_database; end
@@ -1117,8 +1117,8 @@ module Tapioca
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def id_previous_change; end
 
-                      sig { returns(T::Boolean) }
-                      def id_previously_changed?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
@@ -1194,8 +1194,8 @@ module Tapioca
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def id_change_to_be_saved; end
 
-                      sig { returns(T::Boolean) }
-                      def id_changed?; end
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                       sig { returns(T.untyped) }
                       def id_in_database; end
@@ -1203,8 +1203,8 @@ module Tapioca
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def id_previous_change; end
 
-                      sig { returns(T::Boolean) }
-                      def id_previously_changed?; end
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                       sig { returns(T.untyped) }
                       def id_previously_was; end
