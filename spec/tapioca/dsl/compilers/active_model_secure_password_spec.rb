@@ -85,6 +85,9 @@ module Tapioca
 
                   sig { params(_arg0: T.untyped).returns(T.untyped) }
                   def password_confirmation=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def password_salt; end
                 <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password_confirmation=(unencrypted_password); end
@@ -129,6 +132,9 @@ module Tapioca
 
                   sig { params(_arg0: T.untyped).returns(T.untyped) }
                   def token_confirmation=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def token_salt; end
                 <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token_confirmation=(unencrypted_password); end
@@ -180,6 +186,9 @@ module Tapioca
 
                   sig { params(_arg0: T.untyped).returns(T.untyped) }
                   def password_confirmation=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def password_salt; end
                 <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password_confirmation=(unencrypted_password); end
@@ -203,6 +212,9 @@ module Tapioca
 
                   sig { params(_arg0: T.untyped).returns(T.untyped) }
                   def token_confirmation=(_arg0); end
+
+                  sig { returns(T.untyped) }
+                  def token_salt; end
                 <% else %>
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token_confirmation=(unencrypted_password); end
