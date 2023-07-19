@@ -146,7 +146,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped, loaded_argument: T.untyped, loaded_arguments: T::Array[T.untyped], optional_loaded_argument: T.untyped, optional_loaded_arguments: T.nilable(T::Array[T.untyped])).returns(T.untyped) }
+                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: ::CustomScalar, loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
                   def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_arguments:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
                 end
               RBI
