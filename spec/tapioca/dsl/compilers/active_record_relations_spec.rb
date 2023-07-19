@@ -341,6 +341,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def references(*args, &blk); end
+                <% if rails_version(">= 7.1.alpha") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    def regroup(*args, &blk); end
+                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def reorder(*args, &blk); end
@@ -490,6 +495,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def references(*args, &blk); end
+                <% if rails_version(">= 7.1.alpha") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    def regroup(*args, &blk); end
+                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def reorder(*args, &blk); end
