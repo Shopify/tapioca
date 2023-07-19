@@ -317,6 +317,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def none(*args, &blk); end
+                <% if rails_version(">= 7.1.alpha") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    def null_relation?(*args, &blk); end
+                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def offset(*args, &blk); end
@@ -471,6 +476,11 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def none(*args, &blk); end
+                <% if rails_version(">= 7.1.alpha") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    def null_relation?(*args, &blk); end
+                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def offset(*args, &blk); end
