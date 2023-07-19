@@ -100,10 +100,6 @@ module Tapioca
 
             it "generates correct RBI for all graphql types" do
               add_ruby_file("create_comment.rb", <<~RUBY)
-                class LoadedType < GraphQL::Schema::Object
-                  field "foo", type: String
-                end
-
                 class EnumA < GraphQL::Schema::Enum
                   value "foo"
                 end
@@ -131,12 +127,8 @@ module Tapioca
                   argument :enum_b, EnumB, required: true
                   argument :input_object, CreateCommentInput, required: true
                   argument :custom_scalar, CustomScalar, required: true
-                  argument :loaded_argument_id, ID, required: true, loads: LoadedType
-                  argument :optional_loaded_argument_id, ID, required: false, loads: LoadedType
-                  argument :loaded_argument_ids, [ID], required: true, loads: LoadedType
-                  argument :optional_loaded_argument_ids, [ID], required: false, loads: LoadedType
 
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_arguments:, optional_loaded_argument: nil, optional_loaded_arguments: nil)
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:)
                     # ...
                   end
                 end
@@ -146,8 +138,38 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: ::CustomScalar, loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:, loaded_argument:, loaded_arguments:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
+                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: ::CustomScalar).returns(T.untyped) }
+                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
+            it "generates correct RBI for mutation loaders" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class LoadedType < GraphQL::Schema::Object
+                  field "foo", type: String
+                end
+
+                class CreateComment < GraphQL::Schema::Mutation
+                  argument :loaded_argument_id, ID, required: true, loads: LoadedType
+                  argument :optional_loaded_argument_id, ID, required: false, loads: LoadedType
+                  argument :loaded_argument_ids, [ID], required: true, loads: LoadedType
+                  argument :optional_loaded_argument_ids, [ID], required: false, loads: LoadedType
+
+                  def resolve(loaded_argument:, loaded_arguments:, optional_loaded_argument: nil, optional_loaded_arguments: nil)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
+                  def resolve(loaded_argument:, loaded_arguments:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
                 end
               RBI
 
