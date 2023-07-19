@@ -157,8 +157,9 @@ module Tapioca
                   argument :optional_loaded_argument_id, ID, required: false, loads: LoadedType
                   argument :loaded_argument_ids, [ID], required: true, loads: LoadedType
                   argument :optional_loaded_argument_ids, [ID], required: false, loads: LoadedType
+                  argument :renamed_loaded_argument, ID, required: true, loads: LoadedType, as: :custom_name
 
-                  def resolve(loaded_argument:, loaded_arguments:, optional_loaded_argument: nil, optional_loaded_arguments: nil)
+                  def resolve(loaded_argument:, loaded_arguments:, custom_name:, optional_loaded_argument: nil, optional_loaded_arguments: nil)
                     # ...
                   end
                 end
@@ -168,8 +169,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
-                  def resolve(loaded_argument:, loaded_arguments:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
+                  sig { params(loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], custom_name: ::LoadedType, optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
+                  def resolve(loaded_argument:, loaded_arguments:, custom_name:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
                 end
               RBI
 
