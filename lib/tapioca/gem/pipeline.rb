@@ -50,6 +50,8 @@ module Tapioca
         @root
       end
 
+      # Events handling
+
       sig { params(symbol: String).void }
       def push_symbol(symbol)
         @events << Gem::SymbolFound.new(symbol)
@@ -98,6 +100,8 @@ module Tapioca
         @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end
 
+      # Constants and properties filtering
+
       sig { params(symbol_name: String).returns(T::Boolean) }
       def symbol_in_payload?(symbol_name)
         symbol_name = symbol_name[2..-1] if symbol_name.start_with?("::")
@@ -126,6 +130,8 @@ module Tapioca
         @gem.contains_path?(source_location)
       end
 
+      # Helpers
+
       sig { params(constant: Module).returns(T.nilable(String)) }
       def name_of(constant)
         name = name_of_proxy_target(constant, super(class_of(constant)))
@@ -149,6 +155,8 @@ module Tapioca
         gem_symbols.union(engine_symbols)
       end
 
+      # Events handling
+
       sig { returns(Gem::Event) }
       def next_event
         T.must(@events.shift)
@@ -171,7 +179,7 @@ module Tapioca
       sig { params(event: Gem::SymbolFound).void }
       def on_symbol(event)
         symbol = event.symbol.delete_prefix("::")
-        return if symbol_in_payload?(symbol) && !@bootstrap_symbols.include?(symbol)
+        return if skip_symbol?(symbol)
 
         constant = constantize(symbol)
         push_constant(symbol, constant) if Runtime::Reflection.constant_defined?(constant)
@@ -180,13 +188,7 @@ module Tapioca
       sig { params(event: Gem::ConstantFound).void.checked(:never) }
       def on_constant(event)
         name = event.symbol
-
-        return if name.strip.empty?
-        return if name.start_with?("#<")
-        return if name.downcase == name
-        return if alias_namespaced?(name)
-
-        return if T::Enum === event.constant # T::Enum instances are defined via `compile_enums`
+        return if skip_constant?(name, event.constant)
 
         if event.is_a?(Gem::ForeignConstantFound)
           compile_foreign_constant(name, event.constant)
@@ -200,11 +202,17 @@ module Tapioca
         @node_listeners.each { |listener| listener.dispatch(event) }
       end
 
-      # Compile
+      # Compiling
 
       sig { params(symbol: String, constant: Module).void }
       def compile_foreign_constant(symbol, constant)
-        compile_module(symbol, constant, foreign_constant: true)
+        return if skip_foreign_constant?(symbol, constant)
+        return if seen?(symbol)
+
+        seen!(symbol)
+
+        scope = compile_scope(symbol, constant)
+        push_foreign_scope(symbol, constant, scope)
       end
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
@@ -225,10 +233,9 @@ module Tapioca
       def compile_alias(name, constant)
         return if seen?(name)
 
-        mark_seen(name)
+        seen!(name)
 
-        return if symbol_in_payload?(name)
-        return unless constant_in_gem?(name)
+        return if skip_alias?(name, constant)
 
         target = name_of(constant)
         # If target has no name, let's make it an anonymous class or module with `Class.new` or `Module.new`
@@ -247,10 +254,9 @@ module Tapioca
       def compile_object(name, value)
         return if seen?(name)
 
-        mark_seen(name)
+        seen!(name)
 
-        return if symbol_in_payload?(name)
-        return unless constant_in_gem?(name)
+        return if skip_object?(name, value)
 
         klass = class_of(value)
 
@@ -279,29 +285,29 @@ module Tapioca
         @root << node
       end
 
-      sig { params(name: String, constant: Module, foreign_constant: T::Boolean).void }
-      def compile_module(name, constant, foreign_constant: false)
-        return unless defined_in_gem?(constant, strict: false) || foreign_constant
-        return if Tapioca::TypeVariableModule === constant
+      sig { params(name: String, constant: Module).void }
+      def compile_module(name, constant)
+        return if skip_module?(name, constant)
         return if seen?(name)
 
-        mark_seen(name)
+        seen!(name)
 
-        scope =
-          if constant.is_a?(Class)
-            superclass = compile_superclass(constant)
-            RBI::Class.new(name, superclass_name: superclass)
-          else
-            RBI::Module.new(name)
-          end
+        scope = compile_scope(name, constant)
+        push_scope(name, constant, scope)
+      end
 
-        if foreign_constant
-          push_foreign_scope(name, constant, scope)
+      sig { params(name: String, constant: Module).returns(RBI::Scope) }
+      def compile_scope(name, constant)
+        scope = if constant.is_a?(Class)
+          superclass = compile_superclass(constant)
+          RBI::Class.new(name, superclass_name: superclass)
         else
-          push_scope(name, constant, scope)
+          RBI::Module.new(name)
         end
 
         @root << scope
+
+        scope
       end
 
       sig { params(constant: T::Class[T.anything]).returns(T.nilable(String)) }
@@ -353,6 +359,54 @@ module Tapioca
         "::#{name}"
       end
 
+      # Constants and properties filtering
+
+      sig { params(name: String).returns(T::Boolean) }
+      def skip_symbol?(name)
+        symbol_in_payload?(name) && !@bootstrap_symbols.include?(name)
+      end
+
+      sig { params(name: String, constant: T.anything).returns(T::Boolean).checked(:never) }
+      def skip_constant?(name, constant)
+        return true if name.strip.empty?
+        return true if name.start_with?("#<")
+        return true if name.downcase == name
+        return true if alias_namespaced?(name)
+
+        return true if T::Enum === constant # T::Enum instances are defined via `compile_enums`
+
+        false
+      end
+
+      sig { params(name: String, constant: Module).returns(T::Boolean) }
+      def skip_alias?(name, constant)
+        return true if symbol_in_payload?(name)
+        return true unless constant_in_gem?(name)
+
+        false
+      end
+
+      sig { params(name: String, constant: BasicObject).returns(T::Boolean).checked(:never) }
+      def skip_object?(name, constant)
+        return true if symbol_in_payload?(name)
+        return true unless constant_in_gem?(name)
+
+        false
+      end
+
+      sig { params(name: String, constant: Module).returns(T::Boolean) }
+      def skip_foreign_constant?(name, constant)
+        Tapioca::TypeVariableModule === constant
+      end
+
+      sig { params(name: String, constant: Module).returns(T::Boolean) }
+      def skip_module?(name, constant)
+        return true unless defined_in_gem?(constant, strict: false)
+        return true if Tapioca::TypeVariableModule === constant
+
+        false
+      end
+
       sig { params(constant: Module, strict: T::Boolean).returns(T::Boolean) }
       def defined_in_gem?(constant, strict: true)
         files = get_file_candidates(constant)
@@ -385,7 +439,7 @@ module Tapioca
       end
 
       sig { params(name: String).void }
-      def mark_seen(name)
+      def seen!(name)
         @seen.add(name)
       end
 
@@ -393,6 +447,8 @@ module Tapioca
       def seen?(name)
         @seen.include?(name)
       end
+
+      # Helpers
 
       sig { params(constant: T.all(Module, T::Generic)).returns(String) }
       def generic_name_of(constant)
