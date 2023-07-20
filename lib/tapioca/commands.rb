@@ -9,7 +9,10 @@ module Tapioca
     autoload :CheckShims, "tapioca/commands/check_shims"
     autoload :Dsl, "tapioca/commands/dsl"
     autoload :Configure, "tapioca/commands/configure"
-    autoload :Gem, "tapioca/commands/gem"
+    autoload :AbstractGem, "tapioca/commands/abstract_gem"
+    autoload :GemGenerate, "tapioca/commands/gem_generate"
+    autoload :GemSync, "tapioca/commands/gem_sync"
+    autoload :GemVerify, "tapioca/commands/gem_verify"
     autoload :Require, "tapioca/commands/require"
     autoload :Todo, "tapioca/commands/todo"
   end
