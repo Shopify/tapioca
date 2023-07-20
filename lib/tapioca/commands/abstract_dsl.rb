@@ -3,9 +3,11 @@
 
 module Tapioca
   module Commands
-    class Dsl < CommandWithoutTracker
+    class AbstractDsl < CommandWithoutTracker
       include SorbetHelper
       include RBIFilesHelper
+
+      abstract!
 
       sig do
         params(
@@ -16,7 +18,6 @@ module Tapioca
           exclude: T::Array[String],
           file_header: T::Boolean,
           tapioca_path: String,
-          should_verify: T::Boolean,
           quiet: T::Boolean,
           verbose: T::Boolean,
           number_of_workers: T.nilable(Integer),
@@ -35,7 +36,6 @@ module Tapioca
         exclude:,
         file_header:,
         tapioca_path:,
-        should_verify: false,
         quiet: false,
         verbose: false,
         number_of_workers: nil,
@@ -52,7 +52,6 @@ module Tapioca
         @exclude = exclude
         @file_header = file_header
         @tapioca_path = tapioca_path
-        @should_verify = should_verify
         @quiet = quiet
         @verbose = verbose
         @number_of_workers = number_of_workers
@@ -63,98 +62,6 @@ module Tapioca
         @halt_upon_load_error = halt_upon_load_error
 
         super()
-      end
-
-      sig { void }
-      def list_compilers
-        Loaders::Dsl.load_application(
-          tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty? && @requested_paths.empty?,
-          app_root: @app_root,
-          halt_upon_load_error: @halt_upon_load_error,
-        )
-
-        pipeline = create_pipeline
-
-        say("")
-        say("Loaded DSL compiler classes:")
-        say("")
-
-        table = pipeline.compilers.map do |compiler|
-          status = if pipeline.active_compilers.include?(compiler)
-            set_color("enabled", :green)
-          else
-            set_color("disabled", :red)
-          end
-
-          [compiler.name, status]
-        end
-
-        print_table(table, { indent: 2 })
-      end
-
-      sig { override.void }
-      def execute
-        Loaders::Dsl.load_application(
-          tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty? && @requested_paths.empty?,
-          app_root: @app_root,
-          halt_upon_load_error: @halt_upon_load_error,
-        )
-
-        if @should_verify
-          say("Checking for out-of-date RBIs...")
-        else
-          say("Compiling DSL RBI files...")
-        end
-        say("")
-
-        all_requested_constants = @requested_constants + constants_from_requested_paths
-
-        outpath = @should_verify ? Pathname.new(Dir.mktmpdir) : @outpath
-        rbi_files_to_purge = existing_rbi_filenames(all_requested_constants)
-
-        pipeline = create_pipeline
-
-        processed_files = pipeline.run do |constant, contents|
-          constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
-
-          if @verbose && !@quiet
-            say_status(:processing, constant_name, :yellow)
-          end
-
-          compile_dsl_rbi(
-            constant_name,
-            contents,
-            outpath: outpath,
-            quiet: @should_verify || (@quiet && !@verbose),
-          )
-        end
-
-        processed_files.each { |filename| rbi_files_to_purge.delete(T.must(filename)) }
-
-        say("")
-
-        if @should_verify
-          perform_dsl_verification(outpath)
-        else
-          purge_stale_dsl_rbi_files(rbi_files_to_purge)
-          say("Done", :green)
-
-          if @auto_strictness
-            say("")
-            validate_rbi_files(
-              command: default_command(:dsl, all_requested_constants.join(" ")),
-              gem_dir: @gem_dir,
-              dsl_dir: @outpath.to_s,
-              auto_strictness: @auto_strictness,
-              compilers: pipeline.active_compilers,
-            )
-          end
-
-          say("All operations performed in working directory.", [:green, :bold])
-          say("Please review changes and commit them.", [:green, :bold])
-        end
       end
 
       private
