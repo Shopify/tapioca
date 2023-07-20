@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ["3.0", "3.1", "3.2"]
+        ruby: ["3.0", "3.1", "3.2", "head"]
         gemfile:
           - Gemfile
           - gemfiles/Gemfile-rails-6-1
@@ -42,12 +42,14 @@ jobs:
         include:
           - gemfile: gemfiles/Gemfile-rails-main
             experimental: true
+          - ruby: "head"
+            experimental: true
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
       - uses: actions/checkout@v3
-      - if: ${{ matrix.ruby == '3.2' }}
+      - if: ${{ matrix.ruby == 'head' }}
         run: "rm -f ${{ matrix.gemfile }}.lock"
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
