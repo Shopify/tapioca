@@ -44,7 +44,7 @@ module Tapioca
         tapioca_config: options[:config],
         default_postrequire: options[:postrequire],
       )
-      command.execute
+      command.run
     end
 
     desc "require", "generate the list of files to be required by tapioca"
@@ -54,9 +54,7 @@ module Tapioca
         requires_path: options[:postrequire],
         sorbet_config_path: SORBET_CONFIG_FILE,
       )
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     desc "todo", "generate the list of unresolved constants"
@@ -73,9 +71,7 @@ module Tapioca
         todo_file: options[:todo_file],
         file_header: options[:file_header],
       )
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     desc "dsl [constant...]", "generate RBIs for dynamic methods"
@@ -164,9 +160,7 @@ module Tapioca
         Commands::DslGenerate.new(**command_args)
       end
 
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     desc "gem [gem...]", "generate RBIs from gems"
@@ -248,47 +242,45 @@ module Tapioca
       desc: "Halt upon a load error while loading the Rails application",
       default: true
     def gem(*gems)
-      Tapioca.silence_warnings do
-        set_environment(options)
+      set_environment(options)
 
-        all = options[:all]
-        verify = options[:verify]
+      all = options[:all]
+      verify = options[:verify]
 
-        raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
+      raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
 
-        unless gems.empty?
-          raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
-          raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
-        end
-
-        command_args = {
-          gem_names: all ? [] : gems,
-          exclude: options[:exclude],
-          prerequire: options[:prerequire],
-          postrequire: options[:postrequire],
-          typed_overrides: options[:typed_overrides],
-          outpath: Pathname.new(options[:outdir]),
-          file_header: options[:file_header],
-          include_doc: options[:doc],
-          include_loc: options[:loc],
-          include_exported_rbis: options[:exported_gem_rbis],
-          number_of_workers: options[:workers],
-          auto_strictness: options[:auto_strictness],
-          dsl_dir: options[:dsl_dir],
-          rbi_formatter: rbi_formatter(options),
-          halt_upon_load_error: options[:halt_upon_load_error],
-        }
-
-        command = if verify
-          Commands::GemVerify.new(**command_args)
-        elsif !gems.empty? || all
-          Commands::GemGenerate.new(**command_args)
-        else
-          Commands::GemSync.new(**command_args)
-        end
-
-        command.execute
+      unless gems.empty?
+        raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
+        raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
       end
+
+      command_args = {
+        gem_names: all ? [] : gems,
+        exclude: options[:exclude],
+        prerequire: options[:prerequire],
+        postrequire: options[:postrequire],
+        typed_overrides: options[:typed_overrides],
+        outpath: Pathname.new(options[:outdir]),
+        file_header: options[:file_header],
+        include_doc: options[:doc],
+        include_loc: options[:loc],
+        include_exported_rbis: options[:exported_gem_rbis],
+        number_of_workers: options[:workers],
+        auto_strictness: options[:auto_strictness],
+        dsl_dir: options[:dsl_dir],
+        rbi_formatter: rbi_formatter(options),
+        halt_upon_load_error: options[:halt_upon_load_error],
+      }
+
+      command = if verify
+        Commands::GemVerify.new(**command_args)
+      elsif !gems.empty? || all
+        Commands::GemGenerate.new(**command_args)
+      else
+        Commands::GemSync.new(**command_args)
+      end
+
+      command.run
     end
     map "gems" => :gem
 
@@ -311,9 +303,7 @@ module Tapioca
         number_of_workers: options[:workers],
       )
 
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     desc "annotations", "Pull gem RBI annotations from remote sources"
@@ -342,9 +332,7 @@ module Tapioca
         typed_overrides: options[:typed_overrides],
       )
 
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     map ["--version", "-v"] => :__print_version

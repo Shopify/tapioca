@@ -38,6 +38,8 @@ module Tapioca
         @number_of_workers = number_of_workers
       end
 
+      private
+
       sig { override.void }
       def execute
         index = RBI::Index.new

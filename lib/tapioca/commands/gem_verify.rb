@@ -4,14 +4,14 @@
 module Tapioca
   module Commands
     class GemVerify < AbstractGem
+      private
+
       sig { override.void }
       def execute
         say("Checking for out-of-date RBIs...")
         say("")
         perform_sync_verification
       end
-
-      private
 
       sig { void }
       def perform_sync_verification

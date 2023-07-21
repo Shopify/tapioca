@@ -26,6 +26,8 @@ module Tapioca
         @spec = T.let(nil, T.nilable(Bundler::StubSpecification))
       end
 
+      private
+
       sig { override.void }
       def execute
         create_sorbet_config
@@ -33,8 +35,6 @@ module Tapioca
         create_post_require
         create_binstub
       end
-
-      private
 
       sig { void }
       def create_sorbet_config
