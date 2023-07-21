@@ -66,6 +66,53 @@ module Tapioca
 
       private
 
+      sig { params(outpath: Pathname, quiet: T::Boolean).returns(T::Set[Pathname]) }
+      def generate_dsl_rbi_files(outpath, quiet:)
+        existing_rbi_files = existing_rbi_filenames(all_requested_constants)
+
+        generated_files = pipeline.run do |constant, contents|
+          constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
+
+          if @verbose && !@quiet
+            say_status(:processing, constant_name, :yellow)
+          end
+
+          compile_dsl_rbi(
+            constant_name,
+            contents,
+            outpath: outpath,
+            quiet: quiet,
+          )
+        end.compact
+
+        files_to_purge = existing_rbi_files - generated_files
+
+        files_to_purge
+      end
+
+      sig { returns(T::Array[String]) }
+      def all_requested_constants
+        @all_requested_constants ||= T.let(
+          @requested_constants + constants_from_requested_paths,
+          T.nilable(T::Array[String]),
+        )
+      end
+
+      sig { returns(Tapioca::Dsl::Pipeline) }
+      def pipeline
+        @pipeline ||= T.let(create_pipeline, T.nilable(Tapioca::Dsl::Pipeline))
+      end
+
+      sig { void }
+      def load_application
+        Loaders::Dsl.load_application(
+          tapioca_path: @tapioca_path,
+          eager_load: @requested_constants.empty? && @requested_paths.empty?,
+          app_root: @app_root,
+          halt_upon_load_error: @halt_upon_load_error,
+        )
+      end
+
       sig { returns(Tapioca::Dsl::Pipeline) }
       def create_pipeline
         Tapioca::Dsl::Pipeline.new(
