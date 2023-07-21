@@ -21,7 +21,7 @@ module Tapioca
         @file_writer = T.let(FileWriter.new, Thor::Actions)
       end
 
-      sig { void }
+      sig(:final) { void }
       def run
         Tapioca.silence_warnings do
           execute
