@@ -4,6 +4,8 @@
 module Tapioca
   module Commands
     class GemSync < AbstractGem
+      private
+
       sig { override.void }
       def execute
         anything_done = [

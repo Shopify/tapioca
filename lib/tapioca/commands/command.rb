@@ -21,10 +21,17 @@ module Tapioca
         @file_writer = T.let(FileWriter.new, Thor::Actions)
       end
 
-      sig { abstract.void }
-      def execute; end
+      sig { void }
+      def run
+        Tapioca.silence_warnings do
+          execute
+        end
+      end
 
       private
+
+      sig { abstract.void }
+      def execute; end
 
       sig { params(command: Symbol, args: String).returns(String) }
       def default_command(command, *args)

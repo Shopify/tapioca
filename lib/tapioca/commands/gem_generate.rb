@@ -4,6 +4,8 @@
 module Tapioca
   module Commands
     class GemGenerate < AbstractGem
+      private
+
       sig { override.void }
       def execute
         Loaders::Gem.load_application(

@@ -4,6 +4,8 @@
 module Tapioca
   module Commands
     class DslGenerate < AbstractDsl
+      private
+
       sig { override.void }
       def execute
         Loaders::Dsl.load_application(

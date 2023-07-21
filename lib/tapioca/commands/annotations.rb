@@ -32,6 +32,8 @@ module Tapioca
         @typed_overrides = typed_overrides
       end
 
+      private
+
       sig { override.void }
       def execute
         @indexes = fetch_indexes
@@ -39,8 +41,6 @@ module Tapioca
         remove_expired_annotations(project_gems)
         fetch_annotations(project_gems)
       end
-
-      private
 
       sig { returns(T::Array[String]) }
       def list_gemfile_gems
