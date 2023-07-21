@@ -140,7 +140,7 @@ module Tapioca
       # Assume anything starting with a capital letter or colon is a class, otherwise a path
       constants, paths = constant_or_paths.partition { |c| c =~ /\A[A-Z:]/ }
 
-      command = Commands::Dsl.new(
+      command_args = {
         requested_constants: constants,
         requested_paths: paths.map { |p| Pathname.new(p) },
         outpath: Pathname.new(options[:outdir]),
@@ -148,21 +148,24 @@ module Tapioca
         exclude: options[:exclude],
         file_header: options[:file_header],
         tapioca_path: TAPIOCA_DIR,
-        should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
         number_of_workers: options[:workers],
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],
         halt_upon_load_error: options[:halt_upon_load_error],
-      )
+      }
+
+      command = if options[:verify]
+        Commands::DslVerify.new(**command_args)
+      elsif options[:list_compilers]
+        Commands::DslCompilerList.new(**command_args)
+      else
+        Commands::DslGenerate.new(**command_args)
+      end
 
       Tapioca.silence_warnings do
-        if options[:list_compilers]
-          command.list_compilers
-        else
-          command.execute
-        end
+        command.execute
       end
     end
 
