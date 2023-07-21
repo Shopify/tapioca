@@ -3,9 +3,11 @@
 
 module Tapioca
   module Commands
-    class Gem < Command
+    class AbstractGem < Command
       include SorbetHelper
       include RBIFilesHelper
+
+      abstract!
 
       sig do
         params(
@@ -66,77 +68,6 @@ module Tapioca
         @halt_upon_load_error = halt_upon_load_error
       end
 
-      sig { override.void }
-      def execute
-        Loaders::Gem.load_application(
-          bundle: @bundle,
-          prerequire: @prerequire,
-          postrequire: @postrequire,
-          default_command: default_command(:require),
-          halt_upon_load_error: @halt_upon_load_error,
-        )
-
-        gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
-        anything_done = [
-          perform_removals,
-          gem_queue.any?,
-        ].any?
-
-        Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
-          shell.indent do
-            compile_gem_rbi(gem)
-            puts
-          end
-        end
-
-        if anything_done
-          validate_rbi_files(
-            command: default_command(:gem, @gem_names.join(" ")),
-            gem_dir: @outpath.to_s,
-            dsl_dir: @dsl_dir,
-            auto_strictness: @auto_strictness,
-            gems: @bundle.dependencies,
-          )
-
-          say("All operations performed in working directory.", [:green, :bold])
-          say("Please review changes and commit them.", [:green, :bold])
-        else
-          say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
-        end
-      end
-
-      sig { params(should_verify: T::Boolean, exclude: T::Array[String]).void }
-      def sync(should_verify: false, exclude: [])
-        if should_verify
-          say("Checking for out-of-date RBIs...")
-          say("")
-          perform_sync_verification(exclude: exclude)
-          return
-        end
-
-        anything_done = [
-          perform_removals,
-          perform_additions,
-        ].any?
-
-        if anything_done
-          validate_rbi_files(
-            command: default_command(:gem),
-            gem_dir: @outpath.to_s,
-            dsl_dir: @dsl_dir,
-            auto_strictness: @auto_strictness,
-            gems: @bundle.dependencies,
-          )
-
-          say("All operations performed in working directory.", [:green, :bold])
-          say("Please review changes and commit them.", [:green, :bold])
-        else
-          say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
-        end
-
-        puts
-      end
-
       private
 
       sig { params(gem_names: T::Array[String]).returns(T::Array[Gemfile::GemSpec]) }
@@ -183,25 +114,6 @@ module Tapioca
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
           remove_file(file) unless file.basename.to_s == gem.rbi_file_name
         end
-      end
-
-      sig { params(exclude: T::Array[String]).void }
-      def perform_sync_verification(exclude: [])
-        diff = {}
-
-        removed_rbis.each do |gem_name|
-          next if exclude.include?(gem_name)
-
-          filename = existing_rbi(gem_name)
-          diff[filename] = :removed
-        end
-
-        added_rbis.each do |gem_name|
-          filename = expected_rbi(gem_name)
-          diff[filename] = gem_rbi_exists?(gem_name) ? :changed : :added
-        end
-
-        report_diff_and_exit_if_out_of_date(diff, :gem)
       end
 
       sig { void }

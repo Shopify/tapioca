@@ -254,7 +254,14 @@ module Tapioca
         all = options[:all]
         verify = options[:verify]
 
-        command = Commands::Gem.new(
+        raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
+
+        unless gems.empty?
+          raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
+          raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
+        end
+
+        command_args = {
           gem_names: all ? [] : gems,
           exclude: options[:exclude],
           prerequire: options[:prerequire],
@@ -270,20 +277,17 @@ module Tapioca
           dsl_dir: options[:dsl_dir],
           rbi_formatter: rbi_formatter(options),
           halt_upon_load_error: options[:halt_upon_load_error],
-        )
+        }
 
-        raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
-
-        unless gems.empty?
-          raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
-          raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
-        end
-
-        if gems.empty? && !all
-          command.sync(should_verify: verify, exclude: options[:exclude])
+        command = if verify
+          Commands::GemVerify.new(**command_args)
+        elsif !gems.empty? || all
+          Commands::GemGenerate.new(**command_args)
         else
-          command.execute
+          Commands::GemSync.new(**command_args)
         end
+
+        command.execute
       end
     end
     map "gems" => :gem

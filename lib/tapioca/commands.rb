@@ -12,7 +12,10 @@ module Tapioca
     autoload :DslGenerate, "tapioca/commands/dsl_generate"
     autoload :DslVerify, "tapioca/commands/dsl_verify"
     autoload :Configure, "tapioca/commands/configure"
-    autoload :Gem, "tapioca/commands/gem"
+    autoload :AbstractGem, "tapioca/commands/abstract_gem"
+    autoload :GemGenerate, "tapioca/commands/gem_generate"
+    autoload :GemSync, "tapioca/commands/gem_sync"
+    autoload :GemVerify, "tapioca/commands/gem_verify"
     autoload :Require, "tapioca/commands/require"
     autoload :Todo, "tapioca/commands/todo"
   end
