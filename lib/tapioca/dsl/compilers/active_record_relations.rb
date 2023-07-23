@@ -593,13 +593,14 @@ module Tapioca
                 return_type: constant_name,
               )
             when :first, :last, :take
-              create_common_method(
-                method_name,
-                parameters: [
-                  create_opt_param("limit", type: "T.untyped", default: "nil"),
-                ],
-                return_type: "T.untyped",
-              )
+              # skip
+              # create_common_method(
+              #   method_name,
+              #   parameters: [
+              #     create_opt_param("limit", type: "T.untyped", default: "nil"),
+              #   ],
+              #   return_type: "T.untyped",
+              # )
             when :raise_record_not_found_exception!
               # skip
             else
