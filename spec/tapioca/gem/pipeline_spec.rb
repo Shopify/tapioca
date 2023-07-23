@@ -151,14 +151,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           sig { abstract.void }
           def foo; end
-
-          class << self
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
-          end
         end
       RBI
 
@@ -185,12 +177,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             sig { abstract.void }
             def foo; end
-
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
           end
         end
       RBI
@@ -221,12 +207,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             sig { abstract.void }
             def foo; end
-
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
           end
         end
       RBI
@@ -256,6 +236,56 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             sig { abstract.void }
             def foo; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "correctly compiles new method definitions in classes and modules" do
+      add_ruby_file("abstract.rb", <<~RUBY)
+        module Foo
+          extend T::Helpers
+
+          abstract!
+        end
+
+        class Bar
+          extend T::Helpers
+
+          abstract!
+        end
+
+        class Baz
+          def self.new(a, b)
+          end
+        end
+
+        module Quux
+          def self.new(a, b)
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Bar
+          abstract!
+        end
+
+        class Baz
+          class << self
+            def new(a, b); end
+          end
+        end
+
+        module Foo
+          abstract!
+        end
+
+        module Quux
+          class << self
+            def new(a, b); end
           end
         end
       RBI
@@ -1241,6 +1271,61 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Tutu
           def tutu; end
         end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles a module with mixins" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          def foo
+          end
+        end
+      RUBY
+
+      add_ruby_file("bar.rb", <<~RUBY)
+        module Bar
+          def bar
+          end
+        end
+      RUBY
+
+      add_ruby_file("quux.rb", <<~RUBY)
+        module Quux
+        end
+      RUBY
+
+      add_ruby_file("baz.rb", <<~RUBY)
+        module Baz
+          include Foo
+          extend Bar
+          prepend Quux
+          include Kernel
+           # The following should be ignored
+           # since `Kernel` is already included into `Module`
+           # and the singleton class of `Baz` is a subclass of `Module`
+          extend Kernel
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        module Bar
+          def bar; end
+        end
+
+        module Baz
+          include ::Quux
+          include ::Foo
+          include ::Kernel
+          extend ::Bar
+        end
+
+        module Foo
+          def foo; end
+        end
+
+        module Quux; end
       RBI
 
       assert_equal(output, compile)
@@ -2786,6 +2871,20 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RUBY
 
+      add_ruby_file("class_methods.rb", <<~RUBY)
+        module ClassMethods
+          extend(T::Generic)
+
+          has_attached_class!
+        end
+
+        module ClassMethodsWithVariance
+          extend(T::Generic)
+
+          has_attached_class!(:out) { {upper: String} }
+        end
+      RUBY
+
       add_ruby_file("generic.rb", <<~RUBY)
         module Generics
           class ComplexGenericType
@@ -2888,14 +2987,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           sig { abstract.void }
           def do_it; end
-
-          class << self
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
-          end
         end
 
         class Buzz
@@ -2910,6 +3001,18 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :foo, ::Integer
           prop :bar, ::String
           const :baz, T.proc.params(arg0: ::String).void
+        end
+
+        module ClassMethods
+          extend T::Generic
+
+          has_attached_class!
+        end
+
+        module ClassMethodsWithVariance
+          extend T::Generic
+
+          has_attached_class!(:out) { { upper: String } }
         end
 
         class Foo
@@ -4108,15 +4211,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         # source://the-dep//lib/foo.rb#11
         class Baz
           abstract!
-
-          class << self
-            # source://sorbet-runtime/#{sorbet_runtime_version}/lib/types/private/abstract/declare.rb#37
-        <% if ruby_version(">= 3.1") %>
-            def new(*args, **_arg1, &blk); end
-        <% else %>
-            def new(*args, &blk); end
-        <% end %>
-          end
         end
 
         # source://the-dep//lib/foo.rb#1

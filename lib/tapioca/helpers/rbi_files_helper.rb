@@ -80,7 +80,7 @@ module Tapioca
         dsl_dir: String,
         auto_strictness: T::Boolean,
         gems: T::Array[Gemfile::GemSpec],
-        compilers: T::Enumerable[Class],
+        compilers: T::Enumerable[T.class_of(Dsl::Compiler)],
       ).void
     end
     def validate_rbi_files(command:, gem_dir:, dsl_dir:, auto_strictness:, gems: [], compilers: [])

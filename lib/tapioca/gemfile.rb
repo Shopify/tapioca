@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/bundler_ext/auto_require_hook"
+
 module Tapioca
   class Gemfile
     extend(T::Sig)
@@ -12,50 +14,6 @@ module Tapioca
       )
     end
 
-    # This is a module that gets prepended to `Bundler::Dependency` and
-    # makes sure even gems marked as `require: false` are required during
-    # `Bundler.require`.
-    module AutoRequireHook
-      extend T::Sig
-      extend T::Helpers
-
-      requires_ancestor { ::Bundler::Dependency }
-
-      @exclude = T.let([], T::Array[String])
-
-      class << self
-        extend T::Sig
-
-        sig { params(exclude: T::Array[String]).returns(T::Array[String]) }
-        attr_writer :exclude
-
-        sig { params(name: T.untyped).returns(T::Boolean) }
-        def excluded?(name)
-          @exclude.include?(name)
-        end
-      end
-
-      sig { returns(T.untyped).checked(:never) }
-      def autorequire
-        value = super
-
-        # If the gem is excluded, we don't want to force require it, in case
-        # it has side-effects users don't want. For example, `fakefs` gem, if
-        # loaded, takes over filesystem operations.
-        return value if AutoRequireHook.excluded?(name)
-
-        # If a gem is marked as `require: false`, then its `autorequire`
-        # value will be `[]`. But, we want those gems to be loaded for our
-        # purposes as well, so we return `nil` in those cases, instead, which
-        # means `require: true`.
-        return nil if value == []
-
-        value
-      end
-
-      ::Bundler::Dependency.prepend(self)
-    end
-
     sig { returns(Bundler::Definition) }
     attr_reader(:definition)
 
@@ -65,13 +23,15 @@ module Tapioca
     sig { returns(T::Array[String]) }
     attr_reader(:missing_specs)
 
-    sig { params(exclude: T::Array[String]).void }
-    def initialize(exclude)
-      AutoRequireHook.exclude = exclude
+    sig { params(excluded_gems: T::Array[String]).void }
+    def initialize(excluded_gems)
       @gemfile = T.let(File.new(Bundler.default_gemfile), File)
       @lockfile = T.let(File.new(Bundler.default_lockfile), File)
       @definition = T.let(Bundler::Dsl.evaluate(gemfile, lockfile, {}), Bundler::Definition)
+      @excluded_gems = excluded_gems
+
       dependencies, missing_specs = load_dependencies
+
       @dependencies = T.let(dependencies, T::Array[GemSpec])
       @missing_specs = T.let(missing_specs, T::Array[String])
     end
@@ -83,7 +43,9 @@ module Tapioca
 
     sig { void }
     def require_bundle
-      T.unsafe(runtime).require(*groups)
+      BundlerExt::AutoRequireHook.override_require_false(exclude: @excluded_gems) do
+        T.unsafe(runtime).require(*groups)
+      end
     end
 
     private

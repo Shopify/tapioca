@@ -49,6 +49,21 @@ module T
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
+
+      def has_attached_class!(variance = :invariant, &bounds_proc)
+        Tapioca::Runtime::GenericTypeRegistry.register_type_variable(
+          self,
+          Tapioca::TypeVariableModule.new(
+            T.cast(self, Module),
+            Tapioca::TypeVariableModule::Type::HasAttachedClass,
+            variance,
+            nil,
+            nil,
+            nil,
+            bounds_proc,
+          ),
+        )
+      end
     end
 
     prepend TypeStoragePatch
@@ -140,8 +155,12 @@ module Tapioca
       enums do
         Member = new("type_member")
         Template = new("type_template")
+        HasAttachedClass = new("has_attached_class!")
       end
     end
+
+    sig { returns(Type) }
+    attr_reader :type
 
     # rubocop:disable Metrics/ParameterLists
     sig do
@@ -172,19 +191,6 @@ module Tapioca
     sig { returns(T.nilable(String)) }
     def name
       constant_name = super
-
-      # This is a hack to work around modules under anonymous modules not having
-      # names in 2.7: https://bugs.ruby-lang.org/issues/14895
-      #
-      # This happens when a type variable is declared under `class << self`, for
-      # example.
-      #
-      # The workaround is to give the parent context a name, at which point, our
-      # module gets bound to a name under that name, as well.
-      unless constant_name
-        constant_name = with_bound_name_pre_3_0 { super }
-      end
-
       constant_name&.split("::")&.last
     end
 
@@ -226,20 +232,6 @@ module Tapioca
       bounds[:upper] = upper unless upper.nil?
 
       -> { bounds }
-    end
-
-    sig do
-      type_parameters(:Result)
-        .params(block: T.proc.returns(T.type_parameter(:Result)))
-        .returns(T.type_parameter(:Result))
-    end
-    def with_bound_name_pre_3_0(&block)
-      require "securerandom"
-      temp_name = "TYPE_VARIABLE_TRACKING_#{SecureRandom.hex}"
-      self.class.const_set(temp_name, @context)
-      block.call
-    ensure
-      self.class.send(:remove_const, temp_name) if temp_name
     end
 
     sig { returns(T::Hash[Symbol, T.untyped]) }

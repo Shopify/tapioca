@@ -17,6 +17,8 @@ module Tapioca
         super()
       end
 
+      private
+
       sig { override.void }
       def execute
         compiler = Static::RequiresCompiler.new(@sorbet_config_path)

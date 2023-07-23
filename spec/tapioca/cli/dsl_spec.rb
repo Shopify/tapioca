@@ -8,6 +8,9 @@ module Tapioca
     describe "cli::dsl" do
       before(:all) do
         @project.write("config/application.rb", <<~RB)
+          require "bundler/setup"
+          Bundler.require
+
           module Rails
             class Application
               attr_reader :config
@@ -67,6 +70,35 @@ module Tapioca
           @project.remove("db")
           @project.remove("lib")
           @project.remove("sorbet/rbi/dsl")
+        end
+
+        it "respects the Gemfile and Gemfile.lock" do
+          gem = mock_gem("foo", "1.0.0") do
+            write("lib/foo.rb", <<~RB)
+              raise "This gem should not have been loaded"
+
+              module Foo
+              end
+            RB
+          end
+
+          @project.require_mock_gem(gem, require: false)
+
+          result = @project.tapioca("dsl")
+
+          assert_equal(<<~OUT, result.out)
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+          OUT
+
+          assert_equal(<<~ERR, result.err)
+            No classes/modules can be matched for RBI generation.
+            Please check that the requested classes/modules include processable DSL methods.
+          ERR
+
+          refute_success_status(result)
         end
 
         it "does not generate anything if there are no matching constants" do
@@ -2135,40 +2167,64 @@ module Tapioca
           assert_success_status(result)
         end
       end
-    end
 
-    describe "cli::dsl::custom application.rb" do
-      it "output errors when rails application cannot be loaded" do
-        @project.write("config/environment.rb", <<~RB)
-          require_relative "application.rb"
-        RB
+      describe "halt-upon-load-error" do
+        before(:all) do
+          @project.write("config/environment.rb", <<~RB)
+            require_relative "application.rb"
+          RB
 
-        @project.write("config/application.rb", <<~RB)
-          require "rails"
+          @project.write("config/application.rb", <<~RB)
+            require "rails"
 
-          module Test
-            class Application < Rails::Application
-              raise "Error during application loading"
+            module Test
+              class Application < Rails::Application
+                raise "Error during application loading"
+              end
             end
-          end
-        RB
+          RB
 
-        @project.require_real_gem("rails")
-        @project.bundle_install
-        res = @project.tapioca("dsl")
+          @project.require_real_gem("rails")
+          @project.bundle_install
+        end
 
-        out = "Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
-          "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
-          "generating RBIs.\nError during application loading"
-        assert_includes(res.out, out)
-        assert_includes(res.out, "tapioca/tests/dsl_spec/project/config/application.rb:5:in `<class:Application>'")
-        assert_includes(res.out, <<~OUT)
-          Continuing RBI generation without loading the Rails application.
-          Done
-          Loading DSL compiler classes... Done
-          Compiling DSL RBI files...
-        OUT
-        assert_success_status(res)
+        after(:all) do
+          @project.remove("config/application.rb")
+        end
+
+        it "halts upon load errors when rails application cannot be loaded" do
+          res = @project.tapioca("dsl")
+
+          out = "Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
+            "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
+            "generating RBIs. If your application does not use Rails and you wish to continue RBI generation " \
+            "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
+            "\nError during application loading"
+          assert_stdout_includes(res, out)
+          err = "tapioca/tests/dsl_spec/project/config/application.rb:5:in `<class:Application>': Error during " \
+            "application loading (RuntimeError)"
+          assert_stderr_includes(res, err)
+          refute_success_status(res)
+        end
+
+        it "output errors when rails application cannot be loaded with --no-halt-upon-load-error flag" do
+          res = @project.tapioca("dsl --no-halt-upon-load-error")
+
+          out = "Tapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
+            "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
+            "generating RBIs. If your application does not use Rails and you wish to continue RBI generation " \
+            "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
+            "\nError during application loading"
+          assert_stdout_includes(res, out)
+          assert_stdout_includes(res, "tapioca/tests/dsl_spec/project/config/application.rb:5:in `<class:Application>'")
+          assert_stdout_includes(res, <<~OUT)
+            Continuing RBI generation without loading the Rails application.
+            Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+          OUT
+          assert_success_status(res)
+        end
       end
     end
   end

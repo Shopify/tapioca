@@ -44,7 +44,7 @@ module Tapioca
         tapioca_config: options[:config],
         default_postrequire: options[:postrequire],
       )
-      command.execute
+      command.run
     end
 
     desc "require", "generate the list of files to be required by tapioca"
@@ -54,9 +54,7 @@ module Tapioca
         requires_path: options[:postrequire],
         sorbet_config_path: SORBET_CONFIG_FILE,
       )
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     desc "todo", "generate the list of unresolved constants"
@@ -73,9 +71,7 @@ module Tapioca
         todo_file: options[:todo_file],
         file_header: options[:file_header],
       )
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     desc "dsl [constant...]", "generate RBIs for dynamic methods"
@@ -130,13 +126,17 @@ module Tapioca
       type: :string,
       desc: "The path to the Rails application",
       default: "."
+    option :halt_upon_load_error,
+      type: :boolean,
+      desc: "Halt upon a load error while loading the Rails application",
+      default: true
     def dsl(*constant_or_paths)
       set_environment(options)
 
       # Assume anything starting with a capital letter or colon is a class, otherwise a path
       constants, paths = constant_or_paths.partition { |c| c =~ /\A[A-Z:]/ }
 
-      command = Commands::Dsl.new(
+      command_args = {
         requested_constants: constants,
         requested_paths: paths.map { |p| Pathname.new(p) },
         outpath: Pathname.new(options[:outdir]),
@@ -144,21 +144,23 @@ module Tapioca
         exclude: options[:exclude],
         file_header: options[:file_header],
         tapioca_path: TAPIOCA_DIR,
-        should_verify: options[:verify],
         quiet: options[:quiet],
         verbose: options[:verbose],
         number_of_workers: options[:workers],
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],
-      )
+        halt_upon_load_error: options[:halt_upon_load_error],
+      }
 
-      Tapioca.silence_warnings do
-        if options[:list_compilers]
-          command.list_compilers
-        else
-          command.execute
-        end
+      command = if options[:verify]
+        Commands::DslVerify.new(**command_args)
+      elsif options[:list_compilers]
+        Commands::DslCompilerList.new(**command_args)
+      else
+        Commands::DslGenerate.new(**command_args)
       end
+
+      command.run
     end
 
     desc "gem [gem...]", "generate RBIs from gems"
@@ -235,43 +237,50 @@ module Tapioca
       type: :string,
       desc: "The Rack/Rails environment to use when generating RBIs",
       default: DEFAULT_ENVIRONMENT
+    option :halt_upon_load_error,
+      type: :boolean,
+      desc: "Halt upon a load error while loading the Rails application",
+      default: true
     def gem(*gems)
-      Tapioca.silence_warnings do
-        set_environment(options)
+      set_environment(options)
 
-        all = options[:all]
-        verify = options[:verify]
+      all = options[:all]
+      verify = options[:verify]
 
-        command = Commands::Gem.new(
-          gem_names: all ? [] : gems,
-          exclude: options[:exclude],
-          prerequire: options[:prerequire],
-          postrequire: options[:postrequire],
-          typed_overrides: options[:typed_overrides],
-          outpath: Pathname.new(options[:outdir]),
-          file_header: options[:file_header],
-          include_doc: options[:doc],
-          include_loc: options[:loc],
-          include_exported_rbis: options[:exported_gem_rbis],
-          number_of_workers: options[:workers],
-          auto_strictness: options[:auto_strictness],
-          dsl_dir: options[:dsl_dir],
-          rbi_formatter: rbi_formatter(options),
-        )
+      raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
 
-        raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
-
-        unless gems.empty?
-          raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
-          raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
-        end
-
-        if gems.empty? && !all
-          command.sync(should_verify: verify, exclude: options[:exclude])
-        else
-          command.execute
-        end
+      unless gems.empty?
+        raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
+        raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
       end
+
+      command_args = {
+        gem_names: all ? [] : gems,
+        exclude: options[:exclude],
+        prerequire: options[:prerequire],
+        postrequire: options[:postrequire],
+        typed_overrides: options[:typed_overrides],
+        outpath: Pathname.new(options[:outdir]),
+        file_header: options[:file_header],
+        include_doc: options[:doc],
+        include_loc: options[:loc],
+        include_exported_rbis: options[:exported_gem_rbis],
+        number_of_workers: options[:workers],
+        auto_strictness: options[:auto_strictness],
+        dsl_dir: options[:dsl_dir],
+        rbi_formatter: rbi_formatter(options),
+        halt_upon_load_error: options[:halt_upon_load_error],
+      }
+
+      command = if verify
+        Commands::GemVerify.new(**command_args)
+      elsif !gems.empty? || all
+        Commands::GemGenerate.new(**command_args)
+      else
+        Commands::GemSync.new(**command_args)
+      end
+
+      command.run
     end
     map "gems" => :gem
 
@@ -294,9 +303,7 @@ module Tapioca
         number_of_workers: options[:workers],
       )
 
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     desc "annotations", "Pull gem RBI annotations from remote sources"
@@ -325,9 +332,7 @@ module Tapioca
         typed_overrides: options[:typed_overrides],
       )
 
-      Tapioca.silence_warnings do
-        command.execute
-      end
+      command.run
     end
 
     map ["--version", "-v"] => :__print_version

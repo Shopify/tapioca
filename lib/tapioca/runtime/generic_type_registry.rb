@@ -151,7 +151,7 @@ module Tapioca
           generic_type
         end
 
-        sig { params(constant: Class).returns(Class) }
+        sig { params(constant: T::Class[T.anything]).returns(T::Class[T.anything]) }
         def create_safe_subclass(constant)
           # Lookup the "inherited" class method
           inherited_method = constant.method(:inherited)

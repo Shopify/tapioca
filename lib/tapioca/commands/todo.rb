@@ -19,6 +19,8 @@ module Tapioca
         super()
       end
 
+      private
+
       sig { override.void }
       def execute
         say("Finding all unresolved constants, this may take a few seconds... ")
@@ -42,8 +44,6 @@ module Tapioca
         say("\nAll unresolved constants have been written to #{name}.", [:green, :bold])
         say("Please review changes and commit them.", [:green, :bold])
       end
-
-      private
 
       sig { params(constants: T::Array[String], command: String).returns(RBI::File) }
       def rbi(constants, command:)
