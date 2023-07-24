@@ -63,7 +63,6 @@ jobs:
         run: gem install bundler
       - name: Run tests
         run: bin/test
-        continue-on-error: ${{ !!matrix.experimental }}
 
   buildall:
     if: ${{ always() && github.event.pull_request }}
@@ -72,5 +71,5 @@ jobs:
     needs: [linters, tests]
     steps:
       - name: Check build matrix status
-        if: ${{ needs.tests.result != 'success' || needs.linters.result != 'success' }}
+        if: ${{ (!needs.tests.outputs.experimental && needs.tests.result != 'success') || needs.linters.result != 'success' }}
         run: exit 1
