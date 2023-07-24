@@ -65,7 +65,7 @@ jobs:
         run: bin/test
 
   buildall:
-    if: ${{ always() && github.event.pull_request }}
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     name: Build (matrix)
     needs: [linters, tests]
