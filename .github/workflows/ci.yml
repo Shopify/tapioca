@@ -44,6 +44,8 @@ jobs:
             experimental: true
           - ruby: "head"
             experimental: true
+    outputs:
+      experimental: ${{ matrix.experimental || false }}
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
