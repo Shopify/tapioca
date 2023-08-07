@@ -2041,6 +2041,17 @@ module Tapioca
         assert_success_status(result)
       end
 
+      it 'TODO' do
+        @project.require_real_gem("eventmachine", "1.2.7")
+        @project.require_real_gem("em-synchrony", "1.0.6")
+        @project.bundle_install
+
+        @project.tapioca("gem eventmachine em-synchrony")
+        result = @project.bundle_exec("srb tc .")
+        assert_empty_stderr(result)
+        assert_success_status(result)
+      end
+
       describe "environment" do
         before(:all) do
           @project.tapioca("configure")
