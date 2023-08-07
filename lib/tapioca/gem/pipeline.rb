@@ -252,11 +252,16 @@ module Tapioca
         # If target has no name, let's make it an anonymous class or module with `Class.new` or `Module.new`
         target = "#{constant.class}.new" unless target
 
-        add_to_alias_namespace(name)
+        # Dealias any class or module names in the constant's prefix, but
+        # do not dealias the constant name itself
+        aliased_name = dealias_prefixes(name)
+        return if aliased_name == target
+
+        add_to_alias_namespace(aliased_name)
 
         return if IGNORED_SYMBOLS.include?(name)
 
-        node = RBI::Const.new(name, target)
+        node = RBI::Const.new(aliased_name, target)
         push_const(name, constant, node)
         @root << node
       end
