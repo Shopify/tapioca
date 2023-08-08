@@ -5445,44 +5445,44 @@ RuboCop::Cop::RSpec::Rails::MinitestAssertions::RESTRICT_ON_SEND = T.let(T.unsaf
 #   # good
 #   expect(foo).to be_invalid
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#23
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#27
 class RuboCop::Cop::RSpec::Rails::NegationBeValid < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#36
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#40
   def be_invalid?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#31
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#35
   def not_to?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#40
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#44
   def on_send(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#65
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#69
   def message(_matcher); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#52
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#56
   def offense?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#61
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#65
   def offense_range(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#80
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#84
   def replaced_matcher; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#71
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#75
   def replaced_runner; end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#27
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#31
 RuboCop::Cop::RSpec::Rails::NegationBeValid::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#28
+# source://rubocop-rspec//lib/rubocop/cop/rspec/rails/negation_be_valid.rb#32
 RuboCop::Cop::RSpec::Rails::NegationBeValid::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Prefer to travel in `before` rather than `around`.
@@ -5605,73 +5605,73 @@ RuboCop::Cop::RSpec::ReceiveCounts::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Arra
 #   allow(Service).to receive(:foo).and_return(qux)
 #   end
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#26
+# source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#31
 class RuboCop::Cop::RSpec::ReceiveMessages < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RangeHelp
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#39
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#44
   def allow_argument(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#34
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#39
   def allow_receive_message?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#58
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#63
   def on_begin(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#54
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#59
   def receive_and_return_argument(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#49
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#54
   def receive_arg(param0); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#44
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#49
   def receive_node(param0); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#78
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#83
   def add_repeated_lines_and_arguments(items); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#95
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#100
   def arguments(items); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#145
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#150
   def heredoc?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#141
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#146
   def item_range_by_whole_lines(item); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#130
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#135
   def message(repeated_lines); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#104
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#109
   def normalize_receive_arg(receive_arg); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#112
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#117
   def normalize_return_arg(return_arg); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#120
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#125
   def register_offense(item, repeated_lines, args); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#68
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#73
   def repeated_receive_message(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#134
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#139
   def replace_to_receive_messages(corrector, item, args); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#149
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#154
   def requires_quotes?(value); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#86
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#91
   def uniq_items(items); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#30
+# source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#35
 RuboCop::Cop::RSpec::ReceiveMessages::MSG = T.let(T.unsafe(nil), String)
 
 # Prefer `not_to receive(...)` over `receive(...).never`.
@@ -7419,7 +7419,7 @@ end
 
 # Wrapper for RSpec examples
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/example.rb#7
 class RuboCop::RSpec::Example < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example.rb#28
   def definition; end
@@ -7445,7 +7445,7 @@ end
 
 # Wrapper for RSpec example groups
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#12
 class RuboCop::RSpec::ExampleGroup < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#28
   def examples; end
@@ -7485,7 +7485,7 @@ end
 
 # Wrapper for RSpec hook
 #
-# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#7
 class RuboCop::RSpec::Hook < ::RuboCop::RSpec::Concept
   # @return [Boolean]
   #
