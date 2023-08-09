@@ -284,6 +284,155 @@ module Tapioca
     end
     map "gems" => :gem
 
+    desc "update", "update all RBIs"
+    option :gem_outdir,
+      aliases: ["--gem-out"],
+      banner: "directory",
+      desc: "The output directory for generated gem RBI files",
+      default: DEFAULT_GEM_DIR
+    option :dsl_outdir,
+      aliases: ["--dsl-out"],
+      banner: "directory",
+      desc: "The output directory for generated DSL RBI files",
+      default: DEFAULT_DSL_DIR
+    option :file_header,
+      type: :boolean,
+      desc: FILE_HEADER_OPTION_DESC,
+      default: true
+    option :quiet,
+      aliases: ["-q"],
+      type: :boolean,
+      desc: "Suppresses file creation output",
+      default: false
+    option :workers,
+      aliases: ["-w"],
+      type: :numeric,
+      desc: "Number of parallel workers to use when generating RBIs (default: 2)",
+      default: 2
+    option :rbi_max_line_length,
+      type: :numeric,
+      desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
+      default: DEFAULT_RBI_MAX_LINE_LENGTH
+    option :environment,
+      aliases: ["-e"],
+      type: :string,
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: DEFAULT_ENVIRONMENT
+    option :app_root,
+      type: :string,
+      desc: "The path to the Rails application",
+      default: "."
+    option :halt_upon_load_error,
+      type: :boolean,
+      desc: "Halt upon a load error while loading the Rails application",
+      default: true
+    option :prerequire,
+      aliases: ["--pre", "-b"],
+      banner: "file",
+      desc: "A file to be required before Bundler.require is called",
+      default: nil
+    option :postrequire,
+      aliases: ["--post", "-a"],
+      banner: "file",
+      desc: "A file to be required after Bundler.require is called",
+      default: DEFAULT_POSTREQUIRE_FILE
+    option :typed_overrides,
+      aliases: ["--typed", "-t"],
+      type: :hash,
+      banner: "gem:level [gem:level ...]",
+      desc: "Override for typed sigils for generated gem RBIs",
+      default: DEFAULT_OVERRIDES
+    option :doc,
+      type: :boolean,
+      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
+      default: true
+    option :loc,
+      type: :boolean,
+      desc: "Include comments with source location when generating RBIs",
+      default: true
+    option :exported_gem_rbis,
+      type: :boolean,
+      desc: "Include RBIs found in the `rbi/` directory of the gem",
+      default: true
+    option :auto_strictness,
+      type: :boolean,
+      desc: "Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs",
+      default: true
+    option :sources,
+      type: :array,
+      default: [CENTRAL_REPO_ROOT_URI],
+      desc: "URIs of the sources to pull gem RBI annotations from"
+    option :netrc, type: :boolean, default: true, desc: "Use .netrc to authenticate to private sources"
+    option :netrc_file, type: :string, desc: "Path to .netrc file"
+    option :auth, type: :string, default: nil, desc: "HTTP authorization header for private sources"
+    option :todo_file,
+      type: :string,
+      desc: "Path to the generated todo RBI file",
+      default: DEFAULT_TODO_FILE
+    def update
+      set_environment(options)
+
+      # `tapioca annotations`
+      if !options[:netrc] && options[:netrc_file]
+        raise Thor::Error, set_color("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
+      end
+
+      annotations_command = Commands::Annotations.new(
+        central_repo_root_uris: options[:sources],
+        auth: options[:auth],
+        netrc_file: netrc_file(options),
+        typed_overrides: options[:typed_overrides],
+      )
+
+      # `tapioca gem --all`
+      gem_command_args = {
+        gem_names: [],
+        exclude: [],
+        prerequire: options[:prerequire],
+        postrequire: options[:postrequire],
+        typed_overrides: options[:typed_overrides],
+        outpath: Pathname.new(options[:gem_outdir]),
+        file_header: options[:file_header],
+        include_doc: options[:doc],
+        include_loc: options[:loc],
+        include_exported_rbis: options[:exported_gem_rbis],
+        number_of_workers: options[:workers],
+        auto_strictness: options[:auto_strictness],
+        dsl_dir: options[:dsl_outdir],
+        rbi_formatter: rbi_formatter(options),
+        halt_upon_load_error: options[:halt_upon_load_error],
+      }
+      gem_command = Commands::GemGenerate.new(**gem_command_args)
+
+      # `tapioca dsl`
+      dsl_command_args = {
+        requested_constants: [],
+        requested_paths: [],
+        outpath: Pathname.new(options[:dsl_outdir]),
+        only: [],
+        exclude: [],
+        file_header: options[:file_header],
+        tapioca_path: TAPIOCA_DIR,
+        quiet: options[:quiet],
+        number_of_workers: options[:workers],
+        rbi_formatter: rbi_formatter(options),
+        app_root: options[:app_root],
+        halt_upon_load_error: options[:halt_upon_load_error],
+      }
+      dsl_command = Commands::DslGenerate.new(**dsl_command_args)
+
+      # `tapioca todo`
+      todo_command = Commands::Todo.new(
+        todo_file: options[:todo_file],
+        file_header: options[:file_header],
+      )
+
+      annotations_command.run
+      gem_command.run
+      dsl_command.run
+      todo_command.run
+    end
+
     desc "check-shims", "check duplicated definitions in shim RBIs"
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
     option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
