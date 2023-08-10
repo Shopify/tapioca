@@ -110,16 +110,27 @@ module Tapioca
         @payload_symbols.include?(symbol_name)
       end
 
+      # this looks something like:
+      # "(eval at /path/to/file.rb:123)"
+      # and we are just interested in the "/path/to/file.rb" part
+      EVAL_SOURCE_FILE_PATTERN = T.let(/\(eval at (.+):\d+\)/, Regexp)
+
       sig { params(name: T.any(String, Symbol)).returns(T::Boolean) }
       def constant_in_gem?(name)
         return true unless Object.respond_to?(:const_source_location)
 
-        source_location, _ = Object.const_source_location(name)
-        return true unless source_location
+        source_file, _ = Object.const_source_location(name)
+        return true unless source_file
         # If the source location of the constant is "(eval)", all bets are off.
-        return true if source_location == "(eval)"
+        return true if source_file == "(eval)"
 
-        gem.contains_path?(source_location)
+        # Ruby 3.3 adds automatic definition of source location for evals if
+        # `file` and `line` arguments are not provided. This results in the source
+        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
+        # this string to get the actual source file.
+        source_file = source_file.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
+
+        gem.contains_path?(source_file)
       end
 
       sig { params(method: UnboundMethod).returns(T::Boolean) }
