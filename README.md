@@ -47,6 +47,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
   * [Generating RBI files for Rails and other DSLs](#generating-rbi-files-for-rails-and-other-dsls)
     * [Keeping RBI files for DSLs up-to-date](#keeping-rbi-files-for-dsls-up-to-date)
     * [Writing custom DSL compilers](#writing-custom-dsl-compilers)
+    * [Writing custom DSL extensions](#writing-custom-dsl-extensions)
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
     * [Generating the RBI file for missing constants](#generating-the-rbi-file-for-missing-constants)
     * [Manually writing RBI definitions (shims)](#manually-writing-rbi-definitions-shims)
@@ -666,6 +667,110 @@ No errors! Great job.
 ```
 
 For more concrete and advanced examples, take a look at [Tapioca's default DSL compilers](https://github.com/Shopify/tapioca/tree/main/lib/tapioca/dsl/compilers).
+
+#### Writing custom DSL extensions
+
+When writing custom DSL compilers, it is sometimes necessary to rely on an extension, i.e. a bit of code that is being loaded before the application in order to override some behavior. This is typically useful when a DSL's implementation does not store enough information for the compiler to properly define signatures.
+
+Let's reuse the previous `Encryptable` module as an example, but this time let's imagine that the implementation of `attr_encrypted` does not store attribute names:
+
+
+```rb
+module Encryptable
+  def self.included(base)
+    base.extend(ClassMethods)
+  end
+
+  module ClassMethods
+    def attr_encrypted(attr_name)
+      attr_accessor(attr_name)
+
+      encrypted_attr_name = :"#{attr_name}_encrypted"
+
+      define_method(encrypted_attr_name) do
+        value = send(attr_name)
+        encrypt(value)
+      end
+
+      define_method("#{encrypted_attr_name}=") do |value|
+        send("#{attr_name}=", decrypt(value))
+      end
+    end
+  end
+
+  private
+
+  def encrypt(value)
+    value.unpack("H*").first
+  end
+
+  def decrypt(value)
+    [value].pack("H*")
+  end
+end
+```
+
+Without the `attribute_names` array, the compiler has no way of knowing which methods were defined by the `attr_encrypted` DSL. This can be solved by defining an extension that will override the behavior of `attr_encrypted`:
+
+```rb
+require "encryptable"
+
+module Tapioca
+  module Extensions
+    module Encryptable
+      attr_reader :__tapioca_encrypted_attributes
+
+      def attr_encrypted(attr_name)
+        @__tapioca_encrypted_attributes ||= []
+        @__tapioca_encrypted_attributes << attr_name.to_s
+
+        super
+      end
+
+      ::Encryptable::ClassMethods.prepend(self)
+    end
+  end
+end
+```
+
+The compiler can now use the `__tapioca_encrypted_attributes` array managed by the extension:
+
+```rb
+module Tapioca
+  module Compilers
+    class Encryptable < Tapioca::Dsl::Compiler
+      extend T::Sig
+
+      ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
+
+      sig { override.returns(T::Enumerable[Module]) }
+      def self.gather_constants
+        # Collect all the classes that include Encryptable
+        all_classes.select { |c| c < ::Encryptable }
+      end
+
+      sig { override.void }
+      def decorate
+        # Create a RBI definition for each class that includes Encryptable
+        root.create_path(constant) do |klass|
+          # For each encrypted attribute we find in the class
+          constant.__tapioca_encrypted_attributes.each do |attr_name|
+            # Create the RBI definitions for all the missing methods
+            klass.create_method(attr_name, return_type: "String")
+            klass.create_method("#{attr_name}=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+            klass.create_method("#{attr_name}_encrypted", return_type: "String")
+            klass.create_method("#{attr_name}_encrypted=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+          end
+        end
+      end
+    end
+  end
+end
+```
+
+In order for DSL extensions to be discovered by Tapioca, they either needs to be placed inside the `sorbet/tapioca/extensions` directory of your application or be inside a `tapioca/dsl/extensions` folder on the load path.
+
+For more concrete and advanced examples, take a look at [Tapioca's default DSL extensions](https://github.com/Shopify/tapioca/tree/main/lib/tapioca/dsl/extensions).
 
 ### RBI files for missing constants and methods
 
