@@ -31,7 +31,12 @@ module Tapioca
         invoke(:annotations)
         invoke(:gem)
       end
-      invoke(:todo)
+
+      # call the command directly to skip deprecation warning
+      Commands::Todo.new(
+        todo_file: DEFAULT_TODO_FILE,
+        file_header: true,
+      ).run
 
       print_init_next_steps
     end
@@ -71,7 +76,7 @@ module Tapioca
         todo_file: options[:todo_file],
         file_header: options[:file_header],
       )
-      command.run
+      command.run_with_deprecation
     end
 
     desc "dsl [constant...]", "generate RBIs for dynamic methods"
