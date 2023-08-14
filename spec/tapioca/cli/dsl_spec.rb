@@ -72,6 +72,40 @@ module Tapioca
           @project.remove("sorbet/rbi/dsl")
         end
 
+        it "must generate a .gitattributes file in the output folder" do
+          @project.write("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl Post --outdir output")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          assert_project_file_equal("output/.gitattributes", <<~CONTENT)
+            **/*.rbi linguist-generated=true
+          CONTENT
+        ensure
+          @project.remove("output")
+        end
+
+        it "must not generate a .gitattributes file if the output folder is not created" do
+          result = @project.tapioca("dsl --outdir output")
+
+          assert_equal(<<~ERR, result.err)
+            No classes/modules can be matched for RBI generation.
+            Please check that the requested classes/modules include processable DSL methods.
+          ERR
+          refute_project_file_exist("output/.gitattributes")
+        ensure
+          @project.remove("output")
+        end
+
         it "respects the Gemfile and Gemfile.lock" do
           gem = mock_gem("foo", "1.0.0") do
             write("lib/foo.rb", <<~RB)
