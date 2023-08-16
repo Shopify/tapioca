@@ -299,33 +299,6 @@ module Tapioca
       type: :boolean,
       desc: FILE_HEADER_OPTION_DESC,
       default: true
-    option :quiet,
-      aliases: ["-q"],
-      type: :boolean,
-      desc: "Suppresses file creation output",
-      default: false
-    option :workers,
-      aliases: ["-w"],
-      type: :numeric,
-      desc: "Number of parallel workers to use when generating RBIs (default: 2)",
-      default: 2
-    option :rbi_max_line_length,
-      type: :numeric,
-      desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
-      default: DEFAULT_RBI_MAX_LINE_LENGTH
-    option :environment,
-      aliases: ["-e"],
-      type: :string,
-      desc: "The Rack/Rails environment to use when generating RBIs",
-      default: DEFAULT_ENVIRONMENT
-    option :app_root,
-      type: :string,
-      desc: "The path to the Rails application",
-      default: "."
-    option :halt_upon_load_error,
-      type: :boolean,
-      desc: "Halt upon a load error while loading the Rails application",
-      default: true
     option :prerequire,
       aliases: ["--pre", "-b"],
       banner: "file",
@@ -342,6 +315,10 @@ module Tapioca
       banner: "gem:level [gem:level ...]",
       desc: "Override for typed sigils for generated gem RBIs",
       default: DEFAULT_OVERRIDES
+    option :verify,
+      type: :boolean,
+      desc: "Verify RBIs are up-to-date",
+      default: false
     option :doc,
       type: :boolean,
       desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
@@ -354,38 +331,42 @@ module Tapioca
       type: :boolean,
       desc: "Include RBIs found in the `rbi/` directory of the gem",
       default: true
+    option :workers,
+      aliases: ["-w"],
+      type: :numeric,
+      desc: "Number of parallel workers to use when generating RBIs (default: auto)"
     option :auto_strictness,
       type: :boolean,
       desc: "Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs",
       default: true
-    option :sources,
-      type: :array,
-      default: [CENTRAL_REPO_ROOT_URI],
-      desc: "URIs of the sources to pull gem RBI annotations from"
-    option :netrc, type: :boolean, default: true, desc: "Use .netrc to authenticate to private sources"
-    option :netrc_file, type: :string, desc: "Path to .netrc file"
-    option :auth, type: :string, default: nil, desc: "HTTP authorization header for private sources"
-    option :todo_file,
+    option :rbi_max_line_length,
+      type: :numeric,
+      desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
+      default: DEFAULT_RBI_MAX_LINE_LENGTH
+    option :environment,
+      aliases: ["-e"],
       type: :string,
-      desc: "Path to the generated todo RBI file",
-      default: DEFAULT_TODO_FILE
+      desc: "The Rack/Rails environment to use when generating RBIs",
+      default: DEFAULT_ENVIRONMENT
+    option :halt_upon_load_error,
+      type: :boolean,
+      desc: "Halt upon a load error while loading the Rails application",
+      default: true
+    option :quiet,
+      aliases: ["-q"],
+      type: :boolean,
+      desc: "Suppresses file creation output",
+      default: false
+    option :app_root,
+      type: :string,
+      desc: "The path to the Rails application",
+      default: "."
     def update
       set_environment(options)
 
-      # `tapioca annotations`
-      if !options[:netrc] && options[:netrc_file]
-        raise Thor::Error, set_color("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
-      end
+      say(set_color("💎 Running `tapioca gem --all`", :bold))
 
-      annotations_command = Commands::Annotations.new(
-        central_repo_root_uris: options[:sources],
-        auth: options[:auth],
-        netrc_file: netrc_file(options),
-        typed_overrides: options[:typed_overrides],
-      )
-
-      # `tapioca gem --all`
-      gem_command_args = {
+      command_args = {
         gem_names: [],
         exclude: [],
         prerequire: options[:prerequire],
@@ -402,10 +383,12 @@ module Tapioca
         rbi_formatter: rbi_formatter(options),
         halt_upon_load_error: options[:halt_upon_load_error],
       }
-      gem_command = Commands::GemGenerate.new(**gem_command_args)
 
-      # `tapioca dsl`
-      dsl_command_args = {
+      Commands::GemGenerate.new(**command_args).run
+
+      say(set_color("✍️ Running `tapioca dsl`", :bold))
+
+      command_args = {
         requested_constants: [],
         requested_paths: [],
         outpath: Pathname.new(options[:dsl_outdir]),
@@ -414,23 +397,14 @@ module Tapioca
         file_header: options[:file_header],
         tapioca_path: TAPIOCA_DIR,
         quiet: options[:quiet],
+        verbose: options[:verbose],
         number_of_workers: options[:workers],
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],
         halt_upon_load_error: options[:halt_upon_load_error],
       }
-      dsl_command = Commands::DslGenerate.new(**dsl_command_args)
 
-      # `tapioca todo`
-      todo_command = Commands::Todo.new(
-        todo_file: options[:todo_file],
-        file_header: options[:file_header],
-      )
-
-      annotations_command.run
-      gem_command.run
-      dsl_command.run
-      todo_command.run
+      Commands::DslGenerate.new(**command_args).run
     end
 
     desc "check-shims", "check duplicated definitions in shim RBIs"
