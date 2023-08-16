@@ -50,7 +50,7 @@ module Tapioca
               assert_equal(["HandController", "UserController"], gathered_constants)
             end
 
-            it "ignores abstract subclasses of ActionController" do
+            it "gathers abstract subclasses of ActionController" do
               add_ruby_file("content.rb", <<~RUBY)
                 class UserController < ActionController::Base
                 end
@@ -60,7 +60,7 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal(["UserController"], gathered_constants)
+              assert_equal(["HomeController", "UserController"], gathered_constants)
             end
 
             it "ignores anonymous subclasses of ActionController" do
@@ -348,6 +348,98 @@ module Tapioca
               RBI
 
               assert_equal(expected, rbi_for(:UserController))
+            end
+
+            it "works correctly with abstract ApplicationController" do
+              add_ruby_file("greet_helper.rb", <<~RUBY)
+                module GreetHelper
+                  def greet(user)
+                    # ...
+                  end
+                end
+              RUBY
+
+              add_ruby_file("application_controller.rb", <<~RUBY)
+                # typed: false
+
+                class ApplicationController < ActionController::Base
+                  abstract!
+
+                  helper_method :foo
+                  def foo; end
+                end
+              RUBY
+              add_ruby_file("user_controller.rb", <<~RUBY)
+                class UserController < ApplicationController
+                  helper GreetHelper
+                end
+              RUBY
+              add_ruby_file("posts_controller.rb", <<~RUBY)
+                class PostsController < ApplicationController
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class ApplicationController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ActionController::Base::HelperMethods
+
+                    sig { returns(T.untyped) }
+                    def foo; end
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+              assert_equal expected, rbi_for(:ApplicationController)
+
+              expected = <<~RBI
+                # typed: strong
+
+                class UserController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ActionController::Base::HelperMethods
+                    include ::ApplicationController::HelperMethods
+                    include ::GreetHelper
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+              assert_equal expected, rbi_for(:UserController)
+
+              expected = <<~RBI
+                # typed: strong
+
+                class PostsController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ActionController::Base::HelperMethods
+
+                    sig { returns(T.untyped) }
+                    def foo; end
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+              assert_equal expected, rbi_for(:PostsController)
             end
           end
         end
