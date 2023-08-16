@@ -60,7 +60,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
 Add this line to your application's `Gemfile`:
 
 ```rb
-group :development do
+group :development, :test do
   gem 'tapioca', require: false
 end
 ```
