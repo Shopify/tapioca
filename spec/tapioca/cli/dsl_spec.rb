@@ -87,6 +87,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -109,6 +110,7 @@ module Tapioca
           result = @project.tapioca("dsl User")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -138,6 +140,7 @@ module Tapioca
           result = @project.tapioca("dsl Post")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -182,6 +185,7 @@ module Tapioca
           result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -207,6 +211,7 @@ module Tapioca
           result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -250,6 +255,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -335,6 +341,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -457,6 +464,7 @@ module Tapioca
           result = @project.tapioca("dsl --verbose --outdir rbis/")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -509,6 +517,7 @@ module Tapioca
           result = @project.tapioca("dsl --verbose")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -548,6 +557,7 @@ module Tapioca
           result = @project.tapioca("dsl --quiet")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -615,6 +625,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -732,6 +743,7 @@ module Tapioca
           result = @project.tapioca("dsl Post User")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -791,6 +803,7 @@ module Tapioca
           result = @project.tapioca("dsl lib/models")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -829,6 +842,7 @@ module Tapioca
           result = @project.tapioca("dsl path/to/nowhere.rb")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -857,6 +871,7 @@ module Tapioca
           result = @project.tapioca("dsl lib/models")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -937,6 +952,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1029,6 +1045,7 @@ module Tapioca
           result = @project.tapioca("dsl --only SidekiqWorker Foo::Compiler")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1078,6 +1095,7 @@ module Tapioca
           result = @project.tapioca("dsl --only NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1138,6 +1156,7 @@ module Tapioca
           result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Compiler")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1165,6 +1184,7 @@ module Tapioca
           result = @project.tapioca("dsl --exclude NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1201,6 +1221,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1292,6 +1313,7 @@ module Tapioca
 
             # FIXME: print the error to the correct stream
             assert_equal(<<~OUT, result.out)
+              Loading DSL extension classes... Done
               Loading Rails application... Done
               Loading DSL compiler classes... Done
               Compiling DSL RBI files...
@@ -1317,6 +1339,7 @@ module Tapioca
 
             # FIXME: print the error to the correct stream
             assert_equal(<<~OUT, result.out)
+              Loading DSL extension classes... Done
               Loading Rails application... Done
               Loading DSL compiler classes... Done
               Compiling DSL RBI files...
@@ -1345,6 +1368,7 @@ module Tapioca
             result = @project.tapioca("dsl Post")
 
             assert_equal(<<~OUT, result.out)
+              Loading DSL extension classes... Done
               Loading Rails application... Done
               Loading DSL compiler classes... Done
               Compiling DSL RBI files...
@@ -1385,6 +1409,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1471,6 +1496,7 @@ module Tapioca
           result = @project.tapioca("dsl")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1504,6 +1530,7 @@ module Tapioca
           result = @project.tapioca("dsl Post --only=ActiveRecordTypedStore")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1613,6 +1640,7 @@ module Tapioca
           result = @project.tapioca("dsl --verify --exclude SmartProperties")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Checking for out-of-date RBIs...
@@ -1651,6 +1679,7 @@ module Tapioca
           result = @project.tapioca("dsl --verify")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Checking for out-of-date RBIs...
@@ -1700,6 +1729,7 @@ module Tapioca
           result = @project.tapioca("dsl --verify")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Checking for out-of-date RBIs...
@@ -1813,6 +1843,7 @@ module Tapioca
           result = @project.tapioca("dsl Post")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
@@ -1901,6 +1932,342 @@ module Tapioca
 
           assert_empty_stderr(result)
           assert_success_status(result)
+        end
+      end
+
+      describe "custom extensions" do
+        after do
+          project.remove("sorbet/rbi/gems")
+          project.remove("sorbet/rbi/dsl")
+          project.remove("sorbet/tapioca")
+        end
+
+        it "must load custom extensions from gems" do
+          @project.write("lib/credit_card.rb", <<~RB)
+            require "encryptable"
+
+            class CreditCard
+              include Encryptable
+
+              attr_encrypted :number
+            end
+          RB
+
+          encryptable = mock_gem("encryptable", "0.0.1") do
+            write("lib/encryptable.rb", <<~RB)
+              module Encryptable
+                def self.included(base)
+                  base.extend(ClassMethods)
+                end
+
+                module ClassMethods
+                  def attr_encrypted(attr_name)
+                    attr_accessor(attr_name)
+
+                    encrypted_attr_name = :"\#{attr_name}_encrypted"
+
+                    define_method(encrypted_attr_name) do
+                      value = send(attr_name)
+                      encrypt(value)
+                    end
+
+                    define_method("\#{encrypted_attr_name}=") do |value|
+                      send("\#{attr_name}=", decrypt(value))
+                    end
+                  end
+                end
+
+                private
+
+                def encrypt(value)
+                  value.unpack("H*").first
+                end
+
+                def decrypt(value)
+                  [value].pack("H*")
+                end
+              end
+            RB
+
+            write("lib/tapioca/dsl/extensions/encryptable.rb", <<~RB)
+              require "encryptable"
+
+              module Tapioca
+                module Extensions
+                  module Encryptable
+                    attr_reader :__tapioca_encrypted_attributes
+
+                    def attr_encrypted(attr_name)
+                      @__tapioca_encrypted_attributes ||= []
+                      @__tapioca_encrypted_attributes << attr_name.to_s
+
+                      super
+                    end
+
+                    ::Encryptable::ClassMethods.prepend(self)
+                  end
+                end
+              end
+            RB
+
+            write("lib/tapioca/dsl/compilers/encryptable.rb", <<~RB)
+              require "encryptable"
+
+              module Tapioca
+                module Compilers
+                  class Encryptable < Tapioca::Dsl::Compiler
+                    extend T::Sig
+
+                    ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
+
+                    sig { override.returns(T::Enumerable[Module]) }
+                    def self.gather_constants
+                      # Collect all the classes that include Encryptable
+                      all_classes.select { |c| c < ::Encryptable }
+                    end
+
+                    sig { override.void }
+                    def decorate
+                      # Create a RBI definition for each class that includes Encryptable
+                      root.create_path(constant) do |klass|
+                        # For each encrypted attribute we find in the class
+                        constant.__tapioca_encrypted_attributes.each do |attr_name|
+                          # Create the RBI definitions for all the missing methods
+                          klass.create_method(attr_name, return_type: "String")
+                          klass.create_method("\#{attr_name}=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+                          klass.create_method("\#{attr_name}_encrypted", return_type: "String")
+                          klass.create_method("\#{attr_name}_encrypted=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            RB
+          end
+
+          @project.require_mock_gem(encryptable)
+          @project.bundle_install
+
+          result = @project.tapioca("dsl CreditCard")
+
+          assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/credit_card.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_project_file_equal("sorbet/rbi/dsl/credit_card.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for dynamic methods in `CreditCard`.
+            # Please instead update this file by running `bin/tapioca dsl CreditCard`.
+
+            class CreditCard
+              sig { returns(String) }
+              def number; end
+
+              sig { params(value: String).void }
+              def number=(value); end
+
+              sig { returns(String) }
+              def number_encrypted; end
+
+              sig { params(value: String).void }
+              def number_encrypted=(value); end
+            end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must load custom extensions from the Sorbet directory" do
+          @project.write("lib/credit_card.rb", <<~RB)
+            require "encryptable"
+
+            class CreditCard
+              include Encryptable
+
+              attr_encrypted :number
+            end
+          RB
+
+          encryptable = mock_gem("encryptable", "0.0.1") do
+            write("lib/encryptable.rb", <<~RB)
+              module Encryptable
+                def self.included(base)
+                  base.extend(ClassMethods)
+                end
+
+                module ClassMethods
+                  def attr_encrypted(attr_name)
+                    attr_accessor(attr_name)
+
+                    encrypted_attr_name = :"\#{attr_name}_encrypted"
+
+                    define_method(encrypted_attr_name) do
+                      value = send(attr_name)
+                      encrypt(value)
+                    end
+
+                    define_method("\#{encrypted_attr_name}=") do |value|
+                      send("\#{attr_name}=", decrypt(value))
+                    end
+                  end
+                end
+
+                private
+
+                def encrypt(value)
+                  value.unpack("H*").first
+                end
+
+                def decrypt(value)
+                  [value].pack("H*")
+                end
+              end
+            RB
+          end
+
+          @project.write("sorbet/tapioca/extensions/encryptable.rb", <<~RB)
+            require "encryptable"
+
+            module Tapioca
+              module Extensions
+                module Encryptable
+                  attr_reader :__tapioca_encrypted_attributes
+
+                  def attr_encrypted(attr_name)
+                    @__tapioca_encrypted_attributes ||= []
+                    @__tapioca_encrypted_attributes << attr_name.to_s
+
+                    super
+                  end
+
+                  ::Encryptable::ClassMethods.prepend(self)
+                end
+              end
+            end
+          RB
+
+          @project.write("sorbet/tapioca/compilers/encryptable.rb", <<~RB)
+            require "encryptable"
+
+            module Tapioca
+              module Compilers
+                class Encryptable < Tapioca::Dsl::Compiler
+                  extend T::Sig
+
+                  ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
+
+                  sig { override.returns(T::Enumerable[Module]) }
+                  def self.gather_constants
+                    # Collect all the classes that include Encryptable
+                    all_classes.select { |c| c < ::Encryptable }
+                  end
+
+                  sig { override.void }
+                  def decorate
+                    # Create a RBI definition for each class that includes Encryptable
+                    root.create_path(constant) do |klass|
+                      # For each encrypted attribute we find in the class
+                      constant.__tapioca_encrypted_attributes.each do |attr_name|
+                        # Create the RBI definitions for all the missing methods
+                        klass.create_method(attr_name, return_type: "String")
+                        klass.create_method("\#{attr_name}=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+                        klass.create_method("\#{attr_name}_encrypted", return_type: "String")
+                        klass.create_method("\#{attr_name}_encrypted=", parameters: [ create_param("value", type: "String") ], return_type: "void")
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          RB
+
+          @project.require_mock_gem(encryptable)
+          @project.bundle_install
+
+          result = @project.tapioca("dsl CreditCard")
+
+          assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/credit_card.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_project_file_equal("sorbet/rbi/dsl/credit_card.rbi", <<~RBI)
+            # typed: true
+
+            # DO NOT EDIT MANUALLY
+            # This is an autogenerated file for dynamic methods in `CreditCard`.
+            # Please instead update this file by running `bin/tapioca dsl CreditCard`.
+
+            class CreditCard
+              sig { returns(String) }
+              def number; end
+
+              sig { params(value: String).void }
+              def number=(value); end
+
+              sig { returns(String) }
+              def number_encrypted; end
+
+              sig { params(value: String).void }
+              def number_encrypted=(value); end
+            end
+          RBI
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "halts upon load errors when extension cannot be loaded" do
+          @project.write("lib/post.rb", <<~RB)
+            class Post
+            end
+          RB
+
+          @project.write("sorbet/tapioca/extensions/test.rb", <<~RB)
+            puts "Hi from test extension"
+            raise "Raising from test extension"
+          RB
+
+          result = @project.tapioca("dsl Post")
+
+          assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Hi from test extension
+          OUT
+
+          err = "tapioca/tests/dsl_spec/project/sorbet/tapioca/extensions/test.rb:2:in `<top (required)>': " \
+            "Raising from test extension (RuntimeError)"
+          assert_stderr_includes(result, err)
+
+          refute_success_status(result)
         end
       end
 
@@ -2081,6 +2448,7 @@ module Tapioca
           result = @project.tapioca("dsl --list-compilers")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
 
@@ -2111,6 +2479,7 @@ module Tapioca
           result = @project.tapioca("dsl --list-compilers --exclude SmartProperties ActiveRecordEnum")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
 
@@ -2141,6 +2510,7 @@ module Tapioca
           result = @project.tapioca("dsl --list-compilers --only SmartProperties ActiveRecordEnum")
 
           assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
 
