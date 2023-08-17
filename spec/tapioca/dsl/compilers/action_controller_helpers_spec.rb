@@ -13,9 +13,13 @@ module Tapioca
               assert_empty(gathered_constants)
             end
 
-            it "gathers only ActionController subclasses" do
+            it "gathers only ActionController subclasses with helpers" do
               add_ruby_file("content.rb", <<~RUBY)
                 class UserController < ActionController::Base
+                  helper_method :foo
+                end
+
+                class AnotherController
                 end
 
                 class User
@@ -32,18 +36,21 @@ module Tapioca
 
                 class UserController < ActionController::Base
                   include UserHelper
+                  helper_method :foo
                 end
               RUBY
 
               assert_equal(["UserController"], gathered_constants)
             end
 
-            it "gathers subclasses of ActionController subclasses" do
+            it "gathers subclasses of ActionController subclasses with helpers" do
               add_ruby_file("content.rb", <<~RUBY)
                 class UserController < ActionController::Base
+                  helper_method :foo
                 end
 
                 class HandController < UserController
+                  helper_method :bar
                 end
               RUBY
 
@@ -53,10 +60,12 @@ module Tapioca
             it "gathers abstract subclasses of ActionController" do
               add_ruby_file("content.rb", <<~RUBY)
                 class UserController < ActionController::Base
+                  helper_method :foo
                 end
 
                 class HomeController < ActionController::Base
                   abstract!
+                  helper_method :foo
                 end
               RUBY
 
@@ -65,7 +74,9 @@ module Tapioca
 
             it "ignores anonymous subclasses of ActionController" do
               add_ruby_file("content.rb", <<~RUBY)
-                Class.new(ActionController::Base)
+                Class.new(ActionController::Base) do
+                  helper_method :foo
+                end
               RUBY
 
               assert_equal([], gathered_constants)
@@ -73,35 +84,6 @@ module Tapioca
           end
 
           describe "decorate" do
-            it "generates empty helper module when there are no helper methods specified" do
-              add_ruby_file("controller.rb", <<~RUBY)
-                class UserController < ActionController::Base
-                  def current_user_name
-                    # ...
-                  end
-                end
-              RUBY
-
-              expected = <<~RBI
-                # typed: strong
-
-                class UserController
-                  sig { returns(HelperProxy) }
-                  def helpers; end
-
-                  module HelperMethods
-                    include ::ActionController::Base::HelperMethods
-                  end
-
-                  class HelperProxy < ::ActionView::Base
-                    include HelperMethods
-                  end
-                end
-              RBI
-
-              assert_equal(expected, rbi_for(:UserController))
-            end
-
             it "generates helper module and helper proxy class if helper_method target does not exist" do
               add_ruby_file("controller.rb", <<~RUBY)
                 class BaseController < ActionController::Base
@@ -151,31 +133,6 @@ module Tapioca
               RBI
 
               assert_equal(expected, rbi_for(:BaseController))
-
-              expected = <<~RBI
-                # typed: strong
-
-                class UserController
-                  sig { returns(HelperProxy) }
-                  def helpers; end
-
-                  module HelperMethods
-                    include ::ActionController::Base::HelperMethods
-
-                    sig { returns(T.untyped) }
-                    def current_user_name; end
-
-                    sig { params(user_id: ::Integer).void }
-                    def notify_user(user_id); end
-                  end
-
-                  class HelperProxy < ::ActionView::Base
-                    include HelperMethods
-                  end
-                end
-              RBI
-
-              assert_equal(expected, rbi_for(:UserController))
             end
 
             it "generates helper module and helper proxy class when defining helper using helper_method" do
@@ -378,6 +335,7 @@ module Tapioca
                 class PostsController < ApplicationController
                 end
               RUBY
+              assert_equal(["ApplicationController", "UserController"], gathered_constants)
 
               expected = <<~RBI
                 # typed: strong
@@ -419,27 +377,6 @@ module Tapioca
                 end
               RBI
               assert_equal expected, rbi_for(:UserController)
-
-              expected = <<~RBI
-                # typed: strong
-
-                class PostsController
-                  sig { returns(HelperProxy) }
-                  def helpers; end
-
-                  module HelperMethods
-                    include ::ActionController::Base::HelperMethods
-
-                    sig { returns(T.untyped) }
-                    def foo; end
-                  end
-
-                  class HelperProxy < ::ActionView::Base
-                    include HelperMethods
-                  end
-                end
-              RBI
-              assert_equal expected, rbi_for(:PostsController)
             end
           end
         end
