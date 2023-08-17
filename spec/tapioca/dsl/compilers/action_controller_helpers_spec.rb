@@ -19,7 +19,7 @@ module Tapioca
                   helper_method :foo
                 end
 
-                class AnotherController
+                class AnotherController < ActionController::Base
                 end
 
                 class User
