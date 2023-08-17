@@ -84,6 +84,13 @@ module Tapioca
 
             # Create helper method module
             controller.create_module(helper_methods_name) do |helper_methods|
+              # If the controller has the same helpers module as the superclass
+              # just include superclass helpers
+              if helpers_module == constant.superclass._helpers
+                superclass_helper_methods = constant.superclass.const_get(helper_methods_name)
+                next helper_methods.create_include(qualified_name_of(superclass_helper_methods))
+              end
+
               # If the controller has no helper defined, then it just inherits
               # the Action Controlller base helper methods module, so we should
               # just add that as an include and stop doing more processing.
