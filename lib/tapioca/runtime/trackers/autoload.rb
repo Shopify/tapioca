@@ -17,21 +17,31 @@ module Tapioca
 
           sig { params(bundle: Gemfile).void }
           def eager_load_all!(bundle)
+            start = Time.now
             with_disabled_exits do
+              start_registering = Time.now
               register_autoloads_for_bundle(bundle)
-              exit
+              finish_registering = Time.now
+              puts "Registered all autoloads in #{finish_registering - start_registering} seconds"
+              @constant_names_registered_for_autoload -= CONSTANTS_TO_SKIP
+              start_loading = Time.now
               until @constant_names_registered_for_autoload.empty?
                 begin
                   # Grab the next constant name
                   constant_name = T.must(@constant_names_registered_for_autoload.shift)
                   # Trigger autoload by constantizing the registered name
+
                   Reflection.constantize(constant_name)
                   puts "Successfully eager loaded #{constant_name}"
                 rescue Exception => e # rubocop:disable Lint/RescueException
                   puts "Error while eager loading #{constant_name}: #{e.message}"
                 end
               end
+              finish_loading = Time.now
+              puts "Finished loading constants in #{finish_loading - start_loading} seconds"
             end
+            finish = Time.now
+            puts "Eager loaded all constants in #{finish - start} seconds"
           end
 
           sig { params(constant_name: String).void }
