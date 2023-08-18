@@ -13,6 +13,7 @@ PATH
       netrc (>= 0.11.0)
       parallel (>= 1.21.0)
       rbi (~> 0.0.0, >= 0.0.16)
+      ruby-lsp
       sorbet-static-and-runtime (>= 0.5.10187)
       spoom (~> 1.2.0, >= 1.2.0)
       thor (>= 1.2.0)
@@ -333,6 +334,11 @@ GEM
       rubocop (~> 1.51)
     rubocop-sorbet (0.7.2)
       rubocop (>= 0.90.0)
+    ruby-lsp (0.8.1)
+      language_server-protocol (~> 3.17.0)
+      sorbet-runtime
+      syntax_tree (>= 6.1.1, < 7)
+      yarp (~> 0.6.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     shopify-money (1.2.1)
@@ -395,6 +401,7 @@ GEM
     yard-sorbet (0.8.1)
       sorbet-runtime (>= 0.5)
       yard (>= 0.9)
+    yarp (0.6.0)
     zeitwerk (2.6.8)
 
 PLATFORMS

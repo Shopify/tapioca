@@ -23,6 +23,7 @@ module Tapioca
               register_autoloads_for_bundle(bundle)
               finish_registering = Time.now
               puts "Registered all autoloads in #{finish_registering - start_registering} seconds"
+              return # TODO
               @constant_names_registered_for_autoload -= CONSTANTS_TO_SKIP
               start_loading = Time.now
               until @constant_names_registered_for_autoload.empty?
@@ -56,22 +57,31 @@ module Tapioca
           def register_autoloads_for_bundle(bundle)
             autoload_list = Hash.new { |h, k| h[k] = Hash.new { |h, k| h[k] = [] } }
 
-            bundle.dependencies.reverse.each_with_index do |gem, _index|
-              puts "Processing #{gem.name}..."
+            index = ::RubyIndexer::Index.new
 
-              paths_with_symbols = Static::SymbolLoader.gem_symbols_with_paths(gem)
-
-              paths_with_symbols.each do |path, symbols|
-                symbols.each do |symbol|
-                  previous = ""
-
-                  symbol.split("::").each do |part|
-                    autoload_list[previous][part] << path
-                    previous = previous.empty? ? part : "#{previous}::#{part}"
-                  end
-                end
+            files = bundle.dependencies.flat_map(&:files)
+            puts files
+            Benchmark.realtime do
+              files.each do |file|
+                index.index_single(file)
+              rescue Errno::ENOENT
+                puts "File #{file} does not exist"
               end
             end
+            return
+
+            # paths_with_symbols = Static::SymbolLoader.gem_symbols_with_paths(gem)
+
+            # paths_with_symbols.each do |path, symbols|
+            #   symbols.each do |symbol|
+            #     previous = ""
+
+            #     symbol.split("::").each do |part|
+            #       autoload_list[previous][part] << path
+            #       previous = previous.empty? ? part : "#{previous}::#{part}"
+            #     end
+            #   end
+            # end
 
             # Sort the list of autoloads by the number of components in the constant name and the length of the name.
             autoload_list.transform_values do |part_to_paths_map|
