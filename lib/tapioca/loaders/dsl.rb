@@ -46,7 +46,17 @@ module Tapioca
 
       sig { void }
       def load_dsl_extensions
-        Dir["#{__dir__}/../dsl/extensions/*.rb"].sort.each { |f| require(f) }
+        say("Loading DSL extension classes... ")
+
+        Dir.glob(["#{@tapioca_path}/extensions/**/*.rb"]).each do |extension|
+          require File.expand_path(extension)
+        end
+
+        ::Gem.find_files("tapioca/dsl/extensions/*.rb").each do |extension|
+          require File.expand_path(extension)
+        end
+
+        say("Done", :green)
       end
 
       sig { void }

@@ -8,14 +8,7 @@ module Tapioca
 
       sig { override.void }
       def execute
-        Loaders::Dsl.load_application(
-          tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty? && @requested_paths.empty?,
-          app_root: @app_root,
-          halt_upon_load_error: @halt_upon_load_error,
-        )
-
-        pipeline = create_pipeline
+        load_application
 
         say("")
         say("Loaded DSL compiler classes:")

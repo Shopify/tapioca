@@ -230,13 +230,14 @@ module Tapioca
 
       sig { returns(Regexp) }
       def require_paths_prefix_matcher
-        @require_paths_prefix_matcher = T.let(@require_paths_prefix_matcher, T.nilable(Regexp))
-
-        @require_paths_prefix_matcher ||= begin
-          require_paths = T.unsafe(@spec).require_paths
-          prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
-          Regexp.union(prefix_matchers)
-        end
+        @require_paths_prefix_matcher ||= T.let(
+          begin
+            require_paths = T.unsafe(@spec).require_paths
+            prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
+            Regexp.union(prefix_matchers)
+          end,
+          T.nilable(Regexp),
+        )
       end
 
       sig { params(file: String).returns(Pathname) }

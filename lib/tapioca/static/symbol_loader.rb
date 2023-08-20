@@ -59,14 +59,15 @@ module Tapioca
 
         sig { returns(T::Array[T.class_of(Rails::Engine)]) }
         def engines
-          @engines = T.let(@engines, T.nilable(T::Array[T.class_of(Rails::Engine)]))
-
-          @engines ||= if Object.const_defined?("Rails::Engine")
-            descendants_of(Object.const_get("Rails::Engine"))
-              .reject(&:abstract_railtie?)
-          else
-            []
-          end
+          @engines ||= T.let(
+            if Object.const_defined?("Rails::Engine")
+              descendants_of(Object.const_get("Rails::Engine"))
+                .reject(&:abstract_railtie?)
+            else
+              []
+            end,
+            T.nilable(T::Array[T.class_of(Rails::Engine)]),
+          )
         end
 
         sig { params(input: String, table_type: String).returns(String) }

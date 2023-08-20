@@ -105,10 +105,12 @@ module Tapioca
 
       sig { returns(T::Array[T.class_of(Compiler)]) }
       def compilers
-        @compilers = T.let(@compilers, T.nilable(T::Array[T.class_of(Compiler)]))
-        @compilers ||= Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
-          T.must(compiler.name)
-        end
+        @compilers ||= T.let(
+          Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
+            T.must(compiler.name)
+          end,
+          T.nilable(T::Array[T.class_of(Compiler)]),
+        )
       end
 
       private
