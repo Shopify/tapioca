@@ -60,12 +60,12 @@ module Tapioca
             index = ::RubyIndexer::Index.new
 
             files = bundle.dependencies.flat_map(&:files)
-            puts files
+            # puts files
             Benchmark.realtime do
               files.each do |file|
                 index.index_single(file)
               rescue Errno::ENOENT
-                puts "File #{file} does not exist"
+                # puts "File #{file} does not exist"
               end
             end
             return
