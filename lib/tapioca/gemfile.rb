@@ -156,6 +156,11 @@ module Tapioca
         @spec.name
       end
 
+      sig { returns(T::Array[::Gem::Dependency]) }
+      def dependencies
+        @spec.dependencies
+      end
+
       sig { returns(String) }
       def rbi_file_name
         "#{name}@#{version}.rbi"

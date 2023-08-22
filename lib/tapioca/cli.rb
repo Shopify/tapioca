@@ -198,6 +198,10 @@ module Tapioca
       banner: "gem [gem ...]",
       desc: "Exclude the given gem(s) from RBI generation",
       default: []
+    option :include_dependencies,
+      type: :boolean,
+      desc: "Generate RBI files for dependencies of the given gem(s)",
+      default: false
     option :typed_overrides,
       aliases: ["--typed", "-t"],
       type: :hash,
@@ -251,10 +255,14 @@ module Tapioca
 
       all = options[:all]
       verify = options[:verify]
+      include_dependencies = options[:include_dependencies]
 
       raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
 
-      unless gems.empty?
+      if gems.empty?
+        raise MalformattedArgumentError,
+          "Option '--include-dependencies' must be provided with gems" if include_dependencies
+      else
         raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
         raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
       end
@@ -262,6 +270,7 @@ module Tapioca
       command_args = {
         gem_names: all ? [] : gems,
         exclude: options[:exclude],
+        include_dependencies: options[:include_dependencies],
         prerequire: options[:prerequire],
         postrequire: options[:postrequire],
         typed_overrides: options[:typed_overrides],

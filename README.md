@@ -171,6 +171,7 @@ Options:
   --post, -a,  [--postrequire=file]                                   # A file to be required after Bundler.require is called
                                                                       # Default: sorbet/tapioca/require.rb
   -x,          [--exclude=gem [gem ...]]                              # Exclude the given gem(s) from RBI generation
+               [--include-dependencies], [--no-include-dependencies]  # Generate RBI files for dependencies of the given gem(s)
   --typed, -t, [--typed-overrides=gem:level [gem:level ...]]          # Override for typed sigils for generated gem RBIs
                                                                       # Default: {"activesupport"=>"false"}
                [--verify], [--no-verify]                              # Verify RBIs are up-to-date
@@ -199,7 +200,7 @@ generate RBIs from gems
 ```
 <!-- END_HELP_COMMAND_GEM -->
 
-By default, running `tapioca gem` will only generate the RBI files for gems that have been added to or removed from the project's `Gemfile` this means that Tapioca will not regenerate the RBI files for untouched gems. However, when changing Tapioca configuration or bumping its version, it may be useful to force the regeneration of the RBI files previously generated. This can be done with the `--all` option:
+By default, running `tapioca gem` will only generate the RBI files for gems that have been added to or removed from the project's `Gemfile` this means that Tapioca will not regenerate the RBI files for untouched gems. If you want to force the regeneration you can supply gem names to the `tapioca gem` command. When supplying gem names if you want to generate RBI files for their dependencies as well, you can use the `--include-dependencies` option. When changing Tapioca configuration or bumping its version, it may be useful to force the regeneration of all the RBI files previously generated. This can be done with the `--all` option:
 
 ```shell
 bin/tapioca gems --all
@@ -904,6 +905,7 @@ gem:
   prerequire: ''
   postrequire: sorbet/tapioca/require.rb
   exclude: []
+  include_dependencies: false
   typed_overrides:
     activesupport: 'false'
   verify: false
