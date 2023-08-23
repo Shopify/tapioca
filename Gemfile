@@ -13,6 +13,7 @@ gem "pry-byebug"
 gem "rubocop-shopify", require: false
 gem "rubocop-sorbet", ">= 0.4.1"
 gem "rubocop-rspec", require: false
+gem "ruby-lsp"
 
 group :deployment, :development do
   gem "rake"

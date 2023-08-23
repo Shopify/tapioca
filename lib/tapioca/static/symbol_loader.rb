@@ -43,16 +43,13 @@ module Tapioca
 
         sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
         def symbols_from_paths(paths)
-          output = Tempfile.create("sorbet") do |file|
-            file.write(Array(paths).join("\n"))
-            file.flush
-
-            symbol_table_json_from("@#{file.path.shellescape}")
+          index = RubyIndexer::Index.new
+          paths.map do |path|
+            index.index_single(path)
+          rescue Errno::ENOENT
+            puts "File not found: #{path}"
           end
-
-          return Set.new if output.empty?
-
-          SymbolTableParser.parse_json(output)
+          Set.new(index.entries.keys)
         end
 
         private

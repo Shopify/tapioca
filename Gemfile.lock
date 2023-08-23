@@ -333,6 +333,11 @@ GEM
       rubocop (~> 1.51)
     rubocop-sorbet (0.7.2)
       rubocop (>= 0.90.0)
+    ruby-lsp (0.8.1)
+      language_server-protocol (~> 3.17.0)
+      sorbet-runtime
+      syntax_tree (>= 6.1.1, < 7)
+      yarp (~> 0.8.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     shopify-money (1.2.1)
@@ -395,6 +400,7 @@ GEM
     yard-sorbet (0.8.1)
       sorbet-runtime (>= 0.5)
       yard (>= 0.9)
+    yarp (0.8.0)
     zeitwerk (2.6.8)
 
 PLATFORMS
@@ -429,6 +435,7 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
+  ruby-lsp
   shopify-money
   sidekiq
   smart_properties
