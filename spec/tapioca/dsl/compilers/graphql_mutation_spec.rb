@@ -98,6 +98,31 @@ module Tapioca
               assert_equal(expected, rbi_for(:CreateComment))
             end
 
+            it "generates correct RBI for default values with replacement" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CreateComment < GraphQL::Schema::Mutation
+                  argument :body, String, required: false, default_value: "comment", replace_null_with_default: true
+                  argument :author, String, required: false, default_value: nil, replace_null_with_default: true
+                  argument :post_id, ID, required: true
+
+                  def resolve(body:, author:, post_id:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(body: ::String, author: T.nilable(::String), post_id: ::String).returns(T.untyped) }
+                  def resolve(body:, author:, post_id:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
             it "generates correct RBI for all graphql types" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class EnumA < GraphQL::Schema::Enum
