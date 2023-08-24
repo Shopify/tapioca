@@ -1337,6 +1337,48 @@ module Tapioca
                   expect_dsl_compiler_errors!
                 end
 
+                it "generates RBI file for monkey patches reflections" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :posts do |t|
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("custom_reflection.rb", <<~RUBY)
+                    class CustomReflection
+                      def parent_reflection
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      ::ActiveRecord::Reflection.add_reflection(self, :monkey, CustomReflection.new)
+                    end
+                  RUBY
+
+                  expected = <<~RBI
+                    # typed: strong
+
+                    class Post
+                      include GeneratedAssociationMethods
+
+                      module GeneratedAssociationMethods; end
+                    end
+                  RBI
+
+                  assert_equal(expected, rbi_for(:Post))
+
+                  assert_equal(1, generated_errors.size)
+
+                  assert_match(Regexp.new(<<~MSG.strip), generated_errors.first)
+                    Cannot generate association `monkey` on `Post` because of `undefined method `collection?.*
+                  MSG
+                end
+
                 it "generates RBI file for broken associations" do
                   add_ruby_file("schema.rb", <<~RUBY)
                     ActiveRecord::Migration.suppress_messages do

@@ -173,6 +173,10 @@ module Tapioca
             add_error(<<~MSG.strip)
               Cannot generate association `#{declaration(reflection)}` on `#{constant}` since the constant `#{error.class_name}` does not exist.
             MSG
+          rescue StandardError => error
+            add_error(<<~MSG.strip)
+              Cannot generate association `#{association_name}` on `#{constant}` because of `#{error}`.".
+            MSG
           end
         end
 
