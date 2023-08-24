@@ -198,6 +198,17 @@ module Tapioca
           assert_empty_stdout(result)
           refute_success_status(result)
         end
+
+        it "must show an error if --include-dependencies is supplied without gem" do
+          result = @project.tapioca("gem --include-dependencies")
+
+          assert_equal(<<~ERR, result.err)
+            Option '--include-dependencies' must be provided with gems
+          ERR
+
+          assert_empty_stdout(result)
+          refute_success_status(result)
+        end
       end
 
       describe "generate" do
@@ -739,6 +750,32 @@ module Tapioca
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
           refute_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
           assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must respect include-dependencies option" do
+          @project.require_real_gem("actionpack", "7.0.6")
+          @project.require_mock_gem(mock_gem("foo", "0.0.1"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0", dependencies: ["bundler", "actionpack"]))
+          @project.require_mock_gem(mock_gem("baz", "0.0.2"))
+          @project.bundle_install
+
+          result = @project.tapioca("gem foo bar --include-dependencies")
+
+          assert_stdout_includes(result, "Compiled foo")
+          assert_stdout_includes(result, "Compiled bar")
+          assert_stdout_includes(result, "Compiled actionpack")
+          assert_stdout_includes(result, "Compiled rack")
+          refute_includes(result.out, "Compiled baz")
+          refute_includes(result.out, "Compiled bundler")
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/actionpack@7.0.6.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/rack@2.2.8.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
 
           assert_empty_stderr(result)
           assert_success_status(result)
