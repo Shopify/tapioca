@@ -93,6 +93,27 @@ module Tapioca
               assert_equal([], gathered_constants_in_namespace(:TestCase))
             end
 
+            it "does not gather constants that inherit from a class that extend ActiveSupport::Concern" do
+              add_ruby_file("test_case.rb", <<~RUBY)
+                module TestCase
+                  module Foo
+                    extend ActiveSupport::Concern
+                  end
+
+                  class Bar
+                    extend ActiveSupport::Concern
+                    include Foo
+                  end
+
+                  class Baz < Bar
+                    include Foo
+                  end
+                end
+              RUBY
+
+              assert_equal(["TestCase::Bar"], gathered_constants_in_namespace(:TestCase))
+            end
+
             it "gathers constants for nested AS::Concern" do
               add_ruby_file("test_case.rb", <<~RUBY)
                 module TestCase
