@@ -30,6 +30,15 @@ module Tapioca
             super
           end
 
+          attr_reader :__tapioca_stored_attributes
+
+          def store_accessor(store_attribute, *keys, prefix: nil, suffix: nil)
+            @__tapioca_stored_attributes ||= []
+            @__tapioca_stored_attributes << [store_attribute, keys, prefix, suffix]
+
+            super
+          end
+
           ::ActiveRecord::Base.singleton_class.prepend(self)
         end
       end

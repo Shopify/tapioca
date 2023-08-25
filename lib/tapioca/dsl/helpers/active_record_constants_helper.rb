@@ -15,6 +15,7 @@ module Tapioca
         AssociationMethodsModuleName = T.let("GeneratedAssociationMethods", String)
         DelegatedTypesModuleName = T.let("GeneratedDelegatedTypeMethods", String)
         SecureTokensModuleName = T.let("GeneratedSecureTokenMethods", String)
+        StoredAttributesModuleName = T.let("GeneratedStoredAttributesMethods", String)
 
         RelationMethodsModuleName = T.let("GeneratedRelationMethods", String)
         AssociationRelationMethodsModuleName = T.let("GeneratedAssociationRelationMethods", String)
