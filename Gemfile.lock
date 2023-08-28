@@ -187,7 +187,7 @@ GEM
     google-protobuf (3.24.1-arm64-darwin)
     google-protobuf (3.24.1-x86_64-darwin)
     google-protobuf (3.24.1-x86_64-linux)
-    graphql (2.0.25)
+    graphql (2.0.26)
     hashdiff (1.0.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
