@@ -71,15 +71,7 @@ module Tapioca
         def argument_type(argument)
           return "T.untyped" unless argument
 
-          argument_type = if argument.loads
-            loads_type = ::GraphQL::Schema::Wrapper.new(argument.loads)
-            loads_type = loads_type.to_list_type if argument.type.list?
-            loads_type = loads_type.to_non_null_type if argument.type.non_null?
-            loads_type
-          else
-            argument.type
-          end
-          Helpers::GraphqlTypeHelper.type_for(argument_type)
+          Helpers::GraphqlTypeHelper.type_for(argument)
         end
 
         class << self
