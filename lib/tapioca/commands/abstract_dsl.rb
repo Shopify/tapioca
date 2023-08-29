@@ -26,6 +26,7 @@ module Tapioca
           rbi_formatter: RBIFormatter,
           app_root: String,
           halt_upon_load_error: T::Boolean,
+          environment: String,
         ).void
       end
       def initialize(
@@ -43,7 +44,8 @@ module Tapioca
         gem_dir: DEFAULT_GEM_DIR,
         rbi_formatter: DEFAULT_RBI_FORMATTER,
         app_root: ".",
-        halt_upon_load_error: true
+        halt_upon_load_error: true,
+        environment: DEFAULT_ENVIRONMENT
       )
         @requested_constants = requested_constants
         @requested_paths = requested_paths
@@ -60,6 +62,7 @@ module Tapioca
         @rbi_formatter = rbi_formatter
         @app_root = app_root
         @halt_upon_load_error = halt_upon_load_error
+        @environment = environment
 
         super()
       end
@@ -298,9 +301,15 @@ module Tapioca
             build_error_for_files(cause, diff_for_cause.map(&:first))
           end.join("\n")
 
+          suggested_command = if @environment != DEFAULT_ENVIRONMENT
+            default_command(command, "-e", @environment)
+          else
+            default_command(command)
+          end
+
           raise Thor::Error, <<~ERROR
-            #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
-              #{set_color("`#{default_command(command)}`", :green, :bold)}
+            #{set_color("RBI files are out-of-date. To update the RBI files, please run:", :green)}
+              #{set_color("`#{suggested_command}`", :green, :bold)}
             #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
             If you don't observe any changes after running the command locally, ensure your database is in a good
             state e.g. run `bin/rails db:reset`

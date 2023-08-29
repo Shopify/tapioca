@@ -123,12 +123,13 @@ module Tapioca
     sig do
       params(
         command: String,
+        args: T::Array[String],
         enforce_typechecking: T::Boolean,
         exclude: T::Array[String],
       ).returns(ExecResult)
     end
-    def tapioca(command, enforce_typechecking: true, exclude: tapioca_dependencies)
-      exec_command = ["tapioca", command]
+    def tapioca(command, args: [], enforce_typechecking: true, exclude: tapioca_dependencies)
+      exec_command = ["tapioca", command, *args]
       if command.start_with?(/gem/)
         exec_command << "--workers=1" unless command.match?("--workers")
         exec_command << "--no-doc" unless command.match?("--doc")

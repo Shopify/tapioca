@@ -155,6 +155,7 @@ module Tapioca
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],
         halt_upon_load_error: options[:halt_upon_load_error],
+        environment: options[:environment],
       }
 
       command = if options[:verify]

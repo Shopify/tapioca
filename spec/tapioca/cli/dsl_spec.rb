@@ -1649,7 +1649,7 @@ module Tapioca
           OUT
 
           assert_equal(<<~ERROR, result.err)
-            RBI files are out-of-date. In your development environment, please run:
+            RBI files are out-of-date. To update the RBI files, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
             If you don't observe any changes after running the command locally, ensure your database is in a good
@@ -1688,7 +1688,7 @@ module Tapioca
           OUT
 
           assert_equal(<<~ERROR, result.err)
-            RBI files are out-of-date. In your development environment, please run:
+            RBI files are out-of-date. To update the RBI files, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
             If you don't observe any changes after running the command locally, ensure your database is in a good
@@ -1738,8 +1738,56 @@ module Tapioca
           OUT
 
           assert_equal(<<~ERROR, result.err)
-            RBI files are out-of-date. In your development environment, please run:
+            RBI files are out-of-date. To update the RBI files, please run:
               `bin/tapioca dsl`
+            Once it is complete, be sure to commit and push any changes
+            If you don't observe any changes after running the command locally, ensure your database is in a good
+            state e.g. run `bin/rails db:reset`
+
+            Reason:
+              File(s) changed:
+              - sorbet/rbi/dsl/post.rbi
+          ERROR
+
+          refute_success_status(result)
+        end
+
+        it "suggest commands for regenerating RBIs using the same environment argument" do
+          @project.write("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          @project.tapioca("dsl")
+
+          @project.write("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+              property :desc, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl", args: ["--verify", "-e", "test"])
+
+          assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Checking for out-of-date RBIs...
+
+
+          OUT
+
+          assert_equal(<<~ERROR, result.err)
+            RBI files are out-of-date. To update the RBI files, please run:
+              `bin/tapioca dsl -e test`
             Once it is complete, be sure to commit and push any changes
             If you don't observe any changes after running the command locally, ensure your database is in a good
             state e.g. run `bin/rails db:reset`
