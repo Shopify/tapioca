@@ -929,7 +929,7 @@ end
 # source://public_suffix//lib/public_suffix.rb#27
 PublicSuffix::STAR = T.let(T.unsafe(nil), String)
 
-# @return [String] The current library version.
+# @return [String] the current library version
 #
-# source://public_suffix//lib/public_suffix/version.rb#13
+# source://public_suffix//lib/public_suffix/version.rb#12
 PublicSuffix::VERSION = T.let(T.unsafe(nil), String)
