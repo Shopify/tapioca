@@ -71,16 +71,16 @@ Run `bundle install` and make sure Tapioca is properly installed:
 $ tapioca help
 
 Commands:
-  tapioca --version, -v      # show version
+  tapioca --version, -v      # Show version
   tapioca annotations        # Pull gem RBI annotations from remote sources
-  tapioca check-shims        # check duplicated definitions in shim RBIs
-  tapioca configure          # initialize folder structure and type checking configuration
-  tapioca dsl [constant...]  # generate RBIs for dynamic methods
-  tapioca gem [gem...]       # generate RBIs from gems
+  tapioca check-shims        # Check duplicated definitions in shim RBIs
+  tapioca configure          # Initialize folder structure and type checking configuration
+  tapioca dsl [constant...]  # Generate RBIs for dynamic methods
+  tapioca gem [gem...]       # Generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
-  tapioca init               # get project ready for type checking
-  tapioca require            # generate the list of files to be required by tapioca
-  tapioca todo               # generate the list of unresolved constants
+  tapioca init               # Get project ready for type checking
+  tapioca require            # Generate the list of files to be required by tapioca
+  tapioca todo               # Generate the list of unresolved constants
 
 Options:
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
@@ -120,7 +120,7 @@ Options:
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
 
-get project ready for type checking
+Get project ready for type checking
 ```
 <!-- END_HELP_COMMAND_INIT -->
 
@@ -196,7 +196,7 @@ Options:
                                                                       # Default: sorbet/tapioca/config.yml
   -V,          [--verbose], [--no-verbose]                            # Verbose output for debugging purposes
 
-generate RBIs from gems
+Generate RBIs from gems
 ```
 <!-- END_HELP_COMMAND_GEM -->
 
@@ -483,7 +483,7 @@ Options:
                                                                     # Default: sorbet/tapioca/config.yml
   -V,        [--verbose], [--no-verbose]                            # Verbose output for debugging purposes
 
-generate RBIs for dynamic methods
+Generate RBIs for dynamic methods
 ```
 <!-- END_HELP_COMMAND_DSL -->
 
@@ -846,7 +846,7 @@ Options:
                                                    # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                  # Verbose output for debugging purposes
 
-check duplicated definitions in shim RBIs
+Check duplicated definitions in shim RBIs
 ```
 <!-- END_HELP_COMMAND_CHECK_SHIMS -->
 
