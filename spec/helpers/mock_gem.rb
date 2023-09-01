@@ -5,7 +5,7 @@ require "helpers/mock_dir"
 
 module Tapioca
   # A mock gem used for testing purposes
-  class MockGem < MockDir
+  class MockGem < Spoom::Context
     extend T::Sig
 
     # The gem's name
@@ -32,13 +32,13 @@ module Tapioca
     # Write `contents` to the gem's gemspec
     sig { params(contents: String).void }
     def gemspec(contents)
-      write("#{name}.gemspec", contents)
+      write!("#{name}.gemspec", contents)
     end
 
     # The line to add to a project gemfile to require this gem
     sig { returns(String) }
     def gemfile_line
-      "gem '#{name}', path: '#{path}'"
+      "gem '#{name}', path: '#{absolute_path}'"
     end
 
     # The default gemspec contents string

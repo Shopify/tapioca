@@ -74,7 +74,7 @@ module Tapioca
 
         it "respects the Gemfile and Gemfile.lock" do
           gem = mock_gem("foo", "1.0.0") do
-            write("lib/foo.rb", <<~RB)
+            write!("lib/foo.rb", <<~RB)
               raise "This gem should not have been loaded"
 
               module Foo
@@ -319,7 +319,7 @@ module Tapioca
 
         it "generates RBI files for processable constants coming from gems" do
           gem = mock_gem("foo", "1.0.0") do
-            write("lib/foo/role.rb", <<~RB)
+            write!("lib/foo/role.rb", <<~RB)
               require "smart_properties"
 
               module Foo
@@ -1812,7 +1812,7 @@ module Tapioca
           RB
 
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/tapioca/dsl/compilers/post_compiler.rb", <<~RB)
+            write!("lib/tapioca/dsl/compilers/post_compiler.rb", <<~RB)
               require "post"
               require "tapioca/dsl"
 
@@ -1954,7 +1954,7 @@ module Tapioca
           RB
 
           encryptable = mock_gem("encryptable", "0.0.1") do
-            write("lib/encryptable.rb", <<~RB)
+            write!("lib/encryptable.rb", <<~RB)
               module Encryptable
                 def self.included(base)
                   base.extend(ClassMethods)
@@ -1989,7 +1989,7 @@ module Tapioca
               end
             RB
 
-            write("lib/tapioca/dsl/extensions/encryptable.rb", <<~RB)
+            write!("lib/tapioca/dsl/extensions/encryptable.rb", <<~RB)
               require "encryptable"
 
               module Tapioca
@@ -2010,7 +2010,7 @@ module Tapioca
               end
             RB
 
-            write("lib/tapioca/dsl/compilers/encryptable.rb", <<~RB)
+            write!("lib/tapioca/dsl/compilers/encryptable.rb", <<~RB)
               require "encryptable"
 
               module Tapioca
@@ -2106,7 +2106,7 @@ module Tapioca
           RB
 
           encryptable = mock_gem("encryptable", "0.0.1") do
-            write("lib/encryptable.rb", <<~RB)
+            write!("lib/encryptable.rb", <<~RB)
               module Encryptable
                 def self.included(base)
                   base.extend(ClassMethods)

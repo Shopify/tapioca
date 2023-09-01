@@ -146,7 +146,7 @@ module Tapioca
 
       it "must support 'gems' as an alias to the command" do
         foo = mock_gem("foo", "0.0.1") do
-          write("lib/foo.rb", FOO_RB)
+          write!("lib/foo.rb", FOO_RB)
         end
 
         @project.require_mock_gem(foo)
@@ -226,11 +226,11 @@ module Tapioca
 
         it "must generate a single gem RBI" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           bar = mock_gem("bar", "0.3.0") do
-            write("lib/bar.rb", BAR_RB)
+            write!("lib/bar.rb", BAR_RB)
           end
 
           @project.require_mock_gem(foo)
@@ -281,7 +281,7 @@ module Tapioca
 
         it "must generate gem RBI in correct output directory" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           @project.require_mock_gem(foo)
@@ -303,22 +303,22 @@ module Tapioca
 
         it "must generate a gem RBI with the ones exported from the gem by default" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
 
-            write("rbi/foo.rbi", <<~RBI)
+            write!("rbi/foo.rbi", <<~RBI)
               module Foo
                 sig { params(a: String, b: Integer, opts: T.untyped).void }
                 def self.foo(a = T.unsafe(nil), b: T.unsafe(nil), **opts); end
               end
             RBI
 
-            write("rbi/foo/bar.rbi", <<~RBI)
+            write!("rbi/foo/bar.rbi", <<~RBI)
               module Foo
                 def foo; end
               end
             RBI
 
-            write("rbi/foo/bar/baz.rbi", <<~RBI)
+            write!("rbi/foo/bar/baz.rbi", <<~RBI)
               module Foo::Bar
                 def bar; end
               end
@@ -363,22 +363,22 @@ module Tapioca
 
         it "must generate a gem RBI without the ones exported from the gem when called with `--no-exported-gem-rbis`" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
 
-            write("rbi/foo.rbi", <<~RBI)
+            write!("rbi/foo.rbi", <<~RBI)
               module RBI::Foo
                 sig { void }
                 def foo; end
               end
             RBI
 
-            write("rbi/foo/bar.rbi", <<~RBI)
+            write!("rbi/foo/bar.rbi", <<~RBI)
               module RBI::Bar
                 def bar; end
               end
             RBI
 
-            write("rbi/foo/bar/baz.rbi", <<~RBI)
+            write!("rbi/foo/bar/baz.rbi", <<~RBI)
               module RBI::Bar::Baz
                 def baz; end
               end
@@ -398,9 +398,9 @@ module Tapioca
 
         it "must generate a gem RBI and skip exported gem RBIs if they contain errors" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
 
-            write("rbi/foo.rbi", <<~RBI)
+            write!("rbi/foo.rbi", <<~RBI)
               module Foo # Syntax error
             RBI
           end
@@ -423,15 +423,15 @@ module Tapioca
 
         it "must generate a gem RBI and skip exported gem RBIs if they contain conflicts" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
 
-            write("rbi/foo.rbi", <<~RBI)
+            write!("rbi/foo.rbi", <<~RBI)
               module RBI::Foo
                 def foo(x); end
               end
             RBI
 
-            write("rbi/bar.rbi", <<~RBI)
+            write!("rbi/bar.rbi", <<~RBI)
               module RBI::Foo
                 def foo(a, b, c); end
               end
@@ -458,9 +458,9 @@ module Tapioca
 
         it "must generate a gem RBI and resolves conflicts with exported gem RBIs by keeping the generated RBI" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
 
-            write("rbi/foo.rbi", <<~RBI)
+            write!("rbi/foo.rbi", <<~RBI)
               module Foo
                 class << self
                   def foo; end
@@ -510,8 +510,8 @@ module Tapioca
 
         it "must perform postrequire properly" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
-            write("lib/foo/secret.rb", "class Secret; end")
+            write!("lib/foo.rb", FOO_RB)
+            write!("lib/foo/secret.rb", "class Secret; end")
           end
 
           @project.require_mock_gem(foo)
@@ -538,12 +538,12 @@ module Tapioca
 
         it "loads gems that are marked `require: false`" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
-            write("lib/foo/secret.rb", "class Secret; end")
+            write!("lib/foo.rb", FOO_RB)
+            write!("lib/foo/secret.rb", "class Secret; end")
           end
 
           bar = mock_gem("bar", "1.0.0") do
-            write("lib/bar.rb", <<~RUBY)
+            write!("lib/bar.rb", <<~RUBY)
               module Foo
                 MY_CONSTANT = 42
               end
@@ -582,7 +582,7 @@ module Tapioca
 
         it "explains what went wrong when it can't load the postrequire properly" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           @project.require_mock_gem(foo)
@@ -624,15 +624,15 @@ module Tapioca
 
         it "must generate multiple gem RBIs" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           bar = mock_gem("bar", "0.3.0") do
-            write("lib/bar.rb", BAR_RB)
+            write!("lib/bar.rb", BAR_RB)
           end
 
           baz = mock_gem("baz", "0.0.2") do
-            write("lib/baz.rb", BAZ_RB)
+            write!("lib/baz.rb", BAZ_RB)
           end
 
           @project.require_mock_gem(foo)
@@ -654,15 +654,15 @@ module Tapioca
 
         it "must generate RBIs for all gems in the Gemfile" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           bar = mock_gem("bar", "0.3.0") do
-            write("lib/bar.rb", BAR_RB)
+            write!("lib/bar.rb", BAR_RB)
           end
 
           baz = mock_gem("baz", "0.0.2") do
-            write("lib/baz.rb", BAZ_RB)
+            write!("lib/baz.rb", BAZ_RB)
           end
 
           @project.require_mock_gem(foo)
@@ -783,7 +783,7 @@ module Tapioca
 
         it "does not crash when the extras gem is loaded" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           @project.require_real_gem("extras")
@@ -876,7 +876,7 @@ module Tapioca
           # get `Rake::TaskLib` in the output.
           fake_yard = mock_gem("fake_yard", "0.0.1") do
             # Top-level autoloads `FakeYard::Rake` module.
-            write("lib/fake_yard.rb", <<~RB)
+            write!("lib/fake_yard.rb", <<~RB)
               module FakeYard
                 autoload :Rake, __dir__ + "/fake_yard/rake.rb"
               end
@@ -886,7 +886,7 @@ module Tapioca
             #
             # This file is mostly here to make sure that we handle autoloads
             # inside autoloaded files properly.
-            write("lib/fake_yard/rake.rb", <<~RB)
+            write!("lib/fake_yard/rake.rb", <<~RB)
               module FakeYard
                 module Rake
                   autoload :YardocTask, __dir__ + "/yardoc_task.rb"
@@ -896,7 +896,7 @@ module Tapioca
 
             # Finally `FakeYard::Rake::YardocTask` requires a non-default path from
             # `fake_rake` gem, `fake_rake/tasklib`, and subclasses from `FakeRake::TaskLib`
-            write("lib/fake_yard/yardoc_task.rb", <<~RB)
+            write!("lib/fake_yard/yardoc_task.rb", <<~RB)
               require 'fake_rake'
               require 'fake_rake/tasklib'
 
@@ -911,13 +911,13 @@ module Tapioca
 
           fake_rake = mock_gem("fake_rake", "0.0.1") do
             # The default require does nothing but define the gem namespace.
-            write("lib/fake_rake.rb", <<~RB)
+            write!("lib/fake_rake.rb", <<~RB)
               module FakeRake
               end
             RB
 
             # The non-default require defines `FakeRake::TaskLib`
-            write("lib/fake_rake/tasklib.rb", <<~RB)
+            write!("lib/fake_rake/tasklib.rb", <<~RB)
               module FakeRake
                 class TaskLib
                 end
@@ -951,7 +951,7 @@ module Tapioca
 
         it "uses the correct autoload, even when a gem redefines it via alias-method-chain" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RB)
+            write!("lib/foo.rb", <<~RB)
               class Module
                 alias_method :autoload_without_foo, :autoload
 
@@ -972,14 +972,14 @@ module Tapioca
 
         it "uses ignores `abort` and `exit` calls inside autoloaded files" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RB)
+            write!("lib/foo.rb", <<~RB)
               module Foo
                 autoload :Bar, __dir__ + "/foo/bar.rb"
                 autoload :Baz, __dir__ + "/foo/baz.rb"
               end
             RB
 
-            write("lib/foo/bar.rb", <<~RB)
+            write!("lib/foo/bar.rb", <<~RB)
               begin
                 abort("Cannot continue")
               rescue
@@ -988,7 +988,7 @@ module Tapioca
               end
             RB
 
-            write("lib/foo/baz.rb", <<~RB)
+            write!("lib/foo/baz.rb", <<~RB)
               begin
                 exit 2
               rescue
@@ -1012,7 +1012,7 @@ module Tapioca
 
         it "must wrap long signatures to 120 chars by default" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RBI)
+            write!("lib/foo.rb", <<~RBI)
               module Foo
                 extend T::Sig
 
@@ -1063,7 +1063,7 @@ module Tapioca
 
         it "must wrap long signatures to specified chars" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RBI)
+            write!("lib/foo.rb", <<~RBI)
               module Foo
                 extend T::Sig
 
@@ -1125,7 +1125,7 @@ module Tapioca
         it "must do mixin attribution properly" do
           # This is pattern is taken from the private `typed_parameters` gem.
           typed_parameters = mock_gem("typed_parameters", "0.3.0") do
-            write("lib/typed_parameters.rb", <<~RUBY)
+            write!("lib/typed_parameters.rb", <<~RUBY)
               require "action_controller"
               module TypedParameters
               end
@@ -1165,7 +1165,7 @@ module Tapioca
 
         it "must do mixin attribution properly when include occurs in other gem" do
           some_engine = mock_gem("some_engine", "0.0.2") do
-            write("lib/some_engine.rb", <<~RUBY)
+            write!("lib/some_engine.rb", <<~RUBY)
               require "action_controller"
 
               module SomeEngine
@@ -1227,7 +1227,7 @@ module Tapioca
 
         it "must generate RBIs for constants defined in a different gem but with mixins in this gem" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RBI)
+            write!("lib/foo.rb", <<~RBI)
               class Foo
                 def baz; end
                 def buzz; end
@@ -1236,7 +1236,7 @@ module Tapioca
           end
 
           bar = mock_gem("bar", "0.0.2") do
-            write("lib/bar.rb", <<~RBI)
+            write!("lib/bar.rb", <<~RBI)
               module Bar; end
 
               Foo.prepend(Bar)
@@ -1266,13 +1266,13 @@ module Tapioca
 
         it "must not generate RBIs for constants that have dynamic mixins performed in other gems" do
           bar = mock_gem("bar", "0.0.2") do
-            write("lib/bar.rb", <<~RBI)
+            write!("lib/bar.rb", <<~RBI)
               module Bar; end
             RBI
           end
 
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RBI)
+            write!("lib/foo.rb", <<~RBI)
               class Foo; end
               String.prepend(Bar)
             RBI
@@ -1297,7 +1297,7 @@ module Tapioca
 
         it "must generate RBIs for constants that have dynamic mixins performed in the gem" do
           bar = mock_gem("bar", "0.0.2") do
-            write("lib/bar.rb", <<~RBI)
+            write!("lib/bar.rb", <<~RBI)
               class Bar
                 def bar; end
               end
@@ -1305,7 +1305,7 @@ module Tapioca
           end
 
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RBI)
+            write!("lib/foo.rb", <<~RBI)
               module Foo; end
               class Baz < Bar; end
 
@@ -1337,7 +1337,7 @@ module Tapioca
 
         it "must generate RBIs for foreign constants whose singleton class overrides #inspect" do
           bar = mock_gem("bar", "0.0.2") do
-            write("lib/bar.rb", <<~RBI)
+            write!("lib/bar.rb", <<~RBI)
               class Bar
                 def self.inspect
                   "Override!"
@@ -1347,7 +1347,7 @@ module Tapioca
           end
 
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RBI)
+            write!("lib/foo.rb", <<~RBI)
               module Foo; end
 
               Bar.singleton_class.include(Foo)
@@ -1452,7 +1452,7 @@ module Tapioca
 
         it "must generate top-level and namespaced constants from engines" do
           foo = mock_gem("foo", "0.0.2") do
-            write("lib/foo.rb", <<~RB)
+            write!("lib/foo.rb", <<~RB)
               require "rails"
 
               module Foo
@@ -1462,12 +1462,12 @@ module Tapioca
               end
             RB
 
-            write("app/models/user.rb", <<~RB)
+            write!("app/models/user.rb", <<~RB)
               class User
               end
             RB
 
-            write("app/models/post.rb", <<~RB)
+            write!("app/models/post.rb", <<~RB)
               module Foo
                 class Post
                 end
@@ -1575,7 +1575,7 @@ module Tapioca
 
         it "generates documentation only for the gem that defines it" do
           foo = mock_gem("foo", "0.0.2") do
-            write("lib/foo.rb", <<~RB)
+            write!("lib/foo.rb", <<~RB)
               # Most objects are cloneable
               class Object
                 def foo; end
@@ -1583,14 +1583,14 @@ module Tapioca
             RB
           end
           bar = mock_gem("bar", "0.0.2") do
-            write("lib/bar.rb", <<~RB)
+            write!("lib/bar.rb", <<~RB)
               class Object
                 def bar; end
               end
             RB
           end
           baz = mock_gem("baz", "0.0.2") do
-            write("lib/baz.rb", <<~RB)
+            write!("lib/baz.rb", <<~RB)
               def baz; end
             RB
           end
@@ -1855,7 +1855,7 @@ module Tapioca
           @project.tapioca("configure")
 
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RB)
+            write!("lib/foo.rb", <<~RB)
               module Foo
                 def foo(a, b, c); end
               end
@@ -1863,7 +1863,7 @@ module Tapioca
           end
 
           bar = mock_gem("bar", "0.3.0") do
-            write("lib/bar.rb", <<~RB)
+            write!("lib/bar.rb", <<~RB)
               module Bar
                 def bar(a, b, c); end
               end
@@ -1871,7 +1871,7 @@ module Tapioca
           end
 
           baz = mock_gem("baz", "1.0.0") do
-            write("lib/baz.rb", <<~RB)
+            write!("lib/baz.rb", <<~RB)
               module Baz
                 def baz(a, b, c); end
               end
@@ -1962,11 +1962,11 @@ module Tapioca
       describe "sanity" do
         before(:all) do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           bar = mock_gem("bar", "1.0.0") do
-            write("lib/bar.rb", BAR_RB)
+            write!("lib/bar.rb", BAR_RB)
           end
 
           @project.require_mock_gem(foo)
@@ -2025,7 +2025,7 @@ module Tapioca
 
       it "generates the correct type variable syntax" do
         type_variable = mock_gem("type_variable", "0.0.1") do
-          write("lib/type_variable.rb", TYPE_VARIABLE_RB)
+          write!("lib/type_variable.rb", TYPE_VARIABLE_RB)
         end
 
         @project.require_mock_gem(type_variable)
@@ -2083,7 +2083,7 @@ module Tapioca
           @project.tapioca("configure")
 
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", <<~RB)
+            write!("lib/foo.rb", <<~RB)
               $stderr.puts "RAILS ENVIRONMENT: \#{ENV["RAILS_ENV"]}"
               $stderr.puts "RACK ENVIRONMENT: \#{ENV["RACK_ENV"]}"
             RB
@@ -2133,7 +2133,7 @@ module Tapioca
           RB
 
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           @project.require_mock_gem(foo)

@@ -78,6 +78,7 @@ module Tapioca
     end
     def mock_gem(name, version, dependencies: [], path: default_gem_path(name), &block)
       gem = MockGem.new(path, name, version, dependencies)
+      gem.mkdir!
       gem.gemspec(gem.default_gemspec_contents)
       gem.instance_exec(gem, &block) if block
       gem

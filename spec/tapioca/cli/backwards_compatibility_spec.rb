@@ -30,7 +30,7 @@ module Tapioca
     describe "ObjectSpace WeakMap generation" do
       before do
         foo = mock_gem("foo", "0.0.1") do
-          write("lib/foo.rb", <<~RB)
+          write!("lib/foo.rb", <<~RB)
             Foo = ObjectSpace::WeakMap.new
           RB
         end
@@ -75,7 +75,7 @@ module Tapioca
     describe "serialization of T::Class and T.anything" do
       before do
         foo = mock_gem("foo", "0.0.1") do
-          write("lib/foo.rb", <<~RB)
+          write!("lib/foo.rb", <<~RB)
             Foo = T.type_alias { T.any(T.anything, T::Class[String]) }
           RB
         end
@@ -159,7 +159,7 @@ module Tapioca
         RBI
 
         generic_type = mock_gem("generic_type", "0.0.1") do
-          write("lib/generic_type.rb", GENERIC_TYPE_RB)
+          write!("lib/generic_type.rb", GENERIC_TYPE_RB)
         end
         @project.require_mock_gem(generic_type)
       end
