@@ -117,7 +117,7 @@ module Tapioca
             # the generic class `Foo[Bar]` is still a `Foo`. That is:
             # `Foo[Bar].new.is_a?(Foo)` should be true, which isn't the case
             # if we just clone the class. But subclassing works just fine.
-            create_safe_subclass(constant)
+            create_safe_subclass(constant, name)
           else
             # This can only be a module and it is fine to just clone modules
             # since they can't have instances and will not have `is_a?` relationships.
@@ -151,21 +151,30 @@ module Tapioca
           generic_type
         end
 
-        sig { params(constant: T::Class[T.anything]).returns(T::Class[T.anything]) }
-        def create_safe_subclass(constant)
+        sig { params(constant: T::Class[T.anything], name: String).returns(T::Class[T.anything]) }
+        def create_safe_subclass(constant, name)
           # Lookup the "inherited" class method
           inherited_method = constant.method(:inherited)
           # and the module that defines it
           owner = inherited_method.owner
 
-          # If no one has overriden the inherited method yet, just subclass
+          # If no one has overridden the inherited method yet, just subclass
           return Class.new(constant) if Class == owner
+
+          # Capture this Hash locally, to mutate it in the `inherited` callback below.
+          generic_instances = @generic_instances
 
           begin
             # Otherwise, some inherited method could be preventing us
             # from creating subclasses, so let's override it and rescue
-            owner.send(:define_method, :inherited) do |s|
-              inherited_method.call(s)
+            owner.send(:define_method, :inherited) do |new_subclass|
+              # Register this new subclass ASAP, to prevent re-entry into the `create_safe_subclass` code-path.
+              # This can happen if the sig of the original `.inherited` method references the generic type itself.
+              generic_instances[name] ||= new_subclass
+
+              # Call the original `.inherited` method, but rescue any errors that might be raised,
+              # which would have otherwise prevented our subclass from being created.
+              inherited_method.call(new_subclass)
             rescue
               # Ignoring errors
             end

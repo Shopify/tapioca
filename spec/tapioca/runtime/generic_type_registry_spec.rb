@@ -83,12 +83,10 @@ module Tapioca
             _ = HasNonRecursiveInheritedSig[Object]
           end
 
-          it "FIXME: breaks from infinite recursion if the sig on .inherited uses the generic type" do
+          it "works for classes whose .inherited sig reference the generic type itself" do
             # Our swizzled implementation of the `.inherited` method needs to be carefully implemented to not fall into
             # infinite recursion when the sig for the method references the class that it's defined on.
-            assert_raises(SystemStackError) do
-              HasRecursiveInheritedSig[Object]
-            end
+            _ = HasRecursiveInheritedSig[Object]
           end
         end
       end
@@ -120,8 +118,6 @@ module Tapioca
         class << self
           extend T::Sig
 
-          # The correct type would be `T::Class[SampleGenericClass[T.anything]]`, but that would crash Tapioca.
-          # That's not honey Pooh, that's recursion!
           sig { params(subclass: T::Class[T.anything]).void }
           def inherited(subclass)
             super
