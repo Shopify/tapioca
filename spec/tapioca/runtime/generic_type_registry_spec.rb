@@ -6,7 +6,45 @@ require "spec_helper"
 module Tapioca
   module Runtime
     class GenericTypeRegistrySpec < Minitest::Spec
+      class MyGenericClass
+        extend T::Generic
+
+        Element = type_member
+
+        class << self
+          def inherited(subclass)
+            # no-op
+          end
+        end
+      end
+
       describe Tapioca::Runtime::GenericTypeRegistry do
+        describe "when accessing generic types from multiple threads" do
+          it "might get a stack overflow" do
+            assert_raises(SystemStackError) do
+              generic_args = (1...100).map { Class.new }
+
+              loop do # Brute force until we get a SystemStackError
+                t1 = Thread.new do
+                  generic_args.each do |generic_arg|
+                    MyGenericClass[generic_arg]
+                  end
+                end
+
+                Thread.new do
+                  generic_args.each do |generic_arg|
+                    MyGenericClass[generic_arg]
+                  end
+                end.join
+
+                t1.join
+
+                GenericTypeRegistry.instance_variable_get(:@generic_instances).clear
+              end
+            end
+          end
+        end
+
         describe ".generic_type_instance?" do
           it "returns false for instances of non-generic classes" do
             refute(GenericTypeRegistry.generic_type_instance?(Object.new))
