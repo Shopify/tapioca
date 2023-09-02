@@ -20,27 +20,25 @@ module Tapioca
 
       describe Tapioca::Runtime::GenericTypeRegistry do
         describe "when accessing generic types from multiple threads" do
-          it "might get a stack overflow" do
-            assert_raises(SystemStackError) do
-              generic_args = (1...100).map { Class.new }
+          it "should not get a stack overflow" do
+            generic_args = (1...100).map { Class.new }
 
-              loop do # Brute force until we get a SystemStackError
-                t1 = Thread.new do
-                  generic_args.each do |generic_arg|
-                    MyGenericClass[generic_arg]
-                  end
+            10_000.times do # Brute force until we get a SystemStackError
+              t1 = Thread.new do
+                generic_args.each do |generic_arg|
+                  MyGenericClass[generic_arg]
                 end
-
-                Thread.new do
-                  generic_args.each do |generic_arg|
-                    MyGenericClass[generic_arg]
-                  end
-                end.join
-
-                t1.join
-
-                GenericTypeRegistry.instance_variable_get(:@generic_instances).clear
               end
+
+              Thread.new do
+                generic_args.each do |generic_arg|
+                  MyGenericClass[generic_arg]
+                end
+              end.join
+
+              t1.join
+
+              GenericTypeRegistry.instance_variable_get(:@generic_instances).clear
             end
           end
         end

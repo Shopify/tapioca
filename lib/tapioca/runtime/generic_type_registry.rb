@@ -161,21 +161,18 @@ module Tapioca
           # If no one has overriden the inherited method yet, just subclass
           return Class.new(constant) if Class == owner
 
-          begin
-            # Otherwise, some inherited method could be preventing us
-            # from creating subclasses, so let's override it and rescue
-            owner.send(:define_method, :inherited) do |s|
-              inherited_method.call(s)
-            rescue
-              # Ignoring errors
-            end
-
-            # return a subclass
-            Class.new(constant)
-          ensure
-            # Reinstate the original inherited method back.
+          # Otherwise, some inherited method could be preventing us
+          # from creating subclasses, so let's override it and rescue
+          owner.send(:define_method, :inherited) do |s|
+            # Reinstate the original inherited method back ASAP
             owner.send(:define_method, :inherited, inherited_method)
+            inherited_method.call(s)
+          rescue
+            # Ignoring errors
           end
+
+          # return a subclass
+          Class.new(constant)
         end
 
         sig { params(constant: Module).returns(T::Array[TypeVariableModule]) }
