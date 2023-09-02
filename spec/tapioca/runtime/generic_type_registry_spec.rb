@@ -68,14 +68,27 @@ module Tapioca
           # but it's easier to test here on its own.
 
           it "rescues exceptions that would prevent subclassing" do
-            assert_raises(RuntimeError) do # Precondition
-              # If not caught by the patch, the error raised from `.inherited` would have blocked our subclassing.
-              Class.new(RaisesInInheritedCallback)
+            cls = Class.new do
+              extend T::Generic
+
+              Element = type_member
+
+              class << self
+                def inherited(subclass)
+                  super
+                  raise "Boom"
+                end
+              end
             end
 
-            result = RaisesInInheritedCallback[Object] # Should be a distinct subclass
-            refute_same(result, RaisesInInheritedCallback)
-            assert_operator(result, :<, RaisesInInheritedCallback)
+            assert_raises(RuntimeError) do # Precondition
+              # If not caught by the patch, the error raised from `.inherited` would have blocked our subclassing.
+              Class.new(cls)
+            end
+
+            result = cls[Object] # Should be a distinct subclass
+            refute_same(result, cls)
+            assert_operator(result, :<, cls)
           end
         end
       end
@@ -84,19 +97,6 @@ module Tapioca
         extend T::Generic
 
         Element = type_member
-      end
-
-      class RaisesInInheritedCallback
-        extend T::Generic
-
-        Element = type_member
-
-        class << self
-          def inherited(subclass)
-            super
-            raise "Boom"
-          end
-        end
       end
     end
   end
