@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Linters
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -48,7 +48,7 @@ jobs:
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - if: ${{ matrix.ruby == 'head' }}
         run: "rm -f ${{ matrix.gemfile }}.lock"
       - name: Set up Ruby
