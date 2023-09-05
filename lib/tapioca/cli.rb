@@ -28,7 +28,6 @@ module Tapioca
       # We need to make sure that trackers stay enabled until the `gem` command is invoked
       Runtime::Trackers.with_trackers_enabled do
         invoke(:configure)
-        invoke(:annotations)
         invoke(:gem)
       end
 
@@ -302,7 +301,6 @@ module Tapioca
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
     option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
     option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
-    option :annotations_rbi_dir, type: :string, desc: "Path to annotations RBIs", default: DEFAULT_ANNOTATIONS_DIR
     option :todo_rbi_file, type: :string, desc: "Path to the generated todo RBI file", default: DEFAULT_TODO_FILE
     option :payload, type: :boolean, desc: "Check shims against Sorbet's payload", default: true
     option :workers, aliases: ["-w"], type: :numeric, desc: "Number of parallel workers (default: auto)"
@@ -311,7 +309,6 @@ module Tapioca
         gem_rbi_dir: options[:gem_rbi_dir],
         dsl_rbi_dir: options[:dsl_rbi_dir],
         shim_rbi_dir: options[:shim_rbi_dir],
-        annotations_rbi_dir: options[:annotations_rbi_dir],
         todo_rbi_file: options[:todo_rbi_file],
         payload: options[:payload],
         number_of_workers: options[:workers],
@@ -320,7 +317,7 @@ module Tapioca
       command.run
     end
 
-    desc "annotations", "Pull gem RBI annotations from remote sources"
+    desc "annotations", "Deprecated, this command has been merged into `tapioca gem`. Please use that instead."
     option :sources,
       type: :array,
       default: [CENTRAL_REPO_ROOT_URI],
@@ -335,18 +332,12 @@ module Tapioca
       desc: "Override for typed sigils for pulled annotations",
       default: {}
     def annotations
-      if !options[:netrc] && options[:netrc_file]
-        raise Thor::Error, set_color("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
-      end
-
-      command = Commands::Annotations.new(
-        central_repo_root_uris: options[:sources],
-        auth: options[:auth],
-        netrc_file: netrc_file(options),
-        typed_overrides: options[:typed_overrides],
+      raise Thor::Error, set_color(
+        "`tapioca annotation` has been deprecated." \
+          "The functionality has been merged into `tapioca gem`. Please use that instead.",
+        :bold,
+        :red,
       )
-
-      command.run
     end
 
     map ["--version", "-v"] => :__print_version

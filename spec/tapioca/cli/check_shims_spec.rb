@@ -482,61 +482,6 @@ module Tapioca
           refute_success_status(result)
         end
 
-        it "detects duplicated definitions between shim and annotations" do
-          @project.write!("sorbet/rbi/annotations/foo.rbi", <<~RBI)
-            class Foo
-              attr_reader :foo
-            end
-          RBI
-
-          @project.write!("sorbet/rbi/annotations/bar.rbi", <<~RBI)
-            module Bar
-              def bar; end
-            end
-          RBI
-
-          @project.write!("sorbet/rbi/annotations/baz.rbi", <<~RBI)
-            module Baz; end
-          RBI
-
-          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
-            class Foo
-              attr_reader :foo
-            end
-          RBI
-
-          @project.write!("sorbet/rbi/shims/bar.rbi", <<~RBI)
-            module Bar
-              def bar; end
-            end
-          RBI
-
-          @project.write!("sorbet/rbi/shims/baz.rbi", <<~RBI)
-            module Baz; end
-          RBI
-
-          result = @project.tapioca("check-shims --no-payload")
-
-          assert_equal(<<~ERR, result.err)
-
-            Duplicated RBI for ::Bar#bar:
-             * sorbet/rbi/shims/bar.rbi:2:2-2:14
-             * sorbet/rbi/annotations/bar.rbi:2:2-2:14
-
-            Duplicated RBI for ::Baz:
-             * sorbet/rbi/shims/baz.rbi:1:0-1:15
-             * sorbet/rbi/annotations/baz.rbi:1:0-1:15
-
-            Duplicated RBI for ::Foo#foo:
-             * sorbet/rbi/shims/foo.rbi:2:2-2:18
-             * sorbet/rbi/annotations/foo.rbi:2:2-2:18
-
-            Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
-          ERR
-
-          refute_success_status(result)
-        end
-
         it "detects duplicated definitions between the TODO file and generated RBIs" do
           @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
@@ -638,12 +583,6 @@ module Tapioca
         end
 
         it "ignores files typed: ignore" do
-          @project.write!("sorbet/rbi/annotations/foo.rbi", <<~RBI)
-            # typed: ignore
-
-            class Foo; end
-          RBI
-
           @project.write!("sorbet/rbi/gems/foo.rbi", <<~RBI)
             # typed: ignore
 

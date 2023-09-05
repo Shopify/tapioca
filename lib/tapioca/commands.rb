@@ -5,7 +5,6 @@ module Tapioca
   module Commands
     autoload :Command, "tapioca/commands/command"
     autoload :CommandWithoutTracker, "tapioca/commands/command_without_tracker"
-    autoload :Annotations, "tapioca/commands/annotations"
     autoload :CheckShims, "tapioca/commands/check_shims"
     autoload :AbstractDsl, "tapioca/commands/abstract_dsl"
     autoload :DslCompilerList, "tapioca/commands/dsl_compiler_list"

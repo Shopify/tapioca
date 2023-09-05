@@ -12,7 +12,6 @@ module Tapioca
         params(
           gem_rbi_dir: String,
           dsl_rbi_dir: String,
-          annotations_rbi_dir: String,
           shim_rbi_dir: String,
           todo_rbi_file: String,
           payload: T::Boolean,
@@ -22,7 +21,6 @@ module Tapioca
       def initialize(
         gem_rbi_dir:,
         dsl_rbi_dir:,
-        annotations_rbi_dir:,
         shim_rbi_dir:,
         todo_rbi_file:,
         payload:,
@@ -31,7 +29,6 @@ module Tapioca
         super()
         @gem_rbi_dir = gem_rbi_dir
         @dsl_rbi_dir = dsl_rbi_dir
-        @annotations_rbi_dir = annotations_rbi_dir
         @shim_rbi_dir = shim_rbi_dir
         @todo_rbi_file = todo_rbi_file
         @payload = payload
@@ -72,7 +69,6 @@ module Tapioca
         index_rbis(index, "shim", @shim_rbi_dir, number_of_workers: @number_of_workers)
         index_rbis(index, "gem", @gem_rbi_dir, number_of_workers: @number_of_workers)
         index_rbis(index, "dsl", @dsl_rbi_dir, number_of_workers: @number_of_workers)
-        index_rbis(index, "annotation", @annotations_rbi_dir, number_of_workers: @number_of_workers)
 
         duplicates = duplicated_nodes_from_index(index, shim_rbi_dir: @shim_rbi_dir, todo_rbi_file: @todo_rbi_file)
 
