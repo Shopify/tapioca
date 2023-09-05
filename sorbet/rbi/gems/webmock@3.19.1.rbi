@@ -478,6 +478,13 @@ class WebMock::Config
   #
   # source://webmock//lib/webmock/config.rb#16
   def show_stubbing_instructions=(_arg0); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/deprecation.rb#4
@@ -585,6 +592,13 @@ class WebMock::HttpLibAdapterRegistry
 
   # source://webmock//lib/webmock/http_lib_adapters/http_lib_adapter_registry.rb#13
   def register(lib, adapter); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#10
@@ -985,6 +999,13 @@ class WebMock::RequestRegistry
 
   # source://webmock//lib/webmock/request_registry.rb#24
   def to_s; end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/request_signature.rb#5
@@ -1115,7 +1136,7 @@ class WebMock::RequestStub
   # source://webmock//lib/webmock/request_stub.rb#8
   def initialize(method, uri); end
 
-  # source://webmock//lib/webmock/request_stub.rb#52
+  # source://webmock//lib/webmock/request_stub.rb#65
   def and_raise(*exceptions); end
 
   # source://webmock//lib/webmock/request_stub.rb#19
@@ -1126,17 +1147,17 @@ class WebMock::RequestStub
   # source://webmock//lib/webmock/request_stub.rb#29
   def and_return_json(*response_hashes); end
 
-  # source://webmock//lib/webmock/request_stub.rb#60
+  # source://webmock//lib/webmock/request_stub.rb#73
   def and_timeout; end
 
   # @return [Boolean]
   #
-  # source://webmock//lib/webmock/request_stub.rb#77
+  # source://webmock//lib/webmock/request_stub.rb#90
   def has_responses?; end
 
   # @return [Boolean]
   #
-  # source://webmock//lib/webmock/request_stub.rb#95
+  # source://webmock//lib/webmock/request_stub.rb#108
   def matches?(request_signature); end
 
   # Returns the value of attribute request_pattern.
@@ -1151,19 +1172,19 @@ class WebMock::RequestStub
   # source://webmock//lib/webmock/request_stub.rb#6
   def request_pattern=(_arg0); end
 
-  # source://webmock//lib/webmock/request_stub.rb#66
+  # source://webmock//lib/webmock/request_stub.rb#79
   def response; end
 
-  # source://webmock//lib/webmock/request_stub.rb#81
+  # source://webmock//lib/webmock/request_stub.rb#94
   def then; end
 
-  # source://webmock//lib/webmock/request_stub.rb#85
+  # source://webmock//lib/webmock/request_stub.rb#98
   def times(number); end
 
-  # source://webmock//lib/webmock/request_stub.rb#48
+  # source://webmock//lib/webmock/request_stub.rb#61
   def to_rack(app, options = T.unsafe(nil)); end
 
-  # source://webmock//lib/webmock/request_stub.rb#52
+  # source://webmock//lib/webmock/request_stub.rb#65
   def to_raise(*exceptions); end
 
   # source://webmock//lib/webmock/request_stub.rb#19
@@ -1174,17 +1195,17 @@ class WebMock::RequestStub
   # source://webmock//lib/webmock/request_stub.rb#29
   def to_return_json(*response_hashes); end
 
-  # source://webmock//lib/webmock/request_stub.rb#99
+  # source://webmock//lib/webmock/request_stub.rb#112
   def to_s; end
 
-  # source://webmock//lib/webmock/request_stub.rb#60
+  # source://webmock//lib/webmock/request_stub.rb#73
   def to_timeout; end
 
   # source://webmock//lib/webmock/request_stub.rb#14
   def with(params = T.unsafe(nil), &block); end
 
   class << self
-    # source://webmock//lib/webmock/request_stub.rb#103
+    # source://webmock//lib/webmock/request_stub.rb#116
     def from_request_signature(signature); end
   end
 end
@@ -1345,6 +1366,13 @@ class WebMock::StubRegistry
 
   # source://webmock//lib/webmock/stub_registry.rb#72
   def request_stub_for(request_signature); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://webmock//lib/webmock/stub_request_snippet.rb#4
