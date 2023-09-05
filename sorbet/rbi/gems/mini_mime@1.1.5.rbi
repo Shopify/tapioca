@@ -51,64 +51,66 @@ end
 class MiniMime::Db
   # @return [Db] a new instance of Db
   #
-  # source://mini_mime//lib/mini_mime.rb#154
+  # source://mini_mime//lib/mini_mime.rb#173
   def initialize; end
 
-  # source://mini_mime//lib/mini_mime.rb#163
+  # source://mini_mime//lib/mini_mime.rb#182
   def lookup_by_content_type(content_type); end
 
-  # source://mini_mime//lib/mini_mime.rb#159
+  # source://mini_mime//lib/mini_mime.rb#178
   def lookup_by_extension(extension); end
 
   class << self
-    # source://mini_mime//lib/mini_mime.rb#70
+    # source://mini_mime//lib/mini_mime.rb#66
     def lookup_by_content_type(content_type); end
 
-    # source://mini_mime//lib/mini_mime.rb#62
+    # source://mini_mime//lib/mini_mime.rb#60
     def lookup_by_extension(extension); end
 
-    # source://mini_mime//lib/mini_mime.rb#55
+    # source://mini_mime//lib/mini_mime.rb#53
     def lookup_by_filename(filename); end
   end
 end
 
-# source://mini_mime//lib/mini_mime.rb#77
+# source://mini_mime//lib/mini_mime.rb#71
 class MiniMime::Db::Cache
   # @return [Cache] a new instance of Cache
   #
-  # source://mini_mime//lib/mini_mime.rb#78
+  # source://mini_mime//lib/mini_mime.rb#72
   def initialize(size); end
 
-  # source://mini_mime//lib/mini_mime.rb#83
+  # source://mini_mime//lib/mini_mime.rb#77
   def []=(key, val); end
 
-  # source://mini_mime//lib/mini_mime.rb#89
+  # source://mini_mime//lib/mini_mime.rb#83
   def fetch(key, &blk); end
 end
 
-# source://mini_mime//lib/mini_mime.rb#53
-MiniMime::Db::LOCK = T.let(T.unsafe(nil), Thread::Mutex)
+# For Windows support
+#
+# source://mini_mime//lib/mini_mime.rb#89
+MiniMime::Db::PReadFile = File
 
-# source://mini_mime//lib/mini_mime.rb#94
+# source://mini_mime//lib/mini_mime.rb#114
 class MiniMime::Db::RandomAccessDb
   # @return [RandomAccessDb] a new instance of RandomAccessDb
   #
-  # source://mini_mime//lib/mini_mime.rb#97
+  # source://mini_mime//lib/mini_mime.rb#117
   def initialize(path, sort_order); end
 
-  # source://mini_mime//lib/mini_mime.rb#111
+  # source://mini_mime//lib/mini_mime.rb#131
   def lookup(val); end
 
   # lifted from marcandre/backports
   #
-  # source://mini_mime//lib/mini_mime.rb#127
+  # source://mini_mime//lib/mini_mime.rb#147
   def lookup_uncached(val); end
 
-  # source://mini_mime//lib/mini_mime.rb#148
+  # source://mini_mime//lib/mini_mime.rb#168
   def resolve(row); end
 end
 
-# source://mini_mime//lib/mini_mime.rb#95
+# source://mini_mime//lib/mini_mime.rb#115
 MiniMime::Db::RandomAccessDb::MAX_CACHED = T.let(T.unsafe(nil), Integer)
 
 # source://mini_mime//lib/mini_mime.rb#28

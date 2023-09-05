@@ -2533,7 +2533,7 @@ Net::IMAP::HAS_NO_CHILDREN = T.let(T.unsafe(nil), Symbol)
 #
 # It matches no IMAP standard.
 #
-# source://net-imap//lib/net/imap/response_data.rb#63
+# source://net-imap//lib/net/imap/response_data.rb#68
 class Net::IMAP::IgnoredResponse < ::Struct; end
 
 # Mailbox attribute indicating that this mailbox is where messages deemed to
@@ -2654,7 +2654,7 @@ Net::IMAP::NO_SELECT = T.let(T.unsafe(nil), Symbol)
 #
 # Returned by Net::IMAP#namespace, contained inside a Namespaces object.
 #
-# source://net-imap//lib/net/imap/response_data.rb#387
+# source://net-imap//lib/net/imap/response_data.rb#392
 class Net::IMAP::Namespace < ::Struct; end
 
 # Net::IMAP::Namespaces represents a +NAMESPACE+ server response, which
@@ -2662,7 +2662,7 @@ class Net::IMAP::Namespace < ::Struct; end
 #
 # Net::IMAP#namespace returns a Namespaces object.
 #
-# source://net-imap//lib/net/imap/response_data.rb#413
+# source://net-imap//lib/net/imap/response_data.rb#418
 class Net::IMAP::Namespaces < ::Struct; end
 
 # Common validators of number and nz_number types
@@ -3743,7 +3743,7 @@ Net::IMAP::TRASH = T.let(T.unsafe(nil), Symbol)
 # TODO: support MULTIAPPEND
 # ++
 #
-# source://net-imap//lib/net/imap/response_data.rb#237
+# source://net-imap//lib/net/imap/response_data.rb#242
 class Net::IMAP::UIDPlusData < ::Struct
   # :call-seq: uid_mapping -> nil or a hash
   #
