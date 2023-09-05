@@ -1134,7 +1134,7 @@ Rack::Directory::DIR_PAGE_HEADER = T.let(T.unsafe(nil), String)
 # Body class for directory entries, showing an index page with links
 # to each file.
 #
-# source://rack//lib/rack/directory.rb#45
+# source://rack//lib/rack/directory.rb#46
 class Rack::Directory::DirectoryBody < ::Struct
   # Yield strings for each part of the directory entry
   #
@@ -1629,6 +1629,8 @@ class Rack::Lint
   # source://rack//lib/rack/lint.rb#10
   def initialize(app); end
 
+  # @raise [LintError]
+  #
   # source://rack//lib/rack/lint.rb#41
   def _call(env); end
 
@@ -1640,27 +1642,29 @@ class Rack::Lint
 
   # === The Content-Length
   #
-  # source://rack//lib/rack/lint.rb#719
+  # source://rack//lib/rack/lint.rb#708
   def check_content_length(status, headers); end
 
   # === The Content-Type
   #
-  # source://rack//lib/rack/lint.rb#705
+  # source://rack//lib/rack/lint.rb#694
   def check_content_type(status, headers); end
 
   # == The Environment
   #
-  # source://rack//lib/rack/lint.rb#77
+  # @raise [LintError]
+  #
+  # source://rack//lib/rack/lint.rb#73
   def check_env(env); end
 
   # === The Error Stream
   #
-  # source://rack//lib/rack/lint.rb#497
+  # source://rack//lib/rack/lint.rb#483
   def check_error(error); end
 
   # === The Headers
   #
-  # source://rack//lib/rack/lint.rb#668
+  # source://rack//lib/rack/lint.rb#656
   def check_headers(header); end
 
   # === Hijacking
@@ -1671,14 +1675,14 @@ class Rack::Lint
   #
   # ==== Request (before status)
   #
-  # source://rack//lib/rack/lint.rb#562
+  # source://rack//lib/rack/lint.rb#548
   def check_hijack(env); end
 
   # ==== Response (after headers)
   # It is also possible to hijack a response after the status and headers
   # have been sent.
   #
-  # source://rack//lib/rack/lint.rb#609
+  # source://rack//lib/rack/lint.rb#595
   def check_hijack_response(headers, env); end
 
   # === The Input Stream
@@ -1686,23 +1690,23 @@ class Rack::Lint
   # The input stream is an IO-like object which contains the raw HTTP
   # POST data.
   #
-  # source://rack//lib/rack/lint.rb#377
+  # source://rack//lib/rack/lint.rb#365
   def check_input(input); end
 
   # === The Status
   #
-  # source://rack//lib/rack/lint.rb#661
+  # source://rack//lib/rack/lint.rb#647
   def check_status(status); end
 
-  # source://rack//lib/rack/lint.rb#792
+  # source://rack//lib/rack/lint.rb#781
   def close; end
 
   # === The Body
   #
-  # source://rack//lib/rack/lint.rb#745
+  # source://rack//lib/rack/lint.rb#734
   def each; end
 
-  # source://rack//lib/rack/lint.rb#732
+  # source://rack//lib/rack/lint.rb#721
   def verify_content_length(bytes); end
 end
 
@@ -1712,101 +1716,111 @@ module Rack::Lint::Assertion
   def assert(message); end
 end
 
-# source://rack//lib/rack/lint.rb#506
+# source://rack//lib/rack/lint.rb#492
 class Rack::Lint::ErrorWrapper
   include ::Rack::Lint::Assertion
 
   # @return [ErrorWrapper] a new instance of ErrorWrapper
   #
-  # source://rack//lib/rack/lint.rb#509
+  # source://rack//lib/rack/lint.rb#495
   def initialize(error); end
 
   # * +close+ must never be called on the error stream.
   #
-  # source://rack//lib/rack/lint.rb#531
+  # @raise [LintError]
+  #
+  # source://rack//lib/rack/lint.rb#517
   def close(*args); end
 
   # * +flush+ must be called without arguments and must be called
   #   in order to make the error appear for sure.
   #
-  # source://rack//lib/rack/lint.rb#526
+  # source://rack//lib/rack/lint.rb#512
   def flush; end
 
   # * +puts+ must be called with a single argument that responds to +to_s+.
   #
-  # source://rack//lib/rack/lint.rb#514
+  # source://rack//lib/rack/lint.rb#500
   def puts(str); end
 
   # * +write+ must be called with a single argument that is a String.
   #
-  # source://rack//lib/rack/lint.rb#519
+  # @raise [LintError]
+  #
+  # source://rack//lib/rack/lint.rb#505
   def write(str); end
 end
 
-# source://rack//lib/rack/lint.rb#536
+# source://rack//lib/rack/lint.rb#522
 class Rack::Lint::HijackWrapper
   include ::Rack::Lint::Assertion
   extend ::Forwardable
 
   # @return [HijackWrapper] a new instance of HijackWrapper
   #
-  # source://rack//lib/rack/lint.rb#547
+  # source://rack//lib/rack/lint.rb#533
   def initialize(io); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def close(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def close_read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def close_write(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def closed?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def flush(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def read_nonblock(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def write(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def write_nonblock(*args, **_arg1, &block); end
 end
 
-# source://rack//lib/rack/lint.rb#540
+# source://rack//lib/rack/lint.rb#526
 Rack::Lint::HijackWrapper::REQUIRED_METHODS = T.let(T.unsafe(nil), Array)
 
-# source://rack//lib/rack/lint.rb#395
+# source://rack//lib/rack/lint.rb#383
 class Rack::Lint::InputWrapper
   include ::Rack::Lint::Assertion
 
   # @return [InputWrapper] a new instance of InputWrapper
   #
-  # source://rack//lib/rack/lint.rb#398
+  # source://rack//lib/rack/lint.rb#386
   def initialize(input); end
 
   # * +close+ must never be called on the input stream.
   #
-  # source://rack//lib/rack/lint.rb#491
+  # @raise [LintError]
+  #
+  # source://rack//lib/rack/lint.rb#477
   def close(*args); end
 
   # * +each+ must be called without arguments and only yield Strings.
   #
-  # source://rack//lib/rack/lint.rb#463
+  # @raise [LintError]
+  #
+  # source://rack//lib/rack/lint.rb#451
   def each(*args); end
 
   # * +gets+ must be called without arguments and return a string,
   #   or +nil+ on EOF.
   #
-  # source://rack//lib/rack/lint.rb#404
+  # @raise [LintError]
+  #
+  # source://rack//lib/rack/lint.rb#392
   def gets(*args); end
 
   # * +read+ behaves like IO#read.
@@ -1827,7 +1841,7 @@ class Rack::Lint::InputWrapper
   #   If +buffer+ is given, then the read data will be placed
   #   into +buffer+ instead of a newly created String object.
   #
-  # source://rack//lib/rack/lint.rb#430
+  # source://rack//lib/rack/lint.rb#418
   def read(*args); end
 
   # * +rewind+ must be called without arguments. It rewinds the input
@@ -1836,7 +1850,9 @@ class Rack::Lint::InputWrapper
   #   developers must buffer the input data into some rewindable object
   #   if the underlying input stream is not rewindable.
   #
-  # source://rack//lib/rack/lint.rb#478
+  # @raise [LintError]
+  #
+  # source://rack//lib/rack/lint.rb#466
   def rewind(*args); end
 end
 
@@ -2304,145 +2320,145 @@ class Rack::Multipart::MultipartTotalPartLimitError < ::StandardError; end
 class Rack::Multipart::Parser
   # @return [Parser] a new instance of Parser
   #
-  # source://rack//lib/rack/multipart/parser.rb#178
+  # source://rack//lib/rack/multipart/parser.rb#180
   def initialize(boundary, tempfile, bufsize, query_parser); end
 
-  # source://rack//lib/rack/multipart/parser.rb#196
+  # source://rack//lib/rack/multipart/parser.rb#198
   def on_read(content); end
 
-  # source://rack//lib/rack/multipart/parser.rb#202
+  # source://rack//lib/rack/multipart/parser.rb#204
   def result; end
 
   # Returns the value of attribute state.
   #
-  # source://rack//lib/rack/multipart/parser.rb#176
+  # source://rack//lib/rack/multipart/parser.rb#178
   def state; end
 
   private
 
-  # source://rack//lib/rack/multipart/parser.rb#294
+  # source://rack//lib/rack/multipart/parser.rb#296
   def consume_boundary; end
 
-  # source://rack//lib/rack/multipart/parser.rb#292
+  # source://rack//lib/rack/multipart/parser.rb#294
   def full_boundary; end
 
-  # source://rack//lib/rack/multipart/parser.rb#304
+  # source://rack//lib/rack/multipart/parser.rb#306
   def get_filename(head); end
 
-  # source://rack//lib/rack/multipart/parser.rb#240
+  # source://rack//lib/rack/multipart/parser.rb#242
   def handle_consume_token; end
 
-  # source://rack//lib/rack/multipart/parser.rb#369
+  # source://rack//lib/rack/multipart/parser.rb#371
   def handle_empty_content!(content); end
 
-  # source://rack//lib/rack/multipart/parser.rb#231
+  # source://rack//lib/rack/multipart/parser.rb#233
   def handle_fast_forward; end
 
-  # source://rack//lib/rack/multipart/parser.rb#273
+  # source://rack//lib/rack/multipart/parser.rb#275
   def handle_mime_body; end
 
-  # source://rack//lib/rack/multipart/parser.rb#250
+  # source://rack//lib/rack/multipart/parser.rb#252
   def handle_mime_head; end
 
-  # source://rack//lib/rack/multipart/parser.rb#214
+  # source://rack//lib/rack/multipart/parser.rb#216
   def run_parser; end
 
-  # source://rack//lib/rack/multipart/parser.rb#341
+  # source://rack//lib/rack/multipart/parser.rb#343
   def tag_multipart_encoding(filename, content_type, name, body); end
 
   class << self
-    # source://rack//lib/rack/multipart/parser.rb#64
+    # source://rack//lib/rack/multipart/parser.rb#66
     def parse(io, content_length, content_type, tmpfile, bufsize, qp); end
 
-    # source://rack//lib/rack/multipart/parser.rb#57
+    # source://rack//lib/rack/multipart/parser.rb#59
     def parse_boundary(content_type); end
   end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#19
+# source://rack//lib/rack/multipart/parser.rb#21
 Rack::Multipart::Parser::BOUNDARY_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # source://rack//lib/rack/multipart/parser.rb#13
 Rack::Multipart::Parser::BUFSIZE = T.let(T.unsafe(nil), Integer)
 
-# source://rack//lib/rack/multipart/parser.rb#21
+# source://rack//lib/rack/multipart/parser.rb#23
 class Rack::Multipart::Parser::BoundedIO
   # @return [BoundedIO] a new instance of BoundedIO
   #
-  # source://rack//lib/rack/multipart/parser.rb#22
+  # source://rack//lib/rack/multipart/parser.rb#24
   def initialize(io, content_length); end
 
-  # source://rack//lib/rack/multipart/parser.rb#28
+  # source://rack//lib/rack/multipart/parser.rb#30
   def read(size, outbuf = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/multipart/parser.rb#49
+  # source://rack//lib/rack/multipart/parser.rb#51
   def rewind; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#339
+# source://rack//lib/rack/multipart/parser.rb#341
 Rack::Multipart::Parser::CHARSET = T.let(T.unsafe(nil), String)
 
-# source://rack//lib/rack/multipart/parser.rb#85
+# source://rack//lib/rack/multipart/parser.rb#87
 class Rack::Multipart::Parser::Collector
   include ::Enumerable
 
   # @return [Collector] a new instance of Collector
   #
-  # source://rack//lib/rack/multipart/parser.rb#121
+  # source://rack//lib/rack/multipart/parser.rb#123
   def initialize(tempfile); end
 
-  # source://rack//lib/rack/multipart/parser.rb#127
+  # source://rack//lib/rack/multipart/parser.rb#129
   def each; end
 
-  # source://rack//lib/rack/multipart/parser.rb#147
+  # source://rack//lib/rack/multipart/parser.rb#149
   def on_mime_body(mime_index, content); end
 
-  # source://rack//lib/rack/multipart/parser.rb#151
+  # source://rack//lib/rack/multipart/parser.rb#153
   def on_mime_finish(mime_index); end
 
-  # source://rack//lib/rack/multipart/parser.rb#131
+  # source://rack//lib/rack/multipart/parser.rb#133
   def on_mime_head(mime_index, head, filename, content_type, name); end
 
   private
 
-  # source://rack//lib/rack/multipart/parser.rb#156
+  # source://rack//lib/rack/multipart/parser.rb#158
   def check_part_limits; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#109
+# source://rack//lib/rack/multipart/parser.rb#111
 class Rack::Multipart::Parser::Collector::BufferPart < ::Rack::Multipart::Parser::Collector::MimePart
-  # source://rack//lib/rack/multipart/parser.rb#111
+  # source://rack//lib/rack/multipart/parser.rb#113
   def close; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/multipart/parser.rb#110
+  # source://rack//lib/rack/multipart/parser.rb#112
   def file?; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#86
+# source://rack//lib/rack/multipart/parser.rb#88
 class Rack::Multipart::Parser::Collector::MimePart < ::Struct
   # @yield [data]
   #
-  # source://rack//lib/rack/multipart/parser.rb#87
+  # source://rack//lib/rack/multipart/parser.rb#89
   def get_data; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#114
+# source://rack//lib/rack/multipart/parser.rb#116
 class Rack::Multipart::Parser::Collector::TempfilePart < ::Rack::Multipart::Parser::Collector::MimePart
-  # source://rack//lib/rack/multipart/parser.rb#116
+  # source://rack//lib/rack/multipart/parser.rb#118
   def close; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/multipart/parser.rb#115
+  # source://rack//lib/rack/multipart/parser.rb#117
   def file?; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#55
+# source://rack//lib/rack/multipart/parser.rb#57
 Rack::Multipart::Parser::EMPTY = T.let(T.unsafe(nil), Rack::Multipart::Parser::MultipartInfo)
 
-# source://rack//lib/rack/multipart/parser.rb#54
+# source://rack//lib/rack/multipart/parser.rb#56
 class Rack::Multipart::Parser::MultipartInfo < ::Struct
   # Returns the value of attribute params
   #
@@ -4660,116 +4676,116 @@ Rack::Session::Abstract::SessionHash::Unspecified = T.let(T.unsafe(nil), Object)
 #     }.new
 #   })
 #
-# source://rack//lib/rack/session/cookie.rb#49
+# source://rack//lib/rack/session/cookie.rb#51
 class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
   # @return [Cookie] a new instance of Cookie
   #
-  # source://rack//lib/rack/session/cookie.rb#107
+  # source://rack//lib/rack/session/cookie.rb#108
   def initialize(app, options = T.unsafe(nil)); end
 
   # Returns the value of attribute coder.
   #
-  # source://rack//lib/rack/session/cookie.rb#105
+  # source://rack//lib/rack/session/cookie.rb#106
   def coder; end
 
   private
 
-  # source://rack//lib/rack/session/cookie.rb#180
+  # source://rack//lib/rack/session/cookie.rb#181
   def delete_session(req, session_id, options); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/session/cookie.rb#185
+  # source://rack//lib/rack/session/cookie.rb#186
   def digest_match?(data, digest); end
 
-  # source://rack//lib/rack/session/cookie.rb#132
+  # source://rack//lib/rack/session/cookie.rb#133
   def extract_session_id(request); end
 
-  # source://rack//lib/rack/session/cookie.rb#126
+  # source://rack//lib/rack/session/cookie.rb#127
   def find_session(req, sid); end
 
-  # source://rack//lib/rack/session/cookie.rb#192
+  # source://rack//lib/rack/session/cookie.rb#193
   def generate_hmac(data, secret); end
 
-  # source://rack//lib/rack/session/cookie.rb#149
+  # source://rack//lib/rack/session/cookie.rb#150
   def persistent_session_id!(data, sid = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/session/cookie.rb#196
+  # source://rack//lib/rack/session/cookie.rb#197
   def secure?(options); end
 
-  # source://rack//lib/rack/session/cookie.rb#136
+  # source://rack//lib/rack/session/cookie.rb#137
   def unpacked_cookie_data(request); end
 
-  # source://rack//lib/rack/session/cookie.rb#164
+  # source://rack//lib/rack/session/cookie.rb#165
   def write_session(req, session_id, session, options); end
 end
 
 # Encode session cookies as Base64
 #
-# source://rack//lib/rack/session/cookie.rb#51
+# source://rack//lib/rack/session/cookie.rb#52
 class Rack::Session::Cookie::Base64
-  # source://rack//lib/rack/session/cookie.rb#56
+  # source://rack//lib/rack/session/cookie.rb#57
   def decode(str); end
 
-  # source://rack//lib/rack/session/cookie.rb#52
+  # source://rack//lib/rack/session/cookie.rb#53
   def encode(str); end
 end
 
 # N.B. Unlike other encoding methods, the contained objects must be a
 # valid JSON composite type, either a Hash or an Array.
 #
-# source://rack//lib/rack/session/cookie.rb#74
+# source://rack//lib/rack/session/cookie.rb#75
 class Rack::Session::Cookie::Base64::JSON < ::Rack::Session::Cookie::Base64
-  # source://rack//lib/rack/session/cookie.rb#79
+  # source://rack//lib/rack/session/cookie.rb#80
   def decode(str); end
 
-  # source://rack//lib/rack/session/cookie.rb#75
+  # source://rack//lib/rack/session/cookie.rb#76
   def encode(obj); end
 end
 
 # Encode session cookies as Marshaled Base64 data
 #
-# source://rack//lib/rack/session/cookie.rb#61
+# source://rack//lib/rack/session/cookie.rb#62
 class Rack::Session::Cookie::Base64::Marshal < ::Rack::Session::Cookie::Base64
-  # source://rack//lib/rack/session/cookie.rb#66
+  # source://rack//lib/rack/session/cookie.rb#67
   def decode(str); end
 
-  # source://rack//lib/rack/session/cookie.rb#62
+  # source://rack//lib/rack/session/cookie.rb#63
   def encode(str); end
 end
 
-# source://rack//lib/rack/session/cookie.rb#85
+# source://rack//lib/rack/session/cookie.rb#86
 class Rack::Session::Cookie::Base64::ZipJSON < ::Rack::Session::Cookie::Base64
-  # source://rack//lib/rack/session/cookie.rb#90
+  # source://rack//lib/rack/session/cookie.rb#91
   def decode(str); end
 
-  # source://rack//lib/rack/session/cookie.rb#86
+  # source://rack//lib/rack/session/cookie.rb#87
   def encode(obj); end
 end
 
 # Use no encoding for session cookies
 #
-# source://rack//lib/rack/session/cookie.rb#100
+# source://rack//lib/rack/session/cookie.rb#101
 class Rack::Session::Cookie::Identity
-  # source://rack//lib/rack/session/cookie.rb#102
+  # source://rack//lib/rack/session/cookie.rb#103
   def decode(str); end
 
-  # source://rack//lib/rack/session/cookie.rb#101
+  # source://rack//lib/rack/session/cookie.rb#102
   def encode(str); end
 end
 
-# source://rack//lib/rack/session/cookie.rb#155
+# source://rack//lib/rack/session/cookie.rb#156
 class Rack::Session::Cookie::SessionId
   # @return [SessionId] a new instance of SessionId
   #
-  # source://rack//lib/rack/session/cookie.rb#158
+  # source://rack//lib/rack/session/cookie.rb#159
   def initialize(session_id, cookie_value); end
 
   # Returns the value of attribute cookie_value.
   #
-  # source://rack//lib/rack/session/cookie.rb#156
+  # source://rack//lib/rack/session/cookie.rb#157
   def cookie_value; end
 end
 
