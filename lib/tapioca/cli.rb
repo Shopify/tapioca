@@ -249,6 +249,28 @@ module Tapioca
       type: :boolean,
       desc: "Halt upon a load error while loading the Rails application",
       default: true
+    option :annotations,
+      type: :boolean,
+      desc: "Include RBI annotations from remote source",
+      default: true
+    option :annotation_sources,
+      type: :array,
+      default: [CENTRAL_REPO_ROOT_URI],
+      desc: "URIs of the sources to pull gem RBI annotations from"
+    option :annotation_netrc,
+      type: :boolean,
+      default: true,
+      desc: "Use .netrc to authenticate to private annotation sources"
+    option :annotation_netrc_file, type: :string, desc: "Path to .netrc file"
+    option :annotation_auth,
+      type: :string,
+      default: nil,
+      desc: "HTTP authorization header for private annotation sources"
+    option :exclude_annotation,
+      type: :array,
+      banner: "gem [gem ...]",
+      desc: "Excludes annotation for gem while generating RBI",
+      default: []
     def gem(*gems)
       set_environment(options)
 
@@ -266,6 +288,14 @@ module Tapioca
         raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
       end
 
+      if !options[:annotation_netrc] && options[:annotation_netrc_file]
+        raise Thor::Error, set_color(
+          "Options `--no-annotation-netrc` and `--annotation-netrc-file` can't be used together",
+          :bold,
+          :red,
+        )
+      end
+
       command_args = {
         gem_names: all ? [] : gems,
         exclude: options[:exclude],
@@ -277,12 +307,17 @@ module Tapioca
         file_header: options[:file_header],
         include_doc: options[:doc],
         include_loc: options[:loc],
+        include_annotations: options[:annotations],
         include_exported_rbis: options[:exported_gem_rbis],
         number_of_workers: options[:workers],
         auto_strictness: options[:auto_strictness],
         dsl_dir: options[:dsl_dir],
         rbi_formatter: rbi_formatter(options),
         halt_upon_load_error: options[:halt_upon_load_error],
+        annotation_sources: options[:annotation_sources],
+        annotation_auth: options[:annotation_auth],
+        annotation_netrc_file: netrc_file(options),
+        excluded_annotations: options[:exclude_annotation],
       }
 
       command = if verify

@@ -8,6 +8,8 @@ module Tapioca
 
       sig { override.void }
       def execute
+        @indexes = fetch_annotation_source_indexes
+
         Loaders::Gem.load_application(
           bundle: @bundle,
           prerequire: @prerequire,
