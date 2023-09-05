@@ -7,7 +7,7 @@ module Tapioca
   class HelpSpec < SpecWithProject
     describe("cli::help") do
       before(:all) do
-        project.bundle_install
+        project.bundle_install!
       end
 
       it "must display the help when passing --help" do

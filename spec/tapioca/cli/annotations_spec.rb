@@ -7,11 +7,11 @@ module Tapioca
   class AnnotationsTest < SpecWithProject
     describe "cli::annotations" do
       before(:all) do
-        @project.bundle_install
+        @project.bundle_install!
       end
 
       after do
-        @project.remove("sorbet/rbi/annotations")
+        @project.remove!("sorbet/rbi/annotations")
       end
 
       it "does nothing if the repo is empty" do
@@ -34,9 +34,9 @@ module Tapioca
       it "removes local annotations if they do not appear in the Gemfile.lock" do
         repo = create_repo({})
 
-        @project.write("sorbet/rbi/annotations/rbi.rbi", "# typed: true")
-        @project.write("sorbet/rbi/annotations/bar.rbi", "# typed: true")
-        @project.write("sorbet/rbi/annotations/foo.rbi", "# typed: true")
+        @project.write!("sorbet/rbi/annotations/rbi.rbi", "# typed: true")
+        @project.write!("sorbet/rbi/annotations/bar.rbi", "# typed: true")
+        @project.write!("sorbet/rbi/annotations/foo.rbi", "# typed: true")
 
         result = @project.tapioca("annotations --sources #{repo.path}")
 
@@ -360,7 +360,7 @@ module Tapioca
 
     sig { params(annotations: T::Hash[String, String], repo_name: String).returns(MockDir) }
     def create_repo(annotations, repo_name: "repo")
-      repo = MockDir.new("#{@project.path}/#{repo_name}")
+      repo = MockDir.new("#{@project.absolute_path}/#{repo_name}")
       index = {}
 
       annotations.each do |gem_name, rbi_content|

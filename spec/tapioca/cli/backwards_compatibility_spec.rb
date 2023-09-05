@@ -24,7 +24,7 @@ module Tapioca
     end
 
     after do
-      @project.destroy
+      @project.destroy!
     end
 
     describe "ObjectSpace WeakMap generation" do
@@ -39,7 +39,7 @@ module Tapioca
 
       it "is a generic type with Sorbet < 0.5.10587" do
         @project.require_real_gem("sorbet-static", "0.5.10585")
-        @project.bundle_install
+        @project.bundle_install!
 
         @project.tapioca("gem foo")
 
@@ -56,7 +56,7 @@ module Tapioca
 
       it "is a non-generic type with Sorbet >= 0.5.10587" do
         @project.require_real_gem("sorbet-static", "0.5.10588")
-        @project.bundle_install
+        @project.bundle_install!
 
         @project.tapioca("gem foo")
 
@@ -84,7 +84,7 @@ module Tapioca
 
       it "serializes both as untyped with Sorbet < 0.5.10782" do
         @project.require_real_gem("sorbet-static", "0.5.10780")
-        @project.bundle_install
+        @project.bundle_install!
 
         @project.tapioca("gem foo")
 
@@ -101,7 +101,7 @@ module Tapioca
 
       it "serializes T::Class as untyped with Sorbet >= 0.5.10782 and < 0.5.10820" do
         @project.require_real_gem("sorbet-static", "0.5.10800")
-        @project.bundle_install
+        @project.bundle_install!
 
         @project.tapioca("gem foo")
 
@@ -118,7 +118,7 @@ module Tapioca
 
       it "serializes them correctly with Sorbet >= 0.5.10820" do
         @project.require_real_gem("sorbet-static", "0.5.10860")
-        @project.bundle_install
+        @project.bundle_install!
 
         @project.tapioca("gem foo")
 
@@ -166,7 +166,7 @@ module Tapioca
 
       it "must succeed on sorbet-runtime < 0.5.10554" do
         @project.require_real_gem("sorbet-static-and-runtime", "=0.5.10539")
-        @project.bundle_install
+        @project.bundle_install!
 
         result = @project.tapioca("gem generic_type", enforce_typechecking: false)
 
@@ -178,7 +178,7 @@ module Tapioca
 
       it "must succeed on sorbet-runtime >= 0.5.10554" do
         @project.require_real_gem("sorbet-static-and-runtime", ">=0.5.10554")
-        @project.bundle_install
+        @project.bundle_install!
 
         result = @project.tapioca("gem generic_type", enforce_typechecking: false)
 

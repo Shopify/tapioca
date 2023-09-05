@@ -23,7 +23,7 @@ module Tapioca
     attr_reader :project
 
     after(:all) do
-      project.destroy
+      project.destroy!
     end
 
     # Spec helpers
@@ -46,7 +46,7 @@ module Tapioca
     end
     def mock_project(sorbet_dependency: true, &block)
       project = MockProject.new("#{TEST_TMP_PATH}/#{spec_name}/project")
-      project.gemfile(project.tapioca_gemfile)
+      project.write_gemfile!(project.tapioca_gemfile)
       # Pin Sorbet static and runtime version to the current one in this project
       project.require_real_gem(
         "sorbet-static-and-runtime",
@@ -106,7 +106,7 @@ module Tapioca
 
     sig { params(strictness: String, file: String).void }
     def assert_file_strictness(strictness, file)
-      assert_equal(strictness, Spoom::Sorbet::Sigils.file_strictness(@project.absolute_path(file)))
+      assert_equal(strictness, Spoom::Sorbet::Sigils.file_strictness(@project.absolute_path_to(file)))
     end
 
     sig { params(result: MockProject::ExecResult).void }

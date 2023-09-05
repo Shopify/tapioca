@@ -8,13 +8,13 @@ module Tapioca
   class ConfigureSpec < SpecWithProject
     describe "cli::configure" do
       before(:all) do
-        project.bundle_install
+        project.bundle_install!
       end
 
       after do
-        @project.remove("sorbet/config")
-        @project.remove("sorbet/tapioca")
-        @project.remove("bin/tapioca")
+        @project.remove!("sorbet/config")
+        @project.remove!("sorbet/tapioca")
+        @project.remove!("bin/tapioca")
       end
 
       it "must create proper files" do
@@ -51,10 +51,10 @@ module Tapioca
       end
 
       it "must not overwrite files" do
-        @project.write("bin/tapioca")
-        @project.write("sorbet/config")
-        @project.write("sorbet/tapioca/require.rb")
-        @project.write("sorbet/tapioca/config.yml")
+        @project.write!("bin/tapioca")
+        @project.write!("sorbet/config")
+        @project.write!("sorbet/tapioca/require.rb")
+        @project.write!("sorbet/tapioca/config.yml")
 
         result = @project.tapioca("configure")
 

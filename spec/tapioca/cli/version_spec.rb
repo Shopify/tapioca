@@ -7,7 +7,7 @@ module Tapioca
   class VersionSpec < SpecWithProject
     describe("cli::version") do
       before(:all) do
-        project.bundle_install
+        project.bundle_install!
       end
 
       it "must display the version when passing --version" do

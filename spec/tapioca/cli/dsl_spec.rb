@@ -7,7 +7,7 @@ module Tapioca
   class DslSpec < SpecWithProject
     describe "cli::dsl" do
       before(:all) do
-        @project.write("config/application.rb", <<~RB)
+        @project.write!("config/application.rb", <<~RB)
           require "bundler/setup"
           Bundler.require
 
@@ -34,13 +34,13 @@ module Tapioca
           end
         RB
 
-        @project.write("config/environment.rb", <<~RB)
+        @project.write!("config/environment.rb", <<~RB)
           require_relative "application.rb"
         RB
       end
 
       it "shows an error message for unknown options" do
-        @project.bundle_install
+        @project.bundle_install!
         result = @project.tapioca("dsl --unknown-option")
 
         assert_empty_stdout(result)
@@ -56,20 +56,20 @@ module Tapioca
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.require_real_gem("sidekiq", "6.2.1")
-          @project.bundle_install
+          @project.bundle_install!
           @gemfile = @project.read("Gemfile")
           @gemfile_lock = @project.read("Gemfile.lock")
         end
 
         before do
-          @project.write("Gemfile", @gemfile)
-          @project.write("Gemfile.lock", @gemfile_lock)
+          @project.write!("Gemfile", @gemfile)
+          @project.write!("Gemfile.lock", @gemfile_lock)
         end
 
         after do
-          @project.remove("db")
-          @project.remove("lib")
-          @project.remove("sorbet/rbi/dsl")
+          @project.remove!("db")
+          @project.remove!("lib")
+          @project.remove!("sorbet/rbi/dsl")
         end
 
         it "respects the Gemfile and Gemfile.lock" do
@@ -103,7 +103,7 @@ module Tapioca
         end
 
         it "does not generate anything if there are no matching constants" do
-          @project.write("lib/user.rb", <<~RB)
+          @project.write!("lib/user.rb", <<~RB)
             class User; end
           RB
 
@@ -128,7 +128,7 @@ module Tapioca
         end
 
         it "generates RBI files for only required constants" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -205,8 +205,8 @@ module Tapioca
         end
 
         it "removes RBI files for unprocessable required constants" do
-          @project.write("sorbet/rbi/dsl/non_existent/foo.rbi")
-          @project.write("sorbet/rbi/dsl/non_existent/baz.rbi")
+          @project.write!("sorbet/rbi/dsl/non_existent/foo.rbi")
+          @project.write!("sorbet/rbi/dsl/non_existent/baz.rbi")
 
           result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
@@ -232,7 +232,7 @@ module Tapioca
         end
 
         it "generates RBI files for all processable constants" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -241,7 +241,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/comment.rb", <<~RB)
+          @project.write!("lib/comment.rb", <<~RB)
             require "smart_properties"
 
             module Namespace
@@ -331,12 +331,12 @@ module Tapioca
             RB
           end
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "foo/role"
           RB
 
           @project.require_mock_gem(gem)
-          @project.bundle_install
+          @project.bundle_install!
 
           result = @project.tapioca("dsl")
 
@@ -383,7 +383,7 @@ module Tapioca
         end
 
         it "generates RBI files for engine when provided with an `app_root` flag" do
-          @project.write("test/dummy/lib/post.rb", <<~RB)
+          @project.write!("test/dummy/lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -392,7 +392,7 @@ module Tapioca
             end
           RB
 
-          @project.write("test/dummy/lib/comment.rb", <<~RB)
+          @project.write!("test/dummy/lib/comment.rb", <<~RB)
             require "smart_properties"
 
             module Namespace
@@ -403,11 +403,11 @@ module Tapioca
             end
           RB
 
-          engine_path = @project.path + "/test/dummy"
+          engine_path = @project.absolute_path + "/test/dummy"
 
           begin
             FileUtils.mkdir_p(engine_path)
-            FileUtils.mv(@project.path + "/config", engine_path)
+            FileUtils.mv(@project.absolute_path + "/config", engine_path)
 
             result = @project.tapioca("dsl --app_root=test/dummy")
 
@@ -435,13 +435,13 @@ module Tapioca
 
           # Restore directory structure so to not impact other tests
           ensure
-            FileUtils.mv(engine_path + "/config", @project.path)
+            FileUtils.mv(engine_path + "/config", @project.absolute_path)
             FileUtils.rm_rf(engine_path)
           end
         end
 
         it "generates RBI files in the correct output directory" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -450,7 +450,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/comment.rb", <<~RB)
+          @project.write!("lib/comment.rb", <<~RB)
             require "smart_properties"
 
             module Namespace
@@ -490,11 +490,11 @@ module Tapioca
 
           assert_success_status(result)
 
-          @project.remove("rbis/")
+          @project.remove!("rbis/")
         end
 
         it "generates RBI files with verbose output" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -503,7 +503,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/comment.rb", <<~RB)
+          @project.write!("lib/comment.rb", <<~RB)
             require "smart_properties"
 
             module Namespace
@@ -545,7 +545,7 @@ module Tapioca
         end
 
         it "can generates RBI files quietly" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -580,7 +580,7 @@ module Tapioca
         end
 
         it "generates RBI files without header" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -609,11 +609,11 @@ module Tapioca
         end
 
         it "removes stale RBI files" do
-          @project.write("sorbet/rbi/dsl/to_be_deleted/foo.rbi")
-          @project.write("sorbet/rbi/dsl/to_be_deleted/baz.rbi")
-          @project.write("sorbet/rbi/dsl/does_not_exist.rbi")
+          @project.write!("sorbet/rbi/dsl/to_be_deleted/foo.rbi")
+          @project.write!("sorbet/rbi/dsl/to_be_deleted/baz.rbi")
+          @project.write!("sorbet/rbi/dsl/does_not_exist.rbi")
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -657,7 +657,7 @@ module Tapioca
         end
 
         it "does not crash with anonymous constants" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -666,7 +666,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/job.rb", <<~RB)
+          @project.write!("lib/job.rb", <<~RB)
             require "sidekiq"
 
             Class.new do
@@ -684,15 +684,15 @@ module Tapioca
 
         it "removes stale RBIs properly when running in parallel" do
           # Files that shouldn't be deleted
-          @project.write("sorbet/rbi/dsl/job.rbi")
-          @project.write("sorbet/rbi/dsl/post.rbi")
+          @project.write!("sorbet/rbi/dsl/job.rbi")
+          @project.write!("sorbet/rbi/dsl/post.rbi")
 
           # Files that should be deleted
-          @project.write("sorbet/rbi/dsl/to_be_deleted/foo.rbi")
-          @project.write("sorbet/rbi/dsl/to_be_deleted/baz.rbi")
-          @project.write("sorbet/rbi/dsl/does_not_exist.rbi")
+          @project.write!("sorbet/rbi/dsl/to_be_deleted/foo.rbi")
+          @project.write!("sorbet/rbi/dsl/to_be_deleted/baz.rbi")
+          @project.write!("sorbet/rbi/dsl/does_not_exist.rbi")
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -701,7 +701,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/job.rb", <<~RB)
+          @project.write!("lib/job.rb", <<~RB)
             require "sidekiq"
 
             class Job
@@ -725,9 +725,9 @@ module Tapioca
         end
 
         it "removes stale RBI files of requested constants" do
-          @project.write("sorbet/rbi/dsl/user.rbi")
+          @project.write!("sorbet/rbi/dsl/user.rbi")
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -736,7 +736,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/user.rb", <<~RB)
+          @project.write!("lib/user.rb", <<~RB)
             class User; end
           RB
 
@@ -771,7 +771,7 @@ module Tapioca
         end
 
         it "can be called by path" do
-          @project.write("lib/models/post.rb", <<~RB)
+          @project.write!("lib/models/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -780,7 +780,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/models/nested/user.rb", <<~RB)
+          @project.write!("lib/models/nested/user.rb", <<~RB)
             require "smart_properties"
 
             module Nested
@@ -791,7 +791,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/job.rb", <<~RB)
+          @project.write!("lib/job.rb", <<~RB)
             require "smart_properties"
 
             class User
@@ -830,7 +830,7 @@ module Tapioca
         end
 
         it "does not generate anything and errors for non-existent paths" do
-          @project.write("lib/models/post.rb", <<~RB)
+          @project.write!("lib/models/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -860,7 +860,7 @@ module Tapioca
         end
 
         it "does not generate anything but succeeds for real paths with no processable DSL" do
-          @project.write("lib/models/post.rb", <<~RB)
+          @project.write!("lib/models/post.rb", <<~RB)
             class Foo
               class << self
                 BAR = nil
@@ -894,7 +894,7 @@ module Tapioca
         end
 
         it "must run custom compilers" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -903,7 +903,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/compilers/compiler_that_includes_bar_module.rb", <<~RB)
+          @project.write!("lib/compilers/compiler_that_includes_bar_module.rb", <<~RB)
             require "post"
 
             class CompilerThatIncludesBarModuleInPost < Tapioca::Dsl::Compiler
@@ -926,7 +926,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/compilers/compiler_that_includes_foo_module.rb", <<~RB)
+          @project.write!("lib/compilers/compiler_that_includes_foo_module.rb", <<~RB)
             require "post"
 
             class CompilerThatIncludesFooModuleInPost < Tapioca::Dsl::Compiler
@@ -999,7 +999,7 @@ module Tapioca
         end
 
         it "must respect `only` option" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1008,7 +1008,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/job.rb", <<~RB)
+          @project.write!("lib/job.rb", <<~RB)
             require "sidekiq"
 
             class Job
@@ -1018,7 +1018,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/compilers/foo/compiler.rb", <<~RB)
+          @project.write!("lib/compilers/foo/compiler.rb", <<~RB)
             require "job"
 
             module Foo
@@ -1110,7 +1110,7 @@ module Tapioca
         end
 
         it "must respect `exclude` option" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1119,7 +1119,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/job.rb", <<~RB)
+          @project.write!("lib/job.rb", <<~RB)
             require "sidekiq"
 
             class Job
@@ -1129,7 +1129,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/compilers/foo/compiler.rb", <<~RB)
+          @project.write!("lib/compilers/foo/compiler.rb", <<~RB)
             require "job"
 
             module Foo
@@ -1199,7 +1199,7 @@ module Tapioca
         end
 
         it "must warn about reloaded constants and process only the newest one" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1267,7 +1267,7 @@ module Tapioca
 
         describe "pending migrations" do
           before do
-            @project.write("db/migrate/202001010000_create_articles.rb", <<~RB)
+            @project.write!("db/migrate/202001010000_create_articles.rb", <<~RB)
               class CreateArticles < ActiveRecord::Migration[6.1]
                 def change
                   create_table(:articles) do |t|
@@ -1277,7 +1277,7 @@ module Tapioca
               end
             RB
 
-            @project.write("lib/database.rb", <<~RB)
+            @project.write!("lib/database.rb", <<~RB)
               require "rake"
 
               namespace :db do
@@ -1300,11 +1300,11 @@ module Tapioca
 
             @project.require_real_gem("rake", "13.0.6")
             @project.require_real_gem("activerecord")
-            @project.bundle_install
+            @project.bundle_install!
           end
 
           it "aborts if there are pending migrations" do
-            @project.write("lib/post.rb", <<~RB)
+            @project.write!("lib/post.rb", <<~RB)
               class Post < ActiveRecord::Base
               end
             RB
@@ -1330,7 +1330,7 @@ module Tapioca
           end
 
           it "aborts if there are pending migrations and no arg was passed" do
-            @project.write("lib/post.rb", <<~RB)
+            @project.write!("lib/post.rb", <<~RB)
               class Post < ActiveRecord::Base
               end
             RB
@@ -1356,7 +1356,7 @@ module Tapioca
           end
 
           it "does not abort if there are pending migrations but no active record models" do
-            @project.write("lib/post.rb", <<~RB)
+            @project.write!("lib/post.rb", <<~RB)
               require "smart_properties"
 
               class Post
@@ -1393,9 +1393,9 @@ module Tapioca
         end
 
         it "overwrites existing RBIs without user input" do
-          @project.write("sorbet/rbi/dsl/image.rbi")
+          @project.write!("sorbet/rbi/dsl/image.rbi")
 
-          @project.write("lib/image.rb", <<~RB)
+          @project.write!("lib/image.rb", <<~RB)
             require "smart_properties"
 
             class Image
@@ -1433,7 +1433,7 @@ module Tapioca
         end
 
         it "generates the correct RBIs when running in parallel" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1442,7 +1442,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/job.rb", <<~RB)
+          @project.write!("lib/job.rb", <<~RB)
             require "sidekiq"
 
             class Job
@@ -1452,7 +1452,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/image.rb", <<~RB)
+          @project.write!("lib/image.rb", <<~RB)
             require "smart_properties"
 
             class Image
@@ -1474,12 +1474,12 @@ module Tapioca
         end
 
         it "shows a helpful error message when unexpected errors occur" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             class Post
             end
           RB
 
-          @project.write("lib/compilers/post_compiler_that_raises.rb", <<~RB)
+          @project.write!("lib/compilers/post_compiler_that_raises.rb", <<~RB)
             require "post"
 
             class PostCompilerThatRaises < Tapioca::Dsl::Compiler
@@ -1513,8 +1513,8 @@ module Tapioca
         it "generates RBIs for lower versions of activerecord-typedstore" do
           @project.require_real_gem("activerecord-typedstore", "1.4.0")
           @project.require_real_gem("sqlite3")
-          @project.bundle_install
-          @project.write("lib/post.rb", <<~RB)
+          @project.bundle_install!
+          @project.write!("lib/post.rb", <<~RB)
             require "active_record"
             require "active_record/typed_store"
 
@@ -1597,9 +1597,9 @@ module Tapioca
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
           @project.require_real_gem("sidekiq", "6.2.1")
-          @project.bundle_install
+          @project.bundle_install!
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1608,7 +1608,7 @@ module Tapioca
             end
           RB
 
-          @project.write("lib/job.rb", <<~RB)
+          @project.write!("lib/job.rb", <<~RB)
             require "sidekiq"
 
             class Job
@@ -1620,7 +1620,7 @@ module Tapioca
         end
 
         after do
-          @project.remove("sorbet/rbi/dsl")
+          @project.remove!("sorbet/rbi/dsl")
         end
 
         it "does nothing and returns exit status 0 with no changes" do
@@ -1666,7 +1666,7 @@ module Tapioca
         it "advises of new file(s) and returns exit status 1 with new files" do
           @project.tapioca("dsl")
 
-          @project.write("lib/image.rb", <<~RB)
+          @project.write!("lib/image.rb", <<~RB)
             require "smart_properties"
 
             class Image
@@ -1701,11 +1701,11 @@ module Tapioca
 
           refute_success_status(result)
 
-          @project.remove("lib/image.rb")
+          @project.remove!("lib/image.rb")
         end
 
         it "advises of modified file(s) and returns exit status 1 with modified file" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1716,7 +1716,7 @@ module Tapioca
 
           @project.tapioca("dsl")
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1756,9 +1756,9 @@ module Tapioca
       describe "strictness" do
         it "must turn the strictness of gem RBI files with errors to false" do
           @project.require_real_gem("smart_properties", "1.15.0")
-          @project.bundle_install
+          @project.bundle_install!
 
-          @project.write("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
             # typed: true
 
             module Post::SmartPropertiesGeneratedMethods
@@ -1766,7 +1766,7 @@ module Tapioca
             end
           RBI
 
-          @project.write("sorbet/rbi/gems/bar@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/bar@1.0.0.rbi", <<~RBI)
             # typed: true
 
             module Post::SmartPropertiesGeneratedMethods
@@ -1775,7 +1775,7 @@ module Tapioca
             end
           RBI
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -1799,14 +1799,14 @@ module Tapioca
           assert_empty_stderr(result)
           assert_success_status(result)
 
-          @project.remove("sorbet/rbi/gems")
-          @project.remove("sorbet/rbi/dsl")
+          @project.remove!("sorbet/rbi/gems")
+          @project.remove!("sorbet/rbi/dsl")
         end
       end
 
       describe "custom compilers" do
         it "must load custom compilers from gems" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             class Post
             end
           RB
@@ -1838,7 +1838,7 @@ module Tapioca
           end
 
           @project.require_mock_gem(foo)
-          @project.bundle_install
+          @project.bundle_install!
 
           result = @project.tapioca("dsl Post")
 
@@ -1878,14 +1878,14 @@ module Tapioca
         end
 
         it "must be able to load custom compilers without a full require" do
-          @project.bundle_install
+          @project.bundle_install!
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             class Post
             end
           RB
 
-          @project.write("lib/compilers/post_compiler.rb", <<~RB)
+          @project.write!("lib/compilers/post_compiler.rb", <<~RB)
             require "post"
             require "tapioca/dsl"
 
@@ -1909,7 +1909,7 @@ module Tapioca
             end
           RB
 
-          @project.write("bin/generate", <<~RB)
+          @project.write!("bin/generate", <<~RB)
             require_relative "../config/environment"
 
             file = RBI::File.new(strictness: "strong")
@@ -1937,13 +1937,13 @@ module Tapioca
 
       describe "custom extensions" do
         after do
-          project.remove("sorbet/rbi/gems")
-          project.remove("sorbet/rbi/dsl")
-          project.remove("sorbet/tapioca")
+          project.remove!("sorbet/rbi/gems")
+          project.remove!("sorbet/rbi/dsl")
+          project.remove!("sorbet/tapioca")
         end
 
         it "must load custom extensions from gems" do
-          @project.write("lib/credit_card.rb", <<~RB)
+          @project.write!("lib/credit_card.rb", <<~RB)
             require "encryptable"
 
             class CreditCard
@@ -2047,7 +2047,7 @@ module Tapioca
           end
 
           @project.require_mock_gem(encryptable)
-          @project.bundle_install
+          @project.bundle_install!
 
           result = @project.tapioca("dsl CreditCard")
 
@@ -2095,7 +2095,7 @@ module Tapioca
         end
 
         it "must load custom extensions from the Sorbet directory" do
-          @project.write("lib/credit_card.rb", <<~RB)
+          @project.write!("lib/credit_card.rb", <<~RB)
             require "encryptable"
 
             class CreditCard
@@ -2142,7 +2142,7 @@ module Tapioca
             RB
           end
 
-          @project.write("sorbet/tapioca/extensions/encryptable.rb", <<~RB)
+          @project.write!("sorbet/tapioca/extensions/encryptable.rb", <<~RB)
             require "encryptable"
 
             module Tapioca
@@ -2163,7 +2163,7 @@ module Tapioca
             end
           RB
 
-          @project.write("sorbet/tapioca/compilers/encryptable.rb", <<~RB)
+          @project.write!("sorbet/tapioca/compilers/encryptable.rb", <<~RB)
             require "encryptable"
 
             module Tapioca
@@ -2199,7 +2199,7 @@ module Tapioca
           RB
 
           @project.require_mock_gem(encryptable)
-          @project.bundle_install
+          @project.bundle_install!
 
           result = @project.tapioca("dsl CreditCard")
 
@@ -2247,12 +2247,12 @@ module Tapioca
         end
 
         it "halts upon load errors when extension cannot be loaded" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             class Post
             end
           RB
 
-          @project.write("sorbet/tapioca/extensions/test.rb", <<~RB)
+          @project.write!("sorbet/tapioca/extensions/test.rb", <<~RB)
             puts "Hi from test extension"
             raise "Raising from test extension"
           RB
@@ -2274,10 +2274,10 @@ module Tapioca
       describe "sanity" do
         before(:all) do
           @project.require_real_gem("smart_properties", "1.15.0")
-          @project.bundle_install
+          @project.bundle_install!
           @project.tapioca("configure")
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -2288,12 +2288,12 @@ module Tapioca
         end
 
         after do
-          project.remove("sorbet/rbi/gems")
-          project.remove("sorbet/rbi/dsl")
+          project.remove!("sorbet/rbi/gems")
+          project.remove!("sorbet/rbi/dsl")
         end
 
         it "must display an error message when a generated gem RBI file contains a parse error" do
-          @project.write("sorbet/rbi/dsl/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/dsl/bar.rbi", <<~RBI)
             # typed: true
 
             module Bar
@@ -2336,7 +2336,7 @@ module Tapioca
         before(:all) do
           @project.tapioca("configure")
 
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             $stderr.puts "RAILS ENVIRONMENT: \#{ENV["RAILS_ENV"]}"
@@ -2359,7 +2359,7 @@ module Tapioca
           RB
 
           @project.require_real_gem("smart_properties", "1.15.0")
-          @project.bundle_install
+          @project.bundle_install!
         end
 
         it "must default to `development` as environment" do
@@ -2434,9 +2434,9 @@ module Tapioca
           @project.require_real_gem("smart_properties")
           @project.require_real_gem("sidekiq")
           @project.require_real_gem("activerecord")
-          @project.bundle_install
+          @project.bundle_install!
 
-          @project.write("lib/compilers/post_compiler.rb", <<~RB)
+          @project.write!("lib/compilers/post_compiler.rb", <<~RB)
             require "tapioca/dsl"
 
             class PostCompiler < Tapioca::Dsl::Compiler
@@ -2540,11 +2540,11 @@ module Tapioca
 
       describe "halt-upon-load-error" do
         before(:all) do
-          @project.write("config/environment.rb", <<~RB)
+          @project.write!("config/environment.rb", <<~RB)
             require_relative "application.rb"
           RB
 
-          @project.write("config/application.rb", <<~RB)
+          @project.write!("config/application.rb", <<~RB)
             require "rails"
 
             module Test
@@ -2555,11 +2555,11 @@ module Tapioca
           RB
 
           @project.require_real_gem("rails")
-          @project.bundle_install
+          @project.bundle_install!
         end
 
         after(:all) do
-          @project.remove("config/application.rb")
+          @project.remove!("config/application.rb")
         end
 
         it "halts upon load errors when rails application cannot be loaded" do

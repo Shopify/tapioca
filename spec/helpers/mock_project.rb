@@ -6,17 +6,11 @@ require "helpers/mock_gem"
 
 module Tapioca
   # A mock project used for testing purposes
-  class MockProject < MockDir
+  class MockProject < Spoom::Context
     extend T::Sig
 
     # Path to Tapioca's source files
     TAPIOCA_PATH = T.let((Pathname.new(__FILE__) / ".." / ".." / "..").to_s, String)
-
-    # Write `contents` to the gemfile in this project
-    sig { params(contents: String, append: T::Boolean).void }
-    def gemfile(contents, append: false)
-      write("Gemfile", contents, append: append)
-    end
 
     # Add a gem requirement to this project's gemfile from a `MockGem`
     sig { params(gem: MockGem, require: T.nilable(T.any(FalseClass, String))).void }
@@ -24,7 +18,7 @@ module Tapioca
       line = gem.gemfile_line.dup
       line << ", require: #{require.inspect}" unless require.nil?
       line << "\n"
-      gemfile(line, append: true)
+      write_gemfile!(line, append: true)
     end
 
     # Add a gem requirement to this project's gemfile from a real gem
@@ -34,7 +28,7 @@ module Tapioca
       line << ", \"#{version}\"" if version
       line << ", require: #{require.inspect}" unless require.nil?
       line << "\n"
-      gemfile(line, append: true)
+      write_gemfile!(line, append: true)
     end
 
     # Default Gemfile contents requiring only Tapioca
@@ -47,12 +41,6 @@ module Tapioca
       GEMFILE
     end
 
-    # Write `contents` to the `sorbet/config` file of this project
-    sig { params(contents: String, append: T::Boolean).void }
-    def sorbet_config(contents, append: false)
-      write("sorbet/config", contents, append: append)
-    end
-
     sig { returns(String) }
     def bundler_version
       @bundler_version || Bundler::VERSION
@@ -62,7 +50,7 @@ module Tapioca
     def reset_bundler_version
       return unless @bundler_version
 
-      bundle_install
+      bundle_install!
     end
 
     class ExecResult < T::Struct
@@ -85,12 +73,16 @@ module Tapioca
     end
 
     # Run `bundle install` in this project context (unbundled env)
-    sig { params(version: T.nilable(String)).returns(ExecResult) }
-    def bundle_install(version: nil)
+    sig do
+      override(allow_incompatible: true) # rubocop:disable Sorbet/AllowIncompatibleOverride
+        .params(version: T.nilable(String))
+        .returns(ExecResult)
+    end
+    def bundle_install!(version: nil)
       @bundler_version = T.let(version, T.nilable(String))
 
       opts = {}
-      opts[:chdir] = path
+      opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
         cmd =
           # prerelease versions are not always available on rubygems.org
@@ -109,10 +101,14 @@ module Tapioca
     end
 
     # Run a `command` with `bundle exec` in this project context (unbundled env)
-    sig { params(command: String, env: T::Hash[String, String]).returns(ExecResult) }
+    sig do
+      override(allow_incompatible: true) # rubocop:disable Sorbet/AllowIncompatibleOverride
+        .params(command: String, env: T::Hash[String, String])
+        .returns(ExecResult)
+    end
     def bundle_exec(command, env = {})
       opts = {}
-      opts[:chdir] = path
+      opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
         out, err, status = Open3.capture3(env, ["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
         ExecResult.new(out: out, err: err, status: T.must(status.success?))
