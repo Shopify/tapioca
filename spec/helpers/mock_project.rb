@@ -53,30 +53,11 @@ module Tapioca
       bundle_install!
     end
 
-    class ExecResult < T::Struct
-      extend T::Sig
-
-      const :out, String
-      const :err, String
-      const :status, T::Boolean
-
-      sig { returns(String) }
-      def to_s
-        <<~STR
-          ########## STDOUT ##########
-          #{out.empty? ? "<empty>" : out}
-          ########## STDERR ##########
-          #{err.empty? ? "<empty>" : err}
-          ########## STATUS: #{status} ##########
-        STR
-      end
-    end
-
     # Run `bundle install` in this project context (unbundled env)
     sig do
       override(allow_incompatible: true) # rubocop:disable Sorbet/AllowIncompatibleOverride
         .params(version: T.nilable(String))
-        .returns(ExecResult)
+        .returns(Spoom::ExecResult)
     end
     def bundle_install!(version: nil)
       @bundler_version = T.let(version, T.nilable(String))
@@ -96,7 +77,7 @@ module Tapioca
           end
 
         out, err, status = Open3.capture3(cmd, opts)
-        ExecResult.new(out: out, err: err, status: T.must(status.success?))
+        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
       end
     end
 
@@ -104,14 +85,14 @@ module Tapioca
     sig do
       override(allow_incompatible: true) # rubocop:disable Sorbet/AllowIncompatibleOverride
         .params(command: String, env: T::Hash[String, String])
-        .returns(ExecResult)
+        .returns(Spoom::ExecResult)
     end
     def bundle_exec(command, env = {})
       opts = {}
       opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
         out, err, status = Open3.capture3(env, ["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
-        ExecResult.new(out: out, err: err, status: T.must(status.success?))
+        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
       end
     end
 
@@ -121,7 +102,7 @@ module Tapioca
         command: String,
         enforce_typechecking: T::Boolean,
         exclude: T::Array[String],
-      ).returns(ExecResult)
+      ).returns(Spoom::ExecResult)
     end
     def tapioca(command, enforce_typechecking: true, exclude: tapioca_dependencies)
       exec_command = ["tapioca", command]

@@ -109,32 +109,32 @@ module Tapioca
       assert_equal(strictness, Spoom::Sorbet::Sigils.file_strictness(@project.absolute_path_to(file)))
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def assert_empty_stdout(result)
       assert_empty(result.out)
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def assert_empty_stderr(result)
       assert_empty(result.err)
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def assert_success_status(result)
       assert(result.status)
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def refute_success_status(result)
       refute(result.status)
     end
 
-    sig { params(result: MockProject::ExecResult, snippet: String).void }
+    sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stdout_includes(result, snippet)
       assert_includes(result.out, snippet, result.to_s)
     end
 
-    sig { params(result: MockProject::ExecResult, snippet: String).void }
+    sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stderr_includes(result, snippet)
       assert_includes(result.err, snippet, result.to_s)
     end
