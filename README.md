@@ -40,10 +40,9 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Excluding a gem from RBI generation](#excluding-a-gem-from-rbi-generation)
     * [Changing the strictness level of the RBI for a gem](#changing-the-strictness-level-of-the-rbi-for-a-gem)
     * [Keeping RBI files for gems up-to-date](#keeping-rbi-files-for-gems-up-to-date)
-  * [Pulling RBI annotations from remote sources](#pulling-rbi-annotations-from-remote-sources)
+    * [Pulling RBI annotations from remote sources](#pulling-rbi-annotations-from-remote-sources)
     * [Basic authentication](#basic-authentication)
     * [Using a .netrc file](#using-a-netrc-file)
-    * [Changing the typed strictness of annotations files](#changing-the-typed-strictness-of-annotations-files)
   * [Generating RBI files for Rails and other DSLs](#generating-rbi-files-for-rails-and-other-dsls)
     * [Keeping RBI files for DSLs up-to-date](#keeping-rbi-files-for-dsls-up-to-date)
     * [Writing custom DSL compilers](#writing-custom-dsl-compilers)
@@ -72,7 +71,7 @@ $ tapioca help
 
 Commands:
   tapioca --version, -v      # Show version
-  tapioca annotations        # Pull gem RBI annotations from remote sources
+  tapioca annotations        # Deprecated, this command has been merged into `tapioca gem`. Please use that instead.
   tapioca check-shims        # Check duplicated definitions in shim RBIs
   tapioca configure          # Initialize folder structure and type checking configuration
   tapioca dsl [constant...]  # Generate RBIs for dynamic methods
@@ -192,6 +191,15 @@ Options:
                                                                       # Default: development
                [--halt-upon-load-error], [--no-halt-upon-load-error]  # Halt upon a load error while loading the Rails application
                                                                       # Default: true
+               [--annotations], [--no-annotations]                    # Include RBI annotations from remote source
+                                                                      # Default: true
+               [--annotation-sources=one two three]                   # URIs of the sources to pull gem RBI annotations from
+                                                                      # Default: ["https://raw.githubusercontent.com/Shopify/rbi-central/main"]
+               [--annotation-netrc], [--no-annotation-netrc]          # Use .netrc to authenticate to private annotation sources
+                                                                      # Default: true
+               [--annotation-netrc-file=ANNOTATION_NETRC_FILE]        # Path to .netrc file
+               [--annotation-auth=ANNOTATION_AUTH]                    # HTTP authorization header for private annotation sources
+               [--exclude-annotation=gem [gem ...]]                   # Excludes annotation for gem while generating RBI
   -c,          [--config=<config file path>]                          # Path to the Tapioca configuration file
                                                                       # Default: sorbet/tapioca/config.yml
   -V,          [--verbose], [--no-verbose]                            # Verbose output for debugging purposes
@@ -321,59 +329,20 @@ Nothing to do, all RBIs are up-to-date.
 
 This option can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking. **Warning**: doing so will break your normal Dependabot workflow as every pull-request opened to bump a gem version will fail CI since the RBI will be out-of-date and will require you to manually run `bin/tapioca gems` to update them.
 
-### Pulling RBI annotations from remote sources
+#### Pulling RBI annotations from remote sources
 
-Since Tapioca does not perform any type inference, the RBI files generated for the gems do not contain any type signatures. Instead, Tapioca relies on the community to provide high-quality, manually written RBI annotations for public gems.
+Since Tapioca does not perform any type inference, the RBI files generated for the gems do not contain any type signatures. Instead, Tapioca relies on the community to provide high-quality, manually written RBI annotations for public gems. These annotations are sourced and combined with the generated RBIs as a step during `tapioca gem`.
 
-To pull the annotations relevant to your project from the central repository, run the `annotations` command:
-
-```shell
-$ bin/tapioca annotations
-
-Retrieving index from central repository... Done
-Listing gems from Gemfile.lock... Done
-Removing annotations for gems that have been removed...  Nothing to do
-Fetching gem annotations from central repository...
-
-  Fetched activesupport
-   created  sorbet/rbi/annotations/activesupport.rbi
-
-Done
-```
-
-<!-- START_HELP_COMMAND_ANNOTATIONS -->
-```shell
-$ tapioca help annotations
-
-Usage:
-  tapioca annotations
-
-Options:
-               [--sources=one two three]                      # URIs of the sources to pull gem RBI annotations from
-                                                              # Default: ["https://raw.githubusercontent.com/Shopify/rbi-central/main"]
-               [--netrc], [--no-netrc]                        # Use .netrc to authenticate to private sources
-                                                              # Default: true
-               [--netrc-file=NETRC_FILE]                      # Path to .netrc file
-               [--auth=AUTH]                                  # HTTP authorization header for private sources
-  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Override for typed sigils for pulled annotations
-  -c,          [--config=<config file path>]                  # Path to the Tapioca configuration file
-                                                              # Default: sorbet/tapioca/config.yml
-  -V,          [--verbose], [--no-verbose]                    # Verbose output for debugging purposes
-
-Pull gem RBI annotations from remote sources
-```
-<!-- END_HELP_COMMAND_ANNOTATIONS -->
-
-By default, Tapioca will pull the annotations stored in the central repository located at https://github.com/Shopify/rbi-central. It is possible to use a custom repository by changing the value of the `--sources` options. For example if your repository is stored on Github:
+By default, Tapioca will pull the annotations stored in the central repository located at https://github.com/Shopify/rbi-central. It is possible to use a custom repository by changing the value of the `--annotation-sources` option. For example if your repository is stored on Github:
 
 ```shell
-$ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO/$BRANCH
+$ bin/tapioca gem --annotation-sources https://raw.githubusercontent.com/$USER/$REPO/$BRANCH
 ```
 
 Tapioca also supports pulling annotations from multiple sources:
 
 ```shell
-$ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO1/$BRANCH https://raw.githubusercontent.com/$USER/$REPO2/$BRANCH
+$ bin/tapioca gem --annotation-sources https://raw.githubusercontent.com/$USER/$REPO1/$BRANCH https://raw.githubusercontent.com/$USER/$REPO2/$BRANCH
 ```
 
 #### Basic authentication
@@ -381,7 +350,7 @@ $ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REP
 Private repositories can be used as sources by passing the option `--auth` with an authentication string. For Github, this string is `token $TOKEN` where `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```shell
-$ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$PRIVATE_REPO/$BRANCH --auth "token $TOKEN"
+$ bin/tapioca gem --annotation-sources https://raw.githubusercontent.com/$USER/$PRIVATE_REPO/$BRANCH --annotation-auth "token $TOKEN"
 ```
 
 #### Using a .netrc file
@@ -396,38 +365,21 @@ machine raw.githubusercontent.com
   password $TOKEN
 ```
 
-where `$USERNAME` is your Github username and `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), then, if you run Tapioca with the `--netrc` option (enabled by default), your annotation requests should be authenticated properly.
+where `$USERNAME` is your Github username and `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), then, if you run Tapioca with the `--annotation-netrc` option (enabled by default), your annotation requests should be authenticated properly.
 
-The `--netrc-file` option can be specified to read from a file other than `~/.netrc`:
-
-```shell
-$ bin/tapioca annotations --netrc-file /path/to/my/netrc/file
-```
-
-Similar to `--netrc-file`, you can also specify an alternative netrc file by using the `TAPIOCA_NETRC_FILE` environment variable:
+The `--annotation-netrc-file` option can be specified to read from a file other than `~/.netrc`:
 
 ```shell
-$ TAPIOCA_NETRC_FILE=/path/to/my/netrc/file bin/tapioca annotations
+$ bin/tapioca gem --annotation-netrc-file /path/to/my/netrc/file
 ```
 
-Tapioca will first try to find the netrc file as specified by the `--netrc-file` option. If that option is not supplied, it will try the `TAPIOCA_NETRC_FILE` environment variable value. If that value is not supplied either, it will fallback to `~/.netrc`.
-
-#### Changing the typed strictness of annotations files
-
-Sometimes the annotations files pulled by Tapioca will create type errors in your project because of incompatibilities.
-It is possible to ignore such files by switching their strictness level `--typed-overrides` option:
+Similar to `--annotation-netrc-file`, you can also specify an alternative netrc file by using the `TAPIOCA_NETRC_FILE` environment variable:
 
 ```shell
-$ bin/tapioca annotations --typed-overrides gemA:ignore gemB:false
+$ TAPIOCA_NETRC_FILE=/path/to/my/netrc/file bin/tapioca gem
 ```
 
-Or through the configuration file:
-
-```yaml
-annotations:
-  typed_overrides:
-    gemA: "ignore"
-    gemB: "false"
+Tapioca will first try to find the netrc file as specified by the `--annotation-netrc-file` option. If that option is not supplied, it will try the `TAPIOCA_NETRC_FILE` environment variable value. If that value is not supplied either, it will fallback to `~/.netrc`.
 ```
 
 ### Generating RBI files for Rails and other DSLs
@@ -805,7 +757,6 @@ Loading Sorbet payload...  Done
 Loading shim RBIs from sorbet/rbi/shims...  Done
 Loading gem RBIs from sorbet/rbi/gems...  Done
 Loading gem RBIs from sorbet/rbi/dsl...  Done
-Loading annotation RBIs from sorbet/rbi/annotations...  Done
 Looking for duplicates...  Done
 
 Duplicated RBI for ::MyModel#title:
@@ -829,22 +780,20 @@ Usage:
   tapioca check-shims
 
 Options:
-      [--gem-rbi-dir=GEM_RBI_DIR]                  # Path to gem RBIs
-                                                   # Default: sorbet/rbi/gems
-      [--dsl-rbi-dir=DSL_RBI_DIR]                  # Path to DSL RBIs
-                                                   # Default: sorbet/rbi/dsl
-      [--shim-rbi-dir=SHIM_RBI_DIR]                # Path to shim RBIs
-                                                   # Default: sorbet/rbi/shims
-      [--annotations-rbi-dir=ANNOTATIONS_RBI_DIR]  # Path to annotations RBIs
-                                                   # Default: sorbet/rbi/annotations
-      [--todo-rbi-file=TODO_RBI_FILE]              # Path to the generated todo RBI file
-                                                   # Default: sorbet/rbi/todo.rbi
-      [--payload], [--no-payload]                  # Check shims against Sorbet's payload
-                                                   # Default: true
-  -w, [--workers=N]                                # Number of parallel workers (default: auto)
-  -c, [--config=<config file path>]                # Path to the Tapioca configuration file
-                                                   # Default: sorbet/tapioca/config.yml
-  -V, [--verbose], [--no-verbose]                  # Verbose output for debugging purposes
+      [--gem-rbi-dir=GEM_RBI_DIR]      # Path to gem RBIs
+                                       # Default: sorbet/rbi/gems
+      [--dsl-rbi-dir=DSL_RBI_DIR]      # Path to DSL RBIs
+                                       # Default: sorbet/rbi/dsl
+      [--shim-rbi-dir=SHIM_RBI_DIR]    # Path to shim RBIs
+                                       # Default: sorbet/rbi/shims
+      [--todo-rbi-file=TODO_RBI_FILE]  # Path to the generated todo RBI file
+                                       # Default: sorbet/rbi/todo.rbi
+      [--payload], [--no-payload]      # Check shims against Sorbet's payload
+                                       # Default: true
+  -w, [--workers=N]                    # Number of parallel workers (default: auto)
+  -c, [--config=<config file path>]    # Path to the Tapioca configuration file
+                                       # Default: sorbet/tapioca/config.yml
+  -V, [--verbose], [--no-verbose]      # Verbose output for debugging purposes
 
 Check duplicated definitions in shim RBIs
 ```
@@ -918,11 +867,17 @@ gem:
   rbi_max_line_length: 120
   environment: development
   halt_upon_load_error: true
+  annotations: true
+  annotation_sources:
+  - https://raw.githubusercontent.com/Shopify/rbi-central/main
+  annotation_netrc: true
+  annotation_netrc_file: ''
+  annotation_auth: ''
+  exclude_annotation: []
 check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
   shim_rbi_dir: sorbet/rbi/shims
-  annotations_rbi_dir: sorbet/rbi/annotations
   todo_rbi_file: sorbet/rbi/todo.rbi
   payload: true
   workers: 1
