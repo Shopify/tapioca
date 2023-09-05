@@ -49,8 +49,6 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Writing custom DSL compilers](#writing-custom-dsl-compilers)
     * [Writing custom DSL extensions](#writing-custom-dsl-extensions)
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
-    * [Generating the RBI file for missing constants](#generating-the-rbi-file-for-missing-constants)
-    * [Manually writing RBI definitions (shims)](#manually-writing-rbi-definitions-shims)
   * [Configuration](#configuration)
 * [Contributing](#contributing)
 * [License](#license)
@@ -73,16 +71,16 @@ Run `bundle install` and make sure Tapioca is properly installed:
 $ tapioca help
 
 Commands:
-  tapioca --version, -v      # show version
+  tapioca --version, -v      # Show version
   tapioca annotations        # Pull gem RBI annotations from remote sources
-  tapioca check-shims        # check duplicated definitions in shim RBIs
-  tapioca configure          # initialize folder structure and type checking configuration
-  tapioca dsl [constant...]  # generate RBIs for dynamic methods
-  tapioca gem [gem...]       # generate RBIs from gems
+  tapioca check-shims        # Check duplicated definitions in shim RBIs
+  tapioca configure          # Initialize folder structure and type checking configuration
+  tapioca dsl [constant...]  # Generate RBIs for dynamic methods
+  tapioca gem [gem...]       # Generate RBIs from gems
   tapioca help [COMMAND]     # Describe available commands or one specific command
-  tapioca init               # get project ready for type checking
-  tapioca require            # generate the list of files to be required by tapioca
-  tapioca todo               # generate the list of unresolved constants
+  tapioca init               # Get project ready for type checking
+  tapioca require            # Generate the list of files to be required by tapioca
+  tapioca todo               # Generate the list of unresolved constants
 
 Options:
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
@@ -122,7 +120,7 @@ Options:
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
 
-get project ready for type checking
+Get project ready for type checking
 ```
 <!-- END_HELP_COMMAND_INIT -->
 
@@ -173,6 +171,7 @@ Options:
   --post, -a,  [--postrequire=file]                                   # A file to be required after Bundler.require is called
                                                                       # Default: sorbet/tapioca/require.rb
   -x,          [--exclude=gem [gem ...]]                              # Exclude the given gem(s) from RBI generation
+               [--include-dependencies], [--no-include-dependencies]  # Generate RBI files for dependencies of the given gem(s)
   --typed, -t, [--typed-overrides=gem:level [gem:level ...]]          # Override for typed sigils for generated gem RBIs
                                                                       # Default: {"activesupport"=>"false"}
                [--verify], [--no-verify]                              # Verify RBIs are up-to-date
@@ -197,11 +196,11 @@ Options:
                                                                       # Default: sorbet/tapioca/config.yml
   -V,          [--verbose], [--no-verbose]                            # Verbose output for debugging purposes
 
-generate RBIs from gems
+Generate RBIs from gems
 ```
 <!-- END_HELP_COMMAND_GEM -->
 
-By default, running `tapioca gem` will only generate the RBI files for gems that have been added to or removed from the project's `Gemfile` this means that Tapioca will not regenerate the RBI files for untouched gems. However, when changing Tapioca configuration or bumping its version, it may be useful to force the regeneration of the RBI files previously generated. This can be done with the `--all` option:
+By default, running `tapioca gem` will only generate the RBI files for gems that have been added to or removed from the project's `Gemfile` this means that Tapioca will not regenerate the RBI files for untouched gems. If you want to force the regeneration you can supply gem names to the `tapioca gem` command. When supplying gem names if you want to generate RBI files for their dependencies as well, you can use the `--include-dependencies` option. When changing Tapioca configuration or bumping its version, it may be useful to force the regeneration of all the RBI files previously generated. This can be done with the `--all` option:
 
 ```shell
 bin/tapioca gems --all
@@ -484,7 +483,7 @@ Options:
                                                                     # Default: sorbet/tapioca/config.yml
   -V,        [--verbose], [--no-verbose]                            # Verbose output for debugging purposes
 
-generate RBIs for dynamic methods
+Generate RBIs for dynamic methods
 ```
 <!-- END_HELP_COMMAND_DSL -->
 
@@ -782,47 +781,7 @@ This might be for multiple reasons, with the most frequents ones being:
 * The constant or method comes from a DSL or meta-programming that Tapioca doesn't support yet
 * The constant or method only exists when a specific code path is executed
 
-The best way to deal with such occurrences is to manually create RBI files (shims) for them so you can also add types but depending on the amount of meta-programming used in your project this can mean an overwhelming amount of manual work.
-
-#### Generating the RBI file for missing constants
-
-To get you started quickly, Tapioca can create a RBI file containing a stub of all the missing constants so you can typecheck your project without missing constants and shim them later as you need them.
-
-To generate the RBI file for the missing constants used in your application run the following command:
-
-```shell
-$ bin/tapioca todo
-
-Compiling sorbet/rbi/todo.rbi, this may take a few seconds... Done
-All unresolved constants have been written to sorbet/rbi/todo.rbi.
-Please review changes and commit them.
-```
-
-This will generate the file `sorbet/rbi/todo.rbi` defining all unresolved constants as empty modules. Since the constants are "missing", Tapioca does not know if they should be marked as modules or classes and will use modules as a safer default. This file should be reviewed, corrected, if necessary, and then committed in your repository.
-
-<!-- START_HELP_COMMAND_TODO -->
-```shell
-$ tapioca help todo
-
-Usage:
-  tapioca todo
-
-Options:
-      [--todo-file=TODO_FILE]              # Path to the generated todo RBI file
-                                           # Default: sorbet/rbi/todo.rbi
-      [--file-header], [--no-file-header]  # Add a "This file is generated" header on top of each generated RBI file
-                                           # Default: true
-  -c, [--config=<config file path>]        # Path to the Tapioca configuration file
-                                           # Default: sorbet/tapioca/config.yml
-  -V, [--verbose], [--no-verbose]          # Verbose output for debugging purposes
-
-generate the list of unresolved constants
-```
-<!-- END_HELP_COMMAND_TODO -->
-
-#### Manually writing RBI definitions (shims)
-
-A _shim_ is a hand-crafted RBI file that tells Sorbet about constants, ancestors, methods, etc. that it can't understand statically and aren't already generated by Tapioca.
+The best way to deal with such occurrences is _shims_. A shim is a hand-crafted RBI file that tells Sorbet about constants, ancestors, methods, etc. that it can't understand statically and aren't already generated by Tapioca.
 
 These shims are usually placed in the `sorbet/rbi/shims` directory. From there, conventionally, you should follow the directory structure of the project to the file you'd like to shim. For example, say you had a `person.rb` file found at `app/models/person.rb`. If you were to add a shim for it, you'd want to create your RBI file at `sorbet/rbi/shims/app/models/person.rbi`.
 
@@ -887,9 +846,11 @@ Options:
                                                    # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                  # Verbose output for debugging purposes
 
-check duplicated definitions in shim RBIs
+Check duplicated definitions in shim RBIs
 ```
 <!-- END_HELP_COMMAND_CHECK_SHIMS -->
+
+Depending on the amount of meta-programming used in your project this can mean an overwhelming amount of manual work. In this case, you should consider [writting a custom DSL compiler](#writing-custom-dsl-compilers).
 
 ### Configuration
 
@@ -944,6 +905,7 @@ gem:
   prerequire: ''
   postrequire: sorbet/tapioca/require.rb
   exclude: []
+  include_dependencies: false
   typed_overrides:
     activesupport: 'false'
   verify: false

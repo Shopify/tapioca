@@ -23,7 +23,7 @@ module Tapioca
       desc: "Verbose output for debugging purposes",
       default: false
 
-    desc "init", "get project ready for type checking"
+    desc "init", "Get project ready for type checking"
     def init
       # We need to make sure that trackers stay enabled until the `gem` command is invoked
       Runtime::Trackers.with_trackers_enabled do
@@ -31,12 +31,17 @@ module Tapioca
         invoke(:annotations)
         invoke(:gem)
       end
-      invoke(:todo)
+
+      # call the command directly to skip deprecation warning
+      Commands::Todo.new(
+        todo_file: DEFAULT_TODO_FILE,
+        file_header: true,
+      ).run
 
       print_init_next_steps
     end
 
-    desc "configure", "initialize folder structure and type checking configuration"
+    desc "configure", "Initialize folder structure and type checking configuration"
     option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def configure
       command = Commands::Configure.new(
@@ -47,7 +52,7 @@ module Tapioca
       command.run
     end
 
-    desc "require", "generate the list of files to be required by tapioca"
+    desc "require", "Generate the list of files to be required by tapioca"
     option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
     def require
       command = Commands::Require.new(
@@ -57,7 +62,7 @@ module Tapioca
       command.run
     end
 
-    desc "todo", "generate the list of unresolved constants"
+    desc "todo", "Generate the list of unresolved constants"
     option :todo_file,
       type: :string,
       desc: "Path to the generated todo RBI file",
@@ -71,10 +76,10 @@ module Tapioca
         todo_file: options[:todo_file],
         file_header: options[:file_header],
       )
-      command.run
+      command.run_with_deprecation
     end
 
-    desc "dsl [constant...]", "generate RBIs for dynamic methods"
+    desc "dsl [constant...]", "Generate RBIs for dynamic methods"
     option :outdir,
       aliases: ["--out", "-o"],
       banner: "directory",
@@ -163,7 +168,7 @@ module Tapioca
       command.run
     end
 
-    desc "gem [gem...]", "generate RBIs from gems"
+    desc "gem [gem...]", "Generate RBIs from gems"
     option :outdir,
       aliases: ["--out", "-o"],
       banner: "directory",
@@ -193,6 +198,10 @@ module Tapioca
       banner: "gem [gem ...]",
       desc: "Exclude the given gem(s) from RBI generation",
       default: []
+    option :include_dependencies,
+      type: :boolean,
+      desc: "Generate RBI files for dependencies of the given gem(s)",
+      default: false
     option :typed_overrides,
       aliases: ["--typed", "-t"],
       type: :hash,
@@ -246,10 +255,14 @@ module Tapioca
 
       all = options[:all]
       verify = options[:verify]
+      include_dependencies = options[:include_dependencies]
 
       raise MalformattedArgumentError, "Options '--all' and '--verify' are mutually exclusive" if all && verify
 
-      unless gems.empty?
+      if gems.empty?
+        raise MalformattedArgumentError,
+          "Option '--include-dependencies' must be provided with gems" if include_dependencies
+      else
         raise MalformattedArgumentError, "Option '--all' must be provided without any other arguments" if all
         raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
       end
@@ -257,6 +270,7 @@ module Tapioca
       command_args = {
         gem_names: all ? [] : gems,
         exclude: options[:exclude],
+        include_dependencies: options[:include_dependencies],
         prerequire: options[:prerequire],
         postrequire: options[:postrequire],
         typed_overrides: options[:typed_overrides],
@@ -284,7 +298,7 @@ module Tapioca
     end
     map "gems" => :gem
 
-    desc "check-shims", "check duplicated definitions in shim RBIs"
+    desc "check-shims", "Check duplicated definitions in shim RBIs"
     option :gem_rbi_dir, type: :string, desc: "Path to gem RBIs", default: DEFAULT_GEM_DIR
     option :dsl_rbi_dir, type: :string, desc: "Path to DSL RBIs", default: DEFAULT_DSL_DIR
     option :shim_rbi_dir, type: :string, desc: "Path to shim RBIs", default: DEFAULT_SHIM_DIR
@@ -337,7 +351,7 @@ module Tapioca
 
     map ["--version", "-v"] => :__print_version
 
-    desc "--version, -v", "show version"
+    desc "--version, -v", "Show version"
     def __print_version
       puts "Tapioca v#{Tapioca::VERSION}"
     end

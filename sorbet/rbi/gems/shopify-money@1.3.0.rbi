@@ -225,7 +225,7 @@ class Money
     # source://forwardable/1.3.3/forwardable.rb#231
     def default_currency=(*args, **_arg1, &block); end
 
-    # source://shopify-money//lib/money/deprecations.rb#9
+    # source://shopify-money//lib/money/deprecations.rb#12
     def deprecate(message); end
 
     # source://shopify-money//lib/money/money.rb#23
@@ -884,7 +884,7 @@ module RuboCop::Cop::Money; end
 
 # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#6
 class RuboCop::Cop::Money::MissingCurrency < ::RuboCop::Cop::Cop
-  # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#47
+  # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#48
   def autocorrect(node); end
 
   # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#22
@@ -904,7 +904,7 @@ class RuboCop::Cop::Money::MissingCurrency < ::RuboCop::Cop::Cop
 
   private
 
-  # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#73
+  # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#74
   def replacement_currency; end
 end
 

@@ -13,6 +13,7 @@ module Tapioca
         params(
           gem_names: T::Array[String],
           exclude: T::Array[String],
+          include_dependencies: T::Boolean,
           prerequire: T.nilable(String),
           postrequire: String,
           typed_overrides: T::Hash[String, String],
@@ -31,6 +32,7 @@ module Tapioca
       def initialize(
         gem_names:,
         exclude:,
+        include_dependencies:,
         prerequire:,
         postrequire:,
         typed_overrides:,
@@ -47,6 +49,7 @@ module Tapioca
       )
         @gem_names = gem_names
         @exclude = exclude
+        @include_dependencies = include_dependencies
         @prerequire = prerequire
         @postrequire = postrequire
         @typed_overrides = typed_overrides
@@ -74,14 +77,32 @@ module Tapioca
       def gems_to_generate(gem_names)
         return @bundle.dependencies if gem_names.empty?
 
-        gem_names.map do |gem_name|
+        gem_names.each_with_object([]) do |gem_name, gems|
           gem = @bundle.gem(gem_name)
 
           if gem.nil?
             raise Thor::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
           end
 
-          gem
+          gems.concat(gem_dependencies(gem)) if @include_dependencies
+          gems << gem
+        end
+      end
+
+      sig do
+        params(
+          gem: Gemfile::GemSpec,
+          dependencies: T::Array[Gemfile::GemSpec],
+        ).returns(T::Array[Gemfile::GemSpec])
+      end
+      def gem_dependencies(gem, dependencies = [])
+        direct_dependencies = gem.dependencies.filter_map { |dependency| @bundle.gem(dependency.name) }
+        gems = dependencies | direct_dependencies
+
+        if direct_dependencies.empty?
+          gems
+        else
+          direct_dependencies.reduce(gems) { |result, gem| gem_dependencies(gem, result) }
         end
       end
 

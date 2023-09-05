@@ -6,6 +6,17 @@ module Tapioca
     class Todo < CommandWithoutTracker
       include SorbetHelper
 
+      DEPRECATION_MESSAGE = T.let(<<~DEPRECATION, String)
+        The `todo` command is deprecated and will be removed in a future release.
+
+        If your project is still missing type definitions for constants, try the following:
+        1. Regenerate gem RBIs by running `bin/tapioca gem --all` and `bin/tapioca annotations`
+        2. Generate RBIs for DSLs by running `bin/tapioca dsl`
+        3. If the missing constants are defined in files that a gem does not load by default,
+           manually require those files in `sorbet/tapioca/require.rb` and regenerate gem RBIs
+        4. Manually create an RBI shim defining the missing constants
+      DEPRECATION
+
       sig do
         params(
           todo_file: String,
@@ -17,6 +28,14 @@ module Tapioca
         @file_header = file_header
 
         super()
+      end
+
+      sig { void }
+      def run_with_deprecation
+        say(DEPRECATION_MESSAGE, :red)
+        say("")
+
+        run
       end
 
       private

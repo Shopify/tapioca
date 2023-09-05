@@ -20,6 +20,7 @@ module Tapioca
         result = @project.tapioca("todo")
 
         assert_equal(<<~OUT, result.out)
+          #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUT
 
@@ -62,6 +63,7 @@ module Tapioca
         result = @project.tapioca("todo")
 
         assert_equal(<<~OUT, result.out)
+          #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Done
 
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
@@ -96,6 +98,7 @@ module Tapioca
         result = @project.tapioca("todo --no-file-header")
 
         assert_equal(<<~OUT, result.out)
+          #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Done
 
           All unresolved constants have been written to sorbet/rbi/todo.rbi.
@@ -122,6 +125,7 @@ module Tapioca
         result = @project.tapioca("todo")
 
         assert_equal(<<~OUT, result.out)
+          #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUT
 

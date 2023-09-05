@@ -9,8 +9,16 @@ module Tapioca
 
         extend T::Sig
 
-        sig { params(type: GraphQL::Schema::Wrapper).returns(String) }
-        def type_for(type)
+        sig { params(argument: GraphQL::Schema::Argument).returns(String) }
+        def type_for(argument)
+          type = if argument.loads
+            loads_type = ::GraphQL::Schema::Wrapper.new(argument.loads)
+            loads_type = loads_type.to_list_type if argument.type.list?
+            loads_type = loads_type.to_non_null_type if argument.type.non_null?
+            loads_type
+          else
+            argument.type
+          end
           unwrapped_type = type.unwrap
 
           parsed_type = case unwrapped_type
@@ -51,7 +59,7 @@ module Tapioca
             parsed_type = "T::Array[#{parsed_type}]"
           end
 
-          unless type.non_null?
+          unless type.non_null? || has_replaceable_default?(argument)
             parsed_type = RBIHelper.as_nilable_type(parsed_type)
           end
 
@@ -63,6 +71,11 @@ module Tapioca
         sig { params(constant: Module).returns(String) }
         def type_for_constant(constant)
           Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
+        end
+
+        sig { params(argument: GraphQL::Schema::Argument).returns(T::Boolean) }
+        def has_replaceable_default?(argument)
+          !!argument.replace_null_with_default? && !argument.default_value.nil?
         end
       end
     end
