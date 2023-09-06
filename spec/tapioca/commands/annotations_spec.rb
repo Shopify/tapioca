@@ -70,7 +70,7 @@ module Tapioca
         before(:all) do
           T.bind(self, AnnotationsSpec)
 
-          project.write(".netrc", <<~NETRC)
+          project.write!(".netrc", <<~NETRC)
             machine my-private-repo-1 login user1 password TOKEN1
             machine my-private-repo-2 login user1 password TOKEN2
           NETRC
@@ -78,7 +78,7 @@ module Tapioca
         end
 
         after(:all) do
-          project.destroy
+          project.destroy!
         end
 
         it "adds the proper headers when fetching indexes" do
@@ -92,7 +92,7 @@ module Tapioca
 
           command = Annotations.new(
             central_repo_root_uris: [DUMMY_REPO_URI_1, DUMMY_REPO_URI_2],
-            netrc_file: @project.absolute_path(".netrc"),
+            netrc_file: @project.absolute_path_to(".netrc"),
           )
 
           indexes = T.unsafe(command).stub(:say, ->(*_args) {}) do
@@ -112,7 +112,7 @@ module Tapioca
 
           command = Annotations.new(
             central_repo_root_uris: [DUMMY_REPO_URI_1, DUMMY_REPO_URI_2],
-            netrc_file: @project.absolute_path(".netrc_not_found"),
+            netrc_file: @project.absolute_path_to(".netrc_not_found"),
           )
 
           indexes = T.unsafe(command).stub(:say, ->(*_args) {}) do
@@ -135,7 +135,7 @@ module Tapioca
           command = Annotations.new(
             central_repo_root_uris: [DUMMY_REPO_URI_1, DUMMY_REPO_URI_2],
             auth: "AUTH",
-            netrc_file: @project.absolute_path(".netrc"),
+            netrc_file: @project.absolute_path_to(".netrc"),
           )
 
           indexes = T.unsafe(command).stub(:say, ->(*_args) {}) do

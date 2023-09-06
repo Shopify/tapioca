@@ -23,7 +23,7 @@ module Tapioca
     attr_reader :project
 
     after(:all) do
-      project.destroy
+      project.destroy!
     end
 
     # Spec helpers
@@ -46,7 +46,7 @@ module Tapioca
     end
     def mock_project(sorbet_dependency: true, &block)
       project = MockProject.new("#{TEST_TMP_PATH}/#{spec_name}/project")
-      project.gemfile(project.tapioca_gemfile)
+      project.write_gemfile!(project.tapioca_gemfile)
       # Pin Sorbet static and runtime version to the current one in this project
       project.require_real_gem(
         "sorbet-static-and-runtime",
@@ -78,6 +78,7 @@ module Tapioca
     end
     def mock_gem(name, version, dependencies: [], path: default_gem_path(name), &block)
       gem = MockGem.new(path, name, version, dependencies)
+      gem.mkdir!
       gem.gemspec(gem.default_gemspec_contents)
       gem.instance_exec(gem, &block) if block
       gem
@@ -105,35 +106,35 @@ module Tapioca
 
     sig { params(strictness: String, file: String).void }
     def assert_file_strictness(strictness, file)
-      assert_equal(strictness, Spoom::Sorbet::Sigils.file_strictness(@project.absolute_path(file)))
+      assert_equal(strictness, Spoom::Sorbet::Sigils.file_strictness(@project.absolute_path_to(file)))
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def assert_empty_stdout(result)
       assert_empty(result.out)
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def assert_empty_stderr(result)
       assert_empty(result.err)
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def assert_success_status(result)
       assert(result.status)
     end
 
-    sig { params(result: MockProject::ExecResult).void }
+    sig { params(result: Spoom::ExecResult).void }
     def refute_success_status(result)
       refute(result.status)
     end
 
-    sig { params(result: MockProject::ExecResult, snippet: String).void }
+    sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stdout_includes(result, snippet)
       assert_includes(result.out, snippet, result.to_s)
     end
 
-    sig { params(result: MockProject::ExecResult, snippet: String).void }
+    sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stderr_includes(result, snippet)
       assert_includes(result.err, snippet, result.to_s)
     end

@@ -7,15 +7,15 @@ module Tapioca
   class ConfigTest < SpecWithProject
     describe "cli::configuration" do
       before(:all) do
-        @project.bundle_install
+        @project.bundle_install!
       end
 
       after do
-        @project.remove("sorbet/rbi")
+        @project.remove!("sorbet/rbi")
       end
 
       it "validates unknown configuration keys" do
-        @project.write("sorbet/tapioca/config.yml", <<~YAML)
+        @project.write!("sorbet/tapioca/config.yml", <<~YAML)
           foo: true
           bar:
           - 1
@@ -43,7 +43,7 @@ module Tapioca
       end
 
       it "validates unknown configuration key options" do
-        @project.write("sorbet/tapioca/config.yml", <<~YAML)
+        @project.write!("sorbet/tapioca/config.yml", <<~YAML)
           gem:
             doc: true
             foo: 1
@@ -66,7 +66,7 @@ module Tapioca
       end
 
       it "validates invalid configuration option values" do
-        @project.write("sorbet/tapioca/config.yml", <<~YAML)
+        @project.write!("sorbet/tapioca/config.yml", <<~YAML)
           gem:
             doc: "true"
             typed_overrides:
@@ -94,7 +94,7 @@ module Tapioca
       end
 
       it "validates invalid configuration option values inside arrays and hashes" do
-        @project.write("sorbet/tapioca/config.yml", <<~YAML)
+        @project.write!("sorbet/tapioca/config.yml", <<~YAML)
           dsl:
             only: [1, false]
             exclude: [1, false]
@@ -121,7 +121,7 @@ module Tapioca
       end
 
       it "validates unknown configuration keys, options, and invalid values" do
-        @project.write("sorbet/tapioca/config.yml", <<~YAML)
+        @project.write!("sorbet/tapioca/config.yml", <<~YAML)
           gem:
             doc: true
             foo: 1
@@ -150,7 +150,7 @@ module Tapioca
       end
 
       it "loads the configuration file from a custom location" do
-        @project.write("tapioca_custom_config.yml", <<~YAML)
+        @project.write!("tapioca_custom_config.yml", <<~YAML)
           foo: true
         YAML
 
@@ -166,7 +166,7 @@ module Tapioca
         assert_empty_stdout(result)
         refute_success_status(result)
 
-        @project.remove("tapioca_custom_config.yml")
+        @project.remove!("tapioca_custom_config.yml")
       end
     end
   end

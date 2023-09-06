@@ -7,13 +7,13 @@ module Tapioca
   class TodoSpec < SpecWithProject
     describe "cli::todo" do
       before(:all) do
-        project.bundle_install
+        project.bundle_install!
         project.tapioca("configure")
       end
 
       after do
-        @project.remove("lib/")
-        @project.remove("sorbet/rbi")
+        @project.remove!("lib/")
+        @project.remove!("sorbet/rbi")
       end
 
       it "does nothing if all constant are already resolved" do
@@ -31,7 +31,7 @@ module Tapioca
       end
 
       it "creates a list of all unresolved constants" do
-        @project.write("lib/file.rb", <<~RB)
+        @project.write!("lib/file.rb", <<~RB)
           class Foo < ::Undef1
             def foo
               Undef2.new
@@ -91,7 +91,7 @@ module Tapioca
       end
 
       it "creates a TODO file without header" do
-        @project.write("lib/file.rb", <<~RUBY)
+        @project.write!("lib/file.rb", <<~RUBY)
           class Foo < ::Undef1; end
         RUBY
 
@@ -116,7 +116,7 @@ module Tapioca
       end
 
       it "deletes the todo.rbi file when everything is resolved" do
-        @project.write("sorbet/rbi/todo.rbi", <<~RB)
+        @project.write!("sorbet/rbi/todo.rbi", <<~RB)
           # typed: false
 
           module SomeTodo; end

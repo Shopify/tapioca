@@ -7,22 +7,22 @@ module Tapioca
   class CheckShimsTest < SpecWithProject
     describe "cli::check-shims" do
       after do
-        @project.remove("sorbet/rbi")
+        @project.remove!("sorbet/rbi")
       end
 
       describe "when Sorbet version is >= 0.5.9818" do
         before(:all) do
-          @project.bundle_install
+          @project.bundle_install!
         end
 
         it "does nothing when there is no shims to check" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/dsl/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/dsl/foo.rbi", <<~RBI)
             class Foo
               attr_reader :bar
             end
@@ -38,7 +38,7 @@ module Tapioca
         end
 
         it "does nothing when there is no duplicates" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
 
@@ -46,7 +46,7 @@ module Tapioca
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :bar
 
@@ -70,35 +70,35 @@ module Tapioca
         end
 
         it "detects duplicated definitions between shim and generated RBIs" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/dsl/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/dsl/bar.rbi", <<~RBI)
             module Bar
               def bar; end
             end
           RBI
 
-          @project.write("sorbet/rbi/dsl/baz.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/dsl/baz.rbi", <<~RBI)
             module Baz; end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/bar.rbi", <<~RBI)
             module Bar
               def bar; end
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/baz.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/baz.rbi", <<~RBI)
             module Baz
               def baz; end
             end
@@ -123,13 +123,13 @@ module Tapioca
         end
 
         it "ignores duplicates that have a signature" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               def foo; end
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               sig { void }
               def foo; end
@@ -141,14 +141,14 @@ module Tapioca
         end
 
         it "ignores duplicates that have a different signature" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               sig { void }
               def foo; end
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               sig { returns(Integer) }
               def foo; end
@@ -160,7 +160,7 @@ module Tapioca
         end
 
         it "detects duplicates that have the same signature" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               sig { params(x: Integer, y: String).returns(String) }
               def foo(x, y); end
@@ -173,7 +173,7 @@ module Tapioca
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               sig { params(x: Integer, y: String).returns(String) }
               def foo(x, y); end
@@ -204,13 +204,13 @@ module Tapioca
         end
 
         it "detects duplicates from nodes with multiple definitions" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo, :bar
             end
@@ -231,7 +231,7 @@ module Tapioca
         end
 
         it "detects duplicated includes and extends" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             module Bar; end
 
             class Foo
@@ -254,7 +254,7 @@ module Tapioca
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               include Bar
               extend Bar
@@ -297,7 +297,7 @@ module Tapioca
         end
 
         it "detects duplicates from same shim file" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
 
@@ -307,7 +307,7 @@ module Tapioca
             class Bar; end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo, :bar
               def foo; end
@@ -344,11 +344,11 @@ module Tapioca
         end
 
         it "detects duplicates from Sorbet's payload" do
-          @project.write("sorbet/rbi/shims/core/object.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/core/object.rbi", <<~RBI)
             class Object; end
           RBI
 
-          @project.write("sorbet/rbi/shims/core/string.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/core/string.rbi", <<~RBI)
             class String
               sig { returns(String) }
               def capitalize(); end
@@ -357,7 +357,7 @@ module Tapioca
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/stdlib/base64.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/stdlib/base64.rbi", <<~RBI)
             module Base64
               sig { params(str: String).returns(String) }
               def self.decode64(str); end
@@ -395,19 +395,19 @@ module Tapioca
         end
 
         it "checks shims with custom rbi dirs" do
-          @project.write("rbi/gem/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("rbi/gem/foo@1.0.0.rbi", <<~RBI)
             class Foo
               def foo; end
             end
           RBI
 
-          @project.write("rbi/dsl/foo.rbi", <<~RBI)
+          @project.write!("rbi/dsl/foo.rbi", <<~RBI)
             class Foo
               def bar; end
             end
           RBI
 
-          @project.write("rbi/shim/foo.rbi", <<~RBI)
+          @project.write!("rbi/shim/foo.rbi", <<~RBI)
             class Foo
               def foo; end
               def bar; end
@@ -418,7 +418,7 @@ module Tapioca
             end
           RBI
 
-          @project.write("rbi/todo.rbi", <<~RBI)
+          @project.write!("rbi/todo.rbi", <<~RBI)
             module Baz
               def baz; end
             end
@@ -450,19 +450,19 @@ module Tapioca
         end
 
         it "skips files with parse errors" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               foo { bar }
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/bar.rbi", <<~RBI)
             module Foo
               def foo; end
             end
@@ -485,35 +485,35 @@ module Tapioca
         end
 
         it "detects duplicated definitions between shim and annotations" do
-          @project.write("sorbet/rbi/annotations/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/annotations/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/annotations/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/annotations/bar.rbi", <<~RBI)
             module Bar
               def bar; end
             end
           RBI
 
-          @project.write("sorbet/rbi/annotations/baz.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/annotations/baz.rbi", <<~RBI)
             module Baz; end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/bar.rbi", <<~RBI)
             module Bar
               def bar; end
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/baz.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/baz.rbi", <<~RBI)
             module Baz; end
           RBI
 
@@ -540,7 +540,7 @@ module Tapioca
         end
 
         it "detects duplicated definitions between the TODO file and generated RBIs" do
-          @project.write("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
             class Foo
               attr_reader :foo
 
@@ -548,13 +548,13 @@ module Tapioca
             end
           RBI
 
-          @project.write("sorbet/rbi/dsl/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/dsl/bar.rbi", <<~RBI)
             module Bar
               def bar; end
             end
           RBI
 
-          @project.write("sorbet/rbi/todo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/todo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
 
@@ -589,23 +589,23 @@ module Tapioca
         end
 
         it "detects duplicated definitions between the TODO file and shims" do
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/bar.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/bar.rbi", <<~RBI)
             module Bar
               def bar; end
             end
           RBI
 
-          @project.write("sorbet/rbi/shims/baz.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/baz.rbi", <<~RBI)
             module Baz; end
           RBI
 
-          @project.write("sorbet/rbi/todo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/todo.rbi", <<~RBI)
             class Foo
               attr_reader :foo
             end
@@ -640,25 +640,25 @@ module Tapioca
         end
 
         it "ignores files typed: ignore" do
-          @project.write("sorbet/rbi/annotations/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/annotations/foo.rbi", <<~RBI)
             # typed: ignore
 
             class Foo; end
           RBI
 
-          @project.write("sorbet/rbi/gems/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/gems/foo.rbi", <<~RBI)
             # typed: ignore
 
             class Foo; end
           RBI
 
-          @project.write("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             # typed: ignore
 
             class Foo; end
           RBI
 
-          @project.write("sorbet/rbi/todo.rbi", <<~RBI)
+          @project.write!("sorbet/rbi/todo.rbi", <<~RBI)
             # typed: ignore
 
             class Foo; end

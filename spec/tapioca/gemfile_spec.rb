@@ -16,7 +16,7 @@ module Tapioca
 
       it "export_rbi_files? returns true if the gem exports at least one RBI file" do
         bar_gem = mock_gem("bar", "1.0.0")
-        bar_gem.write("rbi/foo.rbi")
+        bar_gem.write!("rbi/foo.rbi")
         bar_spec = make_spec(bar_gem)
         assert(bar_spec.export_rbi_files?)
       end
@@ -29,8 +29,8 @@ module Tapioca
 
       it "exported_rbi_files returns the list of RBI files exported by the gem" do
         bar_gem = mock_gem("bar", "1.0.0")
-        bar_gem.write("rbi/foo.rbi")
-        bar_gem.write("rbi/bar.rbi")
+        bar_gem.write!("rbi/foo.rbi")
+        bar_gem.write!("rbi/bar.rbi")
         bar_spec = make_spec(bar_gem)
         bar_rbis = bar_spec.exported_rbi_files.map { |path| File.basename(path) }
         assert_equal(["bar.rbi", "foo.rbi"], bar_rbis)
@@ -47,7 +47,7 @@ module Tapioca
       it "creates a tree by merging all the RBI files exported by te gem" do
         foo_gem = mock_gem("foo", "0.0.1")
 
-        foo_gem.write("rbi/foo.rbi", <<~RBI)
+        foo_gem.write!("rbi/foo.rbi", <<~RBI)
           # typed: true
 
           module Foo
@@ -58,7 +58,7 @@ module Tapioca
           end
         RBI
 
-        foo_gem.write("rbi/bar.rbi", <<~RBI)
+        foo_gem.write!("rbi/bar.rbi", <<~RBI)
           # typed: true
 
           module Foo
@@ -88,7 +88,7 @@ module Tapioca
       it "creates a tree with conflicts if the gem export RBI files with conflicting definitions" do
         foo_gem = mock_gem("foo", "0.0.1")
 
-        foo_gem.write("rbi/foo.rbi", <<~RBI)
+        foo_gem.write!("rbi/foo.rbi", <<~RBI)
           # typed: true
 
           module Foo
@@ -97,7 +97,7 @@ module Tapioca
           end
         RBI
 
-        foo_gem.write("rbi/bar.rbi", <<~RBI)
+        foo_gem.write!("rbi/bar.rbi", <<~RBI)
           # typed: true
 
           module Foo
@@ -128,13 +128,13 @@ module Tapioca
     it "ignore? returns false for gems within Ruby even when Ruby is installed inside the project" do
       # Imitate Ruby being installed inside the project
       original_rubylibprefix = RbConfig::CONFIG["rubylibprefix"]
-      mock_rubylibprefix = "#{File.realpath(@project.path)}/vendor/ruby/lib"
+      mock_rubylibprefix = "#{File.realpath(@project.absolute_path)}/vendor/ruby/lib"
       RbConfig::CONFIG["rubylibprefix"] = mock_rubylibprefix
 
       foo_gem = mock_gem("foo", "0.0.1", path: "#{mock_rubylibprefix}/ruby/gems")
       foo_spec = make_spec(foo_gem)
 
-      refute(foo_spec.ignore?(@project.path))
+      refute(foo_spec.ignore?(@project.absolute_path))
     ensure
       RbConfig::CONFIG["rubylibprefix"] = original_rubylibprefix
     end
@@ -143,7 +143,7 @@ module Tapioca
 
     sig { params(gem: MockGem).returns(Gemfile::GemSpec) }
     def make_spec(gem)
-      mock = MockGemSpecification.new(gem.path)
+      mock = MockGemSpecification.new(gem.absolute_path)
       Gemfile::GemSpec.new(mock)
     end
   end
