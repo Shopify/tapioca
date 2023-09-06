@@ -2488,21 +2488,22 @@ module Tapioca
 
             Loaded DSL compiler classes:
 
-              PostCompiler                                             enabled
-              Tapioca::Dsl::Compilers::ActiveModelAttributes           enabled
-              Tapioca::Dsl::Compilers::ActiveModelSecurePassword       enabled
-              Tapioca::Dsl::Compilers::ActiveRecordAssociations        enabled
-              Tapioca::Dsl::Compilers::ActiveRecordColumns             enabled
-              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes      enabled
-              Tapioca::Dsl::Compilers::ActiveRecordEnum                enabled
-              Tapioca::Dsl::Compilers::ActiveRecordRelations           enabled
-              Tapioca::Dsl::Compilers::ActiveRecordScope               enabled
-              Tapioca::Dsl::Compilers::ActiveRecordSecureToken         enabled
-              Tapioca::Dsl::Compilers::ActiveSupportConcern            enabled
-              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes  enabled
-              Tapioca::Dsl::Compilers::MixedInClassAttributes          enabled
-              Tapioca::Dsl::Compilers::SidekiqWorker                   enabled
-              Tapioca::Dsl::Compilers::SmartProperties                 enabled
+              PostCompiler                                                 enabled
+              Tapioca::Dsl::Compilers::ActiveModelAttributes               enabled
+              Tapioca::Dsl::Compilers::ActiveModelSecurePassword           enabled
+              Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmation  enabled
+              Tapioca::Dsl::Compilers::ActiveRecordAssociations            enabled
+              Tapioca::Dsl::Compilers::ActiveRecordColumns                 enabled
+              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes          enabled
+              Tapioca::Dsl::Compilers::ActiveRecordEnum                    enabled
+              Tapioca::Dsl::Compilers::ActiveRecordRelations               enabled
+              Tapioca::Dsl::Compilers::ActiveRecordScope                   enabled
+              Tapioca::Dsl::Compilers::ActiveRecordSecureToken             enabled
+              Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
+              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
+              Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
+              Tapioca::Dsl::Compilers::SidekiqWorker                       enabled
+              Tapioca::Dsl::Compilers::SmartProperties                     enabled
           OUT
 
           assert_empty_stderr(result)
@@ -2519,21 +2520,22 @@ module Tapioca
 
             Loaded DSL compiler classes:
 
-              PostCompiler                                             enabled
-              Tapioca::Dsl::Compilers::ActiveModelAttributes           enabled
-              Tapioca::Dsl::Compilers::ActiveModelSecurePassword       enabled
-              Tapioca::Dsl::Compilers::ActiveRecordAssociations        enabled
-              Tapioca::Dsl::Compilers::ActiveRecordColumns             enabled
-              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes      enabled
-              Tapioca::Dsl::Compilers::ActiveRecordEnum                disabled
-              Tapioca::Dsl::Compilers::ActiveRecordRelations           enabled
-              Tapioca::Dsl::Compilers::ActiveRecordScope               enabled
-              Tapioca::Dsl::Compilers::ActiveRecordSecureToken         enabled
-              Tapioca::Dsl::Compilers::ActiveSupportConcern            enabled
-              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes  enabled
-              Tapioca::Dsl::Compilers::MixedInClassAttributes          enabled
-              Tapioca::Dsl::Compilers::SidekiqWorker                   enabled
-              Tapioca::Dsl::Compilers::SmartProperties                 disabled
+              PostCompiler                                                 enabled
+              Tapioca::Dsl::Compilers::ActiveModelAttributes               enabled
+              Tapioca::Dsl::Compilers::ActiveModelSecurePassword           enabled
+              Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmation  enabled
+              Tapioca::Dsl::Compilers::ActiveRecordAssociations            enabled
+              Tapioca::Dsl::Compilers::ActiveRecordColumns                 enabled
+              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes          enabled
+              Tapioca::Dsl::Compilers::ActiveRecordEnum                    disabled
+              Tapioca::Dsl::Compilers::ActiveRecordRelations               enabled
+              Tapioca::Dsl::Compilers::ActiveRecordScope                   enabled
+              Tapioca::Dsl::Compilers::ActiveRecordSecureToken             enabled
+              Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
+              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
+              Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
+              Tapioca::Dsl::Compilers::SidekiqWorker                       enabled
+              Tapioca::Dsl::Compilers::SmartProperties                     disabled
           OUT
 
           assert_empty_stderr(result)
@@ -2550,21 +2552,22 @@ module Tapioca
 
             Loaded DSL compiler classes:
 
-              PostCompiler                                             disabled
-              Tapioca::Dsl::Compilers::ActiveModelAttributes           disabled
-              Tapioca::Dsl::Compilers::ActiveModelSecurePassword       disabled
-              Tapioca::Dsl::Compilers::ActiveRecordAssociations        disabled
-              Tapioca::Dsl::Compilers::ActiveRecordColumns             disabled
-              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes      disabled
-              Tapioca::Dsl::Compilers::ActiveRecordEnum                enabled
-              Tapioca::Dsl::Compilers::ActiveRecordRelations           disabled
-              Tapioca::Dsl::Compilers::ActiveRecordScope               disabled
-              Tapioca::Dsl::Compilers::ActiveRecordSecureToken         disabled
-              Tapioca::Dsl::Compilers::ActiveSupportConcern            disabled
-              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes  disabled
-              Tapioca::Dsl::Compilers::MixedInClassAttributes          disabled
-              Tapioca::Dsl::Compilers::SidekiqWorker                   disabled
-              Tapioca::Dsl::Compilers::SmartProperties                 enabled
+              PostCompiler                                                 disabled
+              Tapioca::Dsl::Compilers::ActiveModelAttributes               disabled
+              Tapioca::Dsl::Compilers::ActiveModelSecurePassword           disabled
+              Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmation  disabled
+              Tapioca::Dsl::Compilers::ActiveRecordAssociations            disabled
+              Tapioca::Dsl::Compilers::ActiveRecordColumns                 disabled
+              Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes          disabled
+              Tapioca::Dsl::Compilers::ActiveRecordEnum                    enabled
+              Tapioca::Dsl::Compilers::ActiveRecordRelations               disabled
+              Tapioca::Dsl::Compilers::ActiveRecordScope                   disabled
+              Tapioca::Dsl::Compilers::ActiveRecordSecureToken             disabled
+              Tapioca::Dsl::Compilers::ActiveSupportConcern                disabled
+              Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      disabled
+              Tapioca::Dsl::Compilers::MixedInClassAttributes              disabled
+              Tapioca::Dsl::Compilers::SidekiqWorker                       disabled
+              Tapioca::Dsl::Compilers::SmartProperties                     enabled
           OUT
 
           assert_empty_stderr(result)
