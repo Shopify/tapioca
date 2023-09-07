@@ -13,8 +13,26 @@ module Tapioca
           @constant = constant
         end
 
+        sig { params(attribute_name: String, column_name: String).returns([String, String]) }
+        def type_for(attribute_name, column_name = attribute_name)
+          return id_type if attribute_name == "id"
+
+          column_type_for(column_name)
+        end
+
+        private
+
+        sig { returns([String, String]) }
+        def id_type
+          if @constant.respond_to?(:composite_primary_key?) && T.unsafe(@constant).composite_primary_key?
+            @constant.primary_key.map(&method(:column_type_for)).map { |tuple| "[#{tuple.join(", ")}]" }
+          else
+            column_type_for(@constant.primary_key)
+          end
+        end
+
         sig { params(column_name: String).returns([String, String]) }
-        def type_for(column_name)
+        def column_type_for(column_name)
           return ["T.untyped", "T.untyped"] if do_not_generate_strong_types?(@constant)
 
           column = @constant.columns_hash[column_name]
@@ -33,7 +51,7 @@ module Tapioca
             return [getter_type, as_nilable_type(setter_type)]
           end
 
-          if column_name == @constant.primary_key ||
+          if Array(@constant.primary_key).include?(column_name) ||
               column_name == "created_at" ||
               column_name == "updated_at"
             getter_type = as_nilable_type(getter_type)
@@ -41,8 +59,6 @@ module Tapioca
 
           [getter_type, setter_type]
         end
-
-        private
 
         sig { params(column_type: T.untyped).returns(String) }
         def type_for_activerecord_value(column_type)

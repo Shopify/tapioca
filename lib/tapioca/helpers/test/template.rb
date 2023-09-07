@@ -24,12 +24,12 @@ module Tapioca
           ::Gem::Requirement.new(selector).satisfied_by?(ActiveSupport.gem_version)
         end
 
-        sig { params(src: String).returns(String) }
-        def template(src)
+        sig { params(src: String, trim_mode: String).returns(String) }
+        def template(src, trim_mode: ">")
           erb = if ERB_SUPPORTS_KVARGS
-            ::ERB.new(src, trim_mode: ">")
+            ::ERB.new(src, trim_mode: trim_mode)
           else
-            ::ERB.new(src, nil, ">")
+            ::ERB.new(src, nil, trim_mode)
           end
 
           erb.result(binding)
