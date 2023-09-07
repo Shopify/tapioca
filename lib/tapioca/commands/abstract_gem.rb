@@ -23,9 +23,9 @@ module Tapioca
           include_loc: T::Boolean,
           include_annotations: T::Boolean,
           include_exported_rbis: T::Boolean,
-          annotation_sources: T::Array[String],
-          annotation_auth: T.nilable(String),
-          annotation_netrc_file: T.nilable(String),
+          annotations_sources: T::Array[String],
+          annotations_auth: T.nilable(String),
+          annotations_netrc_file: T.nilable(String),
           excluded_annotations: T::Array[String],
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
@@ -47,9 +47,9 @@ module Tapioca
         include_loc:,
         include_annotations:,
         include_exported_rbis:,
-        annotation_sources:,
-        annotation_auth: nil,
-        annotation_netrc_file: nil,
+        annotations_sources:,
+        annotations_auth: nil,
+        annotations_netrc_file: nil,
         excluded_annotations: [],
         number_of_workers: nil,
         auto_strictness: true,
@@ -79,9 +79,9 @@ module Tapioca
         @include_loc = T.let(include_loc, T::Boolean)
         @include_annotations = include_annotations
         @include_exported_rbis = include_exported_rbis
-        @annotation_sources = annotation_sources
-        @annotation_auth = annotation_auth
-        @annotation_netrc_file = annotation_netrc_file
+        @annotations_sources = annotations_sources
+        @annotations_auth = annotations_auth
+        @annotations_netrc_file = annotations_netrc_file
         @annotation_netrc_info = T.let(nil, T.nilable(Netrc))
         @excluded_annotations = excluded_annotations
         @tokens = T.let(repo_tokens, T::Hash[String, T.nilable(String)])
@@ -145,11 +145,11 @@ module Tapioca
 
       sig { returns(T::Hash[String, RepoIndex]) }
       def fetch_annotation_source_indexes
-        multiple_repos = @annotation_sources.size > 1
+        multiple_repos = @annotations_sources.size > 1
         repo_number = 1
         indexes = T.let({}, T::Hash[String, RepoIndex])
 
-        @annotation_sources.each do |uri|
+        @annotations_sources.each do |uri|
           index = fetch_annotation_source_index(uri, repo_number: multiple_repos ? repo_number : nil)
           next unless index
 
@@ -462,10 +462,10 @@ module Tapioca
 
       sig { returns(T::Hash[String, T.nilable(String)]) }
       def repo_tokens
-        @annotation_netrc_info = Netrc.read(@annotation_netrc_file) if @annotation_netrc_file
-        @annotation_sources.filter_map do |uri|
-          if @annotation_auth
-            [uri, @annotation_auth]
+        @annotation_netrc_info = Netrc.read(@annotations_netrc_file) if @annotations_netrc_file
+        @annotations_sources.filter_map do |uri|
+          if @annotations_auth
+            [uri, @annotations_auth]
           else
             [uri, token_for(uri)]
           end

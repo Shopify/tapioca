@@ -253,20 +253,20 @@ module Tapioca
       type: :boolean,
       desc: "Include RBI annotations from remote source",
       default: true
-    option :annotation_sources,
+    option :annotations_sources,
       type: :array,
       default: [CENTRAL_REPO_ROOT_URI],
       desc: "URIs of the sources to pull gem RBI annotations from"
-    option :annotation_netrc,
+    option :annotations_netrc,
       type: :boolean,
       default: true,
       desc: "Use .netrc to authenticate to private annotation sources"
-    option :annotation_netrc_file, type: :string, desc: "Path to .netrc file"
-    option :annotation_auth,
+    option :annotations_netrc_file, type: :string, desc: "Path to .netrc file"
+    option :annotations_auth,
       type: :string,
       default: nil,
       desc: "HTTP authorization header for private annotation sources"
-    option :exclude_annotation,
+    option :exclude_annotations,
       type: :array,
       banner: "gem [gem ...]",
       desc: "Excludes annotation for gem while generating RBI",
@@ -288,9 +288,9 @@ module Tapioca
         raise MalformattedArgumentError, "Option '--verify' must be provided without any other arguments" if verify
       end
 
-      if !options[:annotation_netrc] && options[:annotation_netrc_file]
+      if !options[:annotations_netrc] && options[:annotations_netrc_file]
         raise Thor::Error, set_color(
-          "Options `--no-annotation-netrc` and `--annotation-netrc-file` can't be used together",
+          "Options `--no-annotations-netrc` and `--annotations-netrc-file` can't be used together",
           :bold,
           :red,
         )
@@ -314,10 +314,10 @@ module Tapioca
         dsl_dir: options[:dsl_dir],
         rbi_formatter: rbi_formatter(options),
         halt_upon_load_error: options[:halt_upon_load_error],
-        annotation_sources: options[:annotation_sources],
-        annotation_auth: options[:annotation_auth],
-        annotation_netrc_file: netrc_file(options),
-        excluded_annotations: options[:exclude_annotation],
+        annotations_sources: options[:annotations_sources],
+        annotations_auth: options[:annotations_auth],
+        annotations_netrc_file: netrc_file(options),
+        excluded_annotations: options[:exclude_annotations],
       }
 
       command = if verify
@@ -352,7 +352,7 @@ module Tapioca
       command.run
     end
 
-    desc "annotations", "Deprecated, this command has been merged into `tapioca gem`. Please use that instead."
+    desc "annotations", "[deprecated] Pull gem RBI annotations from remote sources"
     option :sources,
       type: :array,
       default: [CENTRAL_REPO_ROOT_URI],

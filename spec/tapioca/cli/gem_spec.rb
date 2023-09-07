@@ -228,7 +228,7 @@ module Tapioca
 
           @project.require_mock_gem(foo)
 
-          result = @project.tapioca("gem foo --annotation-sources #{repo.absolute_path} --no-annotations")
+          result = @project.tapioca("gem foo --annotations-sources #{repo.absolute_path} --no-annotations")
           assert_empty_stderr(result)
           assert_success_status(result)
 
@@ -250,11 +250,11 @@ module Tapioca
           repo.destroy!
         end
 
-        it "errors if passing both --no-annotation-netrc and --annotation-netrc-file" do
-          result = @project.tapioca("gem --no-annotation-netrc --annotation-netrc-file some_file")
+        it "errors if passing both --no-annotations-netrc and --annotations-netrc-file" do
+          result = @project.tapioca("gem --no-annotations-netrc --annotations-netrc-file some_file")
 
           assert_stderr_includes(result, <<~ERR)
-            Options `--no-annotation-netrc` and `--annotation-netrc-file` can't be used together
+            Options `--no-annotations-netrc` and `--annotations-netrc-file` can't be used together
           ERR
 
           refute_success_status(result)
@@ -1736,7 +1736,7 @@ module Tapioca
 
           @project.require_mock_gem(foo)
 
-          result = @project.tapioca("gem foo --annotation-sources #{repo.absolute_path}")
+          result = @project.tapioca("gem foo --annotations-sources #{repo.absolute_path}")
           assert_empty_stderr(result)
           assert_success_status(result)
 
@@ -2362,7 +2362,7 @@ module Tapioca
         it "retrieves indexes from the central repository even on empty repos" do
           repo = create_repo({})
 
-          result = @project.tapioca("gem foo --annotation-sources #{repo.absolute_path}")
+          result = @project.tapioca("gem foo --annotations-sources #{repo.absolute_path}")
 
           assert_match(/Retrieving index from central repository... Done/, result.out)
 
@@ -2385,7 +2385,7 @@ module Tapioca
             RBI
           })
 
-          result = @project.tapioca("gem --annotation-sources #{repo.absolute_path}")
+          result = @project.tapioca("gem --annotations-sources #{repo.absolute_path}")
 
           assert_stdout_includes(result, "Compiled foo with external annotations")
           refute_includes(result.out, "Compiled baz with external annotations")
@@ -2406,7 +2406,7 @@ module Tapioca
           repo.destroy!
         end
 
-        it "does not use annotations for gems passed with `--exclude-annotation`" do
+        it "does not use annotations for gems passed with `--exclude-annotations`" do
           repo = create_repo({
             foo: <<~RBI,
               # typed: true
@@ -2420,7 +2420,7 @@ module Tapioca
             RBI
           })
 
-          result = @project.tapioca("gem foo bar --annotation-sources #{repo.absolute_path} --exclude-annotation foo")
+          result = @project.tapioca("gem foo bar --annotations-sources #{repo.absolute_path} --exclude-annotations foo")
 
           refute_includes(result.out, "Compiled foo with external annotations")
           assert_includes(result.out, "Compiled bar with external annotations")
@@ -2450,7 +2450,7 @@ module Tapioca
         end
 
         it "recovers from a bad source" do
-          result = @project.tapioca("gem foo --annotation-sources #{Tapioca::CENTRAL_REPO_ROOT_URI} https://bad-source")
+          result = @project.tapioca("gem foo --annotations-sources #{Tapioca::CENTRAL_REPO_ROOT_URI} https://bad-source")
 
           assert_stdout_includes(result, "Retrieving index from central repository #1... Done")
           assert_stderr_includes(result, "Can't fetch file `index.json` from https://bad-source")
@@ -2466,7 +2466,7 @@ module Tapioca
         end
 
         it "errors without a valid source" do
-          result = @project.tapioca("gem foo --annotation-sources https://bad-source")
+          result = @project.tapioca("gem foo --annotations-sources https://bad-source")
 
           assert_stderr_includes(result, "Can't fetch file `index.json` from https://bad-source")
           assert_stderr_includes(result, "Can't fetch annotations without sources (no index fetched)")
@@ -2482,7 +2482,7 @@ module Tapioca
             RBI
           })
 
-          result = @project.tapioca("gem foo --annotation-sources #{repo.absolute_path}")
+          result = @project.tapioca("gem foo --annotations-sources #{repo.absolute_path}")
 
           assert_stderr_includes(result, <<~ERR)
             Can't import annotation for `foo` as it contains errors:
@@ -2518,7 +2518,7 @@ module Tapioca
             repo_name: "repo2",
           )
 
-          result = @project.tapioca("gem foo bar --annotation-sources #{repo1.absolute_path} #{repo2.absolute_path}")
+          result = @project.tapioca("gem foo bar --annotations-sources #{repo1.absolute_path} #{repo2.absolute_path}")
 
           assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
           assert_stdout_includes(result, "create  sorbet/rbi/gems/bar@0.0.1.rbi")
@@ -2584,7 +2584,7 @@ module Tapioca
 
           @project.require_mock_gem(foo)
 
-          result = @project.tapioca("gem foo --annotation-sources #{repo1.absolute_path} #{repo2.absolute_path}")
+          result = @project.tapioca("gem foo --annotations-sources #{repo1.absolute_path} #{repo2.absolute_path}")
 
           assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
           assert_project_annotation_equal("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI)
@@ -2638,7 +2638,7 @@ module Tapioca
             repo_name: "repo2",
           )
 
-          result = @project.tapioca("gem foo --annotation-sources #{repo1.absolute_path} #{repo2.absolute_path}")
+          result = @project.tapioca("gem foo --annotations-sources #{repo1.absolute_path} #{repo2.absolute_path}")
 
           assert_stderr_includes(result, <<~ERR)
             Can't import annotation for `foo` as it contains conflicts:
