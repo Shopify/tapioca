@@ -70,9 +70,7 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          confirmation_validators = constant.validators.select do |v|
-            v.is_a?(ActiveModel::Validations::ConfirmationValidator)
-          end
+          confirmation_validators = constant.validators.grep(ActiveModel::Validations::ConfirmationValidator)
 
           return if confirmation_validators.empty?
 
