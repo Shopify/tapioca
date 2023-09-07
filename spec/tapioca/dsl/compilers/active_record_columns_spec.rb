@@ -1119,6 +1119,30 @@ module Tapioca
 
                 assert_includes(rbi_for(:Post), expected)
               end
+
+              it "generates id accessors when primary key isn't id" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts, primary_key: :number do |t|
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    self.primary_key = :number
+                  end
+                RUBY
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable(::Integer)) }
+                  def id; end
+                RBI
+
+                assert_includes(rbi_for(:Post), expected)
+              end
             end
 
             describe "when StrongTypeGeneration is defined" do
