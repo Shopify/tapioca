@@ -413,8 +413,11 @@ module Tapioca
           assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
 
           assert_stderr_includes(result, "RBIs exported by `foo` contain errors and can't be used:")
-          assert_stderr_includes(result, "Cause: unexpected token $end")
-          assert_stderr_includes(result, "foo/rbi/foo.rbi:2:0-2:0")
+          assert_stderr_includes(
+            result,
+            "Cause: Expected to be able to parse an expression. Expected `end` to close `module` statement. ",
+          )
+          assert_stderr_includes(result, "foo/rbi/foo.rbi:2:0-1:26")
 
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
 

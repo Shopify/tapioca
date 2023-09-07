@@ -144,7 +144,7 @@ module Tapioca
 
         assert_stderr_includes(result, <<~ERR)
           Can't import RBI file for `spoom` as it contains errors:
-              Error: unexpected token $end (-:4:0-4:0)
+              Error: Expected to be able to parse an expression. Expected `end` to close `class` statement. (-:4:0-3:25)
         ERR
 
         refute_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
