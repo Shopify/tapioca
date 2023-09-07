@@ -2652,6 +2652,41 @@ module Tapioca
           repo1.destroy!
           repo2.destroy!
         end
+
+        it "removes old annotations files if present" do
+          repo = create_repo({
+            foo: <<~RBI,
+              # typed: true
+
+              class AnnotationForFoo; end
+            RBI
+            baz: <<~RBI,
+              # typed: true
+
+              class AnnotationForBaz; end
+            RBI
+          })
+
+          @project.write!("sorbet/rbi/annotations/foo.rbi", <<~RBI)
+            # typed: true
+            class AnnotationForFoo; end
+          RBI
+
+          result = @project.tapioca("gem foo bar --annotations-sources #{repo.absolute_path}")
+
+          assert_stdout_includes(result, <<~OUT)
+            Compiled foo with external annotations
+                  create  sorbet/rbi/gems/foo@0.0.1.rbi
+                  remove  sorbet/rbi/annotations/foo.rbi
+          OUT
+
+          refute_includes(result.out, "remove sorbet/rbi/annotations/bar.rbi")
+
+          refute_project_file_exist("sorbet/rbi/annotations/foo.rbi")
+          assert_success_status(result)
+
+          repo.destroy!
+        end
       end
 
       private

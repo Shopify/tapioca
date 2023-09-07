@@ -233,6 +233,10 @@ module Tapioca
         T.unsafe(Pathname).glob((@outpath / "#{gem.name}@*.rbi").to_s) do |file|
           remove_file(file) unless file.basename.to_s == gem.rbi_file_name
         end
+
+        T.unsafe(Pathname).glob("#{DEFAULT_RBI_DIR}/annotations/#{gem.name}.rbi") do |file|
+          remove_file(file)
+        end
       end
 
       sig { void }
