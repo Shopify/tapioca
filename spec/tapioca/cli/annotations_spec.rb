@@ -27,6 +27,7 @@ module Tapioca
         OUT
 
         assert_success_status(result)
+        refute(File.directory?(@project.absolute_path("sorbet/rbi/annotations")))
 
         repo.destroy!
       end
@@ -94,6 +95,9 @@ module Tapioca
           class AnnotationForSpoom; end
         RBI
 
+        assert_project_file_equal("sorbet/rbi/annotations/.gitattributes", <<~CONTENT)
+          **/*.rbi linguist-vendored=true
+        CONTENT
         refute_project_file_exist("sorbet/rbi/annotations/foo.rbi")
         assert_success_status(result)
 

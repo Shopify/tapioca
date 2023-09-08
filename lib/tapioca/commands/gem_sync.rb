@@ -29,6 +29,8 @@ module Tapioca
         end
 
         puts
+      ensure
+        GitAttributes.create_generated_attribute_file(@outpath)
       end
     end
   end
