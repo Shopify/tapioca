@@ -9,6 +9,7 @@ In the following section you will find all available DSL compilers:
 * [ActiveJob](compiler_activejob.md)
 * [ActiveModelAttributes](compiler_activemodelattributes.md)
 * [ActiveModelSecurePassword](compiler_activemodelsecurepassword.md)
+* [ActiveModelValidationsConfirmation](compiler_activemodelvalidationsconfirmation.md)
 * [ActiveRecordAssociations](compiler_activerecordassociations.md)
 * [ActiveRecordColumns](compiler_activerecordcolumns.md)
 * [ActiveRecordDelegatedTypes](compiler_activerecorddelegatedtypes.md)
