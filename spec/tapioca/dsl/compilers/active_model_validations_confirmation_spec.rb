@@ -27,7 +27,7 @@ module Tapioca
                 class ShopWithActiveRecord < ActiveRecord::Base
                 end
               RUBY
-              assert_equal(["ShopWithActiveRecord", "ShopWithValidations"], gathered_constants)
+              assert_equal(["ActiveRecord::Base", "ShopWithActiveRecord", "ShopWithValidations"], gathered_constants)
             end
           end
 

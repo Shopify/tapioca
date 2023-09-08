@@ -62,8 +62,7 @@ module Tapioca
           def gather_constants
             # Collect all the classes that include ActiveModel::Validations
             all_classes.select do |c|
-              c < ActiveModel::Validations &&
-                c.name.to_s != "ActiveRecord::Base"
+              c < ActiveModel::Validations
             end
           end
         end
