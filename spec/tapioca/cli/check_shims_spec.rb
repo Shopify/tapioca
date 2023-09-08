@@ -458,8 +458,6 @@ module Tapioca
 
           @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
             class Foo
-              foo { bar }
-            end
           RBI
 
           @project.write!("sorbet/rbi/shims/bar.rbi", <<~RBI)
@@ -472,7 +470,7 @@ module Tapioca
 
           assert_equal(<<~ERR, result.err)
 
-            Warning: Unsupported block node type `foo` (sorbet/rbi/shims/foo.rbi:2:2-2:13)
+            Warning: Expected to be able to parse an expression. Expected `end` to close `class` statement. (sorbet/rbi/shims/foo.rbi:2:0-1:10)
 
             Duplicated RBI for ::Foo#foo:
              * sorbet/rbi/shims/bar.rbi:2:2-2:14
