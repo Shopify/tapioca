@@ -27,7 +27,7 @@ module Tapioca
         OUT
 
         assert_success_status(result)
-        refute(File.directory?(@project.absolute_path("sorbet/rbi/annotations")))
+        refute(File.directory?(@project.absolute_path_to("sorbet/rbi/annotations")))
 
         repo.destroy!
       end

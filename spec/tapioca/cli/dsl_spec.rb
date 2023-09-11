@@ -73,7 +73,7 @@ module Tapioca
         end
 
         it "must generate a .gitattributes file in the output folder" do
-          @project.write("lib/post.rb", <<~RB)
+          @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 
             class Post
@@ -91,7 +91,7 @@ module Tapioca
             **/*.rbi linguist-generated=true
           CONTENT
         ensure
-          @project.remove("output")
+          @project.remove!("output")
         end
 
         it "must not generate a .gitattributes file if the output folder is not created" do
@@ -103,7 +103,7 @@ module Tapioca
           ERR
           refute_project_file_exist("output/.gitattributes")
         ensure
-          @project.remove("output")
+          @project.remove!("output")
         end
 
         it "respects the Gemfile and Gemfile.lock" do
