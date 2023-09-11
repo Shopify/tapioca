@@ -79,11 +79,6 @@ class RBI::Attr < ::RBI::NodeWithComments
   sig { returns(T::Array[::Symbol]) }
   def names; end
 
-  # @return [Array<Symbol>]
-  #
-  # source://rbi//lib/rbi/model.rb#356
-  def names=(_arg0); end
-
   # source://rbi//lib/rbi/printer.rb#375
   sig { override.returns(T::Boolean) }
   def oneline?; end
@@ -848,7 +843,7 @@ class RBI::Loc
   sig { returns(T.nilable(::String)) }
   def file; end
 
-  # source://rbi//lib/rbi/loc.rb#52
+  # source://rbi//lib/rbi/loc.rb#56
   sig { returns(T.nilable(::String)) }
   def source; end
 
@@ -1040,11 +1035,6 @@ class RBI::Mixin < ::RBI::NodeWithComments
   # source://rbi//lib/rbi/model.rb#777
   sig { returns(T::Array[::String]) }
   def names; end
-
-  # @return [Array<String>]
-  #
-  # source://rbi//lib/rbi/model.rb#777
-  def names=(_arg0); end
 end
 
 # source://rbi//lib/rbi/model.rb#190
@@ -1312,81 +1302,76 @@ class RBI::Parser
   end
 end
 
-# source://rbi//lib/rbi/parser.rb#743
+# source://rbi//lib/rbi/parser.rb#746
 class RBI::Parser::SigBuilder < ::RBI::Parser::Visitor
-  # source://rbi//lib/rbi/parser.rb#750
+  # source://rbi//lib/rbi/parser.rb#753
   sig { params(content: ::String, file: ::String).void }
   def initialize(content, file:); end
 
-  # source://rbi//lib/rbi/parser.rb#747
+  # source://rbi//lib/rbi/parser.rb#750
   sig { returns(::RBI::Sig) }
   def current; end
 
-  # @return [Sig]
-  #
-  # source://rbi//lib/rbi/parser.rb#747
-  def current=(_arg0); end
-
-  # source://rbi//lib/rbi/parser.rb#802
+  # source://rbi//lib/rbi/parser.rb#805
   sig { override.params(node: ::YARP::AssocNode).void }
   def visit_assoc_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#757
+  # source://rbi//lib/rbi/parser.rb#760
   sig { override.params(node: ::YARP::CallNode).void }
   def visit_call_node(node); end
 end
 
-# source://rbi//lib/rbi/parser.rb#152
+# source://rbi//lib/rbi/parser.rb#155
 class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
-  # source://rbi//lib/rbi/parser.rb#162
+  # source://rbi//lib/rbi/parser.rb#165
   sig { params(source: ::String, comments: T::Array[::YARP::Comment], file: ::String).void }
   def initialize(source, comments:, file:); end
 
-  # source://rbi//lib/rbi/parser.rb#159
+  # source://rbi//lib/rbi/parser.rb#162
   sig { returns(T.nilable(::YARP::Node)) }
   def last_node; end
 
-  # source://rbi//lib/rbi/parser.rb#156
+  # source://rbi//lib/rbi/parser.rb#159
   sig { returns(::RBI::Tree) }
   def tree; end
 
-  # source://rbi//lib/rbi/parser.rb#175
+  # source://rbi//lib/rbi/parser.rb#178
   sig { override.params(node: T.nilable(::YARP::Node)).void }
   def visit(node); end
 
-  # source://rbi//lib/rbi/parser.rb#292
+  # source://rbi//lib/rbi/parser.rb#295
   sig { params(node: ::YARP::CallNode).void }
   def visit_call_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#183
+  # source://rbi//lib/rbi/parser.rb#186
   sig { override.params(node: ::YARP::ClassNode).void }
   def visit_class_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#209
+  # source://rbi//lib/rbi/parser.rb#212
   sig { params(node: T.any(::YARP::ConstantPathWriteNode, ::YARP::ConstantWriteNode)).void }
   def visit_constant_assign(node); end
 
-  # source://rbi//lib/rbi/parser.rb#204
+  # source://rbi//lib/rbi/parser.rb#207
   sig { override.params(node: ::YARP::ConstantPathWriteNode).void }
   def visit_constant_path_write_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#199
+  # source://rbi//lib/rbi/parser.rb#202
   sig { override.params(node: ::YARP::ConstantWriteNode).void }
   def visit_constant_write_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#242
+  # source://rbi//lib/rbi/parser.rb#245
   sig { override.params(node: ::YARP::DefNode).void }
   def visit_def_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#254
+  # source://rbi//lib/rbi/parser.rb#257
   sig { override.params(node: ::YARP::ModuleNode).void }
   def visit_module_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#269
+  # source://rbi//lib/rbi/parser.rb#272
   sig { override.params(node: ::YARP::ProgramNode).void }
   def visit_program_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#278
+  # source://rbi//lib/rbi/parser.rb#281
   sig { override.params(node: ::YARP::SingletonClassNode).void }
   def visit_singleton_class_node(node); end
 
@@ -1394,49 +1379,49 @@ class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
 
   # Collect all the remaining comments within a node
   #
-  # source://rbi//lib/rbi/parser.rb#417
+  # source://rbi//lib/rbi/parser.rb#420
   sig { params(node: ::YARP::Node).void }
   def collect_dangling_comments(node); end
 
   # Collect all the remaining comments after visiting the tree
   #
-  # source://rbi//lib/rbi/parser.rb#435
+  # source://rbi//lib/rbi/parser.rb#438
   sig { void }
   def collect_orphan_comments; end
 
-  # source://rbi//lib/rbi/parser.rb#458
+  # source://rbi//lib/rbi/parser.rb#461
   sig { returns(::RBI::Tree) }
   def current_scope; end
 
-  # source://rbi//lib/rbi/parser.rb#463
+  # source://rbi//lib/rbi/parser.rb#466
   sig { returns(T::Array[::RBI::Sig]) }
   def current_sigs; end
 
-  # source://rbi//lib/rbi/parser.rb#470
+  # source://rbi//lib/rbi/parser.rb#473
   sig { returns(T::Array[::RBI::Comment]) }
   def current_sigs_comments; end
 
-  # source://rbi//lib/rbi/parser.rb#477
+  # source://rbi//lib/rbi/parser.rb#480
   sig { params(node: ::YARP::Node).returns(T::Array[::RBI::Comment]) }
   def node_comments(node); end
 
-  # source://rbi//lib/rbi/parser.rb#495
+  # source://rbi//lib/rbi/parser.rb#498
   sig { params(node: ::YARP::Comment).returns(::RBI::Comment) }
   def parse_comment(node); end
 
-  # source://rbi//lib/rbi/parser.rb#524
+  # source://rbi//lib/rbi/parser.rb#527
   sig { params(node: T.nilable(::YARP::Node)).returns(T::Array[::RBI::Param]) }
   def parse_params(node); end
 
-  # source://rbi//lib/rbi/parser.rb#500
+  # source://rbi//lib/rbi/parser.rb#503
   sig { params(node: T.nilable(::YARP::Node)).returns(T::Array[::RBI::Arg]) }
   def parse_send_args(node); end
 
-  # source://rbi//lib/rbi/parser.rb#600
+  # source://rbi//lib/rbi/parser.rb#603
   sig { params(node: ::YARP::CallNode).returns(::RBI::Sig) }
   def parse_sig(node); end
 
-  # source://rbi//lib/rbi/parser.rb#610
+  # source://rbi//lib/rbi/parser.rb#613
   sig do
     params(
       node: T.any(::YARP::ConstantPathWriteNode, ::YARP::ConstantWriteNode)
@@ -1444,44 +1429,44 @@ class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
   end
   def parse_struct(node); end
 
-  # source://rbi//lib/rbi/parser.rb#660
+  # source://rbi//lib/rbi/parser.rb#663
   sig { params(send: ::YARP::CallNode).void }
   def parse_tstruct_field(send); end
 
-  # source://rbi//lib/rbi/parser.rb#697
+  # source://rbi//lib/rbi/parser.rb#700
   sig { params(name: ::String, node: ::YARP::Node).returns(::RBI::Visibility) }
   def parse_visibility(name, node); end
 
-  # source://rbi//lib/rbi/parser.rb#711
+  # source://rbi//lib/rbi/parser.rb#714
   sig { void }
   def separate_header_comments; end
 
-  # source://rbi//lib/rbi/parser.rb#721
+  # source://rbi//lib/rbi/parser.rb#724
   sig { void }
   def set_root_tree_loc; end
 
-  # source://rbi//lib/rbi/parser.rb#735
+  # source://rbi//lib/rbi/parser.rb#738
   sig { params(node: T.nilable(::YARP::Node)).returns(T::Boolean) }
   def type_variable_definition?(node); end
 end
 
-# source://rbi//lib/rbi/parser.rb#121
+# source://rbi//lib/rbi/parser.rb#124
 class RBI::Parser::Visitor < ::YARP::Visitor
-  # source://rbi//lib/rbi/parser.rb#125
+  # source://rbi//lib/rbi/parser.rb#128
   sig { params(source: ::String, file: ::String).void }
   def initialize(source, file:); end
 
   private
 
-  # source://rbi//lib/rbi/parser.rb#135
+  # source://rbi//lib/rbi/parser.rb#138
   sig { params(node: ::YARP::Node).returns(::RBI::Loc) }
   def node_loc(node); end
 
-  # source://rbi//lib/rbi/parser.rb#140
+  # source://rbi//lib/rbi/parser.rb#143
   sig { params(node: T.nilable(::YARP::Node)).returns(T.nilable(::String)) }
   def node_string(node); end
 
-  # source://rbi//lib/rbi/parser.rb#147
+  # source://rbi//lib/rbi/parser.rb#150
   sig { params(node: ::YARP::Node).returns(::String) }
   def node_string!(node); end
 end
