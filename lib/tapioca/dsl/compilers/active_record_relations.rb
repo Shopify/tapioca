@@ -280,6 +280,7 @@ module Tapioca
           # Type the `to_ary` method as returning `NilClass` so that flatten stops recursing
           # See https://github.com/sorbet/sorbet/pull/4706 for details
           model.create_method("to_ary", return_type: "NilClass", visibility: RBI::Private.new)
+          model.create_method("to_a", return_type: "NilClass", visibility: RBI::Private.new)
 
           create_relation_class
           create_association_relation_class
@@ -297,6 +298,7 @@ module Tapioca
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
             klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            klass.create_method("to_a", return_type: "T::Array[#{constant_name}]")
           end
 
           create_relation_where_chain_class
@@ -313,6 +315,7 @@ module Tapioca
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
             klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            klass.create_method("to_a", return_type: "T::Array[#{constant_name}]")
           end
 
           create_association_relation_where_chain_class
@@ -373,6 +376,7 @@ module Tapioca
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
             klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            klass.create_method("to_a", return_type: "T::Array[#{constant_name}]")
             create_collection_proxy_methods(klass)
           end
         end
