@@ -226,11 +226,11 @@ module Tapioca
 
         it "must generate a .gitattributes file in the output folder" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           @project.require_mock_gem(foo)
-          @project.bundle_install
+          @project.bundle_install!
           result = @project.tapioca("gem foo --outdir output")
 
           assert_stdout_includes(result, <<~OUT)
@@ -244,16 +244,16 @@ module Tapioca
             **/*.rbi linguist-generated=true
           CONTENT
         ensure
-          @project.remove("output")
+          @project.remove!("output")
         end
 
         it "must not generate a .gitattributes file if the output folder is not created" do
           foo = mock_gem("foo", "0.0.1") do
-            write("lib/foo.rb", FOO_RB)
+            write!("lib/foo.rb", FOO_RB)
           end
 
           @project.require_mock_gem(foo)
-          @project.bundle_install
+          @project.bundle_install!
 
           # Generate for `foo` but exclude it as well, so that we don't create the output folder
           result = @project.tapioca("gem foo --outdir output --exclude foo")
@@ -267,7 +267,7 @@ module Tapioca
 
           refute_project_file_exist("output/.gitattributes")
         ensure
-          @project.remove("output")
+          @project.remove!("output")
         end
 
         it "must generate a single gem RBI" do
@@ -461,9 +461,9 @@ module Tapioca
           assert_stderr_includes(result, "RBIs exported by `foo` contain errors and can't be used:")
           assert_stderr_includes(
             result,
-            "Cause: Expected to be able to parse an expression. Expected `end` to close `module` statement. ",
+            "Cause: Cannot parse the expression. Expected an `end` to close the `module` statement. ",
           )
-          assert_stderr_includes(result, "foo/rbi/foo.rbi:2:0-1:26")
+          assert_stderr_includes(result, "foo/rbi/foo.rbi:2:0")
 
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
 
@@ -1695,7 +1695,7 @@ module Tapioca
             **/*.rbi linguist-generated=true
           CONTENT
         ensure
-          @project.remove("output")
+          @project.remove!("output")
         end
 
         it "must perform no operations if everything is up-to-date" do

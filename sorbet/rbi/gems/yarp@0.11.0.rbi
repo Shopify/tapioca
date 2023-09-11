@@ -39,7 +39,7 @@ module YARP
 
     # Load the serialized AST using the source as a reference into a tree.
     #
-    # source://yarp//lib/yarp.rb#361
+    # source://yarp//lib/yarp.rb#417
     def load(source, serialized); end
 
     # Mirror the YARP.parse API by using the serialization API.
@@ -82,9 +82,14 @@ class YARP::AliasNode < ::YARP::Node
   # source://yarp//lib/yarp/node.rb#37
   def child_nodes; end
 
-  # def copy: (**params) -> AliasNode
+  # def comment_targets: () -> Array[Node | Location]
   #
   # source://yarp//lib/yarp/node.rb#42
+  def comment_targets; end
+
+  # def copy: (**params) -> AliasNode
+  #
+  # source://yarp//lib/yarp/node.rb#47
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
@@ -95,12 +100,15 @@ class YARP::AliasNode < ::YARP::Node
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#55
+  # source://yarp//lib/yarp/node.rb#60
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#69
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#60
+  # source://yarp//lib/yarp/node.rb#65
   def keyword; end
 
   # attr_reader keyword_loc: Location
@@ -124,59 +132,67 @@ end
 #     foo => bar | baz
 #            ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#69
+# source://yarp//lib/yarp/node.rb#84
 class YARP::AlternationPatternNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [AlternationPatternNode] a new instance of AlternationPatternNode
   #
-  # source://yarp//lib/yarp/node.rb#80
+  # source://yarp//lib/yarp/node.rb#95
   def initialize(left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#88
+  # source://yarp//lib/yarp/node.rb#103
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#93
+  # source://yarp//lib/yarp/node.rb#108
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#113
+  def comment_targets; end
 
   # def copy: (**params) -> AlternationPatternNode
   #
-  # source://yarp//lib/yarp/node.rb#98
+  # source://yarp//lib/yarp/node.rb#118
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#93
+  # source://yarp//lib/yarp/node.rb#108
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#111
+  # source://yarp//lib/yarp/node.rb#131
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#140
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://yarp//lib/yarp/node.rb#71
+  # source://yarp//lib/yarp/node.rb#86
   def left; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#116
+  # source://yarp//lib/yarp/node.rb#136
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#77
+  # source://yarp//lib/yarp/node.rb#92
   def operator_loc; end
 
   # attr_reader right: Node
   #
-  # source://yarp//lib/yarp/node.rb#74
+  # source://yarp//lib/yarp/node.rb#89
   def right; end
 end
 
@@ -185,59 +201,67 @@ end
 #     left and right
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#125
+# source://yarp//lib/yarp/node.rb#155
 class YARP::AndNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [AndNode] a new instance of AndNode
   #
-  # source://yarp//lib/yarp/node.rb#136
+  # source://yarp//lib/yarp/node.rb#166
   def initialize(left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#144
+  # source://yarp//lib/yarp/node.rb#174
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#149
+  # source://yarp//lib/yarp/node.rb#179
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#184
+  def comment_targets; end
 
   # def copy: (**params) -> AndNode
   #
-  # source://yarp//lib/yarp/node.rb#154
+  # source://yarp//lib/yarp/node.rb#189
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#149
+  # source://yarp//lib/yarp/node.rb#179
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#167
+  # source://yarp//lib/yarp/node.rb#202
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#211
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://yarp//lib/yarp/node.rb#127
+  # source://yarp//lib/yarp/node.rb#157
   def left; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#172
+  # source://yarp//lib/yarp/node.rb#207
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#133
+  # source://yarp//lib/yarp/node.rb#163
   def operator_loc; end
 
   # attr_reader right: Node
   #
-  # source://yarp//lib/yarp/node.rb#130
+  # source://yarp//lib/yarp/node.rb#160
   def right; end
 end
 
@@ -246,45 +270,53 @@ end
 #     return foo, bar, baz
 #            ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#181
+# source://yarp//lib/yarp/node.rb#226
 class YARP::ArgumentsNode < ::YARP::Node
   # def initialize: (arguments: Array[Node], location: Location) -> void
   #
   # @return [ArgumentsNode] a new instance of ArgumentsNode
   #
-  # source://yarp//lib/yarp/node.rb#186
+  # source://yarp//lib/yarp/node.rb#231
   def initialize(arguments, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#192
+  # source://yarp//lib/yarp/node.rb#237
   def accept(visitor); end
 
   # attr_reader arguments: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#183
+  # source://yarp//lib/yarp/node.rb#228
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#197
+  # source://yarp//lib/yarp/node.rb#242
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#247
+  def comment_targets; end
 
   # def copy: (**params) -> ArgumentsNode
   #
-  # source://yarp//lib/yarp/node.rb#202
+  # source://yarp//lib/yarp/node.rb#252
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#197
+  # source://yarp//lib/yarp/node.rb#242
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#213
+  # source://yarp//lib/yarp/node.rb#263
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#267
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents an array literal. This can be a regular array using brackets or
@@ -293,64 +325,72 @@ end
 #     [1, 2, 3]
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#223
+# source://yarp//lib/yarp/node.rb#279
 class YARP::ArrayNode < ::YARP::Node
   # def initialize: (elements: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [ArrayNode] a new instance of ArrayNode
   #
-  # source://yarp//lib/yarp/node.rb#234
+  # source://yarp//lib/yarp/node.rb#290
   def initialize(elements, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#242
+  # source://yarp//lib/yarp/node.rb#298
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#247
+  # source://yarp//lib/yarp/node.rb#303
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#275
+  # source://yarp//lib/yarp/node.rb#336
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#231
+  # source://yarp//lib/yarp/node.rb#287
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#308
+  def comment_targets; end
 
   # def copy: (**params) -> ArrayNode
   #
-  # source://yarp//lib/yarp/node.rb#252
+  # source://yarp//lib/yarp/node.rb#313
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#247
+  # source://yarp//lib/yarp/node.rb#303
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#265
+  # source://yarp//lib/yarp/node.rb#326
   def deconstruct_keys(keys); end
 
   # attr_reader elements: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#225
+  # source://yarp//lib/yarp/node.rb#281
   def elements; end
+
+  # source://yarp//lib/yarp/node.rb#340
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#270
+  # source://yarp//lib/yarp/node.rb#331
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#228
+  # source://yarp//lib/yarp/node.rb#284
   def opening_loc; end
 end
 
@@ -371,79 +411,87 @@ end
 #     foo in Bar[1, 2, 3]
 #     ^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#296
+# source://yarp//lib/yarp/node.rb#365
 class YARP::ArrayPatternNode < ::YARP::Node
   # def initialize: (constant: Node?, requireds: Array[Node], rest: Node?, posts: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [ArrayPatternNode] a new instance of ArrayPatternNode
   #
-  # source://yarp//lib/yarp/node.rb#316
+  # source://yarp//lib/yarp/node.rb#385
   def initialize(constant, requireds, rest, posts, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#327
+  # source://yarp//lib/yarp/node.rb#396
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#332
+  # source://yarp//lib/yarp/node.rb#401
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#363
+  # source://yarp//lib/yarp/node.rb#437
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#313
+  # source://yarp//lib/yarp/node.rb#382
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#406
+  def comment_targets; end
 
   # attr_reader constant: Node?
   #
-  # source://yarp//lib/yarp/node.rb#298
+  # source://yarp//lib/yarp/node.rb#367
   def constant; end
 
   # def copy: (**params) -> ArrayPatternNode
   #
-  # source://yarp//lib/yarp/node.rb#337
+  # source://yarp//lib/yarp/node.rb#411
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#332
+  # source://yarp//lib/yarp/node.rb#401
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#353
+  # source://yarp//lib/yarp/node.rb#427
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#441
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#358
+  # source://yarp//lib/yarp/node.rb#432
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#310
+  # source://yarp//lib/yarp/node.rb#379
   def opening_loc; end
 
   # attr_reader posts: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#307
+  # source://yarp//lib/yarp/node.rb#376
   def posts; end
 
   # attr_reader requireds: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#301
+  # source://yarp//lib/yarp/node.rb#370
   def requireds; end
 
   # attr_reader rest: Node?
   #
-  # source://yarp//lib/yarp/node.rb#304
+  # source://yarp//lib/yarp/node.rb#373
   def rest; end
 end
 
@@ -452,133 +500,14 @@ end
 #     { a => b }
 #       ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#372
+# source://yarp//lib/yarp/node.rb#467
 class YARP::AssocNode < ::YARP::Node
   # def initialize: (key: Node, value: Node?, operator_loc: Location?, location: Location) -> void
   #
   # @return [AssocNode] a new instance of AssocNode
   #
-  # source://yarp//lib/yarp/node.rb#383
+  # source://yarp//lib/yarp/node.rb#478
   def initialize(key, value, operator_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#391
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#396
-  def child_nodes; end
-
-  # def copy: (**params) -> AssocNode
-  #
-  # source://yarp//lib/yarp/node.rb#401
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#396
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#414
-  def deconstruct_keys(keys); end
-
-  # attr_reader key: Node
-  #
-  # source://yarp//lib/yarp/node.rb#374
-  def key; end
-
-  # def operator: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#419
-  def operator; end
-
-  # attr_reader operator_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#380
-  def operator_loc; end
-
-  # attr_reader value: Node?
-  #
-  # source://yarp//lib/yarp/node.rb#377
-  def value; end
-end
-
-# Represents a splat in a hash literal.
-#
-#     { **foo }
-#       ^^^^^
-#
-# source://yarp//lib/yarp/node.rb#428
-class YARP::AssocSplatNode < ::YARP::Node
-  # def initialize: (value: Node?, operator_loc: Location, location: Location) -> void
-  #
-  # @return [AssocSplatNode] a new instance of AssocSplatNode
-  #
-  # source://yarp//lib/yarp/node.rb#436
-  def initialize(value, operator_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#443
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#448
-  def child_nodes; end
-
-  # def copy: (**params) -> AssocSplatNode
-  #
-  # source://yarp//lib/yarp/node.rb#453
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#448
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#465
-  def deconstruct_keys(keys); end
-
-  # def operator: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#470
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#433
-  def operator_loc; end
-
-  # attr_reader value: Node?
-  #
-  # source://yarp//lib/yarp/node.rb#430
-  def value; end
-end
-
-YARP::BACKEND = T.let(T.unsafe(nil), Symbol)
-
-# Represents reading a reference to a field in the previous match.
-#
-#     $'
-#     ^^
-#
-# source://yarp//lib/yarp/node.rb#479
-class YARP::BackReferenceReadNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
-  #
-  # @return [BackReferenceReadNode] a new instance of BackReferenceReadNode
-  #
-  # source://yarp//lib/yarp/node.rb#481
-  def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
@@ -590,9 +519,14 @@ class YARP::BackReferenceReadNode < ::YARP::Node
   # source://yarp//lib/yarp/node.rb#491
   def child_nodes; end
 
-  # def copy: (**params) -> BackReferenceReadNode
+  # def comment_targets: () -> Array[Node | Location]
   #
   # source://yarp//lib/yarp/node.rb#496
+  def comment_targets; end
+
+  # def copy: (**params) -> AssocNode
+  #
+  # source://yarp//lib/yarp/node.rb#501
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
@@ -603,8 +537,146 @@ class YARP::BackReferenceReadNode < ::YARP::Node
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#506
+  # source://yarp//lib/yarp/node.rb#514
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#523
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader key: Node
+  #
+  # source://yarp//lib/yarp/node.rb#469
+  def key; end
+
+  # def operator: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#519
+  def operator; end
+
+  # attr_reader operator_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#475
+  def operator_loc; end
+
+  # attr_reader value: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#472
+  def value; end
+end
+
+# Represents a splat in a hash literal.
+#
+#     { **foo }
+#       ^^^^^
+#
+# source://yarp//lib/yarp/node.rb#542
+class YARP::AssocSplatNode < ::YARP::Node
+  # def initialize: (value: Node?, operator_loc: Location, location: Location) -> void
+  #
+  # @return [AssocSplatNode] a new instance of AssocSplatNode
+  #
+  # source://yarp//lib/yarp/node.rb#550
+  def initialize(value, operator_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#557
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#562
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#567
+  def comment_targets; end
+
+  # def copy: (**params) -> AssocSplatNode
+  #
+  # source://yarp//lib/yarp/node.rb#572
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#562
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#584
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#593
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#589
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#547
+  def operator_loc; end
+
+  # attr_reader value: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#544
+  def value; end
+end
+
+YARP::BACKEND = T.let(T.unsafe(nil), Symbol)
+
+# Represents reading a reference to a field in the previous match.
+#
+#     $'
+#     ^^
+#
+# source://yarp//lib/yarp/node.rb#610
+class YARP::BackReferenceReadNode < ::YARP::Node
+  # def initialize: (location: Location) -> void
+  #
+  # @return [BackReferenceReadNode] a new instance of BackReferenceReadNode
+  #
+  # source://yarp//lib/yarp/node.rb#612
+  def initialize(location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#617
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#622
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#627
+  def comment_targets; end
+
+  # def copy: (**params) -> BackReferenceReadNode
+  #
+  # source://yarp//lib/yarp/node.rb#632
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#622
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#642
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#646
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # A class that knows how to walk down the tree. None of the individual visit
@@ -612,15 +684,15 @@ end
 # implement each one that they need. For a default implementation that
 # continues walking the tree, see the Visitor class.
 #
-# source://yarp//lib/yarp.rb#178
+# source://yarp//lib/yarp.rb#209
 class YARP::BasicVisitor
-  # source://yarp//lib/yarp.rb#179
+  # source://yarp//lib/yarp.rb#210
   def visit(node); end
 
-  # source://yarp//lib/yarp.rb#183
+  # source://yarp//lib/yarp.rb#214
   def visit_all(nodes); end
 
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_child_nodes(node); end
 end
 
@@ -631,82 +703,90 @@ end
 #     end
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#517
+# source://yarp//lib/yarp/node.rb#658
 class YARP::BeginNode < ::YARP::Node
   # def initialize: (begin_keyword_loc: Location?, statements: StatementsNode?, rescue_clause: RescueNode?, else_clause: ElseNode?, ensure_clause: EnsureNode?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [BeginNode] a new instance of BeginNode
   #
-  # source://yarp//lib/yarp/node.rb#537
+  # source://yarp//lib/yarp/node.rb#678
   def initialize(begin_keyword_loc, statements, rescue_clause, else_clause, ensure_clause, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#548
+  # source://yarp//lib/yarp/node.rb#689
   def accept(visitor); end
 
   # def begin_keyword: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#583
+  # source://yarp//lib/yarp/node.rb#729
   def begin_keyword; end
 
   # attr_reader begin_keyword_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#519
+  # source://yarp//lib/yarp/node.rb#660
   def begin_keyword_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#557
+  # source://yarp//lib/yarp/node.rb#698
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#703
+  def comment_targets; end
 
   # def copy: (**params) -> BeginNode
   #
-  # source://yarp//lib/yarp/node.rb#562
+  # source://yarp//lib/yarp/node.rb#708
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#557
+  # source://yarp//lib/yarp/node.rb#698
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#578
+  # source://yarp//lib/yarp/node.rb#724
   def deconstruct_keys(keys); end
 
   # attr_reader else_clause: ElseNode?
   #
-  # source://yarp//lib/yarp/node.rb#528
+  # source://yarp//lib/yarp/node.rb#669
   def else_clause; end
 
   # def end_keyword: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#588
+  # source://yarp//lib/yarp/node.rb#734
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#534
+  # source://yarp//lib/yarp/node.rb#675
   def end_keyword_loc; end
 
   # attr_reader ensure_clause: EnsureNode?
   #
-  # source://yarp//lib/yarp/node.rb#531
+  # source://yarp//lib/yarp/node.rb#672
   def ensure_clause; end
+
+  # source://yarp//lib/yarp/node.rb#738
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader rescue_clause: RescueNode?
   #
-  # source://yarp//lib/yarp/node.rb#525
+  # source://yarp//lib/yarp/node.rb#666
   def rescue_clause; end
 
-  # source://yarp//lib/yarp/node.rb#552
+  # source://yarp//lib/yarp/node.rb#693
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#522
+  # source://yarp//lib/yarp/node.rb#663
   def statements; end
 end
 
@@ -715,55 +795,117 @@ end
 #     bar(&args)
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#597
+# source://yarp//lib/yarp/node.rb#774
 class YARP::BlockArgumentNode < ::YARP::Node
   # def initialize: (expression: Node?, operator_loc: Location, location: Location) -> void
   #
   # @return [BlockArgumentNode] a new instance of BlockArgumentNode
   #
-  # source://yarp//lib/yarp/node.rb#605
+  # source://yarp//lib/yarp/node.rb#782
   def initialize(expression, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#612
+  # source://yarp//lib/yarp/node.rb#789
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#617
+  # source://yarp//lib/yarp/node.rb#794
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#799
+  def comment_targets; end
 
   # def copy: (**params) -> BlockArgumentNode
   #
-  # source://yarp//lib/yarp/node.rb#622
+  # source://yarp//lib/yarp/node.rb#804
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#617
+  # source://yarp//lib/yarp/node.rb#794
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#634
+  # source://yarp//lib/yarp/node.rb#816
   def deconstruct_keys(keys); end
 
   # attr_reader expression: Node?
   #
-  # source://yarp//lib/yarp/node.rb#599
+  # source://yarp//lib/yarp/node.rb#776
   def expression; end
+
+  # source://yarp//lib/yarp/node.rb#825
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#639
+  # source://yarp//lib/yarp/node.rb#821
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#602
+  # source://yarp//lib/yarp/node.rb#779
   def operator_loc; end
+end
+
+# Represents a block local variable.
+#
+#     a { |; b| }
+#            ^
+#
+# source://yarp//lib/yarp/node.rb#842
+class YARP::BlockLocalVariableNode < ::YARP::Node
+  # def initialize: (name: Symbol, location: Location) -> void
+  #
+  # @return [BlockLocalVariableNode] a new instance of BlockLocalVariableNode
+  #
+  # source://yarp//lib/yarp/node.rb#847
+  def initialize(name, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#853
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#858
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#863
+  def comment_targets; end
+
+  # def copy: (**params) -> BlockLocalVariableNode
+  #
+  # source://yarp//lib/yarp/node.rb#868
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#858
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#879
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#883
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#844
+  def name; end
 end
 
 # Represents a block of ruby code.
@@ -771,74 +913,82 @@ end
 # [1, 2, 3].each { |i| puts x }
 #                ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#648
+# source://yarp//lib/yarp/node.rb#894
 class YARP::BlockNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], parameters: BlockParametersNode?, body: Node?, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [BlockNode] a new instance of BlockNode
   #
-  # source://yarp//lib/yarp/node.rb#665
+  # source://yarp//lib/yarp/node.rb#911
   def initialize(locals, parameters, body, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#675
+  # source://yarp//lib/yarp/node.rb#921
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://yarp//lib/yarp/node.rb#656
+  # source://yarp//lib/yarp/node.rb#902
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#680
+  # source://yarp//lib/yarp/node.rb#926
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#710
+  # source://yarp//lib/yarp/node.rb#961
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#662
+  # source://yarp//lib/yarp/node.rb#908
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#931
+  def comment_targets; end
 
   # def copy: (**params) -> BlockNode
   #
-  # source://yarp//lib/yarp/node.rb#685
+  # source://yarp//lib/yarp/node.rb#936
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#680
+  # source://yarp//lib/yarp/node.rb#926
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#700
+  # source://yarp//lib/yarp/node.rb#951
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#965
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://yarp//lib/yarp/node.rb#650
+  # source://yarp//lib/yarp/node.rb#896
   def locals; end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#705
+  # source://yarp//lib/yarp/node.rb#956
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#659
+  # source://yarp//lib/yarp/node.rb#905
   def opening_loc; end
 
   # attr_reader parameters: BlockParametersNode?
   #
-  # source://yarp//lib/yarp/node.rb#653
+  # source://yarp//lib/yarp/node.rb#899
   def parameters; end
 end
 
@@ -848,59 +998,67 @@ end
 #           ^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#720
+# source://yarp//lib/yarp/node.rb#991
 class YARP::BlockParameterNode < ::YARP::Node
-  # def initialize: (name_loc: Location?, operator_loc: Location, location: Location) -> void
+  # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
   # @return [BlockParameterNode] a new instance of BlockParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#728
-  def initialize(name_loc, operator_loc, location); end
+  # source://yarp//lib/yarp/node.rb#1002
+  def initialize(name, name_loc, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#735
+  # source://yarp//lib/yarp/node.rb#1010
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#740
+  # source://yarp//lib/yarp/node.rb#1015
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1020
+  def comment_targets; end
 
   # def copy: (**params) -> BlockParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#745
+  # source://yarp//lib/yarp/node.rb#1025
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#740
+  # source://yarp//lib/yarp/node.rb#1015
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#757
+  # source://yarp//lib/yarp/node.rb#1038
   def deconstruct_keys(keys); end
 
-  # def name: () -> String?
+  # source://yarp//lib/yarp/node.rb#1047
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol?
   #
-  # source://yarp//lib/yarp/node.rb#762
+  # source://yarp//lib/yarp/node.rb#993
   def name; end
 
   # attr_reader name_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#722
+  # source://yarp//lib/yarp/node.rb#996
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#767
+  # source://yarp//lib/yarp/node.rb#1043
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#725
+  # source://yarp//lib/yarp/node.rb#999
   def operator_loc; end
 end
 
@@ -913,69 +1071,77 @@ end
 #            ^^^^^^^^^^^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#780
+# source://yarp//lib/yarp/node.rb#1064
 class YARP::BlockParametersNode < ::YARP::Node
-  # def initialize: (parameters: ParametersNode?, locals: Array[Location], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
+  # def initialize: (parameters: ParametersNode?, locals: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [BlockParametersNode] a new instance of BlockParametersNode
   #
-  # source://yarp//lib/yarp/node.rb#794
+  # source://yarp//lib/yarp/node.rb#1078
   def initialize(parameters, locals, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#803
+  # source://yarp//lib/yarp/node.rb#1087
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#808
+  # source://yarp//lib/yarp/node.rb#1092
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#837
+  # source://yarp//lib/yarp/node.rb#1126
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#791
+  # source://yarp//lib/yarp/node.rb#1075
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1097
+  def comment_targets; end
 
   # def copy: (**params) -> BlockParametersNode
   #
-  # source://yarp//lib/yarp/node.rb#813
+  # source://yarp//lib/yarp/node.rb#1102
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#808
+  # source://yarp//lib/yarp/node.rb#1092
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#827
+  # source://yarp//lib/yarp/node.rb#1116
   def deconstruct_keys(keys); end
 
-  # attr_reader locals: Array[Location]
+  # source://yarp//lib/yarp/node.rb#1130
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader locals: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#785
+  # source://yarp//lib/yarp/node.rb#1069
   def locals; end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#832
+  # source://yarp//lib/yarp/node.rb#1121
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#788
+  # source://yarp//lib/yarp/node.rb#1072
   def opening_loc; end
 
   # attr_reader parameters: ParametersNode?
   #
-  # source://yarp//lib/yarp/node.rb#782
+  # source://yarp//lib/yarp/node.rb#1066
   def parameters; end
 end
 
@@ -984,55 +1150,206 @@ end
 #     break foo
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#846
+# source://yarp//lib/yarp/node.rb#1149
 class YARP::BreakNode < ::YARP::Node
   # def initialize: (arguments: ArgumentsNode?, keyword_loc: Location, location: Location) -> void
   #
   # @return [BreakNode] a new instance of BreakNode
   #
-  # source://yarp//lib/yarp/node.rb#854
+  # source://yarp//lib/yarp/node.rb#1157
   def initialize(arguments, keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#861
+  # source://yarp//lib/yarp/node.rb#1164
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://yarp//lib/yarp/node.rb#848
+  # source://yarp//lib/yarp/node.rb#1151
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#866
+  # source://yarp//lib/yarp/node.rb#1169
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1174
+  def comment_targets; end
 
   # def copy: (**params) -> BreakNode
   #
-  # source://yarp//lib/yarp/node.rb#871
+  # source://yarp//lib/yarp/node.rb#1179
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#866
+  # source://yarp//lib/yarp/node.rb#1169
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#883
+  # source://yarp//lib/yarp/node.rb#1191
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#1200
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#888
+  # source://yarp//lib/yarp/node.rb#1196
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#851
+  # source://yarp//lib/yarp/node.rb#1154
   def keyword_loc; end
+end
+
+# Represents the use of the `&&=` operator on a call.
+#
+#     foo.bar &&= value
+#     ^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#1217
+class YARP::CallAndWriteNode < ::YARP::Node
+  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, flags: Integer, read_name: String, write_name: String, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [CallAndWriteNode] a new instance of CallAndWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#1252
+  def initialize(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, flags, read_name, write_name, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#1268
+  def accept(visitor); end
+
+  # attr_reader arguments: ArgumentsNode?
+  #
+  # source://yarp//lib/yarp/node.rb#1231
+  def arguments; end
+
+  # def call_operator: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1309
+  def call_operator; end
+
+  # attr_reader call_operator_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1222
+  def call_operator_loc; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#1273
+  def child_nodes; end
+
+  # def closing: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1324
+  def closing; end
+
+  # attr_reader closing_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1234
+  def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1278
+  def comment_targets; end
+
+  # def copy: (**params) -> CallAndWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#1283
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#1273
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1304
+  def deconstruct_keys(keys); end
+
+  # attr_reader flags: Integer
+  #
+  # source://yarp//lib/yarp/node.rb#1237
+  def flags; end
+
+  # source://yarp//lib/yarp/node.rb#1343
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def message: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1314
+  def message; end
+
+  # attr_reader message_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1225
+  def message_loc; end
+
+  # def opening: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1319
+  def opening; end
+
+  # attr_reader opening_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1228
+  def opening_loc; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#1339
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#1246
+  def operator_loc; end
+
+  # attr_reader read_name: String
+  #
+  # source://yarp//lib/yarp/node.rb#1240
+  def read_name; end
+
+  # attr_reader receiver: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#1219
+  def receiver; end
+
+  # def safe_navigation?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/node.rb#1329
+  def safe_navigation?; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#1249
+  def value; end
+
+  # def variable_call?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/node.rb#1334
+  def variable_call?; end
+
+  # attr_reader write_name: String
+  #
+  # source://yarp//lib/yarp/node.rb#1243
+  def write_name; end
 end
 
 # Represents a method call, in all of the various forms that can take.
@@ -1055,193 +1372,283 @@ end
 #     foo&.bar
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#912
+# source://yarp//lib/yarp/node.rb#1390
 class YARP::CallNode < ::YARP::Node
-  # def initialize: (receiver: Node?, operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, block: BlockNode?, flags: Integer, name: String, location: Location) -> void
+  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, block: BlockNode?, flags: Integer, name: String, location: Location) -> void
   #
   # @return [CallNode] a new instance of CallNode
   #
-  # source://yarp//lib/yarp/node.rb#941
-  def initialize(receiver, operator_loc, message_loc, opening_loc, arguments, closing_loc, block, flags, name, location); end
+  # source://yarp//lib/yarp/node.rb#1419
+  def initialize(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, block, flags, name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#955
+  # source://yarp//lib/yarp/node.rb#1433
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://yarp//lib/yarp/node.rb#926
+  # source://yarp//lib/yarp/node.rb#1404
   def arguments; end
 
   # attr_reader block: BlockNode?
   #
-  # source://yarp//lib/yarp/node.rb#932
+  # source://yarp//lib/yarp/node.rb#1410
   def block; end
+
+  # def call_operator: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1472
+  def call_operator; end
+
+  # attr_reader call_operator_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1395
+  def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#960
+  # source://yarp//lib/yarp/node.rb#1438
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#1004
+  # source://yarp//lib/yarp/node.rb#1487
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#929
+  # source://yarp//lib/yarp/node.rb#1407
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1443
+  def comment_targets; end
 
   # def copy: (**params) -> CallNode
   #
-  # source://yarp//lib/yarp/node.rb#965
+  # source://yarp//lib/yarp/node.rb#1448
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#960
+  # source://yarp//lib/yarp/node.rb#1438
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#984
+  # source://yarp//lib/yarp/node.rb#1467
   def deconstruct_keys(keys); end
 
   # attr_reader flags: Integer
   #
-  # source://yarp//lib/yarp/node.rb#935
+  # source://yarp//lib/yarp/node.rb#1413
   def flags; end
+
+  # source://yarp//lib/yarp/node.rb#1501
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def message: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#994
+  # source://yarp//lib/yarp/node.rb#1477
   def message; end
 
   # attr_reader message_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#920
+  # source://yarp//lib/yarp/node.rb#1398
   def message_loc; end
 
   # attr_reader name: String
   #
-  # source://yarp//lib/yarp/node.rb#938
+  # source://yarp//lib/yarp/node.rb#1416
   def name; end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#999
+  # source://yarp//lib/yarp/node.rb#1482
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#923
+  # source://yarp//lib/yarp/node.rb#1401
   def opening_loc; end
-
-  # def operator: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#989
-  def operator; end
-
-  # attr_reader operator_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#917
-  def operator_loc; end
 
   # attr_reader receiver: Node?
   #
-  # source://yarp//lib/yarp/node.rb#914
+  # source://yarp//lib/yarp/node.rb#1392
   def receiver; end
 
   # def safe_navigation?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#1009
+  # source://yarp//lib/yarp/node.rb#1492
   def safe_navigation?; end
 
   # def variable_call?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#1014
+  # source://yarp//lib/yarp/node.rb#1497
   def variable_call?; end
 end
 
-# source://yarp//lib/yarp/node.rb#7983
+# source://yarp//lib/yarp/node.rb#10557
 module YARP::CallNodeFlags; end
 
 # &. operator
 #
-# source://yarp//lib/yarp/node.rb#7985
+# source://yarp//lib/yarp/node.rb#10559
 YARP::CallNodeFlags::SAFE_NAVIGATION = T.let(T.unsafe(nil), Integer)
 
 # a call that could have been a local variable
 #
-# source://yarp//lib/yarp/node.rb#7988
+# source://yarp//lib/yarp/node.rb#10562
 YARP::CallNodeFlags::VARIABLE_CALL = T.let(T.unsafe(nil), Integer)
 
-# Represents the use of the `&&=` operator on a call.
+# Represents the use of an assignment operator on a call.
 #
-#     foo.bar &&= value
-#     ^^^^^^^^^^^^^^^^^
+#     foo.bar += baz
+#     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1023
-class YARP::CallOperatorAndWriteNode < ::YARP::Node
-  # def initialize: (target: CallNode, operator_loc: Location, value: Node, location: Location) -> void
+# source://yarp//lib/yarp/node.rb#1535
+class YARP::CallOperatorWriteNode < ::YARP::Node
+  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, flags: Integer, read_name: String, write_name: String, operator: Symbol, operator_loc: Location, value: Node, location: Location) -> void
   #
-  # @return [CallOperatorAndWriteNode] a new instance of CallOperatorAndWriteNode
+  # @return [CallOperatorWriteNode] a new instance of CallOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1034
-  def initialize(target, operator_loc, value, location); end
+  # source://yarp//lib/yarp/node.rb#1573
+  def initialize(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, flags, read_name, write_name, operator, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1042
+  # source://yarp//lib/yarp/node.rb#1590
   def accept(visitor); end
+
+  # attr_reader arguments: ArgumentsNode?
+  #
+  # source://yarp//lib/yarp/node.rb#1549
+  def arguments; end
+
+  # def call_operator: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1632
+  def call_operator; end
+
+  # attr_reader call_operator_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1540
+  def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1047
+  # source://yarp//lib/yarp/node.rb#1595
   def child_nodes; end
 
-  # def copy: (**params) -> CallOperatorAndWriteNode
+  # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#1052
+  # source://yarp//lib/yarp/node.rb#1647
+  def closing; end
+
+  # attr_reader closing_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1552
+  def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1600
+  def comment_targets; end
+
+  # def copy: (**params) -> CallOperatorWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#1605
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1047
+  # source://yarp//lib/yarp/node.rb#1595
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1065
+  # source://yarp//lib/yarp/node.rb#1627
   def deconstruct_keys(keys); end
 
-  # def operator: () -> String
+  # attr_reader flags: Integer
   #
-  # source://yarp//lib/yarp/node.rb#1070
+  # source://yarp//lib/yarp/node.rb#1555
+  def flags; end
+
+  # source://yarp//lib/yarp/node.rb#1661
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def message: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1637
+  def message; end
+
+  # attr_reader message_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1543
+  def message_loc; end
+
+  # def opening: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1642
+  def opening; end
+
+  # attr_reader opening_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1546
+  def opening_loc; end
+
+  # attr_reader operator: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#1564
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1028
+  # source://yarp//lib/yarp/node.rb#1567
   def operator_loc; end
 
-  # attr_reader target: CallNode
+  # attr_reader read_name: String
   #
-  # source://yarp//lib/yarp/node.rb#1025
-  def target; end
+  # source://yarp//lib/yarp/node.rb#1558
+  def read_name; end
+
+  # attr_reader receiver: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#1537
+  def receiver; end
+
+  # def safe_navigation?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/node.rb#1652
+  def safe_navigation?; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1031
+  # source://yarp//lib/yarp/node.rb#1570
   def value; end
+
+  # def variable_call?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/node.rb#1657
+  def variable_call?; end
+
+  # attr_reader write_name: String
+  #
+  # source://yarp//lib/yarp/node.rb#1561
+  def write_name; end
 end
 
 # Represents the use of the `||=` operator on a call.
@@ -1249,121 +1656,142 @@ end
 #     foo.bar ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1079
-class YARP::CallOperatorOrWriteNode < ::YARP::Node
-  # def initialize: (target: CallNode, value: Node, operator_loc: Location, location: Location) -> void
+# source://yarp//lib/yarp/node.rb#1694
+class YARP::CallOrWriteNode < ::YARP::Node
+  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, flags: Integer, read_name: String, write_name: String, operator_loc: Location, value: Node, location: Location) -> void
   #
-  # @return [CallOperatorOrWriteNode] a new instance of CallOperatorOrWriteNode
+  # @return [CallOrWriteNode] a new instance of CallOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1090
-  def initialize(target, value, operator_loc, location); end
+  # source://yarp//lib/yarp/node.rb#1729
+  def initialize(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, flags, read_name, write_name, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1098
+  # source://yarp//lib/yarp/node.rb#1745
   def accept(visitor); end
+
+  # attr_reader arguments: ArgumentsNode?
+  #
+  # source://yarp//lib/yarp/node.rb#1708
+  def arguments; end
+
+  # def call_operator: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1786
+  def call_operator; end
+
+  # attr_reader call_operator_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1699
+  def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1103
+  # source://yarp//lib/yarp/node.rb#1750
   def child_nodes; end
 
-  # def copy: (**params) -> CallOperatorOrWriteNode
+  # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#1108
+  # source://yarp//lib/yarp/node.rb#1801
+  def closing; end
+
+  # attr_reader closing_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1711
+  def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1755
+  def comment_targets; end
+
+  # def copy: (**params) -> CallOrWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#1760
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1103
+  # source://yarp//lib/yarp/node.rb#1750
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1121
+  # source://yarp//lib/yarp/node.rb#1781
   def deconstruct_keys(keys); end
+
+  # attr_reader flags: Integer
+  #
+  # source://yarp//lib/yarp/node.rb#1714
+  def flags; end
+
+  # source://yarp//lib/yarp/node.rb#1820
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def message: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1791
+  def message; end
+
+  # attr_reader message_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1702
+  def message_loc; end
+
+  # def opening: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#1796
+  def opening; end
+
+  # attr_reader opening_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#1705
+  def opening_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1126
+  # source://yarp//lib/yarp/node.rb#1816
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1087
+  # source://yarp//lib/yarp/node.rb#1723
   def operator_loc; end
 
-  # attr_reader target: CallNode
+  # attr_reader read_name: String
   #
-  # source://yarp//lib/yarp/node.rb#1081
-  def target; end
+  # source://yarp//lib/yarp/node.rb#1717
+  def read_name; end
+
+  # attr_reader receiver: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#1696
+  def receiver; end
+
+  # def safe_navigation?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/node.rb#1806
+  def safe_navigation?; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1084
+  # source://yarp//lib/yarp/node.rb#1726
   def value; end
-end
 
-# Represents the use of an assignment operator on a call.
-#
-#     foo.bar += baz
-#     ^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#1135
-class YARP::CallOperatorWriteNode < ::YARP::Node
-  # def initialize: (target: CallNode, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
+  # def variable_call?: () -> bool
   #
-  # @return [CallOperatorWriteNode] a new instance of CallOperatorWriteNode
+  # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#1149
-  def initialize(target, operator_loc, value, operator, location); end
+  # source://yarp//lib/yarp/node.rb#1811
+  def variable_call?; end
 
-  # def accept: (visitor: Visitor) -> void
+  # attr_reader write_name: String
   #
-  # source://yarp//lib/yarp/node.rb#1158
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#1163
-  def child_nodes; end
-
-  # def copy: (**params) -> CallOperatorWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#1168
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#1163
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#1182
-  def deconstruct_keys(keys); end
-
-  # attr_reader operator: Symbol
-  #
-  # source://yarp//lib/yarp/node.rb#1146
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#1140
-  def operator_loc; end
-
-  # attr_reader target: CallNode
-  #
-  # source://yarp//lib/yarp/node.rb#1137
-  def target; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#1143
-  def value; end
+  # source://yarp//lib/yarp/node.rb#1720
+  def write_name; end
 end
 
 # Represents assigning to a local variable in pattern matching.
@@ -1371,59 +1799,67 @@ end
 #     foo => [bar => baz]
 #            ^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1191
+# source://yarp//lib/yarp/node.rb#1852
 class YARP::CapturePatternNode < ::YARP::Node
   # def initialize: (value: Node, target: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [CapturePatternNode] a new instance of CapturePatternNode
   #
-  # source://yarp//lib/yarp/node.rb#1202
+  # source://yarp//lib/yarp/node.rb#1863
   def initialize(value, target, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1210
+  # source://yarp//lib/yarp/node.rb#1871
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1215
+  # source://yarp//lib/yarp/node.rb#1876
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1881
+  def comment_targets; end
 
   # def copy: (**params) -> CapturePatternNode
   #
-  # source://yarp//lib/yarp/node.rb#1220
+  # source://yarp//lib/yarp/node.rb#1886
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1215
+  # source://yarp//lib/yarp/node.rb#1876
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1233
+  # source://yarp//lib/yarp/node.rb#1899
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#1908
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1238
+  # source://yarp//lib/yarp/node.rb#1904
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1199
+  # source://yarp//lib/yarp/node.rb#1860
   def operator_loc; end
 
   # attr_reader target: Node
   #
-  # source://yarp//lib/yarp/node.rb#1196
+  # source://yarp//lib/yarp/node.rb#1857
   def target; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1193
+  # source://yarp//lib/yarp/node.rb#1854
   def value; end
 end
 
@@ -1434,74 +1870,82 @@ end
 # when false
 # end
 #
-# source://yarp//lib/yarp/node.rb#1249
+# source://yarp//lib/yarp/node.rb#1925
 class YARP::CaseNode < ::YARP::Node
   # def initialize: (predicate: Node?, conditions: Array[Node], consequent: ElseNode?, case_keyword_loc: Location, end_keyword_loc: Location, location: Location) -> void
   #
   # @return [CaseNode] a new instance of CaseNode
   #
-  # source://yarp//lib/yarp/node.rb#1266
+  # source://yarp//lib/yarp/node.rb#1942
   def initialize(predicate, conditions, consequent, case_keyword_loc, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1276
+  # source://yarp//lib/yarp/node.rb#1952
   def accept(visitor); end
 
   # def case_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1306
+  # source://yarp//lib/yarp/node.rb#1987
   def case_keyword; end
 
   # attr_reader case_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1260
+  # source://yarp//lib/yarp/node.rb#1936
   def case_keyword_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1281
+  # source://yarp//lib/yarp/node.rb#1957
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#1962
+  def comment_targets; end
 
   # attr_reader conditions: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#1254
+  # source://yarp//lib/yarp/node.rb#1930
   def conditions; end
 
   # attr_reader consequent: ElseNode?
   #
-  # source://yarp//lib/yarp/node.rb#1257
+  # source://yarp//lib/yarp/node.rb#1933
   def consequent; end
 
   # def copy: (**params) -> CaseNode
   #
-  # source://yarp//lib/yarp/node.rb#1286
+  # source://yarp//lib/yarp/node.rb#1967
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1281
+  # source://yarp//lib/yarp/node.rb#1957
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1301
+  # source://yarp//lib/yarp/node.rb#1982
   def deconstruct_keys(keys); end
 
   # def end_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1311
+  # source://yarp//lib/yarp/node.rb#1992
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1263
+  # source://yarp//lib/yarp/node.rb#1939
   def end_keyword_loc; end
+
+  # source://yarp//lib/yarp/node.rb#1996
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader predicate: Node?
   #
-  # source://yarp//lib/yarp/node.rb#1251
+  # source://yarp//lib/yarp/node.rb#1927
   def predicate; end
 end
 
@@ -1510,94 +1954,102 @@ end
 #     class Foo end
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1320
+# source://yarp//lib/yarp/node.rb#2021
 class YARP::ClassNode < ::YARP::Node
-  # def initialize: (locals: Array[Symbol], class_keyword_loc: Location, constant_path: Node, inheritance_operator_loc: Location?, superclass: Node?, body: Node?, end_keyword_loc: Location, name: String, location: Location) -> void
+  # def initialize: (locals: Array[Symbol], class_keyword_loc: Location, constant_path: Node, inheritance_operator_loc: Location?, superclass: Node?, body: Node?, end_keyword_loc: Location, name: Symbol, location: Location) -> void
   #
   # @return [ClassNode] a new instance of ClassNode
   #
-  # source://yarp//lib/yarp/node.rb#1346
+  # source://yarp//lib/yarp/node.rb#2047
   def initialize(locals, class_keyword_loc, constant_path, inheritance_operator_loc, superclass, body, end_keyword_loc, name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1359
+  # source://yarp//lib/yarp/node.rb#2060
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://yarp//lib/yarp/node.rb#1337
+  # source://yarp//lib/yarp/node.rb#2038
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1364
+  # source://yarp//lib/yarp/node.rb#2065
   def child_nodes; end
 
   # def class_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1392
+  # source://yarp//lib/yarp/node.rb#2098
   def class_keyword; end
 
   # attr_reader class_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1325
+  # source://yarp//lib/yarp/node.rb#2026
   def class_keyword_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2070
+  def comment_targets; end
 
   # attr_reader constant_path: Node
   #
-  # source://yarp//lib/yarp/node.rb#1328
+  # source://yarp//lib/yarp/node.rb#2029
   def constant_path; end
 
   # def copy: (**params) -> ClassNode
   #
-  # source://yarp//lib/yarp/node.rb#1369
+  # source://yarp//lib/yarp/node.rb#2075
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1364
+  # source://yarp//lib/yarp/node.rb#2065
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1387
+  # source://yarp//lib/yarp/node.rb#2093
   def deconstruct_keys(keys); end
 
   # def end_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1402
+  # source://yarp//lib/yarp/node.rb#2108
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1340
+  # source://yarp//lib/yarp/node.rb#2041
   def end_keyword_loc; end
 
   # def inheritance_operator: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#1397
+  # source://yarp//lib/yarp/node.rb#2103
   def inheritance_operator; end
 
   # attr_reader inheritance_operator_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#1331
+  # source://yarp//lib/yarp/node.rb#2032
   def inheritance_operator_loc; end
+
+  # source://yarp//lib/yarp/node.rb#2112
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://yarp//lib/yarp/node.rb#1322
+  # source://yarp//lib/yarp/node.rb#2023
   def locals; end
 
-  # attr_reader name: String
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1343
+  # source://yarp//lib/yarp/node.rb#2044
   def name; end
 
   # attr_reader superclass: Node?
   #
-  # source://yarp//lib/yarp/node.rb#1334
+  # source://yarp//lib/yarp/node.rb#2035
   def superclass; end
 end
 
@@ -1606,64 +2058,72 @@ end
 #     @@target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1411
+# source://yarp//lib/yarp/node.rb#2141
 class YARP::ClassVariableAndWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ClassVariableAndWriteNode] a new instance of ClassVariableAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1425
+  # source://yarp//lib/yarp/node.rb#2155
   def initialize(name, name_loc, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1434
+  # source://yarp//lib/yarp/node.rb#2164
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1439
+  # source://yarp//lib/yarp/node.rb#2169
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2174
+  def comment_targets; end
 
   # def copy: (**params) -> ClassVariableAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1444
+  # source://yarp//lib/yarp/node.rb#2179
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1439
+  # source://yarp//lib/yarp/node.rb#2169
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1458
+  # source://yarp//lib/yarp/node.rb#2193
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2202
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1413
+  # source://yarp//lib/yarp/node.rb#2143
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1416
+  # source://yarp//lib/yarp/node.rb#2146
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1463
+  # source://yarp//lib/yarp/node.rb#2198
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1419
+  # source://yarp//lib/yarp/node.rb#2149
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1422
+  # source://yarp//lib/yarp/node.rb#2152
   def value; end
 end
 
@@ -1672,64 +2132,72 @@ end
 #     @@target += value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1472
+# source://yarp//lib/yarp/node.rb#2217
 class YARP::ClassVariableOperatorWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
   # @return [ClassVariableOperatorWriteNode] a new instance of ClassVariableOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1489
+  # source://yarp//lib/yarp/node.rb#2234
   def initialize(name, name_loc, operator_loc, value, operator, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1499
+  # source://yarp//lib/yarp/node.rb#2244
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1504
+  # source://yarp//lib/yarp/node.rb#2249
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2254
+  def comment_targets; end
 
   # def copy: (**params) -> ClassVariableOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1509
+  # source://yarp//lib/yarp/node.rb#2259
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1504
+  # source://yarp//lib/yarp/node.rb#2249
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1524
+  # source://yarp//lib/yarp/node.rb#2274
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2278
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1474
+  # source://yarp//lib/yarp/node.rb#2219
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1477
+  # source://yarp//lib/yarp/node.rb#2222
   def name_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1486
+  # source://yarp//lib/yarp/node.rb#2231
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1480
+  # source://yarp//lib/yarp/node.rb#2225
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1483
+  # source://yarp//lib/yarp/node.rb#2228
   def value; end
 end
 
@@ -1738,64 +2206,72 @@ end
 #     @@target ||= value
 #     ^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1533
+# source://yarp//lib/yarp/node.rb#2294
 class YARP::ClassVariableOrWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ClassVariableOrWriteNode] a new instance of ClassVariableOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1547
+  # source://yarp//lib/yarp/node.rb#2308
   def initialize(name, name_loc, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1556
+  # source://yarp//lib/yarp/node.rb#2317
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1561
+  # source://yarp//lib/yarp/node.rb#2322
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2327
+  def comment_targets; end
 
   # def copy: (**params) -> ClassVariableOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1566
+  # source://yarp//lib/yarp/node.rb#2332
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1561
+  # source://yarp//lib/yarp/node.rb#2322
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1580
+  # source://yarp//lib/yarp/node.rb#2346
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2355
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1535
+  # source://yarp//lib/yarp/node.rb#2296
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1538
+  # source://yarp//lib/yarp/node.rb#2299
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1585
+  # source://yarp//lib/yarp/node.rb#2351
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1541
+  # source://yarp//lib/yarp/node.rb#2302
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1544
+  # source://yarp//lib/yarp/node.rb#2305
   def value; end
 end
 
@@ -1804,44 +2280,52 @@ end
 #     @@foo
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1594
+# source://yarp//lib/yarp/node.rb#2370
 class YARP::ClassVariableReadNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ClassVariableReadNode] a new instance of ClassVariableReadNode
   #
-  # source://yarp//lib/yarp/node.rb#1599
+  # source://yarp//lib/yarp/node.rb#2375
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1605
+  # source://yarp//lib/yarp/node.rb#2381
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1610
+  # source://yarp//lib/yarp/node.rb#2386
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2391
+  def comment_targets; end
 
   # def copy: (**params) -> ClassVariableReadNode
   #
-  # source://yarp//lib/yarp/node.rb#1615
+  # source://yarp//lib/yarp/node.rb#2396
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1610
+  # source://yarp//lib/yarp/node.rb#2386
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1626
+  # source://yarp//lib/yarp/node.rb#2407
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2411
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1596
+  # source://yarp//lib/yarp/node.rb#2372
   def name; end
 end
 
@@ -1850,44 +2334,52 @@ end
 #     @@foo, @@bar = baz
 #     ^^^^^  ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1635
+# source://yarp//lib/yarp/node.rb#2422
 class YARP::ClassVariableTargetNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ClassVariableTargetNode] a new instance of ClassVariableTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#1640
+  # source://yarp//lib/yarp/node.rb#2427
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1646
+  # source://yarp//lib/yarp/node.rb#2433
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1651
+  # source://yarp//lib/yarp/node.rb#2438
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2443
+  def comment_targets; end
 
   # def copy: (**params) -> ClassVariableTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#1656
+  # source://yarp//lib/yarp/node.rb#2448
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1651
+  # source://yarp//lib/yarp/node.rb#2438
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1667
+  # source://yarp//lib/yarp/node.rb#2459
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2463
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1637
+  # source://yarp//lib/yarp/node.rb#2424
   def name; end
 end
 
@@ -1896,91 +2388,109 @@ end
 #     @@foo = 1
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1676
+# source://yarp//lib/yarp/node.rb#2474
 class YARP::ClassVariableWriteNode < ::YARP::Node
-  # def initialize: (name: Symbol, name_loc: Location, value: Node?, operator_loc: Location?, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location?, location: Location) -> void
   #
   # @return [ClassVariableWriteNode] a new instance of ClassVariableWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1690
+  # source://yarp//lib/yarp/node.rb#2488
   def initialize(name, name_loc, value, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1699
+  # source://yarp//lib/yarp/node.rb#2497
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1704
+  # source://yarp//lib/yarp/node.rb#2502
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2507
+  def comment_targets; end
 
   # def copy: (**params) -> ClassVariableWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1709
+  # source://yarp//lib/yarp/node.rb#2512
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1704
+  # source://yarp//lib/yarp/node.rb#2502
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1723
+  # source://yarp//lib/yarp/node.rb#2526
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2535
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1678
+  # source://yarp//lib/yarp/node.rb#2476
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1681
+  # source://yarp//lib/yarp/node.rb#2479
   def name_loc; end
 
   # def operator: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#1728
+  # source://yarp//lib/yarp/node.rb#2531
   def operator; end
 
   # attr_reader operator_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#1687
+  # source://yarp//lib/yarp/node.rb#2485
   def operator_loc; end
 
-  # attr_reader value: Node?
+  # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1684
+  # source://yarp//lib/yarp/node.rb#2482
   def value; end
 end
 
 # This represents a comment that was encountered during parsing.
 #
-# source://yarp//lib/yarp.rb#131
+# source://yarp//lib/yarp.rb#145
 class YARP::Comment
   # @return [Comment] a new instance of Comment
   #
-  # source://yarp//lib/yarp.rb#136
+  # source://yarp//lib/yarp.rb#150
   def initialize(type, location); end
 
-  # source://yarp//lib/yarp.rb#141
+  # source://yarp//lib/yarp.rb#155
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp.rb#164
+  def inspect; end
 
   # Returns the value of attribute location.
   #
-  # source://yarp//lib/yarp.rb#134
+  # source://yarp//lib/yarp.rb#148
   def location; end
+
+  # Returns true if the comment happens on the same line as other code and false if the comment is by itself
+  #
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp.rb#160
+  def trailing?; end
 
   # Returns the value of attribute type.
   #
-  # source://yarp//lib/yarp.rb#134
+  # source://yarp//lib/yarp.rb#148
   def type; end
 end
 
-# source://yarp//lib/yarp.rb#132
+# source://yarp//lib/yarp.rb#146
 YARP::Comment::TYPES = T.let(T.unsafe(nil), Array)
 
 # Represents the use of the `&&=` operator for assignment to a constant.
@@ -1988,64 +2498,72 @@ YARP::Comment::TYPES = T.let(T.unsafe(nil), Array)
 #     Target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1737
+# source://yarp//lib/yarp/node.rb#2550
 class YARP::ConstantAndWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ConstantAndWriteNode] a new instance of ConstantAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1748
-  def initialize(name_loc, operator_loc, value, location); end
+  # source://yarp//lib/yarp/node.rb#2564
+  def initialize(name, name_loc, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1756
+  # source://yarp//lib/yarp/node.rb#2573
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1761
+  # source://yarp//lib/yarp/node.rb#2578
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2583
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1766
+  # source://yarp//lib/yarp/node.rb#2588
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1761
+  # source://yarp//lib/yarp/node.rb#2578
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1779
+  # source://yarp//lib/yarp/node.rb#2602
   def deconstruct_keys(keys); end
 
-  # def name: () -> String
+  # source://yarp//lib/yarp/node.rb#2611
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1784
+  # source://yarp//lib/yarp/node.rb#2552
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1739
+  # source://yarp//lib/yarp/node.rb#2555
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1789
+  # source://yarp//lib/yarp/node.rb#2607
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1742
+  # source://yarp//lib/yarp/node.rb#2558
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1745
+  # source://yarp//lib/yarp/node.rb#2561
   def value; end
 end
 
@@ -2054,64 +2572,72 @@ end
 #     Target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1798
+# source://yarp//lib/yarp/node.rb#2626
 class YARP::ConstantOperatorWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
   # @return [ConstantOperatorWriteNode] a new instance of ConstantOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1812
-  def initialize(name_loc, operator_loc, value, operator, location); end
+  # source://yarp//lib/yarp/node.rb#2643
+  def initialize(name, name_loc, operator_loc, value, operator, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1821
+  # source://yarp//lib/yarp/node.rb#2653
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1826
+  # source://yarp//lib/yarp/node.rb#2658
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2663
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1831
+  # source://yarp//lib/yarp/node.rb#2668
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1826
+  # source://yarp//lib/yarp/node.rb#2658
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1845
+  # source://yarp//lib/yarp/node.rb#2683
   def deconstruct_keys(keys); end
 
-  # def name: () -> String
+  # source://yarp//lib/yarp/node.rb#2687
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1850
+  # source://yarp//lib/yarp/node.rb#2628
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1800
+  # source://yarp//lib/yarp/node.rb#2631
   def name_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1809
+  # source://yarp//lib/yarp/node.rb#2640
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1803
+  # source://yarp//lib/yarp/node.rb#2634
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1806
+  # source://yarp//lib/yarp/node.rb#2637
   def value; end
 end
 
@@ -2120,64 +2646,72 @@ end
 #     Target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1859
+# source://yarp//lib/yarp/node.rb#2703
 class YARP::ConstantOrWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ConstantOrWriteNode] a new instance of ConstantOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1870
-  def initialize(name_loc, operator_loc, value, location); end
+  # source://yarp//lib/yarp/node.rb#2717
+  def initialize(name, name_loc, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1878
+  # source://yarp//lib/yarp/node.rb#2726
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1883
+  # source://yarp//lib/yarp/node.rb#2731
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2736
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1888
+  # source://yarp//lib/yarp/node.rb#2741
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1883
+  # source://yarp//lib/yarp/node.rb#2731
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1901
+  # source://yarp//lib/yarp/node.rb#2755
   def deconstruct_keys(keys); end
 
-  # def name: () -> String
+  # source://yarp//lib/yarp/node.rb#2764
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#1906
+  # source://yarp//lib/yarp/node.rb#2705
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1861
+  # source://yarp//lib/yarp/node.rb#2708
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1911
+  # source://yarp//lib/yarp/node.rb#2760
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1864
+  # source://yarp//lib/yarp/node.rb#2711
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1867
+  # source://yarp//lib/yarp/node.rb#2714
   def value; end
 end
 
@@ -2186,59 +2720,67 @@ end
 #     Parent::Child &&= value
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1920
+# source://yarp//lib/yarp/node.rb#2779
 class YARP::ConstantPathAndWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ConstantPathAndWriteNode] a new instance of ConstantPathAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1931
+  # source://yarp//lib/yarp/node.rb#2790
   def initialize(target, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1939
+  # source://yarp//lib/yarp/node.rb#2798
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1944
+  # source://yarp//lib/yarp/node.rb#2803
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2808
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantPathAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#1949
+  # source://yarp//lib/yarp/node.rb#2813
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#1944
+  # source://yarp//lib/yarp/node.rb#2803
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#1962
+  # source://yarp//lib/yarp/node.rb#2826
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2835
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#1967
+  # source://yarp//lib/yarp/node.rb#2831
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1925
+  # source://yarp//lib/yarp/node.rb#2784
   def operator_loc; end
 
   # attr_reader target: ConstantPathNode
   #
-  # source://yarp//lib/yarp/node.rb#1922
+  # source://yarp//lib/yarp/node.rb#2781
   def target; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#1928
+  # source://yarp//lib/yarp/node.rb#2787
   def value; end
 end
 
@@ -2247,59 +2789,67 @@ end
 #     Foo::Bar
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1976
+# source://yarp//lib/yarp/node.rb#2850
 class YARP::ConstantPathNode < ::YARP::Node
   # def initialize: (parent: Node?, child: Node, delimiter_loc: Location, location: Location) -> void
   #
   # @return [ConstantPathNode] a new instance of ConstantPathNode
   #
-  # source://yarp//lib/yarp/node.rb#1987
+  # source://yarp//lib/yarp/node.rb#2861
   def initialize(parent, child, delimiter_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#1995
+  # source://yarp//lib/yarp/node.rb#2869
   def accept(visitor); end
 
   # attr_reader child: Node
   #
-  # source://yarp//lib/yarp/node.rb#1981
+  # source://yarp//lib/yarp/node.rb#2855
   def child; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2000
+  # source://yarp//lib/yarp/node.rb#2874
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2879
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantPathNode
   #
-  # source://yarp//lib/yarp/node.rb#2005
+  # source://yarp//lib/yarp/node.rb#2884
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2000
+  # source://yarp//lib/yarp/node.rb#2874
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2018
+  # source://yarp//lib/yarp/node.rb#2897
   def deconstruct_keys(keys); end
 
   # def delimiter: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2023
+  # source://yarp//lib/yarp/node.rb#2902
   def delimiter; end
 
   # attr_reader delimiter_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#1984
+  # source://yarp//lib/yarp/node.rb#2858
   def delimiter_loc; end
+
+  # source://yarp//lib/yarp/node.rb#2906
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader parent: Node?
   #
-  # source://yarp//lib/yarp/node.rb#1978
+  # source://yarp//lib/yarp/node.rb#2852
   def parent; end
 end
 
@@ -2308,59 +2858,67 @@ end
 #     Parent::Child += value
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2032
+# source://yarp//lib/yarp/node.rb#2925
 class YARP::ConstantPathOperatorWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
   # @return [ConstantPathOperatorWriteNode] a new instance of ConstantPathOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2046
+  # source://yarp//lib/yarp/node.rb#2939
   def initialize(target, operator_loc, value, operator, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2055
+  # source://yarp//lib/yarp/node.rb#2948
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2060
+  # source://yarp//lib/yarp/node.rb#2953
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#2958
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantPathOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2065
+  # source://yarp//lib/yarp/node.rb#2963
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2060
+  # source://yarp//lib/yarp/node.rb#2953
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2079
+  # source://yarp//lib/yarp/node.rb#2977
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#2981
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader operator: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#2043
+  # source://yarp//lib/yarp/node.rb#2936
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2037
+  # source://yarp//lib/yarp/node.rb#2930
   def operator_loc; end
 
   # attr_reader target: ConstantPathNode
   #
-  # source://yarp//lib/yarp/node.rb#2034
+  # source://yarp//lib/yarp/node.rb#2927
   def target; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#2040
+  # source://yarp//lib/yarp/node.rb#2933
   def value; end
 end
 
@@ -2369,59 +2927,67 @@ end
 #     Parent::Child ||= value
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2088
+# source://yarp//lib/yarp/node.rb#2997
 class YARP::ConstantPathOrWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ConstantPathOrWriteNode] a new instance of ConstantPathOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2099
+  # source://yarp//lib/yarp/node.rb#3008
   def initialize(target, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2107
+  # source://yarp//lib/yarp/node.rb#3016
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2112
+  # source://yarp//lib/yarp/node.rb#3021
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3026
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantPathOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2117
+  # source://yarp//lib/yarp/node.rb#3031
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2112
+  # source://yarp//lib/yarp/node.rb#3021
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2130
+  # source://yarp//lib/yarp/node.rb#3044
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3053
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2135
+  # source://yarp//lib/yarp/node.rb#3049
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2093
+  # source://yarp//lib/yarp/node.rb#3002
   def operator_loc; end
 
   # attr_reader target: ConstantPathNode
   #
-  # source://yarp//lib/yarp/node.rb#2090
+  # source://yarp//lib/yarp/node.rb#2999
   def target; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#2096
+  # source://yarp//lib/yarp/node.rb#3005
   def value; end
 end
 
@@ -2430,59 +2996,67 @@ end
 #     Foo::Foo, Bar::Bar = baz
 #     ^^^^^^^^  ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2144
+# source://yarp//lib/yarp/node.rb#3068
 class YARP::ConstantPathTargetNode < ::YARP::Node
   # def initialize: (parent: Node?, child: Node, delimiter_loc: Location, location: Location) -> void
   #
   # @return [ConstantPathTargetNode] a new instance of ConstantPathTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#2155
+  # source://yarp//lib/yarp/node.rb#3079
   def initialize(parent, child, delimiter_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2163
+  # source://yarp//lib/yarp/node.rb#3087
   def accept(visitor); end
 
   # attr_reader child: Node
   #
-  # source://yarp//lib/yarp/node.rb#2149
+  # source://yarp//lib/yarp/node.rb#3073
   def child; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2168
+  # source://yarp//lib/yarp/node.rb#3092
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3097
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantPathTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#2173
+  # source://yarp//lib/yarp/node.rb#3102
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2168
+  # source://yarp//lib/yarp/node.rb#3092
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2186
+  # source://yarp//lib/yarp/node.rb#3115
   def deconstruct_keys(keys); end
 
   # def delimiter: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2191
+  # source://yarp//lib/yarp/node.rb#3120
   def delimiter; end
 
   # attr_reader delimiter_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2152
+  # source://yarp//lib/yarp/node.rb#3076
   def delimiter_loc; end
+
+  # source://yarp//lib/yarp/node.rb#3124
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader parent: Node?
   #
-  # source://yarp//lib/yarp/node.rb#2146
+  # source://yarp//lib/yarp/node.rb#3070
   def parent; end
 end
 
@@ -2497,59 +3071,67 @@ end
 #     ::Foo::Bar = 1
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2206
+# source://yarp//lib/yarp/node.rb#3149
 class YARP::ConstantPathWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ConstantPathWriteNode] a new instance of ConstantPathWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2217
+  # source://yarp//lib/yarp/node.rb#3160
   def initialize(target, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2225
+  # source://yarp//lib/yarp/node.rb#3168
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2230
+  # source://yarp//lib/yarp/node.rb#3173
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3178
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantPathWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2235
+  # source://yarp//lib/yarp/node.rb#3183
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2230
+  # source://yarp//lib/yarp/node.rb#3173
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2248
+  # source://yarp//lib/yarp/node.rb#3196
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3205
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2253
+  # source://yarp//lib/yarp/node.rb#3201
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2211
+  # source://yarp//lib/yarp/node.rb#3154
   def operator_loc; end
 
   # attr_reader target: ConstantPathNode
   #
-  # source://yarp//lib/yarp/node.rb#2208
+  # source://yarp//lib/yarp/node.rb#3151
   def target; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#2214
+  # source://yarp//lib/yarp/node.rb#3157
   def value; end
 end
 
@@ -2558,40 +3140,53 @@ end
 #     Foo
 #     ^^^
 #
-# source://yarp//lib/yarp/node.rb#2262
+# source://yarp//lib/yarp/node.rb#3220
 class YARP::ConstantReadNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
+  # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ConstantReadNode] a new instance of ConstantReadNode
   #
-  # source://yarp//lib/yarp/node.rb#2264
-  def initialize(location); end
+  # source://yarp//lib/yarp/node.rb#3225
+  def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2269
+  # source://yarp//lib/yarp/node.rb#3231
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2274
+  # source://yarp//lib/yarp/node.rb#3236
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3241
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantReadNode
   #
-  # source://yarp//lib/yarp/node.rb#2279
+  # source://yarp//lib/yarp/node.rb#3246
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2274
+  # source://yarp//lib/yarp/node.rb#3236
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2289
+  # source://yarp//lib/yarp/node.rb#3257
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3261
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#3222
+  def name; end
 end
 
 # Represents writing to a constant in a context that doesn't have an explicit value.
@@ -2599,40 +3194,53 @@ end
 #     Foo, Bar = baz
 #     ^^^  ^^^
 #
-# source://yarp//lib/yarp/node.rb#2298
+# source://yarp//lib/yarp/node.rb#3272
 class YARP::ConstantTargetNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
+  # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ConstantTargetNode] a new instance of ConstantTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#2300
-  def initialize(location); end
+  # source://yarp//lib/yarp/node.rb#3277
+  def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2305
+  # source://yarp//lib/yarp/node.rb#3283
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2310
+  # source://yarp//lib/yarp/node.rb#3288
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3293
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#2315
+  # source://yarp//lib/yarp/node.rb#3298
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2310
+  # source://yarp//lib/yarp/node.rb#3288
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2325
+  # source://yarp//lib/yarp/node.rb#3309
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3313
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#3274
+  def name; end
 end
 
 # Represents writing to a constant.
@@ -2640,766 +3248,784 @@ end
 #     Foo = 1
 #     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2334
+# source://yarp//lib/yarp/node.rb#3324
 class YARP::ConstantWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [ConstantWriteNode] a new instance of ConstantWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2345
-  def initialize(name_loc, value, operator_loc, location); end
+  # source://yarp//lib/yarp/node.rb#3338
+  def initialize(name, name_loc, value, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2353
+  # source://yarp//lib/yarp/node.rb#3347
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2358
+  # source://yarp//lib/yarp/node.rb#3352
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3357
+  def comment_targets; end
 
   # def copy: (**params) -> ConstantWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#2363
+  # source://yarp//lib/yarp/node.rb#3362
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2358
+  # source://yarp//lib/yarp/node.rb#3352
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2376
+  # source://yarp//lib/yarp/node.rb#3376
   def deconstruct_keys(keys); end
 
-  # def name: () -> String
+  # source://yarp//lib/yarp/node.rb#3385
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#2381
+  # source://yarp//lib/yarp/node.rb#3326
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2336
+  # source://yarp//lib/yarp/node.rb#3329
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2386
+  # source://yarp//lib/yarp/node.rb#3381
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2342
+  # source://yarp//lib/yarp/node.rb#3335
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#2339
+  # source://yarp//lib/yarp/node.rb#3332
   def value; end
 end
 
-# source://yarp//lib/yarp/node.rb#8431
+# source://yarp//lib/yarp/node.rb#11011
 module YARP::DSL
   private
 
   # Create a new AliasNode node
   #
-  # source://yarp//lib/yarp/node.rb#8440
+  # source://yarp//lib/yarp/node.rb#11020
   def AliasNode(new_name, old_name, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new AlternationPatternNode node
   #
-  # source://yarp//lib/yarp/node.rb#8445
+  # source://yarp//lib/yarp/node.rb#11025
   def AlternationPatternNode(left, right, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new AndNode node
   #
-  # source://yarp//lib/yarp/node.rb#8450
+  # source://yarp//lib/yarp/node.rb#11030
   def AndNode(left, right, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new ArgumentsNode node
   #
-  # source://yarp//lib/yarp/node.rb#8455
+  # source://yarp//lib/yarp/node.rb#11035
   def ArgumentsNode(arguments, location = T.unsafe(nil)); end
 
   # Create a new ArrayNode node
   #
-  # source://yarp//lib/yarp/node.rb#8460
+  # source://yarp//lib/yarp/node.rb#11040
   def ArrayNode(elements, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new ArrayPatternNode node
   #
-  # source://yarp//lib/yarp/node.rb#8465
+  # source://yarp//lib/yarp/node.rb#11045
   def ArrayPatternNode(constant, requireds, rest, posts, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new AssocNode node
   #
-  # source://yarp//lib/yarp/node.rb#8470
+  # source://yarp//lib/yarp/node.rb#11050
   def AssocNode(key, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new AssocSplatNode node
   #
-  # source://yarp//lib/yarp/node.rb#8475
+  # source://yarp//lib/yarp/node.rb#11055
   def AssocSplatNode(value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new BackReferenceReadNode node
   #
-  # source://yarp//lib/yarp/node.rb#8480
+  # source://yarp//lib/yarp/node.rb#11060
   def BackReferenceReadNode(location = T.unsafe(nil)); end
 
   # Create a new BeginNode node
   #
-  # source://yarp//lib/yarp/node.rb#8485
+  # source://yarp//lib/yarp/node.rb#11065
   def BeginNode(begin_keyword_loc, statements, rescue_clause, else_clause, ensure_clause, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new BlockArgumentNode node
   #
-  # source://yarp//lib/yarp/node.rb#8490
+  # source://yarp//lib/yarp/node.rb#11070
   def BlockArgumentNode(expression, operator_loc, location = T.unsafe(nil)); end
+
+  # Create a new BlockLocalVariableNode node
+  #
+  # source://yarp//lib/yarp/node.rb#11075
+  def BlockLocalVariableNode(name, location = T.unsafe(nil)); end
 
   # Create a new BlockNode node
   #
-  # source://yarp//lib/yarp/node.rb#8495
+  # source://yarp//lib/yarp/node.rb#11080
   def BlockNode(locals, parameters, body, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new BlockParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8500
-  def BlockParameterNode(name_loc, operator_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11085
+  def BlockParameterNode(name, name_loc, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new BlockParametersNode node
   #
-  # source://yarp//lib/yarp/node.rb#8505
+  # source://yarp//lib/yarp/node.rb#11090
   def BlockParametersNode(parameters, locals, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new BreakNode node
   #
-  # source://yarp//lib/yarp/node.rb#8510
+  # source://yarp//lib/yarp/node.rb#11095
   def BreakNode(arguments, keyword_loc, location = T.unsafe(nil)); end
+
+  # Create a new CallAndWriteNode node
+  #
+  # source://yarp//lib/yarp/node.rb#11100
+  def CallAndWriteNode(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, flags, read_name, write_name, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new CallNode node
   #
-  # source://yarp//lib/yarp/node.rb#8515
-  def CallNode(receiver, operator_loc, message_loc, opening_loc, arguments, closing_loc, block, flags, name, location = T.unsafe(nil)); end
-
-  # Create a new CallOperatorAndWriteNode node
-  #
-  # source://yarp//lib/yarp/node.rb#8520
-  def CallOperatorAndWriteNode(target, operator_loc, value, location = T.unsafe(nil)); end
-
-  # Create a new CallOperatorOrWriteNode node
-  #
-  # source://yarp//lib/yarp/node.rb#8525
-  def CallOperatorOrWriteNode(target, value, operator_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11105
+  def CallNode(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, block, flags, name, location = T.unsafe(nil)); end
 
   # Create a new CallOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8530
-  def CallOperatorWriteNode(target, operator_loc, value, operator, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11110
+  def CallOperatorWriteNode(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, flags, read_name, write_name, operator, operator_loc, value, location = T.unsafe(nil)); end
+
+  # Create a new CallOrWriteNode node
+  #
+  # source://yarp//lib/yarp/node.rb#11115
+  def CallOrWriteNode(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, flags, read_name, write_name, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new CapturePatternNode node
   #
-  # source://yarp//lib/yarp/node.rb#8535
+  # source://yarp//lib/yarp/node.rb#11120
   def CapturePatternNode(value, target, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new CaseNode node
   #
-  # source://yarp//lib/yarp/node.rb#8540
+  # source://yarp//lib/yarp/node.rb#11125
   def CaseNode(predicate, conditions, consequent, case_keyword_loc, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ClassNode node
   #
-  # source://yarp//lib/yarp/node.rb#8545
+  # source://yarp//lib/yarp/node.rb#11130
   def ClassNode(locals, class_keyword_loc, constant_path, inheritance_operator_loc, superclass, body, end_keyword_loc, name, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8550
+  # source://yarp//lib/yarp/node.rb#11135
   def ClassVariableAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8555
+  # source://yarp//lib/yarp/node.rb#11140
   def ClassVariableOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8560
+  # source://yarp//lib/yarp/node.rb#11145
   def ClassVariableOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableReadNode node
   #
-  # source://yarp//lib/yarp/node.rb#8565
+  # source://yarp//lib/yarp/node.rb#11150
   def ClassVariableReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableTargetNode node
   #
-  # source://yarp//lib/yarp/node.rb#8570
+  # source://yarp//lib/yarp/node.rb#11155
   def ClassVariableTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8575
+  # source://yarp//lib/yarp/node.rb#11160
   def ClassVariableWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new ConstantAndWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8580
-  def ConstantAndWriteNode(name_loc, operator_loc, value, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11165
+  def ConstantAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8585
-  def ConstantOperatorWriteNode(name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11170
+  def ConstantOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new ConstantOrWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8590
-  def ConstantOrWriteNode(name_loc, operator_loc, value, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11175
+  def ConstantOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathAndWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8595
+  # source://yarp//lib/yarp/node.rb#11180
   def ConstantPathAndWriteNode(target, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathNode node
   #
-  # source://yarp//lib/yarp/node.rb#8600
+  # source://yarp//lib/yarp/node.rb#11185
   def ConstantPathNode(parent, child, delimiter_loc, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8605
+  # source://yarp//lib/yarp/node.rb#11190
   def ConstantPathOperatorWriteNode(target, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathOrWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8610
+  # source://yarp//lib/yarp/node.rb#11195
   def ConstantPathOrWriteNode(target, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathTargetNode node
   #
-  # source://yarp//lib/yarp/node.rb#8615
+  # source://yarp//lib/yarp/node.rb#11200
   def ConstantPathTargetNode(parent, child, delimiter_loc, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8620
+  # source://yarp//lib/yarp/node.rb#11205
   def ConstantPathWriteNode(target, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantReadNode node
   #
-  # source://yarp//lib/yarp/node.rb#8625
-  def ConstantReadNode(location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11210
+  def ConstantReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new ConstantTargetNode node
   #
-  # source://yarp//lib/yarp/node.rb#8630
-  def ConstantTargetNode(location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11215
+  def ConstantTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new ConstantWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8635
-  def ConstantWriteNode(name_loc, value, operator_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11220
+  def ConstantWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new DefNode node
   #
-  # source://yarp//lib/yarp/node.rb#8640
-  def DefNode(name_loc, receiver, parameters, body, locals, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11225
+  def DefNode(name, name_loc, receiver, parameters, body, locals, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new DefinedNode node
   #
-  # source://yarp//lib/yarp/node.rb#8645
+  # source://yarp//lib/yarp/node.rb#11230
   def DefinedNode(lparen_loc, value, rparen_loc, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ElseNode node
   #
-  # source://yarp//lib/yarp/node.rb#8650
+  # source://yarp//lib/yarp/node.rb#11235
   def ElseNode(else_keyword_loc, statements, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new EmbeddedStatementsNode node
   #
-  # source://yarp//lib/yarp/node.rb#8655
+  # source://yarp//lib/yarp/node.rb#11240
   def EmbeddedStatementsNode(opening_loc, statements, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new EmbeddedVariableNode node
   #
-  # source://yarp//lib/yarp/node.rb#8660
+  # source://yarp//lib/yarp/node.rb#11245
   def EmbeddedVariableNode(operator_loc, variable, location = T.unsafe(nil)); end
 
   # Create a new EnsureNode node
   #
-  # source://yarp//lib/yarp/node.rb#8665
+  # source://yarp//lib/yarp/node.rb#11250
   def EnsureNode(ensure_keyword_loc, statements, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new FalseNode node
   #
-  # source://yarp//lib/yarp/node.rb#8670
+  # source://yarp//lib/yarp/node.rb#11255
   def FalseNode(location = T.unsafe(nil)); end
 
   # Create a new FindPatternNode node
   #
-  # source://yarp//lib/yarp/node.rb#8675
+  # source://yarp//lib/yarp/node.rb#11260
   def FindPatternNode(constant, left, requireds, right, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new FlipFlopNode node
   #
-  # source://yarp//lib/yarp/node.rb#8680
+  # source://yarp//lib/yarp/node.rb#11265
   def FlipFlopNode(left, right, operator_loc, flags, location = T.unsafe(nil)); end
 
   # Create a new FloatNode node
   #
-  # source://yarp//lib/yarp/node.rb#8685
+  # source://yarp//lib/yarp/node.rb#11270
   def FloatNode(location = T.unsafe(nil)); end
 
   # Create a new ForNode node
   #
-  # source://yarp//lib/yarp/node.rb#8690
+  # source://yarp//lib/yarp/node.rb#11275
   def ForNode(index, collection, statements, for_keyword_loc, in_keyword_loc, do_keyword_loc, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ForwardingArgumentsNode node
   #
-  # source://yarp//lib/yarp/node.rb#8695
+  # source://yarp//lib/yarp/node.rb#11280
   def ForwardingArgumentsNode(location = T.unsafe(nil)); end
 
   # Create a new ForwardingParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8700
+  # source://yarp//lib/yarp/node.rb#11285
   def ForwardingParameterNode(location = T.unsafe(nil)); end
 
   # Create a new ForwardingSuperNode node
   #
-  # source://yarp//lib/yarp/node.rb#8705
+  # source://yarp//lib/yarp/node.rb#11290
   def ForwardingSuperNode(block, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8710
-  def GlobalVariableAndWriteNode(name_loc, operator_loc, value, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11295
+  def GlobalVariableAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8715
-  def GlobalVariableOperatorWriteNode(name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11300
+  def GlobalVariableOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8720
-  def GlobalVariableOrWriteNode(name_loc, operator_loc, value, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11305
+  def GlobalVariableOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableReadNode node
   #
-  # source://yarp//lib/yarp/node.rb#8725
-  def GlobalVariableReadNode(location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11310
+  def GlobalVariableReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableTargetNode node
   #
-  # source://yarp//lib/yarp/node.rb#8730
-  def GlobalVariableTargetNode(location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11315
+  def GlobalVariableTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8735
-  def GlobalVariableWriteNode(name_loc, value, operator_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11320
+  def GlobalVariableWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new HashNode node
   #
-  # source://yarp//lib/yarp/node.rb#8740
+  # source://yarp//lib/yarp/node.rb#11325
   def HashNode(opening_loc, elements, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new HashPatternNode node
   #
-  # source://yarp//lib/yarp/node.rb#8745
+  # source://yarp//lib/yarp/node.rb#11330
   def HashPatternNode(constant, assocs, kwrest, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new IfNode node
   #
-  # source://yarp//lib/yarp/node.rb#8750
+  # source://yarp//lib/yarp/node.rb#11335
   def IfNode(if_keyword_loc, predicate, statements, consequent, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ImaginaryNode node
   #
-  # source://yarp//lib/yarp/node.rb#8755
+  # source://yarp//lib/yarp/node.rb#11340
   def ImaginaryNode(numeric, location = T.unsafe(nil)); end
 
   # Create a new InNode node
   #
-  # source://yarp//lib/yarp/node.rb#8760
+  # source://yarp//lib/yarp/node.rb#11345
   def InNode(pattern, statements, in_loc, then_loc, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8765
+  # source://yarp//lib/yarp/node.rb#11350
   def InstanceVariableAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8770
+  # source://yarp//lib/yarp/node.rb#11355
   def InstanceVariableOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8775
+  # source://yarp//lib/yarp/node.rb#11360
   def InstanceVariableOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableReadNode node
   #
-  # source://yarp//lib/yarp/node.rb#8780
+  # source://yarp//lib/yarp/node.rb#11365
   def InstanceVariableReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableTargetNode node
   #
-  # source://yarp//lib/yarp/node.rb#8785
+  # source://yarp//lib/yarp/node.rb#11370
   def InstanceVariableTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8790
+  # source://yarp//lib/yarp/node.rb#11375
   def InstanceVariableWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new IntegerNode node
   #
-  # source://yarp//lib/yarp/node.rb#8795
+  # source://yarp//lib/yarp/node.rb#11380
   def IntegerNode(location = T.unsafe(nil)); end
 
   # Create a new InterpolatedRegularExpressionNode node
   #
-  # source://yarp//lib/yarp/node.rb#8800
+  # source://yarp//lib/yarp/node.rb#11385
   def InterpolatedRegularExpressionNode(opening_loc, parts, closing_loc, flags, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedStringNode node
   #
-  # source://yarp//lib/yarp/node.rb#8805
+  # source://yarp//lib/yarp/node.rb#11390
   def InterpolatedStringNode(opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedSymbolNode node
   #
-  # source://yarp//lib/yarp/node.rb#8810
+  # source://yarp//lib/yarp/node.rb#11395
   def InterpolatedSymbolNode(opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedXStringNode node
   #
-  # source://yarp//lib/yarp/node.rb#8815
+  # source://yarp//lib/yarp/node.rb#11400
   def InterpolatedXStringNode(opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new KeywordHashNode node
   #
-  # source://yarp//lib/yarp/node.rb#8820
+  # source://yarp//lib/yarp/node.rb#11405
   def KeywordHashNode(elements, location = T.unsafe(nil)); end
 
   # Create a new KeywordParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8825
-  def KeywordParameterNode(name_loc, value, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11410
+  def KeywordParameterNode(name, name_loc, value, location = T.unsafe(nil)); end
 
   # Create a new KeywordRestParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8830
-  def KeywordRestParameterNode(operator_loc, name_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11415
+  def KeywordRestParameterNode(name, name_loc, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new LambdaNode node
   #
-  # source://yarp//lib/yarp/node.rb#8835
+  # source://yarp//lib/yarp/node.rb#11420
   def LambdaNode(locals, operator_loc, opening_loc, closing_loc, parameters, body, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8840
+  # source://yarp//lib/yarp/node.rb#11425
   def LocalVariableAndWriteNode(name_loc, operator_loc, value, name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8845
+  # source://yarp//lib/yarp/node.rb#11430
   def LocalVariableOperatorWriteNode(name_loc, operator_loc, value, name, operator, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8850
+  # source://yarp//lib/yarp/node.rb#11435
   def LocalVariableOrWriteNode(name_loc, operator_loc, value, name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableReadNode node
   #
-  # source://yarp//lib/yarp/node.rb#8855
+  # source://yarp//lib/yarp/node.rb#11440
   def LocalVariableReadNode(name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableTargetNode node
   #
-  # source://yarp//lib/yarp/node.rb#8860
+  # source://yarp//lib/yarp/node.rb#11445
   def LocalVariableTargetNode(name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8865
+  # source://yarp//lib/yarp/node.rb#11450
   def LocalVariableWriteNode(name, depth, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new Location object
   #
-  # source://yarp//lib/yarp/node.rb#8435
+  # source://yarp//lib/yarp/node.rb#11015
   def Location(source = T.unsafe(nil), start_offset = T.unsafe(nil), length = T.unsafe(nil)); end
 
   # Create a new MatchPredicateNode node
   #
-  # source://yarp//lib/yarp/node.rb#8870
+  # source://yarp//lib/yarp/node.rb#11455
   def MatchPredicateNode(value, pattern, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new MatchRequiredNode node
   #
-  # source://yarp//lib/yarp/node.rb#8875
+  # source://yarp//lib/yarp/node.rb#11460
   def MatchRequiredNode(value, pattern, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new MissingNode node
   #
-  # source://yarp//lib/yarp/node.rb#8880
+  # source://yarp//lib/yarp/node.rb#11465
   def MissingNode(location = T.unsafe(nil)); end
 
   # Create a new ModuleNode node
   #
-  # source://yarp//lib/yarp/node.rb#8885
+  # source://yarp//lib/yarp/node.rb#11470
   def ModuleNode(locals, module_keyword_loc, constant_path, body, end_keyword_loc, name, location = T.unsafe(nil)); end
+
+  # Create a new MultiTargetNode node
+  #
+  # source://yarp//lib/yarp/node.rb#11475
+  def MultiTargetNode(targets, lparen_loc, rparen_loc, location = T.unsafe(nil)); end
 
   # Create a new MultiWriteNode node
   #
-  # source://yarp//lib/yarp/node.rb#8890
-  def MultiWriteNode(targets, operator_loc, value, lparen_loc, rparen_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11480
+  def MultiWriteNode(targets, lparen_loc, rparen_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new NextNode node
   #
-  # source://yarp//lib/yarp/node.rb#8895
+  # source://yarp//lib/yarp/node.rb#11485
   def NextNode(arguments, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new NilNode node
   #
-  # source://yarp//lib/yarp/node.rb#8900
+  # source://yarp//lib/yarp/node.rb#11490
   def NilNode(location = T.unsafe(nil)); end
 
   # Create a new NoKeywordsParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8905
+  # source://yarp//lib/yarp/node.rb#11495
   def NoKeywordsParameterNode(operator_loc, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new NumberedReferenceReadNode node
   #
-  # source://yarp//lib/yarp/node.rb#8910
+  # source://yarp//lib/yarp/node.rb#11500
   def NumberedReferenceReadNode(number, location = T.unsafe(nil)); end
 
   # Create a new OptionalParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8915
+  # source://yarp//lib/yarp/node.rb#11505
   def OptionalParameterNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new OrNode node
   #
-  # source://yarp//lib/yarp/node.rb#8920
+  # source://yarp//lib/yarp/node.rb#11510
   def OrNode(left, right, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new ParametersNode node
   #
-  # source://yarp//lib/yarp/node.rb#8925
+  # source://yarp//lib/yarp/node.rb#11515
   def ParametersNode(requireds, optionals, posts, rest, keywords, keyword_rest, block, location = T.unsafe(nil)); end
 
   # Create a new ParenthesesNode node
   #
-  # source://yarp//lib/yarp/node.rb#8930
+  # source://yarp//lib/yarp/node.rb#11520
   def ParenthesesNode(body, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new PinnedExpressionNode node
   #
-  # source://yarp//lib/yarp/node.rb#8935
+  # source://yarp//lib/yarp/node.rb#11525
   def PinnedExpressionNode(expression, operator_loc, lparen_loc, rparen_loc, location = T.unsafe(nil)); end
 
   # Create a new PinnedVariableNode node
   #
-  # source://yarp//lib/yarp/node.rb#8940
+  # source://yarp//lib/yarp/node.rb#11530
   def PinnedVariableNode(variable, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new PostExecutionNode node
   #
-  # source://yarp//lib/yarp/node.rb#8945
+  # source://yarp//lib/yarp/node.rb#11535
   def PostExecutionNode(statements, keyword_loc, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new PreExecutionNode node
   #
-  # source://yarp//lib/yarp/node.rb#8950
+  # source://yarp//lib/yarp/node.rb#11540
   def PreExecutionNode(statements, keyword_loc, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new ProgramNode node
   #
-  # source://yarp//lib/yarp/node.rb#8955
+  # source://yarp//lib/yarp/node.rb#11545
   def ProgramNode(locals, statements, location = T.unsafe(nil)); end
 
   # Create a new RangeNode node
   #
-  # source://yarp//lib/yarp/node.rb#8960
+  # source://yarp//lib/yarp/node.rb#11550
   def RangeNode(left, right, operator_loc, flags, location = T.unsafe(nil)); end
 
   # Create a new RationalNode node
   #
-  # source://yarp//lib/yarp/node.rb#8965
+  # source://yarp//lib/yarp/node.rb#11555
   def RationalNode(numeric, location = T.unsafe(nil)); end
 
   # Create a new RedoNode node
   #
-  # source://yarp//lib/yarp/node.rb#8970
+  # source://yarp//lib/yarp/node.rb#11560
   def RedoNode(location = T.unsafe(nil)); end
 
   # Create a new RegularExpressionNode node
   #
-  # source://yarp//lib/yarp/node.rb#8975
+  # source://yarp//lib/yarp/node.rb#11565
   def RegularExpressionNode(opening_loc, content_loc, closing_loc, unescaped, flags, location = T.unsafe(nil)); end
 
   # Create a new RequiredDestructuredParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8980
+  # source://yarp//lib/yarp/node.rb#11570
   def RequiredDestructuredParameterNode(parameters, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new RequiredParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#8985
+  # source://yarp//lib/yarp/node.rb#11575
   def RequiredParameterNode(name, location = T.unsafe(nil)); end
 
   # Create a new RescueModifierNode node
   #
-  # source://yarp//lib/yarp/node.rb#8990
+  # source://yarp//lib/yarp/node.rb#11580
   def RescueModifierNode(expression, keyword_loc, rescue_expression, location = T.unsafe(nil)); end
 
   # Create a new RescueNode node
   #
-  # source://yarp//lib/yarp/node.rb#8995
+  # source://yarp//lib/yarp/node.rb#11585
   def RescueNode(keyword_loc, exceptions, operator_loc, reference, statements, consequent, location = T.unsafe(nil)); end
 
   # Create a new RestParameterNode node
   #
-  # source://yarp//lib/yarp/node.rb#9000
-  def RestParameterNode(operator_loc, name_loc, location = T.unsafe(nil)); end
+  # source://yarp//lib/yarp/node.rb#11590
+  def RestParameterNode(name, name_loc, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new RetryNode node
   #
-  # source://yarp//lib/yarp/node.rb#9005
+  # source://yarp//lib/yarp/node.rb#11595
   def RetryNode(location = T.unsafe(nil)); end
 
   # Create a new ReturnNode node
   #
-  # source://yarp//lib/yarp/node.rb#9010
+  # source://yarp//lib/yarp/node.rb#11600
   def ReturnNode(keyword_loc, arguments, location = T.unsafe(nil)); end
 
   # Create a new SelfNode node
   #
-  # source://yarp//lib/yarp/node.rb#9015
+  # source://yarp//lib/yarp/node.rb#11605
   def SelfNode(location = T.unsafe(nil)); end
 
   # Create a new SingletonClassNode node
   #
-  # source://yarp//lib/yarp/node.rb#9020
+  # source://yarp//lib/yarp/node.rb#11610
   def SingletonClassNode(locals, class_keyword_loc, operator_loc, expression, body, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new SourceEncodingNode node
   #
-  # source://yarp//lib/yarp/node.rb#9025
+  # source://yarp//lib/yarp/node.rb#11615
   def SourceEncodingNode(location = T.unsafe(nil)); end
 
   # Create a new SourceFileNode node
   #
-  # source://yarp//lib/yarp/node.rb#9030
+  # source://yarp//lib/yarp/node.rb#11620
   def SourceFileNode(filepath, location = T.unsafe(nil)); end
 
   # Create a new SourceLineNode node
   #
-  # source://yarp//lib/yarp/node.rb#9035
+  # source://yarp//lib/yarp/node.rb#11625
   def SourceLineNode(location = T.unsafe(nil)); end
 
   # Create a new SplatNode node
   #
-  # source://yarp//lib/yarp/node.rb#9040
+  # source://yarp//lib/yarp/node.rb#11630
   def SplatNode(operator_loc, expression, location = T.unsafe(nil)); end
 
   # Create a new StatementsNode node
   #
-  # source://yarp//lib/yarp/node.rb#9045
+  # source://yarp//lib/yarp/node.rb#11635
   def StatementsNode(body, location = T.unsafe(nil)); end
 
   # Create a new StringConcatNode node
   #
-  # source://yarp//lib/yarp/node.rb#9050
+  # source://yarp//lib/yarp/node.rb#11640
   def StringConcatNode(left, right, location = T.unsafe(nil)); end
 
   # Create a new StringNode node
   #
-  # source://yarp//lib/yarp/node.rb#9055
+  # source://yarp//lib/yarp/node.rb#11645
   def StringNode(opening_loc, content_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new SuperNode node
   #
-  # source://yarp//lib/yarp/node.rb#9060
+  # source://yarp//lib/yarp/node.rb#11650
   def SuperNode(keyword_loc, lparen_loc, arguments, rparen_loc, block, location = T.unsafe(nil)); end
 
   # Create a new SymbolNode node
   #
-  # source://yarp//lib/yarp/node.rb#9065
+  # source://yarp//lib/yarp/node.rb#11655
   def SymbolNode(opening_loc, value_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new TrueNode node
   #
-  # source://yarp//lib/yarp/node.rb#9070
+  # source://yarp//lib/yarp/node.rb#11660
   def TrueNode(location = T.unsafe(nil)); end
 
   # Create a new UndefNode node
   #
-  # source://yarp//lib/yarp/node.rb#9075
+  # source://yarp//lib/yarp/node.rb#11665
   def UndefNode(names, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new UnlessNode node
   #
-  # source://yarp//lib/yarp/node.rb#9080
+  # source://yarp//lib/yarp/node.rb#11670
   def UnlessNode(keyword_loc, predicate, statements, consequent, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new UntilNode node
   #
-  # source://yarp//lib/yarp/node.rb#9085
+  # source://yarp//lib/yarp/node.rb#11675
   def UntilNode(keyword_loc, closing_loc, predicate, statements, flags, location = T.unsafe(nil)); end
 
   # Create a new WhenNode node
   #
-  # source://yarp//lib/yarp/node.rb#9090
+  # source://yarp//lib/yarp/node.rb#11680
   def WhenNode(keyword_loc, conditions, statements, location = T.unsafe(nil)); end
 
   # Create a new WhileNode node
   #
-  # source://yarp//lib/yarp/node.rb#9095
+  # source://yarp//lib/yarp/node.rb#11685
   def WhileNode(keyword_loc, closing_loc, predicate, statements, flags, location = T.unsafe(nil)); end
 
   # Create a new XStringNode node
   #
-  # source://yarp//lib/yarp/node.rb#9100
+  # source://yarp//lib/yarp/node.rb#11690
   def XStringNode(opening_loc, content_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new YieldNode node
   #
-  # source://yarp//lib/yarp/node.rb#9105
+  # source://yarp//lib/yarp/node.rb#11695
   def YieldNode(keyword_loc, lparen_loc, arguments, rparen_loc, location = T.unsafe(nil)); end
 end
 
 # This module is used for testing and debugging and is not meant to be used by
 # consumers of this library.
 #
-# source://yarp//lib/yarp.rb#367
+# source://yarp//lib/yarp.rb#423
 module YARP::Debug
   class << self
     # For the given source, compiles with CRuby and returns a list of all of the
     # sets of local variables that were encountered.
     #
-    # source://yarp//lib/yarp.rb#408
+    # source://yarp//lib/yarp.rb#464
     def cruby_locals(source); end
 
     def memsize(_arg0); end
     def named_captures(_arg0); end
 
-    # source://yarp//lib/yarp.rb#514
+    # source://yarp//lib/yarp.rb#570
     def newlines(source); end
 
-    # source://yarp//lib/yarp.rb#518
+    # source://yarp//lib/yarp.rb#574
     def parse_serialize_file(filepath); end
 
     def parse_serialize_file_metadata(_arg0, _arg1); end
@@ -3411,33 +4037,33 @@ module YARP::Debug
     # For the given source, parses with YARP and returns a list of all of the
     # sets of local variables that were encountered.
     #
-    # source://yarp//lib/yarp.rb#447
+    # source://yarp//lib/yarp.rb#503
     def yarp_locals(source); end
   end
 end
 
-# source://yarp//lib/yarp.rb#368
+# source://yarp//lib/yarp.rb#424
 class YARP::Debug::ISeq
   # @return [ISeq] a new instance of ISeq
   #
-  # source://yarp//lib/yarp.rb#371
+  # source://yarp//lib/yarp.rb#427
   def initialize(parts); end
 
-  # source://yarp//lib/yarp.rb#387
+  # source://yarp//lib/yarp.rb#443
   def each_child; end
 
-  # source://yarp//lib/yarp.rb#383
+  # source://yarp//lib/yarp.rb#439
   def instructions; end
 
-  # source://yarp//lib/yarp.rb#379
+  # source://yarp//lib/yarp.rb#435
   def local_table; end
 
   # Returns the value of attribute parts.
   #
-  # source://yarp//lib/yarp.rb#369
+  # source://yarp//lib/yarp.rb#425
   def parts; end
 
-  # source://yarp//lib/yarp.rb#375
+  # source://yarp//lib/yarp.rb#431
   def type; end
 end
 
@@ -3447,129 +4073,137 @@ end
 #     end
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2396
+# source://yarp//lib/yarp/node.rb#3401
 class YARP::DefNode < ::YARP::Node
-  # def initialize: (name_loc: Location, receiver: Node?, parameters: ParametersNode?, body: Node?, locals: Array[Symbol], def_keyword_loc: Location, operator_loc: Location?, lparen_loc: Location?, rparen_loc: Location?, equal_loc: Location?, end_keyword_loc: Location?, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, receiver: Node?, parameters: ParametersNode?, body: Node?, locals: Array[Symbol], def_keyword_loc: Location, operator_loc: Location?, lparen_loc: Location?, rparen_loc: Location?, equal_loc: Location?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [DefNode] a new instance of DefNode
   #
-  # source://yarp//lib/yarp/node.rb#2431
-  def initialize(name_loc, receiver, parameters, body, locals, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location); end
+  # source://yarp//lib/yarp/node.rb#3439
+  def initialize(name, name_loc, receiver, parameters, body, locals, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2447
+  # source://yarp//lib/yarp/node.rb#3456
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://yarp//lib/yarp/node.rb#2407
+  # source://yarp//lib/yarp/node.rb#3415
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2452
+  # source://yarp//lib/yarp/node.rb#3461
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3466
+  def comment_targets; end
 
   # def copy: (**params) -> DefNode
   #
-  # source://yarp//lib/yarp/node.rb#2457
+  # source://yarp//lib/yarp/node.rb#3471
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2452
+  # source://yarp//lib/yarp/node.rb#3461
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2478
+  # source://yarp//lib/yarp/node.rb#3493
   def deconstruct_keys(keys); end
 
   # def def_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2488
+  # source://yarp//lib/yarp/node.rb#3498
   def def_keyword; end
 
   # attr_reader def_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2413
+  # source://yarp//lib/yarp/node.rb#3421
   def def_keyword_loc; end
 
   # def end_keyword: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2513
+  # source://yarp//lib/yarp/node.rb#3523
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2428
+  # source://yarp//lib/yarp/node.rb#3436
   def end_keyword_loc; end
 
   # def equal: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2508
+  # source://yarp//lib/yarp/node.rb#3518
   def equal; end
 
   # attr_reader equal_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2425
+  # source://yarp//lib/yarp/node.rb#3433
   def equal_loc; end
+
+  # source://yarp//lib/yarp/node.rb#3527
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://yarp//lib/yarp/node.rb#2410
+  # source://yarp//lib/yarp/node.rb#3418
   def locals; end
 
   # def lparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2498
+  # source://yarp//lib/yarp/node.rb#3508
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2419
+  # source://yarp//lib/yarp/node.rb#3427
   def lparen_loc; end
 
-  # def name: () -> String
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#2483
+  # source://yarp//lib/yarp/node.rb#3403
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2398
+  # source://yarp//lib/yarp/node.rb#3406
   def name_loc; end
 
   # def operator: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2493
+  # source://yarp//lib/yarp/node.rb#3503
   def operator; end
 
   # attr_reader operator_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2416
+  # source://yarp//lib/yarp/node.rb#3424
   def operator_loc; end
 
   # attr_reader parameters: ParametersNode?
   #
-  # source://yarp//lib/yarp/node.rb#2404
+  # source://yarp//lib/yarp/node.rb#3412
   def parameters; end
 
   # attr_reader receiver: Node?
   #
-  # source://yarp//lib/yarp/node.rb#2401
+  # source://yarp//lib/yarp/node.rb#3409
   def receiver; end
 
   # def rparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2503
+  # source://yarp//lib/yarp/node.rb#3513
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2422
+  # source://yarp//lib/yarp/node.rb#3430
   def rparen_loc; end
 end
 
@@ -3578,74 +4212,82 @@ end
 #     defined?(a)
 #     ^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2522
+# source://yarp//lib/yarp/node.rb#3564
 class YARP::DefinedNode < ::YARP::Node
   # def initialize: (lparen_loc: Location?, value: Node, rparen_loc: Location?, keyword_loc: Location, location: Location) -> void
   #
   # @return [DefinedNode] a new instance of DefinedNode
   #
-  # source://yarp//lib/yarp/node.rb#2536
+  # source://yarp//lib/yarp/node.rb#3578
   def initialize(lparen_loc, value, rparen_loc, keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2545
+  # source://yarp//lib/yarp/node.rb#3587
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2550
+  # source://yarp//lib/yarp/node.rb#3592
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3597
+  def comment_targets; end
 
   # def copy: (**params) -> DefinedNode
   #
-  # source://yarp//lib/yarp/node.rb#2555
+  # source://yarp//lib/yarp/node.rb#3602
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2550
+  # source://yarp//lib/yarp/node.rb#3592
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2569
+  # source://yarp//lib/yarp/node.rb#3616
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3635
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2584
+  # source://yarp//lib/yarp/node.rb#3631
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2533
+  # source://yarp//lib/yarp/node.rb#3575
   def keyword_loc; end
 
   # def lparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2574
+  # source://yarp//lib/yarp/node.rb#3621
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2524
+  # source://yarp//lib/yarp/node.rb#3566
   def lparen_loc; end
 
   # def rparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2579
+  # source://yarp//lib/yarp/node.rb#3626
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2530
+  # source://yarp//lib/yarp/node.rb#3572
   def rparen_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#2527
+  # source://yarp//lib/yarp/node.rb#3569
   def value; end
 end
 
@@ -3779,22 +4421,22 @@ class YARP::DesugarVisitor < ::YARP::MutationVisitor
   # Desugar `x &&= y` to `x && x = y`
   #
   # source://yarp//lib/yarp/desugar_visitor.rb#143
-  def desugar_and_write_node(node, read_class, write_class, arguments: T.unsafe(nil)); end
+  def desugar_and_write_node(node, read_class, write_class, *arguments); end
 
   # Desugar `x += y` to `x = x + y`
   #
   # source://yarp//lib/yarp/desugar_visitor.rb#153
-  def desugar_operator_write_node(node, read_class, write_class, arguments: T.unsafe(nil)); end
+  def desugar_operator_write_node(node, read_class, write_class, *arguments); end
 
   # Desugar `x ||= y` to `defined?(x) ? x : x = y`
   #
   # source://yarp//lib/yarp/desugar_visitor.rb#185
-  def desugar_or_write_defined_node(node, read_class, write_class, arguments: T.unsafe(nil)); end
+  def desugar_or_write_defined_node(node, read_class, write_class, *arguments); end
 
   # Desugar `x ||= y` to `x || x = y`
   #
   # source://yarp//lib/yarp/desugar_visitor.rb#175
-  def desugar_or_write_node(node, read_class, write_class, arguments: T.unsafe(nil)); end
+  def desugar_or_write_node(node, read_class, write_class, *arguments); end
 end
 
 # Represents an `else` clause in a `case`, `if`, or `unless` statement.
@@ -3802,64 +4444,72 @@ end
 #     if a then b else c end
 #                 ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2593
+# source://yarp//lib/yarp/node.rb#3650
 class YARP::ElseNode < ::YARP::Node
   # def initialize: (else_keyword_loc: Location, statements: StatementsNode?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [ElseNode] a new instance of ElseNode
   #
-  # source://yarp//lib/yarp/node.rb#2604
+  # source://yarp//lib/yarp/node.rb#3661
   def initialize(else_keyword_loc, statements, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2612
+  # source://yarp//lib/yarp/node.rb#3669
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2617
+  # source://yarp//lib/yarp/node.rb#3674
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3679
+  def comment_targets; end
 
   # def copy: (**params) -> ElseNode
   #
-  # source://yarp//lib/yarp/node.rb#2622
+  # source://yarp//lib/yarp/node.rb#3684
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2617
+  # source://yarp//lib/yarp/node.rb#3674
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2635
+  # source://yarp//lib/yarp/node.rb#3697
   def deconstruct_keys(keys); end
 
   # def else_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2640
+  # source://yarp//lib/yarp/node.rb#3702
   def else_keyword; end
 
   # attr_reader else_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2595
+  # source://yarp//lib/yarp/node.rb#3652
   def else_keyword_loc; end
 
   # def end_keyword: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2645
+  # source://yarp//lib/yarp/node.rb#3707
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2601
+  # source://yarp//lib/yarp/node.rb#3658
   def end_keyword_loc; end
+
+  # source://yarp//lib/yarp/node.rb#3711
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#2598
+  # source://yarp//lib/yarp/node.rb#3655
   def statements; end
 end
 
@@ -3868,64 +4518,72 @@ end
 #     "foo #{bar}"
 #          ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2654
+# source://yarp//lib/yarp/node.rb#3729
 class YARP::EmbeddedStatementsNode < ::YARP::Node
   # def initialize: (opening_loc: Location, statements: StatementsNode?, closing_loc: Location, location: Location) -> void
   #
   # @return [EmbeddedStatementsNode] a new instance of EmbeddedStatementsNode
   #
-  # source://yarp//lib/yarp/node.rb#2665
+  # source://yarp//lib/yarp/node.rb#3740
   def initialize(opening_loc, statements, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2673
+  # source://yarp//lib/yarp/node.rb#3748
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2678
+  # source://yarp//lib/yarp/node.rb#3753
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2706
+  # source://yarp//lib/yarp/node.rb#3786
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2662
+  # source://yarp//lib/yarp/node.rb#3737
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3758
+  def comment_targets; end
 
   # def copy: (**params) -> EmbeddedStatementsNode
   #
-  # source://yarp//lib/yarp/node.rb#2683
+  # source://yarp//lib/yarp/node.rb#3763
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2678
+  # source://yarp//lib/yarp/node.rb#3753
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2696
+  # source://yarp//lib/yarp/node.rb#3776
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3790
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2701
+  # source://yarp//lib/yarp/node.rb#3781
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2656
+  # source://yarp//lib/yarp/node.rb#3731
   def opening_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#2659
+  # source://yarp//lib/yarp/node.rb#3734
   def statements; end
 end
 
@@ -3934,54 +4592,62 @@ end
 #     "foo #@bar"
 #          ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2715
+# source://yarp//lib/yarp/node.rb#3808
 class YARP::EmbeddedVariableNode < ::YARP::Node
   # def initialize: (operator_loc: Location, variable: Node, location: Location) -> void
   #
   # @return [EmbeddedVariableNode] a new instance of EmbeddedVariableNode
   #
-  # source://yarp//lib/yarp/node.rb#2723
+  # source://yarp//lib/yarp/node.rb#3816
   def initialize(operator_loc, variable, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2730
+  # source://yarp//lib/yarp/node.rb#3823
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2735
+  # source://yarp//lib/yarp/node.rb#3828
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3833
+  def comment_targets; end
 
   # def copy: (**params) -> EmbeddedVariableNode
   #
-  # source://yarp//lib/yarp/node.rb#2740
+  # source://yarp//lib/yarp/node.rb#3838
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2735
+  # source://yarp//lib/yarp/node.rb#3828
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2752
+  # source://yarp//lib/yarp/node.rb#3850
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3859
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2757
+  # source://yarp//lib/yarp/node.rb#3855
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2717
+  # source://yarp//lib/yarp/node.rb#3810
   def operator_loc; end
 
   # attr_reader variable: Node
   #
-  # source://yarp//lib/yarp/node.rb#2720
+  # source://yarp//lib/yarp/node.rb#3813
   def variable; end
 end
 
@@ -3994,64 +4660,72 @@ end
 #       bar
 #     end
 #
-# source://yarp//lib/yarp/node.rb#2770
+# source://yarp//lib/yarp/node.rb#3876
 class YARP::EnsureNode < ::YARP::Node
   # def initialize: (ensure_keyword_loc: Location, statements: StatementsNode?, end_keyword_loc: Location, location: Location) -> void
   #
   # @return [EnsureNode] a new instance of EnsureNode
   #
-  # source://yarp//lib/yarp/node.rb#2781
+  # source://yarp//lib/yarp/node.rb#3887
   def initialize(ensure_keyword_loc, statements, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2789
+  # source://yarp//lib/yarp/node.rb#3895
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2794
+  # source://yarp//lib/yarp/node.rb#3900
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3905
+  def comment_targets; end
 
   # def copy: (**params) -> EnsureNode
   #
-  # source://yarp//lib/yarp/node.rb#2799
+  # source://yarp//lib/yarp/node.rb#3910
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2794
+  # source://yarp//lib/yarp/node.rb#3900
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2812
+  # source://yarp//lib/yarp/node.rb#3923
   def deconstruct_keys(keys); end
 
   # def end_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2822
+  # source://yarp//lib/yarp/node.rb#3933
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2778
+  # source://yarp//lib/yarp/node.rb#3884
   def end_keyword_loc; end
 
   # def ensure_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#2817
+  # source://yarp//lib/yarp/node.rb#3928
   def ensure_keyword; end
 
   # attr_reader ensure_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#2772
+  # source://yarp//lib/yarp/node.rb#3878
   def ensure_keyword_loc; end
+
+  # source://yarp//lib/yarp/node.rb#3937
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#2775
+  # source://yarp//lib/yarp/node.rb#3881
   def statements; end
 end
 
@@ -4060,40 +4734,48 @@ end
 #     false
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2831
+# source://yarp//lib/yarp/node.rb#3955
 class YARP::FalseNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [FalseNode] a new instance of FalseNode
   #
-  # source://yarp//lib/yarp/node.rb#2833
+  # source://yarp//lib/yarp/node.rb#3957
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2838
+  # source://yarp//lib/yarp/node.rb#3962
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2843
+  # source://yarp//lib/yarp/node.rb#3967
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#3972
+  def comment_targets; end
 
   # def copy: (**params) -> FalseNode
   #
-  # source://yarp//lib/yarp/node.rb#2848
+  # source://yarp//lib/yarp/node.rb#3977
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2843
+  # source://yarp//lib/yarp/node.rb#3967
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2858
+  # source://yarp//lib/yarp/node.rb#3987
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#3991
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents a find pattern in pattern matching.
@@ -4107,79 +4789,87 @@ end
 #     foo in Foo(*bar, baz, *qux)
 #     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2873
+# source://yarp//lib/yarp/node.rb#4007
 class YARP::FindPatternNode < ::YARP::Node
   # def initialize: (constant: Node?, left: Node, requireds: Array[Node], right: Node, opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [FindPatternNode] a new instance of FindPatternNode
   #
-  # source://yarp//lib/yarp/node.rb#2893
+  # source://yarp//lib/yarp/node.rb#4027
   def initialize(constant, left, requireds, right, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#2904
+  # source://yarp//lib/yarp/node.rb#4038
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2909
+  # source://yarp//lib/yarp/node.rb#4043
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2940
+  # source://yarp//lib/yarp/node.rb#4079
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2890
+  # source://yarp//lib/yarp/node.rb#4024
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4048
+  def comment_targets; end
 
   # attr_reader constant: Node?
   #
-  # source://yarp//lib/yarp/node.rb#2875
+  # source://yarp//lib/yarp/node.rb#4009
   def constant; end
 
   # def copy: (**params) -> FindPatternNode
   #
-  # source://yarp//lib/yarp/node.rb#2914
+  # source://yarp//lib/yarp/node.rb#4053
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#2909
+  # source://yarp//lib/yarp/node.rb#4043
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#2930
+  # source://yarp//lib/yarp/node.rb#4069
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4083
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://yarp//lib/yarp/node.rb#2878
+  # source://yarp//lib/yarp/node.rb#4012
   def left; end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#2935
+  # source://yarp//lib/yarp/node.rb#4074
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#2887
+  # source://yarp//lib/yarp/node.rb#4021
   def opening_loc; end
 
   # attr_reader requireds: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#2881
+  # source://yarp//lib/yarp/node.rb#4015
   def requireds; end
 
   # attr_reader right: Node
   #
-  # source://yarp//lib/yarp/node.rb#2884
+  # source://yarp//lib/yarp/node.rb#4018
   def right; end
 end
 
@@ -4188,1295 +4878,14 @@ end
 #     baz if foo .. bar
 #            ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2949
+# source://yarp//lib/yarp/node.rb#4106
 class YARP::FlipFlopNode < ::YARP::Node
   # def initialize: (left: Node?, right: Node?, operator_loc: Location, flags: Integer, location: Location) -> void
   #
   # @return [FlipFlopNode] a new instance of FlipFlopNode
   #
-  # source://yarp//lib/yarp/node.rb#2963
+  # source://yarp//lib/yarp/node.rb#4120
   def initialize(left, right, operator_loc, flags, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#2972
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#2977
-  def child_nodes; end
-
-  # def copy: (**params) -> FlipFlopNode
-  #
-  # source://yarp//lib/yarp/node.rb#2982
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#2977
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#2996
-  def deconstruct_keys(keys); end
-
-  # def exclude_end?: () -> bool
-  #
-  # @return [Boolean]
-  #
-  # source://yarp//lib/yarp/node.rb#3006
-  def exclude_end?; end
-
-  # attr_reader flags: Integer
-  #
-  # source://yarp//lib/yarp/node.rb#2960
-  def flags; end
-
-  # attr_reader left: Node?
-  #
-  # source://yarp//lib/yarp/node.rb#2951
-  def left; end
-
-  # def operator: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3001
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#2957
-  def operator_loc; end
-
-  # attr_reader right: Node?
-  #
-  # source://yarp//lib/yarp/node.rb#2954
-  def right; end
-end
-
-# Represents a floating point number literal.
-#
-#     1.0
-#     ^^^
-#
-# source://yarp//lib/yarp.rb#336
-class YARP::FloatNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
-  #
-  # @return [FloatNode] a new instance of FloatNode
-  #
-  # source://yarp//lib/yarp/node.rb#3017
-  def initialize(location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3022
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3027
-  def child_nodes; end
-
-  # def copy: (**params) -> FloatNode
-  #
-  # source://yarp//lib/yarp/node.rb#3032
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3027
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3042
-  def deconstruct_keys(keys); end
-
-  # source://yarp//lib/yarp.rb#337
-  def value; end
-end
-
-# Represents the use of the `for` keyword.
-#
-#     for i in a end
-#     ^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3051
-class YARP::ForNode < ::YARP::Node
-  # def initialize: (index: Node, collection: Node, statements: StatementsNode?, for_keyword_loc: Location, in_keyword_loc: Location, do_keyword_loc: Location?, end_keyword_loc: Location, location: Location) -> void
-  #
-  # @return [ForNode] a new instance of ForNode
-  #
-  # source://yarp//lib/yarp/node.rb#3074
-  def initialize(index, collection, statements, for_keyword_loc, in_keyword_loc, do_keyword_loc, end_keyword_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3086
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3091
-  def child_nodes; end
-
-  # attr_reader collection: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3056
-  def collection; end
-
-  # def copy: (**params) -> ForNode
-  #
-  # source://yarp//lib/yarp/node.rb#3096
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3091
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3113
-  def deconstruct_keys(keys); end
-
-  # def do_keyword: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#3128
-  def do_keyword; end
-
-  # attr_reader do_keyword_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#3068
-  def do_keyword_loc; end
-
-  # def end_keyword: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3133
-  def end_keyword; end
-
-  # attr_reader end_keyword_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3071
-  def end_keyword_loc; end
-
-  # def for_keyword: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3118
-  def for_keyword; end
-
-  # attr_reader for_keyword_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3062
-  def for_keyword_loc; end
-
-  # def in_keyword: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3123
-  def in_keyword; end
-
-  # attr_reader in_keyword_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3065
-  def in_keyword_loc; end
-
-  # attr_reader index: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3053
-  def index; end
-
-  # attr_reader statements: StatementsNode?
-  #
-  # source://yarp//lib/yarp/node.rb#3059
-  def statements; end
-end
-
-# Represents forwarding all arguments to this method to another method.
-#
-#     def foo(...)
-#       bar(...)
-#       ^^^^^^^^
-#     end
-#
-# source://yarp//lib/yarp/node.rb#3144
-class YARP::ForwardingArgumentsNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
-  #
-  # @return [ForwardingArgumentsNode] a new instance of ForwardingArgumentsNode
-  #
-  # source://yarp//lib/yarp/node.rb#3146
-  def initialize(location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3151
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3156
-  def child_nodes; end
-
-  # def copy: (**params) -> ForwardingArgumentsNode
-  #
-  # source://yarp//lib/yarp/node.rb#3161
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3156
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3171
-  def deconstruct_keys(keys); end
-end
-
-# Represents the use of the forwarding parameter in a method, block, or lambda declaration.
-#
-#     def foo(...)
-#             ^^^
-#     end
-#
-# source://yarp//lib/yarp/node.rb#3181
-class YARP::ForwardingParameterNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
-  #
-  # @return [ForwardingParameterNode] a new instance of ForwardingParameterNode
-  #
-  # source://yarp//lib/yarp/node.rb#3183
-  def initialize(location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3188
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3193
-  def child_nodes; end
-
-  # def copy: (**params) -> ForwardingParameterNode
-  #
-  # source://yarp//lib/yarp/node.rb#3198
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3193
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3208
-  def deconstruct_keys(keys); end
-end
-
-# Represents the use of the `super` keyword without parentheses or arguments.
-#
-#     super
-#     ^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3217
-class YARP::ForwardingSuperNode < ::YARP::Node
-  # def initialize: (block: BlockNode?, location: Location) -> void
-  #
-  # @return [ForwardingSuperNode] a new instance of ForwardingSuperNode
-  #
-  # source://yarp//lib/yarp/node.rb#3222
-  def initialize(block, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3228
-  def accept(visitor); end
-
-  # attr_reader block: BlockNode?
-  #
-  # source://yarp//lib/yarp/node.rb#3219
-  def block; end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3233
-  def child_nodes; end
-
-  # def copy: (**params) -> ForwardingSuperNode
-  #
-  # source://yarp//lib/yarp/node.rb#3238
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3233
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3249
-  def deconstruct_keys(keys); end
-end
-
-# Represents the use of the `&&=` operator for assignment to a global variable.
-#
-#     $target &&= value
-#     ^^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3258
-class YARP::GlobalVariableAndWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
-  #
-  # @return [GlobalVariableAndWriteNode] a new instance of GlobalVariableAndWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3269
-  def initialize(name_loc, operator_loc, value, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3277
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3282
-  def child_nodes; end
-
-  # def copy: (**params) -> GlobalVariableAndWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3287
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3282
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3300
-  def deconstruct_keys(keys); end
-
-  # def name: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3305
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3260
-  def name_loc; end
-
-  # def operator: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3310
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3263
-  def operator_loc; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3266
-  def value; end
-end
-
-# Represents assigning to a global variable using an operator that isn't `=`.
-#
-#     $target += value
-#     ^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3319
-class YARP::GlobalVariableOperatorWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
-  #
-  # @return [GlobalVariableOperatorWriteNode] a new instance of GlobalVariableOperatorWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3333
-  def initialize(name_loc, operator_loc, value, operator, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3342
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3347
-  def child_nodes; end
-
-  # def copy: (**params) -> GlobalVariableOperatorWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3352
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3347
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3366
-  def deconstruct_keys(keys); end
-
-  # def name: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3371
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3321
-  def name_loc; end
-
-  # attr_reader operator: Symbol
-  #
-  # source://yarp//lib/yarp/node.rb#3330
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3324
-  def operator_loc; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3327
-  def value; end
-end
-
-# Represents the use of the `||=` operator for assignment to a global variable.
-#
-#     $target ||= value
-#     ^^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3380
-class YARP::GlobalVariableOrWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
-  #
-  # @return [GlobalVariableOrWriteNode] a new instance of GlobalVariableOrWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3391
-  def initialize(name_loc, operator_loc, value, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3399
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3404
-  def child_nodes; end
-
-  # def copy: (**params) -> GlobalVariableOrWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3409
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3404
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3422
-  def deconstruct_keys(keys); end
-
-  # def name: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3427
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3382
-  def name_loc; end
-
-  # def operator: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3432
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3385
-  def operator_loc; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3388
-  def value; end
-end
-
-# Represents referencing a global variable.
-#
-#     $foo
-#     ^^^^
-#
-# source://yarp//lib/yarp/node.rb#3441
-class YARP::GlobalVariableReadNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
-  #
-  # @return [GlobalVariableReadNode] a new instance of GlobalVariableReadNode
-  #
-  # source://yarp//lib/yarp/node.rb#3443
-  def initialize(location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3448
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3453
-  def child_nodes; end
-
-  # def copy: (**params) -> GlobalVariableReadNode
-  #
-  # source://yarp//lib/yarp/node.rb#3458
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3453
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3468
-  def deconstruct_keys(keys); end
-end
-
-# Represents writing to a global variable in a context that doesn't have an explicit value.
-#
-#     $foo, $bar = baz
-#     ^^^^  ^^^^
-#
-# source://yarp//lib/yarp/node.rb#3477
-class YARP::GlobalVariableTargetNode < ::YARP::Node
-  # def initialize: (location: Location) -> void
-  #
-  # @return [GlobalVariableTargetNode] a new instance of GlobalVariableTargetNode
-  #
-  # source://yarp//lib/yarp/node.rb#3479
-  def initialize(location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3484
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3489
-  def child_nodes; end
-
-  # def copy: (**params) -> GlobalVariableTargetNode
-  #
-  # source://yarp//lib/yarp/node.rb#3494
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3489
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3504
-  def deconstruct_keys(keys); end
-end
-
-# Represents writing to a global variable.
-#
-#     $foo = 1
-#     ^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3513
-class YARP::GlobalVariableWriteNode < ::YARP::Node
-  # def initialize: (name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
-  #
-  # @return [GlobalVariableWriteNode] a new instance of GlobalVariableWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3524
-  def initialize(name_loc, value, operator_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3532
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3537
-  def child_nodes; end
-
-  # def copy: (**params) -> GlobalVariableWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3542
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3537
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3555
-  def deconstruct_keys(keys); end
-
-  # def name: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3560
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3515
-  def name_loc; end
-
-  # def operator: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3565
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3521
-  def operator_loc; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3518
-  def value; end
-end
-
-# Represents a hash literal.
-#
-#     { a => b }
-#     ^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3574
-class YARP::HashNode < ::YARP::Node
-  # def initialize: (opening_loc: Location, elements: Array[Node], closing_loc: Location, location: Location) -> void
-  #
-  # @return [HashNode] a new instance of HashNode
-  #
-  # source://yarp//lib/yarp/node.rb#3585
-  def initialize(opening_loc, elements, closing_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3593
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3598
-  def child_nodes; end
-
-  # def closing: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3626
-  def closing; end
-
-  # attr_reader closing_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3582
-  def closing_loc; end
-
-  # def copy: (**params) -> HashNode
-  #
-  # source://yarp//lib/yarp/node.rb#3603
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3598
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3616
-  def deconstruct_keys(keys); end
-
-  # attr_reader elements: Array[Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3579
-  def elements; end
-
-  # def opening: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3621
-  def opening; end
-
-  # attr_reader opening_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3576
-  def opening_loc; end
-end
-
-# Represents a hash pattern in pattern matching.
-#
-#     foo => { a: 1, b: 2 }
-#            ^^^^^^^^^^^^^^
-#
-#     foo => { a: 1, b: 2, **c }
-#            ^^^^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3638
-class YARP::HashPatternNode < ::YARP::Node
-  # def initialize: (constant: Node?, assocs: Array[Node], kwrest: Node?, opening_loc: Location?, closing_loc: Location?, location: Location) -> void
-  #
-  # @return [HashPatternNode] a new instance of HashPatternNode
-  #
-  # source://yarp//lib/yarp/node.rb#3655
-  def initialize(constant, assocs, kwrest, opening_loc, closing_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3665
-  def accept(visitor); end
-
-  # attr_reader assocs: Array[Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3643
-  def assocs; end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3670
-  def child_nodes; end
-
-  # def closing: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#3700
-  def closing; end
-
-  # attr_reader closing_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#3652
-  def closing_loc; end
-
-  # attr_reader constant: Node?
-  #
-  # source://yarp//lib/yarp/node.rb#3640
-  def constant; end
-
-  # def copy: (**params) -> HashPatternNode
-  #
-  # source://yarp//lib/yarp/node.rb#3675
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3670
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3690
-  def deconstruct_keys(keys); end
-
-  # attr_reader kwrest: Node?
-  #
-  # source://yarp//lib/yarp/node.rb#3646
-  def kwrest; end
-
-  # def opening: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#3695
-  def opening; end
-
-  # attr_reader opening_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#3649
-  def opening_loc; end
-end
-
-# Represents the use of the `if` keyword, either in the block form or the modifier form.
-#
-#     bar if foo
-#     ^^^^^^^^^^
-#
-#     if foo then bar end
-#     ^^^^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3712
-class YARP::IfNode < ::YARP::Node
-  # def initialize: (if_keyword_loc: Location?, predicate: Node, statements: StatementsNode?, consequent: Node?, end_keyword_loc: Location?, location: Location) -> void
-  #
-  # @return [IfNode] a new instance of IfNode
-  #
-  # source://yarp//lib/yarp/node.rb#3729
-  def initialize(if_keyword_loc, predicate, statements, consequent, end_keyword_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3739
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3748
-  def child_nodes; end
-
-  # attr_reader consequent: Node?
-  #
-  # source://yarp//lib/yarp/node.rb#3723
-  def consequent; end
-
-  # def copy: (**params) -> IfNode
-  #
-  # source://yarp//lib/yarp/node.rb#3753
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3748
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3768
-  def deconstruct_keys(keys); end
-
-  # def end_keyword: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#3778
-  def end_keyword; end
-
-  # attr_reader end_keyword_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#3726
-  def end_keyword_loc; end
-
-  # def if_keyword: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#3773
-  def if_keyword; end
-
-  # attr_reader if_keyword_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#3714
-  def if_keyword_loc; end
-
-  # attr_reader predicate: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3717
-  def predicate; end
-
-  # source://yarp//lib/yarp/node.rb#3743
-  def set_newline_flag(newline_marked); end
-
-  # attr_reader statements: StatementsNode?
-  #
-  # source://yarp//lib/yarp/node.rb#3720
-  def statements; end
-end
-
-# Represents an imaginary number literal.
-#
-#     1.0i
-#     ^^^^
-#
-# source://yarp//lib/yarp.rb#342
-class YARP::ImaginaryNode < ::YARP::Node
-  # def initialize: (numeric: Node, location: Location) -> void
-  #
-  # @return [ImaginaryNode] a new instance of ImaginaryNode
-  #
-  # source://yarp//lib/yarp/node.rb#3792
-  def initialize(numeric, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3798
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3803
-  def child_nodes; end
-
-  # def copy: (**params) -> ImaginaryNode
-  #
-  # source://yarp//lib/yarp/node.rb#3808
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3803
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3819
-  def deconstruct_keys(keys); end
-
-  # attr_reader numeric: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3789
-  def numeric; end
-
-  # source://yarp//lib/yarp.rb#343
-  def value; end
-end
-
-# Represents the use of the `in` keyword in a case statement.
-#
-#     case a; in b then c end
-#             ^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3828
-class YARP::InNode < ::YARP::Node
-  # def initialize: (pattern: Node, statements: StatementsNode?, in_loc: Location, then_loc: Location?, location: Location) -> void
-  #
-  # @return [InNode] a new instance of InNode
-  #
-  # source://yarp//lib/yarp/node.rb#3842
-  def initialize(pattern, statements, in_loc, then_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3851
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3856
-  def child_nodes; end
-
-  # def copy: (**params) -> InNode
-  #
-  # source://yarp//lib/yarp/node.rb#3861
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3856
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3875
-  def deconstruct_keys(keys); end
-
-  # def in: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3880
-  def in; end
-
-  # attr_reader in_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3836
-  def in_loc; end
-
-  # attr_reader pattern: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3830
-  def pattern; end
-
-  # attr_reader statements: StatementsNode?
-  #
-  # source://yarp//lib/yarp/node.rb#3833
-  def statements; end
-
-  # def then: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#3885
-  def then; end
-
-  # attr_reader then_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#3839
-  def then_loc; end
-end
-
-# Represents the use of the `&&=` operator for assignment to an instance variable.
-#
-#     @target &&= value
-#     ^^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3894
-class YARP::InstanceVariableAndWriteNode < ::YARP::Node
-  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
-  #
-  # @return [InstanceVariableAndWriteNode] a new instance of InstanceVariableAndWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3908
-  def initialize(name, name_loc, operator_loc, value, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3917
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3922
-  def child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableAndWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3927
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3922
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#3941
-  def deconstruct_keys(keys); end
-
-  # attr_reader name: Symbol
-  #
-  # source://yarp//lib/yarp/node.rb#3896
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3899
-  def name_loc; end
-
-  # def operator: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#3946
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3902
-  def operator_loc; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3905
-  def value; end
-end
-
-# Represents assigning to an instance variable using an operator that isn't `=`.
-#
-#     @target += value
-#     ^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#3955
-class YARP::InstanceVariableOperatorWriteNode < ::YARP::Node
-  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
-  #
-  # @return [InstanceVariableOperatorWriteNode] a new instance of InstanceVariableOperatorWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3972
-  def initialize(name, name_loc, operator_loc, value, operator, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#3982
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3987
-  def child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableOperatorWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#3992
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#3987
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#4007
-  def deconstruct_keys(keys); end
-
-  # attr_reader name: Symbol
-  #
-  # source://yarp//lib/yarp/node.rb#3957
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3960
-  def name_loc; end
-
-  # attr_reader operator: Symbol
-  #
-  # source://yarp//lib/yarp/node.rb#3969
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#3963
-  def operator_loc; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#3966
-  def value; end
-end
-
-# Represents the use of the `||=` operator for assignment to an instance variable.
-#
-#     @target ||= value
-#     ^^^^^^^^^^^^^^^^^
-#
-# source://yarp//lib/yarp/node.rb#4016
-class YARP::InstanceVariableOrWriteNode < ::YARP::Node
-  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
-  #
-  # @return [InstanceVariableOrWriteNode] a new instance of InstanceVariableOrWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#4030
-  def initialize(name, name_loc, operator_loc, value, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#4039
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#4044
-  def child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableOrWriteNode
-  #
-  # source://yarp//lib/yarp/node.rb#4049
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#4044
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#4063
-  def deconstruct_keys(keys); end
-
-  # attr_reader name: Symbol
-  #
-  # source://yarp//lib/yarp/node.rb#4018
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#4021
-  def name_loc; end
-
-  # def operator: () -> String
-  #
-  # source://yarp//lib/yarp/node.rb#4068
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://yarp//lib/yarp/node.rb#4024
-  def operator_loc; end
-
-  # attr_reader value: Node
-  #
-  # source://yarp//lib/yarp/node.rb#4027
-  def value; end
-end
-
-# Represents referencing an instance variable.
-#
-#     @foo
-#     ^^^^
-#
-# source://yarp//lib/yarp/node.rb#4077
-class YARP::InstanceVariableReadNode < ::YARP::Node
-  # def initialize: (name: Symbol, location: Location) -> void
-  #
-  # @return [InstanceVariableReadNode] a new instance of InstanceVariableReadNode
-  #
-  # source://yarp//lib/yarp/node.rb#4082
-  def initialize(name, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://yarp//lib/yarp/node.rb#4088
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#4093
-  def child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableReadNode
-  #
-  # source://yarp//lib/yarp/node.rb#4098
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://yarp//lib/yarp/node.rb#4093
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://yarp//lib/yarp/node.rb#4109
-  def deconstruct_keys(keys); end
-
-  # attr_reader name: Symbol
-  #
-  # source://yarp//lib/yarp/node.rb#4079
-  def name; end
-end
-
-# Represents writing to an instance variable in a context that doesn't have an explicit value.
-#
-#     @foo, @bar = baz
-#     ^^^^  ^^^^
-#
-# source://yarp//lib/yarp/node.rb#4118
-class YARP::InstanceVariableTargetNode < ::YARP::Node
-  # def initialize: (name: Symbol, location: Location) -> void
-  #
-  # @return [InstanceVariableTargetNode] a new instance of InstanceVariableTargetNode
-  #
-  # source://yarp//lib/yarp/node.rb#4123
-  def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
@@ -5488,9 +4897,14 @@ class YARP::InstanceVariableTargetNode < ::YARP::Node
   # source://yarp//lib/yarp/node.rb#4134
   def child_nodes; end
 
-  # def copy: (**params) -> InstanceVariableTargetNode
+  # def comment_targets: () -> Array[Node | Location]
   #
   # source://yarp//lib/yarp/node.rb#4139
+  def comment_targets; end
+
+  # def copy: (**params) -> FlipFlopNode
+  #
+  # source://yarp//lib/yarp/node.rb#4144
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
@@ -5501,12 +4915,1474 @@ class YARP::InstanceVariableTargetNode < ::YARP::Node
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4150
+  # source://yarp//lib/yarp/node.rb#4158
   def deconstruct_keys(keys); end
+
+  # def exclude_end?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/node.rb#4168
+  def exclude_end?; end
+
+  # attr_reader flags: Integer
+  #
+  # source://yarp//lib/yarp/node.rb#4117
+  def flags; end
+
+  # source://yarp//lib/yarp/node.rb#4172
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader left: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#4108
+  def left; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4163
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4114
+  def operator_loc; end
+
+  # attr_reader right: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#4111
+  def right; end
+end
+
+# Represents a floating point number literal.
+#
+#     1.0
+#     ^^^
+#
+# source://yarp//lib/yarp.rb#392
+class YARP::FloatNode < ::YARP::Node
+  # def initialize: (location: Location) -> void
+  #
+  # @return [FloatNode] a new instance of FloatNode
+  #
+  # source://yarp//lib/yarp/node.rb#4198
+  def initialize(location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4203
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4208
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4213
+  def comment_targets; end
+
+  # def copy: (**params) -> FloatNode
+  #
+  # source://yarp//lib/yarp/node.rb#4218
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4208
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4228
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4232
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # source://yarp//lib/yarp.rb#393
+  def value; end
+end
+
+# Represents the use of the `for` keyword.
+#
+#     for i in a end
+#     ^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4242
+class YARP::ForNode < ::YARP::Node
+  # def initialize: (index: Node, collection: Node, statements: StatementsNode?, for_keyword_loc: Location, in_keyword_loc: Location, do_keyword_loc: Location?, end_keyword_loc: Location, location: Location) -> void
+  #
+  # @return [ForNode] a new instance of ForNode
+  #
+  # source://yarp//lib/yarp/node.rb#4265
+  def initialize(index, collection, statements, for_keyword_loc, in_keyword_loc, do_keyword_loc, end_keyword_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4277
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4282
+  def child_nodes; end
+
+  # attr_reader collection: Node
+  #
+  # source://yarp//lib/yarp/node.rb#4247
+  def collection; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4287
+  def comment_targets; end
+
+  # def copy: (**params) -> ForNode
+  #
+  # source://yarp//lib/yarp/node.rb#4292
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4282
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4309
+  def deconstruct_keys(keys); end
+
+  # def do_keyword: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#4324
+  def do_keyword; end
+
+  # attr_reader do_keyword_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#4259
+  def do_keyword_loc; end
+
+  # def end_keyword: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4329
+  def end_keyword; end
+
+  # attr_reader end_keyword_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4262
+  def end_keyword_loc; end
+
+  # def for_keyword: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4314
+  def for_keyword; end
+
+  # attr_reader for_keyword_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4253
+  def for_keyword_loc; end
+
+  # def in_keyword: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4319
+  def in_keyword; end
+
+  # attr_reader in_keyword_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4256
+  def in_keyword_loc; end
+
+  # attr_reader index: Node
+  #
+  # source://yarp//lib/yarp/node.rb#4244
+  def index; end
+
+  # source://yarp//lib/yarp/node.rb#4333
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader statements: StatementsNode?
+  #
+  # source://yarp//lib/yarp/node.rb#4250
+  def statements; end
+end
+
+# Represents forwarding all arguments to this method to another method.
+#
+#     def foo(...)
+#       bar(...)
+#       ^^^^^^^^
+#     end
+#
+# source://yarp//lib/yarp/node.rb#4359
+class YARP::ForwardingArgumentsNode < ::YARP::Node
+  # def initialize: (location: Location) -> void
+  #
+  # @return [ForwardingArgumentsNode] a new instance of ForwardingArgumentsNode
+  #
+  # source://yarp//lib/yarp/node.rb#4361
+  def initialize(location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4366
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4371
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4376
+  def comment_targets; end
+
+  # def copy: (**params) -> ForwardingArgumentsNode
+  #
+  # source://yarp//lib/yarp/node.rb#4381
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4371
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4391
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4395
+  def inspect(inspector = T.unsafe(nil)); end
+end
+
+# Represents the use of the forwarding parameter in a method, block, or lambda declaration.
+#
+#     def foo(...)
+#             ^^^
+#     end
+#
+# source://yarp//lib/yarp/node.rb#4406
+class YARP::ForwardingParameterNode < ::YARP::Node
+  # def initialize: (location: Location) -> void
+  #
+  # @return [ForwardingParameterNode] a new instance of ForwardingParameterNode
+  #
+  # source://yarp//lib/yarp/node.rb#4408
+  def initialize(location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4413
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4418
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4423
+  def comment_targets; end
+
+  # def copy: (**params) -> ForwardingParameterNode
+  #
+  # source://yarp//lib/yarp/node.rb#4428
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4418
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4438
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4442
+  def inspect(inspector = T.unsafe(nil)); end
+end
+
+# Represents the use of the `super` keyword without parentheses or arguments.
+#
+#     super
+#     ^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4452
+class YARP::ForwardingSuperNode < ::YARP::Node
+  # def initialize: (block: BlockNode?, location: Location) -> void
+  #
+  # @return [ForwardingSuperNode] a new instance of ForwardingSuperNode
+  #
+  # source://yarp//lib/yarp/node.rb#4457
+  def initialize(block, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4463
+  def accept(visitor); end
+
+  # attr_reader block: BlockNode?
+  #
+  # source://yarp//lib/yarp/node.rb#4454
+  def block; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4468
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4473
+  def comment_targets; end
+
+  # def copy: (**params) -> ForwardingSuperNode
+  #
+  # source://yarp//lib/yarp/node.rb#4478
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4468
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4489
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4493
+  def inspect(inspector = T.unsafe(nil)); end
+end
+
+# Represents the use of the `&&=` operator for assignment to a global variable.
+#
+#     $target &&= value
+#     ^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4509
+class YARP::GlobalVariableAndWriteNode < ::YARP::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [GlobalVariableAndWriteNode] a new instance of GlobalVariableAndWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4523
+  def initialize(name, name_loc, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4532
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4537
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4542
+  def comment_targets; end
+
+  # def copy: (**params) -> GlobalVariableAndWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4547
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4537
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4561
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4570
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#4120
+  # source://yarp//lib/yarp/node.rb#4511
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4514
+  def name_loc; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4566
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4517
+  def operator_loc; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#4520
+  def value; end
+end
+
+# Represents assigning to a global variable using an operator that isn't `=`.
+#
+#     $target += value
+#     ^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4585
+class YARP::GlobalVariableOperatorWriteNode < ::YARP::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
+  #
+  # @return [GlobalVariableOperatorWriteNode] a new instance of GlobalVariableOperatorWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4602
+  def initialize(name, name_loc, operator_loc, value, operator, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4612
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4617
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4622
+  def comment_targets; end
+
+  # def copy: (**params) -> GlobalVariableOperatorWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4627
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4617
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4642
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4646
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#4587
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4590
+  def name_loc; end
+
+  # attr_reader operator: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#4599
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4593
+  def operator_loc; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#4596
+  def value; end
+end
+
+# Represents the use of the `||=` operator for assignment to a global variable.
+#
+#     $target ||= value
+#     ^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4662
+class YARP::GlobalVariableOrWriteNode < ::YARP::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [GlobalVariableOrWriteNode] a new instance of GlobalVariableOrWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4676
+  def initialize(name, name_loc, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4685
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4690
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4695
+  def comment_targets; end
+
+  # def copy: (**params) -> GlobalVariableOrWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4700
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4690
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4714
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4723
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#4664
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4667
+  def name_loc; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4719
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4670
+  def operator_loc; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#4673
+  def value; end
+end
+
+# Represents referencing a global variable.
+#
+#     $foo
+#     ^^^^
+#
+# source://yarp//lib/yarp/node.rb#4738
+class YARP::GlobalVariableReadNode < ::YARP::Node
+  # def initialize: (name: Symbol, location: Location) -> void
+  #
+  # @return [GlobalVariableReadNode] a new instance of GlobalVariableReadNode
+  #
+  # source://yarp//lib/yarp/node.rb#4743
+  def initialize(name, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4749
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4754
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4759
+  def comment_targets; end
+
+  # def copy: (**params) -> GlobalVariableReadNode
+  #
+  # source://yarp//lib/yarp/node.rb#4764
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4754
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4775
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4779
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#4740
+  def name; end
+end
+
+# Represents writing to a global variable in a context that doesn't have an explicit value.
+#
+#     $foo, $bar = baz
+#     ^^^^  ^^^^
+#
+# source://yarp//lib/yarp/node.rb#4790
+class YARP::GlobalVariableTargetNode < ::YARP::Node
+  # def initialize: (name: Symbol, location: Location) -> void
+  #
+  # @return [GlobalVariableTargetNode] a new instance of GlobalVariableTargetNode
+  #
+  # source://yarp//lib/yarp/node.rb#4795
+  def initialize(name, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4801
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4806
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4811
+  def comment_targets; end
+
+  # def copy: (**params) -> GlobalVariableTargetNode
+  #
+  # source://yarp//lib/yarp/node.rb#4816
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4806
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4827
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4831
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#4792
+  def name; end
+end
+
+# Represents writing to a global variable.
+#
+#     $foo = 1
+#     ^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4842
+class YARP::GlobalVariableWriteNode < ::YARP::Node
+  # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
+  #
+  # @return [GlobalVariableWriteNode] a new instance of GlobalVariableWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4856
+  def initialize(name, name_loc, value, operator_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4865
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4870
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4875
+  def comment_targets; end
+
+  # def copy: (**params) -> GlobalVariableWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#4880
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4870
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4894
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#4903
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#4844
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4847
+  def name_loc; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4899
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4853
+  def operator_loc; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#4850
+  def value; end
+end
+
+# Represents a hash literal.
+#
+#     { a => b }
+#     ^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4918
+class YARP::HashNode < ::YARP::Node
+  # def initialize: (opening_loc: Location, elements: Array[Node], closing_loc: Location, location: Location) -> void
+  #
+  # @return [HashNode] a new instance of HashNode
+  #
+  # source://yarp//lib/yarp/node.rb#4929
+  def initialize(opening_loc, elements, closing_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#4937
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4942
+  def child_nodes; end
+
+  # def closing: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4975
+  def closing; end
+
+  # attr_reader closing_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4926
+  def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4947
+  def comment_targets; end
+
+  # def copy: (**params) -> HashNode
+  #
+  # source://yarp//lib/yarp/node.rb#4952
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4942
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#4965
+  def deconstruct_keys(keys); end
+
+  # attr_reader elements: Array[Node]
+  #
+  # source://yarp//lib/yarp/node.rb#4923
+  def elements; end
+
+  # source://yarp//lib/yarp/node.rb#4979
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def opening: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#4970
+  def opening; end
+
+  # attr_reader opening_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#4920
+  def opening_loc; end
+end
+
+# Represents a hash pattern in pattern matching.
+#
+#     foo => { a: 1, b: 2 }
+#            ^^^^^^^^^^^^^^
+#
+#     foo => { a: 1, b: 2, **c }
+#            ^^^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#4995
+class YARP::HashPatternNode < ::YARP::Node
+  # def initialize: (constant: Node?, assocs: Array[Node], kwrest: Node?, opening_loc: Location?, closing_loc: Location?, location: Location) -> void
+  #
+  # @return [HashPatternNode] a new instance of HashPatternNode
+  #
+  # source://yarp//lib/yarp/node.rb#5012
+  def initialize(constant, assocs, kwrest, opening_loc, closing_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5022
+  def accept(visitor); end
+
+  # attr_reader assocs: Array[Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5000
+  def assocs; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5027
+  def child_nodes; end
+
+  # def closing: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#5062
+  def closing; end
+
+  # attr_reader closing_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#5009
+  def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5032
+  def comment_targets; end
+
+  # attr_reader constant: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#4997
+  def constant; end
+
+  # def copy: (**params) -> HashPatternNode
+  #
+  # source://yarp//lib/yarp/node.rb#5037
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5027
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5052
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5066
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader kwrest: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#5003
+  def kwrest; end
+
+  # def opening: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#5057
+  def opening; end
+
+  # attr_reader opening_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#5006
+  def opening_loc; end
+end
+
+# Represents the use of the `if` keyword, either in the block form or the modifier form.
+#
+#     bar if foo
+#     ^^^^^^^^^^
+#
+#     if foo then bar end
+#     ^^^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#5094
+class YARP::IfNode < ::YARP::Node
+  # def initialize: (if_keyword_loc: Location?, predicate: Node, statements: StatementsNode?, consequent: Node?, end_keyword_loc: Location?, location: Location) -> void
+  #
+  # @return [IfNode] a new instance of IfNode
+  #
+  # source://yarp//lib/yarp/node.rb#5111
+  def initialize(if_keyword_loc, predicate, statements, consequent, end_keyword_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5121
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5130
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5135
+  def comment_targets; end
+
+  # attr_reader consequent: Node?
+  #
+  # source://yarp//lib/yarp/node.rb#5105
+  def consequent; end
+
+  # def copy: (**params) -> IfNode
+  #
+  # source://yarp//lib/yarp/node.rb#5140
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5130
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5155
+  def deconstruct_keys(keys); end
+
+  # def end_keyword: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#5165
+  def end_keyword; end
+
+  # attr_reader end_keyword_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#5108
+  def end_keyword_loc; end
+
+  # def if_keyword: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#5160
+  def if_keyword; end
+
+  # attr_reader if_keyword_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#5096
+  def if_keyword_loc; end
+
+  # source://yarp//lib/yarp/node.rb#5169
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader predicate: Node
+  #
+  # source://yarp//lib/yarp/node.rb#5099
+  def predicate; end
+
+  # source://yarp//lib/yarp/node.rb#5125
+  def set_newline_flag(newline_marked); end
+
+  # attr_reader statements: StatementsNode?
+  #
+  # source://yarp//lib/yarp/node.rb#5102
+  def statements; end
+end
+
+# Represents an imaginary number literal.
+#
+#     1.0i
+#     ^^^^
+#
+# source://yarp//lib/yarp.rb#398
+class YARP::ImaginaryNode < ::YARP::Node
+  # def initialize: (numeric: Node, location: Location) -> void
+  #
+  # @return [ImaginaryNode] a new instance of ImaginaryNode
+  #
+  # source://yarp//lib/yarp/node.rb#5200
+  def initialize(numeric, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5206
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5211
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5216
+  def comment_targets; end
+
+  # def copy: (**params) -> ImaginaryNode
+  #
+  # source://yarp//lib/yarp/node.rb#5221
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5211
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5232
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5236
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader numeric: Node
+  #
+  # source://yarp//lib/yarp/node.rb#5197
+  def numeric; end
+
+  # source://yarp//lib/yarp.rb#399
+  def value; end
+end
+
+# Represents the use of the `in` keyword in a case statement.
+#
+#     case a; in b then c end
+#             ^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#5248
+class YARP::InNode < ::YARP::Node
+  # def initialize: (pattern: Node, statements: StatementsNode?, in_loc: Location, then_loc: Location?, location: Location) -> void
+  #
+  # @return [InNode] a new instance of InNode
+  #
+  # source://yarp//lib/yarp/node.rb#5262
+  def initialize(pattern, statements, in_loc, then_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5271
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5276
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5281
+  def comment_targets; end
+
+  # def copy: (**params) -> InNode
+  #
+  # source://yarp//lib/yarp/node.rb#5286
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5276
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5300
+  def deconstruct_keys(keys); end
+
+  # def in: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#5305
+  def in; end
+
+  # attr_reader in_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#5256
+  def in_loc; end
+
+  # source://yarp//lib/yarp/node.rb#5314
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader pattern: Node
+  #
+  # source://yarp//lib/yarp/node.rb#5250
+  def pattern; end
+
+  # attr_reader statements: StatementsNode?
+  #
+  # source://yarp//lib/yarp/node.rb#5253
+  def statements; end
+
+  # def then: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#5310
+  def then; end
+
+  # attr_reader then_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#5259
+  def then_loc; end
+end
+
+# Represents the use of the `&&=` operator for assignment to an instance variable.
+#
+#     @target &&= value
+#     ^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#5334
+class YARP::InstanceVariableAndWriteNode < ::YARP::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [InstanceVariableAndWriteNode] a new instance of InstanceVariableAndWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#5348
+  def initialize(name, name_loc, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5357
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5362
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5367
+  def comment_targets; end
+
+  # def copy: (**params) -> InstanceVariableAndWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#5372
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5362
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5386
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5395
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#5336
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#5339
+  def name_loc; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#5391
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#5342
+  def operator_loc; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#5345
+  def value; end
+end
+
+# Represents assigning to an instance variable using an operator that isn't `=`.
+#
+#     @target += value
+#     ^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#5410
+class YARP::InstanceVariableOperatorWriteNode < ::YARP::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
+  #
+  # @return [InstanceVariableOperatorWriteNode] a new instance of InstanceVariableOperatorWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#5427
+  def initialize(name, name_loc, operator_loc, value, operator, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5437
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5442
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5447
+  def comment_targets; end
+
+  # def copy: (**params) -> InstanceVariableOperatorWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#5452
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5442
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5467
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5471
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#5412
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#5415
+  def name_loc; end
+
+  # attr_reader operator: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#5424
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#5418
+  def operator_loc; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#5421
+  def value; end
+end
+
+# Represents the use of the `||=` operator for assignment to an instance variable.
+#
+#     @target ||= value
+#     ^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#5487
+class YARP::InstanceVariableOrWriteNode < ::YARP::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [InstanceVariableOrWriteNode] a new instance of InstanceVariableOrWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#5501
+  def initialize(name, name_loc, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5510
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5515
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5520
+  def comment_targets; end
+
+  # def copy: (**params) -> InstanceVariableOrWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#5525
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5515
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5539
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5548
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#5489
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#5492
+  def name_loc; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#5544
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#5495
+  def operator_loc; end
+
+  # attr_reader value: Node
+  #
+  # source://yarp//lib/yarp/node.rb#5498
+  def value; end
+end
+
+# Represents referencing an instance variable.
+#
+#     @foo
+#     ^^^^
+#
+# source://yarp//lib/yarp/node.rb#5563
+class YARP::InstanceVariableReadNode < ::YARP::Node
+  # def initialize: (name: Symbol, location: Location) -> void
+  #
+  # @return [InstanceVariableReadNode] a new instance of InstanceVariableReadNode
+  #
+  # source://yarp//lib/yarp/node.rb#5568
+  def initialize(name, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5574
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5579
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5584
+  def comment_targets; end
+
+  # def copy: (**params) -> InstanceVariableReadNode
+  #
+  # source://yarp//lib/yarp/node.rb#5589
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5579
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5600
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5604
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#5565
+  def name; end
+end
+
+# Represents writing to an instance variable in a context that doesn't have an explicit value.
+#
+#     @foo, @bar = baz
+#     ^^^^  ^^^^
+#
+# source://yarp//lib/yarp/node.rb#5615
+class YARP::InstanceVariableTargetNode < ::YARP::Node
+  # def initialize: (name: Symbol, location: Location) -> void
+  #
+  # @return [InstanceVariableTargetNode] a new instance of InstanceVariableTargetNode
+  #
+  # source://yarp//lib/yarp/node.rb#5620
+  def initialize(name, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#5626
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5631
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5636
+  def comment_targets; end
+
+  # def copy: (**params) -> InstanceVariableTargetNode
+  #
+  # source://yarp//lib/yarp/node.rb#5641
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#5631
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5652
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5656
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://yarp//lib/yarp/node.rb#5617
   def name; end
 end
 
@@ -5515,64 +6391,72 @@ end
 #     @foo = 1
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4159
+# source://yarp//lib/yarp/node.rb#5667
 class YARP::InstanceVariableWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [InstanceVariableWriteNode] a new instance of InstanceVariableWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4173
+  # source://yarp//lib/yarp/node.rb#5681
   def initialize(name, name_loc, value, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4182
+  # source://yarp//lib/yarp/node.rb#5690
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4187
+  # source://yarp//lib/yarp/node.rb#5695
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5700
+  def comment_targets; end
 
   # def copy: (**params) -> InstanceVariableWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4192
+  # source://yarp//lib/yarp/node.rb#5705
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4187
+  # source://yarp//lib/yarp/node.rb#5695
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4206
+  # source://yarp//lib/yarp/node.rb#5719
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5728
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#4161
+  # source://yarp//lib/yarp/node.rb#5669
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4164
+  # source://yarp//lib/yarp/node.rb#5672
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4211
+  # source://yarp//lib/yarp/node.rb#5724
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4170
+  # source://yarp//lib/yarp/node.rb#5678
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#4167
+  # source://yarp//lib/yarp/node.rb#5675
   def value; end
 end
 
@@ -5581,42 +6465,50 @@ end
 #     1
 #     ^
 #
-# source://yarp//lib/yarp.rb#348
+# source://yarp//lib/yarp.rb#404
 class YARP::IntegerNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [IntegerNode] a new instance of IntegerNode
   #
-  # source://yarp//lib/yarp/node.rb#4222
+  # source://yarp//lib/yarp/node.rb#5745
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4227
+  # source://yarp//lib/yarp/node.rb#5750
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4232
+  # source://yarp//lib/yarp/node.rb#5755
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5760
+  def comment_targets; end
 
   # def copy: (**params) -> IntegerNode
   #
-  # source://yarp//lib/yarp/node.rb#4237
+  # source://yarp//lib/yarp/node.rb#5765
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4232
+  # source://yarp//lib/yarp/node.rb#5755
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4247
+  # source://yarp//lib/yarp/node.rb#5775
   def deconstruct_keys(keys); end
 
-  # source://yarp//lib/yarp.rb#349
+  # source://yarp//lib/yarp/node.rb#5779
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # source://yarp//lib/yarp.rb#405
   def value; end
 end
 
@@ -5625,128 +6517,136 @@ end
 #     /foo #{bar} baz/
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4256
+# source://yarp//lib/yarp/node.rb#5789
 class YARP::InterpolatedRegularExpressionNode < ::YARP::Node
   # def initialize: (opening_loc: Location, parts: Array[Node], closing_loc: Location, flags: Integer, location: Location) -> void
   #
   # @return [InterpolatedRegularExpressionNode] a new instance of InterpolatedRegularExpressionNode
   #
-  # source://yarp//lib/yarp/node.rb#4270
+  # source://yarp//lib/yarp/node.rb#5803
   def initialize(opening_loc, parts, closing_loc, flags, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4279
+  # source://yarp//lib/yarp/node.rb#5812
   def accept(visitor); end
 
   # def ascii_8bit?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4343
+  # source://yarp//lib/yarp/node.rb#5881
   def ascii_8bit?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4289
+  # source://yarp//lib/yarp/node.rb#5822
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4318
+  # source://yarp//lib/yarp/node.rb#5856
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4264
+  # source://yarp//lib/yarp/node.rb#5797
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5827
+  def comment_targets; end
 
   # def copy: (**params) -> InterpolatedRegularExpressionNode
   #
-  # source://yarp//lib/yarp/node.rb#4294
+  # source://yarp//lib/yarp/node.rb#5832
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4289
+  # source://yarp//lib/yarp/node.rb#5822
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4308
+  # source://yarp//lib/yarp/node.rb#5846
   def deconstruct_keys(keys); end
 
   # def euc_jp?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4338
+  # source://yarp//lib/yarp/node.rb#5876
   def euc_jp?; end
 
   # def extended?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4333
+  # source://yarp//lib/yarp/node.rb#5871
   def extended?; end
 
   # attr_reader flags: Integer
   #
-  # source://yarp//lib/yarp/node.rb#4267
+  # source://yarp//lib/yarp/node.rb#5800
   def flags; end
 
   # def ignore_case?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4323
+  # source://yarp//lib/yarp/node.rb#5861
   def ignore_case?; end
+
+  # source://yarp//lib/yarp/node.rb#5900
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def multi_line?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4328
+  # source://yarp//lib/yarp/node.rb#5866
   def multi_line?; end
 
   # def once?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4358
+  # source://yarp//lib/yarp/node.rb#5896
   def once?; end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4313
+  # source://yarp//lib/yarp/node.rb#5851
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4258
+  # source://yarp//lib/yarp/node.rb#5791
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#4261
+  # source://yarp//lib/yarp/node.rb#5794
   def parts; end
 
-  # source://yarp//lib/yarp/node.rb#4283
+  # source://yarp//lib/yarp/node.rb#5816
   def set_newline_flag(newline_marked); end
 
   # def utf_8?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4353
+  # source://yarp//lib/yarp/node.rb#5891
   def utf_8?; end
 
   # def windows_31j?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#4348
+  # source://yarp//lib/yarp/node.rb#5886
   def windows_31j?; end
 end
 
@@ -5755,67 +6655,75 @@ end
 #     "foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4367
+# source://yarp//lib/yarp/node.rb#5914
 class YARP::InterpolatedStringNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, parts: Array[Node], closing_loc: Location?, location: Location) -> void
   #
   # @return [InterpolatedStringNode] a new instance of InterpolatedStringNode
   #
-  # source://yarp//lib/yarp/node.rb#4378
+  # source://yarp//lib/yarp/node.rb#5925
   def initialize(opening_loc, parts, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4386
+  # source://yarp//lib/yarp/node.rb#5933
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4396
+  # source://yarp//lib/yarp/node.rb#5943
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#4424
+  # source://yarp//lib/yarp/node.rb#5976
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#4375
+  # source://yarp//lib/yarp/node.rb#5922
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#5948
+  def comment_targets; end
 
   # def copy: (**params) -> InterpolatedStringNode
   #
-  # source://yarp//lib/yarp/node.rb#4401
+  # source://yarp//lib/yarp/node.rb#5953
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4396
+  # source://yarp//lib/yarp/node.rb#5943
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4414
+  # source://yarp//lib/yarp/node.rb#5966
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#5980
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#4419
+  # source://yarp//lib/yarp/node.rb#5971
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#4369
+  # source://yarp//lib/yarp/node.rb#5916
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#4372
+  # source://yarp//lib/yarp/node.rb#5919
   def parts; end
 
-  # source://yarp//lib/yarp/node.rb#4390
+  # source://yarp//lib/yarp/node.rb#5937
   def set_newline_flag(newline_marked); end
 end
 
@@ -5824,67 +6732,75 @@ end
 #     :"foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4433
+# source://yarp//lib/yarp/node.rb#5993
 class YARP::InterpolatedSymbolNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, parts: Array[Node], closing_loc: Location?, location: Location) -> void
   #
   # @return [InterpolatedSymbolNode] a new instance of InterpolatedSymbolNode
   #
-  # source://yarp//lib/yarp/node.rb#4444
+  # source://yarp//lib/yarp/node.rb#6004
   def initialize(opening_loc, parts, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4452
+  # source://yarp//lib/yarp/node.rb#6012
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4462
+  # source://yarp//lib/yarp/node.rb#6022
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#4490
+  # source://yarp//lib/yarp/node.rb#6055
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#4441
+  # source://yarp//lib/yarp/node.rb#6001
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6027
+  def comment_targets; end
 
   # def copy: (**params) -> InterpolatedSymbolNode
   #
-  # source://yarp//lib/yarp/node.rb#4467
+  # source://yarp//lib/yarp/node.rb#6032
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4462
+  # source://yarp//lib/yarp/node.rb#6022
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4480
+  # source://yarp//lib/yarp/node.rb#6045
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#6059
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#4485
+  # source://yarp//lib/yarp/node.rb#6050
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#4435
+  # source://yarp//lib/yarp/node.rb#5995
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#4438
+  # source://yarp//lib/yarp/node.rb#5998
   def parts; end
 
-  # source://yarp//lib/yarp/node.rb#4456
+  # source://yarp//lib/yarp/node.rb#6016
   def set_newline_flag(newline_marked); end
 end
 
@@ -5893,67 +6809,75 @@ end
 #     `foo #{bar} baz`
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4499
+# source://yarp//lib/yarp/node.rb#6072
 class YARP::InterpolatedXStringNode < ::YARP::Node
   # def initialize: (opening_loc: Location, parts: Array[Node], closing_loc: Location, location: Location) -> void
   #
   # @return [InterpolatedXStringNode] a new instance of InterpolatedXStringNode
   #
-  # source://yarp//lib/yarp/node.rb#4510
+  # source://yarp//lib/yarp/node.rb#6083
   def initialize(opening_loc, parts, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4518
+  # source://yarp//lib/yarp/node.rb#6091
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4528
+  # source://yarp//lib/yarp/node.rb#6101
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4556
+  # source://yarp//lib/yarp/node.rb#6134
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4507
+  # source://yarp//lib/yarp/node.rb#6080
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6106
+  def comment_targets; end
 
   # def copy: (**params) -> InterpolatedXStringNode
   #
-  # source://yarp//lib/yarp/node.rb#4533
+  # source://yarp//lib/yarp/node.rb#6111
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4528
+  # source://yarp//lib/yarp/node.rb#6101
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4546
+  # source://yarp//lib/yarp/node.rb#6124
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#6138
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4551
+  # source://yarp//lib/yarp/node.rb#6129
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4501
+  # source://yarp//lib/yarp/node.rb#6074
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#4504
+  # source://yarp//lib/yarp/node.rb#6077
   def parts; end
 
-  # source://yarp//lib/yarp/node.rb#4522
+  # source://yarp//lib/yarp/node.rb#6095
   def set_newline_flag(newline_marked); end
 end
 
@@ -5962,45 +6886,53 @@ end
 #     foo(a: b)
 #         ^^^^
 #
-# source://yarp//lib/yarp/node.rb#4565
+# source://yarp//lib/yarp/node.rb#6151
 class YARP::KeywordHashNode < ::YARP::Node
   # def initialize: (elements: Array[Node], location: Location) -> void
   #
   # @return [KeywordHashNode] a new instance of KeywordHashNode
   #
-  # source://yarp//lib/yarp/node.rb#4570
+  # source://yarp//lib/yarp/node.rb#6156
   def initialize(elements, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4576
+  # source://yarp//lib/yarp/node.rb#6162
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4581
+  # source://yarp//lib/yarp/node.rb#6167
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6172
+  def comment_targets; end
 
   # def copy: (**params) -> KeywordHashNode
   #
-  # source://yarp//lib/yarp/node.rb#4586
+  # source://yarp//lib/yarp/node.rb#6177
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4581
+  # source://yarp//lib/yarp/node.rb#6167
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4597
+  # source://yarp//lib/yarp/node.rb#6188
   def deconstruct_keys(keys); end
 
   # attr_reader elements: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#4567
+  # source://yarp//lib/yarp/node.rb#6153
   def elements; end
+
+  # source://yarp//lib/yarp/node.rb#6192
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents a keyword parameter to a method, block, or lambda definition.
@@ -6013,54 +6945,62 @@ end
 #           ^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#4611
+# source://yarp//lib/yarp/node.rb#6208
 class YARP::KeywordParameterNode < ::YARP::Node
-  # def initialize: (name_loc: Location, value: Node?, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, value: Node?, location: Location) -> void
   #
   # @return [KeywordParameterNode] a new instance of KeywordParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#4619
-  def initialize(name_loc, value, location); end
+  # source://yarp//lib/yarp/node.rb#6219
+  def initialize(name, name_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4626
+  # source://yarp//lib/yarp/node.rb#6227
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4631
+  # source://yarp//lib/yarp/node.rb#6232
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6237
+  def comment_targets; end
 
   # def copy: (**params) -> KeywordParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#4636
+  # source://yarp//lib/yarp/node.rb#6242
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4631
+  # source://yarp//lib/yarp/node.rb#6232
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4648
+  # source://yarp//lib/yarp/node.rb#6255
   def deconstruct_keys(keys); end
 
-  # def name: () -> String
+  # source://yarp//lib/yarp/node.rb#6259
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#4653
+  # source://yarp//lib/yarp/node.rb#6210
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4613
+  # source://yarp//lib/yarp/node.rb#6213
   def name_loc; end
 
   # attr_reader value: Node?
   #
-  # source://yarp//lib/yarp/node.rb#4616
+  # source://yarp//lib/yarp/node.rb#6216
   def value; end
 end
 
@@ -6070,59 +7010,67 @@ end
 #           ^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#4663
+# source://yarp//lib/yarp/node.rb#6278
 class YARP::KeywordRestParameterNode < ::YARP::Node
-  # def initialize: (operator_loc: Location, name_loc: Location?, location: Location) -> void
+  # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
   # @return [KeywordRestParameterNode] a new instance of KeywordRestParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#4671
-  def initialize(operator_loc, name_loc, location); end
+  # source://yarp//lib/yarp/node.rb#6289
+  def initialize(name, name_loc, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4678
+  # source://yarp//lib/yarp/node.rb#6297
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4683
+  # source://yarp//lib/yarp/node.rb#6302
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6307
+  def comment_targets; end
 
   # def copy: (**params) -> KeywordRestParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#4688
+  # source://yarp//lib/yarp/node.rb#6312
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4683
+  # source://yarp//lib/yarp/node.rb#6302
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4700
+  # source://yarp//lib/yarp/node.rb#6325
   def deconstruct_keys(keys); end
 
-  # def name: () -> String?
+  # source://yarp//lib/yarp/node.rb#6334
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol?
   #
-  # source://yarp//lib/yarp/node.rb#4710
+  # source://yarp//lib/yarp/node.rb#6280
   def name; end
 
   # attr_reader name_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#4668
+  # source://yarp//lib/yarp/node.rb#6283
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4705
+  # source://yarp//lib/yarp/node.rb#6330
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4665
+  # source://yarp//lib/yarp/node.rb#6286
   def operator_loc; end
 end
 
@@ -6131,84 +7079,92 @@ end
 #     ->(value) { value * 2 }
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4719
+# source://yarp//lib/yarp/node.rb#6347
 class YARP::LambdaNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], operator_loc: Location, opening_loc: Location, closing_loc: Location, parameters: BlockParametersNode?, body: Node?, location: Location) -> void
   #
   # @return [LambdaNode] a new instance of LambdaNode
   #
-  # source://yarp//lib/yarp/node.rb#4739
+  # source://yarp//lib/yarp/node.rb#6367
   def initialize(locals, operator_loc, opening_loc, closing_loc, parameters, body, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4750
+  # source://yarp//lib/yarp/node.rb#6378
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://yarp//lib/yarp/node.rb#4736
+  # source://yarp//lib/yarp/node.rb#6364
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4755
+  # source://yarp//lib/yarp/node.rb#6383
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4791
+  # source://yarp//lib/yarp/node.rb#6424
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4730
+  # source://yarp//lib/yarp/node.rb#6358
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6388
+  def comment_targets; end
 
   # def copy: (**params) -> LambdaNode
   #
-  # source://yarp//lib/yarp/node.rb#4760
+  # source://yarp//lib/yarp/node.rb#6393
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4755
+  # source://yarp//lib/yarp/node.rb#6383
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4776
+  # source://yarp//lib/yarp/node.rb#6409
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#6428
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://yarp//lib/yarp/node.rb#4721
+  # source://yarp//lib/yarp/node.rb#6349
   def locals; end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4786
+  # source://yarp//lib/yarp/node.rb#6419
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4727
+  # source://yarp//lib/yarp/node.rb#6355
   def opening_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4781
+  # source://yarp//lib/yarp/node.rb#6414
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4724
+  # source://yarp//lib/yarp/node.rb#6352
   def operator_loc; end
 
   # attr_reader parameters: BlockParametersNode?
   #
-  # source://yarp//lib/yarp/node.rb#4733
+  # source://yarp//lib/yarp/node.rb#6361
   def parameters; end
 end
 
@@ -6442,69 +7398,77 @@ end
 #     target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4800
+# source://yarp//lib/yarp/node.rb#6454
 class YARP::LocalVariableAndWriteNode < ::YARP::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableAndWriteNode] a new instance of LocalVariableAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4817
+  # source://yarp//lib/yarp/node.rb#6471
   def initialize(name_loc, operator_loc, value, name, depth, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4827
+  # source://yarp//lib/yarp/node.rb#6481
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4832
+  # source://yarp//lib/yarp/node.rb#6486
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6491
+  def comment_targets; end
 
   # def copy: (**params) -> LocalVariableAndWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4837
+  # source://yarp//lib/yarp/node.rb#6496
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4832
+  # source://yarp//lib/yarp/node.rb#6486
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4852
+  # source://yarp//lib/yarp/node.rb#6511
   def deconstruct_keys(keys); end
 
   # attr_reader depth: Integer
   #
-  # source://yarp//lib/yarp/node.rb#4814
+  # source://yarp//lib/yarp/node.rb#6468
   def depth; end
+
+  # source://yarp//lib/yarp/node.rb#6520
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#4811
+  # source://yarp//lib/yarp/node.rb#6465
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4802
+  # source://yarp//lib/yarp/node.rb#6456
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4857
+  # source://yarp//lib/yarp/node.rb#6516
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4805
+  # source://yarp//lib/yarp/node.rb#6459
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#4808
+  # source://yarp//lib/yarp/node.rb#6462
   def value; end
 end
 
@@ -6513,69 +7477,77 @@ end
 #     target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4866
+# source://yarp//lib/yarp/node.rb#6536
 class YARP::LocalVariableOperatorWriteNode < ::YARP::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, operator: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableOperatorWriteNode] a new instance of LocalVariableOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4886
+  # source://yarp//lib/yarp/node.rb#6556
   def initialize(name_loc, operator_loc, value, name, operator, depth, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4897
+  # source://yarp//lib/yarp/node.rb#6567
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4902
+  # source://yarp//lib/yarp/node.rb#6572
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6577
+  def comment_targets; end
 
   # def copy: (**params) -> LocalVariableOperatorWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4907
+  # source://yarp//lib/yarp/node.rb#6582
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4902
+  # source://yarp//lib/yarp/node.rb#6572
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4923
+  # source://yarp//lib/yarp/node.rb#6598
   def deconstruct_keys(keys); end
 
   # attr_reader depth: Integer
   #
-  # source://yarp//lib/yarp/node.rb#4883
+  # source://yarp//lib/yarp/node.rb#6553
   def depth; end
+
+  # source://yarp//lib/yarp/node.rb#6602
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#4877
+  # source://yarp//lib/yarp/node.rb#6547
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4868
+  # source://yarp//lib/yarp/node.rb#6538
   def name_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#4880
+  # source://yarp//lib/yarp/node.rb#6550
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4871
+  # source://yarp//lib/yarp/node.rb#6541
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#4874
+  # source://yarp//lib/yarp/node.rb#6544
   def value; end
 end
 
@@ -6584,69 +7556,77 @@ end
 #     target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4932
+# source://yarp//lib/yarp/node.rb#6619
 class YARP::LocalVariableOrWriteNode < ::YARP::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableOrWriteNode] a new instance of LocalVariableOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4949
+  # source://yarp//lib/yarp/node.rb#6636
   def initialize(name_loc, operator_loc, value, name, depth, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#4959
+  # source://yarp//lib/yarp/node.rb#6646
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4964
+  # source://yarp//lib/yarp/node.rb#6651
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6656
+  def comment_targets; end
 
   # def copy: (**params) -> LocalVariableOrWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#4969
+  # source://yarp//lib/yarp/node.rb#6661
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#4964
+  # source://yarp//lib/yarp/node.rb#6651
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#4984
+  # source://yarp//lib/yarp/node.rb#6676
   def deconstruct_keys(keys); end
 
   # attr_reader depth: Integer
   #
-  # source://yarp//lib/yarp/node.rb#4946
+  # source://yarp//lib/yarp/node.rb#6633
   def depth; end
+
+  # source://yarp//lib/yarp/node.rb#6685
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#4943
+  # source://yarp//lib/yarp/node.rb#6630
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4934
+  # source://yarp//lib/yarp/node.rb#6621
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#4989
+  # source://yarp//lib/yarp/node.rb#6681
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#4937
+  # source://yarp//lib/yarp/node.rb#6624
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#4940
+  # source://yarp//lib/yarp/node.rb#6627
   def value; end
 end
 
@@ -6657,49 +7637,57 @@ end
 #     foo
 #     ^^^
 #
-# source://yarp//lib/yarp/node.rb#5000
+# source://yarp//lib/yarp/node.rb#6703
 class YARP::LocalVariableReadNode < ::YARP::Node
   # def initialize: (name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableReadNode] a new instance of LocalVariableReadNode
   #
-  # source://yarp//lib/yarp/node.rb#5008
+  # source://yarp//lib/yarp/node.rb#6711
   def initialize(name, depth, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5015
+  # source://yarp//lib/yarp/node.rb#6718
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5020
+  # source://yarp//lib/yarp/node.rb#6723
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6728
+  def comment_targets; end
 
   # def copy: (**params) -> LocalVariableReadNode
   #
-  # source://yarp//lib/yarp/node.rb#5025
+  # source://yarp//lib/yarp/node.rb#6733
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5020
+  # source://yarp//lib/yarp/node.rb#6723
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5037
+  # source://yarp//lib/yarp/node.rb#6745
   def deconstruct_keys(keys); end
 
   # attr_reader depth: Integer
   #
-  # source://yarp//lib/yarp/node.rb#5005
+  # source://yarp//lib/yarp/node.rb#6708
   def depth; end
+
+  # source://yarp//lib/yarp/node.rb#6749
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#5002
+  # source://yarp//lib/yarp/node.rb#6705
   def name; end
 end
 
@@ -6708,49 +7696,57 @@ end
 #     foo, bar = baz
 #     ^^^  ^^^
 #
-# source://yarp//lib/yarp/node.rb#5046
+# source://yarp//lib/yarp/node.rb#6761
 class YARP::LocalVariableTargetNode < ::YARP::Node
   # def initialize: (name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableTargetNode] a new instance of LocalVariableTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#5054
+  # source://yarp//lib/yarp/node.rb#6769
   def initialize(name, depth, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5061
+  # source://yarp//lib/yarp/node.rb#6776
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5066
+  # source://yarp//lib/yarp/node.rb#6781
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6786
+  def comment_targets; end
 
   # def copy: (**params) -> LocalVariableTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#5071
+  # source://yarp//lib/yarp/node.rb#6791
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5066
+  # source://yarp//lib/yarp/node.rb#6781
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5083
+  # source://yarp//lib/yarp/node.rb#6803
   def deconstruct_keys(keys); end
 
   # attr_reader depth: Integer
   #
-  # source://yarp//lib/yarp/node.rb#5051
+  # source://yarp//lib/yarp/node.rb#6766
   def depth; end
+
+  # source://yarp//lib/yarp/node.rb#6807
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#5048
+  # source://yarp//lib/yarp/node.rb#6763
   def name; end
 end
 
@@ -6759,169 +7755,187 @@ end
 #     foo = 1
 #     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5092
+# source://yarp//lib/yarp/node.rb#6819
 class YARP::LocalVariableWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, depth: Integer, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [LocalVariableWriteNode] a new instance of LocalVariableWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#5109
+  # source://yarp//lib/yarp/node.rb#6836
   def initialize(name, depth, name_loc, value, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5119
+  # source://yarp//lib/yarp/node.rb#6846
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5124
+  # source://yarp//lib/yarp/node.rb#6851
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6856
+  def comment_targets; end
 
   # def copy: (**params) -> LocalVariableWriteNode
   #
-  # source://yarp//lib/yarp/node.rb#5129
+  # source://yarp//lib/yarp/node.rb#6861
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5124
+  # source://yarp//lib/yarp/node.rb#6851
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5144
+  # source://yarp//lib/yarp/node.rb#6876
   def deconstruct_keys(keys); end
 
   # attr_reader depth: Integer
   #
-  # source://yarp//lib/yarp/node.rb#5097
+  # source://yarp//lib/yarp/node.rb#6824
   def depth; end
+
+  # source://yarp//lib/yarp/node.rb#6885
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#5094
+  # source://yarp//lib/yarp/node.rb#6821
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5100
+  # source://yarp//lib/yarp/node.rb#6827
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5149
+  # source://yarp//lib/yarp/node.rb#6881
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5106
+  # source://yarp//lib/yarp/node.rb#6833
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#5103
+  # source://yarp//lib/yarp/node.rb#6830
   def value; end
 end
 
 # This represents a location in the source.
 #
-# source://yarp//lib/yarp.rb#37
+# source://yarp//lib/yarp.rb#41
 class YARP::Location
   # @return [Location] a new instance of Location
   #
-  # source://yarp//lib/yarp.rb#49
+  # source://yarp//lib/yarp.rb#56
   def initialize(source, start_offset, length); end
 
-  # source://yarp//lib/yarp.rb#109
+  # source://yarp//lib/yarp.rb#123
   def ==(other); end
+
+  # The list of comments attached to this location
+  #
+  # source://yarp//lib/yarp.rb#54
+  def comments; end
 
   # Create a new location object with the given options.
   #
-  # source://yarp//lib/yarp.rb#56
+  # source://yarp//lib/yarp.rb#64
   def copy(**options); end
 
-  # source://yarp//lib/yarp.rb#101
+  # source://yarp//lib/yarp.rb#115
   def deconstruct_keys(keys); end
 
   # The column number in bytes where this location ends from the start of the
   # line.
   #
-  # source://yarp//lib/yarp.rb#97
+  # source://yarp//lib/yarp.rb#111
   def end_column; end
 
   # The line number where this location ends.
   #
-  # source://yarp//lib/yarp.rb#85
+  # source://yarp//lib/yarp.rb#99
   def end_line; end
 
   # The byte offset from the beginning of the source where this location ends.
   #
-  # source://yarp//lib/yarp.rb#75
+  # source://yarp//lib/yarp.rb#83
   def end_offset; end
 
   # Returns a string representation of this location.
   #
-  # source://yarp//lib/yarp.rb#65
+  # source://yarp//lib/yarp.rb#73
   def inspect; end
 
   # Returns a new location that stretches from this location to the given
   # other location. Raises an error if this location is not before the other
   # location or if they don't share the same source.
   #
-  # source://yarp//lib/yarp.rb#118
+  # source://yarp//lib/yarp.rb#132
   def join(other); end
 
   # The length of this location in bytes.
   #
-  # source://yarp//lib/yarp.rb#47
+  # source://yarp//lib/yarp.rb#51
   def length; end
 
-  # source://yarp//lib/yarp.rb#105
+  # source://yarp//lib/yarp.rb#119
   def pretty_print(q); end
 
   # The source code that this location represents.
   #
-  # source://yarp//lib/yarp.rb#70
+  # source://yarp//lib/yarp.rb#78
   def slice; end
 
   # The column number in bytes where this location starts from the start of
   # the line.
   #
-  # source://yarp//lib/yarp.rb#91
+  # source://yarp//lib/yarp.rb#105
   def start_column; end
 
   # The line number where this location starts.
   #
-  # source://yarp//lib/yarp.rb#80
+  # source://yarp//lib/yarp.rb#88
   def start_line; end
+
+  # The content of the line where this location starts before this location.
+  #
+  # source://yarp//lib/yarp.rb#93
+  def start_line_slice; end
 
   # The byte offset from the beginning of the source where this location
   # starts.
   #
-  # source://yarp//lib/yarp.rb#44
+  # source://yarp//lib/yarp.rb#48
   def start_offset; end
 
   protected
 
   # Returns the value of attribute source.
   #
-  # source://yarp//lib/yarp.rb#40
+  # source://yarp//lib/yarp.rb#44
   def source; end
 
   class << self
-    # source://yarp//lib/yarp.rb#125
+    # source://yarp//lib/yarp.rb#139
     def null; end
   end
 end
 
-# source://yarp//lib/yarp/node.rb#7991
+# source://yarp//lib/yarp/node.rb#10565
 module YARP::LoopFlags; end
 
 # a loop after a begin statement, so the body is executed first before the condition
 #
-# source://yarp//lib/yarp/node.rb#7993
+# source://yarp//lib/yarp/node.rb#10567
 YARP::LoopFlags::BEGIN_MODIFIER = T.let(T.unsafe(nil), Integer)
 
 # Represents the use of the modifier `in` operator.
@@ -6929,59 +7943,67 @@ YARP::LoopFlags::BEGIN_MODIFIER = T.let(T.unsafe(nil), Integer)
 #     foo in bar
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5158
+# source://yarp//lib/yarp/node.rb#6901
 class YARP::MatchPredicateNode < ::YARP::Node
   # def initialize: (value: Node, pattern: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [MatchPredicateNode] a new instance of MatchPredicateNode
   #
-  # source://yarp//lib/yarp/node.rb#5169
+  # source://yarp//lib/yarp/node.rb#6912
   def initialize(value, pattern, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5177
+  # source://yarp//lib/yarp/node.rb#6920
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5182
+  # source://yarp//lib/yarp/node.rb#6925
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#6930
+  def comment_targets; end
 
   # def copy: (**params) -> MatchPredicateNode
   #
-  # source://yarp//lib/yarp/node.rb#5187
+  # source://yarp//lib/yarp/node.rb#6935
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5182
+  # source://yarp//lib/yarp/node.rb#6925
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5200
+  # source://yarp//lib/yarp/node.rb#6948
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#6957
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5205
+  # source://yarp//lib/yarp/node.rb#6953
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5166
+  # source://yarp//lib/yarp/node.rb#6909
   def operator_loc; end
 
   # attr_reader pattern: Node
   #
-  # source://yarp//lib/yarp/node.rb#5163
+  # source://yarp//lib/yarp/node.rb#6906
   def pattern; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#5160
+  # source://yarp//lib/yarp/node.rb#6903
   def value; end
 end
 
@@ -6990,99 +8012,115 @@ end
 #     foo => bar
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5214
+# source://yarp//lib/yarp/node.rb#6972
 class YARP::MatchRequiredNode < ::YARP::Node
   # def initialize: (value: Node, pattern: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [MatchRequiredNode] a new instance of MatchRequiredNode
   #
-  # source://yarp//lib/yarp/node.rb#5225
+  # source://yarp//lib/yarp/node.rb#6983
   def initialize(value, pattern, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5233
+  # source://yarp//lib/yarp/node.rb#6991
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5238
+  # source://yarp//lib/yarp/node.rb#6996
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7001
+  def comment_targets; end
 
   # def copy: (**params) -> MatchRequiredNode
   #
-  # source://yarp//lib/yarp/node.rb#5243
+  # source://yarp//lib/yarp/node.rb#7006
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5238
+  # source://yarp//lib/yarp/node.rb#6996
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5256
+  # source://yarp//lib/yarp/node.rb#7019
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7028
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5261
+  # source://yarp//lib/yarp/node.rb#7024
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5222
+  # source://yarp//lib/yarp/node.rb#6980
   def operator_loc; end
 
   # attr_reader pattern: Node
   #
-  # source://yarp//lib/yarp/node.rb#5219
+  # source://yarp//lib/yarp/node.rb#6977
   def pattern; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#5216
+  # source://yarp//lib/yarp/node.rb#6974
   def value; end
 end
 
 # Represents a node that is missing from the source and results in a syntax
 # error.
 #
-# source://yarp//lib/yarp/node.rb#5268
+# source://yarp//lib/yarp/node.rb#7041
 class YARP::MissingNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [MissingNode] a new instance of MissingNode
   #
-  # source://yarp//lib/yarp/node.rb#5270
+  # source://yarp//lib/yarp/node.rb#7043
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5275
+  # source://yarp//lib/yarp/node.rb#7048
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5280
+  # source://yarp//lib/yarp/node.rb#7053
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7058
+  def comment_targets; end
 
   # def copy: (**params) -> MissingNode
   #
-  # source://yarp//lib/yarp/node.rb#5285
+  # source://yarp//lib/yarp/node.rb#7063
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5280
+  # source://yarp//lib/yarp/node.rb#7053
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5295
+  # source://yarp//lib/yarp/node.rb#7073
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7077
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents a module declaration involving the `module` keyword.
@@ -7090,160 +8128,250 @@ end
 #     module Foo end
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5304
+# source://yarp//lib/yarp/node.rb#7087
 class YARP::ModuleNode < ::YARP::Node
-  # def initialize: (locals: Array[Symbol], module_keyword_loc: Location, constant_path: Node, body: Node?, end_keyword_loc: Location, name: String, location: Location) -> void
+  # def initialize: (locals: Array[Symbol], module_keyword_loc: Location, constant_path: Node, body: Node?, end_keyword_loc: Location, name: Symbol, location: Location) -> void
   #
   # @return [ModuleNode] a new instance of ModuleNode
   #
-  # source://yarp//lib/yarp/node.rb#5324
+  # source://yarp//lib/yarp/node.rb#7107
   def initialize(locals, module_keyword_loc, constant_path, body, end_keyword_loc, name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5335
+  # source://yarp//lib/yarp/node.rb#7118
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://yarp//lib/yarp/node.rb#5315
+  # source://yarp//lib/yarp/node.rb#7098
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5340
+  # source://yarp//lib/yarp/node.rb#7123
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7128
+  def comment_targets; end
 
   # attr_reader constant_path: Node
   #
-  # source://yarp//lib/yarp/node.rb#5312
+  # source://yarp//lib/yarp/node.rb#7095
   def constant_path; end
 
   # def copy: (**params) -> ModuleNode
   #
-  # source://yarp//lib/yarp/node.rb#5345
+  # source://yarp//lib/yarp/node.rb#7133
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5340
+  # source://yarp//lib/yarp/node.rb#7123
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5361
+  # source://yarp//lib/yarp/node.rb#7149
   def deconstruct_keys(keys); end
 
   # def end_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5371
+  # source://yarp//lib/yarp/node.rb#7159
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5318
+  # source://yarp//lib/yarp/node.rb#7101
   def end_keyword_loc; end
+
+  # source://yarp//lib/yarp/node.rb#7163
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://yarp//lib/yarp/node.rb#5306
+  # source://yarp//lib/yarp/node.rb#7089
   def locals; end
 
   # def module_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5366
+  # source://yarp//lib/yarp/node.rb#7154
   def module_keyword; end
 
   # attr_reader module_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5309
+  # source://yarp//lib/yarp/node.rb#7092
   def module_keyword_loc; end
 
-  # attr_reader name: String
+  # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#5321
+  # source://yarp//lib/yarp/node.rb#7104
   def name; end
 end
 
 # Represents a multi-target expression.
 #
 #     a, b, c = 1, 2, 3
-#     ^^^^^^^^^^^^^^^^^
+#     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5380
-class YARP::MultiWriteNode < ::YARP::Node
-  # def initialize: (targets: Array[Node], operator_loc: Location?, value: Node?, lparen_loc: Location?, rparen_loc: Location?, location: Location) -> void
+# source://yarp//lib/yarp/node.rb#7185
+class YARP::MultiTargetNode < ::YARP::Node
+  # def initialize: (targets: Array[Node], lparen_loc: Location?, rparen_loc: Location?, location: Location) -> void
   #
-  # @return [MultiWriteNode] a new instance of MultiWriteNode
+  # @return [MultiTargetNode] a new instance of MultiTargetNode
   #
-  # source://yarp//lib/yarp/node.rb#5397
-  def initialize(targets, operator_loc, value, lparen_loc, rparen_loc, location); end
+  # source://yarp//lib/yarp/node.rb#7196
+  def initialize(targets, lparen_loc, rparen_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5407
+  # source://yarp//lib/yarp/node.rb#7204
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5412
+  # source://yarp//lib/yarp/node.rb#7209
   def child_nodes; end
 
-  # def copy: (**params) -> MultiWriteNode
+  # def comment_targets: () -> Array[Node | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5417
+  # source://yarp//lib/yarp/node.rb#7214
+  def comment_targets; end
+
+  # def copy: (**params) -> MultiTargetNode
+  #
+  # source://yarp//lib/yarp/node.rb#7219
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5412
+  # source://yarp//lib/yarp/node.rb#7209
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5432
+  # source://yarp//lib/yarp/node.rb#7232
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7246
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def lparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#5442
+  # source://yarp//lib/yarp/node.rb#7237
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#5391
+  # source://yarp//lib/yarp/node.rb#7190
   def lparen_loc; end
-
-  # def operator: () -> String?
-  #
-  # source://yarp//lib/yarp/node.rb#5437
-  def operator; end
-
-  # attr_reader operator_loc: Location?
-  #
-  # source://yarp//lib/yarp/node.rb#5385
-  def operator_loc; end
 
   # def rparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#5447
+  # source://yarp//lib/yarp/node.rb#7242
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#5394
+  # source://yarp//lib/yarp/node.rb#7193
   def rparen_loc; end
 
   # attr_reader targets: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#5382
+  # source://yarp//lib/yarp/node.rb#7187
+  def targets; end
+end
+
+# Represents a write to a multi-target expression.
+#
+#     a, b, c = 1, 2, 3
+#     ^^^^^^^^^^^^^^^^^
+#
+# source://yarp//lib/yarp/node.rb#7259
+class YARP::MultiWriteNode < ::YARP::Node
+  # def initialize: (targets: Array[Node], lparen_loc: Location?, rparen_loc: Location?, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [MultiWriteNode] a new instance of MultiWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#7276
+  def initialize(targets, lparen_loc, rparen_loc, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://yarp//lib/yarp/node.rb#7286
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#7291
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7296
+  def comment_targets; end
+
+  # def copy: (**params) -> MultiWriteNode
+  #
+  # source://yarp//lib/yarp/node.rb#7301
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://yarp//lib/yarp/node.rb#7291
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7316
+  def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7335
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def lparen: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#7321
+  def lparen; end
+
+  # attr_reader lparen_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#7264
+  def lparen_loc; end
+
+  # def operator: () -> String
+  #
+  # source://yarp//lib/yarp/node.rb#7331
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://yarp//lib/yarp/node.rb#7270
+  def operator_loc; end
+
+  # def rparen: () -> String?
+  #
+  # source://yarp//lib/yarp/node.rb#7326
+  def rparen; end
+
+  # attr_reader rparen_loc: Location?
+  #
+  # source://yarp//lib/yarp/node.rb#7267
+  def rparen_loc; end
+
+  # attr_reader targets: Array[Node]
+  #
+  # source://yarp//lib/yarp/node.rb#7261
   def targets; end
 
-  # attr_reader value: Node?
+  # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#5388
+  # source://yarp//lib/yarp/node.rb#7273
   def value; end
 end
 
@@ -7308,619 +8436,629 @@ class YARP::MutationVisitor < ::YARP::BasicVisitor
   # source://yarp//lib/yarp/mutation_visitor.rb#64
   def visit_block_argument_node(node); end
 
-  # Copy a BlockNode node
+  # Copy a BlockLocalVariableNode node
   #
   # source://yarp//lib/yarp/mutation_visitor.rb#69
+  def visit_block_local_variable_node(node); end
+
+  # Copy a BlockNode node
+  #
+  # source://yarp//lib/yarp/mutation_visitor.rb#74
   def visit_block_node(node); end
 
   # Copy a BlockParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#74
+  # source://yarp//lib/yarp/mutation_visitor.rb#79
   def visit_block_parameter_node(node); end
 
   # Copy a BlockParametersNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#79
+  # source://yarp//lib/yarp/mutation_visitor.rb#84
   def visit_block_parameters_node(node); end
 
   # Copy a BreakNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#84
+  # source://yarp//lib/yarp/mutation_visitor.rb#89
   def visit_break_node(node); end
+
+  # Copy a CallAndWriteNode node
+  #
+  # source://yarp//lib/yarp/mutation_visitor.rb#94
+  def visit_call_and_write_node(node); end
 
   # Copy a CallNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#89
-  def visit_call_node(node); end
-
-  # Copy a CallOperatorAndWriteNode node
-  #
-  # source://yarp//lib/yarp/mutation_visitor.rb#94
-  def visit_call_operator_and_write_node(node); end
-
-  # Copy a CallOperatorOrWriteNode node
-  #
   # source://yarp//lib/yarp/mutation_visitor.rb#99
-  def visit_call_operator_or_write_node(node); end
+  def visit_call_node(node); end
 
   # Copy a CallOperatorWriteNode node
   #
   # source://yarp//lib/yarp/mutation_visitor.rb#104
   def visit_call_operator_write_node(node); end
 
-  # Copy a CapturePatternNode node
+  # Copy a CallOrWriteNode node
   #
   # source://yarp//lib/yarp/mutation_visitor.rb#109
+  def visit_call_or_write_node(node); end
+
+  # Copy a CapturePatternNode node
+  #
+  # source://yarp//lib/yarp/mutation_visitor.rb#114
   def visit_capture_pattern_node(node); end
 
   # Copy a CaseNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#114
+  # source://yarp//lib/yarp/mutation_visitor.rb#119
   def visit_case_node(node); end
 
   # Copy a ClassNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#119
+  # source://yarp//lib/yarp/mutation_visitor.rb#124
   def visit_class_node(node); end
 
   # Copy a ClassVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#124
+  # source://yarp//lib/yarp/mutation_visitor.rb#129
   def visit_class_variable_and_write_node(node); end
 
   # Copy a ClassVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#129
+  # source://yarp//lib/yarp/mutation_visitor.rb#134
   def visit_class_variable_operator_write_node(node); end
 
   # Copy a ClassVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#134
+  # source://yarp//lib/yarp/mutation_visitor.rb#139
   def visit_class_variable_or_write_node(node); end
 
   # Copy a ClassVariableReadNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#139
+  # source://yarp//lib/yarp/mutation_visitor.rb#144
   def visit_class_variable_read_node(node); end
 
   # Copy a ClassVariableTargetNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#144
+  # source://yarp//lib/yarp/mutation_visitor.rb#149
   def visit_class_variable_target_node(node); end
 
   # Copy a ClassVariableWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#149
+  # source://yarp//lib/yarp/mutation_visitor.rb#154
   def visit_class_variable_write_node(node); end
 
   # Copy a ConstantAndWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#154
+  # source://yarp//lib/yarp/mutation_visitor.rb#159
   def visit_constant_and_write_node(node); end
 
   # Copy a ConstantOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#159
+  # source://yarp//lib/yarp/mutation_visitor.rb#164
   def visit_constant_operator_write_node(node); end
 
   # Copy a ConstantOrWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#164
+  # source://yarp//lib/yarp/mutation_visitor.rb#169
   def visit_constant_or_write_node(node); end
 
   # Copy a ConstantPathAndWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#169
+  # source://yarp//lib/yarp/mutation_visitor.rb#174
   def visit_constant_path_and_write_node(node); end
 
   # Copy a ConstantPathNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#174
+  # source://yarp//lib/yarp/mutation_visitor.rb#179
   def visit_constant_path_node(node); end
 
   # Copy a ConstantPathOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#179
+  # source://yarp//lib/yarp/mutation_visitor.rb#184
   def visit_constant_path_operator_write_node(node); end
 
   # Copy a ConstantPathOrWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#184
+  # source://yarp//lib/yarp/mutation_visitor.rb#189
   def visit_constant_path_or_write_node(node); end
 
   # Copy a ConstantPathTargetNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#189
+  # source://yarp//lib/yarp/mutation_visitor.rb#194
   def visit_constant_path_target_node(node); end
 
   # Copy a ConstantPathWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#194
+  # source://yarp//lib/yarp/mutation_visitor.rb#199
   def visit_constant_path_write_node(node); end
 
   # Copy a ConstantReadNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#199
+  # source://yarp//lib/yarp/mutation_visitor.rb#204
   def visit_constant_read_node(node); end
 
   # Copy a ConstantTargetNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#204
+  # source://yarp//lib/yarp/mutation_visitor.rb#209
   def visit_constant_target_node(node); end
 
   # Copy a ConstantWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#209
+  # source://yarp//lib/yarp/mutation_visitor.rb#214
   def visit_constant_write_node(node); end
 
   # Copy a DefNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#214
+  # source://yarp//lib/yarp/mutation_visitor.rb#219
   def visit_def_node(node); end
 
   # Copy a DefinedNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#219
+  # source://yarp//lib/yarp/mutation_visitor.rb#224
   def visit_defined_node(node); end
 
   # Copy a ElseNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#224
+  # source://yarp//lib/yarp/mutation_visitor.rb#229
   def visit_else_node(node); end
 
   # Copy a EmbeddedStatementsNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#229
+  # source://yarp//lib/yarp/mutation_visitor.rb#234
   def visit_embedded_statements_node(node); end
 
   # Copy a EmbeddedVariableNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#234
+  # source://yarp//lib/yarp/mutation_visitor.rb#239
   def visit_embedded_variable_node(node); end
 
   # Copy a EnsureNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#239
+  # source://yarp//lib/yarp/mutation_visitor.rb#244
   def visit_ensure_node(node); end
 
   # Copy a FalseNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#244
+  # source://yarp//lib/yarp/mutation_visitor.rb#249
   def visit_false_node(node); end
 
   # Copy a FindPatternNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#249
+  # source://yarp//lib/yarp/mutation_visitor.rb#254
   def visit_find_pattern_node(node); end
 
   # Copy a FlipFlopNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#254
+  # source://yarp//lib/yarp/mutation_visitor.rb#259
   def visit_flip_flop_node(node); end
 
   # Copy a FloatNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#259
+  # source://yarp//lib/yarp/mutation_visitor.rb#264
   def visit_float_node(node); end
 
   # Copy a ForNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#264
+  # source://yarp//lib/yarp/mutation_visitor.rb#269
   def visit_for_node(node); end
 
   # Copy a ForwardingArgumentsNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#269
+  # source://yarp//lib/yarp/mutation_visitor.rb#274
   def visit_forwarding_arguments_node(node); end
 
   # Copy a ForwardingParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#274
+  # source://yarp//lib/yarp/mutation_visitor.rb#279
   def visit_forwarding_parameter_node(node); end
 
   # Copy a ForwardingSuperNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#279
+  # source://yarp//lib/yarp/mutation_visitor.rb#284
   def visit_forwarding_super_node(node); end
 
   # Copy a GlobalVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#284
+  # source://yarp//lib/yarp/mutation_visitor.rb#289
   def visit_global_variable_and_write_node(node); end
 
   # Copy a GlobalVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#289
+  # source://yarp//lib/yarp/mutation_visitor.rb#294
   def visit_global_variable_operator_write_node(node); end
 
   # Copy a GlobalVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#294
+  # source://yarp//lib/yarp/mutation_visitor.rb#299
   def visit_global_variable_or_write_node(node); end
 
   # Copy a GlobalVariableReadNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#299
+  # source://yarp//lib/yarp/mutation_visitor.rb#304
   def visit_global_variable_read_node(node); end
 
   # Copy a GlobalVariableTargetNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#304
+  # source://yarp//lib/yarp/mutation_visitor.rb#309
   def visit_global_variable_target_node(node); end
 
   # Copy a GlobalVariableWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#309
+  # source://yarp//lib/yarp/mutation_visitor.rb#314
   def visit_global_variable_write_node(node); end
 
   # Copy a HashNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#314
+  # source://yarp//lib/yarp/mutation_visitor.rb#319
   def visit_hash_node(node); end
 
   # Copy a HashPatternNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#319
+  # source://yarp//lib/yarp/mutation_visitor.rb#324
   def visit_hash_pattern_node(node); end
 
   # Copy a IfNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#324
+  # source://yarp//lib/yarp/mutation_visitor.rb#329
   def visit_if_node(node); end
 
   # Copy a ImaginaryNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#329
+  # source://yarp//lib/yarp/mutation_visitor.rb#334
   def visit_imaginary_node(node); end
 
   # Copy a InNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#334
+  # source://yarp//lib/yarp/mutation_visitor.rb#339
   def visit_in_node(node); end
 
   # Copy a InstanceVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#339
+  # source://yarp//lib/yarp/mutation_visitor.rb#344
   def visit_instance_variable_and_write_node(node); end
 
   # Copy a InstanceVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#344
+  # source://yarp//lib/yarp/mutation_visitor.rb#349
   def visit_instance_variable_operator_write_node(node); end
 
   # Copy a InstanceVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#349
+  # source://yarp//lib/yarp/mutation_visitor.rb#354
   def visit_instance_variable_or_write_node(node); end
 
   # Copy a InstanceVariableReadNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#354
+  # source://yarp//lib/yarp/mutation_visitor.rb#359
   def visit_instance_variable_read_node(node); end
 
   # Copy a InstanceVariableTargetNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#359
+  # source://yarp//lib/yarp/mutation_visitor.rb#364
   def visit_instance_variable_target_node(node); end
 
   # Copy a InstanceVariableWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#364
+  # source://yarp//lib/yarp/mutation_visitor.rb#369
   def visit_instance_variable_write_node(node); end
 
   # Copy a IntegerNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#369
+  # source://yarp//lib/yarp/mutation_visitor.rb#374
   def visit_integer_node(node); end
 
   # Copy a InterpolatedRegularExpressionNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#374
+  # source://yarp//lib/yarp/mutation_visitor.rb#379
   def visit_interpolated_regular_expression_node(node); end
 
   # Copy a InterpolatedStringNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#379
+  # source://yarp//lib/yarp/mutation_visitor.rb#384
   def visit_interpolated_string_node(node); end
 
   # Copy a InterpolatedSymbolNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#384
+  # source://yarp//lib/yarp/mutation_visitor.rb#389
   def visit_interpolated_symbol_node(node); end
 
   # Copy a InterpolatedXStringNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#389
+  # source://yarp//lib/yarp/mutation_visitor.rb#394
   def visit_interpolated_x_string_node(node); end
 
   # Copy a KeywordHashNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#394
+  # source://yarp//lib/yarp/mutation_visitor.rb#399
   def visit_keyword_hash_node(node); end
 
   # Copy a KeywordParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#399
+  # source://yarp//lib/yarp/mutation_visitor.rb#404
   def visit_keyword_parameter_node(node); end
 
   # Copy a KeywordRestParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#404
+  # source://yarp//lib/yarp/mutation_visitor.rb#409
   def visit_keyword_rest_parameter_node(node); end
 
   # Copy a LambdaNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#409
+  # source://yarp//lib/yarp/mutation_visitor.rb#414
   def visit_lambda_node(node); end
 
   # Copy a LocalVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#414
+  # source://yarp//lib/yarp/mutation_visitor.rb#419
   def visit_local_variable_and_write_node(node); end
 
   # Copy a LocalVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#419
+  # source://yarp//lib/yarp/mutation_visitor.rb#424
   def visit_local_variable_operator_write_node(node); end
 
   # Copy a LocalVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#424
+  # source://yarp//lib/yarp/mutation_visitor.rb#429
   def visit_local_variable_or_write_node(node); end
 
   # Copy a LocalVariableReadNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#429
+  # source://yarp//lib/yarp/mutation_visitor.rb#434
   def visit_local_variable_read_node(node); end
 
   # Copy a LocalVariableTargetNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#434
+  # source://yarp//lib/yarp/mutation_visitor.rb#439
   def visit_local_variable_target_node(node); end
 
   # Copy a LocalVariableWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#439
+  # source://yarp//lib/yarp/mutation_visitor.rb#444
   def visit_local_variable_write_node(node); end
 
   # Copy a MatchPredicateNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#444
+  # source://yarp//lib/yarp/mutation_visitor.rb#449
   def visit_match_predicate_node(node); end
 
   # Copy a MatchRequiredNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#449
+  # source://yarp//lib/yarp/mutation_visitor.rb#454
   def visit_match_required_node(node); end
 
   # Copy a MissingNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#454
+  # source://yarp//lib/yarp/mutation_visitor.rb#459
   def visit_missing_node(node); end
 
   # Copy a ModuleNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#459
+  # source://yarp//lib/yarp/mutation_visitor.rb#464
   def visit_module_node(node); end
+
+  # Copy a MultiTargetNode node
+  #
+  # source://yarp//lib/yarp/mutation_visitor.rb#469
+  def visit_multi_target_node(node); end
 
   # Copy a MultiWriteNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#464
+  # source://yarp//lib/yarp/mutation_visitor.rb#474
   def visit_multi_write_node(node); end
 
   # Copy a NextNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#469
+  # source://yarp//lib/yarp/mutation_visitor.rb#479
   def visit_next_node(node); end
 
   # Copy a NilNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#474
+  # source://yarp//lib/yarp/mutation_visitor.rb#484
   def visit_nil_node(node); end
 
   # Copy a NoKeywordsParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#479
+  # source://yarp//lib/yarp/mutation_visitor.rb#489
   def visit_no_keywords_parameter_node(node); end
 
   # Copy a NumberedReferenceReadNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#484
+  # source://yarp//lib/yarp/mutation_visitor.rb#494
   def visit_numbered_reference_read_node(node); end
 
   # Copy a OptionalParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#489
+  # source://yarp//lib/yarp/mutation_visitor.rb#499
   def visit_optional_parameter_node(node); end
 
   # Copy a OrNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#494
+  # source://yarp//lib/yarp/mutation_visitor.rb#504
   def visit_or_node(node); end
 
   # Copy a ParametersNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#499
+  # source://yarp//lib/yarp/mutation_visitor.rb#509
   def visit_parameters_node(node); end
 
   # Copy a ParenthesesNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#504
+  # source://yarp//lib/yarp/mutation_visitor.rb#514
   def visit_parentheses_node(node); end
 
   # Copy a PinnedExpressionNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#509
+  # source://yarp//lib/yarp/mutation_visitor.rb#519
   def visit_pinned_expression_node(node); end
 
   # Copy a PinnedVariableNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#514
+  # source://yarp//lib/yarp/mutation_visitor.rb#524
   def visit_pinned_variable_node(node); end
 
   # Copy a PostExecutionNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#519
+  # source://yarp//lib/yarp/mutation_visitor.rb#529
   def visit_post_execution_node(node); end
 
   # Copy a PreExecutionNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#524
+  # source://yarp//lib/yarp/mutation_visitor.rb#534
   def visit_pre_execution_node(node); end
 
   # Copy a ProgramNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#529
+  # source://yarp//lib/yarp/mutation_visitor.rb#539
   def visit_program_node(node); end
 
   # Copy a RangeNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#534
+  # source://yarp//lib/yarp/mutation_visitor.rb#544
   def visit_range_node(node); end
 
   # Copy a RationalNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#539
+  # source://yarp//lib/yarp/mutation_visitor.rb#549
   def visit_rational_node(node); end
 
   # Copy a RedoNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#544
+  # source://yarp//lib/yarp/mutation_visitor.rb#554
   def visit_redo_node(node); end
 
   # Copy a RegularExpressionNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#549
+  # source://yarp//lib/yarp/mutation_visitor.rb#559
   def visit_regular_expression_node(node); end
 
   # Copy a RequiredDestructuredParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#554
+  # source://yarp//lib/yarp/mutation_visitor.rb#564
   def visit_required_destructured_parameter_node(node); end
 
   # Copy a RequiredParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#559
+  # source://yarp//lib/yarp/mutation_visitor.rb#569
   def visit_required_parameter_node(node); end
 
   # Copy a RescueModifierNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#564
+  # source://yarp//lib/yarp/mutation_visitor.rb#574
   def visit_rescue_modifier_node(node); end
 
   # Copy a RescueNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#569
+  # source://yarp//lib/yarp/mutation_visitor.rb#579
   def visit_rescue_node(node); end
 
   # Copy a RestParameterNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#574
+  # source://yarp//lib/yarp/mutation_visitor.rb#584
   def visit_rest_parameter_node(node); end
 
   # Copy a RetryNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#579
+  # source://yarp//lib/yarp/mutation_visitor.rb#589
   def visit_retry_node(node); end
 
   # Copy a ReturnNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#584
+  # source://yarp//lib/yarp/mutation_visitor.rb#594
   def visit_return_node(node); end
 
   # Copy a SelfNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#589
+  # source://yarp//lib/yarp/mutation_visitor.rb#599
   def visit_self_node(node); end
 
   # Copy a SingletonClassNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#594
+  # source://yarp//lib/yarp/mutation_visitor.rb#604
   def visit_singleton_class_node(node); end
 
   # Copy a SourceEncodingNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#599
+  # source://yarp//lib/yarp/mutation_visitor.rb#609
   def visit_source_encoding_node(node); end
 
   # Copy a SourceFileNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#604
+  # source://yarp//lib/yarp/mutation_visitor.rb#614
   def visit_source_file_node(node); end
 
   # Copy a SourceLineNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#609
+  # source://yarp//lib/yarp/mutation_visitor.rb#619
   def visit_source_line_node(node); end
 
   # Copy a SplatNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#614
+  # source://yarp//lib/yarp/mutation_visitor.rb#624
   def visit_splat_node(node); end
 
   # Copy a StatementsNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#619
+  # source://yarp//lib/yarp/mutation_visitor.rb#629
   def visit_statements_node(node); end
 
   # Copy a StringConcatNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#624
+  # source://yarp//lib/yarp/mutation_visitor.rb#634
   def visit_string_concat_node(node); end
 
   # Copy a StringNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#629
+  # source://yarp//lib/yarp/mutation_visitor.rb#639
   def visit_string_node(node); end
 
   # Copy a SuperNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#634
+  # source://yarp//lib/yarp/mutation_visitor.rb#644
   def visit_super_node(node); end
 
   # Copy a SymbolNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#639
+  # source://yarp//lib/yarp/mutation_visitor.rb#649
   def visit_symbol_node(node); end
 
   # Copy a TrueNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#644
+  # source://yarp//lib/yarp/mutation_visitor.rb#654
   def visit_true_node(node); end
 
   # Copy a UndefNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#649
+  # source://yarp//lib/yarp/mutation_visitor.rb#659
   def visit_undef_node(node); end
 
   # Copy a UnlessNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#654
+  # source://yarp//lib/yarp/mutation_visitor.rb#664
   def visit_unless_node(node); end
 
   # Copy a UntilNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#659
+  # source://yarp//lib/yarp/mutation_visitor.rb#669
   def visit_until_node(node); end
 
   # Copy a WhenNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#664
+  # source://yarp//lib/yarp/mutation_visitor.rb#674
   def visit_when_node(node); end
 
   # Copy a WhileNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#669
+  # source://yarp//lib/yarp/mutation_visitor.rb#679
   def visit_while_node(node); end
 
   # Copy a XStringNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#674
+  # source://yarp//lib/yarp/mutation_visitor.rb#684
   def visit_x_string_node(node); end
 
   # Copy a YieldNode node
   #
-  # source://yarp//lib/yarp/mutation_visitor.rb#679
+  # source://yarp//lib/yarp/mutation_visitor.rb#689
   def visit_yield_node(node); end
 end
 
@@ -7929,54 +9067,62 @@ end
 #     next 1
 #     ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5456
+# source://yarp//lib/yarp/node.rb#7351
 class YARP::NextNode < ::YARP::Node
   # def initialize: (arguments: ArgumentsNode?, keyword_loc: Location, location: Location) -> void
   #
   # @return [NextNode] a new instance of NextNode
   #
-  # source://yarp//lib/yarp/node.rb#5464
+  # source://yarp//lib/yarp/node.rb#7359
   def initialize(arguments, keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5471
+  # source://yarp//lib/yarp/node.rb#7366
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://yarp//lib/yarp/node.rb#5458
+  # source://yarp//lib/yarp/node.rb#7353
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5476
+  # source://yarp//lib/yarp/node.rb#7371
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7376
+  def comment_targets; end
 
   # def copy: (**params) -> NextNode
   #
-  # source://yarp//lib/yarp/node.rb#5481
+  # source://yarp//lib/yarp/node.rb#7381
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5476
+  # source://yarp//lib/yarp/node.rb#7371
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5493
+  # source://yarp//lib/yarp/node.rb#7393
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7402
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5498
+  # source://yarp//lib/yarp/node.rb#7398
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5461
+  # source://yarp//lib/yarp/node.rb#7356
   def keyword_loc; end
 end
 
@@ -7985,40 +9131,48 @@ end
 #     nil
 #     ^^^
 #
-# source://yarp//lib/yarp/node.rb#5507
+# source://yarp//lib/yarp/node.rb#7419
 class YARP::NilNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [NilNode] a new instance of NilNode
   #
-  # source://yarp//lib/yarp/node.rb#5509
+  # source://yarp//lib/yarp/node.rb#7421
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5514
+  # source://yarp//lib/yarp/node.rb#7426
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5519
+  # source://yarp//lib/yarp/node.rb#7431
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7436
+  def comment_targets; end
 
   # def copy: (**params) -> NilNode
   #
-  # source://yarp//lib/yarp/node.rb#5524
+  # source://yarp//lib/yarp/node.rb#7441
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5519
+  # source://yarp//lib/yarp/node.rb#7431
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5534
+  # source://yarp//lib/yarp/node.rb#7451
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7455
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents the use of `**nil` inside method arguments.
@@ -8027,86 +9181,152 @@ end
 #           ^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#5544
+# source://yarp//lib/yarp/node.rb#7466
 class YARP::NoKeywordsParameterNode < ::YARP::Node
   # def initialize: (operator_loc: Location, keyword_loc: Location, location: Location) -> void
   #
   # @return [NoKeywordsParameterNode] a new instance of NoKeywordsParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#5552
+  # source://yarp//lib/yarp/node.rb#7474
   def initialize(operator_loc, keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5559
+  # source://yarp//lib/yarp/node.rb#7481
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5564
+  # source://yarp//lib/yarp/node.rb#7486
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7491
+  def comment_targets; end
 
   # def copy: (**params) -> NoKeywordsParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#5569
+  # source://yarp//lib/yarp/node.rb#7496
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5564
+  # source://yarp//lib/yarp/node.rb#7486
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5581
+  # source://yarp//lib/yarp/node.rb#7508
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7522
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5591
+  # source://yarp//lib/yarp/node.rb#7518
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5549
+  # source://yarp//lib/yarp/node.rb#7471
   def keyword_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5586
+  # source://yarp//lib/yarp/node.rb#7513
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5546
+  # source://yarp//lib/yarp/node.rb#7468
   def operator_loc; end
 end
 
 # This represents a node in the tree.
 #
-# source://yarp//lib/yarp.rb#297
+# source://yarp//lib/yarp.rb#289
 class YARP::Node
   # Returns the value of attribute location.
   #
-  # source://yarp//lib/yarp.rb#298
+  # source://yarp//lib/yarp.rb#290
   def location; end
 
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp.rb#300
+  # source://yarp//lib/yarp.rb#292
   def newline?; end
 
-  # source://yarp//lib/yarp.rb#317
+  # source://yarp//lib/yarp.rb#309
   def pretty_print(q); end
 
-  # source://yarp//lib/yarp.rb#304
+  # source://yarp//lib/yarp.rb#296
   def set_newline_flag(newline_marked); end
 
   # Slice the location of the node from the source.
   #
-  # source://yarp//lib/yarp.rb#313
+  # source://yarp//lib/yarp.rb#305
   def slice; end
+end
+
+# This object is responsible for generating the output for the inspect method
+# implementations of child nodes.
+#
+# source://yarp//lib/yarp.rb#329
+class YARP::NodeInspector
+  # @return [NodeInspector] a new instance of NodeInspector
+  #
+  # source://yarp//lib/yarp.rb#332
+  def initialize(prefix = T.unsafe(nil)); end
+
+  # Appends a line to the output with the current prefix.
+  #
+  # source://yarp//lib/yarp.rb#338
+  def <<(line); end
+
+  # Returns a new inspector that can be used to inspect a child node.
+  #
+  # source://yarp//lib/yarp.rb#382
+  def child_inspector(append); end
+
+  # Generates a string that represents a child node.
+  #
+  # source://yarp//lib/yarp.rb#377
+  def child_node(node, append); end
+
+  # This generates a string that is used as the header of the inspect output
+  # for any given node.
+  #
+  # source://yarp//lib/yarp.rb#344
+  def header(node); end
+
+  # Generates a string that represents a list of nodes. It handles properly
+  # using the box drawing characters to make the output look nice.
+  #
+  # source://yarp//lib/yarp.rb#354
+  def list(prefix, nodes); end
+
+  # Generates a string that represents a location field on a node.
+  #
+  # source://yarp//lib/yarp.rb#368
+  def location(value); end
+
+  # Returns the value of attribute output.
+  #
+  # source://yarp//lib/yarp.rb#330
+  def output; end
+
+  # Returns the value of attribute prefix.
+  #
+  # source://yarp//lib/yarp.rb#330
+  def prefix; end
+
+  # Returns the output as a string.
+  #
+  # source://yarp//lib/yarp.rb#387
+  def to_str; end
 end
 
 # Represents reading a numbered reference to a capture in the previous match.
@@ -8114,44 +9334,52 @@ end
 #     $1
 #     ^^
 #
-# source://yarp//lib/yarp/node.rb#5600
+# source://yarp//lib/yarp/node.rb#7534
 class YARP::NumberedReferenceReadNode < ::YARP::Node
   # def initialize: (number: Integer, location: Location) -> void
   #
   # @return [NumberedReferenceReadNode] a new instance of NumberedReferenceReadNode
   #
-  # source://yarp//lib/yarp/node.rb#5605
+  # source://yarp//lib/yarp/node.rb#7539
   def initialize(number, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5611
+  # source://yarp//lib/yarp/node.rb#7545
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5616
+  # source://yarp//lib/yarp/node.rb#7550
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7555
+  def comment_targets; end
 
   # def copy: (**params) -> NumberedReferenceReadNode
   #
-  # source://yarp//lib/yarp/node.rb#5621
+  # source://yarp//lib/yarp/node.rb#7560
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5616
+  # source://yarp//lib/yarp/node.rb#7550
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5632
+  # source://yarp//lib/yarp/node.rb#7571
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7575
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader number: Integer
   #
-  # source://yarp//lib/yarp/node.rb#5602
+  # source://yarp//lib/yarp/node.rb#7536
   def number; end
 end
 
@@ -8161,64 +9389,72 @@ end
 #           ^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#5642
+# source://yarp//lib/yarp/node.rb#7587
 class YARP::OptionalParameterNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [OptionalParameterNode] a new instance of OptionalParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#5656
+  # source://yarp//lib/yarp/node.rb#7601
   def initialize(name, name_loc, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5665
+  # source://yarp//lib/yarp/node.rb#7610
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5670
+  # source://yarp//lib/yarp/node.rb#7615
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7620
+  def comment_targets; end
 
   # def copy: (**params) -> OptionalParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#5675
+  # source://yarp//lib/yarp/node.rb#7625
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5670
+  # source://yarp//lib/yarp/node.rb#7615
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5689
+  # source://yarp//lib/yarp/node.rb#7639
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7648
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#5644
+  # source://yarp//lib/yarp/node.rb#7589
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5647
+  # source://yarp//lib/yarp/node.rb#7592
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5694
+  # source://yarp//lib/yarp/node.rb#7644
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5650
+  # source://yarp//lib/yarp/node.rb#7595
   def operator_loc; end
 
   # attr_reader value: Node
   #
-  # source://yarp//lib/yarp/node.rb#5653
+  # source://yarp//lib/yarp/node.rb#7598
   def value; end
 end
 
@@ -8227,59 +9463,67 @@ end
 #     left or right
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5703
+# source://yarp//lib/yarp/node.rb#7663
 class YARP::OrNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [OrNode] a new instance of OrNode
   #
-  # source://yarp//lib/yarp/node.rb#5714
+  # source://yarp//lib/yarp/node.rb#7674
   def initialize(left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5722
+  # source://yarp//lib/yarp/node.rb#7682
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5727
+  # source://yarp//lib/yarp/node.rb#7687
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7692
+  def comment_targets; end
 
   # def copy: (**params) -> OrNode
   #
-  # source://yarp//lib/yarp/node.rb#5732
+  # source://yarp//lib/yarp/node.rb#7697
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5727
+  # source://yarp//lib/yarp/node.rb#7687
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5745
+  # source://yarp//lib/yarp/node.rb#7710
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7719
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://yarp//lib/yarp/node.rb#5705
+  # source://yarp//lib/yarp/node.rb#7665
   def left; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5750
+  # source://yarp//lib/yarp/node.rb#7715
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5711
+  # source://yarp//lib/yarp/node.rb#7671
   def operator_loc; end
 
   # attr_reader right: Node
   #
-  # source://yarp//lib/yarp/node.rb#5708
+  # source://yarp//lib/yarp/node.rb#7668
   def right; end
 end
 
@@ -8511,74 +9755,82 @@ YARP::Pack::UTF8 = T.let(T.unsafe(nil), Symbol)
 #           ^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#5760
+# source://yarp//lib/yarp/node.rb#7735
 class YARP::ParametersNode < ::YARP::Node
   # def initialize: (requireds: Array[Node], optionals: Array[Node], posts: Array[Node], rest: RestParameterNode?, keywords: Array[Node], keyword_rest: Node?, block: BlockParameterNode?, location: Location) -> void
   #
   # @return [ParametersNode] a new instance of ParametersNode
   #
-  # source://yarp//lib/yarp/node.rb#5783
+  # source://yarp//lib/yarp/node.rb#7758
   def initialize(requireds, optionals, posts, rest, keywords, keyword_rest, block, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5795
+  # source://yarp//lib/yarp/node.rb#7770
   def accept(visitor); end
 
   # attr_reader block: BlockParameterNode?
   #
-  # source://yarp//lib/yarp/node.rb#5780
+  # source://yarp//lib/yarp/node.rb#7755
   def block; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5800
+  # source://yarp//lib/yarp/node.rb#7775
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7780
+  def comment_targets; end
 
   # def copy: (**params) -> ParametersNode
   #
-  # source://yarp//lib/yarp/node.rb#5805
+  # source://yarp//lib/yarp/node.rb#7785
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5800
+  # source://yarp//lib/yarp/node.rb#7775
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5822
+  # source://yarp//lib/yarp/node.rb#7802
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7806
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader keyword_rest: Node?
   #
-  # source://yarp//lib/yarp/node.rb#5777
+  # source://yarp//lib/yarp/node.rb#7752
   def keyword_rest; end
 
   # attr_reader keywords: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#5774
+  # source://yarp//lib/yarp/node.rb#7749
   def keywords; end
 
   # attr_reader optionals: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#5765
+  # source://yarp//lib/yarp/node.rb#7740
   def optionals; end
 
   # attr_reader posts: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#5768
+  # source://yarp//lib/yarp/node.rb#7743
   def posts; end
 
   # attr_reader requireds: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#5762
+  # source://yarp//lib/yarp/node.rb#7737
   def requireds; end
 
   # attr_reader rest: RestParameterNode?
   #
-  # source://yarp//lib/yarp/node.rb#5771
+  # source://yarp//lib/yarp/node.rb#7746
   def rest; end
 end
 
@@ -8587,90 +9839,101 @@ end
 #     (10 + 34)
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5831
+# source://yarp//lib/yarp/node.rb#7838
 class YARP::ParenthesesNode < ::YARP::Node
   # def initialize: (body: Node?, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [ParenthesesNode] a new instance of ParenthesesNode
   #
-  # source://yarp//lib/yarp/node.rb#5842
+  # source://yarp//lib/yarp/node.rb#7849
   def initialize(body, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5850
+  # source://yarp//lib/yarp/node.rb#7857
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://yarp//lib/yarp/node.rb#5833
+  # source://yarp//lib/yarp/node.rb#7840
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5859
+  # source://yarp//lib/yarp/node.rb#7866
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5887
+  # source://yarp//lib/yarp/node.rb#7899
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5839
+  # source://yarp//lib/yarp/node.rb#7846
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7871
+  def comment_targets; end
 
   # def copy: (**params) -> ParenthesesNode
   #
-  # source://yarp//lib/yarp/node.rb#5864
+  # source://yarp//lib/yarp/node.rb#7876
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5859
+  # source://yarp//lib/yarp/node.rb#7866
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5877
+  # source://yarp//lib/yarp/node.rb#7889
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#7903
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5882
+  # source://yarp//lib/yarp/node.rb#7894
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5836
+  # source://yarp//lib/yarp/node.rb#7843
   def opening_loc; end
 
-  # source://yarp//lib/yarp/node.rb#5854
+  # source://yarp//lib/yarp/node.rb#7861
   def set_newline_flag(newline_marked); end
 end
 
 # This represents an error that was encountered during parsing.
 #
-# source://yarp//lib/yarp.rb#147
+# source://yarp//lib/yarp.rb#170
 class YARP::ParseError
   # @return [ParseError] a new instance of ParseError
   #
-  # source://yarp//lib/yarp.rb#150
+  # source://yarp//lib/yarp.rb#173
   def initialize(message, location); end
 
-  # source://yarp//lib/yarp.rb#155
+  # source://yarp//lib/yarp.rb#178
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp.rb#182
+  def inspect; end
 
   # Returns the value of attribute location.
   #
-  # source://yarp//lib/yarp.rb#148
+  # source://yarp//lib/yarp.rb#171
   def location; end
 
   # Returns the value of attribute message.
   #
-  # source://yarp//lib/yarp.rb#148
+  # source://yarp//lib/yarp.rb#171
   def message; end
 end
 
@@ -8678,101 +9941,364 @@ end
 # the AST, any comments that were encounters, and any errors that were
 # encountered.
 #
-# source://yarp//lib/yarp.rb#198
+# source://yarp//lib/yarp.rb#229
 class YARP::ParseResult
   # @return [ParseResult] a new instance of ParseResult
   #
-  # source://yarp//lib/yarp.rb#201
+  # source://yarp//lib/yarp.rb#232
   def initialize(value, comments, errors, warnings, source); end
+
+  # Attach the list of comments to their respective locations in the tree.
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#168
+  def attach_comments!; end
 
   # Returns the value of attribute comments.
   #
-  # source://yarp//lib/yarp.rb#199
+  # source://yarp//lib/yarp.rb#230
   def comments; end
 
-  # source://yarp//lib/yarp.rb#209
+  # source://yarp//lib/yarp.rb#240
   def deconstruct_keys(keys); end
 
   # Returns the value of attribute errors.
   #
-  # source://yarp//lib/yarp.rb#199
+  # source://yarp//lib/yarp.rb#230
   def errors; end
 
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp.rb#217
+  # source://yarp//lib/yarp.rb#248
   def failure?; end
 
-  # source://yarp//lib/yarp.rb#253
-  def mark_newlines; end
+  # Walk the tree and mark nodes that are on a new line.
+  #
+  # source://yarp//lib/yarp/parse_result/newlines.rb#56
+  def mark_newlines!; end
 
   # Returns the value of attribute source.
   #
-  # source://yarp//lib/yarp.rb#199
+  # source://yarp//lib/yarp.rb#230
   def source; end
 
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp.rb#213
+  # source://yarp//lib/yarp.rb#244
   def success?; end
 
   # Returns the value of attribute value.
   #
-  # source://yarp//lib/yarp.rb#199
+  # source://yarp//lib/yarp.rb#230
   def value; end
 
   # Returns the value of attribute warnings.
   #
-  # source://yarp//lib/yarp.rb#199
+  # source://yarp//lib/yarp.rb#230
   def warnings; end
 end
 
-# Keep in sync with Java MarkNewlinesVisitor
+# When we've parsed the source, we have both the syntax tree and the list of
+# comments that we found in the source. This class is responsible for
+# walking the tree and finding the nearest location to attach each comment.
 #
-# source://yarp//lib/yarp.rb#222
-class YARP::ParseResult::MarkNewlinesVisitor < ::YARP::Visitor
-  # @return [MarkNewlinesVisitor] a new instance of MarkNewlinesVisitor
+# It does this by first finding the nearest locations to each comment.
+# Locations can either come from nodes directly or from location fields on
+# nodes. For example, a `ClassNode` has an overall location encompassing the
+# entire class, but it also has a location for the `class` keyword.
+#
+# Once the nearest locations are found, it determines which one to attach
+# to. If it's a trailing comment (a comment on the same line as other source
+# code), it will favor attaching to the nearest location that occurs before
+# the comment. Otherwise it will favor attaching to the nearest location
+# that is after the comment.
+#
+# source://yarp//lib/yarp/parse_result/comments.rb#19
+class YARP::ParseResult::Comments
+  # @return [Comments] a new instance of Comments
   #
-  # source://yarp//lib/yarp.rb#223
+  # source://yarp//lib/yarp/parse_result/comments.rb#75
+  def initialize(parse_result); end
+
+  # source://yarp//lib/yarp/parse_result/comments.rb#79
+  def attach!; end
+
+  # Returns the value of attribute parse_result.
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#73
+  def parse_result; end
+
+  private
+
+  # Responsible for finding the nearest targets to the given comment within
+  # the context of the given encapsulating node.
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#98
+  def nearest_targets(node, comment); end
+end
+
+# A target for attaching comments that is based on a location field on a
+# node. For example, the `end` token of a ClassNode.
+#
+# source://yarp//lib/yarp/parse_result/comments.rb#49
+class YARP::ParseResult::Comments::LocationTarget
+  # @return [LocationTarget] a new instance of LocationTarget
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#52
+  def initialize(location); end
+
+  # source://yarp//lib/yarp/parse_result/comments.rb#68
+  def <<(comment); end
+
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#64
+  def encloses?(comment); end
+
+  # source://yarp//lib/yarp/parse_result/comments.rb#60
+  def end_offset; end
+
+  # Returns the value of attribute location.
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#50
+  def location; end
+
+  # source://yarp//lib/yarp/parse_result/comments.rb#56
+  def start_offset; end
+end
+
+# A target for attaching comments that is based on a specific node's
+# location.
+#
+# source://yarp//lib/yarp/parse_result/comments.rb#22
+class YARP::ParseResult::Comments::NodeTarget
+  # @return [NodeTarget] a new instance of NodeTarget
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#25
+  def initialize(node); end
+
+  # source://yarp//lib/yarp/parse_result/comments.rb#42
+  def <<(comment); end
+
+  # @return [Boolean]
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#37
+  def encloses?(comment); end
+
+  # source://yarp//lib/yarp/parse_result/comments.rb#33
+  def end_offset; end
+
+  # Returns the value of attribute node.
+  #
+  # source://yarp//lib/yarp/parse_result/comments.rb#23
+  def node; end
+
+  # source://yarp//lib/yarp/parse_result/comments.rb#29
+  def start_offset; end
+end
+
+# The :line tracepoint event gets fired whenever the Ruby VM encounters an
+# expression on a new line. The types of expressions that can trigger this
+# event are:
+#
+# * if statements
+# * unless statements
+# * nodes that are children of statements lists
+#
+# In order to keep track of the newlines, we have a list of offsets that
+# come back from the parser. We assign these offsets to the first nodes that
+# we find in the tree that are on those lines.
+#
+# Note that the logic in this file should be kept in sync with the Java
+# MarkNewlinesVisitor, since that visitor is responsible for marking the
+# newlines for JRuby/TruffleRuby.
+#
+# source://yarp//lib/yarp/parse_result/newlines.rb#20
+class YARP::ParseResult::Newlines < ::YARP::Visitor
+  # @return [Newlines] a new instance of Newlines
+  #
+  # source://yarp//lib/yarp/parse_result/newlines.rb#21
   def initialize(newline_marked); end
 
-  # source://yarp//lib/yarp.rb#227
+  # source://yarp//lib/yarp/parse_result/newlines.rb#25
   def visit_block_node(node); end
 
-  # source://yarp//lib/yarp.rb#238
+  # source://yarp//lib/yarp/parse_result/newlines.rb#38
   def visit_if_node(node); end
 
-  # source://yarp//lib/yarp.rb#227
+  # source://yarp//lib/yarp/parse_result/newlines.rb#25
   def visit_lambda_node(node); end
 
-  # source://yarp//lib/yarp.rb#244
+  # source://yarp//lib/yarp/parse_result/newlines.rb#45
   def visit_statements_node(node); end
 
-  # source://yarp//lib/yarp.rb#238
+  # source://yarp//lib/yarp/parse_result/newlines.rb#38
   def visit_unless_node(node); end
 end
 
 # This represents a warning that was encountered during parsing.
 #
-# source://yarp//lib/yarp.rb#161
+# source://yarp//lib/yarp.rb#188
 class YARP::ParseWarning
   # @return [ParseWarning] a new instance of ParseWarning
   #
-  # source://yarp//lib/yarp.rb#164
+  # source://yarp//lib/yarp.rb#191
   def initialize(message, location); end
 
-  # source://yarp//lib/yarp.rb#169
+  # source://yarp//lib/yarp.rb#196
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp.rb#200
+  def inspect; end
 
   # Returns the value of attribute location.
   #
-  # source://yarp//lib/yarp.rb#162
+  # source://yarp//lib/yarp.rb#189
   def location; end
 
   # Returns the value of attribute message.
   #
-  # source://yarp//lib/yarp.rb#162
+  # source://yarp//lib/yarp.rb#189
   def message; end
+end
+
+# A pattern is an object that wraps a Ruby pattern matching expression. The
+# expression would normally be passed to an `in` clause within a `case`
+# expression or a rightward assignment expression. For example, in the
+# following snippet:
+#
+#     case node
+#     in ConstantPathNode[ConstantReadNode[name: :YARP], ConstantReadNode[name: :Pattern]]
+#     end
+#
+# the pattern is the `ConstantPathNode[...]` expression.
+#
+# The pattern gets compiled into an object that responds to #call by running
+# the #compile method. This method itself will run back through YARP to
+# parse the expression into a tree, then walk the tree to generate the
+# necessary callable objects. For example, if you wanted to compile the
+# expression above into a callable, you would:
+#
+#     callable = YARP::Pattern.new("ConstantPathNode[ConstantReadNode[name: :YARP], ConstantReadNode[name: :Pattern]]").compile
+#     callable.call(node)
+#
+# The callable object returned by #compile is guaranteed to respond to #call
+# with a single argument, which is the node to match against. It also is
+# guaranteed to respond to #===, which means it itself can be used in a `case`
+# expression, as in:
+#
+#     case node
+#     when callable
+#     end
+#
+# If the query given to the initializer cannot be compiled into a valid
+# matcher (either because of a syntax error or because it is using syntax we
+# do not yet support) then a YARP::Pattern::CompilationError will be
+# raised.
+#
+# source://yarp//lib/yarp/pattern.rb#37
+class YARP::Pattern
+  # @return [Pattern] a new instance of Pattern
+  #
+  # source://yarp//lib/yarp/pattern.rb#58
+  def initialize(query); end
+
+  # source://yarp//lib/yarp/pattern.rb#63
+  def compile; end
+
+  # Returns the value of attribute query.
+  #
+  # source://yarp//lib/yarp/pattern.rb#56
+  def query; end
+
+  # source://yarp//lib/yarp/pattern.rb#68
+  def scan(root); end
+
+  private
+
+  # Shortcut for combining two procs into one that returns true if both return
+  # true.
+  #
+  # source://yarp//lib/yarp/pattern.rb#84
+  def combine_and(left, right); end
+
+  # Shortcut for combining two procs into one that returns true if either
+  # returns true.
+  #
+  # source://yarp//lib/yarp/pattern.rb#90
+  def combine_or(left, right); end
+
+  # in foo | bar
+  #
+  # source://yarp//lib/yarp/pattern.rb#125
+  def compile_alternation_pattern_node(node); end
+
+  # in [foo, bar, baz]
+  #
+  # source://yarp//lib/yarp/pattern.rb#100
+  def compile_array_pattern_node(node); end
+
+  # in YARP::ConstantReadNode
+  #
+  # source://yarp//lib/yarp/pattern.rb#130
+  def compile_constant_path_node(node); end
+
+  # in ConstantReadNode
+  # in String
+  #
+  # source://yarp//lib/yarp/pattern.rb#142
+  def compile_constant_read_node(node); end
+
+  # Raise an error because the given node is not supported.
+  #
+  # @raise [CompilationError]
+  #
+  # source://yarp//lib/yarp/pattern.rb#95
+  def compile_error(node); end
+
+  # in InstanceVariableReadNode[name: Symbol]
+  # in { name: Symbol }
+  #
+  # source://yarp//lib/yarp/pattern.rb#160
+  def compile_hash_pattern_node(node); end
+
+  # in nil
+  #
+  # source://yarp//lib/yarp/pattern.rb#185
+  def compile_nil_node(node); end
+
+  # Compile any kind of node. Dispatch out to the individual compilation
+  # methods based on the type of node.
+  #
+  # source://yarp//lib/yarp/pattern.rb#214
+  def compile_node(node); end
+
+  # in /foo/
+  #
+  # source://yarp//lib/yarp/pattern.rb#190
+  def compile_regular_expression_node(node); end
+
+  # in ""
+  # in "foo"
+  #
+  # source://yarp//lib/yarp/pattern.rb#198
+  def compile_string_node(node); end
+
+  # in :+
+  # in :foo
+  #
+  # source://yarp//lib/yarp/pattern.rb#206
+  def compile_symbol_node(node); end
+end
+
+# Raised when the query given to a pattern is either invalid Ruby syntax or
+# is using syntax that we don't yet support.
+#
+# source://yarp//lib/yarp/pattern.rb#40
+class YARP::Pattern::CompilationError < ::StandardError
+  # @return [CompilationError] a new instance of CompilationError
+  #
+  # source://yarp//lib/yarp/pattern.rb#41
+  def initialize(repr); end
 end
 
 # Represents the use of the `^` operator for pinning an expression in a
@@ -8781,74 +10307,82 @@ end
 #     foo in ^(bar)
 #            ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5897
+# source://yarp//lib/yarp/node.rb#7922
 class YARP::PinnedExpressionNode < ::YARP::Node
   # def initialize: (expression: Node, operator_loc: Location, lparen_loc: Location, rparen_loc: Location, location: Location) -> void
   #
   # @return [PinnedExpressionNode] a new instance of PinnedExpressionNode
   #
-  # source://yarp//lib/yarp/node.rb#5911
+  # source://yarp//lib/yarp/node.rb#7936
   def initialize(expression, operator_loc, lparen_loc, rparen_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5920
+  # source://yarp//lib/yarp/node.rb#7945
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5925
+  # source://yarp//lib/yarp/node.rb#7950
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#7955
+  def comment_targets; end
 
   # def copy: (**params) -> PinnedExpressionNode
   #
-  # source://yarp//lib/yarp/node.rb#5930
+  # source://yarp//lib/yarp/node.rb#7960
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5925
+  # source://yarp//lib/yarp/node.rb#7950
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#5944
+  # source://yarp//lib/yarp/node.rb#7974
   def deconstruct_keys(keys); end
 
   # attr_reader expression: Node
   #
-  # source://yarp//lib/yarp/node.rb#5899
+  # source://yarp//lib/yarp/node.rb#7924
   def expression; end
+
+  # source://yarp//lib/yarp/node.rb#7993
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def lparen: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5954
+  # source://yarp//lib/yarp/node.rb#7984
   def lparen; end
 
   # attr_reader lparen_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5905
+  # source://yarp//lib/yarp/node.rb#7930
   def lparen_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5949
+  # source://yarp//lib/yarp/node.rb#7979
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5902
+  # source://yarp//lib/yarp/node.rb#7927
   def operator_loc; end
 
   # def rparen: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#5959
+  # source://yarp//lib/yarp/node.rb#7989
   def rparen; end
 
   # attr_reader rparen_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5908
+  # source://yarp//lib/yarp/node.rb#7933
   def rparen_loc; end
 end
 
@@ -8858,54 +10392,62 @@ end
 #     foo in ^bar
 #            ^^^^
 #
-# source://yarp//lib/yarp/node.rb#5969
+# source://yarp//lib/yarp/node.rb#8009
 class YARP::PinnedVariableNode < ::YARP::Node
   # def initialize: (variable: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [PinnedVariableNode] a new instance of PinnedVariableNode
   #
-  # source://yarp//lib/yarp/node.rb#5977
+  # source://yarp//lib/yarp/node.rb#8017
   def initialize(variable, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#5984
+  # source://yarp//lib/yarp/node.rb#8024
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5989
+  # source://yarp//lib/yarp/node.rb#8029
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8034
+  def comment_targets; end
 
   # def copy: (**params) -> PinnedVariableNode
   #
-  # source://yarp//lib/yarp/node.rb#5994
+  # source://yarp//lib/yarp/node.rb#8039
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#5989
+  # source://yarp//lib/yarp/node.rb#8029
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6006
+  # source://yarp//lib/yarp/node.rb#8051
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8060
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6011
+  # source://yarp//lib/yarp/node.rb#8056
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#5974
+  # source://yarp//lib/yarp/node.rb#8014
   def operator_loc; end
 
   # attr_reader variable: Node
   #
-  # source://yarp//lib/yarp/node.rb#5971
+  # source://yarp//lib/yarp/node.rb#8011
   def variable; end
 end
 
@@ -8914,74 +10456,82 @@ end
 #     END { foo }
 #     ^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6020
+# source://yarp//lib/yarp/node.rb#8073
 class YARP::PostExecutionNode < ::YARP::Node
   # def initialize: (statements: StatementsNode?, keyword_loc: Location, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [PostExecutionNode] a new instance of PostExecutionNode
   #
-  # source://yarp//lib/yarp/node.rb#6034
+  # source://yarp//lib/yarp/node.rb#8087
   def initialize(statements, keyword_loc, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6043
+  # source://yarp//lib/yarp/node.rb#8096
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6048
+  # source://yarp//lib/yarp/node.rb#8101
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6082
+  # source://yarp//lib/yarp/node.rb#8140
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6031
+  # source://yarp//lib/yarp/node.rb#8084
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8106
+  def comment_targets; end
 
   # def copy: (**params) -> PostExecutionNode
   #
-  # source://yarp//lib/yarp/node.rb#6053
+  # source://yarp//lib/yarp/node.rb#8111
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6048
+  # source://yarp//lib/yarp/node.rb#8101
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6067
+  # source://yarp//lib/yarp/node.rb#8125
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8144
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6072
+  # source://yarp//lib/yarp/node.rb#8130
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6025
+  # source://yarp//lib/yarp/node.rb#8078
   def keyword_loc; end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6077
+  # source://yarp//lib/yarp/node.rb#8135
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6028
+  # source://yarp//lib/yarp/node.rb#8081
   def opening_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#6022
+  # source://yarp//lib/yarp/node.rb#8075
   def statements; end
 end
 
@@ -8990,131 +10540,147 @@ end
 #     BEGIN { foo }
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6091
+# source://yarp//lib/yarp/node.rb#8163
 class YARP::PreExecutionNode < ::YARP::Node
   # def initialize: (statements: StatementsNode?, keyword_loc: Location, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [PreExecutionNode] a new instance of PreExecutionNode
   #
-  # source://yarp//lib/yarp/node.rb#6105
+  # source://yarp//lib/yarp/node.rb#8177
   def initialize(statements, keyword_loc, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6114
+  # source://yarp//lib/yarp/node.rb#8186
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6119
+  # source://yarp//lib/yarp/node.rb#8191
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6153
+  # source://yarp//lib/yarp/node.rb#8230
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6102
+  # source://yarp//lib/yarp/node.rb#8174
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8196
+  def comment_targets; end
 
   # def copy: (**params) -> PreExecutionNode
   #
-  # source://yarp//lib/yarp/node.rb#6124
+  # source://yarp//lib/yarp/node.rb#8201
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6119
+  # source://yarp//lib/yarp/node.rb#8191
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6138
+  # source://yarp//lib/yarp/node.rb#8215
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8234
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6143
+  # source://yarp//lib/yarp/node.rb#8220
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6096
+  # source://yarp//lib/yarp/node.rb#8168
   def keyword_loc; end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6148
+  # source://yarp//lib/yarp/node.rb#8225
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6099
+  # source://yarp//lib/yarp/node.rb#8171
   def opening_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#6093
+  # source://yarp//lib/yarp/node.rb#8165
   def statements; end
 end
 
 # The top level node of any parse tree.
 #
-# source://yarp//lib/yarp/node.rb#6159
+# source://yarp//lib/yarp/node.rb#8250
 class YARP::ProgramNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], statements: StatementsNode, location: Location) -> void
   #
   # @return [ProgramNode] a new instance of ProgramNode
   #
-  # source://yarp//lib/yarp/node.rb#6167
+  # source://yarp//lib/yarp/node.rb#8258
   def initialize(locals, statements, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6174
+  # source://yarp//lib/yarp/node.rb#8265
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6179
+  # source://yarp//lib/yarp/node.rb#8270
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8275
+  def comment_targets; end
 
   # def copy: (**params) -> ProgramNode
   #
-  # source://yarp//lib/yarp/node.rb#6184
+  # source://yarp//lib/yarp/node.rb#8280
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6179
+  # source://yarp//lib/yarp/node.rb#8270
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6196
+  # source://yarp//lib/yarp/node.rb#8292
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8296
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://yarp//lib/yarp/node.rb#6161
+  # source://yarp//lib/yarp/node.rb#8252
   def locals; end
 
   # attr_reader statements: StatementsNode
   #
-  # source://yarp//lib/yarp/node.rb#6164
+  # source://yarp//lib/yarp/node.rb#8255
   def statements; end
 end
 
-# source://yarp//lib/yarp/node.rb#7996
+# source://yarp//lib/yarp/node.rb#10570
 module YARP::RangeFlags; end
 
 # ... operator
 #
-# source://yarp//lib/yarp/node.rb#7998
+# source://yarp//lib/yarp/node.rb#10572
 YARP::RangeFlags::EXCLUDE_END = T.let(T.unsafe(nil), Integer)
 
 # Represents the use of the `..` or `...` operators.
@@ -9125,71 +10691,79 @@ YARP::RangeFlags::EXCLUDE_END = T.let(T.unsafe(nil), Integer)
 #     c if a =~ /left/ ... b =~ /right/
 #          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6208
+# source://yarp//lib/yarp/node.rb#8312
 class YARP::RangeNode < ::YARP::Node
   # def initialize: (left: Node?, right: Node?, operator_loc: Location, flags: Integer, location: Location) -> void
   #
   # @return [RangeNode] a new instance of RangeNode
   #
-  # source://yarp//lib/yarp/node.rb#6222
+  # source://yarp//lib/yarp/node.rb#8326
   def initialize(left, right, operator_loc, flags, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6231
+  # source://yarp//lib/yarp/node.rb#8335
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6236
+  # source://yarp//lib/yarp/node.rb#8340
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8345
+  def comment_targets; end
 
   # def copy: (**params) -> RangeNode
   #
-  # source://yarp//lib/yarp/node.rb#6241
+  # source://yarp//lib/yarp/node.rb#8350
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6236
+  # source://yarp//lib/yarp/node.rb#8340
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6255
+  # source://yarp//lib/yarp/node.rb#8364
   def deconstruct_keys(keys); end
 
   # def exclude_end?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6265
+  # source://yarp//lib/yarp/node.rb#8374
   def exclude_end?; end
 
   # attr_reader flags: Integer
   #
-  # source://yarp//lib/yarp/node.rb#6219
+  # source://yarp//lib/yarp/node.rb#8323
   def flags; end
+
+  # source://yarp//lib/yarp/node.rb#8378
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node?
   #
-  # source://yarp//lib/yarp/node.rb#6210
+  # source://yarp//lib/yarp/node.rb#8314
   def left; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6260
+  # source://yarp//lib/yarp/node.rb#8369
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6216
+  # source://yarp//lib/yarp/node.rb#8320
   def operator_loc; end
 
   # attr_reader right: Node?
   #
-  # source://yarp//lib/yarp/node.rb#6213
+  # source://yarp//lib/yarp/node.rb#8317
   def right; end
 end
 
@@ -9198,47 +10772,55 @@ end
 #     1.0r
 #     ^^^^
 #
-# source://yarp//lib/yarp.rb#354
+# source://yarp//lib/yarp.rb#410
 class YARP::RationalNode < ::YARP::Node
   # def initialize: (numeric: Node, location: Location) -> void
   #
   # @return [RationalNode] a new instance of RationalNode
   #
-  # source://yarp//lib/yarp/node.rb#6279
+  # source://yarp//lib/yarp/node.rb#8407
   def initialize(numeric, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6285
+  # source://yarp//lib/yarp/node.rb#8413
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6290
+  # source://yarp//lib/yarp/node.rb#8418
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8423
+  def comment_targets; end
 
   # def copy: (**params) -> RationalNode
   #
-  # source://yarp//lib/yarp/node.rb#6295
+  # source://yarp//lib/yarp/node.rb#8428
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6290
+  # source://yarp//lib/yarp/node.rb#8418
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6306
+  # source://yarp//lib/yarp/node.rb#8439
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8443
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader numeric: Node
   #
-  # source://yarp//lib/yarp/node.rb#6276
+  # source://yarp//lib/yarp/node.rb#8404
   def numeric; end
 
-  # source://yarp//lib/yarp.rb#355
+  # source://yarp//lib/yarp.rb#411
   def value; end
 end
 
@@ -9247,83 +10829,91 @@ end
 #     redo
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#6315
+# source://yarp//lib/yarp/node.rb#8455
 class YARP::RedoNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [RedoNode] a new instance of RedoNode
   #
-  # source://yarp//lib/yarp/node.rb#6317
+  # source://yarp//lib/yarp/node.rb#8457
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6322
+  # source://yarp//lib/yarp/node.rb#8462
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6327
+  # source://yarp//lib/yarp/node.rb#8467
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8472
+  def comment_targets; end
 
   # def copy: (**params) -> RedoNode
   #
-  # source://yarp//lib/yarp/node.rb#6332
+  # source://yarp//lib/yarp/node.rb#8477
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6327
+  # source://yarp//lib/yarp/node.rb#8467
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6342
+  # source://yarp//lib/yarp/node.rb#8487
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8491
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
-# source://yarp//lib/yarp/node.rb#8001
+# source://yarp//lib/yarp/node.rb#10575
 module YARP::RegularExpressionFlags; end
 
 # n - forces the ASCII-8BIT encoding
 #
-# source://yarp//lib/yarp/node.rb#8015
+# source://yarp//lib/yarp/node.rb#10589
 YARP::RegularExpressionFlags::ASCII_8BIT = T.let(T.unsafe(nil), Integer)
 
 # e - forces the EUC-JP encoding
 #
-# source://yarp//lib/yarp/node.rb#8012
+# source://yarp//lib/yarp/node.rb#10586
 YARP::RegularExpressionFlags::EUC_JP = T.let(T.unsafe(nil), Integer)
 
 # x - ignores whitespace and allows comments in regular expressions
 #
-# source://yarp//lib/yarp/node.rb#8009
+# source://yarp//lib/yarp/node.rb#10583
 YARP::RegularExpressionFlags::EXTENDED = T.let(T.unsafe(nil), Integer)
 
 # i - ignores the case of characters when matching
 #
-# source://yarp//lib/yarp/node.rb#8003
+# source://yarp//lib/yarp/node.rb#10577
 YARP::RegularExpressionFlags::IGNORE_CASE = T.let(T.unsafe(nil), Integer)
 
 # m - allows $ to match the end of lines within strings
 #
-# source://yarp//lib/yarp/node.rb#8006
+# source://yarp//lib/yarp/node.rb#10580
 YARP::RegularExpressionFlags::MULTI_LINE = T.let(T.unsafe(nil), Integer)
 
 # o - only interpolates values into the regular expression once
 #
-# source://yarp//lib/yarp/node.rb#8024
+# source://yarp//lib/yarp/node.rb#10598
 YARP::RegularExpressionFlags::ONCE = T.let(T.unsafe(nil), Integer)
 
 # u - forces the UTF-8 encoding
 #
-# source://yarp//lib/yarp/node.rb#8021
+# source://yarp//lib/yarp/node.rb#10595
 YARP::RegularExpressionFlags::UTF_8 = T.let(T.unsafe(nil), Integer)
 
 # s - forces the Windows-31J encoding
 #
-# source://yarp//lib/yarp/node.rb#8018
+# source://yarp//lib/yarp/node.rb#10592
 YARP::RegularExpressionFlags::WINDOWS_31J = T.let(T.unsafe(nil), Integer)
 
 # Represents a regular expression literal with no interpolation.
@@ -9331,135 +10921,143 @@ YARP::RegularExpressionFlags::WINDOWS_31J = T.let(T.unsafe(nil), Integer)
 #     /foo/i
 #     ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6351
+# source://yarp//lib/yarp/node.rb#8501
 class YARP::RegularExpressionNode < ::YARP::Node
   # def initialize: (opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, flags: Integer, location: Location) -> void
   #
   # @return [RegularExpressionNode] a new instance of RegularExpressionNode
   #
-  # source://yarp//lib/yarp/node.rb#6368
+  # source://yarp//lib/yarp/node.rb#8518
   def initialize(opening_loc, content_loc, closing_loc, unescaped, flags, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6378
+  # source://yarp//lib/yarp/node.rb#8528
   def accept(visitor); end
 
   # def ascii_8bit?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6443
+  # source://yarp//lib/yarp/node.rb#8598
   def ascii_8bit?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6383
+  # source://yarp//lib/yarp/node.rb#8533
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6418
+  # source://yarp//lib/yarp/node.rb#8573
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6359
+  # source://yarp//lib/yarp/node.rb#8509
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8538
+  def comment_targets; end
 
   # def content: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6413
+  # source://yarp//lib/yarp/node.rb#8568
   def content; end
 
   # attr_reader content_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6356
+  # source://yarp//lib/yarp/node.rb#8506
   def content_loc; end
 
   # def copy: (**params) -> RegularExpressionNode
   #
-  # source://yarp//lib/yarp/node.rb#6388
+  # source://yarp//lib/yarp/node.rb#8543
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6383
+  # source://yarp//lib/yarp/node.rb#8533
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6403
+  # source://yarp//lib/yarp/node.rb#8558
   def deconstruct_keys(keys); end
 
   # def euc_jp?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6438
+  # source://yarp//lib/yarp/node.rb#8593
   def euc_jp?; end
 
   # def extended?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6433
+  # source://yarp//lib/yarp/node.rb#8588
   def extended?; end
 
   # attr_reader flags: Integer
   #
-  # source://yarp//lib/yarp/node.rb#6365
+  # source://yarp//lib/yarp/node.rb#8515
   def flags; end
 
   # def ignore_case?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6423
+  # source://yarp//lib/yarp/node.rb#8578
   def ignore_case?; end
+
+  # source://yarp//lib/yarp/node.rb#8617
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def multi_line?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6428
+  # source://yarp//lib/yarp/node.rb#8583
   def multi_line?; end
 
   # def once?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6458
+  # source://yarp//lib/yarp/node.rb#8613
   def once?; end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6408
+  # source://yarp//lib/yarp/node.rb#8563
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6353
+  # source://yarp//lib/yarp/node.rb#8503
   def opening_loc; end
 
   # attr_reader unescaped: String
   #
-  # source://yarp//lib/yarp/node.rb#6362
+  # source://yarp//lib/yarp/node.rb#8512
   def unescaped; end
 
   # def utf_8?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6453
+  # source://yarp//lib/yarp/node.rb#8608
   def utf_8?; end
 
   # def windows_31j?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#6448
+  # source://yarp//lib/yarp/node.rb#8603
   def windows_31j?; end
 end
 
@@ -9469,64 +11067,72 @@ end
 #             ^^^^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#6468
+# source://yarp//lib/yarp/node.rb#8633
 class YARP::RequiredDestructuredParameterNode < ::YARP::Node
   # def initialize: (parameters: Array[Node], opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [RequiredDestructuredParameterNode] a new instance of RequiredDestructuredParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#6479
+  # source://yarp//lib/yarp/node.rb#8644
   def initialize(parameters, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6487
+  # source://yarp//lib/yarp/node.rb#8652
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6492
+  # source://yarp//lib/yarp/node.rb#8657
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6520
+  # source://yarp//lib/yarp/node.rb#8690
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6476
+  # source://yarp//lib/yarp/node.rb#8641
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8662
+  def comment_targets; end
 
   # def copy: (**params) -> RequiredDestructuredParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#6497
+  # source://yarp//lib/yarp/node.rb#8667
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6492
+  # source://yarp//lib/yarp/node.rb#8657
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6510
+  # source://yarp//lib/yarp/node.rb#8680
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8694
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6515
+  # source://yarp//lib/yarp/node.rb#8685
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6473
+  # source://yarp//lib/yarp/node.rb#8638
   def opening_loc; end
 
   # attr_reader parameters: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#6470
+  # source://yarp//lib/yarp/node.rb#8635
   def parameters; end
 end
 
@@ -9536,44 +11142,52 @@ end
 #           ^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#6530
+# source://yarp//lib/yarp/node.rb#8708
 class YARP::RequiredParameterNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [RequiredParameterNode] a new instance of RequiredParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#6535
+  # source://yarp//lib/yarp/node.rb#8713
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6541
+  # source://yarp//lib/yarp/node.rb#8719
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6546
+  # source://yarp//lib/yarp/node.rb#8724
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8729
+  def comment_targets; end
 
   # def copy: (**params) -> RequiredParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#6551
+  # source://yarp//lib/yarp/node.rb#8734
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6546
+  # source://yarp//lib/yarp/node.rb#8724
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6562
+  # source://yarp//lib/yarp/node.rb#8745
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#8749
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://yarp//lib/yarp/node.rb#6532
+  # source://yarp//lib/yarp/node.rb#8710
   def name; end
 end
 
@@ -9582,62 +11196,70 @@ end
 #   foo rescue nil
 #   ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6571
+# source://yarp//lib/yarp/node.rb#8760
 class YARP::RescueModifierNode < ::YARP::Node
   # def initialize: (expression: Node, keyword_loc: Location, rescue_expression: Node, location: Location) -> void
   #
   # @return [RescueModifierNode] a new instance of RescueModifierNode
   #
-  # source://yarp//lib/yarp/node.rb#6582
+  # source://yarp//lib/yarp/node.rb#8771
   def initialize(expression, keyword_loc, rescue_expression, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6590
+  # source://yarp//lib/yarp/node.rb#8779
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6599
+  # source://yarp//lib/yarp/node.rb#8788
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8793
+  def comment_targets; end
 
   # def copy: (**params) -> RescueModifierNode
   #
-  # source://yarp//lib/yarp/node.rb#6604
+  # source://yarp//lib/yarp/node.rb#8798
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6599
+  # source://yarp//lib/yarp/node.rb#8788
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6617
+  # source://yarp//lib/yarp/node.rb#8811
   def deconstruct_keys(keys); end
 
   # attr_reader expression: Node
   #
-  # source://yarp//lib/yarp/node.rb#6573
+  # source://yarp//lib/yarp/node.rb#8762
   def expression; end
+
+  # source://yarp//lib/yarp/node.rb#8820
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6622
+  # source://yarp//lib/yarp/node.rb#8816
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6576
+  # source://yarp//lib/yarp/node.rb#8765
   def keyword_loc; end
 
   # attr_reader rescue_expression: Node
   #
-  # source://yarp//lib/yarp/node.rb#6579
+  # source://yarp//lib/yarp/node.rb#8768
   def rescue_expression; end
 
-  # source://yarp//lib/yarp/node.rb#6594
+  # source://yarp//lib/yarp/node.rb#8783
   def set_newline_flag(newline_marked); end
 end
 
@@ -9652,79 +11274,87 @@ end
 # `Foo, *splat, Bar` are in the `exceptions` field.
 # `ex` is in the `exception` field.
 #
-# source://yarp//lib/yarp/node.rb#6637
+# source://yarp//lib/yarp/node.rb#8841
 class YARP::RescueNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, exceptions: Array[Node], operator_loc: Location?, reference: Node?, statements: StatementsNode?, consequent: RescueNode?, location: Location) -> void
   #
   # @return [RescueNode] a new instance of RescueNode
   #
-  # source://yarp//lib/yarp/node.rb#6657
+  # source://yarp//lib/yarp/node.rb#8861
   def initialize(keyword_loc, exceptions, operator_loc, reference, statements, consequent, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6668
+  # source://yarp//lib/yarp/node.rb#8872
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6673
+  # source://yarp//lib/yarp/node.rb#8877
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8882
+  def comment_targets; end
 
   # attr_reader consequent: RescueNode?
   #
-  # source://yarp//lib/yarp/node.rb#6654
+  # source://yarp//lib/yarp/node.rb#8858
   def consequent; end
 
   # def copy: (**params) -> RescueNode
   #
-  # source://yarp//lib/yarp/node.rb#6678
+  # source://yarp//lib/yarp/node.rb#8887
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6673
+  # source://yarp//lib/yarp/node.rb#8877
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6694
+  # source://yarp//lib/yarp/node.rb#8903
   def deconstruct_keys(keys); end
 
   # attr_reader exceptions: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#6642
+  # source://yarp//lib/yarp/node.rb#8846
   def exceptions; end
+
+  # source://yarp//lib/yarp/node.rb#8917
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6699
+  # source://yarp//lib/yarp/node.rb#8908
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6639
+  # source://yarp//lib/yarp/node.rb#8843
   def keyword_loc; end
 
   # def operator: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#6704
+  # source://yarp//lib/yarp/node.rb#8913
   def operator; end
 
   # attr_reader operator_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#6645
+  # source://yarp//lib/yarp/node.rb#8849
   def operator_loc; end
 
   # attr_reader reference: Node?
   #
-  # source://yarp//lib/yarp/node.rb#6648
+  # source://yarp//lib/yarp/node.rb#8852
   def reference; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#6651
+  # source://yarp//lib/yarp/node.rb#8855
   def statements; end
 end
 
@@ -9734,59 +11364,67 @@ end
 #           ^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#6714
+# source://yarp//lib/yarp/node.rb#8949
 class YARP::RestParameterNode < ::YARP::Node
-  # def initialize: (operator_loc: Location, name_loc: Location?, location: Location) -> void
+  # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
   # @return [RestParameterNode] a new instance of RestParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#6722
-  def initialize(operator_loc, name_loc, location); end
+  # source://yarp//lib/yarp/node.rb#8960
+  def initialize(name, name_loc, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6729
+  # source://yarp//lib/yarp/node.rb#8968
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6734
+  # source://yarp//lib/yarp/node.rb#8973
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#8978
+  def comment_targets; end
 
   # def copy: (**params) -> RestParameterNode
   #
-  # source://yarp//lib/yarp/node.rb#6739
+  # source://yarp//lib/yarp/node.rb#8983
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6734
+  # source://yarp//lib/yarp/node.rb#8973
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6751
+  # source://yarp//lib/yarp/node.rb#8996
   def deconstruct_keys(keys); end
 
-  # def name: () -> String?
+  # source://yarp//lib/yarp/node.rb#9005
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol?
   #
-  # source://yarp//lib/yarp/node.rb#6761
+  # source://yarp//lib/yarp/node.rb#8951
   def name; end
 
   # attr_reader name_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#6719
+  # source://yarp//lib/yarp/node.rb#8954
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6756
+  # source://yarp//lib/yarp/node.rb#9001
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6716
+  # source://yarp//lib/yarp/node.rb#8957
   def operator_loc; end
 end
 
@@ -9795,40 +11433,48 @@ end
 #     retry
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6770
+# source://yarp//lib/yarp/node.rb#9018
 class YARP::RetryNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [RetryNode] a new instance of RetryNode
   #
-  # source://yarp//lib/yarp/node.rb#6772
+  # source://yarp//lib/yarp/node.rb#9020
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6777
+  # source://yarp//lib/yarp/node.rb#9025
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6782
+  # source://yarp//lib/yarp/node.rb#9030
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9035
+  def comment_targets; end
 
   # def copy: (**params) -> RetryNode
   #
-  # source://yarp//lib/yarp/node.rb#6787
+  # source://yarp//lib/yarp/node.rb#9040
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6782
+  # source://yarp//lib/yarp/node.rb#9030
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6797
+  # source://yarp//lib/yarp/node.rb#9050
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9054
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents the use of the `return` keyword.
@@ -9836,54 +11482,62 @@ end
 #     return 1
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6806
+# source://yarp//lib/yarp/node.rb#9064
 class YARP::ReturnNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, arguments: ArgumentsNode?, location: Location) -> void
   #
   # @return [ReturnNode] a new instance of ReturnNode
   #
-  # source://yarp//lib/yarp/node.rb#6814
+  # source://yarp//lib/yarp/node.rb#9072
   def initialize(keyword_loc, arguments, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6821
+  # source://yarp//lib/yarp/node.rb#9079
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://yarp//lib/yarp/node.rb#6811
+  # source://yarp//lib/yarp/node.rb#9069
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6826
+  # source://yarp//lib/yarp/node.rb#9084
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9089
+  def comment_targets; end
 
   # def copy: (**params) -> ReturnNode
   #
-  # source://yarp//lib/yarp/node.rb#6831
+  # source://yarp//lib/yarp/node.rb#9094
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6826
+  # source://yarp//lib/yarp/node.rb#9084
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6843
+  # source://yarp//lib/yarp/node.rb#9106
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9115
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6848
+  # source://yarp//lib/yarp/node.rb#9111
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6808
+  # source://yarp//lib/yarp/node.rb#9066
   def keyword_loc; end
 end
 
@@ -11232,40 +12886,48 @@ end
 #     self
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#6857
+# source://yarp//lib/yarp/node.rb#9132
 class YARP::SelfNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [SelfNode] a new instance of SelfNode
   #
-  # source://yarp//lib/yarp/node.rb#6859
+  # source://yarp//lib/yarp/node.rb#9134
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6864
+  # source://yarp//lib/yarp/node.rb#9139
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6869
+  # source://yarp//lib/yarp/node.rb#9144
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9149
+  def comment_targets; end
 
   # def copy: (**params) -> SelfNode
   #
-  # source://yarp//lib/yarp/node.rb#6874
+  # source://yarp//lib/yarp/node.rb#9154
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6869
+  # source://yarp//lib/yarp/node.rb#9144
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6884
+  # source://yarp//lib/yarp/node.rb#9164
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9168
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # source://yarp//lib/yarp/serialize.rb#22
@@ -11274,101 +12936,107 @@ module YARP::Serialize
     # source://yarp//lib/yarp/serialize.rb#27
     def load(input, serialized); end
 
-    # source://yarp//lib/yarp/serialize.rb#31
+    # source://yarp//lib/yarp/serialize.rb#37
     def load_tokens(source, serialized); end
   end
 end
 
-# source://yarp//lib/yarp/serialize.rb#35
+# source://yarp//lib/yarp/serialize.rb#41
 class YARP::Serialize::Loader
   # @return [Loader] a new instance of Loader
   #
-  # source://yarp//lib/yarp/serialize.rb#39
+  # source://yarp//lib/yarp/serialize.rb#45
   def initialize(source, serialized); end
 
   # Returns the value of attribute constant_pool.
   #
-  # source://yarp//lib/yarp/serialize.rb#37
+  # source://yarp//lib/yarp/serialize.rb#43
   def constant_pool; end
 
   # Returns the value of attribute constant_pool_offset.
   #
-  # source://yarp//lib/yarp/serialize.rb#37
+  # source://yarp//lib/yarp/serialize.rb#43
   def constant_pool_offset; end
 
   # Returns the value of attribute encoding.
   #
-  # source://yarp//lib/yarp/serialize.rb#36
+  # source://yarp//lib/yarp/serialize.rb#42
   def encoding; end
 
   # Returns the value of attribute input.
   #
-  # source://yarp//lib/yarp/serialize.rb#36
+  # source://yarp//lib/yarp/serialize.rb#42
   def input; end
 
   # Returns the value of attribute io.
   #
-  # source://yarp//lib/yarp/serialize.rb#36
+  # source://yarp//lib/yarp/serialize.rb#42
   def io; end
 
-  # source://yarp//lib/yarp/serialize.rb#53
+  # source://yarp//lib/yarp/serialize.rb#59
   def load_encoding; end
 
-  # source://yarp//lib/yarp/serialize.rb#57
+  # source://yarp//lib/yarp/serialize.rb#63
   def load_metadata; end
 
-  # source://yarp//lib/yarp/serialize.rb#90
+  # source://yarp//lib/yarp/serialize.rb#96
   def load_nodes; end
 
-  # source://yarp//lib/yarp/serialize.rb#105
+  # source://yarp//lib/yarp/serialize.rb#111
   def load_result; end
 
-  # source://yarp//lib/yarp/serialize.rb#64
+  # source://yarp//lib/yarp/serialize.rb#70
   def load_tokens; end
 
-  # source://yarp//lib/yarp/serialize.rb#77
+  # source://yarp//lib/yarp/serialize.rb#83
   def load_tokens_result; end
 
   # Returns the value of attribute serialized.
   #
-  # source://yarp//lib/yarp/serialize.rb#36
+  # source://yarp//lib/yarp/serialize.rb#42
   def serialized; end
 
   # Returns the value of attribute source.
   #
-  # source://yarp//lib/yarp/serialize.rb#37
+  # source://yarp//lib/yarp/serialize.rb#43
   def source; end
 
   private
 
-  # source://yarp//lib/yarp/serialize.rb#162
-  def load_constant; end
+  # source://yarp//lib/yarp/serialize.rb#168
+  def load_constant(index); end
 
-  # source://yarp//lib/yarp/serialize.rb#139
+  # source://yarp//lib/yarp/serialize.rb#145
   def load_embedded_string; end
 
-  # source://yarp//lib/yarp/serialize.rb#154
+  # source://yarp//lib/yarp/serialize.rb#160
   def load_location; end
 
-  # source://yarp//lib/yarp/serialize.rb#179
+  # source://yarp//lib/yarp/serialize.rb#198
   def load_node; end
 
-  # source://yarp//lib/yarp/serialize.rb#158
+  # source://yarp//lib/yarp/serialize.rb#193
+  def load_optional_constant; end
+
+  # source://yarp//lib/yarp/serialize.rb#164
   def load_optional_location; end
 
-  # source://yarp//lib/yarp/serialize.rb#132
+  # source://yarp//lib/yarp/serialize.rb#138
   def load_optional_node; end
 
-  # source://yarp//lib/yarp/serialize.rb#128
+  # source://yarp//lib/yarp/serialize.rb#189
+  def load_required_constant; end
+
+  # source://yarp//lib/yarp/serialize.rb#134
   def load_serialized_length; end
 
-  # source://yarp//lib/yarp/serialize.rb#143
+  # source://yarp//lib/yarp/serialize.rb#149
   def load_string; end
 
   # variable-length integer using https://en.wikipedia.org/wiki/LEB128
   # This is also what protobuf uses: https://protobuf.dev/programming-guides/encoding/#varints
   #
-  # source://yarp//lib/yarp/serialize.rb#114
+  # source://yarp//lib/yarp/serialize.rb#120
   def load_varint; end
 end
 
@@ -11381,7 +13049,7 @@ YARP::Serialize::MINOR_VERSION = T.let(T.unsafe(nil), Integer)
 # source://yarp//lib/yarp/serialize.rb#25
 YARP::Serialize::PATCH_VERSION = T.let(T.unsafe(nil), Integer)
 
-# source://yarp//lib/yarp/serialize.rb#457
+# source://yarp//lib/yarp/serialize.rb#480
 YARP::Serialize::TOKEN_TYPES = T.let(T.unsafe(nil), Array)
 
 # Represents a singleton class declaration involving the `class` keyword.
@@ -11389,84 +13057,92 @@ YARP::Serialize::TOKEN_TYPES = T.let(T.unsafe(nil), Array)
 #     class << self end
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6893
+# source://yarp//lib/yarp/node.rb#9178
 class YARP::SingletonClassNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], class_keyword_loc: Location, operator_loc: Location, expression: Node, body: Node?, end_keyword_loc: Location, location: Location) -> void
   #
   # @return [SingletonClassNode] a new instance of SingletonClassNode
   #
-  # source://yarp//lib/yarp/node.rb#6913
+  # source://yarp//lib/yarp/node.rb#9198
   def initialize(locals, class_keyword_loc, operator_loc, expression, body, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6924
+  # source://yarp//lib/yarp/node.rb#9209
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://yarp//lib/yarp/node.rb#6907
+  # source://yarp//lib/yarp/node.rb#9192
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6929
+  # source://yarp//lib/yarp/node.rb#9214
   def child_nodes; end
 
   # def class_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6955
+  # source://yarp//lib/yarp/node.rb#9245
   def class_keyword; end
 
   # attr_reader class_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6898
+  # source://yarp//lib/yarp/node.rb#9183
   def class_keyword_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9219
+  def comment_targets; end
 
   # def copy: (**params) -> SingletonClassNode
   #
-  # source://yarp//lib/yarp/node.rb#6934
+  # source://yarp//lib/yarp/node.rb#9224
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6929
+  # source://yarp//lib/yarp/node.rb#9214
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#6950
+  # source://yarp//lib/yarp/node.rb#9240
   def deconstruct_keys(keys); end
 
   # def end_keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6965
+  # source://yarp//lib/yarp/node.rb#9255
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6910
+  # source://yarp//lib/yarp/node.rb#9195
   def end_keyword_loc; end
 
   # attr_reader expression: Node
   #
-  # source://yarp//lib/yarp/node.rb#6904
+  # source://yarp//lib/yarp/node.rb#9189
   def expression; end
+
+  # source://yarp//lib/yarp/node.rb#9259
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://yarp//lib/yarp/node.rb#6895
+  # source://yarp//lib/yarp/node.rb#9180
   def locals; end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#6960
+  # source://yarp//lib/yarp/node.rb#9250
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#6901
+  # source://yarp//lib/yarp/node.rb#9186
   def operator_loc; end
 end
 
@@ -11481,11 +13157,14 @@ class YARP::Source
   # source://yarp//lib/yarp.rb#10
   def initialize(source, offsets = T.unsafe(nil)); end
 
-  # source://yarp//lib/yarp.rb#23
+  # source://yarp//lib/yarp.rb#27
   def column(value); end
 
   # source://yarp//lib/yarp.rb#19
   def line(value); end
+
+  # source://yarp//lib/yarp.rb#23
+  def line_offset(value); end
 
   # Returns the value of attribute offsets.
   #
@@ -11502,7 +13181,7 @@ class YARP::Source
 
   private
 
-  # source://yarp//lib/yarp.rb#29
+  # source://yarp//lib/yarp.rb#33
   def compute_offsets(code); end
 end
 
@@ -11511,40 +13190,48 @@ end
 #     __ENCODING__
 #     ^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6974
+# source://yarp//lib/yarp/node.rb#9281
 class YARP::SourceEncodingNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [SourceEncodingNode] a new instance of SourceEncodingNode
   #
-  # source://yarp//lib/yarp/node.rb#6976
+  # source://yarp//lib/yarp/node.rb#9283
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#6981
+  # source://yarp//lib/yarp/node.rb#9288
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6986
+  # source://yarp//lib/yarp/node.rb#9293
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9298
+  def comment_targets; end
 
   # def copy: (**params) -> SourceEncodingNode
   #
-  # source://yarp//lib/yarp/node.rb#6991
+  # source://yarp//lib/yarp/node.rb#9303
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#6986
+  # source://yarp//lib/yarp/node.rb#9293
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7001
+  # source://yarp//lib/yarp/node.rb#9313
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9317
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents the use of the `__FILE__` keyword.
@@ -11552,45 +13239,53 @@ end
 #     __FILE__
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7010
+# source://yarp//lib/yarp/node.rb#9327
 class YARP::SourceFileNode < ::YARP::Node
   # def initialize: (filepath: String, location: Location) -> void
   #
   # @return [SourceFileNode] a new instance of SourceFileNode
   #
-  # source://yarp//lib/yarp/node.rb#7015
+  # source://yarp//lib/yarp/node.rb#9332
   def initialize(filepath, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7021
+  # source://yarp//lib/yarp/node.rb#9338
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7026
+  # source://yarp//lib/yarp/node.rb#9343
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9348
+  def comment_targets; end
 
   # def copy: (**params) -> SourceFileNode
   #
-  # source://yarp//lib/yarp/node.rb#7031
+  # source://yarp//lib/yarp/node.rb#9353
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7026
+  # source://yarp//lib/yarp/node.rb#9343
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7042
+  # source://yarp//lib/yarp/node.rb#9364
   def deconstruct_keys(keys); end
 
   # attr_reader filepath: String
   #
-  # source://yarp//lib/yarp/node.rb#7012
+  # source://yarp//lib/yarp/node.rb#9329
   def filepath; end
+
+  # source://yarp//lib/yarp/node.rb#9368
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents the use of the `__LINE__` keyword.
@@ -11598,40 +13293,48 @@ end
 #     __LINE__
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7051
+# source://yarp//lib/yarp/node.rb#9379
 class YARP::SourceLineNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [SourceLineNode] a new instance of SourceLineNode
   #
-  # source://yarp//lib/yarp/node.rb#7053
+  # source://yarp//lib/yarp/node.rb#9381
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7058
+  # source://yarp//lib/yarp/node.rb#9386
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7063
+  # source://yarp//lib/yarp/node.rb#9391
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9396
+  def comment_targets; end
 
   # def copy: (**params) -> SourceLineNode
   #
-  # source://yarp//lib/yarp/node.rb#7068
+  # source://yarp//lib/yarp/node.rb#9401
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7063
+  # source://yarp//lib/yarp/node.rb#9391
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7078
+  # source://yarp//lib/yarp/node.rb#9411
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9415
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents the use of the splat operator.
@@ -11639,54 +13342,62 @@ end
 #     [*a]
 #      ^^
 #
-# source://yarp//lib/yarp/node.rb#7087
+# source://yarp//lib/yarp/node.rb#9425
 class YARP::SplatNode < ::YARP::Node
   # def initialize: (operator_loc: Location, expression: Node?, location: Location) -> void
   #
   # @return [SplatNode] a new instance of SplatNode
   #
-  # source://yarp//lib/yarp/node.rb#7095
+  # source://yarp//lib/yarp/node.rb#9433
   def initialize(operator_loc, expression, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7102
+  # source://yarp//lib/yarp/node.rb#9440
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7107
+  # source://yarp//lib/yarp/node.rb#9445
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9450
+  def comment_targets; end
 
   # def copy: (**params) -> SplatNode
   #
-  # source://yarp//lib/yarp/node.rb#7112
+  # source://yarp//lib/yarp/node.rb#9455
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7107
+  # source://yarp//lib/yarp/node.rb#9445
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7124
+  # source://yarp//lib/yarp/node.rb#9467
   def deconstruct_keys(keys); end
 
   # attr_reader expression: Node?
   #
-  # source://yarp//lib/yarp/node.rb#7092
+  # source://yarp//lib/yarp/node.rb#9430
   def expression; end
+
+  # source://yarp//lib/yarp/node.rb#9476
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7129
+  # source://yarp//lib/yarp/node.rb#9472
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7089
+  # source://yarp//lib/yarp/node.rb#9427
   def operator_loc; end
 end
 
@@ -11695,45 +13406,53 @@ end
 #     foo; bar; baz
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7138
+# source://yarp//lib/yarp/node.rb#9493
 class YARP::StatementsNode < ::YARP::Node
   # def initialize: (body: Array[Node], location: Location) -> void
   #
   # @return [StatementsNode] a new instance of StatementsNode
   #
-  # source://yarp//lib/yarp/node.rb#7143
+  # source://yarp//lib/yarp/node.rb#9498
   def initialize(body, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7149
+  # source://yarp//lib/yarp/node.rb#9504
   def accept(visitor); end
 
   # attr_reader body: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#7140
+  # source://yarp//lib/yarp/node.rb#9495
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7154
+  # source://yarp//lib/yarp/node.rb#9509
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9514
+  def comment_targets; end
 
   # def copy: (**params) -> StatementsNode
   #
-  # source://yarp//lib/yarp/node.rb#7159
+  # source://yarp//lib/yarp/node.rb#9519
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7154
+  # source://yarp//lib/yarp/node.rb#9509
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7170
+  # source://yarp//lib/yarp/node.rb#9530
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9534
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents the use of compile-time string concatenation.
@@ -11741,49 +13460,57 @@ end
 #     "foo" "bar"
 #     ^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7179
+# source://yarp//lib/yarp/node.rb#9545
 class YARP::StringConcatNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, location: Location) -> void
   #
   # @return [StringConcatNode] a new instance of StringConcatNode
   #
-  # source://yarp//lib/yarp/node.rb#7187
+  # source://yarp//lib/yarp/node.rb#9553
   def initialize(left, right, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7194
+  # source://yarp//lib/yarp/node.rb#9560
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7199
+  # source://yarp//lib/yarp/node.rb#9565
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9570
+  def comment_targets; end
 
   # def copy: (**params) -> StringConcatNode
   #
-  # source://yarp//lib/yarp/node.rb#7204
+  # source://yarp//lib/yarp/node.rb#9575
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7199
+  # source://yarp//lib/yarp/node.rb#9565
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7216
+  # source://yarp//lib/yarp/node.rb#9587
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9591
+  def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://yarp//lib/yarp/node.rb#7181
+  # source://yarp//lib/yarp/node.rb#9547
   def left; end
 
   # attr_reader right: Node
   #
-  # source://yarp//lib/yarp/node.rb#7184
+  # source://yarp//lib/yarp/node.rb#9550
   def right; end
 end
 
@@ -11799,74 +13526,82 @@ end
 #     "foo #{bar} baz"
 #      ^^^^      ^^^^
 #
-# source://yarp//lib/yarp/node.rb#7232
+# source://yarp//lib/yarp/node.rb#9612
 class YARP::StringNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, content_loc: Location, closing_loc: Location?, unescaped: String, location: Location) -> void
   #
   # @return [StringNode] a new instance of StringNode
   #
-  # source://yarp//lib/yarp/node.rb#7246
+  # source://yarp//lib/yarp/node.rb#9626
   def initialize(opening_loc, content_loc, closing_loc, unescaped, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7255
+  # source://yarp//lib/yarp/node.rb#9635
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7260
+  # source://yarp//lib/yarp/node.rb#9640
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7294
+  # source://yarp//lib/yarp/node.rb#9679
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7240
+  # source://yarp//lib/yarp/node.rb#9620
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9645
+  def comment_targets; end
 
   # def content: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7289
+  # source://yarp//lib/yarp/node.rb#9674
   def content; end
 
   # attr_reader content_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7237
+  # source://yarp//lib/yarp/node.rb#9617
   def content_loc; end
 
   # def copy: (**params) -> StringNode
   #
-  # source://yarp//lib/yarp/node.rb#7265
+  # source://yarp//lib/yarp/node.rb#9650
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7260
+  # source://yarp//lib/yarp/node.rb#9640
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7279
+  # source://yarp//lib/yarp/node.rb#9664
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9683
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7284
+  # source://yarp//lib/yarp/node.rb#9669
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7234
+  # source://yarp//lib/yarp/node.rb#9614
   def opening_loc; end
 
   # attr_reader unescaped: String
   #
-  # source://yarp//lib/yarp/node.rb#7243
+  # source://yarp//lib/yarp/node.rb#9623
   def unescaped; end
 end
 
@@ -11878,79 +13613,87 @@ end
 #     super foo, bar
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7306
+# source://yarp//lib/yarp/node.rb#9700
 class YARP::SuperNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, lparen_loc: Location?, arguments: ArgumentsNode?, rparen_loc: Location?, block: BlockNode?, location: Location) -> void
   #
   # @return [SuperNode] a new instance of SuperNode
   #
-  # source://yarp//lib/yarp/node.rb#7323
+  # source://yarp//lib/yarp/node.rb#9717
   def initialize(keyword_loc, lparen_loc, arguments, rparen_loc, block, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7333
+  # source://yarp//lib/yarp/node.rb#9727
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://yarp//lib/yarp/node.rb#7314
+  # source://yarp//lib/yarp/node.rb#9708
   def arguments; end
 
   # attr_reader block: BlockNode?
   #
-  # source://yarp//lib/yarp/node.rb#7320
+  # source://yarp//lib/yarp/node.rb#9714
   def block; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7338
+  # source://yarp//lib/yarp/node.rb#9732
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9737
+  def comment_targets; end
 
   # def copy: (**params) -> SuperNode
   #
-  # source://yarp//lib/yarp/node.rb#7343
+  # source://yarp//lib/yarp/node.rb#9742
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7338
+  # source://yarp//lib/yarp/node.rb#9732
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7358
+  # source://yarp//lib/yarp/node.rb#9757
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9776
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7363
+  # source://yarp//lib/yarp/node.rb#9762
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7308
+  # source://yarp//lib/yarp/node.rb#9702
   def keyword_loc; end
 
   # def lparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7368
+  # source://yarp//lib/yarp/node.rb#9767
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7311
+  # source://yarp//lib/yarp/node.rb#9705
   def lparen_loc; end
 
   # def rparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7373
+  # source://yarp//lib/yarp/node.rb#9772
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7317
+  # source://yarp//lib/yarp/node.rb#9711
   def rparen_loc; end
 end
 
@@ -11962,108 +13705,116 @@ end
 #     %i[foo]
 #        ^^^
 #
-# source://yarp//lib/yarp/node.rb#7385
+# source://yarp//lib/yarp/node.rb#9804
 class YARP::SymbolNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, value_loc: Location?, closing_loc: Location?, unescaped: String, location: Location) -> void
   #
   # @return [SymbolNode] a new instance of SymbolNode
   #
-  # source://yarp//lib/yarp/node.rb#7399
+  # source://yarp//lib/yarp/node.rb#9818
   def initialize(opening_loc, value_loc, closing_loc, unescaped, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7408
+  # source://yarp//lib/yarp/node.rb#9827
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7413
+  # source://yarp//lib/yarp/node.rb#9832
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7447
+  # source://yarp//lib/yarp/node.rb#9871
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7393
+  # source://yarp//lib/yarp/node.rb#9812
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9837
+  def comment_targets; end
 
   # def copy: (**params) -> SymbolNode
   #
-  # source://yarp//lib/yarp/node.rb#7418
+  # source://yarp//lib/yarp/node.rb#9842
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7413
+  # source://yarp//lib/yarp/node.rb#9832
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7432
+  # source://yarp//lib/yarp/node.rb#9856
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9875
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7437
+  # source://yarp//lib/yarp/node.rb#9861
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7387
+  # source://yarp//lib/yarp/node.rb#9806
   def opening_loc; end
 
   # attr_reader unescaped: String
   #
-  # source://yarp//lib/yarp/node.rb#7396
+  # source://yarp//lib/yarp/node.rb#9815
   def unescaped; end
 
   # def value: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7442
+  # source://yarp//lib/yarp/node.rb#9866
   def value; end
 
   # attr_reader value_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7390
+  # source://yarp//lib/yarp/node.rb#9809
   def value_loc; end
 end
 
 # This represents a token from the Ruby source.
 #
-# source://yarp//lib/yarp.rb#262
+# source://yarp//lib/yarp.rb#254
 class YARP::Token
   # @return [Token] a new instance of Token
   #
-  # source://yarp//lib/yarp.rb#265
+  # source://yarp//lib/yarp.rb#257
   def initialize(type, value, location); end
 
-  # source://yarp//lib/yarp.rb#289
+  # source://yarp//lib/yarp.rb#281
   def ==(other); end
 
-  # source://yarp//lib/yarp.rb#271
+  # source://yarp//lib/yarp.rb#263
   def deconstruct_keys(keys); end
 
   # Returns the value of attribute location.
   #
-  # source://yarp//lib/yarp.rb#263
+  # source://yarp//lib/yarp.rb#255
   def location; end
 
-  # source://yarp//lib/yarp.rb#275
+  # source://yarp//lib/yarp.rb#267
   def pretty_print(q); end
 
   # Returns the value of attribute type.
   #
-  # source://yarp//lib/yarp.rb#263
+  # source://yarp//lib/yarp.rb#255
   def type; end
 
   # Returns the value of attribute value.
   #
-  # source://yarp//lib/yarp.rb#263
+  # source://yarp//lib/yarp.rb#255
   def value; end
 end
 
@@ -12072,40 +13823,48 @@ end
 #     true
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#7456
+# source://yarp//lib/yarp/node.rb#9889
 class YARP::TrueNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
   # @return [TrueNode] a new instance of TrueNode
   #
-  # source://yarp//lib/yarp/node.rb#7458
+  # source://yarp//lib/yarp/node.rb#9891
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7463
+  # source://yarp//lib/yarp/node.rb#9896
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7468
+  # source://yarp//lib/yarp/node.rb#9901
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9906
+  def comment_targets; end
 
   # def copy: (**params) -> TrueNode
   #
-  # source://yarp//lib/yarp/node.rb#7473
+  # source://yarp//lib/yarp/node.rb#9911
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7468
+  # source://yarp//lib/yarp/node.rb#9901
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7483
+  # source://yarp//lib/yarp/node.rb#9921
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9925
+  def inspect(inspector = T.unsafe(nil)); end
 end
 
 # Represents the use of the `undef` keyword.
@@ -12113,54 +13872,62 @@ end
 #     undef :foo, :bar, :baz
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7492
+# source://yarp//lib/yarp/node.rb#9935
 class YARP::UndefNode < ::YARP::Node
   # def initialize: (names: Array[Node], keyword_loc: Location, location: Location) -> void
   #
   # @return [UndefNode] a new instance of UndefNode
   #
-  # source://yarp//lib/yarp/node.rb#7500
+  # source://yarp//lib/yarp/node.rb#9943
   def initialize(names, keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7507
+  # source://yarp//lib/yarp/node.rb#9950
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7512
+  # source://yarp//lib/yarp/node.rb#9955
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#9960
+  def comment_targets; end
 
   # def copy: (**params) -> UndefNode
   #
-  # source://yarp//lib/yarp/node.rb#7517
+  # source://yarp//lib/yarp/node.rb#9965
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7512
+  # source://yarp//lib/yarp/node.rb#9955
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7529
+  # source://yarp//lib/yarp/node.rb#9977
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#9986
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7534
+  # source://yarp//lib/yarp/node.rb#9982
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7497
+  # source://yarp//lib/yarp/node.rb#9940
   def keyword_loc; end
 
   # attr_reader names: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#7494
+  # source://yarp//lib/yarp/node.rb#9937
   def names; end
 end
 
@@ -12172,77 +13939,85 @@ end
 #     unless foo then bar end
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7546
+# source://yarp//lib/yarp/node.rb#10001
 class YARP::UnlessNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, predicate: Node, statements: StatementsNode?, consequent: ElseNode?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [UnlessNode] a new instance of UnlessNode
   #
-  # source://yarp//lib/yarp/node.rb#7563
+  # source://yarp//lib/yarp/node.rb#10018
   def initialize(keyword_loc, predicate, statements, consequent, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7573
+  # source://yarp//lib/yarp/node.rb#10028
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7582
+  # source://yarp//lib/yarp/node.rb#10037
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#10042
+  def comment_targets; end
 
   # attr_reader consequent: ElseNode?
   #
-  # source://yarp//lib/yarp/node.rb#7557
+  # source://yarp//lib/yarp/node.rb#10012
   def consequent; end
 
   # def copy: (**params) -> UnlessNode
   #
-  # source://yarp//lib/yarp/node.rb#7587
+  # source://yarp//lib/yarp/node.rb#10047
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7582
+  # source://yarp//lib/yarp/node.rb#10037
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7602
+  # source://yarp//lib/yarp/node.rb#10062
   def deconstruct_keys(keys); end
 
   # def end_keyword: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7612
+  # source://yarp//lib/yarp/node.rb#10072
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7560
+  # source://yarp//lib/yarp/node.rb#10015
   def end_keyword_loc; end
+
+  # source://yarp//lib/yarp/node.rb#10076
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7607
+  # source://yarp//lib/yarp/node.rb#10067
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7548
+  # source://yarp//lib/yarp/node.rb#10003
   def keyword_loc; end
 
   # attr_reader predicate: Node
   #
-  # source://yarp//lib/yarp/node.rb#7551
+  # source://yarp//lib/yarp/node.rb#10006
   def predicate; end
 
-  # source://yarp//lib/yarp/node.rb#7577
+  # source://yarp//lib/yarp/node.rb#10032
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#7554
+  # source://yarp//lib/yarp/node.rb#10009
   def statements; end
 end
 
@@ -12254,760 +14029,778 @@ end
 #     until foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7624
+# source://yarp//lib/yarp/node.rb#10105
 class YARP::UntilNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, flags: Integer, location: Location) -> void
   #
   # @return [UntilNode] a new instance of UntilNode
   #
-  # source://yarp//lib/yarp/node.rb#7641
+  # source://yarp//lib/yarp/node.rb#10122
   def initialize(keyword_loc, closing_loc, predicate, statements, flags, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7651
+  # source://yarp//lib/yarp/node.rb#10132
   def accept(visitor); end
 
   # def begin_modifier?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#7695
+  # source://yarp//lib/yarp/node.rb#10181
   def begin_modifier?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7660
+  # source://yarp//lib/yarp/node.rb#10141
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7690
+  # source://yarp//lib/yarp/node.rb#10176
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7629
+  # source://yarp//lib/yarp/node.rb#10110
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#10146
+  def comment_targets; end
 
   # def copy: (**params) -> UntilNode
   #
-  # source://yarp//lib/yarp/node.rb#7665
+  # source://yarp//lib/yarp/node.rb#10151
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7660
+  # source://yarp//lib/yarp/node.rb#10141
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7680
+  # source://yarp//lib/yarp/node.rb#10166
   def deconstruct_keys(keys); end
 
   # attr_reader flags: Integer
   #
-  # source://yarp//lib/yarp/node.rb#7638
+  # source://yarp//lib/yarp/node.rb#10119
   def flags; end
+
+  # source://yarp//lib/yarp/node.rb#10185
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7685
+  # source://yarp//lib/yarp/node.rb#10171
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7626
+  # source://yarp//lib/yarp/node.rb#10107
   def keyword_loc; end
 
   # attr_reader predicate: Node
   #
-  # source://yarp//lib/yarp/node.rb#7632
+  # source://yarp//lib/yarp/node.rb#10113
   def predicate; end
 
-  # source://yarp//lib/yarp/node.rb#7655
+  # source://yarp//lib/yarp/node.rb#10136
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#7635
+  # source://yarp//lib/yarp/node.rb#10116
   def statements; end
 end
 
 # The version constant is set by reading the result of calling yp_version.
 YARP::VERSION = T.let(T.unsafe(nil), String)
 
-# source://yarp//lib/yarp.rb#192
+# source://yarp//lib/yarp.rb#223
 class YARP::Visitor < ::YARP::BasicVisitor
   # Visit a AliasNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_alias_node(node); end
 
   # Visit a AlternationPatternNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_alternation_pattern_node(node); end
 
   # Visit a AndNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_and_node(node); end
 
   # Visit a ArgumentsNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_arguments_node(node); end
 
   # Visit a ArrayNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_array_node(node); end
 
   # Visit a ArrayPatternNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_array_pattern_node(node); end
 
   # Visit a AssocNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_assoc_node(node); end
 
   # Visit a AssocSplatNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_assoc_splat_node(node); end
 
   # Visit a BackReferenceReadNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_back_reference_read_node(node); end
 
   # Visit a BeginNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_begin_node(node); end
 
   # Visit a BlockArgumentNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_block_argument_node(node); end
+
+  # Visit a BlockLocalVariableNode node
+  #
+  # source://yarp//lib/yarp.rb#218
+  def visit_block_local_variable_node(node); end
 
   # Visit a BlockNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_block_node(node); end
 
   # Visit a BlockParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_block_parameter_node(node); end
 
   # Visit a BlockParametersNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_block_parameters_node(node); end
 
   # Visit a BreakNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_break_node(node); end
+
+  # Visit a CallAndWriteNode node
+  #
+  # source://yarp//lib/yarp.rb#218
+  def visit_call_and_write_node(node); end
 
   # Visit a CallNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_call_node(node); end
-
-  # Visit a CallOperatorAndWriteNode node
-  #
-  # source://yarp//lib/yarp.rb#187
-  def visit_call_operator_and_write_node(node); end
-
-  # Visit a CallOperatorOrWriteNode node
-  #
-  # source://yarp//lib/yarp.rb#187
-  def visit_call_operator_or_write_node(node); end
 
   # Visit a CallOperatorWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_call_operator_write_node(node); end
+
+  # Visit a CallOrWriteNode node
+  #
+  # source://yarp//lib/yarp.rb#218
+  def visit_call_or_write_node(node); end
 
   # Visit a CapturePatternNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_capture_pattern_node(node); end
 
   # Visit a CaseNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_case_node(node); end
 
   # Visit a ClassNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_class_node(node); end
 
   # Visit a ClassVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_class_variable_and_write_node(node); end
 
   # Visit a ClassVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_class_variable_operator_write_node(node); end
 
   # Visit a ClassVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_class_variable_or_write_node(node); end
 
   # Visit a ClassVariableReadNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_class_variable_read_node(node); end
 
   # Visit a ClassVariableTargetNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_class_variable_target_node(node); end
 
   # Visit a ClassVariableWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_class_variable_write_node(node); end
 
   # Visit a ConstantAndWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_and_write_node(node); end
 
   # Visit a ConstantOperatorWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_operator_write_node(node); end
 
   # Visit a ConstantOrWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_or_write_node(node); end
 
   # Visit a ConstantPathAndWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_path_and_write_node(node); end
 
   # Visit a ConstantPathNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_path_node(node); end
 
   # Visit a ConstantPathOperatorWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_path_operator_write_node(node); end
 
   # Visit a ConstantPathOrWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_path_or_write_node(node); end
 
   # Visit a ConstantPathTargetNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_path_target_node(node); end
 
   # Visit a ConstantPathWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_path_write_node(node); end
 
   # Visit a ConstantReadNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_read_node(node); end
 
   # Visit a ConstantTargetNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_target_node(node); end
 
   # Visit a ConstantWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_constant_write_node(node); end
 
   # Visit a DefNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_def_node(node); end
 
   # Visit a DefinedNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_defined_node(node); end
 
   # Visit a ElseNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_else_node(node); end
 
   # Visit a EmbeddedStatementsNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_embedded_statements_node(node); end
 
   # Visit a EmbeddedVariableNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_embedded_variable_node(node); end
 
   # Visit a EnsureNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_ensure_node(node); end
 
   # Visit a FalseNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_false_node(node); end
 
   # Visit a FindPatternNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_find_pattern_node(node); end
 
   # Visit a FlipFlopNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_flip_flop_node(node); end
 
   # Visit a FloatNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_float_node(node); end
 
   # Visit a ForNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_for_node(node); end
 
   # Visit a ForwardingArgumentsNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_forwarding_arguments_node(node); end
 
   # Visit a ForwardingParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_forwarding_parameter_node(node); end
 
   # Visit a ForwardingSuperNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_forwarding_super_node(node); end
 
   # Visit a GlobalVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_global_variable_and_write_node(node); end
 
   # Visit a GlobalVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_global_variable_operator_write_node(node); end
 
   # Visit a GlobalVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_global_variable_or_write_node(node); end
 
   # Visit a GlobalVariableReadNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_global_variable_read_node(node); end
 
   # Visit a GlobalVariableTargetNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_global_variable_target_node(node); end
 
   # Visit a GlobalVariableWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_global_variable_write_node(node); end
 
   # Visit a HashNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_hash_node(node); end
 
   # Visit a HashPatternNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_hash_pattern_node(node); end
 
   # Visit a IfNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_if_node(node); end
 
   # Visit a ImaginaryNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_imaginary_node(node); end
 
   # Visit a InNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_in_node(node); end
 
   # Visit a InstanceVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_instance_variable_and_write_node(node); end
 
   # Visit a InstanceVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_instance_variable_operator_write_node(node); end
 
   # Visit a InstanceVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_instance_variable_or_write_node(node); end
 
   # Visit a InstanceVariableReadNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_instance_variable_read_node(node); end
 
   # Visit a InstanceVariableTargetNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_instance_variable_target_node(node); end
 
   # Visit a InstanceVariableWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_instance_variable_write_node(node); end
 
   # Visit a IntegerNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_integer_node(node); end
 
   # Visit a InterpolatedRegularExpressionNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_interpolated_regular_expression_node(node); end
 
   # Visit a InterpolatedStringNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_interpolated_string_node(node); end
 
   # Visit a InterpolatedSymbolNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_interpolated_symbol_node(node); end
 
   # Visit a InterpolatedXStringNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_interpolated_x_string_node(node); end
 
   # Visit a KeywordHashNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_keyword_hash_node(node); end
 
   # Visit a KeywordParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_keyword_parameter_node(node); end
 
   # Visit a KeywordRestParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_keyword_rest_parameter_node(node); end
 
   # Visit a LambdaNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_lambda_node(node); end
 
   # Visit a LocalVariableAndWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_local_variable_and_write_node(node); end
 
   # Visit a LocalVariableOperatorWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_local_variable_operator_write_node(node); end
 
   # Visit a LocalVariableOrWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_local_variable_or_write_node(node); end
 
   # Visit a LocalVariableReadNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_local_variable_read_node(node); end
 
   # Visit a LocalVariableTargetNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_local_variable_target_node(node); end
 
   # Visit a LocalVariableWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_local_variable_write_node(node); end
 
   # Visit a MatchPredicateNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_match_predicate_node(node); end
 
   # Visit a MatchRequiredNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_match_required_node(node); end
 
   # Visit a MissingNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_missing_node(node); end
 
   # Visit a ModuleNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_module_node(node); end
+
+  # Visit a MultiTargetNode node
+  #
+  # source://yarp//lib/yarp.rb#218
+  def visit_multi_target_node(node); end
 
   # Visit a MultiWriteNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_multi_write_node(node); end
 
   # Visit a NextNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_next_node(node); end
 
   # Visit a NilNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_nil_node(node); end
 
   # Visit a NoKeywordsParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_no_keywords_parameter_node(node); end
 
   # Visit a NumberedReferenceReadNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_numbered_reference_read_node(node); end
 
   # Visit a OptionalParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_optional_parameter_node(node); end
 
   # Visit a OrNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_or_node(node); end
 
   # Visit a ParametersNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_parameters_node(node); end
 
   # Visit a ParenthesesNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_parentheses_node(node); end
 
   # Visit a PinnedExpressionNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_pinned_expression_node(node); end
 
   # Visit a PinnedVariableNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_pinned_variable_node(node); end
 
   # Visit a PostExecutionNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_post_execution_node(node); end
 
   # Visit a PreExecutionNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_pre_execution_node(node); end
 
   # Visit a ProgramNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_program_node(node); end
 
   # Visit a RangeNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_range_node(node); end
 
   # Visit a RationalNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_rational_node(node); end
 
   # Visit a RedoNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_redo_node(node); end
 
   # Visit a RegularExpressionNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_regular_expression_node(node); end
 
   # Visit a RequiredDestructuredParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_required_destructured_parameter_node(node); end
 
   # Visit a RequiredParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_required_parameter_node(node); end
 
   # Visit a RescueModifierNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_rescue_modifier_node(node); end
 
   # Visit a RescueNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_rescue_node(node); end
 
   # Visit a RestParameterNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_rest_parameter_node(node); end
 
   # Visit a RetryNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_retry_node(node); end
 
   # Visit a ReturnNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_return_node(node); end
 
   # Visit a SelfNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_self_node(node); end
 
   # Visit a SingletonClassNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_singleton_class_node(node); end
 
   # Visit a SourceEncodingNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_source_encoding_node(node); end
 
   # Visit a SourceFileNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_source_file_node(node); end
 
   # Visit a SourceLineNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_source_line_node(node); end
 
   # Visit a SplatNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_splat_node(node); end
 
   # Visit a StatementsNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_statements_node(node); end
 
   # Visit a StringConcatNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_string_concat_node(node); end
 
   # Visit a StringNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_string_node(node); end
 
   # Visit a SuperNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_super_node(node); end
 
   # Visit a SymbolNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_symbol_node(node); end
 
   # Visit a TrueNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_true_node(node); end
 
   # Visit a UndefNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_undef_node(node); end
 
   # Visit a UnlessNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_unless_node(node); end
 
   # Visit a UntilNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_until_node(node); end
 
   # Visit a WhenNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_when_node(node); end
 
   # Visit a WhileNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_while_node(node); end
 
   # Visit a XStringNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_x_string_node(node); end
 
   # Visit a YieldNode node
   #
-  # source://yarp//lib/yarp.rb#187
+  # source://yarp//lib/yarp.rb#218
   def visit_yield_node(node); end
 end
 
@@ -13018,59 +14811,67 @@ end
 #     ^^^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#7706
+# source://yarp//lib/yarp/node.rb#10208
 class YARP::WhenNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, conditions: Array[Node], statements: StatementsNode?, location: Location) -> void
   #
   # @return [WhenNode] a new instance of WhenNode
   #
-  # source://yarp//lib/yarp/node.rb#7717
+  # source://yarp//lib/yarp/node.rb#10219
   def initialize(keyword_loc, conditions, statements, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7725
+  # source://yarp//lib/yarp/node.rb#10227
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7730
+  # source://yarp//lib/yarp/node.rb#10232
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#10237
+  def comment_targets; end
 
   # attr_reader conditions: Array[Node]
   #
-  # source://yarp//lib/yarp/node.rb#7711
+  # source://yarp//lib/yarp/node.rb#10213
   def conditions; end
 
   # def copy: (**params) -> WhenNode
   #
-  # source://yarp//lib/yarp/node.rb#7735
+  # source://yarp//lib/yarp/node.rb#10242
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7730
+  # source://yarp//lib/yarp/node.rb#10232
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7748
+  # source://yarp//lib/yarp/node.rb#10255
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#10264
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7753
+  # source://yarp//lib/yarp/node.rb#10260
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7708
+  # source://yarp//lib/yarp/node.rb#10210
   def keyword_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#7714
+  # source://yarp//lib/yarp/node.rb#10216
   def statements; end
 end
 
@@ -13082,84 +14883,92 @@ end
 #     while foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7765
+# source://yarp//lib/yarp/node.rb#10285
 class YARP::WhileNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, flags: Integer, location: Location) -> void
   #
   # @return [WhileNode] a new instance of WhileNode
   #
-  # source://yarp//lib/yarp/node.rb#7782
+  # source://yarp//lib/yarp/node.rb#10302
   def initialize(keyword_loc, closing_loc, predicate, statements, flags, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7792
+  # source://yarp//lib/yarp/node.rb#10312
   def accept(visitor); end
 
   # def begin_modifier?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://yarp//lib/yarp/node.rb#7836
+  # source://yarp//lib/yarp/node.rb#10361
   def begin_modifier?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7801
+  # source://yarp//lib/yarp/node.rb#10321
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7831
+  # source://yarp//lib/yarp/node.rb#10356
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7770
+  # source://yarp//lib/yarp/node.rb#10290
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#10326
+  def comment_targets; end
 
   # def copy: (**params) -> WhileNode
   #
-  # source://yarp//lib/yarp/node.rb#7806
+  # source://yarp//lib/yarp/node.rb#10331
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7801
+  # source://yarp//lib/yarp/node.rb#10321
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7821
+  # source://yarp//lib/yarp/node.rb#10346
   def deconstruct_keys(keys); end
 
   # attr_reader flags: Integer
   #
-  # source://yarp//lib/yarp/node.rb#7779
+  # source://yarp//lib/yarp/node.rb#10299
   def flags; end
+
+  # source://yarp//lib/yarp/node.rb#10365
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7826
+  # source://yarp//lib/yarp/node.rb#10351
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7767
+  # source://yarp//lib/yarp/node.rb#10287
   def keyword_loc; end
 
   # attr_reader predicate: Node
   #
-  # source://yarp//lib/yarp/node.rb#7773
+  # source://yarp//lib/yarp/node.rb#10293
   def predicate; end
 
-  # source://yarp//lib/yarp/node.rb#7796
+  # source://yarp//lib/yarp/node.rb#10316
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://yarp//lib/yarp/node.rb#7776
+  # source://yarp//lib/yarp/node.rb#10296
   def statements; end
 end
 
@@ -13168,74 +14977,82 @@ end
 #     `foo`
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7845
+# source://yarp//lib/yarp/node.rb#10386
 class YARP::XStringNode < ::YARP::Node
   # def initialize: (opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, location: Location) -> void
   #
   # @return [XStringNode] a new instance of XStringNode
   #
-  # source://yarp//lib/yarp/node.rb#7859
+  # source://yarp//lib/yarp/node.rb#10400
   def initialize(opening_loc, content_loc, closing_loc, unescaped, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7868
+  # source://yarp//lib/yarp/node.rb#10409
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7873
+  # source://yarp//lib/yarp/node.rb#10414
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7907
+  # source://yarp//lib/yarp/node.rb#10453
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7853
+  # source://yarp//lib/yarp/node.rb#10394
   def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#10419
+  def comment_targets; end
 
   # def content: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7902
+  # source://yarp//lib/yarp/node.rb#10448
   def content; end
 
   # attr_reader content_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7850
+  # source://yarp//lib/yarp/node.rb#10391
   def content_loc; end
 
   # def copy: (**params) -> XStringNode
   #
-  # source://yarp//lib/yarp/node.rb#7878
+  # source://yarp//lib/yarp/node.rb#10424
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7873
+  # source://yarp//lib/yarp/node.rb#10414
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7892
+  # source://yarp//lib/yarp/node.rb#10438
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#10457
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7897
+  # source://yarp//lib/yarp/node.rb#10443
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7847
+  # source://yarp//lib/yarp/node.rb#10388
   def opening_loc; end
 
   # attr_reader unescaped: String
   #
-  # source://yarp//lib/yarp/node.rb#7856
+  # source://yarp//lib/yarp/node.rb#10397
   def unescaped; end
 end
 
@@ -13244,73 +15061,81 @@ end
 #     yield 1
 #     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7916
+# source://yarp//lib/yarp/node.rb#10471
 class YARP::YieldNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, lparen_loc: Location?, arguments: ArgumentsNode?, rparen_loc: Location?, location: Location) -> void
   #
   # @return [YieldNode] a new instance of YieldNode
   #
-  # source://yarp//lib/yarp/node.rb#7930
+  # source://yarp//lib/yarp/node.rb#10485
   def initialize(keyword_loc, lparen_loc, arguments, rparen_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://yarp//lib/yarp/node.rb#7939
+  # source://yarp//lib/yarp/node.rb#10494
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://yarp//lib/yarp/node.rb#7924
+  # source://yarp//lib/yarp/node.rb#10479
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7944
+  # source://yarp//lib/yarp/node.rb#10499
   def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://yarp//lib/yarp/node.rb#10504
+  def comment_targets; end
 
   # def copy: (**params) -> YieldNode
   #
-  # source://yarp//lib/yarp/node.rb#7949
+  # source://yarp//lib/yarp/node.rb#10509
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://yarp//lib/yarp/node.rb#7944
+  # source://yarp//lib/yarp/node.rb#10499
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://yarp//lib/yarp/node.rb#7963
+  # source://yarp//lib/yarp/node.rb#10523
   def deconstruct_keys(keys); end
+
+  # source://yarp//lib/yarp/node.rb#10542
+  def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://yarp//lib/yarp/node.rb#7968
+  # source://yarp//lib/yarp/node.rb#10528
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://yarp//lib/yarp/node.rb#7918
+  # source://yarp//lib/yarp/node.rb#10473
   def keyword_loc; end
 
   # def lparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7973
+  # source://yarp//lib/yarp/node.rb#10533
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7921
+  # source://yarp//lib/yarp/node.rb#10476
   def lparen_loc; end
 
   # def rparen: () -> String?
   #
-  # source://yarp//lib/yarp/node.rb#7978
+  # source://yarp//lib/yarp/node.rb#10538
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://yarp//lib/yarp/node.rb#7927
+  # source://yarp//lib/yarp/node.rb#10482
   def rparen_loc; end
 end

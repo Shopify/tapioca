@@ -27,7 +27,7 @@ module Tapioca
         OUT
 
         assert_success_status(result)
-        refute(File.directory?(@project.absolute_path("sorbet/rbi/annotations")))
+        refute(File.directory?(@project.absolute_path_to("sorbet/rbi/annotations")))
 
         repo.destroy!
       end
@@ -148,7 +148,7 @@ module Tapioca
 
         assert_stderr_includes(result, <<~ERR)
           Can't import RBI file for `spoom` as it contains errors:
-              Error: Expected to be able to parse an expression. Expected `end` to close `class` statement. (-:4:0-3:25)
+              Error: Cannot parse the expression. Expected an `end` to close the `class` statement. (-:4:0)
         ERR
 
         refute_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")
