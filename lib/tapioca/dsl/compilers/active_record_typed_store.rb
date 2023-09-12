@@ -98,6 +98,9 @@ module Tapioca
           return if stores.values.all? { |store| store.accessors.empty? }
 
           root.create_path(constant) do |model|
+            store_accessors_module = model.create_module("StoreAccessors")
+            model.create_include("StoreAccessors")
+
             stores.values.each do |store_data|
               store_data.accessors.each do |accessor, name|
                 field = store_data.fields.fetch(accessor)
@@ -105,9 +108,7 @@ module Tapioca
                 type = as_nilable_type(type) if field.null
                 name ||= field.name # support < 1.5.0
 
-                store_accessors_module = model.create_module("StoreAccessors")
                 generate_methods(store_accessors_module, name.to_s, type)
-                model.create_include("StoreAccessors")
               end
             end
           end
