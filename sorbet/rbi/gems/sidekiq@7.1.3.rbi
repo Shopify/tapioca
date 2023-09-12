@@ -136,6 +136,7 @@ class Sidekiq::Client
   #   args - an array of simple arguments to the perform method, must be JSON-serializable
   #   at - timestamp to schedule the job (optional), must be Numeric (e.g. Time.now.to_f)
   #   retry - whether to retry this job if it fails, default true or an integer number of retries
+  #   retry_for - relative amount of time to retry this job if it fails, default nil
   #   backtrace - whether to save any error backtrace, default false
   #
   # If class is set to the class name, the jobs' options will be based on Sidekiq's default
@@ -152,7 +153,7 @@ class Sidekiq::Client
   # Example:
   #   push('queue' => 'my_queue', 'class' => MyJob, 'args' => ['foo', 1, :bat => 'bar'])
   #
-  # source://sidekiq//lib/sidekiq/client.rb#85
+  # source://sidekiq//lib/sidekiq/client.rb#86
   def push(item); end
 
   # Push a large number of jobs to Redis. This method cuts out the redis
@@ -174,7 +175,7 @@ class Sidekiq::Client
   #
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/client.rb#115
+  # source://sidekiq//lib/sidekiq/client.rb#116
   def push_bulk(items); end
 
   # Returns the value of attribute redis_pool.
@@ -191,10 +192,10 @@ class Sidekiq::Client
 
   private
 
-  # source://sidekiq//lib/sidekiq/client.rb#245
+  # source://sidekiq//lib/sidekiq/client.rb#246
   def atomic_push(conn, payloads); end
 
-  # source://sidekiq//lib/sidekiq/client.rb#221
+  # source://sidekiq//lib/sidekiq/client.rb#222
   def raw_push(payloads); end
 
   class << self
@@ -206,31 +207,31 @@ class Sidekiq::Client
     #
     # Messages are enqueued to the 'default' queue.
     #
-    # source://sidekiq//lib/sidekiq/client.rb#186
+    # source://sidekiq//lib/sidekiq/client.rb#187
     def enqueue(klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_in(3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # source://sidekiq//lib/sidekiq/client.rb#214
+    # source://sidekiq//lib/sidekiq/client.rb#215
     def enqueue_in(interval, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to(:queue_name, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # source://sidekiq//lib/sidekiq/client.rb#193
+    # source://sidekiq//lib/sidekiq/client.rb#194
     def enqueue_to(queue, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to_in(:queue_name, 3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # source://sidekiq//lib/sidekiq/client.rb#200
+    # source://sidekiq//lib/sidekiq/client.rb#201
     def enqueue_to_in(queue, interval, klass, *args); end
 
-    # source://sidekiq//lib/sidekiq/client.rb#170
+    # source://sidekiq//lib/sidekiq/client.rb#171
     def push(item); end
 
-    # source://sidekiq//lib/sidekiq/client.rb#174
+    # source://sidekiq//lib/sidekiq/client.rb#175
     def push_bulk(*_arg0, **_arg1, &_arg2); end
 
     # Allows sharding of jobs across any number of Redis instances.  All jobs
@@ -246,7 +247,7 @@ class Sidekiq::Client
     # thousands of jobs per second.  I do not recommend sharding unless
     # you cannot scale any other way (e.g. splitting your app into smaller apps).
     #
-    # source://sidekiq//lib/sidekiq/client.rb#160
+    # source://sidekiq//lib/sidekiq/client.rb#161
     def via(pool); end
   end
 end
@@ -267,10 +268,10 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#48
   def initialize(options = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def [](*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def []=(*args, **_arg1, &block); end
 
   # How frequently Redis should be checked by a random Sidekiq process for
@@ -334,7 +335,7 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#224
   def error_handlers; end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def fetch(*args, **_arg1, &block); end
 
   # INTERNAL USE ONLY
@@ -342,10 +343,10 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#263
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def has_key?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def key?(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#242
@@ -359,7 +360,7 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#187
   def lookup(name, default_class = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def merge!(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#137
@@ -759,10 +760,10 @@ end
 module Sidekiq::JobUtil
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/job_util.rb#40
+  # source://sidekiq//lib/sidekiq/job_util.rb#41
   def normalize_item(item); end
 
-  # source://sidekiq//lib/sidekiq/job_util.rb#61
+  # source://sidekiq//lib/sidekiq/job_util.rb#63
   def normalized_hash(item_class); end
 
   # @raise [ArgumentError]
@@ -770,18 +771,18 @@ module Sidekiq::JobUtil
   # source://sidekiq//lib/sidekiq/job_util.rb#10
   def validate(item); end
 
-  # source://sidekiq//lib/sidekiq/job_util.rb#18
+  # source://sidekiq//lib/sidekiq/job_util.rb#19
   def verify_json(item); end
 
   private
 
   # @return [Boolean]
   #
-  # source://sidekiq//lib/sidekiq/job_util.rb#101
+  # source://sidekiq//lib/sidekiq/job_util.rb#103
   def json_unsafe?(item); end
 end
 
-# source://sidekiq//lib/sidekiq/job_util.rb#72
+# source://sidekiq//lib/sidekiq/job_util.rb#74
 Sidekiq::JobUtil::RECURSIVE_JSON_UNSAFE = T.let(T.unsafe(nil), Hash)
 
 # These functions encapsulate various job utilities.
@@ -1066,7 +1067,7 @@ Sidekiq::NAME = T.let(T.unsafe(nil), String)
 # source://sidekiq//lib/sidekiq/rails.rb#7
 class Sidekiq::Rails < ::Rails::Engine
   class << self
-    # source://activesupport/7.0.5/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.7.2/lib/active_support/callbacks.rb#68
     def __callbacks; end
   end
 end
