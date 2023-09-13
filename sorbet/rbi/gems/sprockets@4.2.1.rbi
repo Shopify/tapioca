@@ -150,7 +150,7 @@ class Sprockets::Asset
   # source://sprockets//lib/sprockets/asset.rb#207
   def eql?(other); end
 
-  # Pubic: ETag String of Asset.
+  # Public: ETag String of Asset.
   #
   # source://sprockets//lib/sprockets/asset.rb#141
   def etag; end
@@ -2172,7 +2172,7 @@ Sprockets::EncodingUtils::CHARSET_SIZE = T.let(T.unsafe(nil), Integer)
 # source://sprockets//lib/sprockets/encoding_utils.rb#200
 Sprockets::EncodingUtils::CHARSET_START = T.let(T.unsafe(nil), Array)
 
-# source://sprockets//lib/sprockets/environment.rb#7
+# source://sprockets//lib/sprockets/environment.rb#12
 class Sprockets::Environment < ::Sprockets::Base
   # `Environment` should be initialized with your application's root
   # directory. This should be the same as your Rails or Rack root.
@@ -2663,7 +2663,7 @@ module Sprockets::Loader
   # When this happens the dependencies for the returned asset are added to the "history", and older
   # entries are removed if the "history" is above `limit`.
   #
-  # source://sprockets//lib/sprockets/loader.rb#323
+  # source://sprockets//lib/sprockets/loader.rb#325
   def fetch_asset_from_dependency_cache(unloaded, limit = T.unsafe(nil)); end
 
   # Internal: Loads an asset and saves it to cache
@@ -2694,7 +2694,7 @@ module Sprockets::Loader
   #
   # Returns array of resolved dependencies
   #
-  # source://sprockets//lib/sprockets/loader.rb#287
+  # source://sprockets//lib/sprockets/loader.rb#289
   def resolve_dependencies(uris); end
 
   # Internal: Save a given asset to the cache
@@ -2705,7 +2705,7 @@ module Sprockets::Loader
   # This method converts all absolute paths to "compressed" paths
   # which are relative if they're in the root.
   #
-  # source://sprockets//lib/sprockets/loader.rb#237
+  # source://sprockets//lib/sprockets/loader.rb#239
   def store_asset(asset, unloaded); end
 end
 
@@ -4221,70 +4221,70 @@ module Sprockets::Server
   # A request for `"/assets/foo/bar.js"` will search your
   # environment for `"foo/bar.js"`.
   #
-  # source://sprockets//lib/sprockets/server.rb#27
+  # source://sprockets//lib/sprockets/server.rb#37
   def call(env); end
 
   private
 
   # Returns a 400 Forbidden response tuple
   #
-  # source://sprockets//lib/sprockets/server.rb#149
+  # source://sprockets//lib/sprockets/server.rb#159
   def bad_request_response(env); end
 
-  # source://sprockets//lib/sprockets/server.rb#257
+  # source://sprockets//lib/sprockets/server.rb#267
   def cache_headers(env, etag); end
 
   # Returns a CSS response that hides all elements on the page and
   # displays the exception
   #
-  # source://sprockets//lib/sprockets/server.rb#197
+  # source://sprockets//lib/sprockets/server.rb#207
   def css_exception_response(exception); end
 
   # Escape special characters for use inside a CSS content("...") string
   #
-  # source://sprockets//lib/sprockets/server.rb#249
+  # source://sprockets//lib/sprockets/server.rb#259
   def escape_css_content(content); end
 
   # @return [Boolean]
   #
-  # source://sprockets//lib/sprockets/server.rb#122
+  # source://sprockets//lib/sprockets/server.rb#132
   def forbidden_request?(path); end
 
   # Returns a 403 Forbidden response tuple
   #
-  # source://sprockets//lib/sprockets/server.rb#158
+  # source://sprockets//lib/sprockets/server.rb#168
   def forbidden_response(env); end
 
   # @return [Boolean]
   #
-  # source://sprockets//lib/sprockets/server.rb#130
+  # source://sprockets//lib/sprockets/server.rb#140
   def head_request?(env); end
 
-  # source://sprockets//lib/sprockets/server.rb#278
+  # source://sprockets//lib/sprockets/server.rb#288
   def headers(env, asset, length); end
 
   # Returns a JavaScript response that re-throws a Ruby exception
   # in the browser
   #
-  # source://sprockets//lib/sprockets/server.rb#189
+  # source://sprockets//lib/sprockets/server.rb#199
   def javascript_exception_response(exception); end
 
-  # source://sprockets//lib/sprockets/server.rb#175
+  # source://sprockets//lib/sprockets/server.rb#185
   def method_not_allowed_response; end
 
   # Returns a 404 Not Found response tuple
   #
-  # source://sprockets//lib/sprockets/server.rb#167
+  # source://sprockets//lib/sprockets/server.rb#177
   def not_found_response(env); end
 
   # Returns a 304 Not Modified response tuple
   #
-  # source://sprockets//lib/sprockets/server.rb#144
+  # source://sprockets//lib/sprockets/server.rb#154
   def not_modified_response(env, etag); end
 
   # Returns a 200 OK response tuple
   #
-  # source://sprockets//lib/sprockets/server.rb#135
+  # source://sprockets//lib/sprockets/server.rb#145
   def ok_response(asset, env); end
 
   # Gets ETag fingerprint.
@@ -4292,10 +4292,10 @@ module Sprockets::Server
   #     "foo-0aa2105d29558f3eb790d411d7d8fb66.js"
   #     # => "0aa2105d29558f3eb790d411d7d8fb66"
   #
-  # source://sprockets//lib/sprockets/server.rb#301
+  # source://sprockets//lib/sprockets/server.rb#311
   def path_fingerprint(path); end
 
-  # source://sprockets//lib/sprockets/server.rb#179
+  # source://sprockets//lib/sprockets/server.rb#189
   def precondition_failed_response(env); end
 end
 
@@ -4303,6 +4303,12 @@ end
 #
 # source://sprockets//lib/sprockets/server.rb#12
 Sprockets::Server::ALLOWED_REQUEST_METHODS = T.let(T.unsafe(nil), Set)
+
+# source://sprockets//lib/sprockets/server.rb#17
+Sprockets::Server::VARY = T.let(T.unsafe(nil), String)
+
+# source://sprockets//lib/sprockets/server.rb#16
+Sprockets::Server::X_CASCADE = T.let(T.unsafe(nil), String)
 
 # The purpose of this class is to generate a source map file
 # that can be read and understood by browsers.
