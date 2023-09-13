@@ -362,7 +362,7 @@ GEM
       sorbet-static-and-runtime (>= 0.5.10187)
       syntax_tree (>= 6.1.1)
       thor (>= 0.19.2)
-    sprockets (4.2.0)
+    sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
     sqlite3 (1.6.4-arm64-darwin)
