@@ -2499,6 +2499,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordRelations               enabled
               Tapioca::Dsl::Compilers::ActiveRecordScope                   enabled
               Tapioca::Dsl::Compilers::ActiveRecordSecureToken             enabled
+              Tapioca::Dsl::Compilers::ActiveRecordStore                   enabled
               Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
@@ -2531,6 +2532,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordRelations               enabled
               Tapioca::Dsl::Compilers::ActiveRecordScope                   enabled
               Tapioca::Dsl::Compilers::ActiveRecordSecureToken             enabled
+              Tapioca::Dsl::Compilers::ActiveRecordStore                   enabled
               Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
@@ -2563,6 +2565,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordRelations               disabled
               Tapioca::Dsl::Compilers::ActiveRecordScope                   disabled
               Tapioca::Dsl::Compilers::ActiveRecordSecureToken             disabled
+              Tapioca::Dsl::Compilers::ActiveRecordStore                   disabled
               Tapioca::Dsl::Compilers::ActiveSupportConcern                disabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      disabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              disabled

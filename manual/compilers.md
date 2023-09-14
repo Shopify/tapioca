@@ -18,6 +18,7 @@ In the following section you will find all available DSL compilers:
 * [ActiveRecordRelations](compiler_activerecordrelations.md)
 * [ActiveRecordScope](compiler_activerecordscope.md)
 * [ActiveRecordSecureToken](compiler_activerecordsecuretoken.md)
+* [ActiveRecordStore](compiler_activerecordstore.md)
 * [ActiveRecordTypedStore](compiler_activerecordtypedstore.md)
 * [ActiveResource](compiler_activeresource.md)
 * [ActiveStorage](compiler_activestorage.md)
