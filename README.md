@@ -71,7 +71,7 @@ $ tapioca help
 
 Commands:
   tapioca --version, -v      # Show version
-  tapioca annotations        # [deprecated] Pull gem RBI annotations from remote sources
+  tapioca annotations        # [removed] Pull gem RBI annotations from remote sources
   tapioca check-shims        # Check duplicated definitions in shim RBIs
   tapioca configure          # Initialize folder structure and type checking configuration
   tapioca dsl [constant...]  # Generate RBIs for dynamic methods
@@ -333,7 +333,7 @@ This option can be used on CI to make sure the RBI files are always up-to-date a
 
 Since Tapioca does not perform any type inference, the RBI files generated for the gems do not contain any type signatures. Instead, Tapioca relies on the community to provide high-quality, manually written RBI annotations for public gems. These annotations are sourced and combined with the generated RBIs as a step during `tapioca gem`.
 
-By default, Tapioca will pull the annotations stored in the central repository located at https://github.com/Shopify/rbi-central. It is possible to use a custom repository by changing the value of the `--annotations-sources` option. For example if your repository is stored on Github:
+By default, Tapioca will pull the annotations stored in the central repository located at https://github.com/Shopify/rbi-central. It is possible to use a custom repository by changing the value of the `--annotations-sources` option. For example if your repository is stored on GitHub:
 
 ```shell
 $ bin/tapioca gem --annotations-sources https://raw.githubusercontent.com/$USER/$REPO/$BRANCH
@@ -347,7 +347,7 @@ $ bin/tapioca gem --annotations-sources https://raw.githubusercontent.com/$USER/
 
 ##### Basic authentication
 
-Private repositories can be used as sources by passing the option `--auth` with an authentication string. For Github, this string is `token $TOKEN` where `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token):
+Private repositories can be used as sources by passing the option `--auth` with an authentication string. For GitHub, this string is `token $TOKEN` where `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token):
 
 ```shell
 $ bin/tapioca gem --annotations-sources https://raw.githubusercontent.com/$USER/$PRIVATE_REPO/$BRANCH --annotations-auth "token $TOKEN"
@@ -365,7 +365,7 @@ machine raw.githubusercontent.com
   password $TOKEN
 ```
 
-where `$USERNAME` is your Github username and `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), then, if you run Tapioca with the `--annotations-netrc` option (enabled by default), your annotation requests should be authenticated properly.
+where `$USERNAME` is your GitHub username and `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token), then, if you run Tapioca with the `--annotations-netrc` option (enabled by default), your annotation requests should be authenticated properly.
 
 The `--annotations-netrc-file` option can be specified to read from a file other than `~/.netrc`:
 

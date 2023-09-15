@@ -352,7 +352,7 @@ module Tapioca
       command.run
     end
 
-    desc "annotations", "[deprecated] Pull gem RBI annotations from remote sources"
+    desc "annotations", "[removed] Pull gem RBI annotations from remote sources"
     option :sources,
       type: :array,
       default: [CENTRAL_REPO_ROOT_URI],
@@ -368,7 +368,7 @@ module Tapioca
       default: {}
     def annotations
       raise Thor::Error, set_color(
-        "`tapioca annotation` has been deprecated." \
+        "`tapioca annotation` has been removed." \
           "The functionality has been merged into `tapioca gem`. Please use that instead.",
         :bold,
         :red,

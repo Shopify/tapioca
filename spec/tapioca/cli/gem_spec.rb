@@ -2458,7 +2458,7 @@ module Tapioca
             Tapioca can't access the annotations at https://bad-source.
 
             Are you trying to access a private repository?
-            If so, please specify your Github credentials in your ~/.netrc file or by specifying the --auth option.
+            If so, please specify your GitHub credentials in your ~/.netrc file or by specifying the --auth option.
 
             See https://github.com/Shopify/tapioca#using-a-netrc-file for more details.
           ERROR
