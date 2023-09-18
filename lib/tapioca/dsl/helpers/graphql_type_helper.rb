@@ -28,7 +28,7 @@ module Tapioca
             type_for_constant(Float)
           when GraphQL::Types::ID.singleton_class, GraphQL::Types::String.singleton_class
             type_for_constant(String)
-          when GraphQL::Types::Int.singleton_class
+          when GraphQL::Types::Int.singleton_class, GraphQL::Types::BigInt.singleton_class
             type_for_constant(Integer)
           when GraphQL::Types::ISO8601Date.singleton_class
             type_for_constant(Date)
