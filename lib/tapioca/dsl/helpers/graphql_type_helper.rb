@@ -45,6 +45,10 @@ module Tapioca
             else
               "T.any(#{value_types.join(", ")})"
             end
+          when GraphQL::Schema::Scalar.singleton_class
+            method = Runtime::Reflection.method_of(unwrapped_type, :coerce_input)
+            signature = Runtime::Reflection.signature_of(method)
+            signature&.return_type&.to_s || "T.untyped"
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when GraphQL::Schema::NonNull.singleton_class
