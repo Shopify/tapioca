@@ -144,6 +144,7 @@ module Tapioca
                   argument :float, Float, required: true
                   argument :id, ID, required: true
                   argument :int, Int, required: true
+                  argument :big_int, GraphQL::Types::BigInt, required: true
                   argument :date, GraphQL::Types::ISO8601Date, required: true
                   argument :datetime, GraphQL::Types::ISO8601DateTime, required: true
                   argument :json, GraphQL::Types::JSON, required: true
@@ -153,7 +154,7 @@ module Tapioca
                   argument :input_object, CreateCommentInput, required: true
                   argument :custom_scalar, CustomScalar, required: true
 
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:)
+                  def resolve(boolean:, float:, id:, int:, big_int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:)
                     # ...
                   end
                 end
@@ -163,8 +164,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped).returns(T.untyped) }
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:); end
+                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, big_int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped).returns(T.untyped) }
+                  def resolve(boolean:, float:, id:, int:, big_int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:); end
                 end
               RBI
 
