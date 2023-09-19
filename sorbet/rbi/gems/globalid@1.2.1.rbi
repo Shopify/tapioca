@@ -425,39 +425,42 @@ class GlobalID::Locator::BaseLocator
   #
   # source://globalid//lib/global_id/locator.rb#199
   def model_id_is_valid?(gid); end
+
+  # source://globalid//lib/global_id/locator.rb#203
+  def primary_key(model_class); end
 end
 
-# source://globalid//lib/global_id/locator.rb#224
+# source://globalid//lib/global_id/locator.rb#228
 class GlobalID::Locator::BlockLocator
   # @return [BlockLocator] a new instance of BlockLocator
   #
-  # source://globalid//lib/global_id/locator.rb#225
+  # source://globalid//lib/global_id/locator.rb#229
   def initialize(block); end
 
-  # source://globalid//lib/global_id/locator.rb#229
+  # source://globalid//lib/global_id/locator.rb#233
   def locate(gid, options = T.unsafe(nil)); end
 
-  # source://globalid//lib/global_id/locator.rb#233
+  # source://globalid//lib/global_id/locator.rb#237
   def locate_many(gids, options = T.unsafe(nil)); end
 end
 
-# source://globalid//lib/global_id/locator.rb#222
+# source://globalid//lib/global_id/locator.rb#226
 GlobalID::Locator::DEFAULT_LOCATOR = T.let(T.unsafe(nil), GlobalID::Locator::UnscopedLocator)
 
 # source://globalid//lib/global_id/locator.rb#5
 class GlobalID::Locator::InvalidModelIdError < ::StandardError; end
 
-# source://globalid//lib/global_id/locator.rb#204
+# source://globalid//lib/global_id/locator.rb#208
 class GlobalID::Locator::UnscopedLocator < ::GlobalID::Locator::BaseLocator
-  # source://globalid//lib/global_id/locator.rb#205
+  # source://globalid//lib/global_id/locator.rb#209
   def locate(gid, options = T.unsafe(nil)); end
 
   private
 
-  # source://globalid//lib/global_id/locator.rb#210
+  # source://globalid//lib/global_id/locator.rb#214
   def find_records(model_class, ids, options); end
 
-  # source://globalid//lib/global_id/locator.rb#214
+  # source://globalid//lib/global_id/locator.rb#218
   def unscoped(model_class); end
 end
 
@@ -575,7 +578,7 @@ module URI
   include ::URI::RFC2396_REGEXP
 end
 
-# source://globalid//lib/global_id/uri/gid.rb#27
+# source://globalid//lib/global_id/uri/gid.rb#7
 class URI::GID < ::URI::Generic
   # URI::GID encodes an app unique reference to a specific model as an URI.
   # It has the components: app name, model class name, model id and params.
@@ -598,7 +601,7 @@ class URI::GID < ::URI::Generic
   #
   # Read the documentation for +parse+, +create+ and +build+ for more.
   #
-  # source://uri/0.11.0/uri/generic.rb#243
+  # source://uri/0.12.0/uri/generic.rb#243
   def app; end
 
   # source://globalid//lib/global_id/uri/gid.rb#107
@@ -741,3 +744,5 @@ class URI::GID::InvalidModelIdError < ::URI::InvalidComponentError; end
 #
 # source://globalid//lib/global_id/uri/gid.rb#32
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
+
+class URI::WSS < ::URI::WS; end
