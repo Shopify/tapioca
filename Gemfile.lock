@@ -239,7 +239,7 @@ GEM
       net-protocol
     net-protocol (0.2.1)
       timeout
-    net-smtp (0.3.3)
+    net-smtp (0.4.0)
       net-protocol
     netrc (0.11.0)
     nio4r (2.5.9)
@@ -409,7 +409,7 @@ DEPENDENCIES
   minitest
   minitest-hooks
   minitest-reporters
-  net-smtp (= 0.3.3)
+  net-smtp (= 0.4.0)
   nokogiri
   pry
   pry-byebug

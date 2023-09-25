@@ -47,7 +47,7 @@ group :development, :test do
   # net-smtp was removed from default gems in Ruby 3.1, but is used by the `mail` gem.
   # So we need to add it as a dependency until `mail` is fixed:
   # https://github.com/rails/rails/blob/0919aa97260ab8240150278d3b07a1547489e3fd/Gemfile#L178-L191
-  gem "net-smtp", "0.3.3", require: false
+  gem "net-smtp", "0.4.0", require: false
 end
 
 group :test do
