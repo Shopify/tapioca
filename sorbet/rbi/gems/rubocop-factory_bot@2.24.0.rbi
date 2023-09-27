@@ -25,6 +25,16 @@ module RuboCop::Cop::FactoryBot; end
 #   factory :post do
 #   user
 #   end
+#
+#   # bad
+#   factory :post do
+#   association :user, :author
+#   end
+#
+#   # good
+#   factory :post do
+#   user factory: %i[user author]
+#   end
 # @example EnforcedStyle: explicit
 #   # bad
 #   factory :post do
@@ -36,6 +46,16 @@ module RuboCop::Cop::FactoryBot; end
 #   association :user
 #   end
 #
+#   # bad
+#   factory :post do
+#   user factory: %i[user author]
+#   end
+#
+#   # good
+#   factory :post do
+#   association :user, :author
+#   end
+#
 #   # good (NonImplicitAssociationMethodNames: ['email'])
 #   sequence :email do |n|
 #   "person#{n}@example.com"
@@ -45,70 +65,92 @@ module RuboCop::Cop::FactoryBot; end
 #   email
 #   end
 #
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#43
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#63
 class RuboCop::Cop::FactoryBot::AssociationStyle < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#71
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#139
+  def association_names(param0); end
+
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#96
   def explicit_association?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#81
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#113
   def factory_option_matcher(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#76
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#108
   def implicit_association?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#57
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#82
   def on_send(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#102
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#144
+  def trait_name(param0); end
+
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#134
   def trait_names_from_explicit(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#101
+  def with_strategy_build_option?(param0 = T.unsafe(nil)); end
 
   private
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#106
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#148
   def autocorrect(corrector, node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#114
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#156
   def autocorrect_to_explicit_style(corrector, node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#122
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#164
   def autocorrect_to_implicit_style(corrector, node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#132
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#174
   def bad?(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#140
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#195
   def bad_associations_in(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#146
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#201
   def children_of_factory_block(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#158
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#213
   def factory_names_from_explicit(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#168
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#185
+  def keyword?(node); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#223
   def non_implicit_association_method_name?(method_name); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#172
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#227
   def non_implicit_association_method_names; end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#185
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#240
   def options_for_autocorrect_to_implicit_style(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#177
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#232
   def options_from_explicit(node); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#249
+  def trait_within_trait?(node); end
 end
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#48
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#68
 RuboCop::Cop::FactoryBot::AssociationStyle::DEFAULT_NON_IMPLICIT_ASSOCIATION_METHOD_NAMES = T.let(T.unsafe(nil), Array)
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#55
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#76
+RuboCop::Cop::FactoryBot::AssociationStyle::KEYWORDS = T.let(T.unsafe(nil), Array)
+
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/association_style.rb#75
 RuboCop::Cop::FactoryBot::AssociationStyle::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Always declare attribute values as blocks.
@@ -372,41 +414,32 @@ class RuboCop::Cop::FactoryBot::CreateList < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::FactoryBot::ConfigurableExplicitOnly
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#101
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#92
   def arguments_include_method_call?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#77
-  def array_new?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#92
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#83
   def block_with_arg_and_used?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#106
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#97
   def factory_call(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#116
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#107
   def factory_calls_in_array?(param0); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#111
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#102
   def factory_list_call(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#82
-  def n_times?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#87
-  def n_times_map?(param0 = T.unsafe(nil)); end
-
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#120
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#111
   def on_array(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#131
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#123
   def on_block(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#145
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#136
   def on_send(node); end
 
   # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#72
-  def repetition_block?(param0 = T.unsafe(nil)); end
+  def repeat_count(param0 = T.unsafe(nil)); end
 
   private
 
@@ -414,77 +447,82 @@ class RuboCop::Cop::FactoryBot::CreateList < ::RuboCop::Cop::Base
   # but if it is not appropriate for the configured style,
   # it will be replaced in the subsequent autocorrection.
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#161
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#160
   def autocorrect_same_factory_calls_in_array(corrector, node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#172
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#171
   def contains_only_factory?(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#180
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#179
   def preferred_message_for_array(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#189
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#151
+  def repeat_multiple_time?(node); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#188
   def same_factory_calls_in_array?(node); end
 end
 
 # :nodoc
 #
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#195
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#194
 module RuboCop::Cop::FactoryBot::CreateList::Corrector
   private
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#198
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#197
   def build_options_string(options); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#202
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#201
   def format_method_call(node, method, arguments); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#210
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#209
   def format_receiver(receiver); end
 end
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#255
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#254
 class RuboCop::Cop::FactoryBot::CreateList::CreateListCorrector
   include ::RuboCop::Cop::FactoryBot::CreateList::Corrector
 
   # @return [CreateListCorrector] a new instance of CreateListCorrector
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#258
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#257
   def initialize(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#262
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#261
   def call(corrector); end
 
   private
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#285
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#284
   def build_arguments(node, count); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#294
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#293
   def call_replacement(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#276
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#275
   def call_with_block_replacement(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#307
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#306
   def count_from(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#320
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#319
   def format_block(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#328
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#327
   def format_multiline_block(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#336
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#335
   def format_singleline_block(node); end
 
   # Returns the value of attribute node.
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#274
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#273
   def node; end
 end
 
@@ -499,29 +537,29 @@ RuboCop::Cop::FactoryBot::CreateList::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Ar
 
 # :nodoc
 #
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#218
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#217
 class RuboCop::Cop::FactoryBot::CreateList::TimesCorrector
   include ::RuboCop::Cop::FactoryBot::CreateList::Corrector
 
   # @return [TimesCorrector] a new instance of TimesCorrector
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#221
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#220
   def initialize(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#225
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#224
   def call(corrector); end
 
   private
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#247
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#246
   def factory_call_block_source; end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#234
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#233
   def generate_n_times_block(node); end
 
   # Returns the value of attribute node.
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#232
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/create_list.rb#231
   def node; end
 end
 
@@ -685,6 +723,34 @@ RuboCop::Cop::FactoryBot::FactoryNameStyle::MSG = T.let(T.unsafe(nil), String)
 
 # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#56
 RuboCop::Cop::FactoryBot::FactoryNameStyle::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
+
+# Do not create a FactoryBot sequence for an id column.
+#
+# @example
+#   # bad - can lead to conflicts between FactoryBot and DB sequences
+#   factory :foo do
+#   sequence :id
+#   end
+#
+#   # good - a non-id column
+#   factory :foo do
+#   sequence :some_non_id_column
+#   end
+#
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#19
+class RuboCop::Cop::FactoryBot::IdSequence < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::RangeHelp
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#26
+  def on_send(node); end
+end
+
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#23
+RuboCop::Cop::FactoryBot::IdSequence::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#24
+RuboCop::Cop::FactoryBot::IdSequence::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Checks for redundant `factory` option.
 #
