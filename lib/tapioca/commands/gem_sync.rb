@@ -8,6 +8,13 @@ module Tapioca
 
       sig { override.void }
       def execute
+        Loaders::Gem.load_application(
+          bundle: @bundle,
+          prerequire: @prerequire,
+          postrequire: @postrequire,
+          default_command: default_command(:require),
+          halt_upon_load_error: @halt_upon_load_error,
+        )
         anything_done = [
           perform_removals,
           perform_additions,

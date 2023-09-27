@@ -61,6 +61,7 @@ module Tapioca
         .reject { |gem| gem.ignore?(dir) }
         .uniq(&:rbi_file_name)
         .sort_by(&:rbi_file_name)
+      dependencies.concat(default_gems)
       [dependencies, missing_specs]
     end
 
@@ -76,6 +77,19 @@ module Tapioca
         missing_spec_names.include?(spec.name)
       end
       [materialized_dependencies, missing_specs]
+    end
+
+    sig { returns(T::Array[Gemfile::GemSpec]) }
+    def default_gems
+      $LOADED_FEATURES.filter_map do |f|
+        next unless f.start_with?(RbConfig::CONFIG["rubylibdir"]) && f.end_with?(".rb")
+
+        spec = Gemfile::GemSpec.spec_lookup_by_file_path[f]
+        next unless spec
+
+        spec.loaded_from_bundle = false
+        spec
+      end.uniq
     end
 
     sig { returns(Bundler::Runtime) }
@@ -131,6 +145,9 @@ module Tapioca
       sig { returns(T::Array[Pathname]) }
       attr_reader :files
 
+      sig { returns(T::Boolean) }
+      attr_accessor :loaded_from_bundle
+
       sig { params(spec: Spec).void }
       def initialize(spec)
         @spec = T.let(spec, Tapioca::Gemfile::Spec)
@@ -139,6 +156,7 @@ module Tapioca
         @version = T.let(version_string, String)
         @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
         @files = T.let(collect_files, T::Array[Pathname])
+        @loaded_from_bundle = T.let(true, T::Boolean)
       end
 
       sig { params(other: BasicObject).returns(T::Boolean) }

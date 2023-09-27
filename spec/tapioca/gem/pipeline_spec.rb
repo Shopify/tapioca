@@ -53,6 +53,64 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       end
     end
 
+    describe "compiles default gems" do
+      before do
+        spec = ::Gem::Specification.default_stubs.find { |stub| stub.name == "did_you_mean" }.to_spec
+        @gem = T.let(Tapioca::Gemfile::GemSpec.new(spec), Tapioca::Gemfile::GemSpec)
+        @gem.loaded_from_bundle = false
+      end
+
+      it "that are fully in payload" do
+        T.unsafe(Tapioca::Static::SymbolLoader)
+          .stub(:payload_symbols, -> {
+            Tapioca::Static::SymbolLoader.gem_symbols(@gem)
+          }) do
+            pipeline = ::Tapioca::Gem::Pipeline.new(
+              @gem,
+              include_doc: false,
+              include_loc: false,
+            )
+            tree = pipeline.compile
+            Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
+
+            assert_empty(tree.string)
+          end
+      end
+
+      it "that are partially in the payload" do
+        T.unsafe(Tapioca::Static::SymbolLoader)
+          .stub(:payload_symbols, -> {
+                                    Set.new(["DidYouMean", "DidYouMean::PatternKeyNameChecker"])
+                                  }) do
+          pipeline = ::Tapioca::Gem::Pipeline.new(
+            @gem,
+            include_doc: false,
+            include_loc: false,
+          )
+          tree = pipeline.compile
+          Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
+
+          refute_includes(tree.string, "DidYouMean::PatternKeyNameChecker")
+          assert_includes(tree.string, "DidYouMean::ClassNameChecker")
+        end
+      end
+
+      it "that are not in the payload" do
+        T.unsafe(Tapioca::Static::SymbolLoader)
+          .stub(:payload_symbols, -> { Set.new }) do
+          pipeline = ::Tapioca::Gem::Pipeline.new(
+            @gem,
+            include_doc: false,
+            include_loc: false,
+          )
+          tree = pipeline.compile
+          Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
+
+          assert_includes(tree.string, "DidYouMean::PatternKeyNameChecker")
+        end
+      end
+    end
+
     it "compiles DelegateClass" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar

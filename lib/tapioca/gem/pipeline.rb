@@ -59,6 +59,7 @@ module Tapioca
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def push_constant(symbol, constant)
+        # puts symbol, constant
         @events << Gem::ConstantFound.new(symbol, constant)
       end
 
@@ -162,8 +163,14 @@ module Tapioca
       def load_bootstrap_symbols(gem)
         engine_symbols = Static::SymbolLoader.engine_symbols(gem)
         gem_symbols = Static::SymbolLoader.gem_symbols(gem)
+        bootstrap_symbols = gem_symbols.union(engine_symbols)
 
-        gem_symbols.union(engine_symbols)
+        # If the gem isn't part of the bundle (eg. a default gem) then we only bootsrap symbols
+        # that aren't part of the payload
+        unless gem.loaded_from_bundle
+          bootstrap_symbols.reject! { |sym| symbol_in_payload?(sym) }
+        end
+        bootstrap_symbols
       end
 
       # Events handling
