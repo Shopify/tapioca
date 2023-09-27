@@ -2602,6 +2602,12 @@ end
 
 # Checks that spec file paths are consistent and well-formed.
 #
+# This cop is deprecated.
+# We plan to remove it in the next major version update to 3.0.
+# The migration targets are `RSpec/SpecFilePathSuffix`
+# and `RSpec/SpecFilePathFormat`.
+# If you are using this cop, please plan for migration.
+#
 # By default, this checks that spec file paths are consistent with the
 # test subject and enforces that it reflects the described
 # class/module and its optionally called out method.
@@ -2651,78 +2657,78 @@ end
 #   # good
 #   my_class_spec.rb         # describe MyClass, '#method'
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#59
+# source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#65
 class RuboCop::Cop::RSpec::FilePath < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::TopLevelGroup
   include ::RuboCop::Cop::RSpec::Namespace
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#66
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#72
   def example_group(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#75
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#81
   def on_top_level_example_group(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#73
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#79
   def routing_metadata?(param0); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#136
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#142
   def camel_to_snake_case(string); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#143
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#149
   def custom_transform; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#85
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#91
   def ensure_correct_file_path(send_node, example_group, arguments); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#167
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#173
   def expanded_file_path; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#126
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#132
   def expected_path(constant); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#151
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#157
   def filename_ends_with?(pattern); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#147
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#153
   def ignore_methods?; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#119
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#125
   def name_pattern(method_name); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#101
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#107
   def pattern_for(example_group, arguments); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#115
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#121
   def pattern_for_spec_suffix_only; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#155
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#161
   def relevant_rubocop_rspec_file?(_file); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#97
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#103
   def routing_spec?(args); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#163
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#169
   def routing_spec_path?; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#159
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#165
   def spec_suffix_only?; end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#63
+# source://rubocop-rspec//lib/rubocop/cop/rspec/file_path.rb#69
 RuboCop::Cop::RSpec::FilePath::MSG = T.let(T.unsafe(nil), String)
 
 # Helps find the true end location of nodes which might contain heredocs.
