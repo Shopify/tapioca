@@ -194,7 +194,7 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(loaded_argument: T.untyped, loaded_arguments: T::Array[T.untyped], custom_name: T.untyped, optional_loaded_argument: T.untyped, optional_loaded_arguments: T.nilable(T::Array[T.untyped])).returns(T.untyped) }
+                  sig { params(loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], custom_name: ::LoadedType, optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
                   def resolve(loaded_argument:, loaded_arguments:, custom_name:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
                 end
               RBI
