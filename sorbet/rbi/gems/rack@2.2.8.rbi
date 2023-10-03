@@ -1134,7 +1134,7 @@ Rack::Directory::DIR_PAGE_HEADER = T.let(T.unsafe(nil), String)
 # Body class for directory entries, showing an index page with links
 # to each file.
 #
-# source://rack//lib/rack/directory.rb#46
+# source://rack//lib/rack/directory.rb#45
 class Rack::Directory::DirectoryBody < ::Struct
   # Yield strings for each part of the directory entry
   #
@@ -1761,31 +1761,31 @@ class Rack::Lint::HijackWrapper
   # source://rack//lib/rack/lint.rb#533
   def initialize(io); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def close(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def close_read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def close_write(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def closed?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def flush(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def read_nonblock(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def write(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.2/forwardable.rb#229
+  # source://forwardable/1.3.3/forwardable.rb#231
   def write_nonblock(*args, **_arg1, &block); end
 end
 
@@ -4676,7 +4676,7 @@ Rack::Session::Abstract::SessionHash::Unspecified = T.let(T.unsafe(nil), Object)
 #     }.new
 #   })
 #
-# source://rack//lib/rack/session/cookie.rb#51
+# source://rack//lib/rack/session/cookie.rb#50
 class Rack::Session::Cookie < ::Rack::Session::Abstract::PersistedSecure
   # @return [Cookie] a new instance of Cookie
   #

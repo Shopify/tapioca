@@ -119,12 +119,12 @@ PublicSuffix::DOT = T.let(T.unsafe(nil), String)
 class PublicSuffix::Domain
   # Creates and returns a new {PublicSuffix::Domain} instance.
   #
-  # @example Initialize with a TLD and SLD
-  #   PublicSuffix::Domain.new("com", "example")
-  #   # => #<PublicSuffix::Domain @tld="com", @trd=nil>
   # @example Initialize with a TLD
   #   PublicSuffix::Domain.new("com")
   #   # => #<PublicSuffix::Domain @tld="com">
+  # @example Initialize with a TLD and SLD
+  #   PublicSuffix::Domain.new("com", "example")
+  #   # => #<PublicSuffix::Domain @tld="com", @trd=nil>
   # @example Initialize with a TLD, SLD and TRD
   #   PublicSuffix::Domain.new("com", "example", "wwww")
   #   # => #<PublicSuffix::Domain @tld="com", @trd=nil, @sld="example">

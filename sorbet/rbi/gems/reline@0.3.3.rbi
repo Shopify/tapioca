@@ -1935,38 +1935,9 @@ module Reline::Terminfo
 
     # @return [Boolean]
     #
-    # source://reline//lib/reline/terminfo.rb#165
+    # source://reline//lib/reline/terminfo.rb#171
     def enabled?; end
-
-    # source://reline//lib/reline/terminfo.rb#94
-    def setupterm(term, fildes); end
-
-    # @raise [TerminfoError]
-    #
-    # source://reline//lib/reline/terminfo.rb#141
-    def tigetflag(capname); end
-
-    # @raise [TerminfoError]
-    #
-    # source://reline//lib/reline/terminfo.rb#153
-    def tigetnum(capname); end
-
-    # @raise [TerminfoError]
-    #
-    # source://reline//lib/reline/terminfo.rb#123
-    def tigetstr(capname); end
-
-    # source://reline//lib/reline/terminfo.rb#133
-    def tiparm(str, *args); end
   end
-end
-
-# source://reline//lib/reline/terminfo.rb#117
-class Reline::Terminfo::StringWithTiparm < ::String
-  # for method chain
-  #
-  # source://reline//lib/reline/terminfo.rb#118
-  def tiparm(*args); end
 end
 
 # source://reline//lib/reline.rb#16

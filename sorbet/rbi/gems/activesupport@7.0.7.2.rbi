@@ -172,7 +172,7 @@ class ActiveSupport::ActionableError::NonActionable < ::StandardError; end
 #   variants.tablet?   # => true
 #   variants.desktop?  # => false
 #
-# source://activesupport//lib/active_support/array_inquirer.rb#24
+# source://activesupport//lib/active_support/array_inquirer.rb#12
 class ActiveSupport::ArrayInquirer < ::Array
   # Passes each element of +candidates+ collection to ArrayInquirer collection.
   # The method returns true if any element from the ArrayInquirer collection
@@ -952,7 +952,7 @@ ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
 #   4.0.1+ for distributed mget support.
 # * +delete_matched+ support for Redis KEYS globs.
 #
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#52
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#51
 class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   include ::ActiveSupport::Cache::Strategy::LocalCache
 
@@ -3566,6 +3566,8 @@ class ActiveSupport::Deprecation
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#21
     def gem_name=(arg); end
 
+    def new(*_arg0); end
+
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#21
     def silence(*_arg0, **_arg1, &_arg2); end
 
@@ -3577,6 +3579,10 @@ class ActiveSupport::Deprecation
 
     # source://activesupport//lib/active_support/deprecation/instance_delegator.rb#26
     def warn(message = T.unsafe(nil), callstack = T.unsafe(nil)); end
+
+    private
+
+    def allocate; end
   end
 end
 
@@ -5375,6 +5381,11 @@ end
 # source://activesupport//lib/active_support/fork_tracker.rb#31
 module ActiveSupport::ForkTracker::CoreExtPrivate
   include ::ActiveSupport::ForkTracker::CoreExt
+
+  private
+
+  # source://activesupport//lib/active_support/fork_tracker.rb#16
+  def fork(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://activesupport//lib/active_support/fork_tracker.rb#5
@@ -5463,7 +5474,7 @@ end
 #
 # which will, in turn, require this file.
 #
-# source://activesupport//lib/active_support/hash_with_indifferent_access.rb#55
+# source://activesupport//lib/active_support/hash_with_indifferent_access.rb#53
 class ActiveSupport::HashWithIndifferentAccess < ::Hash
   # @return [HashWithIndifferentAccess] a new instance of HashWithIndifferentAccess
   #
@@ -6907,7 +6918,7 @@ end
 # flushes all logs when the request finishes
 # (via <tt>action_dispatch.callback</tt> notification) in a Rails environment.
 #
-# source://activesupport//lib/active_support/log_subscriber.rb#66
+# source://activesupport//lib/active_support/log_subscriber.rb#65
 class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   # source://activesupport//lib/active_support/log_subscriber.rb#80
   def colorize_logging; end
@@ -7067,7 +7078,7 @@ end
 
 # Simple formatter which only displays the message.
 #
-# source://activesupport//lib/active_support/logger.rb#87
+# source://activesupport//lib/active_support/logger.rb#86
 class ActiveSupport::Logger::SimpleFormatter < ::Logger::Formatter
   # This method is invoked when a log event occurs
   #
@@ -8290,10 +8301,10 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#117
   def listening?(name); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#93
+  # source://mutex_m/0.1.2/mutex_m.rb#93
   def lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#83
+  # source://mutex_m/0.1.2/mutex_m.rb#83
   def locked?; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#79
@@ -8308,13 +8319,13 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#34
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#78
+  # source://mutex_m/0.1.2/mutex_m.rb#78
   def synchronize(&block); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#88
+  # source://mutex_m/0.1.2/mutex_m.rb#88
   def try_lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#98
+  # source://mutex_m/0.1.2/mutex_m.rb#98
   def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#51
@@ -10570,48 +10581,48 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#940
   def _teardown_callbacks; end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#735
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#735
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#664
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#664
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#675
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#675
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#687
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#687
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#699
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#699
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#706
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#706
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#717
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#717
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#727
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#727
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#745
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#745
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#780
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#780
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#803
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#803
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#811
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#811
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#820
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#820
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # test/unit backwards compatibility methods
   #
-  # source://minitest/5.19.0/lib/minitest/assertions.rb#422
+  # source://minitest/5.20.0/lib/minitest/assertions.rb#422
   def assert_raise(*exp); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -10623,7 +10634,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#151
   def inspect; end
 
-  # source://minitest/5.19.0/lib/minitest.rb#304
+  # source://minitest/5.20.0/lib/minitest.rb#307
   def method_name; end
 
   class << self
@@ -15854,38 +15865,57 @@ class IO::Buffer
 
   def initialize(*_arg0); end
 
+  def &(_arg0); end
   def <=>(_arg0); end
+  def ^(_arg0); end
+  def and!(_arg0); end
   def clear(*_arg0); end
   def copy(*_arg0); end
+  def each(*_arg0); end
+  def each_byte(*_arg0); end
   def empty?; end
   def external?; end
   def free; end
   def get_string(*_arg0); end
   def get_value(_arg0, _arg1); end
+  def get_values(_arg0, _arg1); end
   def hexdump; end
   def inspect; end
   def internal?; end
   def locked; end
   def locked?; end
   def mapped?; end
+  def not!; end
   def null?; end
-  def pread(_arg0, _arg1, _arg2); end
-  def pwrite(_arg0, _arg1, _arg2); end
-  def read(_arg0, _arg1); end
+  def or!(_arg0); end
+  def pread(*_arg0); end
+  def pwrite(*_arg0); end
+  def read(*_arg0); end
   def readonly?; end
   def resize(_arg0); end
   def set_string(*_arg0); end
   def set_value(_arg0, _arg1, _arg2); end
+  def set_values(_arg0, _arg1, _arg2); end
+  def shared?; end
   def size; end
-  def slice(_arg0, _arg1); end
+  def slice(*_arg0); end
   def to_s; end
   def transfer; end
   def valid?; end
-  def write(_arg0, _arg1); end
+  def values(*_arg0); end
+  def write(*_arg0); end
+  def xor!(_arg0); end
+  def |(_arg0); end
+  def ~; end
+
+  private
+
+  def initialize_copy(_arg0); end
 
   class << self
     def for(_arg0); end
     def map(*_arg0); end
+    def size_of(_arg0); end
   end
 end
 
@@ -15901,10 +15931,12 @@ IO::Buffer::LITTLE_ENDIAN = T.let(T.unsafe(nil), Integer)
 IO::Buffer::LOCKED = T.let(T.unsafe(nil), Integer)
 class IO::Buffer::LockedError < ::RuntimeError; end
 IO::Buffer::MAPPED = T.let(T.unsafe(nil), Integer)
+class IO::Buffer::MaskError < ::ArgumentError; end
 IO::Buffer::NETWORK_ENDIAN = T.let(T.unsafe(nil), Integer)
 IO::Buffer::PAGE_SIZE = T.let(T.unsafe(nil), Integer)
 IO::Buffer::PRIVATE = T.let(T.unsafe(nil), Integer)
 IO::Buffer::READONLY = T.let(T.unsafe(nil), Integer)
+IO::Buffer::SHARED = T.let(T.unsafe(nil), Integer)
 
 class IO::ConsoleMode
   def echo=(_arg0); end
@@ -15936,6 +15968,7 @@ IO::EWOULDBLOCKWaitReadable = IO::EAGAINWaitReadable
 IO::EWOULDBLOCKWaitWritable = IO::EAGAINWaitWritable
 IO::PRIORITY = T.let(T.unsafe(nil), Integer)
 IO::READABLE = T.let(T.unsafe(nil), Integer)
+class IO::TimeoutError < ::IOError; end
 IO::WRITABLE = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#228

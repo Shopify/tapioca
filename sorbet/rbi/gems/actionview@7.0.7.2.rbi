@@ -845,6 +845,7 @@ class ActionView::ActionViewError < ::StandardError; end
 # source://actionview//lib/action_view/base.rb#141
 class ActionView::Base
   include ::ActionView::Context
+  include ::ERB::Escape
   include ::ERB::Util
   include ::ActiveSupport::Benchmarkable
   include ::ActionView::Helpers::ActiveModelHelper
@@ -14465,7 +14466,7 @@ end
 # source://actionview//lib/action_view/template/handlers/erb.rb#22
 ActionView::Template::Handlers::ERB::ENCODING_TAG = T.let(T.unsafe(nil), Regexp)
 
-# source://actionview//lib/action_view/template/handlers/erb/erubi.rb#10
+# source://actionview//lib/action_view/template/handlers/erb/erubi.rb#9
 class ActionView::Template::Handlers::ERB::Erubi < ::Erubi::Engine
   # @return [Erubi] a new instance of Erubi
   #
@@ -15483,4 +15484,14 @@ class ActionView::WrongEncodingError < ::ActionView::EncodingError
 
   # source://actionview//lib/action_view/template/error.rb#18
   def message; end
+end
+
+module ERB::Escape
+  private
+
+  def html_escape(_arg0); end
+
+  class << self
+    def html_escape(_arg0); end
+  end
 end

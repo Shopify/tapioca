@@ -1565,7 +1565,7 @@ ActionMailer::InlinePreviewInterceptor::PATTERN = T.let(T.unsafe(nil), Regexp)
 # Implements the ActiveSupport::LogSubscriber for logging notifications when
 # email is delivered or received.
 #
-# source://actionmailer//lib/action_mailer/log_subscriber.rb#9
+# source://actionmailer//lib/action_mailer/log_subscriber.rb#8
 class ActionMailer::LogSubscriber < ::ActiveSupport::LogSubscriber
   # An email was delivered.
   #

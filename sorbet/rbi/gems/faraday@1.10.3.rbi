@@ -89,12 +89,12 @@ module Faraday
     # @example With an URL argument
     #   Faraday.new 'http://faraday.com'
     #   # => Faraday::Connection to http://faraday.com
+    # @example With an URL argument and an options hash
+    #   Faraday.new 'http://faraday.com', params: { page: 1 }
+    #   # => Faraday::Connection to http://faraday.com?page=1
     # @example With everything in an options hash
     #   Faraday.new url: 'http://faraday.com',
     #   params: { page: 1 }
-    #   # => Faraday::Connection to http://faraday.com?page=1
-    # @example With an URL argument and an options hash
-    #   Faraday.new 'http://faraday.com', params: { page: 1 }
     #   # => Faraday::Connection to http://faraday.com?page=1
     # @option options
     # @option options

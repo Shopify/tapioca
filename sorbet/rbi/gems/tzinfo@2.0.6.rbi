@@ -2209,20 +2209,20 @@ end
 class TZInfo::DayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # Initializes a new {DayOfMonthTransitionRule}.
   #
-  # @param transition_at [Integer] the time in seconds after midnight local
-  #   time at which the transition occurs.
+  # @param month [Integer] the month of the year when the transition occurs.
   # @param week [Integer] the week of the month when the transition occurs (1
   #   to 4).
   # @param day_of_week [Integer] the day of the week when the transition
   #   occurs. 0 is Sunday, 6 is Saturday.
-  # @param month [Integer] the month of the year when the transition occurs.
+  # @param transition_at [Integer] the time in seconds after midnight local
+  #   time at which the transition occurs.
+  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
+  # @raise [ArgumentError] if `week` is not an `Integer`.
   # @raise [ArgumentError] if `week` is less than 1 or greater than 4.
   # @raise [ArgumentError] if `day_of_week` is not an `Integer`.
   # @raise [ArgumentError] if `day_of_week` is less than 0 or greater than 6.
-  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
-  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
-  # @raise [ArgumentError] if `month` is not an `Integer`.
-  # @raise [ArgumentError] if `week` is not an `Integer`.
   # @return [DayOfMonthTransitionRule] a new instance of DayOfMonthTransitionRule
   #
   # source://tzinfo//lib/tzinfo/transition_rule.rb#340
@@ -2287,16 +2287,16 @@ end
 class TZInfo::DayOfWeekTransitionRule < ::TZInfo::TransitionRule
   # Initializes a new {DayOfWeekTransitionRule}.
   #
-  # @param transition_at [Integer] the time in seconds after midnight local
-  #   time at which the transition occurs.
+  # @param month [Integer] the month of the year when the transition occurs.
   # @param day_of_week [Integer] the day of the week when the transition
   #   occurs. 0 is Sunday, 6 is Saturday.
-  # @param month [Integer] the month of the year when the transition occurs.
+  # @param transition_at [Integer] the time in seconds after midnight local
+  #   time at which the transition occurs.
+  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
   # @raise [ArgumentError] if `day_of_week` is not an `Integer`.
   # @raise [ArgumentError] if `day_of_week` is less than 0 or greater than 6.
-  # @raise [ArgumentError] if `month` is not an `Integer`.
-  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
-  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
   # @return [DayOfWeekTransitionRule] a new instance of DayOfWeekTransitionRule
   #
   # source://tzinfo//lib/tzinfo/transition_rule.rb#274
@@ -3151,16 +3151,16 @@ TZInfo::JulianDayOfYearTransitionRule::YEAR = T.let(T.unsafe(nil), Integer)
 class TZInfo::LastDayOfMonthTransitionRule < ::TZInfo::DayOfWeekTransitionRule
   # Initializes a new {LastDayOfMonthTransitionRule}.
   #
-  # @param transition_at [Integer] the time in seconds after midnight local
-  #   time at which the transition occurs.
+  # @param month [Integer] the month of the year when the transition occurs.
   # @param day_of_week [Integer] the day of the week when the transition
   #   occurs. 0 is Sunday, 6 is Saturday.
-  # @param month [Integer] the month of the year when the transition occurs.
+  # @param transition_at [Integer] the time in seconds after midnight local
+  #   time at which the transition occurs.
+  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is not an `Integer`.
+  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
   # @raise [ArgumentError] if `day_of_week` is not an `Integer`.
   # @raise [ArgumentError] if `day_of_week` is less than 0 or greater than 6.
-  # @raise [ArgumentError] if `month` is not an `Integer`.
-  # @raise [ArgumentError] if `transition_at` is not an `Integer`.
-  # @raise [ArgumentError] if `month` is less than 1 or greater than 12.
   # @return [LastDayOfMonthTransitionRule] a new instance of LastDayOfMonthTransitionRule
   #
   # source://tzinfo//lib/tzinfo/transition_rule.rb#409
@@ -3556,19 +3556,19 @@ class TZInfo::Timestamp
   #
   # @param value [Integer] the number of seconds since 1970-01-01 00:00:00 UTC
   #   ignoring leap seconds.
-  # @param utc_offset [Object] either `nil` for a {Timestamp} without a
-  #   specified offset, an offset from UTC specified as an `Integer` number of
-  #   seconds or the `Symbol` `:utc`).
   # @param sub_second [Numeric] the fractional part of the second as either a
   #   `Rational` that is greater than or equal to 0 and less than 1, or
   #   the `Integer` 0.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer` and
-  #   not the `Symbol` `:utc`.
+  # @param utc_offset [Object] either `nil` for a {Timestamp} without a
+  #   specified offset, an offset from UTC specified as an `Integer` number of
+  #   seconds or the `Symbol` `:utc`).
+  # @raise [ArgumentError] if `value` is not an `Integer`.
   # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
   #   `Integer` 0.
-  # @raise [ArgumentError] if `value` is not an `Integer`.
   # @raise [RangeError] if `sub_second` is a `Rational` but that is less
   #   than 0 or greater than or equal to 1.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer` and
+  #   not the `Symbol` `:utc`.
   # @return [Timestamp] a new instance of Timestamp
   #
   # source://tzinfo//lib/tzinfo/timestamp.rb#344
@@ -3760,6 +3760,7 @@ class TZInfo::Timestamp
     # and time parameters will be interpreted as a local date and time with
     # the given offset.
     #
+    # @param year [Integer] the year.
     # @param month [Integer] the month (1-12).
     # @param day [Integer] the day of the month (1-31).
     # @param hour [Integer] the hour (0-23).
@@ -3771,13 +3772,10 @@ class TZInfo::Timestamp
     # @param utc_offset [Object] either `nil` for a {Timestamp} without a
     #   specified offset, an offset from UTC specified as an `Integer` number
     #   of seconds or the `Symbol` `:utc`).
-    # @param year [Integer] the year.
-    # @raise [RangeError] if `sub_second` is a `Rational` but that is less
-    #   than 0 or greater than or equal to 1.
-    # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-    #   `Integer` 0.
     # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
     #   `minute`, or `second` is not an `Integer`.
+    # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+    #   `Integer` 0.
     # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
     #   and not the `Symbol` `:utc`.
     # @raise [RangeError] if `month` is not between 1 and 12.
@@ -3785,6 +3783,8 @@ class TZInfo::Timestamp
     # @raise [RangeError] if `hour` is not between 0 and 23.
     # @raise [RangeError] if `minute` is not between 0 and 59.
     # @raise [RangeError] if `second` is not between 0 and 59.
+    # @raise [RangeError] if `sub_second` is a `Rational` but that is less
+    #   than 0 or greater than or equal to 1.
     # @return [Timestamp] a new {Timestamp} representing the specified
     #   (proleptic Gregorian calendar) date and time.
     #
@@ -4300,6 +4300,9 @@ class TZInfo::Timezone
   #
   # values, interpreted as a local time in the time zone.
   #
+  # @param year [Integer] the year.
+  # @param month [Integer] the month (1-12).
+  # @param day [Integer] the day of the month (1-31).
   # @param hour [Integer] the hour (0-23).
   # @param minute [Integer] the minute (0-59).
   # @param second [Integer] the second (0-59).
@@ -4310,9 +4313,17 @@ class TZInfo::Timezone
   #   selecting the period observing daylight savings time (`true`), always
   #   selecting the period observing standard time (`false`), or leaving the
   #   ambiguity unresolved (`nil`).
-  # @param month [Integer] the month (1-12).
-  # @param day [Integer] the day of the month (1-31).
-  # @param year [Integer] the year.
+  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
+  #   `minute`, or `second` is not an `Integer`.
+  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+  #   `Integer` 0.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
+  #   and not the `Symbol` `:utc`.
+  # @raise [RangeError] if `month` is not between 1 and 12.
+  # @raise [RangeError] if `day` is not between 1 and 31.
+  # @raise [RangeError] if `hour` is not between 0 and 23.
+  # @raise [RangeError] if `minute` is not between 0 and 59.
+  # @raise [RangeError] if `second` is not between 0 and 59.
   # @raise [RangeError] if `sub_second` is a `Rational` but that is less
   #   than 0 or greater than or equal to 1.
   # @raise [PeriodNotFound] if the date and time parameters do not specify a
@@ -4320,17 +4331,6 @@ class TZInfo::Timezone
   # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
   #   the time zone and the `dst` parameter or block did not resolve the
   #   ambiguity.
-  # @raise [RangeError] if `month` is not between 1 and 12.
-  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
-  #   `minute`, or `second` is not an `Integer`.
-  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-  #   `Integer` 0.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
-  #   and not the `Symbol` `:utc`.
-  # @raise [RangeError] if `day` is not between 1 and 31.
-  # @raise [RangeError] if `hour` is not between 0 and 23.
-  # @raise [RangeError] if `minute` is not between 0 and 59.
-  # @raise [RangeError] if `second` is not between 0 and 59.
   # @return [DateTimeWithOffset] a new `DateTime` object based on the given
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
   #   optional block is yielded to.
@@ -4387,6 +4387,9 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param year [Integer] the year.
+  # @param month [Integer] the month (1-12).
+  # @param day [Integer] the day of the month (1-31).
   # @param hour [Integer] the hour (0-23).
   # @param minute [Integer] the minute (0-59).
   # @param second [Integer] the second (0-59).
@@ -4397,9 +4400,17 @@ class TZInfo::Timezone
   #   selecting the period observing daylight savings time (`true`), always
   #   selecting the period observing standard time (`false`), or leaving the
   #   ambiguity unresolved (`nil`).
-  # @param month [Integer] the month (1-12).
-  # @param day [Integer] the day of the month (1-31).
-  # @param year [Integer] the year.
+  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
+  #   `minute`, or `second` is not an `Integer`.
+  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+  #   `Integer` 0.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
+  #   and not the `Symbol` `:utc`.
+  # @raise [RangeError] if `month` is not between 1 and 12.
+  # @raise [RangeError] if `day` is not between 1 and 31.
+  # @raise [RangeError] if `hour` is not between 0 and 23.
+  # @raise [RangeError] if `minute` is not between 0 and 59.
+  # @raise [RangeError] if `second` is not between 0 and 59.
   # @raise [RangeError] if `sub_second` is a `Rational` but that is less
   #   than 0 or greater than or equal to 1.
   # @raise [PeriodNotFound] if the date and time parameters do not specify a
@@ -4407,17 +4418,6 @@ class TZInfo::Timezone
   # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
   #   the time zone and the `dst` parameter or block did not resolve the
   #   ambiguity.
-  # @raise [RangeError] if `month` is not between 1 and 12.
-  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
-  #   `minute`, or `second` is not an `Integer`.
-  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-  #   `Integer` 0.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
-  #   and not the `Symbol` `:utc`.
-  # @raise [RangeError] if `day` is not between 1 and 31.
-  # @raise [RangeError] if `hour` is not between 0 and 23.
-  # @raise [RangeError] if `minute` is not between 0 and 59.
-  # @raise [RangeError] if `second` is not between 0 and 59.
   # @return [TimeWithOffset] a new `Time` object based on the given values,
   #   interpreted as a local time in the time zone.
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
@@ -4475,6 +4475,9 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param year [Integer] the year.
+  # @param month [Integer] the month (1-12).
+  # @param day [Integer] the day of the month (1-31).
   # @param hour [Integer] the hour (0-23).
   # @param minute [Integer] the minute (0-59).
   # @param second [Integer] the second (0-59).
@@ -4485,9 +4488,17 @@ class TZInfo::Timezone
   #   selecting the period observing daylight savings time (`true`), always
   #   selecting the period observing standard time (`false`), or leaving the
   #   ambiguity unresolved (`nil`).
-  # @param month [Integer] the month (1-12).
-  # @param day [Integer] the day of the month (1-31).
-  # @param year [Integer] the year.
+  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
+  #   `minute`, or `second` is not an `Integer`.
+  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
+  #   `Integer` 0.
+  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
+  #   and not the `Symbol` `:utc`.
+  # @raise [RangeError] if `month` is not between 1 and 12.
+  # @raise [RangeError] if `day` is not between 1 and 31.
+  # @raise [RangeError] if `hour` is not between 0 and 23.
+  # @raise [RangeError] if `minute` is not between 0 and 59.
+  # @raise [RangeError] if `second` is not between 0 and 59.
   # @raise [RangeError] if `sub_second` is a `Rational` but that is less
   #   than 0 or greater than or equal to 1.
   # @raise [PeriodNotFound] if the date and time parameters do not specify a
@@ -4495,17 +4506,6 @@ class TZInfo::Timezone
   # @raise [AmbiguousTime] if the date and time parameters are ambiguous for
   #   the time zone and the `dst` parameter or block did not resolve the
   #   ambiguity.
-  # @raise [RangeError] if `month` is not between 1 and 12.
-  # @raise [ArgumentError] if either of `year`, `month`, `day`, `hour`,
-  #   `minute`, or `second` is not an `Integer`.
-  # @raise [ArgumentError] if `sub_second` is not a `Rational`, or the
-  #   `Integer` 0.
-  # @raise [ArgumentError] if `utc_offset` is not `nil`, not an `Integer`
-  #   and not the `Symbol` `:utc`.
-  # @raise [RangeError] if `day` is not between 1 and 31.
-  # @raise [RangeError] if `hour` is not between 0 and 23.
-  # @raise [RangeError] if `minute` is not between 0 and 59.
-  # @raise [RangeError] if `second` is not between 0 and 59.
   # @return [TimestampWithOffset] a new {Timestamp} object based on the given
   #   values, interpreted as a local time in the time zone.
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
@@ -4565,16 +4565,16 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
   # @param dst [Boolean] whether to resolve ambiguous local times by always
   #   selecting the period observing daylight savings time (`true`), always
   #   selecting the period observing standard time (`false`), or leaving the
   #   ambiguity unresolved (`nil`).
-  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
+  # @raise [ArgumentError] if `local_time` is `nil`.
   # @raise [PeriodNotFound] if `local_time` is not valid for the time zone
   #   (there is no equivalent UTC time).
   # @raise [AmbiguousTime] if `local_time` was ambiguous for the time zone and
   #   the `dst` parameter or block did not resolve the ambiguity.
-  # @raise [ArgumentError] if `local_time` is `nil`.
   # @return [Object] the UTC equivalent of `local_time` as a `Time`,
   #   `DateTime` or {Timestamp}.
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an
@@ -4696,16 +4696,16 @@ class TZInfo::Timezone
   # The default value of the `dst` parameter can be specified using
   # {Timezone.default_dst=}.
   #
+  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
   # @param dst [Boolean] whether to resolve ambiguous local times by always
   #   selecting the period observing daylight savings time (`true`), always
   #   selecting the period observing standard time (`false`), or leaving the
   #   ambiguity unresolved (`nil`).
-  # @param local_time [Object] a `Time`, `DateTime` or {Timestamp}.
+  # @raise [ArgumentError] if `local_time` is `nil`.
   # @raise [PeriodNotFound] if `local_time` is not valid for the time zone
   #   (there is no equivalent UTC time).
   # @raise [AmbiguousTime] if `local_time` was ambiguous for the time zone and
   #   the `dst` parameter or block did not resolve the ambiguity.
-  # @raise [ArgumentError] if `local_time` is `nil`.
   # @return [TimezonePeriod] the {TimezonePeriod} that is valid at
   #   `local_time`.
   # @yield [periods] if the `dst` parameter did not resolve an ambiguity, an

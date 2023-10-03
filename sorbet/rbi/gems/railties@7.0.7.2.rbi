@@ -580,6 +580,8 @@ class Rails::Application < ::Rails::Engine
 
     # source://railties//lib/rails/application.rb#77
     def instance; end
+
+    def new(*_arg0); end
   end
 end
 
@@ -5411,6 +5413,8 @@ class Rails::Railtie
     #
     # source://railties//lib/rails/railtie.rb#224
     def method_missing(name, *args, **_arg2, &block); end
+
+    def new(*_arg0); end
 
     # receives an instance variable identifier, set the variable value if is
     # blank and append given block to value, which will be used later in

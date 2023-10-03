@@ -890,10 +890,10 @@ class Pry
     # Run a Pry command from outside a session. The commands available are
     # those referenced by `Pry.config.commands` (the default command set).
     #
-    # @example Run under Pry class, returning only public methods.
-    #   Pry.run_command "ls -m", :target => Pry
     # @example Run at top-level with no output.
     #   Pry.run_command "ls"
+    # @example Run under Pry class, returning only public methods.
+    #   Pry.run_command "ls -m", :target => Pry
     # @example Display command output.
     #   Pry.run_command "ls -av", :show_output => true
     # @option options

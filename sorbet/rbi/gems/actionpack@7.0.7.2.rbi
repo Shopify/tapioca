@@ -4082,7 +4082,7 @@ end
 # source://actionpack//lib/action_controller/metal/live.rb#89
 ActionController::Live::SSE::PERMITTED_OPTIONS = T.let(T.unsafe(nil), Array)
 
-# source://actionpack//lib/action_controller/test_case.rb#170
+# source://actionpack//lib/action_controller/test_case.rb#169
 class ActionController::LiveTestResponse < ::ActionController::Live::Response
   # Was there a server-side error?
   #
@@ -5970,10 +5970,10 @@ class ActionController::ParamsWrapper::Options < ::Struct
   # source://actionpack//lib/action_controller/metal/params_wrapper.rb#108
   def include; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#93
+  # source://mutex_m/0.1.2/mutex_m.rb#93
   def lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#83
+  # source://mutex_m/0.1.2/mutex_m.rb#83
   def locked?; end
 
   # Returns the value of attribute model
@@ -5990,13 +5990,13 @@ class ActionController::ParamsWrapper::Options < ::Struct
   # source://actionpack//lib/action_controller/metal/params_wrapper.rb#141
   def name; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#78
+  # source://mutex_m/0.1.2/mutex_m.rb#78
   def synchronize(&block); end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#88
+  # source://mutex_m/0.1.2/mutex_m.rb#88
   def try_lock; end
 
-  # source://mutex_m/0.1.1/mutex_m.rb#98
+  # source://mutex_m/0.1.2/mutex_m.rb#98
   def unlock; end
 
   private
@@ -18564,6 +18564,13 @@ class ActionDispatch::ServerTiming::Subscriber
 
   # source://actionpack//lib/action_dispatch/middleware/server_timing.rb#40
   def unsubscribe; end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://actionpack//lib/action_dispatch/middleware/server_timing.rb#11
@@ -19045,6 +19052,13 @@ class Mime::AllType < ::Mime::Type
   #
   # source://actionpack//lib/action_dispatch/http/mime_type.rb#327
   def html?; end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://actionpack//lib/action_dispatch/http/mime_type.rb#36
@@ -19102,6 +19116,13 @@ class Mime::NullType
   #
   # source://actionpack//lib/action_dispatch/http/mime_type.rb#349
   def respond_to_missing?(method, _); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # source://actionpack//lib/action_dispatch/http/mime_type.rb#35

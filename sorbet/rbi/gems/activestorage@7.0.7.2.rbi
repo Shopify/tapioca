@@ -1731,7 +1731,7 @@ class ActiveStorage::Attached::Changes::PurgeOne
   def reset; end
 end
 
-# source://activestorage//lib/active_storage/attached/many.rb#10
+# source://activestorage//lib/active_storage/attached/many.rb#5
 class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/many.rb#49
   def attach(*attachables); end
@@ -1804,7 +1804,7 @@ module ActiveStorage::Attached::Model::ClassMethods
   def validate_service_configuration(association_name, service); end
 end
 
-# source://activestorage//lib/active_storage/attached/one.rb#10
+# source://activestorage//lib/active_storage/attached/one.rb#5
 class ActiveStorage::Attached::One < ::ActiveStorage::Attached
   # source://activestorage//lib/active_storage/attached/one.rb#56
   def attach(attachable); end
