@@ -677,8 +677,11 @@ module Tapioca
               create_common_method(
                 "sum",
                 parameters: [
-                  create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
-                  create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
+                  create_opt_param("identity_or_column", type: "T.untyped", default: "nil"),
+                  create_block_param(
+                    "block",
+                    type: "T.nilable(T.proc.params(record: #{constant_name}).returns(T.untyped))",
+                  ),
                 ],
                 return_type: "T.untyped",
               )
