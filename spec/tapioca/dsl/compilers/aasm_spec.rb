@@ -67,6 +67,9 @@ module Tapioca
                 # typed: strong
 
                 class StateMachine
+                  sig { params(name: T.untyped).returns(AASM::InstanceBase) }
+                  def aasm(name = :default); end
+
                   sig { returns(T::Boolean) }
                   def cleaning?; end
 
@@ -188,6 +191,9 @@ module Tapioca
                 # typed: strong
 
                 class StateMachine
+                  sig { params(name: T.untyped).returns(AASM::InstanceBase) }
+                  def aasm(name = :default); end
+
                   sig { returns(T::Boolean) }
                   def cleaning?; end
 
@@ -309,6 +315,9 @@ module Tapioca
                 # typed: strong
 
                 class StateMachine
+                  sig { params(name: T.untyped).returns(AASM::InstanceBase) }
+                  def aasm(name = :default); end
+
                   sig { returns(T::Boolean) }
                   def foo_cleaning?; end
 

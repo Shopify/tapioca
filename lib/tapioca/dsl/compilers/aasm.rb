@@ -121,6 +121,14 @@ module Tapioca
               end
             end
 
+            model.create_method(
+              "aasm",
+              parameters: [
+                create_opt_param("name", type: "T.untyped", default: ":default"),
+              ],
+              return_type: "AASM::InstanceBase",
+            )
+
             # Create the overall state machine method, which will return an
             # instance of the PrivateAASMMachine class.
             model.create_method(
