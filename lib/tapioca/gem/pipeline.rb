@@ -59,7 +59,6 @@ module Tapioca
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def push_constant(symbol, constant)
-        # puts symbol, constant
         @events << Gem::ConstantFound.new(symbol, constant)
       end
 

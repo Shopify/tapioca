@@ -87,6 +87,7 @@ module Tapioca
         spec = Gemfile::GemSpec.spec_lookup_by_file_path[f]
         next unless spec
 
+        spec.files.select!(&:exist?)
         spec.loaded_from_bundle = false
         spec
       end.uniq
