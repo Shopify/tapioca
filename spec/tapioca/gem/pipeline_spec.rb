@@ -551,6 +551,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def bar; end
         end
 
+        class Module::DelegationError < ::NoMethodError; end
+
         class String
           include ::Comparable
           include ::Foo::Bar
@@ -4172,7 +4174,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       mutex = Class.new { |k| k.include(::Mutex_m) }
       sorbet_runtime_version = ::Gem::Specification.find_by_name("sorbet-runtime").version.to_s
-      mutex_version = ::Gem::Specification.default_stubs.find { |s| s.name == "mutex_m" }.version.to_s
+      mutex_version = ::Gem::Specification.find_by_name("mutex_m").version.to_s ||
+        ::Gem::Specification.default_stubs.find { |s| s.name == "mutex_m" }.version.to_s
 
       output = template(<<~RBI)
         # source://the-dep//lib/bar.rb#1
