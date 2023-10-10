@@ -110,7 +110,7 @@ class Money
   # source://shopify-money//lib/money/money.rb#280
   def fraction(rate); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def hash(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#89
@@ -119,7 +119,7 @@ class Money
   # source://shopify-money//lib/money/money.rb#155
   def inspect; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def negative?(*args, **_arg1, &block); end
 
   # @return [Boolean]
@@ -127,10 +127,10 @@ class Money
   # source://shopify-money//lib/money/money.rb#110
   def no_currency?; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def nonzero?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def positive?(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#274
@@ -152,7 +152,7 @@ class Money
   # source://shopify-money//lib/money/money.rb#217
   def to_d; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def to_f(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#221
@@ -161,7 +161,7 @@ class Money
   # source://shopify-money//lib/money/money.rb#221
   def to_fs(style = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def to_i(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#246
@@ -178,7 +178,7 @@ class Money
   # source://shopify-money//lib/money/money.rb#10
   def value; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://forwardable/1.3.2/forwardable.rb#229
   def zero?(*args, **_arg1, &block); end
 
   private
@@ -219,10 +219,10 @@ class Money
     # source://shopify-money//lib/money/money.rb#62
     def current_currency=(currency); end
 
-    # source://forwardable/1.3.3/forwardable.rb#231
+    # source://forwardable/1.3.2/forwardable.rb#229
     def default_currency(*args, **_arg1, &block); end
 
-    # source://forwardable/1.3.3/forwardable.rb#231
+    # source://forwardable/1.3.2/forwardable.rb#229
     def default_currency=(*args, **_arg1, &block); end
 
     # source://shopify-money//lib/money/deprecations.rb#12
@@ -882,7 +882,7 @@ module RuboCop::Cop; end
 # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#5
 module RuboCop::Cop::Money; end
 
-# source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#6
+# source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#20
 class RuboCop::Cop::Money::MissingCurrency < ::RuboCop::Cop::Cop
   # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#48
   def autocorrect(node); end
@@ -930,7 +930,7 @@ end
 # source://shopify-money//lib/rubocop/cop/money/unsafe_to_money.rb#15
 RuboCop::Cop::Money::UnsafeToMoney::MSG = T.let(T.unsafe(nil), String)
 
-# source://shopify-money//lib/rubocop/cop/money/zero_money.rb#6
+# source://shopify-money//lib/rubocop/cop/money/zero_money.rb#25
 class RuboCop::Cop::Money::ZeroMoney < ::RuboCop::Cop::Cop
   # source://shopify-money//lib/rubocop/cop/money/zero_money.rb#39
   def autocorrect(node); end

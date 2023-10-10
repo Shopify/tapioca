@@ -89,7 +89,7 @@ end
 # requests when in an EM reactor loop, or for making parallel requests in
 # synchronous code.
 #
-# source://faraday-em_http//lib/faraday/adapter/em_http.rb#8
+# source://faraday-em_http//lib/faraday/adapter/em_http.rb#10
 class Faraday::Adapter::EMHttp < ::Faraday::Adapter
   include ::Faraday::Adapter::EMHttp::Options
 

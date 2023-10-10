@@ -7728,7 +7728,7 @@ end
 
 # Wrapper for RSpec examples
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/example.rb#7
 class RuboCop::RSpec::Example < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example.rb#28
   def definition; end
@@ -7754,7 +7754,7 @@ end
 
 # Wrapper for RSpec example groups
 #
-# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#12
 class RuboCop::RSpec::ExampleGroup < ::RuboCop::RSpec::Concept
   # source://rubocop-rspec//lib/rubocop/rspec/example_group.rb#28
   def examples; end
@@ -7794,7 +7794,7 @@ end
 
 # Wrapper for RSpec hook
 #
-# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#6
+# source://rubocop-rspec//lib/rubocop/rspec/hook.rb#7
 class RuboCop::RSpec::Hook < ::RuboCop::RSpec::Concept
   # @return [Boolean]
   #

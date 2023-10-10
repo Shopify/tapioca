@@ -6,7 +6,7 @@
 
 # This class is equivalent to POP3, except that it uses APOP authentication.
 #
-# source://net-pop//lib/net/pop.rb#729
+# source://net-pop//lib/net/pop.rb#730
 class Net::APOP < ::Net::POP3
   # Always returns true.
   #
@@ -176,7 +176,7 @@ Net::POP = Net::POP3
 # The POPMail#unique_id() method returns the unique-id of the message as a
 # String. Normally the unique-id is a hash of the message.
 #
-# source://net-pop//lib/net/pop.rb#196
+# source://net-pop//lib/net/pop.rb#197
 class Net::POP3 < ::Net::Protocol
   # Creates a new POP3 object.
   #

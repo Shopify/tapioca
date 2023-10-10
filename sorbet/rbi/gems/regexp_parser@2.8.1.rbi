@@ -2872,7 +2872,7 @@ end
 
 # Base for all scanner validation errors
 #
-# source://regexp_parser//lib/regexp_parser/scanner/errors/validation_error.rb#3
+# source://regexp_parser//lib/regexp_parser/scanner/errors/validation_error.rb#4
 class Regexp::Scanner::ValidationError < ::Regexp::Scanner::ScannerError
   class << self
     # Centralizes and unifies the handling of validation related errors.
@@ -3053,7 +3053,7 @@ class Regexp::Syntax::Base
 end
 
 # source://regexp_parser//lib/regexp_parser/syntax/versions.rb#8
-Regexp::Syntax::CURRENT = Regexp::Syntax::V3_2_0
+Regexp::Syntax::CURRENT = Regexp::Syntax::V3_1_0
 
 # source://regexp_parser//lib/regexp_parser/syntax/version_lookup.rb#6
 class Regexp::Syntax::InvalidVersionNameError < ::Regexp::Syntax::SyntaxError

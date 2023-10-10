@@ -163,10 +163,10 @@ end
 class Minitest::AbstractReporter
   include ::Mutex_m
 
-  # source://mutex_m/0.1.2/mutex_m.rb#93
+  # source://mutex_m/0.1.1/mutex_m.rb#93
   def lock; end
 
-  # source://mutex_m/0.1.2/mutex_m.rb#83
+  # source://mutex_m/0.1.1/mutex_m.rb#83
   def locked?; end
 
   # Did this run pass?
@@ -200,13 +200,13 @@ class Minitest::AbstractReporter
   # source://minitest//lib/minitest.rb#627
   def start; end
 
-  # source://mutex_m/0.1.2/mutex_m.rb#78
+  # source://mutex_m/0.1.1/mutex_m.rb#78
   def synchronize(&block); end
 
-  # source://mutex_m/0.1.2/mutex_m.rb#88
+  # source://mutex_m/0.1.1/mutex_m.rb#88
   def try_lock; end
 
-  # source://mutex_m/0.1.2/mutex_m.rb#98
+  # source://mutex_m/0.1.1/mutex_m.rb#98
   def unlock; end
 end
 
@@ -682,7 +682,7 @@ Minitest::BacktraceFilter::MT_RE = T.let(T.unsafe(nil), Regexp)
 
 # Dispatch to multiple reporters as one.
 #
-# source://minitest//lib/minitest.rb#887
+# source://minitest//lib/minitest.rb#889
 class Minitest::CompositeReporter < ::Minitest::AbstractReporter
   # @return [CompositeReporter] a new instance of CompositeReporter
   #
@@ -1648,7 +1648,7 @@ Minitest::Spec::TYPES = T.let(T.unsafe(nil), Array)
 #     end
 #   end
 #
-# source://minitest//lib/minitest.rb#722
+# source://minitest//lib/minitest.rb#724
 class Minitest::StatisticsReporter < ::Minitest::Reporter
   # @return [StatisticsReporter] a new instance of StatisticsReporter
   #
@@ -1766,7 +1766,7 @@ end
 # plugin, pull this out of the composite and replace it with your
 # own.
 #
-# source://minitest//lib/minitest.rb#817
+# source://minitest//lib/minitest.rb#818
 class Minitest::SummaryReporter < ::Minitest::StatisticsReporter
   # source://minitest//lib/minitest.rb#852
   def aggregated_results(io); end
@@ -1985,7 +1985,7 @@ Minitest::Test::TEARDOWN_METHODS = T.let(T.unsafe(nil), Array)
 
 # Assertion wrapping an unexpected error that was raised during a run.
 #
-# source://minitest//lib/minitest.rb#976
+# source://minitest//lib/minitest.rb#977
 class Minitest::UnexpectedError < ::Minitest::Assertion
   # @return [UnexpectedError] a new instance of UnexpectedError
   #

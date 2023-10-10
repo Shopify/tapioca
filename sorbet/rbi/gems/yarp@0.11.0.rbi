@@ -63,7 +63,7 @@ end
 #     alias foo bar
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#13
+# source://yarp//lib/yarp/node.rb#14
 class YARP::AliasNode < ::YARP::Node
   # def initialize: (new_name: Node, old_name: Node, keyword_loc: Location, location: Location) -> void
   #
@@ -132,7 +132,7 @@ end
 #     foo => bar | baz
 #            ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#84
+# source://yarp//lib/yarp/node.rb#85
 class YARP::AlternationPatternNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
@@ -201,7 +201,7 @@ end
 #     left and right
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#155
+# source://yarp//lib/yarp/node.rb#156
 class YARP::AndNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
@@ -270,7 +270,7 @@ end
 #     return foo, bar, baz
 #            ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#226
+# source://yarp//lib/yarp/node.rb#227
 class YARP::ArgumentsNode < ::YARP::Node
   # def initialize: (arguments: Array[Node], location: Location) -> void
   #
@@ -325,7 +325,7 @@ end
 #     [1, 2, 3]
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#279
+# source://yarp//lib/yarp/node.rb#280
 class YARP::ArrayNode < ::YARP::Node
   # def initialize: (elements: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
@@ -411,7 +411,7 @@ end
 #     foo in Bar[1, 2, 3]
 #     ^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#365
+# source://yarp//lib/yarp/node.rb#366
 class YARP::ArrayPatternNode < ::YARP::Node
   # def initialize: (constant: Node?, requireds: Array[Node], rest: Node?, posts: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
@@ -500,7 +500,7 @@ end
 #     { a => b }
 #       ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#467
+# source://yarp//lib/yarp/node.rb#468
 class YARP::AssocNode < ::YARP::Node
   # def initialize: (key: Node, value: Node?, operator_loc: Location?, location: Location) -> void
   #
@@ -569,7 +569,7 @@ end
 #     { **foo }
 #       ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#542
+# source://yarp//lib/yarp/node.rb#543
 class YARP::AssocSplatNode < ::YARP::Node
   # def initialize: (value: Node?, operator_loc: Location, location: Location) -> void
   #
@@ -635,7 +635,7 @@ YARP::BACKEND = T.let(T.unsafe(nil), Symbol)
 #     $'
 #     ^^
 #
-# source://yarp//lib/yarp/node.rb#610
+# source://yarp//lib/yarp/node.rb#611
 class YARP::BackReferenceReadNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -703,7 +703,7 @@ end
 #     end
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#658
+# source://yarp//lib/yarp/node.rb#659
 class YARP::BeginNode < ::YARP::Node
   # def initialize: (begin_keyword_loc: Location?, statements: StatementsNode?, rescue_clause: RescueNode?, else_clause: ElseNode?, ensure_clause: EnsureNode?, end_keyword_loc: Location?, location: Location) -> void
   #
@@ -795,7 +795,7 @@ end
 #     bar(&args)
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#774
+# source://yarp//lib/yarp/node.rb#775
 class YARP::BlockArgumentNode < ::YARP::Node
   # def initialize: (expression: Node?, operator_loc: Location, location: Location) -> void
   #
@@ -859,7 +859,7 @@ end
 #     a { |; b| }
 #            ^
 #
-# source://yarp//lib/yarp/node.rb#842
+# source://yarp//lib/yarp/node.rb#843
 class YARP::BlockLocalVariableNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -913,7 +913,7 @@ end
 # [1, 2, 3].each { |i| puts x }
 #                ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#894
+# source://yarp//lib/yarp/node.rb#895
 class YARP::BlockNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], parameters: BlockParametersNode?, body: Node?, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
@@ -998,7 +998,7 @@ end
 #           ^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#991
+# source://yarp//lib/yarp/node.rb#992
 class YARP::BlockParameterNode < ::YARP::Node
   # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
@@ -1071,7 +1071,7 @@ end
 #            ^^^^^^^^^^^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#1064
+# source://yarp//lib/yarp/node.rb#1065
 class YARP::BlockParametersNode < ::YARP::Node
   # def initialize: (parameters: ParametersNode?, locals: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
@@ -1150,7 +1150,7 @@ end
 #     break foo
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1149
+# source://yarp//lib/yarp/node.rb#1150
 class YARP::BreakNode < ::YARP::Node
   # def initialize: (arguments: ArgumentsNode?, keyword_loc: Location, location: Location) -> void
   #
@@ -1214,7 +1214,7 @@ end
 #     foo.bar &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1217
+# source://yarp//lib/yarp/node.rb#1218
 class YARP::CallAndWriteNode < ::YARP::Node
   # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, flags: Integer, read_name: String, write_name: String, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -1372,7 +1372,7 @@ end
 #     foo&.bar
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1390
+# source://yarp//lib/yarp/node.rb#1391
 class YARP::CallNode < ::YARP::Node
   # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, block: BlockNode?, flags: Integer, name: String, location: Location) -> void
   #
@@ -1513,7 +1513,7 @@ YARP::CallNodeFlags::VARIABLE_CALL = T.let(T.unsafe(nil), Integer)
 #     foo.bar += baz
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1535
+# source://yarp//lib/yarp/node.rb#1536
 class YARP::CallOperatorWriteNode < ::YARP::Node
   # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, flags: Integer, read_name: String, write_name: String, operator: Symbol, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -1656,7 +1656,7 @@ end
 #     foo.bar ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1694
+# source://yarp//lib/yarp/node.rb#1695
 class YARP::CallOrWriteNode < ::YARP::Node
   # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, flags: Integer, read_name: String, write_name: String, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -1799,7 +1799,7 @@ end
 #     foo => [bar => baz]
 #            ^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#1852
+# source://yarp//lib/yarp/node.rb#1853
 class YARP::CapturePatternNode < ::YARP::Node
   # def initialize: (value: Node, target: Node, operator_loc: Location, location: Location) -> void
   #
@@ -1870,7 +1870,7 @@ end
 # when false
 # end
 #
-# source://yarp//lib/yarp/node.rb#1925
+# source://yarp//lib/yarp/node.rb#1926
 class YARP::CaseNode < ::YARP::Node
   # def initialize: (predicate: Node?, conditions: Array[Node], consequent: ElseNode?, case_keyword_loc: Location, end_keyword_loc: Location, location: Location) -> void
   #
@@ -1954,7 +1954,7 @@ end
 #     class Foo end
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2021
+# source://yarp//lib/yarp/node.rb#2022
 class YARP::ClassNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], class_keyword_loc: Location, constant_path: Node, inheritance_operator_loc: Location?, superclass: Node?, body: Node?, end_keyword_loc: Location, name: Symbol, location: Location) -> void
   #
@@ -2058,7 +2058,7 @@ end
 #     @@target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2141
+# source://yarp//lib/yarp/node.rb#2142
 class YARP::ClassVariableAndWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -2132,7 +2132,7 @@ end
 #     @@target += value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2217
+# source://yarp//lib/yarp/node.rb#2218
 class YARP::ClassVariableOperatorWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
@@ -2206,7 +2206,7 @@ end
 #     @@target ||= value
 #     ^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2294
+# source://yarp//lib/yarp/node.rb#2295
 class YARP::ClassVariableOrWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -2280,7 +2280,7 @@ end
 #     @@foo
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2370
+# source://yarp//lib/yarp/node.rb#2371
 class YARP::ClassVariableReadNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -2334,7 +2334,7 @@ end
 #     @@foo, @@bar = baz
 #     ^^^^^  ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2422
+# source://yarp//lib/yarp/node.rb#2423
 class YARP::ClassVariableTargetNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -2388,7 +2388,7 @@ end
 #     @@foo = 1
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2474
+# source://yarp//lib/yarp/node.rb#2475
 class YARP::ClassVariableWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location?, location: Location) -> void
   #
@@ -2498,7 +2498,7 @@ YARP::Comment::TYPES = T.let(T.unsafe(nil), Array)
 #     Target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2550
+# source://yarp//lib/yarp/node.rb#2551
 class YARP::ConstantAndWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -2572,7 +2572,7 @@ end
 #     Target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2626
+# source://yarp//lib/yarp/node.rb#2627
 class YARP::ConstantOperatorWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
@@ -2646,7 +2646,7 @@ end
 #     Target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2703
+# source://yarp//lib/yarp/node.rb#2704
 class YARP::ConstantOrWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -2720,7 +2720,7 @@ end
 #     Parent::Child &&= value
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2779
+# source://yarp//lib/yarp/node.rb#2780
 class YARP::ConstantPathAndWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -2789,7 +2789,7 @@ end
 #     Foo::Bar
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2850
+# source://yarp//lib/yarp/node.rb#2851
 class YARP::ConstantPathNode < ::YARP::Node
   # def initialize: (parent: Node?, child: Node, delimiter_loc: Location, location: Location) -> void
   #
@@ -2858,7 +2858,7 @@ end
 #     Parent::Child += value
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2925
+# source://yarp//lib/yarp/node.rb#2926
 class YARP::ConstantPathOperatorWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
@@ -2927,7 +2927,7 @@ end
 #     Parent::Child ||= value
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#2997
+# source://yarp//lib/yarp/node.rb#2998
 class YARP::ConstantPathOrWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -2996,7 +2996,7 @@ end
 #     Foo::Foo, Bar::Bar = baz
 #     ^^^^^^^^  ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3068
+# source://yarp//lib/yarp/node.rb#3069
 class YARP::ConstantPathTargetNode < ::YARP::Node
   # def initialize: (parent: Node?, child: Node, delimiter_loc: Location, location: Location) -> void
   #
@@ -3071,7 +3071,7 @@ end
 #     ::Foo::Bar = 1
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3149
+# source://yarp//lib/yarp/node.rb#3150
 class YARP::ConstantPathWriteNode < ::YARP::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -3140,7 +3140,7 @@ end
 #     Foo
 #     ^^^
 #
-# source://yarp//lib/yarp/node.rb#3220
+# source://yarp//lib/yarp/node.rb#3221
 class YARP::ConstantReadNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -3194,7 +3194,7 @@ end
 #     Foo, Bar = baz
 #     ^^^  ^^^
 #
-# source://yarp//lib/yarp/node.rb#3272
+# source://yarp//lib/yarp/node.rb#3273
 class YARP::ConstantTargetNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -3248,7 +3248,7 @@ end
 #     Foo = 1
 #     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3324
+# source://yarp//lib/yarp/node.rb#3325
 class YARP::ConstantWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
@@ -4073,7 +4073,7 @@ end
 #     end
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3401
+# source://yarp//lib/yarp/node.rb#3402
 class YARP::DefNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, receiver: Node?, parameters: ParametersNode?, body: Node?, locals: Array[Symbol], def_keyword_loc: Location, operator_loc: Location?, lparen_loc: Location?, rparen_loc: Location?, equal_loc: Location?, end_keyword_loc: Location?, location: Location) -> void
   #
@@ -4212,7 +4212,7 @@ end
 #     defined?(a)
 #     ^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3564
+# source://yarp//lib/yarp/node.rb#3565
 class YARP::DefinedNode < ::YARP::Node
   # def initialize: (lparen_loc: Location?, value: Node, rparen_loc: Location?, keyword_loc: Location, location: Location) -> void
   #
@@ -4291,7 +4291,7 @@ class YARP::DefinedNode < ::YARP::Node
   def value; end
 end
 
-# source://yarp//lib/yarp/desugar_visitor.rb#4
+# source://yarp//lib/yarp/desugar_visitor.rb#9
 class YARP::DesugarVisitor < ::YARP::MutationVisitor
   # @@foo &&= bar
   #
@@ -4444,7 +4444,7 @@ end
 #     if a then b else c end
 #                 ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3650
+# source://yarp//lib/yarp/node.rb#3651
 class YARP::ElseNode < ::YARP::Node
   # def initialize: (else_keyword_loc: Location, statements: StatementsNode?, end_keyword_loc: Location?, location: Location) -> void
   #
@@ -4518,7 +4518,7 @@ end
 #     "foo #{bar}"
 #          ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3729
+# source://yarp//lib/yarp/node.rb#3730
 class YARP::EmbeddedStatementsNode < ::YARP::Node
   # def initialize: (opening_loc: Location, statements: StatementsNode?, closing_loc: Location, location: Location) -> void
   #
@@ -4592,7 +4592,7 @@ end
 #     "foo #@bar"
 #          ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3808
+# source://yarp//lib/yarp/node.rb#3809
 class YARP::EmbeddedVariableNode < ::YARP::Node
   # def initialize: (operator_loc: Location, variable: Node, location: Location) -> void
   #
@@ -4660,7 +4660,7 @@ end
 #       bar
 #     end
 #
-# source://yarp//lib/yarp/node.rb#3876
+# source://yarp//lib/yarp/node.rb#3877
 class YARP::EnsureNode < ::YARP::Node
   # def initialize: (ensure_keyword_loc: Location, statements: StatementsNode?, end_keyword_loc: Location, location: Location) -> void
   #
@@ -4734,7 +4734,7 @@ end
 #     false
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#3955
+# source://yarp//lib/yarp/node.rb#3956
 class YARP::FalseNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -4789,7 +4789,7 @@ end
 #     foo in Foo(*bar, baz, *qux)
 #     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4007
+# source://yarp//lib/yarp/node.rb#4008
 class YARP::FindPatternNode < ::YARP::Node
   # def initialize: (constant: Node?, left: Node, requireds: Array[Node], right: Node, opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
@@ -4878,7 +4878,7 @@ end
 #     baz if foo .. bar
 #            ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4106
+# source://yarp//lib/yarp/node.rb#4107
 class YARP::FlipFlopNode < ::YARP::Node
   # def initialize: (left: Node?, right: Node?, operator_loc: Location, flags: Integer, location: Location) -> void
   #
@@ -5011,7 +5011,7 @@ end
 #     for i in a end
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4242
+# source://yarp//lib/yarp/node.rb#4243
 class YARP::ForNode < ::YARP::Node
   # def initialize: (index: Node, collection: Node, statements: StatementsNode?, for_keyword_loc: Location, in_keyword_loc: Location, do_keyword_loc: Location?, end_keyword_loc: Location, location: Location) -> void
   #
@@ -5117,7 +5117,7 @@ end
 #       ^^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#4359
+# source://yarp//lib/yarp/node.rb#4360
 class YARP::ForwardingArgumentsNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -5167,7 +5167,7 @@ end
 #             ^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#4406
+# source://yarp//lib/yarp/node.rb#4407
 class YARP::ForwardingParameterNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -5216,7 +5216,7 @@ end
 #     super
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4452
+# source://yarp//lib/yarp/node.rb#4453
 class YARP::ForwardingSuperNode < ::YARP::Node
   # def initialize: (block: BlockNode?, location: Location) -> void
   #
@@ -5270,7 +5270,7 @@ end
 #     $target &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4509
+# source://yarp//lib/yarp/node.rb#4510
 class YARP::GlobalVariableAndWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -5344,7 +5344,7 @@ end
 #     $target += value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4585
+# source://yarp//lib/yarp/node.rb#4586
 class YARP::GlobalVariableOperatorWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
@@ -5418,7 +5418,7 @@ end
 #     $target ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4662
+# source://yarp//lib/yarp/node.rb#4663
 class YARP::GlobalVariableOrWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -5492,7 +5492,7 @@ end
 #     $foo
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#4738
+# source://yarp//lib/yarp/node.rb#4739
 class YARP::GlobalVariableReadNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -5546,7 +5546,7 @@ end
 #     $foo, $bar = baz
 #     ^^^^  ^^^^
 #
-# source://yarp//lib/yarp/node.rb#4790
+# source://yarp//lib/yarp/node.rb#4791
 class YARP::GlobalVariableTargetNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -5600,7 +5600,7 @@ end
 #     $foo = 1
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4842
+# source://yarp//lib/yarp/node.rb#4843
 class YARP::GlobalVariableWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
@@ -5674,7 +5674,7 @@ end
 #     { a => b }
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4918
+# source://yarp//lib/yarp/node.rb#4919
 class YARP::HashNode < ::YARP::Node
   # def initialize: (opening_loc: Location, elements: Array[Node], closing_loc: Location, location: Location) -> void
   #
@@ -5751,7 +5751,7 @@ end
 #     foo => { a: 1, b: 2, **c }
 #            ^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#4995
+# source://yarp//lib/yarp/node.rb#4996
 class YARP::HashPatternNode < ::YARP::Node
   # def initialize: (constant: Node?, assocs: Array[Node], kwrest: Node?, opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
@@ -5838,7 +5838,7 @@ end
 #     if foo then bar end
 #     ^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5094
+# source://yarp//lib/yarp/node.rb#5095
 class YARP::IfNode < ::YARP::Node
   # def initialize: (if_keyword_loc: Location?, predicate: Node, statements: StatementsNode?, consequent: Node?, end_keyword_loc: Location?, location: Location) -> void
   #
@@ -5982,7 +5982,7 @@ end
 #     case a; in b then c end
 #             ^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5248
+# source://yarp//lib/yarp/node.rb#5249
 class YARP::InNode < ::YARP::Node
   # def initialize: (pattern: Node, statements: StatementsNode?, in_loc: Location, then_loc: Location?, location: Location) -> void
   #
@@ -6061,7 +6061,7 @@ end
 #     @target &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5334
+# source://yarp//lib/yarp/node.rb#5335
 class YARP::InstanceVariableAndWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -6135,7 +6135,7 @@ end
 #     @target += value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5410
+# source://yarp//lib/yarp/node.rb#5411
 class YARP::InstanceVariableOperatorWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
@@ -6209,7 +6209,7 @@ end
 #     @target ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5487
+# source://yarp//lib/yarp/node.rb#5488
 class YARP::InstanceVariableOrWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -6283,7 +6283,7 @@ end
 #     @foo
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#5563
+# source://yarp//lib/yarp/node.rb#5564
 class YARP::InstanceVariableReadNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -6337,7 +6337,7 @@ end
 #     @foo, @bar = baz
 #     ^^^^  ^^^^
 #
-# source://yarp//lib/yarp/node.rb#5615
+# source://yarp//lib/yarp/node.rb#5616
 class YARP::InstanceVariableTargetNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -6391,7 +6391,7 @@ end
 #     @foo = 1
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5667
+# source://yarp//lib/yarp/node.rb#5668
 class YARP::InstanceVariableWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
@@ -6517,7 +6517,7 @@ end
 #     /foo #{bar} baz/
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5789
+# source://yarp//lib/yarp/node.rb#5790
 class YARP::InterpolatedRegularExpressionNode < ::YARP::Node
   # def initialize: (opening_loc: Location, parts: Array[Node], closing_loc: Location, flags: Integer, location: Location) -> void
   #
@@ -6655,7 +6655,7 @@ end
 #     "foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5914
+# source://yarp//lib/yarp/node.rb#5915
 class YARP::InterpolatedStringNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, parts: Array[Node], closing_loc: Location?, location: Location) -> void
   #
@@ -6732,7 +6732,7 @@ end
 #     :"foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#5993
+# source://yarp//lib/yarp/node.rb#5994
 class YARP::InterpolatedSymbolNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, parts: Array[Node], closing_loc: Location?, location: Location) -> void
   #
@@ -6809,7 +6809,7 @@ end
 #     `foo #{bar} baz`
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6072
+# source://yarp//lib/yarp/node.rb#6073
 class YARP::InterpolatedXStringNode < ::YARP::Node
   # def initialize: (opening_loc: Location, parts: Array[Node], closing_loc: Location, location: Location) -> void
   #
@@ -6886,7 +6886,7 @@ end
 #     foo(a: b)
 #         ^^^^
 #
-# source://yarp//lib/yarp/node.rb#6151
+# source://yarp//lib/yarp/node.rb#6152
 class YARP::KeywordHashNode < ::YARP::Node
   # def initialize: (elements: Array[Node], location: Location) -> void
   #
@@ -6945,7 +6945,7 @@ end
 #           ^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#6208
+# source://yarp//lib/yarp/node.rb#6209
 class YARP::KeywordParameterNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node?, location: Location) -> void
   #
@@ -7010,7 +7010,7 @@ end
 #           ^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#6278
+# source://yarp//lib/yarp/node.rb#6279
 class YARP::KeywordRestParameterNode < ::YARP::Node
   # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
@@ -7079,7 +7079,7 @@ end
 #     ->(value) { value * 2 }
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6347
+# source://yarp//lib/yarp/node.rb#6348
 class YARP::LambdaNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], operator_loc: Location, opening_loc: Location, closing_loc: Location, parameters: BlockParametersNode?, body: Node?, location: Location) -> void
   #
@@ -7398,7 +7398,7 @@ end
 #     target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6454
+# source://yarp//lib/yarp/node.rb#6455
 class YARP::LocalVariableAndWriteNode < ::YARP::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, depth: Integer, location: Location) -> void
   #
@@ -7477,7 +7477,7 @@ end
 #     target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6536
+# source://yarp//lib/yarp/node.rb#6537
 class YARP::LocalVariableOperatorWriteNode < ::YARP::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, operator: Symbol, depth: Integer, location: Location) -> void
   #
@@ -7556,7 +7556,7 @@ end
 #     target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6619
+# source://yarp//lib/yarp/node.rb#6620
 class YARP::LocalVariableOrWriteNode < ::YARP::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, depth: Integer, location: Location) -> void
   #
@@ -7637,7 +7637,7 @@ end
 #     foo
 #     ^^^
 #
-# source://yarp//lib/yarp/node.rb#6703
+# source://yarp//lib/yarp/node.rb#6704
 class YARP::LocalVariableReadNode < ::YARP::Node
   # def initialize: (name: Symbol, depth: Integer, location: Location) -> void
   #
@@ -7696,7 +7696,7 @@ end
 #     foo, bar = baz
 #     ^^^  ^^^
 #
-# source://yarp//lib/yarp/node.rb#6761
+# source://yarp//lib/yarp/node.rb#6762
 class YARP::LocalVariableTargetNode < ::YARP::Node
   # def initialize: (name: Symbol, depth: Integer, location: Location) -> void
   #
@@ -7755,7 +7755,7 @@ end
 #     foo = 1
 #     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6819
+# source://yarp//lib/yarp/node.rb#6820
 class YARP::LocalVariableWriteNode < ::YARP::Node
   # def initialize: (name: Symbol, depth: Integer, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
@@ -7943,7 +7943,7 @@ YARP::LoopFlags::BEGIN_MODIFIER = T.let(T.unsafe(nil), Integer)
 #     foo in bar
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6901
+# source://yarp//lib/yarp/node.rb#6902
 class YARP::MatchPredicateNode < ::YARP::Node
   # def initialize: (value: Node, pattern: Node, operator_loc: Location, location: Location) -> void
   #
@@ -8012,7 +8012,7 @@ end
 #     foo => bar
 #     ^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#6972
+# source://yarp//lib/yarp/node.rb#6973
 class YARP::MatchRequiredNode < ::YARP::Node
   # def initialize: (value: Node, pattern: Node, operator_loc: Location, location: Location) -> void
   #
@@ -8079,7 +8079,7 @@ end
 # Represents a node that is missing from the source and results in a syntax
 # error.
 #
-# source://yarp//lib/yarp/node.rb#7041
+# source://yarp//lib/yarp/node.rb#7042
 class YARP::MissingNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -8128,7 +8128,7 @@ end
 #     module Foo end
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7087
+# source://yarp//lib/yarp/node.rb#7088
 class YARP::ModuleNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], module_keyword_loc: Location, constant_path: Node, body: Node?, end_keyword_loc: Location, name: Symbol, location: Location) -> void
   #
@@ -8217,7 +8217,7 @@ end
 #     a, b, c = 1, 2, 3
 #     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7185
+# source://yarp//lib/yarp/node.rb#7186
 class YARP::MultiTargetNode < ::YARP::Node
   # def initialize: (targets: Array[Node], lparen_loc: Location?, rparen_loc: Location?, location: Location) -> void
   #
@@ -8291,7 +8291,7 @@ end
 #     a, b, c = 1, 2, 3
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7259
+# source://yarp//lib/yarp/node.rb#7260
 class YARP::MultiWriteNode < ::YARP::Node
   # def initialize: (targets: Array[Node], lparen_loc: Location?, rparen_loc: Location?, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -8379,7 +8379,7 @@ end
 # visited. This is useful for consumers that want to mutate the tree, as you
 # can change subtrees in place without effecting the rest of the tree.
 #
-# source://yarp//lib/yarp/mutation_visitor.rb#12
+# source://yarp//lib/yarp/mutation_visitor.rb#13
 class YARP::MutationVisitor < ::YARP::BasicVisitor
   # Copy a AliasNode node
   #
@@ -9067,7 +9067,7 @@ end
 #     next 1
 #     ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7351
+# source://yarp//lib/yarp/node.rb#7352
 class YARP::NextNode < ::YARP::Node
   # def initialize: (arguments: ArgumentsNode?, keyword_loc: Location, location: Location) -> void
   #
@@ -9131,7 +9131,7 @@ end
 #     nil
 #     ^^^
 #
-# source://yarp//lib/yarp/node.rb#7419
+# source://yarp//lib/yarp/node.rb#7420
 class YARP::NilNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -9181,7 +9181,7 @@ end
 #           ^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#7466
+# source://yarp//lib/yarp/node.rb#7467
 class YARP::NoKeywordsParameterNode < ::YARP::Node
   # def initialize: (operator_loc: Location, keyword_loc: Location, location: Location) -> void
   #
@@ -9334,7 +9334,7 @@ end
 #     $1
 #     ^^
 #
-# source://yarp//lib/yarp/node.rb#7534
+# source://yarp//lib/yarp/node.rb#7535
 class YARP::NumberedReferenceReadNode < ::YARP::Node
   # def initialize: (number: Integer, location: Location) -> void
   #
@@ -9389,7 +9389,7 @@ end
 #           ^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#7587
+# source://yarp//lib/yarp/node.rb#7588
 class YARP::OptionalParameterNode < ::YARP::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
@@ -9463,7 +9463,7 @@ end
 #     left or right
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7663
+# source://yarp//lib/yarp/node.rb#7664
 class YARP::OrNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
@@ -9755,7 +9755,7 @@ YARP::Pack::UTF8 = T.let(T.unsafe(nil), Symbol)
 #           ^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#7735
+# source://yarp//lib/yarp/node.rb#7736
 class YARP::ParametersNode < ::YARP::Node
   # def initialize: (requireds: Array[Node], optionals: Array[Node], posts: Array[Node], rest: RestParameterNode?, keywords: Array[Node], keyword_rest: Node?, block: BlockParameterNode?, location: Location) -> void
   #
@@ -9839,7 +9839,7 @@ end
 #     (10 + 34)
 #     ^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7838
+# source://yarp//lib/yarp/node.rb#7839
 class YARP::ParenthesesNode < ::YARP::Node
   # def initialize: (body: Node?, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
@@ -10307,7 +10307,7 @@ end
 #     foo in ^(bar)
 #            ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#7922
+# source://yarp//lib/yarp/node.rb#7923
 class YARP::PinnedExpressionNode < ::YARP::Node
   # def initialize: (expression: Node, operator_loc: Location, lparen_loc: Location, rparen_loc: Location, location: Location) -> void
   #
@@ -10392,7 +10392,7 @@ end
 #     foo in ^bar
 #            ^^^^
 #
-# source://yarp//lib/yarp/node.rb#8009
+# source://yarp//lib/yarp/node.rb#8010
 class YARP::PinnedVariableNode < ::YARP::Node
   # def initialize: (variable: Node, operator_loc: Location, location: Location) -> void
   #
@@ -10456,7 +10456,7 @@ end
 #     END { foo }
 #     ^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#8073
+# source://yarp//lib/yarp/node.rb#8074
 class YARP::PostExecutionNode < ::YARP::Node
   # def initialize: (statements: StatementsNode?, keyword_loc: Location, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
@@ -10540,7 +10540,7 @@ end
 #     BEGIN { foo }
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#8163
+# source://yarp//lib/yarp/node.rb#8164
 class YARP::PreExecutionNode < ::YARP::Node
   # def initialize: (statements: StatementsNode?, keyword_loc: Location, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
@@ -10621,7 +10621,7 @@ end
 
 # The top level node of any parse tree.
 #
-# source://yarp//lib/yarp/node.rb#8250
+# source://yarp//lib/yarp/node.rb#8251
 class YARP::ProgramNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], statements: StatementsNode, location: Location) -> void
   #
@@ -10691,7 +10691,7 @@ YARP::RangeFlags::EXCLUDE_END = T.let(T.unsafe(nil), Integer)
 #     c if a =~ /left/ ... b =~ /right/
 #          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#8312
+# source://yarp//lib/yarp/node.rb#8313
 class YARP::RangeNode < ::YARP::Node
   # def initialize: (left: Node?, right: Node?, operator_loc: Location, flags: Integer, location: Location) -> void
   #
@@ -10829,7 +10829,7 @@ end
 #     redo
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#8455
+# source://yarp//lib/yarp/node.rb#8456
 class YARP::RedoNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -10921,7 +10921,7 @@ YARP::RegularExpressionFlags::WINDOWS_31J = T.let(T.unsafe(nil), Integer)
 #     /foo/i
 #     ^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#8501
+# source://yarp//lib/yarp/node.rb#8502
 class YARP::RegularExpressionNode < ::YARP::Node
   # def initialize: (opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, flags: Integer, location: Location) -> void
   #
@@ -11067,7 +11067,7 @@ end
 #             ^^^^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#8633
+# source://yarp//lib/yarp/node.rb#8634
 class YARP::RequiredDestructuredParameterNode < ::YARP::Node
   # def initialize: (parameters: Array[Node], opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
@@ -11142,7 +11142,7 @@ end
 #           ^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#8708
+# source://yarp//lib/yarp/node.rb#8709
 class YARP::RequiredParameterNode < ::YARP::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
@@ -11196,7 +11196,7 @@ end
 #   foo rescue nil
 #   ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#8760
+# source://yarp//lib/yarp/node.rb#8761
 class YARP::RescueModifierNode < ::YARP::Node
   # def initialize: (expression: Node, keyword_loc: Location, rescue_expression: Node, location: Location) -> void
   #
@@ -11274,7 +11274,7 @@ end
 # `Foo, *splat, Bar` are in the `exceptions` field.
 # `ex` is in the `exception` field.
 #
-# source://yarp//lib/yarp/node.rb#8841
+# source://yarp//lib/yarp/node.rb#8842
 class YARP::RescueNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, exceptions: Array[Node], operator_loc: Location?, reference: Node?, statements: StatementsNode?, consequent: RescueNode?, location: Location) -> void
   #
@@ -11364,7 +11364,7 @@ end
 #           ^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#8949
+# source://yarp//lib/yarp/node.rb#8950
 class YARP::RestParameterNode < ::YARP::Node
   # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
@@ -11433,7 +11433,7 @@ end
 #     retry
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9018
+# source://yarp//lib/yarp/node.rb#9019
 class YARP::RetryNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -11482,7 +11482,7 @@ end
 #     return 1
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9064
+# source://yarp//lib/yarp/node.rb#9065
 class YARP::ReturnNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, arguments: ArgumentsNode?, location: Location) -> void
   #
@@ -12886,7 +12886,7 @@ end
 #     self
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#9132
+# source://yarp//lib/yarp/node.rb#9133
 class YARP::SelfNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -13057,7 +13057,7 @@ YARP::Serialize::TOKEN_TYPES = T.let(T.unsafe(nil), Array)
 #     class << self end
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9178
+# source://yarp//lib/yarp/node.rb#9179
 class YARP::SingletonClassNode < ::YARP::Node
   # def initialize: (locals: Array[Symbol], class_keyword_loc: Location, operator_loc: Location, expression: Node, body: Node?, end_keyword_loc: Location, location: Location) -> void
   #
@@ -13190,7 +13190,7 @@ end
 #     __ENCODING__
 #     ^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9281
+# source://yarp//lib/yarp/node.rb#9282
 class YARP::SourceEncodingNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -13239,7 +13239,7 @@ end
 #     __FILE__
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9327
+# source://yarp//lib/yarp/node.rb#9328
 class YARP::SourceFileNode < ::YARP::Node
   # def initialize: (filepath: String, location: Location) -> void
   #
@@ -13293,7 +13293,7 @@ end
 #     __LINE__
 #     ^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9379
+# source://yarp//lib/yarp/node.rb#9380
 class YARP::SourceLineNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -13342,7 +13342,7 @@ end
 #     [*a]
 #      ^^
 #
-# source://yarp//lib/yarp/node.rb#9425
+# source://yarp//lib/yarp/node.rb#9426
 class YARP::SplatNode < ::YARP::Node
   # def initialize: (operator_loc: Location, expression: Node?, location: Location) -> void
   #
@@ -13406,7 +13406,7 @@ end
 #     foo; bar; baz
 #     ^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9493
+# source://yarp//lib/yarp/node.rb#9494
 class YARP::StatementsNode < ::YARP::Node
   # def initialize: (body: Array[Node], location: Location) -> void
   #
@@ -13460,7 +13460,7 @@ end
 #     "foo" "bar"
 #     ^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9545
+# source://yarp//lib/yarp/node.rb#9546
 class YARP::StringConcatNode < ::YARP::Node
   # def initialize: (left: Node, right: Node, location: Location) -> void
   #
@@ -13526,7 +13526,7 @@ end
 #     "foo #{bar} baz"
 #      ^^^^      ^^^^
 #
-# source://yarp//lib/yarp/node.rb#9612
+# source://yarp//lib/yarp/node.rb#9613
 class YARP::StringNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, content_loc: Location, closing_loc: Location?, unescaped: String, location: Location) -> void
   #
@@ -13613,7 +13613,7 @@ end
 #     super foo, bar
 #     ^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9700
+# source://yarp//lib/yarp/node.rb#9701
 class YARP::SuperNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, lparen_loc: Location?, arguments: ArgumentsNode?, rparen_loc: Location?, block: BlockNode?, location: Location) -> void
   #
@@ -13705,7 +13705,7 @@ end
 #     %i[foo]
 #        ^^^
 #
-# source://yarp//lib/yarp/node.rb#9804
+# source://yarp//lib/yarp/node.rb#9805
 class YARP::SymbolNode < ::YARP::Node
   # def initialize: (opening_loc: Location?, value_loc: Location?, closing_loc: Location?, unescaped: String, location: Location) -> void
   #
@@ -13823,7 +13823,7 @@ end
 #     true
 #     ^^^^
 #
-# source://yarp//lib/yarp/node.rb#9889
+# source://yarp//lib/yarp/node.rb#9890
 class YARP::TrueNode < ::YARP::Node
   # def initialize: (location: Location) -> void
   #
@@ -13872,7 +13872,7 @@ end
 #     undef :foo, :bar, :baz
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#9935
+# source://yarp//lib/yarp/node.rb#9936
 class YARP::UndefNode < ::YARP::Node
   # def initialize: (names: Array[Node], keyword_loc: Location, location: Location) -> void
   #
@@ -13939,7 +13939,7 @@ end
 #     unless foo then bar end
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#10001
+# source://yarp//lib/yarp/node.rb#10002
 class YARP::UnlessNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, predicate: Node, statements: StatementsNode?, consequent: ElseNode?, end_keyword_loc: Location?, location: Location) -> void
   #
@@ -14029,7 +14029,7 @@ end
 #     until foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#10105
+# source://yarp//lib/yarp/node.rb#10106
 class YARP::UntilNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, flags: Integer, location: Location) -> void
   #
@@ -14811,7 +14811,7 @@ end
 #     ^^^^^^^^^
 #     end
 #
-# source://yarp//lib/yarp/node.rb#10208
+# source://yarp//lib/yarp/node.rb#10209
 class YARP::WhenNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, conditions: Array[Node], statements: StatementsNode?, location: Location) -> void
   #
@@ -14883,7 +14883,7 @@ end
 #     while foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#10285
+# source://yarp//lib/yarp/node.rb#10286
 class YARP::WhileNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, flags: Integer, location: Location) -> void
   #
@@ -14977,7 +14977,7 @@ end
 #     `foo`
 #     ^^^^^
 #
-# source://yarp//lib/yarp/node.rb#10386
+# source://yarp//lib/yarp/node.rb#10387
 class YARP::XStringNode < ::YARP::Node
   # def initialize: (opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, location: Location) -> void
   #
@@ -15061,7 +15061,7 @@ end
 #     yield 1
 #     ^^^^^^^
 #
-# source://yarp//lib/yarp/node.rb#10471
+# source://yarp//lib/yarp/node.rb#10472
 class YARP::YieldNode < ::YARP::Node
   # def initialize: (keyword_loc: Location, lparen_loc: Location?, arguments: ArgumentsNode?, rparen_loc: Location?, location: Location) -> void
   #

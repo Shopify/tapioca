@@ -341,42 +341,42 @@ module Loofah::HTML5::Scrub
   class << self
     # @return [Boolean]
     #
-    # source://loofah//lib/loofah/html5/scrub.rb#17
+    # source://loofah//lib/loofah/html5/scrub.rb#18
     def allowed_element?(element_name); end
 
-    # source://loofah//lib/loofah/html5/scrub.rb#191
+    # source://loofah//lib/loofah/html5/scrub.rb#192
     def cdata_escape(node); end
 
     # @return [Boolean]
     #
-    # source://loofah//lib/loofah/html5/scrub.rb#186
+    # source://loofah//lib/loofah/html5/scrub.rb#187
     def cdata_needs_escaping?(node); end
 
-    # source://loofah//lib/loofah/html5/scrub.rb#206
+    # source://loofah//lib/loofah/html5/scrub.rb#207
     def escape_tags(string); end
 
     # libxml2 >= 2.9.2 fails to escape comments within some attributes.
     #
     #  see comments about CVE-2018-8048 within the tests for more information
     #
-    # source://loofah//lib/loofah/html5/scrub.rb#165
+    # source://loofah//lib/loofah/html5/scrub.rb#166
     def force_correct_attribute_escaping!(node); end
 
-    # source://loofah//lib/loofah/html5/scrub.rb#122
+    # source://loofah//lib/loofah/html5/scrub.rb#123
     def scrub_attribute_that_allows_local_ref(attr_node); end
 
     # alternative implementation of the html5lib attribute scrubbing algorithm
     #
-    # source://loofah//lib/loofah/html5/scrub.rb#22
+    # source://loofah//lib/loofah/html5/scrub.rb#23
     def scrub_attributes(node); end
 
-    # source://loofah//lib/loofah/html5/scrub.rb#71
+    # source://loofah//lib/loofah/html5/scrub.rb#72
     def scrub_css(style); end
 
-    # source://loofah//lib/loofah/html5/scrub.rb#66
+    # source://loofah//lib/loofah/html5/scrub.rb#67
     def scrub_css_attribute(node); end
 
-    # source://loofah//lib/loofah/html5/scrub.rb#141
+    # source://loofah//lib/loofah/html5/scrub.rb#142
     def scrub_uri_attribute(attr_node); end
   end
 end
@@ -393,10 +393,13 @@ Loofah::HTML5::Scrub::CSS_IMPORTANT = T.let(T.unsafe(nil), String)
 # source://loofah//lib/loofah/html5/scrub.rb#10
 Loofah::HTML5::Scrub::CSS_KEYWORDISH = T.let(T.unsafe(nil), Regexp)
 
-# source://loofah//lib/loofah/html5/scrub.rb#13
+# source://loofah//lib/loofah/html5/scrub.rb#14
 Loofah::HTML5::Scrub::CSS_PROPERTY_STRING_WITHOUT_EMBEDDED_QUOTES = T.let(T.unsafe(nil), Regexp)
 
-# source://loofah//lib/loofah/html5/scrub.rb#14
+# source://loofah//lib/loofah/html5/scrub.rb#13
+Loofah::HTML5::Scrub::CSS_WHITESPACE = T.let(T.unsafe(nil), String)
+
+# source://loofah//lib/loofah/html5/scrub.rb#15
 Loofah::HTML5::Scrub::DATA_ATTRIBUTE_NAME = T.let(T.unsafe(nil), Regexp)
 
 # source://loofah//lib/loofah/html5/safelist.rb#1048

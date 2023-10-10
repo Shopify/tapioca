@@ -744,7 +744,7 @@ SQLite3::Database::NULL_TRANSLATOR = T.let(T.unsafe(nil), Proc)
 # source://sqlite3//lib/sqlite3/errors.rb#24
 class SQLite3::EmptyException < ::SQLite3::Exception; end
 
-# source://sqlite3//lib/sqlite3/errors.rb#4
+# source://sqlite3//lib/sqlite3/errors.rb#5
 class SQLite3::Exception < ::StandardError
   # A convenience for accessing the error code for this exception.
   #

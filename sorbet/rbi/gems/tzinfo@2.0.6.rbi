@@ -843,7 +843,7 @@ module TZInfo::DataSources; end
 
 # Represents a data time zone defined by a constantly observed offset.
 #
-# source://tzinfo//lib/tzinfo/data_sources/constant_offset_data_timezone_info.rb#7
+# source://tzinfo//lib/tzinfo/data_sources/constant_offset_data_timezone_info.rb#8
 class TZInfo::DataSources::ConstantOffsetDataTimezoneInfo < ::TZInfo::DataSources::DataTimezoneInfo
   # Initializes a new {ConstantOffsetDataTimezoneInfo}.
   #
@@ -940,7 +940,7 @@ end
 #
 # @abstract Data sources return instances of {DataTimezoneInfo} subclasses.
 #
-# source://tzinfo//lib/tzinfo/data_sources/data_timezone_info.rb#11
+# source://tzinfo//lib/tzinfo/data_sources/data_timezone_info.rb#17
 class TZInfo::DataSources::DataTimezoneInfo < ::TZInfo::DataSources::TimezoneInfo
   # @return [DataTimezone] a new {DataTimezone} instance for the time zone
   #   represented by this {DataTimezoneInfo}.
@@ -1049,7 +1049,7 @@ class TZInfo::DataSources::InvalidZoneinfoFile < ::StandardError; end
 # Represents a time zone that is defined as a link to or alias of another
 # zone.
 #
-# source://tzinfo//lib/tzinfo/data_sources/linked_timezone_info.rb#7
+# source://tzinfo//lib/tzinfo/data_sources/linked_timezone_info.rb#9
 class TZInfo::DataSources::LinkedTimezoneInfo < ::TZInfo::DataSources::TimezoneInfo
   # Initializes a new {LinkedTimezoneInfo}. The passed in `identifier` and
   # `link_to_identifier` instances will be frozen.
@@ -1168,7 +1168,7 @@ end
 #
 #     TZInfo::DataSource.set(:ruby)
 #
-# source://tzinfo//lib/tzinfo/data_sources/ruby_data_source.rb#20
+# source://tzinfo//lib/tzinfo/data_sources/ruby_data_source.rb#21
 class TZInfo::DataSources::RubyDataSource < ::TZInfo::DataSource
   # Initializes a new {RubyDataSource} instance.
   #
@@ -1330,7 +1330,7 @@ end
 # Represents a data time zone defined by a list of transitions that change
 # the locally observed time.
 #
-# source://tzinfo//lib/tzinfo/data_sources/transitions_data_timezone_info.rb#8
+# source://tzinfo//lib/tzinfo/data_sources/transitions_data_timezone_info.rb#10
 class TZInfo::DataSources::TransitionsDataTimezoneInfo < ::TZInfo::DataSources::DataTimezoneInfo
   # Initializes a new {TransitionsDataTimezoneInfo}.
   #
@@ -1503,7 +1503,7 @@ end
 # 2038-01-19 03:14:07. Any queries falling after this time may be
 # inaccurate.
 #
-# source://tzinfo//lib/tzinfo/data_sources/zoneinfo_data_source.rb#68
+# source://tzinfo//lib/tzinfo/data_sources/zoneinfo_data_source.rb#69
 class TZInfo::DataSources::ZoneinfoDataSource < ::TZInfo::DataSource
   # Initializes a new {ZoneinfoDataSource}.
   #
@@ -2009,7 +2009,7 @@ TZInfo::DataSources::ZoneinfoReader::GENERATE_UP_TO = T.let(T.unsafe(nil), Integ
 # Represents time zones that are defined by rules that set out when
 # transitions occur.
 #
-# source://tzinfo//lib/tzinfo/data_timezone.rb#7
+# source://tzinfo//lib/tzinfo/data_timezone.rb#8
 class TZInfo::DataTimezone < ::TZInfo::InfoTimezone
   # Returns the canonical {Timezone} instance for this {DataTimezone}.
   #
@@ -3006,7 +3006,7 @@ end
 #
 # @abstract
 #
-# source://tzinfo//lib/tzinfo/info_timezone.rb#8
+# source://tzinfo//lib/tzinfo/info_timezone.rb#16
 class TZInfo::InfoTimezone < ::TZInfo::Timezone
   # Initializes a new {InfoTimezone}.
   #
@@ -3206,7 +3206,7 @@ end
 # Represents time zones that are defined as a link to or alias for another
 # time zone.
 #
-# source://tzinfo//lib/tzinfo/linked_timezone.rb#6
+# source://tzinfo//lib/tzinfo/linked_timezone.rb#14
 class TZInfo::LinkedTimezone < ::TZInfo::InfoTimezone
   # Initializes a new {LinkedTimezone}.
   #
@@ -3299,7 +3299,7 @@ end
 # Represents the infinite period of time in a time zone that constantly
 # observes the same offset from UTC (has an unbounded start and end).
 #
-# source://tzinfo//lib/tzinfo/offset_timezone_period.rb#6
+# source://tzinfo//lib/tzinfo/offset_timezone_period.rb#10
 class TZInfo::OffsetTimezonePeriod < ::TZInfo::TimezonePeriod
   # Initializes an {OffsetTimezonePeriod}.
   #
@@ -5425,7 +5425,7 @@ end
 # real {Timezone} will be loaded is loaded. If the proxy's identifier was not
 # valid, then an exception will be raised at this point.
 #
-# source://tzinfo//lib/tzinfo/timezone_proxy.rb#15
+# source://tzinfo//lib/tzinfo/timezone_proxy.rb#22
 class TZInfo::TimezoneProxy < ::TZInfo::Timezone
   # Initializes a new {TimezoneProxy}.
   #
@@ -5773,7 +5773,7 @@ end
 # applies. The period of time is bounded at at least one end, either having a
 # start transition, end transition or both start and end transitions.
 #
-# source://tzinfo//lib/tzinfo/transitions_timezone_period.rb#8
+# source://tzinfo//lib/tzinfo/transitions_timezone_period.rb#10
 class TZInfo::TransitionsTimezonePeriod < ::TZInfo::TimezonePeriod
   # Initializes a {TransitionsTimezonePeriod}.
   #

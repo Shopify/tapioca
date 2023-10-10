@@ -39,7 +39,7 @@ end
 
 # The main configuration backbone
 #
-# source://config//lib/config/configuration.rb#3
+# source://config//lib/config/configuration.rb#6
 class Config::Configuration < ::Module
   # Accepts configuration options,
   # initializing a module that can be used to extend

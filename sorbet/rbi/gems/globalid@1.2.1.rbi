@@ -578,7 +578,7 @@ module URI
   include ::URI::RFC2396_REGEXP
 end
 
-# source://globalid//lib/global_id/uri/gid.rb#7
+# source://globalid//lib/global_id/uri/gid.rb#27
 class URI::GID < ::URI::Generic
   # URI::GID encodes an app unique reference to a specific model as an URI.
   # It has the components: app name, model class name, model id and params.
@@ -601,7 +601,7 @@ class URI::GID < ::URI::Generic
   #
   # Read the documentation for +parse+, +create+ and +build+ for more.
   #
-  # source://uri/0.12.0/uri/generic.rb#243
+  # source://uri/0.11.0/uri/generic.rb#243
   def app; end
 
   # source://globalid//lib/global_id/uri/gid.rb#107
@@ -744,5 +744,3 @@ class URI::GID::InvalidModelIdError < ::URI::InvalidComponentError; end
 #
 # source://globalid//lib/global_id/uri/gid.rb#32
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
-
-class URI::WSS < ::URI::WS; end

@@ -1070,7 +1070,7 @@ Sidekiq::NAME = T.let(T.unsafe(nil), String)
 # source://sidekiq//lib/sidekiq/rails.rb#7
 class Sidekiq::Rails < ::Rails::Engine
   class << self
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks; end
   end
 end

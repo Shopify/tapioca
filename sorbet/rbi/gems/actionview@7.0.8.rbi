@@ -5,565 +5,540 @@
 # Please instead update this file by running `bin/tapioca gem actionview`.
 
 class ActionController::Base < ::ActionController::Metal
-  include ::ActiveSupport::Deprecation::DeprecatedConstantAccessor
   include ::ActionDispatch::Routing::PolymorphicRoutes
   include ::ActionController::Head
   include ::AbstractController::Caching::ConfigMethods
   include ::ActionController::BasicImplicitRender
-  extend ::AbstractController::Helpers::Resolution
 
-  # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+  # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
   def _helper_methods; end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+  # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
   def _helper_methods=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+  # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
   def _helper_methods?; end
 
-  # source://actionview//lib/action_view/layouts.rb#216
-  def _layout_conditions(&block); end
-
-  # source://activesupport/7.1.0/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
   def _process_action_callbacks; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/renderers.rb#31
+  # source://actionpack/7.0.8/lib/action_controller/metal/renderers.rb#31
   def _renderers; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/renderers.rb#31
+  # source://actionpack/7.0.8/lib/action_controller/metal/renderers.rb#31
   def _renderers=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/renderers.rb#31
+  # source://actionpack/7.0.8/lib/action_controller/metal/renderers.rb#31
   def _renderers?; end
 
-  # source://activesupport/7.1.0/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
   def _run_process_action_callbacks(&block); end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/caching.rb#42
+  # source://actionpack/7.0.8/lib/abstract_controller/caching.rb#42
   def _view_cache_dependencies; end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/caching.rb#42
+  # source://actionpack/7.0.8/lib/abstract_controller/caching.rb#42
   def _view_cache_dependencies=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/caching.rb#42
+  # source://actionpack/7.0.8/lib/abstract_controller/caching.rb#42
   def _view_cache_dependencies?; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/params_wrapper.rb#187
+  # source://actionpack/7.0.8/lib/action_controller/metal/params_wrapper.rb#185
   def _wrapper_options; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/params_wrapper.rb#187
+  # source://actionpack/7.0.8/lib/action_controller/metal/params_wrapper.rb#185
   def _wrapper_options=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/params_wrapper.rb#187
+  # source://actionpack/7.0.8/lib/action_controller/metal/params_wrapper.rb#185
   def _wrapper_options?; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/flash.rb#36
+  # source://actionpack/7.0.8/lib/action_controller/metal/flash.rb#36
   def alert; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def allow_forgery_protection; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def allow_forgery_protection=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def asset_host; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def asset_host=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def assets_dir; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def assets_dir=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
-  def csrf_token_storage_strategy; end
-
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
-  def csrf_token_storage_strategy=(value); end
-
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def default_asset_host_protocol; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def default_asset_host_protocol=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def default_protect_from_forgery; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def default_protect_from_forgery=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def default_static_extension; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def default_static_extension=(value); end
 
-  # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#97
+  # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#95
   def default_url_options; end
 
-  # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#97
+  # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#95
   def default_url_options=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#97
+  # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#95
   def default_url_options?; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def enable_fragment_cache_logging; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def enable_fragment_cache_logging=(value); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/etag_with_template_digest.rb#29
+  # source://actionpack/7.0.8/lib/action_controller/metal/etag_with_template_digest.rb#27
   def etag_with_template_digest; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/etag_with_template_digest.rb#29
+  # source://actionpack/7.0.8/lib/action_controller/metal/etag_with_template_digest.rb#27
   def etag_with_template_digest=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/etag_with_template_digest.rb#29
+  # source://actionpack/7.0.8/lib/action_controller/metal/etag_with_template_digest.rb#27
   def etag_with_template_digest?; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/conditional_get.rb#13
+  # source://actionpack/7.0.8/lib/action_controller/metal/conditional_get.rb#13
   def etaggers; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/conditional_get.rb#13
+  # source://actionpack/7.0.8/lib/action_controller/metal/conditional_get.rb#13
   def etaggers=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/conditional_get.rb#13
+  # source://actionpack/7.0.8/lib/action_controller/metal/conditional_get.rb#13
   def etaggers?; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/flash.rb#10
+  # source://actionpack/7.0.8/lib/action_controller/metal/flash.rb#10
   def flash(*_arg0, **_arg1, &_arg2); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def forgery_protection_origin_check; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def forgery_protection_origin_check=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def forgery_protection_strategy; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def forgery_protection_strategy=(value); end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/caching/fragments.rb#25
+  # source://actionpack/7.0.8/lib/abstract_controller/caching/fragments.rb#23
   def fragment_cache_keys; end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/caching/fragments.rb#25
+  # source://actionpack/7.0.8/lib/abstract_controller/caching/fragments.rb#23
   def fragment_cache_keys=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/caching/fragments.rb#25
+  # source://actionpack/7.0.8/lib/abstract_controller/caching/fragments.rb#23
   def fragment_cache_keys?; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#65
+  # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#63
   def helpers_path; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#65
+  # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#63
   def helpers_path=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#65
+  # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#63
   def helpers_path?; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#66
+  # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#64
   def include_all_helpers; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#66
+  # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#64
   def include_all_helpers=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#66
+  # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#64
   def include_all_helpers?; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def javascripts_dir; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def javascripts_dir=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def log_warning_on_csrf_failure; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def log_warning_on_csrf_failure=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def logger; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def logger=(value); end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/flash.rb#36
+  # source://actionpack/7.0.8/lib/action_controller/metal/flash.rb#36
   def notice; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def per_form_csrf_tokens; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def per_form_csrf_tokens=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def perform_caching; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def perform_caching=(value); end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/callbacks.rb#36
-  def raise_on_missing_callback_actions; end
-
-  # source://actionpack/7.1.0/lib/abstract_controller/callbacks.rb#36
-  def raise_on_missing_callback_actions=(val); end
-
-  # source://actionpack/7.1.0/lib/action_controller/metal/redirecting.rb#15
+  # source://actionpack/7.0.8/lib/action_controller/metal/redirecting.rb#15
   def raise_on_open_redirects; end
 
-  # source://actionpack/7.1.0/lib/action_controller/metal/redirecting.rb#15
+  # source://actionpack/7.0.8/lib/action_controller/metal/redirecting.rb#15
   def raise_on_open_redirects=(val); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def relative_url_root; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def relative_url_root=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def request_forgery_protection_token; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def request_forgery_protection_token=(value); end
 
-  # source://activesupport/7.1.0/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.0.8/lib/active_support/rescuable.rb#13
   def rescue_handlers; end
 
-  # source://activesupport/7.1.0/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.0.8/lib/active_support/rescuable.rb#13
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.1.0/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.0.8/lib/active_support/rescuable.rb#13
   def rescue_handlers?; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
   def stylesheets_dir; end
 
-  # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
   def stylesheets_dir=(value); end
+
+  # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
+  def urlsafe_csrf_tokens; end
 
   private
 
-  # source://actionview//lib/action_view/layouts.rb#330
+  # source://actionview//lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
-  # source://actionpack/7.1.0/lib/action_controller/base.rb#252
+  # source://actionpack/7.0.8/lib/action_controller/base.rb#266
   def _protected_ivars; end
 
   class << self
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
-    # source://actionpack/7.1.0/lib/action_controller/form_builder.rb#33
+    # source://actionpack/7.0.8/lib/action_controller/form_builder.rb#31
     def _default_form_builder; end
 
-    # source://actionpack/7.1.0/lib/action_controller/form_builder.rb#33
+    # source://actionpack/7.0.8/lib/action_controller/form_builder.rb#31
     def _default_form_builder=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/form_builder.rb#33
+    # source://actionpack/7.0.8/lib/action_controller/form_builder.rb#31
     def _default_form_builder?; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/flash.rb#8
+    # source://actionpack/7.0.8/lib/action_controller/metal/flash.rb#8
     def _flash_types; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/flash.rb#8
+    # source://actionpack/7.0.8/lib/action_controller/metal/flash.rb#8
     def _flash_types=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/flash.rb#8
+    # source://actionpack/7.0.8/lib/action_controller/metal/flash.rb#8
     def _flash_types?; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
     def _helper_methods; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
     def _helper_methods=(value); end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
     def _helper_methods?; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#16
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#15
     def _helpers; end
 
-    # source://actionview//lib/action_view/layouts.rb#211
+    # source://actionview//lib/action_view/layouts.rb#209
     def _layout; end
 
-    # source://actionview//lib/action_view/layouts.rb#211
+    # source://actionview//lib/action_view/layouts.rb#209
     def _layout=(value); end
 
-    # source://actionview//lib/action_view/layouts.rb#211
+    # source://actionview//lib/action_view/layouts.rb#209
     def _layout?; end
 
-    # source://actionview//lib/action_view/layouts.rb#212
+    # source://actionview//lib/action_view/layouts.rb#210
     def _layout_conditions; end
 
-    # source://actionview//lib/action_view/layouts.rb#212
+    # source://actionview//lib/action_view/layouts.rb#210
     def _layout_conditions=(value); end
 
-    # source://actionview//lib/action_view/layouts.rb#212
+    # source://actionview//lib/action_view/layouts.rb#210
     def _layout_conditions?; end
 
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
     def _process_action_callbacks; end
 
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
     def _process_action_callbacks=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/renderers.rb#31
+    # source://actionpack/7.0.8/lib/action_controller/metal/renderers.rb#31
     def _renderers; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/renderers.rb#31
+    # source://actionpack/7.0.8/lib/action_controller/metal/renderers.rb#31
     def _renderers=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/renderers.rb#31
+    # source://actionpack/7.0.8/lib/action_controller/metal/renderers.rb#31
     def _renderers?; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/caching.rb#42
+    # source://actionpack/7.0.8/lib/abstract_controller/caching.rb#42
     def _view_cache_dependencies; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/caching.rb#42
+    # source://actionpack/7.0.8/lib/abstract_controller/caching.rb#42
     def _view_cache_dependencies=(value); end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/caching.rb#42
+    # source://actionpack/7.0.8/lib/abstract_controller/caching.rb#42
     def _view_cache_dependencies?; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/params_wrapper.rb#187
+    # source://actionpack/7.0.8/lib/action_controller/metal/params_wrapper.rb#185
     def _wrapper_options; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/params_wrapper.rb#187
+    # source://actionpack/7.0.8/lib/action_controller/metal/params_wrapper.rb#185
     def _wrapper_options=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/params_wrapper.rb#187
+    # source://actionpack/7.0.8/lib/action_controller/metal/params_wrapper.rb#185
     def _wrapper_options?; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def allow_forgery_protection; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def allow_forgery_protection=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def asset_host; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def asset_host=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def assets_dir; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def assets_dir=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
-    def csrf_token_storage_strategy; end
-
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
-    def csrf_token_storage_strategy=(value); end
-
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def default_asset_host_protocol; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def default_asset_host_protocol=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def default_protect_from_forgery; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def default_protect_from_forgery=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def default_static_extension; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def default_static_extension=(value); end
 
-    # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#97
+    # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#95
     def default_url_options; end
 
-    # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#97
+    # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#95
     def default_url_options=(value); end
 
-    # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#97
+    # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#95
     def default_url_options?; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def enable_fragment_cache_logging; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def enable_fragment_cache_logging=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/etag_with_template_digest.rb#29
+    # source://actionpack/7.0.8/lib/action_controller/metal/etag_with_template_digest.rb#27
     def etag_with_template_digest; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/etag_with_template_digest.rb#29
+    # source://actionpack/7.0.8/lib/action_controller/metal/etag_with_template_digest.rb#27
     def etag_with_template_digest=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/etag_with_template_digest.rb#29
+    # source://actionpack/7.0.8/lib/action_controller/metal/etag_with_template_digest.rb#27
     def etag_with_template_digest?; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/conditional_get.rb#13
+    # source://actionpack/7.0.8/lib/action_controller/metal/conditional_get.rb#13
     def etaggers; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/conditional_get.rb#13
+    # source://actionpack/7.0.8/lib/action_controller/metal/conditional_get.rb#13
     def etaggers=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/conditional_get.rb#13
+    # source://actionpack/7.0.8/lib/action_controller/metal/conditional_get.rb#13
     def etaggers?; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def forgery_protection_origin_check; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def forgery_protection_origin_check=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def forgery_protection_strategy; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def forgery_protection_strategy=(value); end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/caching/fragments.rb#25
+    # source://actionpack/7.0.8/lib/abstract_controller/caching/fragments.rb#23
     def fragment_cache_keys; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/caching/fragments.rb#25
+    # source://actionpack/7.0.8/lib/abstract_controller/caching/fragments.rb#23
     def fragment_cache_keys=(value); end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/caching/fragments.rb#25
+    # source://actionpack/7.0.8/lib/abstract_controller/caching/fragments.rb#23
     def fragment_cache_keys?; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#65
+    # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#63
     def helpers_path; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#65
+    # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#63
     def helpers_path=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#65
+    # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#63
     def helpers_path?; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#66
+    # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#64
     def include_all_helpers; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#66
+    # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#64
     def include_all_helpers=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/helpers.rb#66
+    # source://actionpack/7.0.8/lib/action_controller/metal/helpers.rb#64
     def include_all_helpers?; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def javascripts_dir; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def javascripts_dir=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def log_warning_on_csrf_failure; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def log_warning_on_csrf_failure=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def logger; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def logger=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal.rb#262
+    # source://actionpack/7.0.8/lib/action_controller/metal.rb#210
     def middleware_stack; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def per_form_csrf_tokens; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def per_form_csrf_tokens=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def perform_caching; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def perform_caching=(value); end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/callbacks.rb#36
-    def raise_on_missing_callback_actions; end
-
-    # source://actionpack/7.1.0/lib/abstract_controller/callbacks.rb#36
-    def raise_on_missing_callback_actions=(val); end
-
-    # source://actionpack/7.1.0/lib/action_controller/metal/redirecting.rb#15
+    # source://actionpack/7.0.8/lib/action_controller/metal/redirecting.rb#15
     def raise_on_open_redirects; end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal/redirecting.rb#15
+    # source://actionpack/7.0.8/lib/action_controller/metal/redirecting.rb#15
     def raise_on_open_redirects=(val); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def relative_url_root; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def relative_url_root=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def request_forgery_protection_token; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def request_forgery_protection_token=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.0.8/lib/active_support/rescuable.rb#13
     def rescue_handlers; end
 
-    # source://activesupport/7.1.0/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.0.8/lib/active_support/rescuable.rb#13
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.1.0/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.0.8/lib/active_support/rescuable.rb#13
     def rescue_handlers?; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#115
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
     def stylesheets_dir; end
 
-    # source://activesupport/7.1.0/lib/active_support/configurable.rb#116
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#114
     def stylesheets_dir=(value); end
 
-    # source://actionpack/7.1.0/lib/action_controller/base.rb#184
+    # source://activesupport/7.0.8/lib/active_support/configurable.rb#113
+    def urlsafe_csrf_tokens; end
+
+    # source://actionpack/7.0.8/lib/action_controller/metal/request_forgery_protection.rb#97
+    def urlsafe_csrf_tokens=(urlsafe_csrf_tokens); end
+
+    # source://actionpack/7.0.8/lib/action_controller/base.rb#198
     def without_modules(*modules); end
   end
 end
 
-# :include: actionview/README.rdoc
-#
 # source://actionview//lib/action_view/gem_version.rb#3
 module ActionView
   extend ::ActiveSupport::Autoload
 
   class << self
-    # source://actionview//lib/action_view/deprecator.rb#4
-    def deprecator; end
-
-    # source://actionview//lib/action_view.rb#93
+    # source://actionview//lib/action_view.rb#90
     def eager_load!; end
 
-    # Returns the currently loaded version of Action View as a +Gem::Version+.
+    # Returns the currently loaded version of Action View as a <tt>Gem::Version</tt>.
     #
     # source://actionview//lib/action_view/gem_version.rb#5
     def gem_version; end
 
-    # Returns the currently loaded version of Action View as a +Gem::Version+.
+    # Returns the currently loaded version of Action View as a <tt>Gem::Version</tt>.
     #
     # source://actionview//lib/action_view/version.rb#7
     def version; end
@@ -735,10 +710,10 @@ ActionView::AbstractRenderer::RenderedTemplate::EMPTY_SPACER = T.let(T.unsafe(ni
 
 # = Action View Errors
 #
-# source://actionview//lib/action_view/template/error.rb#8
+# source://actionview//lib/action_view/template/error.rb#7
 class ActionView::ActionViewError < ::StandardError; end
 
-# = Action View \Base
+# = Action View Base
 #
 # Action View templates can be written in several ways.
 # If the template file has a <tt>.erb</tt> extension, then it uses the erubi[https://rubygems.org/gems/erubi]
@@ -772,9 +747,9 @@ class ActionView::ActionViewError < ::StandardError; end
 # Using sub templates allows you to sidestep tedious replication and extract common display structures in shared templates. The
 # classic example is the use of a header and footer (even though the Action Pack-way would be to use Layouts):
 #
-#   <%= render "application/header" %>
+#   <%= render "shared/header" %>
 #   Something really specific and terrific
-#   <%= render "application/footer" %>
+#   <%= render "shared/footer" %>
 #
 # As you see, we use the output embeddings for the render methods. The render call itself will just return a string holding the
 # result of the rendering. The output embedding writes it to the current template.
@@ -783,7 +758,7 @@ class ActionView::ActionViewError < ::StandardError; end
 # variables defined using the regular embedding tags. Like this:
 #
 #   <% @page_title = "A Wonderful Hello" %>
-#   <%= render "application/header" %>
+#   <%= render "shared/header" %>
 #
 # Now the header can pick up on the <tt>@page_title</tt> variable and use it for outputting a title tag:
 #
@@ -793,9 +768,9 @@ class ActionView::ActionViewError < ::StandardError; end
 #
 # You can pass local variables to sub templates by using a hash with the variable names as keys and the objects as values:
 #
-#   <%= render "application/header", { headline: "Welcome", person: person } %>
+#   <%= render "shared/header", { headline: "Welcome", person: person } %>
 #
-# These can now be accessed in <tt>application/header</tt> with:
+# These can now be accessed in <tt>shared/header</tt> with:
 #
 #   Headline: <%= headline %>
 #   First name: <%= person.first_name %>
@@ -810,8 +785,8 @@ class ActionView::ActionViewError < ::StandardError; end
 #
 # === Template caching
 #
-# By default, \Rails will compile each template to a method in order to render it. When you alter a template,
-# \Rails will check the file's modification time and recompile it in development mode.
+# By default, Rails will compile each template to a method in order to render it. When you alter a template,
+# Rails will check the file's modification time and recompile it in development mode.
 #
 # == Builder
 #
@@ -871,20 +846,17 @@ class ActionView::ActionViewError < ::StandardError; end
 class ActionView::Base
   include ::ActionView::Context
   include ::ERB::Util
-  include ::ActiveSupport::CoreExt::ERBUtil
-  include ::ActiveSupport::CoreExt::ERBUtilPrivate
   include ::ActiveSupport::Benchmarkable
   include ::ActionView::Helpers::ActiveModelHelper
   include ::ActionView::Helpers::AssetUrlHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::UrlHelper
+  include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::AtomFeedHelper
   include ::ActionView::Helpers::CacheHelper
-  include ::ActionView::Helpers::ContentExfiltrationPreventionHelper
-  include ::ActionView::Helpers::UrlHelper
-  include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::ControllerHelper
   include ::ActionView::Helpers::CspHelper
   include ::ActionView::Helpers::CsrfHelper
@@ -909,7 +881,7 @@ class ActionView::Base
   #
   # @return [Base] a new instance of Base
   #
-  # source://actionview//lib/action_view/base.rb#228
+  # source://actionview//lib/action_view/base.rb#227
   def initialize(lookup_context, assigns, controller); end
 
   # source://actionview//lib/action_view/base.rb#165
@@ -921,8 +893,8 @@ class ActionView::Base
   # source://actionview//lib/action_view/base.rb#165
   def _routes?; end
 
-  # source://actionview//lib/action_view/base.rb#245
-  def _run(method, template, locals, buffer, add_to_stack: T.unsafe(nil), has_strict_locals: T.unsafe(nil), &block); end
+  # source://actionview//lib/action_view/base.rb#240
+  def _run(method, template, locals, buffer, add_to_stack: T.unsafe(nil), &block); end
 
   # source://actionview//lib/action_view/base.rb#163
   def annotate_rendered_view_with_filenames; end
@@ -933,10 +905,10 @@ class ActionView::Base
   # source://actionview//lib/action_view/base.rb#207
   def assign(new_assigns); end
 
-  # source://activesupport/7.1.0/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.0.8/lib/active_support/core_ext/module/attr_internal.rb#33
   def assigns; end
 
-  # source://activesupport/7.1.0/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.0.8/lib/active_support/core_ext/module/attr_internal.rb#33
   def assigns=(_arg0); end
 
   # source://actionview//lib/action_view/base.rb#160
@@ -947,13 +919,13 @@ class ActionView::Base
 
   # @raise [NotImplementedError]
   #
-  # source://actionview//lib/action_view/base.rb#270
+  # source://actionview//lib/action_view/base.rb#249
   def compiled_method_container; end
 
-  # source://activesupport/7.1.0/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.0.8/lib/active_support/core_ext/module/attr_internal.rb#33
   def config; end
 
-  # source://activesupport/7.1.0/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.0.8/lib/active_support/core_ext/module/attr_internal.rb#33
   def config=(_arg0); end
 
   # source://actionview//lib/action_view/helpers/translation_helper.rb#18
@@ -980,7 +952,7 @@ class ActionView::Base
   # source://actionview//lib/action_view/base.rb#205
   def formats=(arg); end
 
-  # source://actionview//lib/action_view/base.rb#278
+  # source://actionview//lib/action_view/base.rb#257
   def in_rendering_context(options); end
 
   # source://actionview//lib/action_view/base.rb#205
@@ -1068,10 +1040,10 @@ class ActionView::Base
     # source://actionview//lib/action_view/helpers/translation_helper.rb#18
     def debug_missing_translation=(val); end
 
-    # source://actionview//lib/action_view/helpers/form_helper.rb#2755
+    # source://actionview//lib/action_view/helpers/form_helper.rb#2730
     def default_form_builder; end
 
-    # source://actionview//lib/action_view/helpers/form_helper.rb#2755
+    # source://actionview//lib/action_view/helpers/form_helper.rb#2730
     def default_form_builder=(val); end
 
     # source://actionview//lib/action_view/base.rb#157
@@ -1082,7 +1054,7 @@ class ActionView::Base
 
     # :stopdoc:
     #
-    # source://actionview//lib/action_view/base.rb#214
+    # source://actionview//lib/action_view/base.rb#213
     def empty; end
 
     # source://actionview//lib/action_view/base.rb#169
@@ -1118,13 +1090,13 @@ class ActionView::Base
     # source://actionview//lib/action_view/base.rb#149
     def streaming_completion_on_exception=(val); end
 
-    # source://actionview//lib/action_view/base.rb#222
+    # source://actionview//lib/action_view/base.rb#221
     def with_context(context, assigns = T.unsafe(nil), controller = T.unsafe(nil)); end
 
     # source://actionview//lib/action_view/base.rb#183
     def with_empty_template_cache; end
 
-    # source://actionview//lib/action_view/base.rb#218
+    # source://actionview//lib/action_view/base.rb#217
     def with_view_paths(view_paths, assigns = T.unsafe(nil), controller = T.unsafe(nil)); end
 
     # @return [Boolean]
@@ -1135,36 +1107,44 @@ class ActionView::Base
 end
 
 # source://actionview//lib/action_view/cache_expiry.rb#4
-module ActionView::CacheExpiry; end
+class ActionView::CacheExpiry; end
 
 # source://actionview//lib/action_view/cache_expiry.rb#5
-class ActionView::CacheExpiry::ViewReloader
-  # @return [ViewReloader] a new instance of ViewReloader
+class ActionView::CacheExpiry::Executor
+  # @return [Executor] a new instance of Executor
   #
   # source://actionview//lib/action_view/cache_expiry.rb#6
-  def initialize(watcher:, &block); end
+  def initialize(watcher:); end
 
-  # source://actionview//lib/action_view/cache_expiry.rb#22
-  def execute; end
+  # source://actionview//lib/action_view/cache_expiry.rb#20
+  def complete(_); end
 
-  # @return [Boolean]
-  #
-  # source://actionview//lib/action_view/cache_expiry.rb#18
-  def updated?; end
+  # source://actionview//lib/action_view/cache_expiry.rb#13
+  def run; end
 
   private
 
-  # source://actionview//lib/action_view/cache_expiry.rb#58
+  # source://actionview//lib/action_view/cache_expiry.rb#25
+  def clear_cache; end
+end
+
+# source://actionview//lib/action_view/cache_expiry.rb#32
+class ActionView::CacheExpiry::ViewModificationWatcher
+  # @return [ViewModificationWatcher] a new instance of ViewModificationWatcher
+  #
+  # source://actionview//lib/action_view/cache_expiry.rb#33
+  def initialize(watcher:, &block); end
+
+  # source://actionview//lib/action_view/cache_expiry.rb#41
+  def execute_if_updated; end
+
+  private
+
+  # source://actionview//lib/action_view/cache_expiry.rb#61
   def all_view_paths; end
 
-  # source://actionview//lib/action_view/cache_expiry.rb#54
+  # source://actionview//lib/action_view/cache_expiry.rb#57
   def dirs_to_watch; end
-
-  # source://actionview//lib/action_view/cache_expiry.rb#36
-  def rebuild_watcher; end
-
-  # source://actionview//lib/action_view/cache_expiry.rb#32
-  def reload!; end
 end
 
 # source://actionview//lib/action_view/renderer/partial_renderer/collection_caching.rb#6
@@ -1184,7 +1164,7 @@ module ActionView::CollectionCaching
   # source://actionview//lib/action_view/renderer/partial_renderer/collection_caching.rb#58
   def collection_by_cache_keys(view, template, collection); end
 
-  # source://actionview//lib/action_view/renderer/partial_renderer/collection_caching.rb#71
+  # source://actionview//lib/action_view/renderer/partial_renderer/collection_caching.rb#70
   def expanded_cache_key(key, view, template, digest_path); end
 
   # `order_by` is an enumerable object containing keys of the cache,
@@ -1203,7 +1183,7 @@ module ActionView::CollectionCaching
   # If the partial is not already cached it will also be
   # written back to the underlying cache store.
   #
-  # source://actionview//lib/action_view/renderer/partial_renderer/collection_caching.rb#91
+  # source://actionview//lib/action_view/renderer/partial_renderer/collection_caching.rb#90
   def fetch_or_cache_partial(cached_partials, template, order_by:); end
 
   # @return [Boolean]
@@ -1216,21 +1196,21 @@ end
 class ActionView::CollectionRenderer < ::ActionView::PartialRenderer
   include ::ActionView::AbstractRenderer::ObjectRendering
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#130
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#122
   def render_collection_derive_partial(collection, context, block); end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#112
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#104
   def render_collection_with_partial(collection, partial, context, block); end
 
   private
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#182
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#174
   def collection_with_template(view, template, layout, collection); end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#153
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#145
   def render_collection(collection, view, path, template, layout, block); end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#148
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#140
   def retrieve_variable(path); end
 end
 
@@ -1249,52 +1229,46 @@ class ActionView::CollectionRenderer::CollectionIterator
   # source://actionview//lib/action_view/renderer/collection_renderer.rb#51
   def length; end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#55
-  def preload!; end
-
   # source://actionview//lib/action_view/renderer/collection_renderer.rb#47
   def size; end
 end
 
-# source://actionview//lib/action_view/renderer/collection_renderer.rb#100
+# source://actionview//lib/action_view/renderer/collection_renderer.rb#92
 class ActionView::CollectionRenderer::MixedCollectionIterator < ::ActionView::CollectionRenderer::CollectionIterator
   # @return [MixedCollectionIterator] a new instance of MixedCollectionIterator
   #
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#101
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#93
   def initialize(collection, paths); end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#106
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#98
   def each_with_info; end
 end
 
-# source://actionview//lib/action_view/renderer/collection_renderer.rb#78
+# source://actionview//lib/action_view/renderer/collection_renderer.rb#74
 class ActionView::CollectionRenderer::PreloadCollectionIterator < ::ActionView::CollectionRenderer::SameCollectionIterator
   # @return [PreloadCollectionIterator] a new instance of PreloadCollectionIterator
   #
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#79
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#75
   def initialize(collection, path, variables, relation); end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#89
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#85
   def each_with_info; end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#85
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#81
   def from_collection(collection); end
-
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#95
-  def preload!; end
 end
 
-# source://actionview//lib/action_view/renderer/collection_renderer.rb#60
+# source://actionview//lib/action_view/renderer/collection_renderer.rb#56
 class ActionView::CollectionRenderer::SameCollectionIterator < ::ActionView::CollectionRenderer::CollectionIterator
   # @return [SameCollectionIterator] a new instance of SameCollectionIterator
   #
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#61
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#57
   def initialize(collection, path, variables); end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#71
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#67
   def each_with_info; end
 
-  # source://actionview//lib/action_view/renderer/collection_renderer.rb#67
+  # source://actionview//lib/action_view/renderer/collection_renderer.rb#63
   def from_collection(collection); end
 end
 
@@ -1525,7 +1499,7 @@ class ActionView::Digestor
     #
     # * <tt>name</tt>         - Template name
     # * <tt>format</tt>       - Template format
-    # * +finder+              - An instance of ActionView::LookupContext
+    # * <tt>finder</tt>       - An instance of <tt>ActionView::LookupContext</tt>
     # * <tt>dependencies</tt> - An array of dependent views
     #
     # source://actionview//lib/action_view/digestor.rb#16
@@ -1614,79 +1588,76 @@ end
 # source://actionview//lib/action_view/digestor.rb#115
 class ActionView::Digestor::Partial < ::ActionView::Digestor::Node; end
 
-# source://actionview//lib/action_view.rb#35
+# source://actionview//lib/action_view.rb#33
 ActionView::ENCODING_FLAG = T.let(T.unsafe(nil), String)
 
-# source://actionview//lib/action_view/template/error.rb#11
+# source://actionview//lib/action_view/template/error.rb#10
 class ActionView::EncodingError < ::StandardError; end
 
 # A resolver that loads files from the filesystem.
 #
-# source://actionview//lib/action_view/template/resolver.rb#93
+# source://actionview//lib/action_view/template/resolver.rb#89
 class ActionView::FileSystemResolver < ::ActionView::Resolver
   # @raise [ArgumentError]
   # @return [FileSystemResolver] a new instance of FileSystemResolver
   #
-  # source://actionview//lib/action_view/template/resolver.rb#96
+  # source://actionview//lib/action_view/template/resolver.rb#92
   def initialize(path); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template/resolver.rb#115
+  # source://actionview//lib/action_view/template/resolver.rb#111
   def ==(resolver); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#120
+  # source://actionview//lib/action_view/template/resolver.rb#116
   def all_template_paths; end
 
-  # source://actionview//lib/action_view/template/resolver.rb#129
-  def built_templates; end
-
-  # source://actionview//lib/action_view/template/resolver.rb#104
+  # source://actionview//lib/action_view/template/resolver.rb#100
   def clear_cache; end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template/resolver.rb#115
+  # source://actionview//lib/action_view/template/resolver.rb#111
   def eql?(resolver); end
 
   # Returns the value of attribute path.
   #
-  # source://actionview//lib/action_view/template/resolver.rb#94
+  # source://actionview//lib/action_view/template/resolver.rb#90
   def path; end
 
-  # source://actionview//lib/action_view/template/resolver.rb#110
+  # source://actionview//lib/action_view/template/resolver.rb#106
   def to_path; end
 
-  # source://actionview//lib/action_view/template/resolver.rb#110
+  # source://actionview//lib/action_view/template/resolver.rb#106
   def to_s; end
 
   private
 
-  # source://actionview//lib/action_view/template/resolver.rb#134
+  # source://actionview//lib/action_view/template/resolver.rb#126
   def _find_all(name, prefix, partial, details, key, locals); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#153
+  # source://actionview//lib/action_view/template/resolver.rb#145
   def build_unbound_template(template); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#211
+  # source://actionview//lib/action_view/template/resolver.rb#203
   def escape_entry(entry); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#183
+  # source://actionview//lib/action_view/template/resolver.rb#175
   def filter_and_sort_by_details(templates, requested_details); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#149
+  # source://actionview//lib/action_view/template/resolver.rb#141
   def source_for_template(template); end
 
   # Safe glob within @path
   #
-  # source://actionview//lib/action_view/template/resolver.rb#198
+  # source://actionview//lib/action_view/template/resolver.rb#190
   def template_glob(glob); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#166
+  # source://actionview//lib/action_view/template/resolver.rb#158
   def unbound_templates_from_path(path); end
 end
 
-# source://actionview//lib/action_view/helpers/capture_helper.rb#6
+# source://actionview//lib/action_view/helpers/capture_helper.rb#7
 module ActionView::Helpers
   include ::ActiveSupport::Benchmarkable
   include ::ActionView::Helpers::ActiveModelHelper
@@ -1698,7 +1669,6 @@ module ActionView::Helpers
   include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::AtomFeedHelper
   include ::ActionView::Helpers::CacheHelper
-  include ::ActionView::Helpers::ContentExfiltrationPreventionHelper
   include ::ActionView::Helpers::ControllerHelper
   include ::ActionView::Helpers::CspHelper
   include ::ActionView::Helpers::CsrfHelper
@@ -1722,16 +1692,14 @@ module ActionView::Helpers
   mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
   class << self
-    # source://actionview//lib/action_view/helpers.rb#35
+    # source://actionview//lib/action_view/helpers.rb#34
     def eager_load!; end
   end
 end
 
-# source://actionview//lib/action_view/helpers/active_model_helper.rb#8
+# source://actionview//lib/action_view/helpers/active_model_helper.rb#9
 module ActionView::Helpers::ActiveModelHelper; end
 
-# = Active \Model Instance Tag \Helpers
-#
 # source://actionview//lib/action_view/helpers/active_model_helper.rb#12
 module ActionView::Helpers::ActiveModelInstanceTag
   # source://actionview//lib/action_view/helpers/active_model_helper.rb#20
@@ -1767,8 +1735,6 @@ module ActionView::Helpers::ActiveModelInstanceTag
   def tag_generate_errors?(options); end
 end
 
-# = Action View Asset Tag \Helpers
-#
 # This module provides methods for generating HTML that links views to assets such
 # as images, JavaScripts, stylesheets, and feeds. These methods do not verify
 # the assets exist before linking to them:
@@ -1778,24 +1744,24 @@ end
 #   stylesheet_link_tag("application")
 #   # => <link href="/assets/application.css?body=1" rel="stylesheet" />
 #
-# source://actionview//lib/action_view/helpers/asset_tag_helper.rb#21
+# source://actionview//lib/action_view/helpers/asset_tag_helper.rb#20
 module ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::AssetUrlHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#28
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
   def apply_stylesheet_media_default; end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#28
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
   def apply_stylesheet_media_default=(val); end
 
   # Returns an HTML audio tag for the +sources+. If +sources+ is a string,
   # a single audio tag will be returned. If +sources+ is an array, an audio
   # tag with nested source tags for each source will be returned. The
-  # +sources+ can be full paths, files that exist in your public audios
-  # directory, or Active Storage attachments.
+  # +sources+ can be full paths or files that exist in your public audios
+  # directory.
   #
   # When the last parameter is a hash you can add HTML attributes using that
   # parameter.
@@ -1809,12 +1775,7 @@ module ActionView::Helpers::AssetTagHelper
   #   audio_tag("sound.wav", "sound.mid")
   #   # => <audio><source src="/audios/sound.wav" /><source src="/audios/sound.mid" /></audio>
   #
-  # Active Storage blobs (audios that are uploaded by the users of your app):
-  #
-  #   audio_tag(user.name_pronunciation_audio)
-  #   # => <audio src="/rails/active_storage/blobs/.../name_pronunciation_audio.mp3"></audio>
-  #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#581
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#486
   def audio_tag(*sources); end
 
   # Returns a link tag that browsers and feed readers can use to auto-detect
@@ -1845,7 +1806,7 @@ module ActionView::Helpers::AssetTagHelper
   #   auto_discovery_link_tag(:rss, "http://www.example.com/feed.rss", {title: "Example RSS"})
   #   # => <link rel="alternate" type="application/rss+xml" title="Example RSS" href="http://www.example.com/feed.rss" />
   #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#259
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#235
   def auto_discovery_link_tag(type = T.unsafe(nil), url_options = T.unsafe(nil), tag_options = T.unsafe(nil)); end
 
   # Returns a link tag for a favicon managed by the asset pipeline.
@@ -1876,19 +1837,19 @@ module ActionView::Helpers::AssetTagHelper
   #   favicon_link_tag 'mb-icon.png', rel: 'apple-touch-icon', type: 'image/png'
   #   # => <link href="/assets/mb-icon.png" rel="apple-touch-icon" type="image/png" />
   #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#300
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#276
   def favicon_link_tag(source = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
   def image_decoding; end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
   def image_decoding=(val); end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#24
   def image_loading; end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#24
   def image_loading=(val); end
 
   # Returns an HTML image tag for the +source+. The +source+ can be a full
@@ -1937,7 +1898,7 @@ module ActionView::Helpers::AssetTagHelper
   #   image_tag(user.avatar.variant(resize_to_limit: [100, 100]), size: '100')
   #   # => <img width="100" height="100" src="/rails/active_storage/representations/.../tiger.jpg" />
   #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#418
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#394
   def image_tag(source, options = T.unsafe(nil)); end
 
   # Returns an HTML script tag for each of the +sources+ provided.
@@ -1955,14 +1916,13 @@ module ActionView::Helpers::AssetTagHelper
   # When the Asset Pipeline is enabled, you can pass the name of your manifest as
   # source, and include other JavaScript or CoffeeScript files inside the manifest.
   #
-  # If the server supports HTTP Early Hints, and the +defer+ option is not
-  # enabled, \Rails will push a <tt>103 Early Hints</tt> response that links
-  # to the assets.
+  # If the server supports Early Hints, header links for these assets will be
+  # automatically pushed.
   #
   # ==== Options
   #
   # When the last parameter is a hash you can add HTML attributes using that
-  # parameter. This includes but is not limited to the following options:
+  # parameter. The following options are supported:
   #
   # * <tt>:extname</tt>  - Append an extension to the generated URL unless the extension
   #   already exists. This only applies for relative URLs.
@@ -1974,20 +1934,6 @@ module ActionView::Helpers::AssetTagHelper
   #   when it is set to true.
   # * <tt>:nonce</tt>  - When set to true, adds an automatic nonce value if
   #   you have Content Security Policy enabled.
-  # * <tt>:async</tt>  - When set to +true+, adds the +async+ HTML
-  #   attribute, allowing the script to be fetched in parallel to be parsed
-  #   and evaluated as soon as possible.
-  # * <tt>:defer</tt>  - When set to +true+, adds the +defer+ HTML
-  #   attribute, which indicates to the browser that the script is meant to
-  #   be executed after the document has been parsed. Additionally, prevents
-  #   sending the Preload Links header.
-  #
-  # Any other specified options will be treated as HTML attributes for the
-  # +script+ tag.
-  #
-  # For more information regarding how the <tt>:async</tt> and <tt>:defer</tt>
-  # options affect the <tt><script></tt> tag, please refer to the
-  # {MDN docs}[https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script].
   #
   # ==== Examples
   #
@@ -2016,57 +1962,8 @@ module ActionView::Helpers::AssetTagHelper
   #   javascript_include_tag "http://www.example.com/xmlhr.js", nonce: true
   #   # => <script src="http://www.example.com/xmlhr.js" nonce="..."></script>
   #
-  #   javascript_include_tag "http://www.example.com/xmlhr.js", async: true
-  #   # => <script src="http://www.example.com/xmlhr.js" async="async"></script>
-  #
-  #   javascript_include_tag "http://www.example.com/xmlhr.js", defer: true
-  #   # => <script src="http://www.example.com/xmlhr.js" defer="defer"></script>
-  #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#111
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#89
   def javascript_include_tag(*sources); end
-
-  # Returns an HTML picture tag for the +sources+. If +sources+ is a string,
-  # a single picture tag will be returned. If +sources+ is an array, a picture
-  # tag with nested source tags for each source will be returned. The
-  # +sources+ can be full paths, files that exist in your public images
-  # directory, or Active Storage attachments. Since the picture tag requires
-  # an img tag, the last element you provide will be used for the img tag.
-  # For complete control over the picture tag, a block can be passed, which
-  # will populate the contents of the tag accordingly.
-  #
-  # ==== Options
-  #
-  # When the last parameter is a hash you can add HTML attributes using that
-  # parameter. Apart from all the HTML supported options, the following are supported:
-  #
-  # * <tt>:image</tt> - Hash of options that are passed directly to the +image_tag+ helper.
-  #
-  # ==== Examples
-  #
-  #   picture_tag("picture.webp")
-  #   # => <picture><img src="/images/picture.webp" /></picture>
-  #   picture_tag("gold.png", :image => { :size => "20" })
-  #   # => <picture><img height="20" src="/images/gold.png" width="20" /></picture>
-  #   picture_tag("gold.png", :image => { :size => "45x70" })
-  #   # => <picture><img height="70" src="/images/gold.png" width="45" /></picture>
-  #   picture_tag("picture.webp", "picture.png")
-  #   # => <picture><source srcset="/images/picture.webp" /><source srcset="/images/picture.png" /><img src="/images/picture.png" /></picture>
-  #   picture_tag("picture.webp", "picture.png", :image => { alt: "Image" })
-  #   # => <picture><source srcset="/images/picture.webp" /><source srcset="/images/picture.png" /><img alt="Image" src="/images/picture.png" /></picture>
-  #   picture_tag(["picture.webp", "picture.png"], :image => { alt: "Image" })
-  #   # => <picture><source srcset="/images/picture.webp" /><source srcset="/images/picture.png" /><img alt="Image" src="/images/picture.png" /></picture>
-  #   picture_tag(:class => "my-class") { tag(:source, :srcset => image_path("picture.webp")) + image_tag("picture.png", :alt => "Image") }
-  #   # => <picture class="my-class"><source srcset="/images/picture.webp" /><img alt="Image" src="/images/picture.png" /></picture>
-  #   picture_tag { tag(:source, :srcset => image_path("picture-small.webp"), :media => "(min-width: 600px)") + tag(:source, :srcset => image_path("picture-big.webp")) + image_tag("picture.png", :alt => "Image") }
-  #   # => <picture><source srcset="/images/picture-small.webp" media="(min-width: 600px)" /><source srcset="/images/picture-big.webp" /><img alt="Image" src="/images/picture.png" /></picture>
-  #
-  # Active Storage blobs (images that are uploaded by the users of your app):
-  #
-  #   picture_tag(user.profile_picture)
-  #   # => <picture><img src="/rails/active_storage/blobs/.../profile_picture.webp" /></picture>
-  #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#479
-  def picture_tag(*sources, &block); end
 
   # Returns a link tag that browsers can use to preload the +source+.
   # The +source+ can be the path of a resource managed by asset pipeline,
@@ -2103,13 +2000,13 @@ module ActionView::Helpers::AssetTagHelper
   #   preload_link_tag("/media/audio.ogg", nopush: true)
   #   # => <link rel="preload" href="/media/audio.ogg" as="audio" type="audio/ogg" />
   #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#343
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#319
   def preload_link_tag(source, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
   def preload_links_header; end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
   def preload_links_header=(val); end
 
   # Returns a stylesheet link tag for the sources specified as arguments.
@@ -2120,8 +2017,8 @@ module ActionView::Helpers::AssetTagHelper
   # set <tt>extname: false</tt> in the options.
   # You can modify the link attributes by passing a hash as the last argument.
   #
-  # If the server supports HTTP Early Hints, \Rails will push a <tt>103 Early
-  # Hints</tt> response that links to the assets.
+  # If the server supports Early Hints, header links for these assets will be
+  # automatically pushed.
   #
   # ==== Options
   #
@@ -2158,14 +2055,14 @@ module ActionView::Helpers::AssetTagHelper
   #   # => <link href="/assets/random.styles" rel="stylesheet" />
   #   #    <link href="/css/stylish.css" rel="stylesheet" />
   #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#193
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#170
   def stylesheet_link_tag(*sources); end
 
   # Returns an HTML video tag for the +sources+. If +sources+ is a string,
   # a single video tag will be returned. If +sources+ is an array, a video
   # tag with nested source tags for each source will be returned. The
-  # +sources+ can be full paths, files that exist in your public videos
-  # directory, or Active Storage attachments.
+  # +sources+ can be full paths or files that exist in your public videos
+  # directory.
   #
   # ==== Options
   #
@@ -2205,71 +2102,63 @@ module ActionView::Helpers::AssetTagHelper
   #   video_tag(["trailer.ogg", "trailer.flv"], size: "160x120")
   #   # => <video height="120" width="160"><source src="/videos/trailer.ogg" /><source src="/videos/trailer.flv" /></video>
   #
-  # Active Storage blobs (videos that are uploaded by the users of your app):
-  #
-  #   video_tag(user.intro_video)
-  #   # => <video src="/rails/active_storage/blobs/.../intro_video.mp4"></video>
-  #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#549
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#459
   def video_tag(*sources); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#622
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#527
   def check_for_image_tag_errors(options); end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#613
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#518
   def extract_dimensions(size); end
 
   # @yield [options]
   #
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#586
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#491
   def multiple_sources_tag_builder(type, sources); end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#603
-  def resolve_asset_source(asset_type, source, skip_pipeline); end
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#508
+  def resolve_image_source(source, skip_pipeline); end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#628
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#533
   def resolve_link_as(extname, mime_type); end
 
-  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#642
+  # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#544
   def send_preload_links_header(preload_links, max_header_size: T.unsafe(nil)); end
 
   class << self
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#28
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
     def apply_stylesheet_media_default; end
 
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#28
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
     def apply_stylesheet_media_default=(val); end
 
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
     def image_decoding; end
 
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
     def image_decoding=(val); end
 
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#24
     def image_loading; end
 
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#25
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#24
     def image_loading=(val); end
 
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
     def preload_links_header; end
 
-    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#27
+    # source://actionview//lib/action_view/helpers/asset_tag_helper.rb#26
     def preload_links_header=(val); end
   end
 end
 
-# Some HTTP client and proxies have a 4kiB header limit, but more importantly
-# including preload links has diminishing returns so it's best to not go overboard
+# Some HTTP client and proxies have a 8kiB header limit
 #
-# source://actionview//lib/action_view/helpers/asset_tag_helper.rb#640
+# source://actionview//lib/action_view/helpers/asset_tag_helper.rb#543
 ActionView::Helpers::AssetTagHelper::MAX_HEADER_SIZE = T.let(T.unsafe(nil), Integer)
 
-# = Action View Asset URL \Helpers
-#
 # This module provides methods for generating asset paths and
 # URLs.
 #
@@ -2281,8 +2170,8 @@ ActionView::Helpers::AssetTagHelper::MAX_HEADER_SIZE = T.let(T.unsafe(nil), Inte
 #
 # === Using asset hosts
 #
-# By default, \Rails links to these assets on the current host in the public
-# folder, but you can direct \Rails to link to assets from a dedicated asset
+# By default, Rails links to these assets on the current host in the public
+# folder, but you can direct Rails to link to assets from a dedicated asset
 # server by setting <tt>ActionController::Base.asset_host</tt> in the application
 # configuration, typically in <tt>config/environments/production.rb</tt>.
 # For example, you'd define <tt>assets.example.com</tt> to be your asset
@@ -2382,7 +2271,7 @@ ActionView::Helpers::AssetTagHelper::MAX_HEADER_SIZE = T.let(T.unsafe(nil), Inte
 #     "http://asset%d.example.com", "https://asset1.example.com"
 #   )
 #
-# source://actionview//lib/action_view/helpers/asset_url_helper.rb#121
+# source://actionview//lib/action_view/helpers/asset_url_helper.rb#120
 module ActionView::Helpers::AssetUrlHelper
   # This is the entry point for all assets.
   # When using an asset pipeline gem (e.g. propshaft or sprockets-rails), the
@@ -2450,7 +2339,7 @@ module ActionView::Helpers::AssetUrlHelper
   #
   # @raise [ArgumentError]
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#187
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#186
   def asset_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an asset in the public directory. This
@@ -2463,7 +2352,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   asset_url "application.js"                                 # => http://example.com/assets/application.js
   #   asset_url "application.js", host: "http://cdn.example.com" # => http://cdn.example.com/assets/application.js
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#231
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#230
   def asset_url(source, options = T.unsafe(nil)); end
 
   # Computes the path to an audio asset in the public audios directory.
@@ -2476,7 +2365,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   audio_path("/sounds/horse.wav")                                # => /sounds/horse.wav
   #   audio_path("http://www.example.com/sounds/horse.wav")          # => http://www.example.com/sounds/horse.wav
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#430
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#429
   def audio_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an audio asset in the public audios directory.
@@ -2486,13 +2375,13 @@ module ActionView::Helpers::AssetUrlHelper
   #
   #   audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#442
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#441
   def audio_url(source, options = T.unsafe(nil)); end
 
   # Compute extname to append to asset path. Returns +nil+ if
   # nothing should be added.
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#243
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#242
   def compute_asset_extname(source, options = T.unsafe(nil)); end
 
   # Pick an asset host for this source. Returns +nil+ if no host is set,
@@ -2501,14 +2390,14 @@ module ActionView::Helpers::AssetUrlHelper
   # or the value returned from invoking call on an object responding to call
   # (proc or otherwise).
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#277
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#276
   def compute_asset_host(source = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Computes asset path to public directory. Plugins and
   # extensions can override this method to point to custom assets
   # or generate digested paths or query strings.
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#266
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#265
   def compute_asset_path(source, options = T.unsafe(nil)); end
 
   # Computes the path to a font asset.
@@ -2520,7 +2409,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   font_path("/dir/font.ttf")                                  # => /dir/font.ttf
   #   font_path("http://www.example.com/dir/font.ttf")            # => http://www.example.com/dir/font.ttf
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#455
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#454
   def font_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a font asset.
@@ -2530,7 +2419,7 @@ module ActionView::Helpers::AssetUrlHelper
   #
   #   font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#467
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#466
   def font_url(source, options = T.unsafe(nil)); end
 
   # Computes the path to an image asset.
@@ -2544,10 +2433,10 @@ module ActionView::Helpers::AssetUrlHelper
   #   image_path("http://www.example.com/img/edit.png")          # => "http://www.example.com/img/edit.png"
   #
   # If you have images as application resources this method may conflict with their named routes.
-  # The alias +path_to_image+ is provided to avoid that. \Rails uses the alias internally, and
+  # The alias +path_to_image+ is provided to avoid that. Rails uses the alias internally, and
   # plugin authors are encouraged to do so.
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#378
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#377
   def image_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an image asset.
@@ -2557,7 +2446,7 @@ module ActionView::Helpers::AssetUrlHelper
   #
   #   image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#390
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#389
   def image_url(source, options = T.unsafe(nil)); end
 
   # Computes the path to a JavaScript asset in the public javascripts directory.
@@ -2571,7 +2460,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   javascript_path "http://www.example.com/js/xmlhr"    # => http://www.example.com/js/xmlhr
   #   javascript_path "http://www.example.com/js/xmlhr.js" # => http://www.example.com/js/xmlhr.js
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#321
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#320
   def javascript_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a JavaScript asset in the public javascripts directory.
@@ -2581,7 +2470,7 @@ module ActionView::Helpers::AssetUrlHelper
   #
   #   javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#333
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#332
   def javascript_url(source, options = T.unsafe(nil)); end
 
   # This is the entry point for all assets.
@@ -2651,7 +2540,7 @@ module ActionView::Helpers::AssetUrlHelper
   #
   # @raise [ArgumentError]
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#187
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#186
   def path_to_asset(source, options = T.unsafe(nil)); end
 
   # Computes the path to an audio asset in the public audios directory.
@@ -2665,7 +2554,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   audio_path("http://www.example.com/sounds/horse.wav")          # => http://www.example.com/sounds/horse.wav
   # aliased to avoid conflicts with an audio_path named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#430
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#429
   def path_to_audio(source, options = T.unsafe(nil)); end
 
   # Computes the path to a font asset.
@@ -2678,7 +2567,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   font_path("http://www.example.com/dir/font.ttf")            # => http://www.example.com/dir/font.ttf
   # aliased to avoid conflicts with a font_path named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#455
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#454
   def path_to_font(source, options = T.unsafe(nil)); end
 
   # Computes the path to an image asset.
@@ -2692,11 +2581,11 @@ module ActionView::Helpers::AssetUrlHelper
   #   image_path("http://www.example.com/img/edit.png")          # => "http://www.example.com/img/edit.png"
   #
   # If you have images as application resources this method may conflict with their named routes.
-  # The alias +path_to_image+ is provided to avoid that. \Rails uses the alias internally, and
+  # The alias +path_to_image+ is provided to avoid that. Rails uses the alias internally, and
   # plugin authors are encouraged to do so.
   # aliased to avoid conflicts with an image_path named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#378
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#377
   def path_to_image(source, options = T.unsafe(nil)); end
 
   # Computes the path to a JavaScript asset in the public javascripts directory.
@@ -2711,7 +2600,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   javascript_path "http://www.example.com/js/xmlhr.js" # => http://www.example.com/js/xmlhr.js
   # aliased to avoid conflicts with a javascript_path named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#321
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#320
   def path_to_javascript(source, options = T.unsafe(nil)); end
 
   # Computes the path to a stylesheet asset in the public stylesheets directory.
@@ -2726,7 +2615,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   stylesheet_path "http://www.example.com/css/style.css"   # => http://www.example.com/css/style.css
   # aliased to avoid conflicts with a stylesheet_path named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#348
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#347
   def path_to_stylesheet(source, options = T.unsafe(nil)); end
 
   # Computes the path to a video asset in the public videos directory.
@@ -2740,14 +2629,14 @@ module ActionView::Helpers::AssetUrlHelper
   #   video_path("http://www.example.com/vid/hd.avi")             # => http://www.example.com/vid/hd.avi
   # aliased to avoid conflicts with a video_path named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#404
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#403
   def path_to_video(source, options = T.unsafe(nil)); end
 
   # Computes asset path to public directory. Plugins and
   # extensions can override this method to point to custom assets
   # or generate digested paths or query strings.
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#266
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#265
   def public_compute_asset_path(source, options = T.unsafe(nil)); end
 
   # Computes the path to a stylesheet asset in the public stylesheets directory.
@@ -2761,7 +2650,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   stylesheet_path "http://www.example.com/css/style"       # => http://www.example.com/css/style
   #   stylesheet_path "http://www.example.com/css/style.css"   # => http://www.example.com/css/style.css
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#348
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#347
   def stylesheet_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a stylesheet asset in the public stylesheets directory.
@@ -2771,7 +2660,7 @@ module ActionView::Helpers::AssetUrlHelper
   #
   #   stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#360
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#359
   def stylesheet_url(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an asset in the public directory. This
@@ -2785,7 +2674,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   asset_url "application.js", host: "http://cdn.example.com" # => http://cdn.example.com/assets/application.js
   # aliased to avoid conflicts with an asset_url named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#231
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#230
   def url_to_asset(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an audio asset in the public audios directory.
@@ -2796,7 +2685,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   audio_url "horse.wav", host: "http://stage.example.com" # => http://stage.example.com/audios/horse.wav
   # aliased to avoid conflicts with an audio_url named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#442
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#441
   def url_to_audio(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a font asset.
@@ -2807,7 +2696,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   font_url "font.ttf", host: "http://stage.example.com" # => http://stage.example.com/fonts/font.ttf
   # aliased to avoid conflicts with a font_url named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#467
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#466
   def url_to_font(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to an image asset.
@@ -2818,7 +2707,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   image_url "edit.png", host: "http://stage.example.com" # => http://stage.example.com/assets/edit.png
   # aliased to avoid conflicts with an image_url named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#390
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#389
   def url_to_image(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a JavaScript asset in the public javascripts directory.
@@ -2829,7 +2718,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   javascript_url "js/xmlhr.js", host: "http://stage.example.com" # => http://stage.example.com/assets/js/xmlhr.js
   # aliased to avoid conflicts with a javascript_url named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#333
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#332
   def url_to_javascript(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a stylesheet asset in the public stylesheets directory.
@@ -2840,7 +2729,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   stylesheet_url "css/style.css", host: "http://stage.example.com" # => http://stage.example.com/assets/css/style.css
   # aliased to avoid conflicts with a stylesheet_url named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#360
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#359
   def url_to_stylesheet(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a video asset in the public videos directory.
@@ -2851,7 +2740,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
   # aliased to avoid conflicts with a video_url named route
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#416
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#415
   def url_to_video(source, options = T.unsafe(nil)); end
 
   # Computes the path to a video asset in the public videos directory.
@@ -2864,7 +2753,7 @@ module ActionView::Helpers::AssetUrlHelper
   #   video_path("/trailers/hd.avi")                              # => /trailers/hd.avi
   #   video_path("http://www.example.com/vid/hd.avi")             # => http://www.example.com/vid/hd.avi
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#404
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#403
   def video_path(source, options = T.unsafe(nil)); end
 
   # Computes the full URL to a video asset in the public videos directory.
@@ -2874,23 +2763,21 @@ module ActionView::Helpers::AssetUrlHelper
   #
   #   video_url "hd.avi", host: "http://stage.example.com" # => http://stage.example.com/videos/hd.avi
   #
-  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#416
+  # source://actionview//lib/action_view/helpers/asset_url_helper.rb#415
   def video_url(source, options = T.unsafe(nil)); end
 end
 
-# source://actionview//lib/action_view/helpers/asset_url_helper.rb#236
+# source://actionview//lib/action_view/helpers/asset_url_helper.rb#235
 ActionView::Helpers::AssetUrlHelper::ASSET_EXTENSIONS = T.let(T.unsafe(nil), Hash)
 
 # Maps asset types to public directory.
 #
-# source://actionview//lib/action_view/helpers/asset_url_helper.rb#254
+# source://actionview//lib/action_view/helpers/asset_url_helper.rb#253
 ActionView::Helpers::AssetUrlHelper::ASSET_PUBLIC_DIRECTORIES = T.let(T.unsafe(nil), Hash)
 
-# source://actionview//lib/action_view/helpers/asset_url_helper.rb#122
+# source://actionview//lib/action_view/helpers/asset_url_helper.rb#121
 ActionView::Helpers::AssetUrlHelper::URI_REGEXP = T.let(T.unsafe(nil), Regexp)
 
-# = Action View Atom Feed \Helpers
-#
 # source://actionview//lib/action_view/helpers/atom_feed_helper.rb#8
 module ActionView::Helpers::AtomFeedHelper
   # Adds easy defaults to writing Atom feeds with the Builder template engine (this does not work on ERB or any other
@@ -2969,9 +2856,9 @@ module ActionView::Helpers::AtomFeedHelper
   #     end
   #
   # The Atom spec defines five elements (content rights title subtitle
-  # summary) which may directly contain XHTML content if type: 'xhtml'
+  # summary) which may directly contain xhtml content if type: 'xhtml'
   # is specified as an attribute. If so, this helper will take care of
-  # the enclosing div and XHTML namespace declaration. Example usage:
+  # the enclosing div and xhtml namespace declaration. Example usage:
   #
   #    entry.summary type: 'xhtml' do |xhtml|
   #      xhtml.p pluralize(order.line_items.count, "line item")
@@ -2996,7 +2883,7 @@ class ActionView::Helpers::AtomFeedHelper::AtomBuilder
 
   private
 
-  # Delegate to XML Builder, first wrapping the element in an XHTML
+  # Delegate to xml builder, first wrapping the element in an xhtml
   # namespaced div element if the method and arguments indicate
   # that an xhtml_block? is desired.
   #
@@ -3042,8 +2929,6 @@ class ActionView::Helpers::AtomFeedHelper::AtomFeedBuilder < ::ActionView::Helpe
   def updated(date_or_time = T.unsafe(nil)); end
 end
 
-# = Action View Cache \Helpers
-#
 # source://actionview//lib/action_view/helpers/cache_helper.rb#6
 module ActionView::Helpers::CacheHelper
   # This helper exposes a method for caching fragments of a view
@@ -3285,42 +3170,37 @@ module ActionView::Helpers::CacheHelper
   def read_fragment_for(name, options); end
 
   # source://actionview//lib/action_view/helpers/cache_helper.rb#284
-  def write_fragment_for(name, options, &block); end
+  def write_fragment_for(name, options); end
 end
 
-# source://actionview//lib/action_view/helpers/cache_helper.rb#289
+# source://actionview//lib/action_view/helpers/cache_helper.rb#295
 module ActionView::Helpers::CacheHelper::CachingRegistry
   extend ::ActionView::Helpers::CacheHelper::CachingRegistry
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/cache_helper.rb#292
+  # source://actionview//lib/action_view/helpers/cache_helper.rb#298
   def caching?; end
 
-  # source://actionview//lib/action_view/helpers/cache_helper.rb#296
+  # source://actionview//lib/action_view/helpers/cache_helper.rb#302
   def track_caching; end
 end
 
 # source://actionview//lib/action_view/helpers/cache_helper.rb#7
 class ActionView::Helpers::CacheHelper::UncacheableFragmentError < ::StandardError; end
 
-# = Action View Capture \Helpers
-#
-# \CaptureHelper exposes methods to let you extract generated markup which
+# CaptureHelper exposes methods to let you extract generated markup which
 # can be used in other parts of a template or layout file.
 #
-# It provides a method to capture blocks into variables through #capture and
-# a way to capture a block of markup for use in a layout through #content_for.
+# It provides a method to capture blocks into variables through capture and
+# a way to capture a block of markup for use in a layout through {content_for}[rdoc-ref:ActionView::Helpers::CaptureHelper#content_for].
 #
-# As well as provides a method when using streaming responses through #provide.
-# See ActionController::Streaming for more information.
-#
-# source://actionview//lib/action_view/helpers/capture_helper.rb#17
+# source://actionview//lib/action_view/helpers/capture_helper.rb#13
 module ActionView::Helpers::CaptureHelper
-  # The capture method extracts part of a template as a string object.
+  # The capture method extracts part of a template as a String object.
   # You can then use this object anywhere in your templates, layout, or helpers.
   #
-  # The capture method can be used in \ERB templates...
+  # The capture method can be used in ERB templates...
   #
   #   <% @greeting = capture do %>
   #     Welcome to my shiny new web page!  The date and time is
@@ -3346,8 +3226,8 @@ module ActionView::Helpers::CaptureHelper
   #
   #   @greeting # => "Welcome to my shiny new web page! The date and time is 2018-09-06 11:09:16 -0500"
   #
-  # source://actionview//lib/action_view/helpers/capture_helper.rb#47
-  def capture(*args, &block); end
+  # source://actionview//lib/action_view/helpers/capture_helper.rb#43
+  def capture(*args); end
 
   # Calling <tt>content_for</tt> stores a block of markup in an identifier for later use.
   # In order to access this stored content in other templates, helper modules
@@ -3454,11 +3334,10 @@ module ActionView::Helpers::CaptureHelper
   #
   # WARNING: <tt>content_for</tt> is ignored in caches. So you shouldn't use it for elements that will be fragment cached.
   #
-  # source://actionview//lib/action_view/helpers/capture_helper.rb#166
+  # source://actionview//lib/action_view/helpers/capture_helper.rb#155
   def content_for(name, content = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # <tt>content_for?</tt> checks whether any content has been captured yet using <tt>content_for</tt>.
-  #
   # Useful to render parts of your layout differently based on what is in your views.
   #
   #   <%# This is the layout %>
@@ -3475,7 +3354,7 @@ module ActionView::Helpers::CaptureHelper
   #
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/capture_helper.rb#209
+  # source://actionview//lib/action_view/helpers/capture_helper.rb#195
   def content_for?(name); end
 
   # The same as +content_for+ but when used with streaming flushes
@@ -3484,160 +3363,72 @@ module ActionView::Helpers::CaptureHelper
   # template, you should use +content_for+, if not, use +provide+ to tell
   # the layout to stop looking for more contents.
   #
-  # See ActionController::Streaming for more information.
-  #
-  # source://actionview//lib/action_view/helpers/capture_helper.rb#188
+  # source://actionview//lib/action_view/helpers/capture_helper.rb#175
   def provide(name, content = T.unsafe(nil), &block); end
 
   # Use an alternate output buffer for the duration of the block.
   # Defaults to a new empty string.
   #
-  # source://actionview//lib/action_view/helpers/capture_helper.rb#215
+  # source://actionview//lib/action_view/helpers/capture_helper.rb#201
   def with_output_buffer(buf = T.unsafe(nil)); end
 end
 
-# source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#5
-module ActionView::Helpers::ContentExfiltrationPreventionHelper
-  # source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#6
-  def prepend_content_exfiltration_prevention; end
-
-  # source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#6
-  def prepend_content_exfiltration_prevention=(val); end
-
-  # source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#61
-  def prevent_content_exfiltration(html); end
-
-  class << self
-    # source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#6
-    def prepend_content_exfiltration_prevention; end
-
-    # source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#6
-    def prepend_content_exfiltration_prevention=(val); end
-  end
-end
-
-# Close any open tags that support CDATA (textarea, xmp) before each form tag.
-# This prevents attackers from injecting unclosed tags that could capture
-# form contents.
-#
-# For example, an attacker might inject:
-#
-#   <form action="https://attacker.com"><textarea>
-#
-# The HTML following this tag, up until the next <tt></textarea></tt> or
-# the end of the document would be captured by the attacker's
-# <tt><textarea></tt>. By closing any open textarea tags, we ensure that
-# form contents are never exfiltrated.
-#
-# source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#32
-ActionView::Helpers::ContentExfiltrationPreventionHelper::CLOSE_CDATA_COMMENT = T.let(T.unsafe(nil), ActiveSupport::SafeBuffer)
-
-# Close any open form tags before each new form tag. This prevents attackers
-# from injecting unclosed forms that could leak markup offsite.
-#
-# For example, an attacker might inject:
-#
-#   <form action="https://attacker.com">
-#
-# The form elements following this tag, up until the next <tt></form></tt>
-# would be captured by the attacker's <tt><form></tt>. By closing any open
-# form tags, we ensure that form contents are never exfiltrated.
-#
-# source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#57
-ActionView::Helpers::ContentExfiltrationPreventionHelper::CLOSE_FORM_TAG = T.let(T.unsafe(nil), ActiveSupport::SafeBuffer)
-
-# Close any open option tags before each form tag. This prevents attackers
-# from injecting unclosed options that could leak markup offsite.
-#
-# For example, an attacker might inject:
-#
-#   <form action="https://attacker.com"><option>
-#
-# The HTML following this tag, up until the next <tt></option></tt> or the
-# end of the document would be captured by the attacker's
-# <tt><option></tt>. By closing any open option tags, we ensure that form
-# contents are never exfiltrated.
-#
-# source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#45
-ActionView::Helpers::ContentExfiltrationPreventionHelper::CLOSE_OPTION_TAG = T.let(T.unsafe(nil), ActiveSupport::SafeBuffer)
-
-# Close any open attributes before each form tag. This prevents attackers from
-# injecting partial tags that could leak markup offsite.
-#
-# For example, an attacker might inject:
-#
-#   <meta http-equiv="refresh" content='0;URL=https://attacker.com?
-#
-# The HTML following this tag, up until the next single quote would be sent to
-# +https://attacker.com+. By closing any open attributes, we ensure that form
-# contents are never exfiltrated this way.
-#
-# source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#18
-ActionView::Helpers::ContentExfiltrationPreventionHelper::CLOSE_QUOTES_COMMENT = T.let(T.unsafe(nil), ActiveSupport::SafeBuffer)
-
-# source://actionview//lib/action_view/helpers/content_exfiltration_prevention_helper.rb#59
-ActionView::Helpers::ContentExfiltrationPreventionHelper::CONTENT_EXFILTRATION_PREVENTION_MARKUP = T.let(T.unsafe(nil), ActiveSupport::SafeBuffer)
-
-# = Action View Controller \Helpers
-#
 # This module keeps all methods and behavior in ActionView
 # that simply delegates to the controller.
 #
-# source://actionview//lib/action_view/helpers/controller_helper.rb#11
+# source://actionview//lib/action_view/helpers/controller_helper.rb#9
 module ActionView::Helpers::ControllerHelper
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def action_name(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#20
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
   def assign_controller(controller); end
 
   def controller; end
   def controller=(_arg0); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def controller_name(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def controller_path(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def cookies(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def flash(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def headers(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#32
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#26
   def logger; end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def params(*_arg0, **_arg1, &_arg2); end
 
   def request; end
   def request=(_arg0); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def request_forgery_protection_token(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#36
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#30
   def respond_to?(method_name, include_private = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def response(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/helpers/controller_helper.rb#18
+  # source://actionview//lib/action_view/helpers/controller_helper.rb#16
   def session(*_arg0, **_arg1, &_arg2); end
 end
 
-# source://actionview//lib/action_view/helpers/controller_helper.rb#14
+# source://actionview//lib/action_view/helpers/controller_helper.rb#12
 ActionView::Helpers::ControllerHelper::CONTROLLER_DELEGATES = T.let(T.unsafe(nil), Array)
 
-# = Action View CSP \Helpers
-#
 # source://actionview//lib/action_view/helpers/csp_helper.rb#6
 module ActionView::Helpers::CspHelper
   # Returns a meta tag "csp-nonce" with the per-session nonce value
@@ -3647,15 +3438,13 @@ module ActionView::Helpers::CspHelper
   #     <%= csp_meta_tag %>
   #   </head>
   #
-  # This is used by the \Rails UJS helper to create dynamically
+  # This is used by the Rails UJS helper to create dynamically
   # loaded inline <script> elements.
   #
   # source://actionview//lib/action_view/helpers/csp_helper.rb#17
   def csp_meta_tag(**options); end
 end
 
-# = Action View CSRF \Helpers
-#
 # source://actionview//lib/action_view/helpers/csrf_helper.rb#6
 module ActionView::Helpers::CsrfHelper
   # Returns meta tags "csrf-param" and "csrf-token" with the name of the cross-site
@@ -3670,7 +3459,7 @@ module ActionView::Helpers::CsrfHelper
   #
   # You don't need to use these tags for regular forms as they generate their own hidden fields.
   #
-  # For Ajax requests other than GETs, extract the "csrf-token" from the meta-tag and send as the
+  # For AJAX requests other than GETs, extract the "csrf-token" from the meta-tag and send as the
   # +X-CSRF-Token+ HTTP header. If you are using rails-ujs, this happens automatically.
   # For backwards compatibility.
   #
@@ -3689,14 +3478,14 @@ module ActionView::Helpers::CsrfHelper
   #
   # You don't need to use these tags for regular forms as they generate their own hidden fields.
   #
-  # For Ajax requests other than GETs, extract the "csrf-token" from the meta-tag and send as the
+  # For AJAX requests other than GETs, extract the "csrf-token" from the meta-tag and send as the
   # +X-CSRF-Token+ HTTP header. If you are using rails-ujs, this happens automatically.
   #
   # source://actionview//lib/action_view/helpers/csrf_helper.rb#22
   def csrf_meta_tags; end
 end
 
-# = Action View \Date \Helpers
+# = Action View Date Helpers
 #
 # The Date Helper primarily creates select/option tags for different kinds of dates and times or date and time
 # elements. All of the select-type methods share a number of common options that are as follows:
@@ -3748,7 +3537,7 @@ module ActionView::Helpers::DateHelper
   # * <tt>:order</tt>             - Set to an array containing <tt>:day</tt>, <tt>:month</tt> and <tt>:year</tt> to
   #   customize the order in which the select fields are shown. If you leave out any of the symbols, the respective
   #   select will not be shown (like when you set <tt>discard_xxx: true</tt>. Defaults to the order defined in
-  #   the respective locale (e.g. [:year, :month, :day] in the en locale that ships with \Rails).
+  #   the respective locale (e.g. [:year, :month, :day] in the en locale that ships with Rails).
   # * <tt>:include_blank</tt>     - Include a blank option in every select field so it's possible to set empty
   #   dates.
   # * <tt>:default</tt>           - Set a default date if the affected date isn't set or is +nil+.
@@ -3854,7 +3643,7 @@ module ActionView::Helpers::DateHelper
   #
   # The selects are prepared for multi-parameter assignment to an Active Record object.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#366
+  # source://actionview//lib/action_view/helpers/date_helper.rb#362
   def datetime_select(object_name, method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Reports the approximate distance in time between two Time, Date, or DateTime objects or integers as seconds.
@@ -3903,7 +3692,7 @@ module ActionView::Helpers::DateHelper
   #   distance_of_time_in_words(to_time, from_time, include_seconds: true)                        # => about 6 years
   #   distance_of_time_in_words(Time.now, Time.now)                                               # => less than a minute
   #
-  # With the <tt>scope</tt> option, you can define a custom scope for \Rails
+  # With the <tt>scope</tt> option, you can define a custom scope for Rails
   # to look up the translation.
   #
   # For example you can define the following in your locale (e.g. en.yml).
@@ -3982,7 +3771,7 @@ module ActionView::Helpers::DateHelper
   #   select_date(my_date, prompt: { hour: true }) # generic prompt for hours
   #   select_date(my_date, prompt: true) # generic prompts for all
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#454
+  # source://actionview//lib/action_view/helpers/date_helper.rb#450
   def select_date(date = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a set of HTML select-tags (one for year, month, day, hour, minute, and second) pre-selected with the
@@ -4031,7 +3820,7 @@ module ActionView::Helpers::DateHelper
   #   select_datetime(my_date_time, prompt: { hour: true }) # generic prompt for hours
   #   select_datetime(my_date_time, prompt: true) # generic prompts for all
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#415
+  # source://actionview//lib/action_view/helpers/date_helper.rb#411
   def select_datetime(datetime = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the days 1 through 31 with the current day selected.
@@ -4058,7 +3847,7 @@ module ActionView::Helpers::DateHelper
   #   # generic prompt.
   #   select_day(5, prompt: 'Choose day')
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#597
+  # source://actionview//lib/action_view/helpers/date_helper.rb#593
   def select_day(date, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the hours 0 through 23 with the current hour selected.
@@ -4087,7 +3876,7 @@ module ActionView::Helpers::DateHelper
   #   # Generates a select field that includes options for hours from 2 to 14.
   #   select_hour(my_time, start_hour: 2, end_hour: 14)
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#570
+  # source://actionview//lib/action_view/helpers/date_helper.rb#566
   def select_hour(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the minutes 0 through 59 with the current minute selected.
@@ -4111,7 +3900,7 @@ module ActionView::Helpers::DateHelper
   #   # generic prompt.
   #   select_minute(14, prompt: 'Choose minutes')
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#541
+  # source://actionview//lib/action_view/helpers/date_helper.rb#537
   def select_minute(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the months January through December with the current month
@@ -4156,7 +3945,7 @@ module ActionView::Helpers::DateHelper
   #   # generic prompt.
   #   select_month(14, prompt: 'Choose month')
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#642
+  # source://actionview//lib/action_view/helpers/date_helper.rb#638
   def select_month(date, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the seconds 0 through 59 with the current second selected.
@@ -4179,7 +3968,7 @@ module ActionView::Helpers::DateHelper
   #   # generic prompt.
   #   select_second(14, prompt: 'Choose seconds')
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#517
+  # source://actionview//lib/action_view/helpers/date_helper.rb#513
   def select_second(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a set of HTML select-tags (one for hour and minute).
@@ -4219,7 +4008,7 @@ module ActionView::Helpers::DateHelper
   #   select_time(my_time, prompt: { hour: true }) # generic prompt for hours
   #   select_time(my_time, prompt: true) # generic prompts for all
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#494
+  # source://actionview//lib/action_view/helpers/date_helper.rb#490
   def select_time(datetime = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a select tag with options for each of the five years on each side of the current, which is selected.
@@ -4248,7 +4037,7 @@ module ActionView::Helpers::DateHelper
   #   # generic prompt.
   #   select_year(14, prompt: 'Choose year')
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#671
+  # source://actionview//lib/action_view/helpers/date_helper.rb#667
   def select_year(date, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Like <tt>distance_of_time_in_words</tt>, but where <tt>to_time</tt> is fixed to <tt>Time.now</tt>.
@@ -4299,16 +4088,12 @@ module ActionView::Helpers::DateHelper
   #   # You can set :ampm option to true which will show the hours as: 12 PM, 01 AM .. 11 PM.
   #   time_select 'game', 'game_time', { ampm: true }
   #
-  #   # You can set :ignore_date option to true which will remove the hidden inputs for day,
-  #   # month, and year that are set by default on this helper when you only want the time inputs
-  #   time_select 'game', 'game_time', { ignore_date: true }
-  #
   # The selects are prepared for multi-parameter assignment to an Active Record object.
   #
   # Note: If the day is not included as an option but the month is, the day will be set to the 1st to ensure that
   # all month choices are valid.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#331
+  # source://actionview//lib/action_view/helpers/date_helper.rb#327
   def time_select(object_name, method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns an HTML time tag for the given date or time.
@@ -4327,12 +4112,12 @@ module ActionView::Helpers::DateHelper
   #   <% end %>
   #   # => <time datetime="2010-11-04T17:55:45+01:00"><span>Right now</span></time>
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#690
+  # source://actionview//lib/action_view/helpers/date_helper.rb#686
   def time_tag(date_or_time, *args, &block); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#699
+  # source://actionview//lib/action_view/helpers/date_helper.rb#695
   def normalize_distance_of_time_argument_to_time(value); end
 end
 
@@ -4345,7 +4130,7 @@ ActionView::Helpers::DateHelper::MINUTES_IN_THREE_QUARTERS_YEAR = T.let(T.unsafe
 # source://actionview//lib/action_view/helpers/date_helper.rb#25
 ActionView::Helpers::DateHelper::MINUTES_IN_YEAR = T.let(T.unsafe(nil), Integer)
 
-# source://actionview//lib/action_view/helpers/date_helper.rb#710
+# source://actionview//lib/action_view/helpers/date_helper.rb#706
 class ActionView::Helpers::DateTimeSelector
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
@@ -4353,34 +4138,34 @@ class ActionView::Helpers::DateTimeSelector
 
   # @return [DateTimeSelector] a new instance of DateTimeSelector
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#727
+  # source://actionview//lib/action_view/helpers/date_helper.rb#723
   def initialize(datetime, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#756
+  # source://actionview//lib/action_view/helpers/date_helper.rb#752
   def select_date; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#735
+  # source://actionview//lib/action_view/helpers/date_helper.rb#731
   def select_datetime; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#818
+  # source://actionview//lib/action_view/helpers/date_helper.rb#814
   def select_day; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#806
+  # source://actionview//lib/action_view/helpers/date_helper.rb#802
   def select_hour; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#798
+  # source://actionview//lib/action_view/helpers/date_helper.rb#794
   def select_minute; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#826
+  # source://actionview//lib/action_view/helpers/date_helper.rb#822
   def select_month; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#790
+  # source://actionview//lib/action_view/helpers/date_helper.rb#786
   def select_second; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#774
+  # source://actionview//lib/action_view/helpers/date_helper.rb#770
   def select_time; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#840
+  # source://actionview//lib/action_view/helpers/date_helper.rb#836
   def select_year; end
 
   private
@@ -4406,7 +4191,7 @@ class ActionView::Helpers::DateTimeSelector
   #       <option value="2" selected="selected">02</option>
   #       <option value="3">03</option>..."
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1070
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1066
   def build_day_options(selected); end
 
   # Builds hidden input tag for date part and value.
@@ -4414,7 +4199,7 @@ class ActionView::Helpers::DateTimeSelector
   #   build_hidden(:year, 2008)
   #   => "<input type="hidden" id="date_year" name="date[year]" value="2008" autocomplete="off" />"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1165
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1167
   def build_hidden(type, value); end
 
   # Build select option HTML from date value and options.
@@ -4438,12 +4223,12 @@ class ActionView::Helpers::DateTimeSelector
   #       <option value="3">3</option>
   #       <option value="5">5</option>..."
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1027
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1023
   def build_options(selected, options = T.unsafe(nil)); end
 
   # Build full select tag from date type and options.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1003
+  # source://actionview//lib/action_view/helpers/date_helper.rb#999
   def build_options_and_select(type, selected, options = T.unsafe(nil)); end
 
   # Builds select tag from date type and HTML select options.
@@ -4453,23 +4238,29 @@ class ActionView::Helpers::DateTimeSelector
   #         <option value="1">January</option>...
   #       </select>"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1110
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1112
   def build_select(type, select_options_as_html); end
 
   # Given an ordering of datetime components, create the selection HTML
   # and join them with their appropriate separators.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1203
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1205
   def build_selects_from_types(order); end
 
   # Build select option HTML for year.
-  #
+  # If <tt>year_format</tt> option is not passed
   #   build_year_options(1998, start: 1998, end: 2000)
   #   => "<option value="1998" selected="selected">1998</option>
   #       <option value="1999">1999</option>
   #       <option value="2000">2000</option>"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1088
+  # If <tt>year_format</tt> option is passed
+  #   build_year_options(1998, start: 1998, end: 2000, year_format: ->year { "Heisei #{ year - 1988 }" })
+  #   => "<option value="1998" selected="selected">Heisei 10</option>
+  #       <option value="1999">Heisei 11</option>
+  #       <option value="2000">Heisei 12</option>"
+  #
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1090
   def build_year_options(selected, options = T.unsafe(nil)); end
 
   # Builds the CSS class value for the select element.
@@ -4477,13 +4268,13 @@ class ActionView::Helpers::DateTimeSelector
   #   css_class_attribute(:year, 'date optional', { year: 'my-year' })
   #   => "date optional my-year"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1130
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1132
   def css_class_attribute(type, html_options_class, options); end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#985
+  # source://actionview//lib/action_view/helpers/date_helper.rb#981
   def date_order; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#868
+  # source://actionview//lib/action_view/helpers/date_helper.rb#864
   def day; end
 
   # Looks up day names by number.
@@ -4498,28 +4289,28 @@ class ActionView::Helpers::DateTimeSelector
   #
   #   day_name(1) # => "1st"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#925
+  # source://actionview//lib/action_view/helpers/date_helper.rb#921
   def day_name(number); end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#868
+  # source://actionview//lib/action_view/helpers/date_helper.rb#864
   def hour; end
 
   # Returns the id attribute for the input tag.
   #  => "post_written_on_1i"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1194
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1196
   def input_id_from_type(type); end
 
   # Returns the name attribute for the input tag.
   #  => post[written_on(1i)]
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1180
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1182
   def input_name_from_type(type); end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#868
+  # source://actionview//lib/action_view/helpers/date_helper.rb#864
   def min; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#868
+  # source://actionview//lib/action_view/helpers/date_helper.rb#864
   def month; end
 
   # Looks up month names by number (1-based):
@@ -4530,7 +4321,7 @@ class ActionView::Helpers::DateTimeSelector
   #
   #   month_name(1) # => 1
   #
-  # If the <tt>:use_two_digit_numbers</tt> option is passed:
+  # If the <tt>:use_two_month_numbers</tt> option is passed:
   #
   #   month_name(1) # => '01'
   #
@@ -4544,13 +4335,13 @@ class ActionView::Helpers::DateTimeSelector
   #
   # depending on the format string.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#956
+  # source://actionview//lib/action_view/helpers/date_helper.rb#952
   def month_name(number); end
 
   # Returns translated month names, but also ensures that a custom month
   # name array has a leading +nil+ element.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#892
+  # source://actionview//lib/action_view/helpers/date_helper.rb#888
   def month_names; end
 
   # Builds a prompt option tag with supplied options or from default options.
@@ -4558,27 +4349,27 @@ class ActionView::Helpers::DateTimeSelector
   #   prompt_option_tag(:month, prompt: 'Select month')
   #   => "<option value="">Select month</option>"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1146
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1148
   def prompt_option_tag(type, options); end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#878
+  # source://actionview//lib/action_view/helpers/date_helper.rb#874
   def prompt_text(prompt, type); end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#868
+  # source://actionview//lib/action_view/helpers/date_helper.rb#864
   def sec; end
 
   # Returns the separator for a given datetime component.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1214
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1216
   def separator(type); end
 
   # If the day is hidden, the day should be set to the 1st so all month and year choices are
   # valid. Otherwise, February 31st or February 29th, 2011 can be selected, which are invalid.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#884
+  # source://actionview//lib/action_view/helpers/date_helper.rb#880
   def set_day_if_discarded; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#989
+  # source://actionview//lib/action_view/helpers/date_helper.rb#985
   def translated_date_order; end
 
   # Returns translated month names.
@@ -4591,10 +4382,10 @@ class ActionView::Helpers::DateTimeSelector
   #  => [nil, "Jan", "Feb", "Mar", "Apr", "May", "Jun",
   #           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#909
+  # source://actionview//lib/action_view/helpers/date_helper.rb#905
   def translated_month_names; end
 
-  # source://actionview//lib/action_view/helpers/date_helper.rb#868
+  # source://actionview//lib/action_view/helpers/date_helper.rb#864
   def year; end
 
   # Looks up year names by number.
@@ -4605,23 +4396,19 @@ class ActionView::Helpers::DateTimeSelector
   #
   #   year_name(1998) # => "Heisei 10"
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#977
+  # source://actionview//lib/action_view/helpers/date_helper.rb#973
   def year_name(number); end
 end
 
-# source://actionview//lib/action_view/helpers/date_helper.rb#718
+# source://actionview//lib/action_view/helpers/date_helper.rb#714
 ActionView::Helpers::DateTimeSelector::AMPM_TRANSLATION = T.let(T.unsafe(nil), Hash)
 
-# source://actionview//lib/action_view/helpers/date_helper.rb#713
+# source://actionview//lib/action_view/helpers/date_helper.rb#709
 ActionView::Helpers::DateTimeSelector::DEFAULT_PREFIX = T.let(T.unsafe(nil), String)
 
-# source://actionview//lib/action_view/helpers/date_helper.rb#714
+# source://actionview//lib/action_view/helpers/date_helper.rb#710
 ActionView::Helpers::DateTimeSelector::POSITION = T.let(T.unsafe(nil), Hash)
 
-# = Action View Debug \Helpers
-#
-# Provides a set of methods for making it easier to debug \Rails objects.
-#
 # source://actionview//lib/action_view/helpers/debug_helper.rb#10
 module ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::CaptureHelper
@@ -4648,8 +4435,6 @@ module ActionView::Helpers::DebugHelper
   def debug(object); end
 end
 
-# = Action View Form Builder
-#
 # A +FormBuilder+ object is associated with a particular model object and
 # allows you to generate fields associated with the model object. The
 # +FormBuilder+ object is yielded when using +form_for+ or +fields_for+.
@@ -4699,13 +4484,13 @@ end
 # The standard set of helper methods for form building are located in the
 # +field_helpers+ class attribute.
 #
-# source://actionview//lib/action_view/helpers/date_helper.rb#1228
+# source://actionview//lib/action_view/helpers/date_helper.rb#1230
 class ActionView::Helpers::FormBuilder
   include ::ActionView::ModelNaming
 
   # @return [FormBuilder] a new instance of FormBuilder
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1713
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1701
   def initialize(object_name, object, template, options); end
 
   # Add the submit button for the given form. When no value is given, it checks
@@ -4763,7 +4548,7 @@ class ActionView::Helpers::FormBuilder
   #   #       <strong>Save as draft</strong>
   #   #     </button>
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2640
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2615
   def button(value = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Returns a checkbox tag tailored for accessing a specified attribute (identified by +method+) on an object
@@ -4808,7 +4593,7 @@ class ActionView::Helpers::FormBuilder
   #     ...
   #   <% end %>
   #
-  # because parameter name repetition is precisely what \Rails seeks to distinguish
+  # because parameter name repetition is precisely what Rails seeks to distinguish
   # the elements of the array. For each item with a checked check box you
   # get an extra ghost item with only that attribute, assigned to "0".
   #
@@ -4832,7 +4617,7 @@ class ActionView::Helpers::FormBuilder
   #   # => <input name="eula[accepted]" type="hidden" value="no" />
   #   #    <input type="checkbox" class="eula_check" id="eula_accepted" name="eula[accepted]" value="yes" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2464
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2439
   def check_box(method, options = T.unsafe(nil), checked_value = T.unsafe(nil), unchecked_value = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#collection_check_boxes for form builders:
@@ -4844,7 +4629,7 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#908
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#907
   def collection_check_boxes(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#collection_radio_buttons for form builders:
@@ -4856,7 +4641,7 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#920
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#919
   def collection_radio_buttons(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#collection_select for form builders:
@@ -4868,13 +4653,13 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#860
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#859
   def collection_select(method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def color_field(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def date_field(method, options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::DateHelper#date_select for form builders:
@@ -4886,13 +4671,13 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1237
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1239
   def date_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def datetime_field(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def datetime_local_field(method, options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::DateHelper#datetime_select for form builders:
@@ -4904,24 +4689,24 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1261
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1263
   def datetime_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def email_field(method, options = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2661
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2636
   def emitted_hidden_id?; end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1678
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1666
   def field_helpers; end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1678
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1666
   def field_helpers=(_arg0); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1678
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1666
   def field_helpers?; end
 
   # Generate an HTML <tt>id</tt> attribute value for the given field
@@ -4941,7 +4726,7 @@ class ActionView::Helpers::FormBuilder
   # element, sharing a common <tt>id</tt> root (<tt>post_title</tt>, in this
   # case).
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1770
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1758
   def field_id(method, *suffixes, namespace: T.unsafe(nil), index: T.unsafe(nil)); end
 
   # Generate an HTML <tt>name</tt> attribute value for the given name and
@@ -4960,12 +4745,12 @@ class ActionView::Helpers::FormBuilder
   #     <%# => <input type="text" name="post[tag][]">
   #   <% end %>
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1790
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1778
   def field_name(method, *methods, multiple: T.unsafe(nil), index: T.unsafe(nil)); end
 
   # See the docs for the ActionView::Helpers::FormHelper#fields helper method.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2320
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2295
   def fields(scope = T.unsafe(nil), model: T.unsafe(nil), **options, &block); end
 
   # Creates a scope around a specific model object like form_for, but
@@ -5028,18 +4813,6 @@ class ActionView::Helpers::FormBuilder
   # Note: This also works for the methods in FormOptionsHelper and
   # DateHelper that are designed to work with an object as base, like
   # FormOptionsHelper#collection_select and DateHelper#datetime_select.
-  #
-  # +fields_for+ tries to be smart about parameters, but it can be confused if both
-  # name and value parameters are provided and the provided value has the shape of an
-  # option Hash. To remove the ambiguity, explicitly pass an option Hash, even if empty.
-  #
-  #   <%= form_for @person do |person_form| %>
-  #     ...
-  #     <%= fields_for :permission, @person.permission, {} do |permission_fields| %>
-  #       Admin?: <%= check_box_tag permission_fields.field_name(:admin), @person.permission[:admin] %>
-  #     <% end %>
-  #     ...
-  #   <% end %>
   #
   # === Nested Attributes Examples
   #
@@ -5222,7 +4995,7 @@ class ActionView::Helpers::FormBuilder
   # hidden field is not needed and you can pass <tt>include_id: false</tt>
   # to prevent fields_for from rendering it automatically.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2282
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2258
   def fields_for(record_name, record_object = T.unsafe(nil), fields_options = T.unsafe(nil), &block); end
 
   # Returns a file upload input tag tailored for accessing a specified attribute (identified by +method+) on an object
@@ -5236,7 +5009,7 @@ class ActionView::Helpers::FormBuilder
   # * Creates standard HTML attributes for the tag.
   # * <tt>:disabled</tt> - If set to true, the user will not be able to use this input.
   # * <tt>:multiple</tt> - If set to true, *in most updated browsers* the user will be allowed to select multiple files.
-  # * <tt>:include_hidden</tt> - When <tt>multiple: true</tt> and <tt>include_hidden: true</tt>, the field will be prefixed with an <tt><input type="hidden"></tt> field with an empty value to support submitting an empty collection of files. Since <tt>include_hidden</tt> will default to <tt>config.active_storage.multiple_file_field_include_hidden</tt> if you don't specify <tt>include_hidden</tt>, you will need to pass <tt>include_hidden: false</tt> to prevent submitting an empty collection of files when passing <tt>multiple: true</tt>.
+  # * <tt>:include_hidden</tt> - When <tt>multiple: true</tt> and <tt>include_hidden: true</tt>, the field will be prefixed with an <tt><input type="hidden"></tt> field with an empty value to support submitting an empty collection of files.
   # * <tt>:accept</tt> - If set to one or multiple mime-types, the user will be suggested a filter when choosing a file. You still need to set up model validations.
   #
   # ==== Examples
@@ -5260,7 +5033,7 @@ class ActionView::Helpers::FormBuilder
   #   file_field(:file, class: 'file_input')
   #   # => <input type="file" id="attachment_file" name="attachment[file]" class="file_input" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2547
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2522
   def file_field(method, options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#grouped_collection_select for form builders:
@@ -5272,7 +5045,7 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#872
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#871
   def grouped_collection_select(method, collection, group_method, group_label_method, option_key_method, option_value_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a hidden input tag tailored for accessing a specified attribute (identified by +method+) on an object
@@ -5293,7 +5066,7 @@ class ActionView::Helpers::FormBuilder
   #   hidden_field(:token)
   #   # => <input type="hidden" id="user_token" name="user[token]" value="abcde" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2508
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2483
   def hidden_field(method, options = T.unsafe(nil)); end
 
   # Generate an HTML <tt>id</tt> attribute value.
@@ -5314,12 +5087,12 @@ class ActionView::Helpers::FormBuilder
   # <tt><button></tt> element should be treated as the <tt><form></tt>
   # element's submit button, regardless of where it exists in the DOM.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1750
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1738
   def id; end
 
   # Returns the value of attribute index.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1690
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1678
   def index; end
 
   # Returns a label tag tailored for labelling an input field for a specified attribute (identified by +method+) on an object
@@ -5389,68 +5162,68 @@ class ActionView::Helpers::FormBuilder
   #   end
   #   # => <label for="post_terms">Accept <a href="/terms">Terms</a>.</label>
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2395
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2370
   def label(method, text = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def month_field(method, options = T.unsafe(nil)); end
 
   # Returns the value of attribute multipart.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1690
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1678
   def multipart; end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1693
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1681
   def multipart=(multipart); end
 
   # Returns the value of attribute multipart.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1690
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1678
   def multipart?; end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def number_field(method, options = T.unsafe(nil)); end
 
   # Returns the value of attribute object.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1688
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1676
   def object; end
 
   # Sets the attribute object
   #
   # @param value the value to set the attribute object to.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1688
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1676
   def object=(_arg0); end
 
   # Returns the value of attribute object_name.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1688
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1676
   def object_name; end
 
   # Sets the attribute object_name
   #
   # @param value the value to set the attribute object_name to.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1688
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1676
   def object_name=(_arg0); end
 
   # Returns the value of attribute options.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1688
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1676
   def options; end
 
   # Sets the attribute options
   #
   # @param value the value to set the attribute options to.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1688
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1676
   def options=(_arg0); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def password_field(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def phone_field(method, options = T.unsafe(nil)); end
 
   # Returns a radio button tag for accessing a specified attribute (identified by +method+) on an object
@@ -5472,15 +5245,15 @@ class ActionView::Helpers::FormBuilder
   #   # => <input type="radio" id="user_receive_newsletter_yes" name="user[receive_newsletter]" value="yes" />
   #   #    <input type="radio" id="user_receive_newsletter_no" name="user[receive_newsletter]" value="no" checked="checked" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2486
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2461
   def radio_button(method, tag_value, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def range_field(method, options = T.unsafe(nil)); end
 
   def rich_text_area(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def search_field(method, options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#select for form builders:
@@ -5492,7 +5265,7 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#848
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#847
   def select(method, choices = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Add the submit button for the given form. When no value is given, it checks
@@ -5522,19 +5295,19 @@ class ActionView::Helpers::FormBuilder
   #         post:
   #           create: "Add %{model}"
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2579
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2554
   def submit(value = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def telephone_field(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def text_area(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def text_field(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def time_field(method, options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::DateHelper#time_select for form builders:
@@ -5546,7 +5319,7 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/date_helper.rb#1249
+  # source://actionview//lib/action_view/helpers/date_helper.rb#1251
   def time_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#time_zone_select for form builders:
@@ -5558,19 +5331,19 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#884
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#883
   def time_zone_select(method, priority_zones = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1709
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1697
   def to_model; end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1705
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1693
   def to_partial_path; end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def url_field(method, options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2019
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2007
   def week_field(method, options = T.unsafe(nil)); end
 
   # Wraps ActionView::Helpers::FormOptionsHelper#weekday_select for form builders:
@@ -5582,51 +5355,49 @@ class ActionView::Helpers::FormBuilder
   #
   # Please refer to the documentation of the base helper for details.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#896
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#895
   def weekday_select(method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2746
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2721
   def convert_to_legacy_options(options); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2728
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2703
   def fields_for_nested_model(name, object, fields_options, block); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2699
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2674
   def fields_for_with_nested_attributes(association_name, association, options, block); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2695
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2670
   def nested_attributes_association?(association_name); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2741
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2716
   def nested_child_index(name); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2666
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2641
   def objectify_options(options); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#2672
+  # source://actionview//lib/action_view/helpers/form_helper.rb#2647
   def submit_default_value; end
 
   class << self
-    # source://actionview//lib/action_view/helpers/form_helper.rb#1701
+    # source://actionview//lib/action_view/helpers/form_helper.rb#1689
     def _to_partial_path; end
 
-    # source://actionview//lib/action_view/helpers/form_helper.rb#1678
+    # source://actionview//lib/action_view/helpers/form_helper.rb#1666
     def field_helpers; end
 
-    # source://actionview//lib/action_view/helpers/form_helper.rb#1678
+    # source://actionview//lib/action_view/helpers/form_helper.rb#1666
     def field_helpers=(value); end
 
-    # source://actionview//lib/action_view/helpers/form_helper.rb#1678
+    # source://actionview//lib/action_view/helpers/form_helper.rb#1666
     def field_helpers?; end
   end
 end
 
-# = Action View Form \Helpers
-#
 # Form helpers are designed to make working with resources much easier
 # compared to using vanilla HTML.
 #
@@ -5640,7 +5411,7 @@ end
 # when the form is initially displayed, input fields corresponding to attributes
 # of the resource should show the current values of those attributes.
 #
-# In \Rails, this is usually achieved by creating the form using +form_for+ and
+# In Rails, this is usually achieved by creating the form using +form_for+ and
 # a number of related helper methods. +form_for+ generates an appropriate <tt>form</tt>
 # tag and yields a form builder object that knows the model the form is about.
 # Input fields are created by calling methods defined on the form builder, which
@@ -5721,7 +5492,7 @@ end
 #
 # That's how you typically work with resources.
 #
-# source://actionview//lib/action_view/helpers/form_helper.rb#112
+# source://actionview//lib/action_view/helpers/form_helper.rb#111
 module ActionView::Helpers::FormHelper
   include ::ActionView::ModelNaming
   include ::ActionView::RecordIdentifier
@@ -5734,7 +5505,7 @@ module ActionView::Helpers::FormHelper
   mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
   mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1584
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1574
   def _object_for_form_builder(object); end
 
   # Returns a checkbox tag tailored for accessing a specified attribute (identified by +method+) on an object
@@ -5779,7 +5550,7 @@ module ActionView::Helpers::FormHelper
   #     ...
   #   <% end %>
   #
-  # because parameter name repetition is precisely what \Rails seeks to distinguish
+  # because parameter name repetition is precisely what Rails seeks to distinguish
   # the elements of the array. For each item with a checked check box you
   # get an extra ghost item with only that attribute, assigned to "0".
   #
@@ -5802,7 +5573,7 @@ module ActionView::Helpers::FormHelper
   #   # => <input name="eula[accepted]" type="hidden" value="no" />
   #   #    <input type="checkbox" class="eula_check" id="eula_accepted" name="eula[accepted]" value="yes" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1341
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1337
   def check_box(object_name, method, options = T.unsafe(nil), checked_value = T.unsafe(nil), unchecked_value = T.unsafe(nil)); end
 
   # Returns a text_field of type "color".
@@ -5810,7 +5581,7 @@ module ActionView::Helpers::FormHelper
   #   color_field("car", "color")
   #   # => <input id="car_color" name="car[color]" type="color" value="#000000" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1371
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1367
   def color_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "date".
@@ -5839,7 +5610,7 @@ module ActionView::Helpers::FormHelper
   #   date_field("user", "born_on", min: "2014-05-20")
   #   # => <input id="user_born_on" name="user[born_on]" type="date" min="2014-05-20" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1435
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1431
   def date_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "datetime-local".
@@ -5867,14 +5638,7 @@ module ActionView::Helpers::FormHelper
   #   datetime_field("user", "born_on", min: "2014-05-20T00:00:00")
   #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
   #
-  # By default, provided datetimes will be formatted including seconds. You can render just the date, hour,
-  # and minute by passing <tt>include_seconds: false</tt>.
-  #
-  #   @user.born_on = Time.current
-  #   datetime_field("user", "born_on", include_seconds: false)
-  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" value="2014-05-20T14:35" />
-  #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1508
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1498
   def datetime_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "datetime-local".
@@ -5902,14 +5666,7 @@ module ActionView::Helpers::FormHelper
   #   datetime_field("user", "born_on", min: "2014-05-20T00:00:00")
   #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" min="2014-05-20T00:00:00.000" />
   #
-  # By default, provided datetimes will be formatted including seconds. You can render just the date, hour,
-  # and minute by passing <tt>include_seconds: false</tt>.
-  #
-  #   @user.born_on = Time.current
-  #   datetime_field("user", "born_on", include_seconds: false)
-  #   # => <input id="user_born_on" name="user[born_on]" type="datetime-local" value="2014-05-20T14:35" />
-  #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1508
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1498
   def datetime_local_field(object_name, method, options = T.unsafe(nil)); end
 
   def default_form_builder; end
@@ -5920,7 +5677,7 @@ module ActionView::Helpers::FormHelper
   #   email_field("user", "address")
   #   # => <input id="user_address" name="user[address]" type="email" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1562
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1552
   def email_field(object_name, method, options = T.unsafe(nil)); end
 
   # Scopes input fields with either an explicit scope or model.
@@ -5969,7 +5726,7 @@ module ActionView::Helpers::FormHelper
   # to work with an object as a base, like
   # FormOptionsHelper#collection_select and DateHelper#datetime_select.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1077
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1073
   def fields(scope = T.unsafe(nil), model: T.unsafe(nil), **options, &block); end
 
   # Creates a scope around a specific model object like form_for, but
@@ -6215,7 +5972,7 @@ module ActionView::Helpers::FormHelper
   # can pass <tt>include_id: false</tt> to prevent fields_for from
   # rendering it automatically.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1026
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1022
   def fields_for(record_name, record_object = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Returns a file upload input tag tailored for accessing a specified attribute (identified by +method+) on an object
@@ -6248,14 +6005,14 @@ module ActionView::Helpers::FormHelper
   #   file_field(:attachment, :file, class: 'file_input')
   #   # => <input type="file" id="attachment_file" name="attachment[file]" class="file_input" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1243
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1239
   def file_field(object_name, method, options = T.unsafe(nil)); end
 
   # Creates a form that allows the user to create or update the attributes
   # of a specific model object.
   #
   # The method can be used in several slightly different ways, depending on
-  # how much you wish to rely on \Rails to infer automatically from the model
+  # how much you wish to rely on Rails to infer automatically from the model
   # how the form should be constructed. For a generic model object, a form
   # can be created by passing +form_for+ a string or symbol representing
   # the object we are concerned with:
@@ -6384,7 +6141,7 @@ module ActionView::Helpers::FormHelper
   # form is going to be sent. However, further simplification is possible
   # if the record passed to +form_for+ is a _resource_, i.e. it corresponds
   # to a set of RESTful routes, e.g. defined using the +resources+ method
-  # in <tt>config/routes.rb</tt>. In this case \Rails will simply infer the
+  # in <tt>config/routes.rb</tt>. In this case Rails will simply infer the
   # appropriate URL from the record itself. For example,
   #
   #   <%= form_for @post do |f| %>
@@ -6566,7 +6323,7 @@ module ActionView::Helpers::FormHelper
   #
   # @raise [ArgumentError]
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#434
+  # source://actionview//lib/action_view/helpers/form_helper.rb#433
   def form_for(record, options = T.unsafe(nil), &block); end
 
   # Creates a form tag based on mixing URLs, scopes, or models.
@@ -6585,7 +6342,7 @@ module ActionView::Helpers::FormHelper
   #     <%= form.text_field :title %>
   #   <% end %>
   #   # =>
-  #   <form method="post">
+  #   <form method="post" data-remote="true">
   #     <input type="text" name="title">
   #   </form>
   #
@@ -6644,7 +6401,7 @@ module ActionView::Helpers::FormHelper
   # is a _resource_. It corresponds to a set of RESTful routes, most likely
   # defined via +resources+ in <tt>config/routes.rb</tt>.
   #
-  # So when passing such a model record, \Rails infers the URL and method.
+  # So when passing such a model record, Rails infers the URL and method.
   #
   #   <%= form_with model: @post do |form| %>
   #     ...
@@ -6707,12 +6464,12 @@ module ActionView::Helpers::FormHelper
   # * <tt>:local</tt> - Whether to use standard HTTP form submission.
   #   When set to <tt>true</tt>, the form is submitted via standard HTTP.
   #   When set to <tt>false</tt>, the form is submitted as a "remote form", which
-  #   is handled by \Rails UJS as an XHR. When unspecified, the behavior is derived
+  #   is handled by Rails UJS as an XHR. When unspecified, the behavior is derived
   #   from <tt>config.action_view.form_with_generates_remote_forms</tt> where the
   #   config's value is actually the inverse of what <tt>local</tt>'s value would be.
-  #   As of \Rails 6.1, that configuration option defaults to <tt>false</tt>
+  #   As of Rails 6.1, that configuration option defaults to <tt>false</tt>
   #   (which has the equivalent effect of passing <tt>local: true</tt>).
-  #   In previous versions of \Rails, that configuration option defaults to
+  #   In previous versions of Rails, that configuration option defaults to
   #   <tt>true</tt> (the equivalent of passing <tt>local: false</tt>).
   # * <tt>:skip_enforcing_utf8</tt> - If set to true, a hidden input with name
   #   utf8 is not output.
@@ -6871,7 +6628,7 @@ module ActionView::Helpers::FormHelper
   #   hidden_field(:user, :token)
   #   # => <input type="hidden" id="user_token" name="user[token]" value="#{@user.token}" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1210
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1206
   def hidden_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a label tag tailored for labelling an input field for a specified attribute (identified by +method+) on an object
@@ -6933,7 +6690,7 @@ module ActionView::Helpers::FormHelper
   #   end
   #   # => <label for="post_terms">Accept <a href="/terms">Terms</a>.</label>
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1147
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1143
   def label(object_name, method, content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Returns a text_field of type "month".
@@ -6949,7 +6706,7 @@ module ActionView::Helpers::FormHelper
   #   month_field("user", "born_on")
   #   # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-01" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1527
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1517
   def month_field(object_name, method, options = T.unsafe(nil)); end
 
   # source://actionview//lib/action_view/helpers/form_helper.rb#482
@@ -6964,7 +6721,7 @@ module ActionView::Helpers::FormHelper
   #
   # Supports the same options as FormTagHelper#number_field_tag.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1571
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1561
   def number_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns an input tag of the "password" type tailored for accessing a specified attribute (identified by +method+) on an object
@@ -6985,7 +6742,7 @@ module ActionView::Helpers::FormHelper
   #   password_field(:account, :pin, size: 20, class: 'form_input')
   #   # => <input type="password" id="account_pin" name="account[pin]" size="20" class="form_input" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1192
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1188
   def password_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "tel".
@@ -6994,7 +6751,7 @@ module ActionView::Helpers::FormHelper
   #   # => <input id="user_phone" name="user[phone]" type="tel" />
   # aliases telephone_field
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1403
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1399
   def phone_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a radio button tag for accessing a specified attribute (identified by +method+) on an object
@@ -7016,7 +6773,7 @@ module ActionView::Helpers::FormHelper
   #   # => <input type="radio" id="user_receive_newsletter_yes" name="user[receive_newsletter]" value="yes" />
   #   #    <input type="radio" id="user_receive_newsletter_no" name="user[receive_newsletter]" value="no" checked="checked" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1363
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1359
   def radio_button(object_name, method, tag_value, options = T.unsafe(nil)); end
 
   # Returns an input tag of type "range".
@@ -7025,7 +6782,7 @@ module ActionView::Helpers::FormHelper
   #
   # Supports the same options as FormTagHelper#range_field_tag.
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1580
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1570
   def range_field(object_name, method, options = T.unsafe(nil)); end
 
   def rich_text_area(object_name, method, options = T.unsafe(nil)); end
@@ -7050,7 +6807,7 @@ module ActionView::Helpers::FormHelper
   #   search_field(:user, :name, autosave: true, onsearch: true)
   #   # => <input autosave="com.example.www" id="user_name" incremental="true" name="user[name]" onsearch="true" results="10" type="search" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1394
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1390
   def search_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "tel".
@@ -7058,7 +6815,7 @@ module ActionView::Helpers::FormHelper
   #   telephone_field("user", "phone")
   #   # => <input id="user_phone" name="user[phone]" type="tel" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1403
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1399
   def telephone_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a textarea opening and closing tag set tailored for accessing a specified attribute (identified by +method+)
@@ -7086,7 +6843,7 @@ module ActionView::Helpers::FormHelper
   #   #      #{@entry.body}
   #   #    </textarea>
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1273
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1269
   def text_area(object_name, method, options = T.unsafe(nil)); end
 
   # Returns an input tag of the "text" type tailored for accessing a specified attribute (identified by +method+) on an object
@@ -7110,7 +6867,7 @@ module ActionView::Helpers::FormHelper
   #   text_field(:snippet, :code, size: 20, class: 'code_input')
   #   # => <input type="text" id="snippet_code" name="snippet[code]" size="20" value="#{@snippet.code}" class="code_input" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1171
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1167
   def text_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "time".
@@ -7148,7 +6905,7 @@ module ActionView::Helpers::FormHelper
   #   time_field("task", "started_at", value: Time.now, include_seconds: false)
   #   # => <input id="task_started_at" name="task[started_at]" type="time" value="01:00" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1473
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1469
   def time_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "url".
@@ -7156,7 +6913,7 @@ module ActionView::Helpers::FormHelper
   #   url_field("user", "homepage")
   #   # => <input id="user_homepage" name="user[homepage]" type="url" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1553
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1543
   def url_field(object_name, method, options = T.unsafe(nil)); end
 
   # Returns a text_field of type "week".
@@ -7172,21 +6929,21 @@ module ActionView::Helpers::FormHelper
   #   week_field("user", "born_on")
   #   # => <input id="user_born_on" name="user[born_on]" type="date" value="1984-W19" />
   #
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1544
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1534
   def week_field(object_name, method, options = T.unsafe(nil)); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#464
+  # source://actionview//lib/action_view/helpers/form_helper.rb#463
   def apply_form_for_options!(object, options); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1618
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1608
   def default_form_builder_class; end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1589
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1579
   def html_options_for_form_with(url_for_options = T.unsafe(nil), model = T.unsafe(nil), html: T.unsafe(nil), local: T.unsafe(nil), skip_enforcing_utf8: T.unsafe(nil), **options); end
 
-  # source://actionview//lib/action_view/helpers/form_helper.rb#1604
+  # source://actionview//lib/action_view/helpers/form_helper.rb#1594
   def instantiate_builder(record_name, record_object, options); end
 
   class << self
@@ -7210,8 +6967,6 @@ module ActionView::Helpers::FormHelper
   end
 end
 
-# = Action View Form Option \Helpers
-#
 # Provides a number of methods for turning different kinds of containers into a set of option tags.
 #
 # The <tt>collection_select</tt>, <tt>select</tt> and <tt>time_zone_select</tt> methods take an <tt>options</tt> parameter, a hash:
@@ -7293,7 +7048,7 @@ end
 #       <option value="4">Poems</option>
 #     </select>
 #
-# source://actionview//lib/action_view/helpers/form_options_helper.rb#94
+# source://actionview//lib/action_view/helpers/form_options_helper.rb#93
 module ActionView::Helpers::FormOptionsHelper
   include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::CaptureHelper
@@ -7383,7 +7138,7 @@ module ActionView::Helpers::FormOptionsHelper
   # In the rare case you don't want this hidden field, you can pass the
   # <tt>include_hidden: false</tt> option to the helper method.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#782
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#781
   def collection_check_boxes(object, method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Returns radio button tags for the collection of existing return values
@@ -7466,7 +7221,7 @@ module ActionView::Helpers::FormOptionsHelper
   # In case if you don't want the helper to generate this hidden field you can specify
   # <tt>include_hidden: false</tt> option.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#698
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#697
   def collection_radio_buttons(object, method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Returns <tt><select></tt> and <tt><option></tt> tags for the collection of existing return values of
@@ -7506,7 +7261,7 @@ module ActionView::Helpers::FormOptionsHelper
   #     <option value="3">M. Clark</option>
   #   </select>
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#199
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#198
   def collection_select(object, method, collection, value_method, text_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns <tt><select></tt>, <tt><optgroup></tt> and <tt><option></tt> tags for the collection of existing return values of
@@ -7565,7 +7320,7 @@ module ActionView::Helpers::FormOptionsHelper
   #     </optgroup>
   #   </select>
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#258
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#257
   def grouped_collection_select(object, method, collection, group_method, group_label_method, option_key_method, option_value_method, options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a string of <tt><option></tt> tags, like <tt>options_for_select</tt>, but
@@ -7632,7 +7387,7 @@ module ActionView::Helpers::FormOptionsHelper
   # <b>Note:</b> Only the <tt><optgroup></tt> and <tt><option></tt> tags are returned, so you still have to
   # wrap the output in an appropriate <tt><select></tt> tag.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#534
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#533
   def grouped_options_for_select(grouped_options, selected_key = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns a string of <tt><option></tt> tags, like <tt>options_from_collection_for_select</tt>, but
@@ -7684,7 +7439,7 @@ module ActionView::Helpers::FormOptionsHelper
   # <b>Note:</b> Only the <tt><optgroup></tt> and <tt><option></tt> tags are returned, so you still have to
   # wrap the output in an appropriate <tt><select></tt> tag.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#462
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#461
   def option_groups_from_collection_for_select(collection, group_method, group_label_method, option_key_method, option_value_method, selected_key = T.unsafe(nil)); end
 
   # Accepts a container (hash, array, enumerable, your type) and returns a string of option tags. Given a container
@@ -7744,7 +7499,7 @@ module ActionView::Helpers::FormOptionsHelper
   #
   # NOTE: Only the option tags are returned, you have to wrap this call in a regular HTML select tag.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#358
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#357
   def options_for_select(container, selected = T.unsafe(nil)); end
 
   # Returns a string of option tags that have been compiled by iterating over the +collection+ and assigning
@@ -7772,7 +7527,7 @@ module ActionView::Helpers::FormOptionsHelper
   #   options_from_collection_for_select(@people, 'id', 'name', 1)
   # should produce the desired results.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#401
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#400
   def options_from_collection_for_select(collection, value_method, text_method, selected = T.unsafe(nil)); end
 
   # Create a select tag and a series of contained option tags for the provided object and method.
@@ -7837,7 +7592,7 @@ module ActionView::Helpers::FormOptionsHelper
   # In case if you don't want the helper to generate this hidden field you can specify
   # <tt>include_hidden: false</tt> option.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#159
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#158
   def select(object, method, choices = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Returns a string of option tags for pretty much any time zone in the
@@ -7860,7 +7615,7 @@ module ActionView::Helpers::FormOptionsHelper
   # NOTE: Only the option tags are returned, you have to wrap this call in
   # a regular HTML select tag.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#579
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#578
   def time_zone_options_for_select(selected = T.unsafe(nil), priority_zones = T.unsafe(nil), model = T.unsafe(nil)); end
 
   # Returns select and option tags for the given object and method, using
@@ -7894,7 +7649,7 @@ module ActionView::Helpers::FormOptionsHelper
   #
   #   time_zone_select(:user, :time_zone, ActiveSupport::TimeZone.all.sort, model: ActiveSupport::TimeZone)
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#292
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#291
   def time_zone_select(object, method, priority_zones = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil)); end
 
   # Returns a string of option tags for the days of the week.
@@ -7909,52 +7664,49 @@ module ActionView::Helpers::FormOptionsHelper
   # NOTE: Only the option tags are returned, you have to wrap this call in
   # a regular HTML select tag.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#611
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#610
   def weekday_options_for_select(selected = T.unsafe(nil), index_as_value: T.unsafe(nil), day_format: T.unsafe(nil), beginning_of_week: T.unsafe(nil)); end
 
   # Returns select and option tags for the given object and method, using
   # <tt>weekday_options_for_select</tt> to generate the list of option tags.
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#298
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#297
   def weekday_select(object, method, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#809
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#808
   def extract_selected_and_disabled(selected); end
 
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#820
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#819
   def extract_values_from_collection(collection, value_method, selected); end
 
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#787
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#786
   def option_html_attributes(element); end
 
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#795
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#794
   def option_text_and_value(option); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#805
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#804
   def option_value_selected?(value, selected); end
 
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#834
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#833
   def prompt_text(prompt); end
 
-  # source://actionview//lib/action_view/helpers/form_options_helper.rb#830
+  # source://actionview//lib/action_view/helpers/form_options_helper.rb#829
   def value_for_collection(item, value); end
 end
 
-# = Action View Form Tag \Helpers
-#
 # Provides a number of methods for creating form tags that don't rely on an Active Record object assigned to the template like
 # FormHelper does. Instead, you provide the names and values manually.
 #
 # NOTE: The HTML options <tt>disabled</tt>, <tt>readonly</tt>, and <tt>multiple</tt> can all be treated as booleans. So specifying
 # <tt>disabled: true</tt> will give <tt>disabled="disabled"</tt>.
 #
-# source://actionview//lib/action_view/helpers/form_tag_helper.rb#19
+# source://actionview//lib/action_view/helpers/form_tag_helper.rb#17
 module ActionView::Helpers::FormTagHelper
-  include ::ActionView::Helpers::ContentExfiltrationPreventionHelper
   extend ::ActiveSupport::Concern
   include ::ActionView::Helpers::UrlHelper
   include ::ActionView::Helpers::SanitizeHelper
@@ -7997,9 +7749,9 @@ module ActionView::Helpers::FormTagHelper
   #   #     <strong>Ask me!</strong>
   #   #    </button>
   #
-  # ==== Deprecated: \Rails UJS attributes
+  # ==== Deprecated: Rails UJS attributes
   #
-  # Prior to \Rails 7, \Rails shipped with a JavaScript library called @rails/ujs on by default. Following \Rails 7,
+  # Prior to Rails 7, Rails shipped with a JavaScript library called @rails/ujs on by default. Following Rails 7,
   # this library is no longer on by default. This library integrated with the following options:
   #
   # * <tt>confirm: 'question?'</tt> - If present, the
@@ -8017,19 +7769,12 @@ module ActionView::Helpers::FormTagHelper
   #   button_tag "Checkout", data: { disable_with: "Please wait..." }
   #   # => <button data-disable-with="Please wait..." name="button" type="submit">Checkout</button>
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#605
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#578
   def button_tag(content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
-  # :call-seq:
-  #   check_box_tag(name, options = {})
-  #   check_box_tag(name, value, options = {})
-  #   check_box_tag(name, value, checked, options = {})
-  #
   # Creates a check box form input tag.
   #
   # ==== Options
-  # * <tt>:value</tt> - The value of the input. Defaults to <tt>"1"</tt>.
-  # * <tt>:checked</tt> - If set to true, the checkbox will be checked by default.
   # * <tt>:disabled</tt> - If set to true, the user will not be able to use this input.
   # * Any other key creates standard HTML options for the tag.
   #
@@ -8049,8 +7794,8 @@ module ActionView::Helpers::FormTagHelper
   #   check_box_tag 'eula', 'accepted', false, disabled: true
   #   # => <input disabled="disabled" id="eula" name="eula" type="checkbox" value="accepted" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#455
-  def check_box_tag(name, *args); end
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#444
+  def check_box_tag(name, value = T.unsafe(nil), checked = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "color".
   #
@@ -8072,7 +7817,7 @@ module ActionView::Helpers::FormTagHelper
   #   color_field_tag 'color', '#DEF726', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="color" name="color" type="color" value="#DEF726" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#703
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#676
   def color_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "date".
@@ -8095,7 +7840,7 @@ module ActionView::Helpers::FormTagHelper
   #   date_field_tag 'date', '01/01/2014', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="date" name="date" type="date" value="01/01/2014" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#773
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#746
   def date_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "datetime-local".
@@ -8107,9 +7852,8 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:min</tt> - The minimum acceptable value.
   # * <tt>:max</tt> - The maximum acceptable value.
   # * <tt>:step</tt> - The acceptable value granularity.
-  # * <tt>:include_seconds</tt> - Include seconds in the output timestamp format (true by default).
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#801
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#773
   def datetime_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "datetime-local".
@@ -8121,15 +7865,14 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:min</tt> - The minimum acceptable value.
   # * <tt>:max</tt> - The maximum acceptable value.
   # * <tt>:step</tt> - The acceptable value granularity.
-  # * <tt>:include_seconds</tt> - Include seconds in the output timestamp format (true by default).
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#801
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#773
   def datetime_local_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#29
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
   def default_enforce_utf8; end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#29
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
   def default_enforce_utf8=(val); end
 
   # Creates a text field of type "email".
@@ -8152,13 +7895,13 @@ module ActionView::Helpers::FormTagHelper
   #   email_field_tag 'email', 'email@example.com', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="email" name="email" type="email" value="email@example.com" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#875
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#847
   def email_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#23
   def embed_authenticity_token_in_remote_forms; end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#23
   def embed_authenticity_token_in_remote_forms=(val); end
 
   # Generate an HTML <tt>id</tt> attribute value for the given name and
@@ -8177,7 +7920,7 @@ module ActionView::Helpers::FormTagHelper
   # element, sharing a common <tt>id</tt> root (<tt>post_title</tt>, in this
   # case).
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#102
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#99
   def field_id(object_name, method_name, *suffixes, index: T.unsafe(nil), namespace: T.unsafe(nil)); end
 
   # Generate an HTML <tt>name</tt> attribute value for the given name and
@@ -8192,7 +7935,7 @@ module ActionView::Helpers::FormTagHelper
   #   <%= text_field_tag :post, :tag, name: field_name(:post, :tag, multiple: true) %>
   #   <%# => <input type="text" name="post[tag][]">
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#132
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#129
   def field_name(object_name, method_name, *method_names, multiple: T.unsafe(nil), index: T.unsafe(nil)); end
 
   # Creates a field set for grouping HTML form elements.
@@ -8216,7 +7959,7 @@ module ActionView::Helpers::FormTagHelper
   #   <% end %>
   #   # => <fieldset class="format"><p><input id="name" name="name" type="text" /></p></fieldset>
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#677
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#650
   def field_set_tag(legend = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Creates a file upload field. If you are using file uploads then you will also need
@@ -8255,7 +7998,7 @@ module ActionView::Helpers::FormTagHelper
   #   file_field_tag 'file', accept: 'text/html', class: 'upload', value: 'index.html'
   #   # => <input accept="text/html" class="upload" id="file" name="file" type="file" value="index.html" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#347
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#344
   def file_field_tag(name, options = T.unsafe(nil)); end
 
   # Starts a form tag that points the action to a URL configured with <tt>url_for_options</tt> just like
@@ -8305,7 +8048,7 @@ module ActionView::Helpers::FormTagHelper
   #   form_tag('http://far.away.com/form', authenticity_token: "cf50faa3fe97702ca1ae")
   #   # form with custom authenticity token
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#78
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#75
   def form_tag(url_for_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Creates a hidden form input field used to transmit data that would be lost due to HTTP's statelessness or
@@ -8325,7 +8068,7 @@ module ActionView::Helpers::FormTagHelper
   #   # => <input type="hidden" name="collected_input" id="collected_input"
   #        value="" onchange="alert(&#39;Input collected!&#39;)" autocomplete="off" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#308
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#305
   def hidden_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Displays an image which when clicked will submit the form.
@@ -8359,7 +8102,7 @@ module ActionView::Helpers::FormTagHelper
   #   image_submit_tag("save.png", data: { confirm: "Are you sure?" })
   #   # => <input src="/assets/save.png" data-confirm="Are you sure?" type="image" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#651
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#624
   def image_submit_tag(source, options = T.unsafe(nil)); end
 
   # Creates a label element. Accepts a block.
@@ -8377,7 +8120,7 @@ module ActionView::Helpers::FormTagHelper
   #   label_tag 'name', nil, class: 'small_label'
   #   # => <label for="name" class="small_label">Name</label>
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#281
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#278
   def label_tag(name = T.unsafe(nil), content_or_options = T.unsafe(nil), options = T.unsafe(nil), &block); end
 
   # Creates a text field of type "month".
@@ -8390,7 +8133,7 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:max</tt> - The maximum acceptable value.
   # * <tt>:step</tt> - The acceptable value granularity.
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#816
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#788
   def month_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a number field.
@@ -8438,7 +8181,7 @@ module ActionView::Helpers::FormTagHelper
   #   number_field_tag 'quantity', '1', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="quantity" name="quantity" type="number" value="1" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#923
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#895
   def number_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a password field, a masked text field that will hide the users input behind a mask character.
@@ -8471,7 +8214,7 @@ module ActionView::Helpers::FormTagHelper
   #   password_field_tag 'pin', '1234', maxlength: 4, size: 6, class: "pin_input"
   #   # => <input class="pin_input" id="pin" maxlength="4" name="pin" size="6" type="password" value="1234" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#380
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#377
   def password_field_tag(name = T.unsafe(nil), value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "tel".
@@ -8494,18 +8237,13 @@ module ActionView::Helpers::FormTagHelper
   #   telephone_field_tag 'tel', '0123456789', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="tel" name="tel" type="tel" value="0123456789" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#749
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#722
   def phone_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # :call-seq:
-  #   radio_button_tag(name, value, options = {})
-  #   radio_button_tag(name, value, checked, options = {})
-  #
   # Creates a radio button; use groups of radio buttons named the same to allow users to
   # select from a group of options.
   #
   # ==== Options
-  # * <tt>:checked</tt> - If set to true, the radio button will be selected by default.
   # * <tt>:disabled</tt> - If set to true, the user will not be able to use this input.
   # * Any other key creates standard HTML options for the tag.
   #
@@ -8522,8 +8260,8 @@ module ActionView::Helpers::FormTagHelper
   #   radio_button_tag 'color', "green", true, class: "color_input"
   #   # => <input checked="checked" class="color_input" id="color_green" name="color" type="radio" value="green" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#491
-  def radio_button_tag(name, value, *args); end
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#469
+  def radio_button_tag(name, value, checked = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a range form element.
   #
@@ -8531,7 +8269,7 @@ module ActionView::Helpers::FormTagHelper
   #
   # Supports the same options as #number_field_tag.
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#937
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#909
   def range_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "search".
@@ -8554,7 +8292,7 @@ module ActionView::Helpers::FormTagHelper
   #   search_field_tag 'search', 'Enter your search query here', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="search" name="search" type="search" value="Enter your search query here" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#726
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#699
   def search_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a dropdown selection box, or if the <tt>:multiple</tt> option is set to true, a multiple
@@ -8613,7 +8351,7 @@ module ActionView::Helpers::FormTagHelper
   #   # => <select id="credit_card" name="credit_card"><option>VISA</option>
   #   #    <option selected="selected">MasterCard</option></select>
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#201
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#198
   def select_tag(name, option_tags = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a submit button with the text <tt>value</tt> as the caption.
@@ -8639,9 +8377,9 @@ module ActionView::Helpers::FormTagHelper
   #   submit_tag "Edit", class: "edit_button"
   #   # => <input class="edit_button" data-disable-with="Edit" name="commit" type="submit" value="Edit" />
   #
-  # ==== Deprecated: \Rails UJS attributes
+  # ==== Deprecated: Rails UJS attributes
   #
-  # Prior to \Rails 7, \Rails shipped with the JavaScript library called @rails/ujs on by default. Following \Rails 7,
+  # Prior to Rails 7, Rails shipped with the JavaScript library called @rails/ujs on by default. Following Rails 7,
   # this library is no longer on by default. This library integrated with the following options:
   #
   # * <tt>confirm: 'question?'</tt> - If present the unobtrusive JavaScript
@@ -8658,7 +8396,7 @@ module ActionView::Helpers::FormTagHelper
   #   submit_tag "Save", data: { confirm: "Are you sure?" }
   #   # => <input name='commit' type='submit' value='Save' data-disable-with="Save" data-confirm="Are you sure?" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#544
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#517
   def submit_tag(value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "tel".
@@ -8681,7 +8419,7 @@ module ActionView::Helpers::FormTagHelper
   #   telephone_field_tag 'tel', '0123456789', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="tel" name="tel" type="tel" value="0123456789" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#749
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#722
   def telephone_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text input area; use a textarea for longer text inputs such as blog posts or descriptions.
@@ -8714,7 +8452,7 @@ module ActionView::Helpers::FormTagHelper
   #   text_area_tag 'comment', nil, class: 'comment_input'
   #   # => <textarea class="comment_input" id="comment" name="comment"></textarea>
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#413
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#410
   def text_area_tag(name, content = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a standard text field; use these text fields to input smaller chunks of text like a username
@@ -8754,7 +8492,7 @@ module ActionView::Helpers::FormTagHelper
   #   text_field_tag 'ip', '0.0.0.0', maxlength: 15, size: 20, class: "ip-input"
   #   # => <input class="ip-input" id="ip" maxlength="15" name="ip" size="20" type="text" value="0.0.0.0" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#263
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#260
   def text_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "time".
@@ -8768,7 +8506,7 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:step</tt> - The acceptable value granularity.
   # * <tt>:include_seconds</tt> - Include seconds and ms in the output timestamp format (true by default).
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#787
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#760
   def time_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates a text field of type "url".
@@ -8791,13 +8529,13 @@ module ActionView::Helpers::FormTagHelper
   #   url_field_tag 'url', 'http://rubyonrails.org', class: 'special_input', disabled: true
   #   # => <input disabled="disabled" class="special_input" id="url" name="url" type="url" value="http://rubyonrails.org" />
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#852
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#824
   def url_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Creates the hidden UTF-8 enforcer tag. Override this method in a helper
   # to customize the tag.
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#943
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#915
   def utf8_enforcer_tag; end
 
   # Creates a text field of type "week".
@@ -8810,52 +8548,50 @@ module ActionView::Helpers::FormTagHelper
   # * <tt>:max</tt> - The maximum acceptable value.
   # * <tt>:step</tt> - The acceptable value granularity.
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#829
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#801
   def week_field_tag(name, value = T.unsafe(nil), options = T.unsafe(nil)); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#1040
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#1011
   def convert_direct_upload_option_to_url(options); end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#978
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#950
   def extra_tags_for_form(html_options); end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#1008
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#980
   def form_tag_html(html_options); end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#1014
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#985
   def form_tag_with_body(html_options, content); end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#951
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#923
   def html_options_for_form(url_for_options, options); end
 
   # see http://www.w3.org/TR/html4/types.html#type-name
   #
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#1021
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#992
   def sanitize_to_id(name); end
 
-  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#1025
+  # source://actionview//lib/action_view/helpers/form_tag_helper.rb#996
   def set_default_disable_with(value, tag_options); end
 
   class << self
-    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#29
+    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
     def default_enforce_utf8; end
 
-    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#29
+    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
     def default_enforce_utf8=(val); end
 
-    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
+    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#23
     def embed_authenticity_token_in_remote_forms; end
 
-    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#26
+    # source://actionview//lib/action_view/helpers/form_tag_helper.rb#23
     def embed_authenticity_token_in_remote_forms=(val); end
   end
 end
 
-# = Action View JavaScript \Helpers
-#
-# source://actionview//lib/action_view/helpers/javascript_helper.rb#6
+# source://actionview//lib/action_view/helpers/javascript_helper.rb#5
 module ActionView::Helpers::JavaScriptHelper
   # Escapes carriage returns and single and double quotes for JavaScript segments.
   #
@@ -8864,7 +8600,7 @@ module ActionView::Helpers::JavaScriptHelper
   #
   #   $('some_element').replaceWith('<%= j render 'some/element_template' %>');
   #
-  # source://actionview//lib/action_view/helpers/javascript_helper.rb#28
+  # source://actionview//lib/action_view/helpers/javascript_helper.rb#27
   def escape_javascript(javascript); end
 
   # Escapes carriage returns and single and double quotes for JavaScript segments.
@@ -8874,10 +8610,10 @@ module ActionView::Helpers::JavaScriptHelper
   #
   #   $('some_element').replaceWith('<%= j render 'some/element_template' %>');
   #
-  # source://actionview//lib/action_view/helpers/javascript_helper.rb#28
+  # source://actionview//lib/action_view/helpers/javascript_helper.rb#27
   def j(javascript); end
 
-  # source://actionview//lib/action_view/helpers/javascript_helper.rb#91
+  # source://actionview//lib/action_view/helpers/javascript_helper.rb#90
   def javascript_cdata_section(content); end
 
   # Returns a JavaScript tag with the +content+ inside. Example:
@@ -8916,15 +8652,13 @@ module ActionView::Helpers::JavaScriptHelper
   #     alert('All is good')
   #   <% end -%>
   #
-  # source://actionview//lib/action_view/helpers/javascript_helper.rb#75
+  # source://actionview//lib/action_view/helpers/javascript_helper.rb#74
   def javascript_tag(content_or_options_with_block = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 end
 
-# source://actionview//lib/action_view/helpers/javascript_helper.rb#7
+# source://actionview//lib/action_view/helpers/javascript_helper.rb#6
 ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP = T.let(T.unsafe(nil), Hash)
 
-# = Action View Number \Helpers
-#
 # Provides methods for converting numbers into formatted strings.
 # Methods are provided for phone numbers, currency, percentage,
 # precision, positional notation, file size, and pretty printing.
@@ -8932,7 +8666,7 @@ ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP = T.let(T.unsafe(nil), Hash
 # Most methods expect a +number+ argument, and will return it
 # unchanged if can't be converted into a valid number.
 #
-# source://actionview//lib/action_view/helpers/number_helper.rb#17
+# source://actionview//lib/action_view/helpers/number_helper.rb#16
 module ActionView::Helpers::NumberHelper
   # Formats a +number+ into a currency string (e.g., $13.65). You
   # can customize the format in the +options+ hash.
@@ -8992,7 +8726,7 @@ module ActionView::Helpers::NumberHelper
   #   number_to_currency(1234567890.50, strip_insignificant_zeros: true)
   #   # => "$1,234,567,890.5"
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#128
+  # source://actionview//lib/action_view/helpers/number_helper.rb#127
   def number_to_currency(number, options = T.unsafe(nil)); end
 
   # Pretty prints (formats and approximates) a number in a way it
@@ -9098,7 +8832,7 @@ module ActionView::Helpers::NumberHelper
   #   number_to_human(1, units: :distance)                   # => "1 meter"
   #   number_to_human(0.34, units: :distance)                # => "34 centimeters"
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#405
+  # source://actionview//lib/action_view/helpers/number_helper.rb#404
   def number_to_human(number, options = T.unsafe(nil)); end
 
   # Formats the bytes in +number+ into a more understandable
@@ -9144,7 +8878,7 @@ module ActionView::Helpers::NumberHelper
   #   number_to_human_size(1234567890123, precision: 5)                  # => "1.1228 TB"
   #   number_to_human_size(524288000, precision: 5)                      # => "500 MB"
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#298
+  # source://actionview//lib/action_view/helpers/number_helper.rb#297
   def number_to_human_size(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ as a percentage string (e.g., 65%). You can
@@ -9184,7 +8918,7 @@ module ActionView::Helpers::NumberHelper
   #
   #   number_to_percentage("98a", raise: true)                         # => InvalidNumberError
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#168
+  # source://actionview//lib/action_view/helpers/number_helper.rb#167
   def number_to_percentage(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ into a phone number (US by default e.g., (555)
@@ -9224,7 +8958,7 @@ module ActionView::Helpers::NumberHelper
   #   number_to_phone(13312345678, pattern: /(\d{3})(\d{4})(\d{4})$/)
   #   # => "133-1234-5678"
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#63
+  # source://actionview//lib/action_view/helpers/number_helper.rb#62
   def number_to_phone(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ with grouped thousands using +delimiter+
@@ -9263,7 +8997,7 @@ module ActionView::Helpers::NumberHelper
   #
   #   number_with_delimiter("112a", raise: true)              # => raise InvalidNumberError
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#207
+  # source://actionview//lib/action_view/helpers/number_helper.rb#206
   def number_with_delimiter(number, options = T.unsafe(nil)); end
 
   # Formats a +number+ with the specified level of
@@ -9308,65 +9042,63 @@ module ActionView::Helpers::NumberHelper
   #   number_with_precision(1111.2345, precision: 2, separator: ',', delimiter: '.')
   #   # => 1.111,23
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#252
+  # source://actionview//lib/action_view/helpers/number_helper.rb#251
   def number_with_precision(number, options = T.unsafe(nil)); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/number_helper.rb#410
+  # source://actionview//lib/action_view/helpers/number_helper.rb#409
   def delegate_number_helper_method(method, number, options); end
 
-  # source://actionview//lib/action_view/helpers/number_helper.rb#429
+  # source://actionview//lib/action_view/helpers/number_helper.rb#428
   def escape_units(units); end
 
-  # source://actionview//lib/action_view/helpers/number_helper.rb#419
+  # source://actionview//lib/action_view/helpers/number_helper.rb#418
   def escape_unsafe_options(options); end
 
   # @raise [InvalidNumberError]
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#452
+  # source://actionview//lib/action_view/helpers/number_helper.rb#451
   def parse_float(number, raise_error); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#448
+  # source://actionview//lib/action_view/helpers/number_helper.rb#447
   def valid_float?(number); end
 
   # @raise [InvalidNumberError]
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#435
+  # source://actionview//lib/action_view/helpers/number_helper.rb#434
   def wrap_with_output_safety_handling(number, raise_on_invalid, &block); end
 end
 
 # Raised when argument +number+ param given to the helpers is invalid and
 # the option +:raise+ is set to  +true+.
 #
-# source://actionview//lib/action_view/helpers/number_helper.rb#20
+# source://actionview//lib/action_view/helpers/number_helper.rb#19
 class ActionView::Helpers::NumberHelper::InvalidNumberError < ::StandardError
   # @return [InvalidNumberError] a new instance of InvalidNumberError
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#22
+  # source://actionview//lib/action_view/helpers/number_helper.rb#21
   def initialize(number); end
 
   # Returns the value of attribute number.
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#21
+  # source://actionview//lib/action_view/helpers/number_helper.rb#20
   def number; end
 
   # Sets the attribute number
   #
   # @param value the value to set the attribute number to.
   #
-  # source://actionview//lib/action_view/helpers/number_helper.rb#21
+  # source://actionview//lib/action_view/helpers/number_helper.rb#20
   def number=(_arg0); end
 end
 
-# = Action View Raw Output \Helpers
-#
 # source://actionview//lib/action_view/helpers/output_safety_helper.rb#8
 module ActionView::Helpers::OutputSafetyHelper
   # This method outputs without escaping a string. Since escaping tags is
-  # now default, this can be used when you don't want \Rails to automatically
+  # now default, this can be used when you don't want Rails to automatically
   # escape tags. This is not recommended if the data is coming from the user's
   # input.
   #
@@ -9400,7 +9132,7 @@ module ActionView::Helpers::OutputSafetyHelper
   def to_sentence(array, options = T.unsafe(nil)); end
 end
 
-# = Action View \Rendering \Helpers
+# = Action View Rendering
 #
 # Implements methods that allow rendering from a view context.
 # In order to use this module, all you need is to implement
@@ -9483,12 +9215,10 @@ module ActionView::Helpers::RenderingHelper
   def render(options = T.unsafe(nil), locals = T.unsafe(nil), &block); end
 end
 
-# = Action View Sanitize \Helpers
-#
 # The SanitizeHelper module provides a set of methods for scrubbing text of undesired HTML elements.
 # These helper methods extend Action View making them callable within your template files.
 #
-# source://actionview//lib/action_view/helpers/sanitize_helper.rb#11
+# source://actionview//lib/action_view/helpers/sanitize_helper.rb#10
 module ActionView::Helpers::SanitizeHelper
   extend ::ActiveSupport::Concern
 
@@ -9496,11 +9226,12 @@ module ActionView::Helpers::SanitizeHelper
 
   # Sanitizes HTML input, stripping all but known-safe tags and attributes.
   #
-  # It also strips href/src attributes with unsafe protocols like <tt>javascript:</tt>, while
-  # also protecting against attempts to use Unicode, ASCII, and hex character references to work
-  # around these protocol filters.
+  # It also strips href/src attributes with unsafe protocols like
+  # <tt>javascript:</tt>, while also protecting against attempts to use Unicode,
+  # ASCII, and hex character references to work around these protocol filters.
+  # All special characters will be escaped.
   #
-  # The default sanitizer is Rails::HTML5::SafeListSanitizer. See {Rails HTML
+  # The default sanitizer is Rails::Html::SafeListSanitizer. See {Rails HTML
   # Sanitizers}[https://github.com/rails/rails-html-sanitizer] for more information.
   #
   # Custom sanitization rules can also be provided.
@@ -9512,7 +9243,7 @@ module ActionView::Helpers::SanitizeHelper
   #
   # * <tt>:tags</tt> - An array of allowed tags.
   # * <tt>:attributes</tt> - An array of allowed attributes.
-  # * <tt>:scrubber</tt> - A {Rails::HTML scrubber}[https://github.com/rails/rails-html-sanitizer]
+  # * <tt>:scrubber</tt> - A {Rails::Html scrubber}[https://github.com/rails/rails-html-sanitizer]
   #   or {Loofah::Scrubber}[https://github.com/flavorjones/loofah] object that
   #   defines custom sanitization rules. A custom scrubber takes precedence over
   #   custom tags and attributes.
@@ -9527,9 +9258,9 @@ module ActionView::Helpers::SanitizeHelper
   #
   #   <%= sanitize @comment.body, tags: %w(strong em a), attributes: %w(href) %>
   #
-  # Providing a custom Rails::HTML scrubber:
+  # Providing a custom Rails::Html scrubber:
   #
-  #   class CommentScrubber < Rails::HTML::PermitScrubber
+  #   class CommentScrubber < Rails::Html::PermitScrubber
   #     def initialize
   #       super
   #       self.tags = %w( form script comment blockquote )
@@ -9544,7 +9275,7 @@ module ActionView::Helpers::SanitizeHelper
   #   <%= sanitize @comment.body, scrubber: CommentScrubber.new %>
   #
   # See {Rails HTML Sanitizer}[https://github.com/rails/rails-html-sanitizer] for
-  # documentation about Rails::HTML scrubbers.
+  # documentation about Rails::Html scrubbers.
   #
   # Providing a custom Loofah::Scrubber:
   #
@@ -9563,35 +9294,13 @@ module ActionView::Helpers::SanitizeHelper
   #   config.action_view.sanitized_allowed_tags = ['strong', 'em', 'a']
   #   config.action_view.sanitized_allowed_attributes = ['href', 'title']
   #
-  # The default, starting in \Rails 7.1, is to use an HTML5 parser for sanitization (if it is
-  # available, see NOTE below). If you wish to revert back to the previous HTML4 behavior, you
-  # can do so by setting the following in your application configuration:
-  #
-  #   # In config/application.rb
-  #   config.action_view.sanitizer_vendor = Rails::HTML4::Sanitizer
-  #
-  # Or, if you're upgrading from a previous version of \Rails and wish to opt into the HTML5
-  # behavior:
-  #
-  #   # In config/application.rb
-  #   config.action_view.sanitizer_vendor = Rails::HTML5::Sanitizer
-  #
-  # NOTE: Rails::HTML5::Sanitizer is not supported on JRuby, so on JRuby platforms \Rails will
-  # fall back to use Rails::HTML4::Sanitizer.
-  #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#100
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#81
   def sanitize(html, options = T.unsafe(nil)); end
 
   # Sanitizes a block of CSS code. Used by +sanitize+ when it comes across a style attribute.
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#105
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#86
   def sanitize_css(style); end
-
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#12
-  def sanitizer_vendor; end
-
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#12
-  def sanitizer_vendor=(val); end
 
   # Strips all link tags from +html+ leaving just the link text.
   #
@@ -9607,7 +9316,7 @@ module ActionView::Helpers::SanitizeHelper
   #   strip_links('<<a href="https://example.org">malformed & link</a>')
   #   # => &lt;malformed &amp; link
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#139
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#120
   def strip_links(html); end
 
   # Strips all HTML tags from +html+, including comments and special characters.
@@ -9624,72 +9333,64 @@ module ActionView::Helpers::SanitizeHelper
   #   strip_tags("> A quote from Smith & Wesson")
   #   # => &gt; A quote from Smith &amp; Wesson
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#122
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#103
   def strip_tags(html); end
-
-  class << self
-    # source://actionview//lib/action_view/helpers/sanitize_helper.rb#12
-    def sanitizer_vendor; end
-
-    # source://actionview//lib/action_view/helpers/sanitize_helper.rb#12
-    def sanitizer_vendor=(val); end
-  end
 end
 
-# source://actionview//lib/action_view/helpers/sanitize_helper.rb#143
+# source://actionview//lib/action_view/helpers/sanitize_helper.rb#124
 module ActionView::Helpers::SanitizeHelper::ClassMethods
-  # Gets the Rails::HTML::FullSanitizer instance used by +strip_tags+. Replace with
+  # Gets the Rails::Html::FullSanitizer instance used by +strip_tags+. Replace with
   # any object that responds to +sanitize+.
   #
   #   class Application < Rails::Application
   #     config.action_view.full_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#164
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#145
   def full_sanitizer; end
 
   # Sets the attribute full_sanitizer
   #
   # @param value the value to set the attribute full_sanitizer to.
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#144
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#125
   def full_sanitizer=(_arg0); end
 
-  # Gets the Rails::HTML::LinkSanitizer instance used by +strip_links+.
+  # Gets the Rails::Html::LinkSanitizer instance used by +strip_links+.
   # Replace with any object that responds to +sanitize+.
   #
   #   class Application < Rails::Application
   #     config.action_view.link_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#174
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#155
   def link_sanitizer; end
 
   # Sets the attribute link_sanitizer
   #
   # @param value the value to set the attribute link_sanitizer to.
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#144
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#125
   def link_sanitizer=(_arg0); end
 
-  # Gets the Rails::HTML::SafeListSanitizer instance used by sanitize and +sanitize_css+.
+  # Gets the Rails::Html::SafeListSanitizer instance used by sanitize and +sanitize_css+.
   # Replace with any object that responds to +sanitize+.
   #
   #   class Application < Rails::Application
   #     config.action_view.safe_list_sanitizer = MySpecialSanitizer.new
   #   end
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#184
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#165
   def safe_list_sanitizer; end
 
   # Sets the attribute safe_list_sanitizer
   #
   # @param value the value to set the attribute safe_list_sanitizer to.
   #
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#144
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#125
   def safe_list_sanitizer=(_arg0); end
 
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#154
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#135
   def sanitized_allowed_attributes; end
 
   # source://rails-html-sanitizer/1.6.0/lib/rails-html-sanitizer.rb#34
@@ -9713,7 +9414,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   # source://rails-html-sanitizer/1.6.0/lib/rails-html-sanitizer.rb#48
   def sanitized_allowed_protocols=(_); end
 
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#150
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#131
   def sanitized_allowed_tags; end
 
   # source://rails-html-sanitizer/1.6.0/lib/rails-html-sanitizer.rb#24
@@ -9743,7 +9444,7 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   # source://rails-html-sanitizer/1.6.0/lib/rails-html-sanitizer.rb#48
   def sanitized_uri_attributes=(_); end
 
-  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#146
+  # source://actionview//lib/action_view/helpers/sanitize_helper.rb#127
   def sanitizer_vendor; end
 
   private
@@ -9752,12 +9453,10 @@ module ActionView::Helpers::SanitizeHelper::ClassMethods
   def deprecate_option(name); end
 end
 
-# = Action View Tag \Helpers
-#
 # Provides methods to generate HTML tags programmatically both as a modern
 # HTML5 compliant builder style and legacy XHTML compliant tags.
 #
-# source://actionview//lib/action_view/helpers/tag_helper.rb#15
+# source://actionview//lib/action_view/helpers/tag_helper.rb#14
 module ActionView::Helpers::TagHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
@@ -9776,7 +9475,7 @@ module ActionView::Helpers::TagHelper
   #   cdata_section("hello]]>world")
   #   # => <![CDATA[hello]]]]><![CDATA[>world]]>
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#386
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#408
   def cdata_section(content); end
 
   # Returns a string of tokens built from +args+.
@@ -9791,7 +9490,7 @@ module ActionView::Helpers::TagHelper
   #   token_list(nil, false, 123, "", "foo", { bar: true })
   #    # => "123 foo bar"
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#366
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#388
   def class_names(*args); end
 
   # Returns an HTML block tag of type +name+ surrounding the +content+. Add
@@ -9823,7 +9522,7 @@ module ActionView::Helpers::TagHelper
   #   <% end -%>
   #    # => <div class="strong">Hello world!</div>
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#346
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#368
   def content_tag(name, content_or_options_with_block = T.unsafe(nil), options = T.unsafe(nil), escape = T.unsafe(nil), &block); end
 
   # Returns an escaped version of +html+ without affecting existing escaped entities.
@@ -9834,7 +9533,7 @@ module ActionView::Helpers::TagHelper
   #   escape_once("&lt;&lt; Accept & Checkout")
   #   # => "&lt;&lt; Accept &amp; Checkout"
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#398
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#420
   def escape_once(html); end
 
   # Returns an HTML tag.
@@ -9930,7 +9629,7 @@ module ActionView::Helpers::TagHelper
   #
   # === Legacy syntax
   #
-  # The following format is for legacy syntax support. It will be deprecated in future versions of \Rails.
+  # The following format is for legacy syntax support. It will be deprecated in future versions of Rails.
   #
   #   tag(name, options = nil, open = false, escape = true)
   #
@@ -9976,7 +9675,7 @@ module ActionView::Helpers::TagHelper
   #   tag("div", class: { highlight: current_user.admin? })
   #   # => <div class="highlight" />
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#309
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#331
   def tag(name = T.unsafe(nil), options = T.unsafe(nil), open = T.unsafe(nil), escape = T.unsafe(nil)); end
 
   # Returns a string of tokens built from +args+.
@@ -9991,46 +9690,46 @@ module ActionView::Helpers::TagHelper
   #   token_list(nil, false, 123, "", "foo", { bar: true })
   #    # => "123 foo bar"
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#366
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#388
   def token_list(*args); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#403
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#425
   def build_tag_values(*args); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#423
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#445
   def tag_builder; end
 
   class << self
-    # source://actionview//lib/action_view/helpers/tag_helper.rb#403
+    # source://actionview//lib/action_view/helpers/tag_helper.rb#425
     def build_tag_values(*args); end
   end
 end
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#32
+# source://actionview//lib/action_view/helpers/tag_helper.rb#31
 ActionView::Helpers::TagHelper::ARIA_PREFIXES = T.let(T.unsafe(nil), Set)
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#19
+# source://actionview//lib/action_view/helpers/tag_helper.rb#18
 ActionView::Helpers::TagHelper::BOOLEAN_ATTRIBUTES = T.let(T.unsafe(nil), Set)
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#33
+# source://actionview//lib/action_view/helpers/tag_helper.rb#32
 ActionView::Helpers::TagHelper::DATA_PREFIXES = T.let(T.unsafe(nil), Set)
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#41
+# source://actionview//lib/action_view/helpers/tag_helper.rb#40
 ActionView::Helpers::TagHelper::PRE_CONTENT_STRINGS = T.let(T.unsafe(nil), Hash)
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#35
+# source://actionview//lib/action_view/helpers/tag_helper.rb#34
 ActionView::Helpers::TagHelper::TAG_TYPES = T.let(T.unsafe(nil), Hash)
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#45
+# source://actionview//lib/action_view/helpers/tag_helper.rb#44
 class ActionView::Helpers::TagHelper::TagBuilder
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
 
   # @return [TagBuilder] a new instance of TagBuilder
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#52
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#51
   def initialize(view_context); end
 
   # Transforms a Hash into HTML Attributes, ready to be interpolated into
@@ -10039,45 +9738,48 @@ class ActionView::Helpers::TagHelper::TagBuilder
   #   <input <%= tag.attributes(type: :text, aria: { label: "Search" }) %> >
   #   # => <input type="text" aria-label="Search">
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#61
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#60
   def attributes(attributes); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#132
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#133
   def boolean_tag_option(key); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#79
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#80
   def content_tag_string(name, content, options, escape = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#65
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#64
   def p(*arguments, **options, &block); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#136
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#137
   def tag_option(key, value, escape); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#90
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#91
   def tag_options(options, escape = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#69
-  def tag_string(name, content = T.unsafe(nil), escape: T.unsafe(nil), **options, &block); end
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#68
+  def tag_string(name, content = T.unsafe(nil), **options, &block); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#166
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#167
+  def handle_deprecated_escape_options(options); end
+
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#188
   def method_missing(called, *args, **options, &block); end
 
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#154
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#155
   def prefix_tag_option(prefix, key, value, escape); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/tag_helper.rb#162
+  # source://actionview//lib/action_view/helpers/tag_helper.rb#163
   def respond_to_missing?(*args); end
 end
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#49
+# source://actionview//lib/action_view/helpers/tag_helper.rb#48
 ActionView::Helpers::TagHelper::TagBuilder::HTML_VOID_ELEMENTS = T.let(T.unsafe(nil), Set)
 
-# source://actionview//lib/action_view/helpers/tag_helper.rb#50
+# source://actionview//lib/action_view/helpers/tag_helper.rb#49
 ActionView::Helpers::TagHelper::TagBuilder::SVG_SELF_CLOSING_ELEMENTS = T.let(T.unsafe(nil), Set)
 
 # source://actionview//lib/action_view/helpers/tags.rb#5
@@ -10090,75 +9792,86 @@ class ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
-  include ::ActionView::Helpers::ContentExfiltrationPreventionHelper
   include ::ActionView::Helpers::UrlHelper
   include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::TextHelper
   include ::ActionView::Helpers::FormTagHelper
   include ::ActionView::Helpers::ActiveModelInstanceTag
+  include ::ActionView::Helpers::FormOptionsHelper
   extend ::ActionView::Helpers::UrlHelper::ClassMethods
   extend ::ActionView::Helpers::SanitizeHelper::ClassMethods
 
   # @return [Base] a new instance of Base
   #
-  # source://actionview//lib/action_view/helpers/tags/base.rb#11
+  # source://actionview//lib/action_view/helpers/tags/base.rb#12
   def initialize(object_name, method_name, template_object, options = T.unsafe(nil)); end
 
   # Returns the value of attribute object.
   #
-  # source://actionview//lib/action_view/helpers/tags/base.rb#9
+  # source://actionview//lib/action_view/helpers/tags/base.rb#10
   def object; end
 
   # This is what child classes implement.
   #
   # @raise [NotImplementedError]
   #
-  # source://actionview//lib/action_view/helpers/tags/base.rb#31
+  # source://actionview//lib/action_view/helpers/tags/base.rb#32
   def render; end
 
   private
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#96
+  # source://actionview//lib/action_view/helpers/tags/base.rb#95
   def add_default_name_and_id(options); end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#83
+  # source://actionview//lib/action_view/helpers/tags/base.rb#82
   def add_default_name_and_id_for_value(tag_value, options); end
+
+  # source://actionview//lib/action_view/helpers/tags/base.rb#147
+  def add_options(option_tags, options, value = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/tags/base.rb#132
+  # source://actionview//lib/action_view/helpers/tags/base.rb#173
   def generate_ids?; end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#124
+  # source://actionview//lib/action_view/helpers/tags/base.rb#165
   def name_and_id_index(options); end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#74
+  # @return [Boolean]
+  #
+  # source://actionview//lib/action_view/helpers/tags/base.rb#142
+  def placeholder_required?(html_options); end
+
+  # source://actionview//lib/action_view/helpers/tags/base.rb#73
   def retrieve_autoindex(pre_match); end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#63
+  # source://actionview//lib/action_view/helpers/tags/base.rb#62
   def retrieve_object(object); end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#116
+  # source://actionview//lib/action_view/helpers/tags/base.rb#115
   def sanitized_method_name; end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#120
+  # source://actionview//lib/action_view/helpers/tags/base.rb#119
   def sanitized_value(value); end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#112
+  # source://actionview//lib/action_view/helpers/tags/base.rb#123
+  def select_content_tag(option_tags, options, html_options); end
+
+  # source://actionview//lib/action_view/helpers/tags/base.rb#111
   def tag_id(index = T.unsafe(nil), namespace = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#108
+  # source://actionview//lib/action_view/helpers/tags/base.rb#107
   def tag_name(multiple = T.unsafe(nil), index = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#36
+  # source://actionview//lib/action_view/helpers/tags/base.rb#37
   def value; end
 
-  # source://actionview//lib/action_view/helpers/tags/base.rb#46
+  # source://actionview//lib/action_view/helpers/tags/base.rb#45
   def value_before_type_cast; end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/tags/base.rb#58
+  # source://actionview//lib/action_view/helpers/tags/base.rb#57
   def value_came_from_user?; end
 end
 
@@ -10196,23 +9909,22 @@ end
 # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#8
 class ActionView::Helpers::Tags::CollectionCheckBoxes < ::ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::Tags::CollectionHelpers
-  include ::ActionView::Helpers::FormOptionsHelper
 
-  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#21
+  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#20
   def render(&block); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#30
+  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#29
   def hidden_field_name; end
 
-  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#26
+  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#25
   def render_component(builder); end
 end
 
-# source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#12
+# source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#11
 class ActionView::Helpers::Tags::CollectionCheckBoxes::CheckBoxBuilder < ::ActionView::Helpers::Tags::CollectionHelpers::Builder
-  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#13
+  # source://actionview//lib/action_view/helpers/tags/collection_check_boxes.rb#12
   def check_box(extra_html_options = T.unsafe(nil)); end
 end
 
@@ -10277,34 +9989,30 @@ end
 # source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#8
 class ActionView::Helpers::Tags::CollectionRadioButtons < ::ActionView::Helpers::Tags::Base
   include ::ActionView::Helpers::Tags::CollectionHelpers
-  include ::ActionView::Helpers::FormOptionsHelper
 
-  # source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#20
+  # source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#19
   def render(&block); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#25
+  # source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#24
   def render_component(builder); end
 end
 
-# source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#12
+# source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#11
 class ActionView::Helpers::Tags::CollectionRadioButtons::RadioButtonBuilder < ::ActionView::Helpers::Tags::CollectionHelpers::Builder
-  # source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#13
+  # source://actionview//lib/action_view/helpers/tags/collection_radio_buttons.rb#12
   def radio_button(extra_html_options = T.unsafe(nil)); end
 end
 
 # source://actionview//lib/action_view/helpers/tags/collection_select.rb#6
 class ActionView::Helpers::Tags::CollectionSelect < ::ActionView::Helpers::Tags::Base
-  include ::ActionView::Helpers::Tags::SelectRenderer
-  include ::ActionView::Helpers::FormOptionsHelper
-
   # @return [CollectionSelect] a new instance of CollectionSelect
   #
-  # source://actionview//lib/action_view/helpers/tags/collection_select.rb#10
+  # source://actionview//lib/action_view/helpers/tags/collection_select.rb#7
   def initialize(object_name, method_name, template_object, collection, value_method, text_method, options, html_options); end
 
-  # source://actionview//lib/action_view/helpers/tags/collection_select.rb#19
+  # source://actionview//lib/action_view/helpers/tags/collection_select.rb#16
   def render; end
 end
 
@@ -10324,34 +10032,32 @@ class ActionView::Helpers::Tags::DateField < ::ActionView::Helpers::Tags::Dateti
   private
 
   # source://actionview//lib/action_view/helpers/tags/date_field.rb#8
-  def format_datetime(value); end
+  def format_date(value); end
 end
 
 # source://actionview//lib/action_view/helpers/tags/date_select.rb#8
 class ActionView::Helpers::Tags::DateSelect < ::ActionView::Helpers::Tags::Base
-  include ::ActionView::Helpers::Tags::SelectRenderer
-
   # @return [DateSelect] a new instance of DateSelect
   #
-  # source://actionview//lib/action_view/helpers/tags/date_select.rb#11
+  # source://actionview//lib/action_view/helpers/tags/date_select.rb#9
   def initialize(object_name, method_name, template_object, options, html_options); end
 
-  # source://actionview//lib/action_view/helpers/tags/date_select.rb#17
+  # source://actionview//lib/action_view/helpers/tags/date_select.rb#15
   def render; end
 
   private
 
-  # source://actionview//lib/action_view/helpers/tags/date_select.rb#32
+  # source://actionview//lib/action_view/helpers/tags/date_select.rb#30
   def datetime_selector(options, html_options); end
 
-  # source://actionview//lib/action_view/helpers/tags/date_select.rb#45
+  # source://actionview//lib/action_view/helpers/tags/date_select.rb#43
   def default_datetime(options); end
 
-  # source://actionview//lib/action_view/helpers/tags/date_select.rb#28
+  # source://actionview//lib/action_view/helpers/tags/date_select.rb#26
   def select_type; end
 
   class << self
-    # source://actionview//lib/action_view/helpers/tags/date_select.rb#22
+    # source://actionview//lib/action_view/helpers/tags/date_select.rb#20
     def select_type; end
   end
 end
@@ -10363,32 +10069,24 @@ class ActionView::Helpers::Tags::DatetimeField < ::ActionView::Helpers::Tags::Te
 
   private
 
-  # source://actionview//lib/action_view/helpers/tags/datetime_field.rb#17
+  # source://actionview//lib/action_view/helpers/tags/datetime_field.rb#21
   def datetime_value(value); end
 
   # @raise [NotImplementedError]
   #
-  # source://actionview//lib/action_view/helpers/tags/datetime_field.rb#25
-  def format_datetime(value); end
-
-  # source://actionview//lib/action_view/helpers/tags/datetime_field.rb#29
-  def parse_datetime(value); end
+  # source://actionview//lib/action_view/helpers/tags/datetime_field.rb#17
+  def format_date(value); end
 end
 
 # source://actionview//lib/action_view/helpers/tags/datetime_local_field.rb#6
 class ActionView::Helpers::Tags::DatetimeLocalField < ::ActionView::Helpers::Tags::DatetimeField
-  # @return [DatetimeLocalField] a new instance of DatetimeLocalField
-  #
-  # source://actionview//lib/action_view/helpers/tags/datetime_local_field.rb#7
-  def initialize(object_name, method_name, template_object, options = T.unsafe(nil)); end
-
   private
 
-  # source://actionview//lib/action_view/helpers/tags/datetime_local_field.rb#19
-  def format_datetime(value); end
+  # source://actionview//lib/action_view/helpers/tags/datetime_local_field.rb#14
+  def format_date(value); end
 
   class << self
-    # source://actionview//lib/action_view/helpers/tags/datetime_local_field.rb#13
+    # source://actionview//lib/action_view/helpers/tags/datetime_local_field.rb#8
     def field_type; end
   end
 end
@@ -10412,15 +10110,12 @@ end
 
 # source://actionview//lib/action_view/helpers/tags/grouped_collection_select.rb#6
 class ActionView::Helpers::Tags::GroupedCollectionSelect < ::ActionView::Helpers::Tags::Base
-  include ::ActionView::Helpers::Tags::SelectRenderer
-  include ::ActionView::Helpers::FormOptionsHelper
-
   # @return [GroupedCollectionSelect] a new instance of GroupedCollectionSelect
   #
-  # source://actionview//lib/action_view/helpers/tags/grouped_collection_select.rb#10
+  # source://actionview//lib/action_view/helpers/tags/grouped_collection_select.rb#7
   def initialize(object_name, method_name, template_object, collection, group_method, group_label_method, option_key_method, option_value_method, options, html_options); end
 
-  # source://actionview//lib/action_view/helpers/tags/grouped_collection_select.rb#21
+  # source://actionview//lib/action_view/helpers/tags/grouped_collection_select.rb#18
   def render; end
 end
 
@@ -10470,7 +10165,7 @@ class ActionView::Helpers::Tags::MonthField < ::ActionView::Helpers::Tags::Datet
   private
 
   # source://actionview//lib/action_view/helpers/tags/month_field.rb#8
-  def format_datetime(value); end
+  def format_date(value); end
 end
 
 # source://actionview//lib/action_view/helpers/tags/number_field.rb#6
@@ -10522,15 +10217,12 @@ end
 
 # source://actionview//lib/action_view/helpers/tags/select.rb#6
 class ActionView::Helpers::Tags::Select < ::ActionView::Helpers::Tags::Base
-  include ::ActionView::Helpers::Tags::SelectRenderer
-  include ::ActionView::Helpers::FormOptionsHelper
-
   # @return [Select] a new instance of Select
   #
-  # source://actionview//lib/action_view/helpers/tags/select.rb#10
+  # source://actionview//lib/action_view/helpers/tags/select.rb#7
   def initialize(object_name, method_name, template_object, choices, options, html_options); end
 
-  # source://actionview//lib/action_view/helpers/tags/select.rb#19
+  # source://actionview//lib/action_view/helpers/tags/select.rb#16
   def render; end
 
   private
@@ -10542,24 +10234,8 @@ class ActionView::Helpers::Tags::Select < ::ActionView::Helpers::Tags::Base
   #
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/tags/select.rb#39
+  # source://actionview//lib/action_view/helpers/tags/select.rb#36
   def grouped_choices?; end
-end
-
-# source://actionview//lib/action_view/helpers/tags/select_renderer.rb#6
-module ActionView::Helpers::Tags::SelectRenderer
-  private
-
-  # source://actionview//lib/action_view/helpers/tags/select_renderer.rb#36
-  def add_options(option_tags, options, value = T.unsafe(nil)); end
-
-  # @return [Boolean]
-  #
-  # source://actionview//lib/action_view/helpers/tags/select_renderer.rb#31
-  def placeholder_required?(html_options); end
-
-  # source://actionview//lib/action_view/helpers/tags/select_renderer.rb#8
-  def select_content_tag(option_tags, options, html_options); end
 end
 
 # source://actionview//lib/action_view/helpers/tags/tel_field.rb#6
@@ -10601,7 +10277,7 @@ class ActionView::Helpers::Tags::TimeField < ::ActionView::Helpers::Tags::Dateti
   private
 
   # source://actionview//lib/action_view/helpers/tags/time_field.rb#13
-  def format_datetime(value); end
+  def format_date(value); end
 end
 
 # source://actionview//lib/action_view/helpers/tags/time_select.rb#6
@@ -10609,15 +10285,12 @@ class ActionView::Helpers::Tags::TimeSelect < ::ActionView::Helpers::Tags::DateS
 
 # source://actionview//lib/action_view/helpers/tags/time_zone_select.rb#6
 class ActionView::Helpers::Tags::TimeZoneSelect < ::ActionView::Helpers::Tags::Base
-  include ::ActionView::Helpers::Tags::SelectRenderer
-  include ::ActionView::Helpers::FormOptionsHelper
-
   # @return [TimeZoneSelect] a new instance of TimeZoneSelect
   #
-  # source://actionview//lib/action_view/helpers/tags/time_zone_select.rb#10
+  # source://actionview//lib/action_view/helpers/tags/time_zone_select.rb#7
   def initialize(object_name, method_name, template_object, priority_zones, options, html_options); end
 
-  # source://actionview//lib/action_view/helpers/tags/time_zone_select.rb#17
+  # source://actionview//lib/action_view/helpers/tags/time_zone_select.rb#14
   def render; end
 end
 
@@ -10668,25 +10341,20 @@ class ActionView::Helpers::Tags::WeekField < ::ActionView::Helpers::Tags::Dateti
   private
 
   # source://actionview//lib/action_view/helpers/tags/week_field.rb#8
-  def format_datetime(value); end
+  def format_date(value); end
 end
 
 # source://actionview//lib/action_view/helpers/tags/weekday_select.rb#6
 class ActionView::Helpers::Tags::WeekdaySelect < ::ActionView::Helpers::Tags::Base
-  include ::ActionView::Helpers::Tags::SelectRenderer
-  include ::ActionView::Helpers::FormOptionsHelper
-
   # @return [WeekdaySelect] a new instance of WeekdaySelect
   #
-  # source://actionview//lib/action_view/helpers/tags/weekday_select.rb#10
+  # source://actionview//lib/action_view/helpers/tags/weekday_select.rb#7
   def initialize(object_name, method_name, template_object, options, html_options); end
 
-  # source://actionview//lib/action_view/helpers/tags/weekday_select.rb#16
+  # source://actionview//lib/action_view/helpers/tags/weekday_select.rb#13
   def render; end
 end
 
-# = Action View Text \Helpers
-#
 # The TextHelper module provides a set of methods for filtering, formatting
 # and transforming strings, which can reduce the amount of inline Ruby code in
 # your views. These helper methods extend Action View making them callable
@@ -10710,7 +10378,7 @@ end
 #   simple_format h('<a href="http://example.com/">Example</a>')
 #   # => "<p>&lt;a href=\"http://example.com/\"&gt;Example&lt;/a&gt;</p>"
 #
-# source://actionview//lib/action_view/helpers/text_helper.rb#36
+# source://actionview//lib/action_view/helpers/text_helper.rb#35
 module ActionView::Helpers::TextHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
@@ -10737,7 +10405,7 @@ module ActionView::Helpers::TextHelper
   #       # will either display "Logged in!" or a login link
   #   %>
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#59
+  # source://actionview//lib/action_view/helpers/text_helper.rb#58
   def concat(string); end
 
   # Returns the current cycle string after a cycle has been started. Useful
@@ -10752,7 +10420,7 @@ module ActionView::Helpers::TextHelper
   #     </div>
   #   <% end %>
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#398
+  # source://actionview//lib/action_view/helpers/text_helper.rb#382
   def current_cycle(name = T.unsafe(nil)); end
 
   # Creates a Cycle object whose _to_s_ method cycles through elements of an
@@ -10793,7 +10461,7 @@ module ActionView::Helpers::TextHelper
   #    </tr>
   #  <% end %>
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#374
+  # source://actionview//lib/action_view/helpers/text_helper.rb#358
   def cycle(first_value, *values); end
 
   # Extracts an excerpt from +text+ that matches the first instance of +phrase+.
@@ -10821,7 +10489,7 @@ module ActionView::Helpers::TextHelper
   #   excerpt('This is a very beautiful morning', 'very', separator: ' ', radius: 1)
   #   # => ...a very beautiful...
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#183
+  # source://actionview//lib/action_view/helpers/text_helper.rb#179
   def excerpt(text, phrase, options = T.unsafe(nil)); end
 
   # Highlights one or more +phrases+ everywhere in +text+ by inserting it into
@@ -10852,7 +10520,7 @@ module ActionView::Helpers::TextHelper
   #   highlight('<a href="javascript:alert(\'no!\')">ruby</a> on rails', 'rails', sanitize: false)
   #   # => <a href="javascript:alert('no!')">ruby</a> on <mark>rails</mark>
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#137
+  # source://actionview//lib/action_view/helpers/text_helper.rb#136
   def highlight(text, phrases, options = T.unsafe(nil), &block); end
 
   # Attempts to pluralize the +singular+ word unless +count+ is 1. If
@@ -10879,7 +10547,7 @@ module ActionView::Helpers::TextHelper
   #   pluralize(2, 'Person', locale: :de)
   #   # => 2 Personen
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#238
+  # source://actionview//lib/action_view/helpers/text_helper.rb#234
   def pluralize(count, singular, plural_arg = T.unsafe(nil), plural: T.unsafe(nil), locale: T.unsafe(nil)); end
 
   # Resets a cycle so that it starts from the first element the next time
@@ -10901,10 +10569,10 @@ module ActionView::Helpers::TextHelper
   #   <% end %>
   #   </table>
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#421
+  # source://actionview//lib/action_view/helpers/text_helper.rb#405
   def reset_cycle(name = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#63
+  # source://actionview//lib/action_view/helpers/text_helper.rb#62
   def safe_concat(string); end
 
   # Returns +text+ transformed into HTML using simple formatting rules.
@@ -10919,7 +10587,6 @@ module ActionView::Helpers::TextHelper
   #
   # ==== Options
   # * <tt>:sanitize</tt> - If +false+, does not sanitize +text+.
-  # * <tt>:sanitize_options</tt> - Any extra options you want appended to the sanitize.
   # * <tt>:wrapper_tag</tt> - String representing the wrapper tag, defaults to <tt>"p"</tt>
   #
   # ==== Examples
@@ -10945,10 +10612,7 @@ module ActionView::Helpers::TextHelper
   #   simple_format("<blink>Blinkable!</blink> It's true.", {}, sanitize: false)
   #   # => "<p><blink>Blinkable!</blink> It's true.</p>"
   #
-  #   simple_format("<a target=\"_blank\" href=\"http://example.com\">Continue</a>", {}, { sanitize_options: { attributes: %w[target href] } })
-  #   # => "<p><a target=\"_blank\" href=\"http://example.com\">Continue</a></p>"
-  #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#322
+  # source://actionview//lib/action_view/helpers/text_helper.rb#306
   def simple_format(text, html_options = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Truncates a given +text+ after a given <tt>:length</tt> if +text+ is longer than <tt>:length</tt>
@@ -10984,7 +10648,7 @@ module ActionView::Helpers::TextHelper
   #   truncate("Once upon a time in a world far far away") { link_to "Continue", "#" }
   #   # => "Once upon a time in a wo...<a href="#">Continue</a>"
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#99
+  # source://actionview//lib/action_view/helpers/text_helper.rb#98
   def truncate(text, options = T.unsafe(nil), &block); end
 
   # Wraps the +text+ into lines no longer than +line_width+ width. This method
@@ -11008,63 +10672,61 @@ module ActionView::Helpers::TextHelper
   #   word_wrap('Once upon a time', line_width: 1, break_sequence: "\r\n")
   #   # => Once\r\nupon\r\na\r\ntime
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#268
+  # source://actionview//lib/action_view/helpers/text_helper.rb#264
   def word_wrap(text, line_width: T.unsafe(nil), break_sequence: T.unsafe(nil)); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#484
+  # source://actionview//lib/action_view/helpers/text_helper.rb#468
   def cut_excerpt_part(part_position, part, separator, options); end
 
   # The cycle helpers need to store the cycles in a place that is
   # guaranteed to be reset every time a page is rendered, so it
   # uses an instance variable of ActionView::Base.
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#466
+  # source://actionview//lib/action_view/helpers/text_helper.rb#450
   def get_cycle(name); end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#471
+  # source://actionview//lib/action_view/helpers/text_helper.rb#455
   def set_cycle(name, cycle_object); end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#476
+  # source://actionview//lib/action_view/helpers/text_helper.rb#460
   def split_paragraphs(text); end
 end
 
-# source://actionview//lib/action_view/helpers/text_helper.rb#426
+# source://actionview//lib/action_view/helpers/text_helper.rb#410
 class ActionView::Helpers::TextHelper::Cycle
   # @return [Cycle] a new instance of Cycle
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#429
+  # source://actionview//lib/action_view/helpers/text_helper.rb#413
   def initialize(first_value, *values); end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#438
+  # source://actionview//lib/action_view/helpers/text_helper.rb#422
   def current_value; end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#434
+  # source://actionview//lib/action_view/helpers/text_helper.rb#418
   def reset; end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#442
+  # source://actionview//lib/action_view/helpers/text_helper.rb#426
   def to_s; end
 
   # Returns the value of attribute values.
   #
-  # source://actionview//lib/action_view/helpers/text_helper.rb#427
+  # source://actionview//lib/action_view/helpers/text_helper.rb#411
   def values; end
 
   private
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#449
+  # source://actionview//lib/action_view/helpers/text_helper.rb#433
   def next_index; end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#453
+  # source://actionview//lib/action_view/helpers/text_helper.rb#437
   def previous_index; end
 
-  # source://actionview//lib/action_view/helpers/text_helper.rb#457
+  # source://actionview//lib/action_view/helpers/text_helper.rb#441
   def step_index(n); end
 end
 
-# = Action View Translation \Helpers
-#
 # source://actionview//lib/action_view/helpers/translation_helper.rb#9
 module ActionView::Helpers::TranslationHelper
   include ::ActionView::Helpers::CaptureHelper
@@ -11221,19 +10883,16 @@ ActionView::Helpers::TranslationHelper::MISSING_TRANSLATION = T.let(T.unsafe(nil
 # source://actionview//lib/action_view/helpers/translation_helper.rb#125
 ActionView::Helpers::TranslationHelper::NO_DEFAULT = T.let(T.unsafe(nil), Array)
 
-# = Action View URL \Helpers
-#
 # Provides a set of methods for making links and getting URLs that
 # depend on the routing subsystem (see ActionDispatch::Routing).
 # This allows you to use the same format for links in views
 # and controllers.
 #
-# source://actionview//lib/action_view/helpers/url_helper.rb#17
+# source://actionview//lib/action_view/helpers/url_helper.rb#15
 module ActionView::Helpers::UrlHelper
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
-  include ::ActionView::Helpers::ContentExfiltrationPreventionHelper
   extend ::ActiveSupport::Concern
 
   mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
@@ -11241,6 +10900,9 @@ module ActionView::Helpers::UrlHelper
   # Generates a form containing a single button that submits to the URL created
   # by the set of +options+. This is the safest method to ensure links that
   # cause changes to your data are not triggered by search bots or accelerators.
+  # If the HTML button does not work with your layout, you can also consider
+  # using the +link_to+ method with the <tt>:method</tt> modifier as described in
+  # the +link_to+ documentation.
   #
   # You can control the form and button behavior with +html_options+. Most
   # values in +html_options+ are passed through to the button element. For
@@ -11253,10 +10915,6 @@ module ActionView::Helpers::UrlHelper
   #
   # The form submits a POST request by default. You can specify a different
   # HTTP verb via the +:method+ option within +html_options+.
-  #
-  # If the HTML button generated from +button_to+ does not work with your layout, you can
-  # consider using the +link_to+ method with the +data-turbo-method+
-  # attribute as described in the +link_to+ documentation.
   #
   # ==== Options
   # The +options+ hash accepts the same options as +url_for+. To generate a
@@ -11323,9 +10981,9 @@ module ActionView::Helpers::UrlHelper
   #   #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"  autocomplete="off"/>
   #   #    </form>"
   #
-  # ==== Deprecated: \Rails UJS Attributes
+  # ==== Deprecated: Rails UJS Attributes
   #
-  # Prior to \Rails 7, \Rails shipped with a JavaScript library called <tt>@rails/ujs</tt> on by default. Following \Rails 7,
+  # Prior to Rails 7, Rails shipped with a JavaScript library called <tt>@rails/ujs</tt> on by default. Following Rails 7,
   # this library is no longer on by default. This library integrated with the following options:
   #
   # * <tt>:remote</tt> -  If set to true, will allow <tt>@rails/ujs</tt> to control the
@@ -11341,7 +10999,7 @@ module ActionView::Helpers::UrlHelper
   #   used as the value for a disabled version of the submit
   #   button when the form is submitted.
   #
-  # ===== \Rails UJS Examples
+  # ===== Rails UJS Examples
   #
   #   <%= button_to "Create", { action: "create" }, remote: true, form: { "data-type" => "json" } %>
   #   # => "<form method="post" action="/images/create" class="button_to" data-remote="true" data-type="json">
@@ -11349,18 +11007,18 @@ module ActionView::Helpers::UrlHelper
   #   #      <input name="authenticity_token" type="hidden" value="10f2163b45388899ad4d5ae948988266befcb6c3d1b2451cf657a0c293d605a6"  autocomplete="off"/>
   #   #    </form>"
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#357
+  # source://actionview//lib/action_view/helpers/url_helper.rb#331
   def button_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#35
+  # source://actionview//lib/action_view/helpers/url_helper.rb#32
   def button_to_generates_button_tag; end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#35
+  # source://actionview//lib/action_view/helpers/url_helper.rb#32
   def button_to_generates_button_tag=(val); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#609
+  # source://actionview//lib/action_view/helpers/url_helper.rb#582
   def current_page?(options = T.unsafe(nil), check_parameters: T.unsafe(nil), **options_as_kwargs); end
 
   # Creates an anchor element of the given +name+ using a URL created by the set of +options+.
@@ -11396,7 +11054,7 @@ module ActionView::Helpers::UrlHelper
   # ==== Examples
   #
   # Because it relies on +url_for+, +link_to+ supports both older-style controller/action/id arguments
-  # and newer RESTful routes. Current \Rails style favors RESTful routes whenever possible, so base
+  # and newer RESTful routes. Current Rails style favors RESTful routes whenever possible, so base
   # your application on resources and use
   #
   #   link_to "Profile", profile_path(@profile)
@@ -11473,31 +11131,9 @@ module ActionView::Helpers::UrlHelper
   #   link_to "External link", "http://www.rubyonrails.org/", target: "_blank", rel: "nofollow"
   #   # => <a href="http://www.rubyonrails.org/" target="_blank" rel="nofollow">External link</a>
   #
-  # ==== Turbo
+  # ==== Deprecated: Rails UJS Attributes
   #
-  # Rails 7 ships with Turbo enabled by default. Turbo provides the following +:data+ options:
-  #
-  # * <tt>turbo_method: symbol of HTTP verb</tt> - Performs a Turbo link visit
-  #   with the given HTTP verb. Forms are recommended when performing non-+GET+ requests.
-  #   Only use <tt>data-turbo-method</tt> where a form is not possible.
-  #
-  # * <tt>turbo_confirm: "question?"</tt> - Adds a confirmation dialog to the link with the
-  #   given value.
-  #
-  # {Consult the Turbo Handbook for more information on the options
-  # above.}[https://turbo.hotwired.dev/handbook/drive#performing-visits-with-a-different-method]
-  #
-  # ===== \Examples
-  #
-  #   link_to "Delete profile", @profile, data: { turbo_method: :delete }
-  #   # => <a href="/profiles/1" data-turbo-method="delete">Delete profile</a>
-  #
-  #   link_to "Visit Other Site", "https://rubyonrails.org/", data: { turbo_confirm: "Are you sure?" }
-  #   # => <a href="https://rubyonrails.org/" data-turbo-confirm="Are you sure?">Visit Other Site</a>
-  #
-  # ==== Deprecated: \Rails UJS Attributes
-  #
-  # Prior to \Rails 7, \Rails shipped with a JavaScript library called <tt>@rails/ujs</tt> on by default. Following \Rails 7,
+  # Prior to Rails 7, Rails shipped with a JavaScript library called <tt>@rails/ujs</tt> on by default. Following Rails 7,
   # this library is no longer on by default. This library integrated with the following options:
   #
   # * <tt>method: symbol of HTTP verb</tt> - This modifier will dynamically
@@ -11523,7 +11159,7 @@ module ActionView::Helpers::UrlHelper
   # * <tt>:disable_with</tt> - Value of this parameter will be used as the
   #   name for a disabled version of the link.
   #
-  # ===== \Rails UJS Examples
+  # ===== Rails UJS Examples
   #
   #   link_to "Remove Profile", profile_path(@profile), method: :delete
   #   # => <a href="/profiles/1" rel="nofollow" data-method="delete">Remove Profile</a>
@@ -11531,7 +11167,7 @@ module ActionView::Helpers::UrlHelper
   #   link_to "Visit Other Site", "http://www.rubyonrails.org/", data: { confirm: "Are you sure?" }
   #   # => <a href="http://www.rubyonrails.org/" data-confirm="Are you sure?">Visit Other Site</a>
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#234
+  # source://actionview//lib/action_view/helpers/url_helper.rb#209
   def link_to(name = T.unsafe(nil), options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a link tag of the given +name+ using a URL created by the set of
@@ -11554,7 +11190,7 @@ module ActionView::Helpers::UrlHelper
   #   # If they are logged in...
   #   # => <a href="/accounts/show/3">my_username</a>
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#498
+  # source://actionview//lib/action_view/helpers/url_helper.rb#471
   def link_to_if(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a link tag of the given +name+ using a URL created by the set of
@@ -11578,7 +11214,7 @@ module ActionView::Helpers::UrlHelper
   #   # If not...
   #   # => <a href="/accounts/signup">Reply</a>
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#475
+  # source://actionview//lib/action_view/helpers/url_helper.rb#448
   def link_to_unless(condition, name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a link tag of the given +name+ using a URL created by the set of
@@ -11620,7 +11256,7 @@ module ActionView::Helpers::UrlHelper
   #        end
   #     %>
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#451
+  # source://actionview//lib/action_view/helpers/url_helper.rb#424
   def link_to_unless_current(name, options = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a mailto link tag to the specified +email_address+, which is
@@ -11638,7 +11274,7 @@ module ActionView::Helpers::UrlHelper
   # * <tt>:reply_to</tt> - Preset the +Reply-To+ field of the email.
   #
   # ==== Obfuscation
-  # Prior to \Rails 4.0, +mail_to+ provided options for encoding the address
+  # Prior to Rails 4.0, +mail_to+ provided options for encoding the address
   # in order to hinder email harvesters.  To take advantage of these options,
   # install the +actionview-encoded_mail_to+ gem.
   #
@@ -11662,7 +11298,7 @@ module ActionView::Helpers::UrlHelper
   #          <strong>Email me:</strong> <span>me@domain.com</span>
   #        </a>
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#548
+  # source://actionview//lib/action_view/helpers/url_helper.rb#521
   def mail_to(email_address, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates a TEL anchor link tag to the specified +phone_number+. When the
@@ -11701,7 +11337,7 @@ module ActionView::Helpers::UrlHelper
   #          <strong>Phone me:</strong>
   #        </a>
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#743
+  # source://actionview//lib/action_view/helpers/url_helper.rb#716
   def phone_to(phone_number, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Creates an SMS anchor link tag to the specified +phone_number+. When the
@@ -11745,45 +11381,45 @@ module ActionView::Helpers::UrlHelper
   #          <strong>Text me:</strong>
   #        </a>
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#692
+  # source://actionview//lib/action_view/helpers/url_helper.rb#665
   def sms_to(phone_number, name = T.unsafe(nil), html_options = T.unsafe(nil), &block); end
 
   # Basic implementation of url_for to allow use helpers without routes existence
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#38
+  # source://actionview//lib/action_view/helpers/url_helper.rb#35
   def url_for(options = T.unsafe(nil)); end
 
   private
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#50
+  # source://actionview//lib/action_view/helpers/url_helper.rb#47
   def _back_url; end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#55
+  # source://actionview//lib/action_view/helpers/url_helper.rb#52
   def _filtered_referrer; end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#786
+  # source://actionview//lib/action_view/helpers/url_helper.rb#759
   def add_method_to_attributes!(html_options, method); end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#757
+  # source://actionview//lib/action_view/helpers/url_helper.rb#730
   def convert_options_to_data_attributes(options, html_options); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#780
+  # source://actionview//lib/action_view/helpers/url_helper.rb#753
   def link_to_remote_options?(options); end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#797
+  # source://actionview//lib/action_view/helpers/url_helper.rb#770
   def method_for_options(options); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#815
+  # source://actionview//lib/action_view/helpers/url_helper.rb#788
   def method_not_get_method?(method); end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#834
+  # source://actionview//lib/action_view/helpers/url_helper.rb#807
   def method_tag(method); end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#880
+  # source://actionview//lib/action_view/helpers/url_helper.rb#853
   def remove_trailing_slash!(url_string); end
 
   # Returns an array of hashes each containing :name and :value keys
@@ -11803,20 +11439,20 @@ module ActionView::Helpers::UrlHelper
   #   to_form_params({ name: 'Denmark' }, 'country')
   #   # => [{name: 'country[name]', value: 'Denmark'}]
   #
-  # source://actionview//lib/action_view/helpers/url_helper.rb#854
+  # source://actionview//lib/action_view/helpers/url_helper.rb#827
   def to_form_params(attribute, namespace = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#820
+  # source://actionview//lib/action_view/helpers/url_helper.rb#793
   def token_tag(token = T.unsafe(nil), form_options: T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/helpers/url_helper.rb#772
+  # source://actionview//lib/action_view/helpers/url_helper.rb#745
   def url_target(name, options); end
 
   class << self
-    # source://actionview//lib/action_view/helpers/url_helper.rb#35
+    # source://actionview//lib/action_view/helpers/url_helper.rb#32
     def button_to_generates_button_tag; end
 
-    # source://actionview//lib/action_view/helpers/url_helper.rb#35
+    # source://actionview//lib/action_view/helpers/url_helper.rb#32
     def button_to_generates_button_tag=(val); end
   end
 end
@@ -11827,16 +11463,16 @@ end
 # (link_to_unless_current, for instance), which must be provided
 # as a method called #request on the context.
 #
-# source://actionview//lib/action_view/helpers/url_helper.rb#23
+# source://actionview//lib/action_view/helpers/url_helper.rb#21
 ActionView::Helpers::UrlHelper::BUTTON_TAG_METHOD_VERBS = T.let(T.unsafe(nil), Array)
 
-# source://actionview//lib/action_view/helpers/url_helper.rb#29
+# source://actionview//lib/action_view/helpers/url_helper.rb#26
 module ActionView::Helpers::UrlHelper::ClassMethods
-  # source://actionview//lib/action_view/helpers/url_helper.rb#30
+  # source://actionview//lib/action_view/helpers/url_helper.rb#27
   def _url_for_modules; end
 end
 
-# source://actionview//lib/action_view/helpers/url_helper.rb#807
+# source://actionview//lib/action_view/helpers/url_helper.rb#780
 ActionView::Helpers::UrlHelper::STRINGIFIED_COMMON_METHODS = T.let(T.unsafe(nil), Hash)
 
 # This is a class to fix I18n global state. Whenever you provide I18n.locale during a request,
@@ -11849,10 +11485,10 @@ class ActionView::I18nProxy < ::I18n::Config
   # source://actionview//lib/action_view/rendering.rb#11
   def initialize(original_config, lookup_context); end
 
-  # source://actionview//lib/action_view/rendering.rb#17
+  # source://actionview//lib/action_view/rendering.rb#16
   def locale; end
 
-  # source://actionview//lib/action_view/rendering.rb#21
+  # source://actionview//lib/action_view/rendering.rb#20
   def locale=(value); end
 
   # source://actionview//lib/action_view/rendering.rb#9
@@ -11862,14 +11498,12 @@ class ActionView::I18nProxy < ::I18n::Config
   def original_config; end
 end
 
-# = Action View \Layouts
-#
 # Layouts reverse the common pattern of including shared headers and footers in many templates to isolate changes in
 # repeated setups. The inclusion pattern has pages that look like this:
 #
-#   <%= render "application/header" %>
+#   <%= render "shared/header" %>
 #   Hello World
-#   <%= render "application/footer" %>
+#   <%= render "shared/footer" %>
 #
 # This approach is a decent way of keeping common structures isolated from the changing content, but it's verbose
 # and if you ever want to change the structure of these two includes, you'll have to change all the templates.
@@ -12061,7 +11695,7 @@ end
 #
 # This will override the controller-wide "weblog_standard" layout, and will render the help action with the "help" layout instead.
 #
-# source://actionview//lib/action_view/layouts.rb#205
+# source://actionview//lib/action_view/layouts.rb#203
 module ActionView::Layouts
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -12073,10 +11707,13 @@ module ActionView::Layouts
   mixes_in_class_methods ::ActionView::Rendering::ClassMethods
   mixes_in_class_methods ::ActionView::Layouts::ClassMethods
 
-  # source://actionview//lib/action_view/layouts.rb#363
+  # source://actionview//lib/action_view/layouts.rb#361
   def initialize(*_arg0); end
 
-  # source://actionview//lib/action_view/layouts.rb#352
+  # source://actionview//lib/action_view/layouts.rb#215
+  def _layout_conditions(*_arg0, **_arg1, &_arg2); end
+
+  # source://actionview//lib/action_view/layouts.rb#350
   def _normalize_options(options); end
 
   def action_has_layout=(_arg0); end
@@ -12090,14 +11727,14 @@ module ActionView::Layouts
   #
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/layouts.rb#374
+  # source://actionview//lib/action_view/layouts.rb#372
   def action_has_layout?; end
 
   private
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/layouts.rb#379
+  # source://actionview//lib/action_view/layouts.rb#377
   def _conditional_layout?; end
 
   # Returns the default layout for this controller.
@@ -12111,17 +11748,17 @@ module ActionView::Layouts
   # ==== Returns
   # * <tt>template</tt> - The template object for the default layout (or +nil+)
   #
-  # source://actionview//lib/action_view/layouts.rb#417
+  # source://actionview//lib/action_view/layouts.rb#415
   def _default_layout(lookup_context, formats, require_layout = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/layouts.rb#432
+  # source://actionview//lib/action_view/layouts.rb#430
   def _include_layout?(options); end
 
   # This will be overwritten by _write_layout_method
   #
-  # source://actionview//lib/action_view/layouts.rb#384
+  # source://actionview//lib/action_view/layouts.rb#382
   def _layout(*_arg0); end
 
   # Determine the layout for a given name, taking into account the name type.
@@ -12129,10 +11766,10 @@ module ActionView::Layouts
   # ==== Parameters
   # * <tt>name</tt> - The name of the template
   #
-  # source://actionview//lib/action_view/layouts.rb#390
+  # source://actionview//lib/action_view/layouts.rb#388
   def _layout_for_option(name); end
 
-  # source://actionview//lib/action_view/layouts.rb#403
+  # source://actionview//lib/action_view/layouts.rb#401
   def _normalize_layout(value); end
 
   module GeneratedClassMethods
@@ -12147,17 +11784,17 @@ module ActionView::Layouts
   module GeneratedInstanceMethods; end
 end
 
-# source://actionview//lib/action_view/layouts.rb#219
+# source://actionview//lib/action_view/layouts.rb#217
 module ActionView::Layouts::ClassMethods
   # Creates a _layout method to be called by _default_layout .
   #
   # If a layout is not explicitly mentioned then look for a layout with the controller's name.
   # if nothing is found then try same procedure to find super class's layout.
   #
-  # source://actionview//lib/action_view/layouts.rb#285
+  # source://actionview//lib/action_view/layouts.rb#283
   def _write_layout_method; end
 
-  # source://actionview//lib/action_view/layouts.rb#220
+  # source://actionview//lib/action_view/layouts.rb#218
   def inherited(klass); end
 
   # Specify the layout to use for this class.
@@ -12182,7 +11819,7 @@ module ActionView::Layouts::ClassMethods
   # * +:only+   - A list of actions to apply this layout to.
   # * +:except+ - Apply this layout to all actions but this one.
   #
-  # source://actionview//lib/action_view/layouts.rb#271
+  # source://actionview//lib/action_view/layouts.rb#269
   def layout(layout, conditions = T.unsafe(nil)); end
 
   private
@@ -12193,14 +11830,14 @@ module ActionView::Layouts::ClassMethods
   # ==== Returns
   # * <tt>String</tt> - A template name
   #
-  # source://actionview//lib/action_view/layouts.rb#347
+  # source://actionview//lib/action_view/layouts.rb#345
   def _implied_layout_name; end
 end
 
 # This module is mixed in if layout conditions are provided. This means
 # that if no layout conditions are used, this method is not used
 #
-# source://actionview//lib/action_view/layouts.rb#227
+# source://actionview//lib/action_view/layouts.rb#225
 module ActionView::Layouts::ClassMethods::LayoutConditions
   private
 
@@ -12213,76 +11850,59 @@ module ActionView::Layouts::ClassMethods::LayoutConditions
   #
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/layouts.rb#235
+  # source://actionview//lib/action_view/layouts.rb#233
   def _conditional_layout?; end
 end
 
 # = Action View Log Subscriber
 #
-# Provides functionality so that \Rails can output logs from Action View.
+# Provides functionality so that Rails can output logs from Action View.
 #
 # source://actionview//lib/action_view/log_subscriber.rb#9
 class ActionView::LogSubscriber < ::ActiveSupport::LogSubscriber
-  include ::ActionView::LogSubscriber::Utils
-
   # @return [LogSubscriber] a new instance of LogSubscriber
   #
   # source://actionview//lib/action_view/log_subscriber.rb#12
   def initialize; end
 
-  # source://actionview//lib/action_view/log_subscriber.rb#45
+  # source://actionview//lib/action_view/log_subscriber.rb#59
+  def logger; end
+
+  # source://actionview//lib/action_view/log_subscriber.rb#42
   def render_collection(event); end
 
-  # source://actionview//lib/action_view/log_subscriber.rb#37
+  # source://actionview//lib/action_view/log_subscriber.rb#35
   def render_layout(event); end
 
-  # source://actionview//lib/action_view/log_subscriber.rb#26
+  # source://actionview//lib/action_view/log_subscriber.rb#25
   def render_partial(event); end
 
   # source://actionview//lib/action_view/log_subscriber.rb#17
   def render_template(event); end
 
+  # source://actionview//lib/action_view/log_subscriber.rb#53
+  def start(name, id, payload); end
+
   private
 
-  # source://actionview//lib/action_view/log_subscriber.rb#117
+  # source://actionview//lib/action_view/log_subscriber.rb#83
   def cache_message(payload); end
 
-  # source://actionview//lib/action_view/log_subscriber.rb#109
-  def render_count(payload); end
-
-  class << self
-    # source://actionview//lib/action_view/log_subscriber.rb#101
-    def attach_to(*_arg0); end
-
-    # source://activesupport/7.1.0/lib/active_support/log_subscriber.rb#87
-    def log_levels; end
-  end
-end
-
-# source://actionview//lib/action_view/log_subscriber.rb#76
-class ActionView::LogSubscriber::Start
-  include ::ActionView::LogSubscriber::Utils
-
-  # source://actionview//lib/action_view/log_subscriber.rb#97
-  def finish(name, id, payload); end
-
-  # source://actionview//lib/action_view/log_subscriber.rb#79
-  def start(name, id, payload); end
-end
-
-# source://actionview//lib/action_view/log_subscriber.rb#57
-module ActionView::LogSubscriber::Utils
-  # source://actionview//lib/action_view/log_subscriber.rb#58
-  def logger; end
-
-  private
-
-  # source://actionview//lib/action_view/log_subscriber.rb#63
+  # source://actionview//lib/action_view/log_subscriber.rb#65
   def from_rails_root(string); end
 
-  # source://actionview//lib/action_view/log_subscriber.rb#69
+  # source://actionview//lib/action_view/log_subscriber.rb#92
+  def log_rendering_start(payload, name); end
+
+  # source://actionview//lib/action_view/log_subscriber.rb#71
   def rails_root; end
+
+  # source://actionview//lib/action_view/log_subscriber.rb#75
+  def render_count(payload); end
 end
+
+# source://actionview//lib/action_view/log_subscriber.rb#64
+ActionView::LogSubscriber::EMPTY = T.let(T.unsafe(nil), String)
 
 # source://actionview//lib/action_view/log_subscriber.rb#10
 ActionView::LogSubscriber::VIEWS_PATTERN = T.let(T.unsafe(nil), Regexp)
@@ -12303,28 +11923,28 @@ class ActionView::LookupContext
 
   # @return [LookupContext] a new instance of LookupContext
   #
-  # source://actionview//lib/action_view/lookup_context.rb#232
+  # source://actionview//lib/action_view/lookup_context.rb#216
   def initialize(view_paths, details = T.unsafe(nil), prefixes = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/lookup_context.rb#242
+  # source://actionview//lib/action_view/lookup_context.rb#226
   def digest_cache; end
 
   # Override formats= to expand ["*/*"] values and automatically
   # add :html as fallback to :js.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#263
+  # source://actionview//lib/action_view/lookup_context.rb#247
   def formats=(values); end
 
   # Override locale to return a symbol instead of array.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#283
+  # source://actionview//lib/action_view/lookup_context.rb#267
   def locale; end
 
   # Overload locale= to also set the I18n.locale. If the current I18n.config object responds
   # to original_config, it means that it has a copy of the original I18n configuration and it's
   # acting as proxy, which we need to skip.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#290
+  # source://actionview//lib/action_view/lookup_context.rb#274
   def locale=(value); end
 
   # source://actionview//lib/action_view/lookup_context.rb#16
@@ -12333,12 +11953,18 @@ class ActionView::LookupContext
   # source://actionview//lib/action_view/lookup_context.rb#16
   def prefixes=(_arg0); end
 
-  # source://actionview//lib/action_view/lookup_context.rb#246
+  # source://actionview//lib/action_view/lookup_context.rb#16
+  def rendered_format; end
+
+  # source://actionview//lib/action_view/lookup_context.rb#16
+  def rendered_format=(_arg0); end
+
+  # source://actionview//lib/action_view/lookup_context.rb#230
   def with_prepended_formats(formats); end
 
   private
 
-  # source://actionview//lib/action_view/lookup_context.rb#253
+  # source://actionview//lib/action_view/lookup_context.rb#237
   def initialize_details(target, details); end
 
   class << self
@@ -12399,34 +12025,34 @@ ActionView::LookupContext::Accessors::DEFAULT_PROCS = T.let(T.unsafe(nil), Hash)
 
 # Add caching behavior on top of Details.
 #
-# source://actionview//lib/action_view/lookup_context.rb#98
+# source://actionview//lib/action_view/lookup_context.rb#94
 module ActionView::LookupContext::DetailsCache
   # Returns the value of attribute cache.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#99
+  # source://actionview//lib/action_view/lookup_context.rb#95
   def cache; end
 
   # Sets the attribute cache
   #
   # @param value the value to set the attribute cache to.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#99
+  # source://actionview//lib/action_view/lookup_context.rb#95
   def cache=(_arg0); end
 
   # Calculate the details key. Remove the handlers from calculation to improve performance
   # since the user cannot modify it explicitly.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#103
+  # source://actionview//lib/action_view/lookup_context.rb#99
   def details_key; end
 
   # Temporary skip passing the details_key forward.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#108
+  # source://actionview//lib/action_view/lookup_context.rb#104
   def disable_cache; end
 
   private
 
-  # source://actionview//lib/action_view/lookup_context.rb#116
+  # source://actionview//lib/action_view/lookup_context.rb#112
   def _set_detail(key, value); end
 end
 
@@ -12435,7 +12061,7 @@ class ActionView::LookupContext::DetailsKey
   def eql?(_arg0); end
 
   class << self
-    # source://actionview//lib/action_view/lookup_context.rb#77
+    # source://actionview//lib/action_view/lookup_context.rb#73
     def clear; end
 
     # source://actionview//lib/action_view/lookup_context.rb#65
@@ -12444,61 +12070,55 @@ class ActionView::LookupContext::DetailsKey
     # source://actionview//lib/action_view/lookup_context.rb#61
     def digest_cache(details); end
 
-    # source://actionview//lib/action_view/lookup_context.rb#86
+    # source://actionview//lib/action_view/lookup_context.rb#82
     def digest_caches; end
 
-    # source://actionview//lib/action_view/lookup_context.rb#90
-    def view_context_class; end
+    # source://actionview//lib/action_view/lookup_context.rb#86
+    def view_context_class(klass); end
   end
 end
 
 # Helpers related to template lookup using the lookup context information.
 #
-# source://actionview//lib/action_view/lookup_context.rb#125
+# source://actionview//lib/action_view/lookup_context.rb#121
 module ActionView::LookupContext::ViewPaths
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/lookup_context.rb#148
+  # source://actionview//lib/action_view/lookup_context.rb#144
   def any?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/lookup_context.rb#148
+  # source://actionview//lib/action_view/lookup_context.rb#144
   def any_templates?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil)); end
-
-  # source://actionview//lib/action_view/lookup_context.rb#155
-  def append_view_paths(paths); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/lookup_context.rb#141
+  # source://actionview//lib/action_view/lookup_context.rb#137
   def exists?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), **options); end
 
-  # source://actionview//lib/action_view/lookup_context.rb#128
+  # source://actionview//lib/action_view/lookup_context.rb#124
   def find(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/lookup_context.rb#135
+  # source://actionview//lib/action_view/lookup_context.rb#131
   def find_all(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/lookup_context.rb#128
+  # source://actionview//lib/action_view/lookup_context.rb#124
   def find_template(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns the value of attribute html_fallback_for_js.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#126
+  # source://actionview//lib/action_view/lookup_context.rb#122
   def html_fallback_for_js; end
-
-  # source://actionview//lib/action_view/lookup_context.rb#159
-  def prepend_view_paths(paths); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/lookup_context.rb#141
+  # source://actionview//lib/action_view/lookup_context.rb#137
   def template_exists?(name, prefixes = T.unsafe(nil), partial = T.unsafe(nil), keys = T.unsafe(nil), **options); end
 
   # Returns the value of attribute view_paths.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#126
+  # source://actionview//lib/action_view/lookup_context.rb#122
   def view_paths; end
 
   private
@@ -12506,30 +12126,30 @@ module ActionView::LookupContext::ViewPaths
   # Whenever setting view paths, makes a copy so that we can manipulate them in
   # instance objects as we wish.
   #
-  # source://actionview//lib/action_view/lookup_context.rb#166
+  # source://actionview//lib/action_view/lookup_context.rb#154
   def build_view_paths(paths); end
 
   # Compute details hash and key according to user options (e.g. passed from #render).
   #
-  # source://actionview//lib/action_view/lookup_context.rb#175
+  # source://actionview//lib/action_view/lookup_context.rb#159
   def detail_args_for(options); end
 
-  # source://actionview//lib/action_view/lookup_context.rb#188
+  # source://actionview//lib/action_view/lookup_context.rb#172
   def detail_args_for_any; end
 
   # Fix when prefix is specified as part of the template name
   #
-  # source://actionview//lib/action_view/lookup_context.rb#209
+  # source://actionview//lib/action_view/lookup_context.rb#193
   def normalize_name(name, prefixes); end
 end
 
-# source://actionview//lib/action_view/template/error.rb#30
+# source://actionview//lib/action_view/template/error.rb#29
 class ActionView::MissingTemplate < ::ActionView::ActionViewError
   include ::DidYouMean::Correctable
 
   # @return [MissingTemplate] a new instance of MissingTemplate
   #
-  # source://actionview//lib/action_view/template/error.rb#33
+  # source://actionview//lib/action_view/template/error.rb#32
   def initialize(paths, path, prefixes, partial, details, *_arg5); end
 
   # Apps may have thousands of candidate templates so we attempt to
@@ -12537,50 +12157,50 @@ class ActionView::MissingTemplate < ::ActionView::ActionViewError
   # First we split templates into prefixes and basenames, so that those can
   # be matched separately.
   #
-  # source://actionview//lib/action_view/template/error.rb#93
+  # source://actionview//lib/action_view/template/error.rb#92
   def corrections; end
 
   # Returns the value of attribute partial.
   #
-  # source://actionview//lib/action_view/template/error.rb#31
+  # source://actionview//lib/action_view/template/error.rb#30
   def partial; end
 
   # Returns the value of attribute path.
   #
-  # source://actionview//lib/action_view/template/error.rb#31
+  # source://actionview//lib/action_view/template/error.rb#30
   def path; end
 
   # Returns the value of attribute paths.
   #
-  # source://actionview//lib/action_view/template/error.rb#31
+  # source://actionview//lib/action_view/template/error.rb#30
   def paths; end
 
   # Returns the value of attribute prefixes.
   #
-  # source://actionview//lib/action_view/template/error.rb#31
+  # source://actionview//lib/action_view/template/error.rb#30
   def prefixes; end
 end
 
-# source://actionview//lib/action_view/template/error.rb#60
+# source://actionview//lib/action_view/template/error.rb#59
 class ActionView::MissingTemplate::Results
   # @return [Results] a new instance of Results
   #
-  # source://actionview//lib/action_view/template/error.rb#63
+  # source://actionview//lib/action_view/template/error.rb#62
   def initialize(size); end
 
-  # source://actionview//lib/action_view/template/error.rb#80
+  # source://actionview//lib/action_view/template/error.rb#79
   def add(path, score); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template/error.rb#72
+  # source://actionview//lib/action_view/template/error.rb#71
   def should_record?(score); end
 
-  # source://actionview//lib/action_view/template/error.rb#68
+  # source://actionview//lib/action_view/template/error.rb#67
   def to_a; end
 end
 
-# source://actionview//lib/action_view/template/error.rb#61
+# source://actionview//lib/action_view/template/error.rb#60
 class ActionView::MissingTemplate::Results::Result < ::Struct
   # Returns the value of attribute path
   #
@@ -12664,80 +12284,23 @@ end
 #   puts sbuf # => "hello\u0005"
 #
 # source://actionview//lib/action_view/buffers.rb#21
-class ActionView::OutputBuffer
+class ActionView::OutputBuffer < ::ActiveSupport::SafeBuffer
   # @return [OutputBuffer] a new instance of OutputBuffer
   #
   # source://actionview//lib/action_view/buffers.rb#22
-  def initialize(buffer = T.unsafe(nil)); end
+  def initialize(*_arg0); end
 
-  # source://actionview//lib/action_view/buffers.rb#42
+  # source://actionview//lib/action_view/buffers.rb#27
   def <<(value); end
 
-  # source://actionview//lib/action_view/buffers.rb#81
-  def ==(other); end
-
-  # source://actionview//lib/action_view/buffers.rb#42
+  # source://actionview//lib/action_view/buffers.rb#27
   def append=(value); end
 
-  # source://actionview//lib/action_view/buffers.rb#27
-  def blank?(*_arg0, **_arg1, &_arg2); end
-
-  # source://actionview//lib/action_view/buffers.rb#72
-  def capture(*args); end
-
-  # source://actionview//lib/action_view/buffers.rb#42
-  def concat(value); end
-
-  # source://actionview//lib/action_view/buffers.rb#27
-  def empty?(*_arg0, **_arg1, &_arg2); end
-
-  # source://actionview//lib/action_view/buffers.rb#27
-  def encode!(*_arg0, **_arg1, &_arg2); end
-
-  # source://actionview//lib/action_view/buffers.rb#27
-  def encoding(*_arg0, **_arg1, &_arg2); end
-
-  # source://actionview//lib/action_view/buffers.rb#27
-  def force_encoding(*_arg0, **_arg1, &_arg2); end
-
-  # source://actionview//lib/action_view/buffers.rb#29
-  def html_safe; end
-
-  # @return [Boolean]
-  #
-  # source://actionview//lib/action_view/buffers.rb#38
-  def html_safe?; end
-
-  # source://actionview//lib/action_view/buffers.rb#27
-  def length(*_arg0, **_arg1, &_arg2); end
-
-  # source://actionview//lib/action_view/buffers.rb#85
-  def raw; end
-
-  # Returns the value of attribute raw_buffer.
-  #
-  # source://actionview//lib/action_view/buffers.rb#89
-  def raw_buffer; end
-
-  # source://actionview//lib/action_view/buffers.rb#56
+  # source://activesupport/7.0.8/lib/active_support/core_ext/string/output_safety.rb#195
   def safe_append=(value); end
 
-  # source://actionview//lib/action_view/buffers.rb#56
-  def safe_concat(value); end
-
-  # source://actionview//lib/action_view/buffers.rb#62
+  # source://actionview//lib/action_view/buffers.rb#33
   def safe_expr_append=(val); end
-
-  # source://actionview//lib/action_view/buffers.rb#29
-  def to_s; end
-
-  # source://actionview//lib/action_view/buffers.rb#34
-  def to_str; end
-
-  private
-
-  # source://actionview//lib/action_view/buffers.rb#68
-  def initialize_copy(other); end
 end
 
 # source://actionview//lib/action_view/flows.rb#6
@@ -13043,7 +12606,7 @@ class ActionView::PartialRenderer < ::ActionView::AbstractRenderer
 
   private
 
-  # source://actionview//lib/action_view/renderer/partial_renderer.rb#262
+  # source://actionview//lib/action_view/renderer/partial_renderer.rb#261
   def find_template(path, locals); end
 
   # source://actionview//lib/action_view/renderer/partial_renderer.rb#245
@@ -13058,31 +12621,6 @@ class ActionView::PartialRenderer < ::ActionView::AbstractRenderer
 
     # source://actionview//lib/action_view/renderer/partial_renderer/collection_caching.rb#12
     def collection_cache=(val); end
-  end
-end
-
-# source://actionview//lib/action_view/path_registry.rb#4
-module ActionView::PathRegistry
-  class << self
-    # source://actionview//lib/action_view/path_registry.rb#53
-    def all_file_system_resolvers; end
-
-    # source://actionview//lib/action_view/path_registry.rb#47
-    def all_resolvers; end
-
-    # source://actionview//lib/action_view/path_registry.rb#22
-    def cast_file_system_resolvers(paths); end
-
-    # Returns the value of attribute file_system_resolver_hooks.
-    #
-    # source://actionview//lib/action_view/path_registry.rb#11
-    def file_system_resolver_hooks; end
-
-    # source://actionview//lib/action_view/path_registry.rb#14
-    def get_view_paths(klass); end
-
-    # source://actionview//lib/action_view/path_registry.rb#18
-    def set_view_paths(klass, paths); end
   end
 end
 
@@ -13104,7 +12642,10 @@ class ActionView::PathSet
   def initialize(paths = T.unsafe(nil)); end
 
   # source://actionview//lib/action_view/path_set.rb#35
-  def +(other); end
+  def +(array); end
+
+  # source://actionview//lib/action_view/path_set.rb#41
+  def <<(*args); end
 
   # source://actionview//lib/action_view/path_set.rb#16
   def [](*_arg0, **_arg1, &_arg2); end
@@ -13112,22 +12653,28 @@ class ActionView::PathSet
   # source://actionview//lib/action_view/path_set.rb#31
   def compact; end
 
+  # source://actionview//lib/action_view/path_set.rb#41
+  def concat(*args); end
+
   # source://actionview//lib/action_view/path_set.rb#16
   def each(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/path_set.rb#53
+  # source://actionview//lib/action_view/path_set.rb#60
   def exists?(path, prefixes, partial, details, details_key, locals); end
 
-  # source://actionview//lib/action_view/path_set.rb#40
+  # source://actionview//lib/action_view/path_set.rb#47
   def find(path, prefixes, partial, details, details_key, locals); end
 
-  # source://actionview//lib/action_view/path_set.rb#45
+  # source://actionview//lib/action_view/path_set.rb#52
   def find_all(path, prefixes, partial, details, details_key, locals); end
 
   # source://actionview//lib/action_view/path_set.rb#16
   def include?(*_arg0, **_arg1, &_arg2); end
+
+  # source://actionview//lib/action_view/path_set.rb#41
+  def insert(*args); end
 
   # Returns the value of attribute paths.
   #
@@ -13135,20 +12682,29 @@ class ActionView::PathSet
   def paths; end
 
   # source://actionview//lib/action_view/path_set.rb#16
+  def pop(*_arg0, **_arg1, &_arg2); end
+
+  # source://actionview//lib/action_view/path_set.rb#41
+  def push(*args); end
+
+  # source://actionview//lib/action_view/path_set.rb#16
   def size(*_arg0, **_arg1, &_arg2); end
 
   # source://actionview//lib/action_view/path_set.rb#27
   def to_ary; end
+
+  # source://actionview//lib/action_view/path_set.rb#41
+  def unshift(*args); end
 
   private
 
   # source://actionview//lib/action_view/path_set.rb#22
   def initialize_copy(other); end
 
-  # source://actionview//lib/action_view/path_set.rb#58
+  # source://actionview//lib/action_view/path_set.rb#65
   def search_combinations(prefixes); end
 
-  # source://actionview//lib/action_view/path_set.rb#67
+  # source://actionview//lib/action_view/path_set.rb#74
   def typecast(paths); end
 end
 
@@ -13157,41 +12713,11 @@ end
 # source://actionview//lib/action_view/railtie.rb#8
 class ActionView::Railtie < ::Rails::Engine
   class << self
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks; end
   end
 end
 
-# source://actionview//lib/action_view/buffers.rb#92
-class ActionView::RawOutputBuffer
-  # @return [RawOutputBuffer] a new instance of RawOutputBuffer
-  #
-  # source://actionview//lib/action_view/buffers.rb#93
-  def initialize(buffer); end
-
-  # source://actionview//lib/action_view/buffers.rb#97
-  def <<(value); end
-
-  # source://actionview//lib/action_view/buffers.rb#103
-  def raw; end
-end
-
-# source://actionview//lib/action_view/buffers.rb#150
-class ActionView::RawStreamingBuffer
-  # @return [RawStreamingBuffer] a new instance of RawStreamingBuffer
-  #
-  # source://actionview//lib/action_view/buffers.rb#151
-  def initialize(buffer); end
-
-  # source://actionview//lib/action_view/buffers.rb#155
-  def <<(value); end
-
-  # source://actionview//lib/action_view/buffers.rb#161
-  def raw; end
-end
-
-# = Action View \Record \Identifier
-#
 # RecordIdentifier encapsulates methods used by various ActionView helpers
 # to associate records with DOM elements.
 #
@@ -13219,8 +12745,6 @@ end
 # automatically generated, following naming conventions encapsulated by the
 # RecordIdentifier methods #dom_id and #dom_class:
 #
-#   dom_id(Post)             # => "new_post"
-#   dom_class(Post)          # => "post"
 #   dom_id(Post.new)         # => "new_post"
 #   dom_class(Post.new)      # => "post"
 #   dom_id(Post.find 42)     # => "post_42"
@@ -13244,7 +12768,7 @@ end
 #     end
 #   end
 #
-# source://actionview//lib/action_view/record_identifier.rb#60
+# source://actionview//lib/action_view/record_identifier.rb#56
 module ActionView::RecordIdentifier
   include ::ActionView::ModelNaming
   extend ::ActionView::RecordIdentifier
@@ -13260,24 +12784,22 @@ module ActionView::RecordIdentifier
   #   dom_class(post, :edit)   # => "edit_post"
   #   dom_class(Person, :edit) # => "edit_person"
   #
-  # source://actionview//lib/action_view/record_identifier.rb#78
+  # source://actionview//lib/action_view/record_identifier.rb#74
   def dom_class(record_or_class, prefix = T.unsafe(nil)); end
 
   # The DOM id convention is to use the singular form of an object or class with the id following an underscore.
   # If no id is found, prefix with "new_" instead.
   #
-  #   dom_id(Post.find(45)) # => "post_45"
-  #   dom_id(Post)          # => "new_post"
+  #   dom_id(Post.find(45))       # => "post_45"
+  #   dom_id(Post.new)            # => "new_post"
   #
   # If you need to address multiple instances of the same class in the same view, you can prefix the dom_id:
   #
   #   dom_id(Post.find(45), :edit) # => "edit_post_45"
-  #   dom_id(Post, :custom)        # => "custom_post"
+  #   dom_id(Post.new, :custom)    # => "custom_post"
   #
-  # @raise [ArgumentError]
-  #
-  # source://actionview//lib/action_view/record_identifier.rb#93
-  def dom_id(record_or_class, prefix = T.unsafe(nil)); end
+  # source://actionview//lib/action_view/record_identifier.rb#89
+  def dom_id(record, prefix = T.unsafe(nil)); end
 
   private
 
@@ -13290,14 +12812,14 @@ module ActionView::RecordIdentifier
   # method that replaces all characters that are invalid inside DOM ids, with valid ones. You need to
   # make sure yourself that your dom ids are valid, in case you override this method.
   #
-  # source://actionview//lib/action_view/record_identifier.rb#113
+  # source://actionview//lib/action_view/record_identifier.rb#106
   def record_key_for_dom_id(record); end
 end
 
-# source://actionview//lib/action_view/record_identifier.rb#66
+# source://actionview//lib/action_view/record_identifier.rb#62
 ActionView::RecordIdentifier::JOIN = T.let(T.unsafe(nil), String)
 
-# source://actionview//lib/action_view/record_identifier.rb#67
+# source://actionview//lib/action_view/record_identifier.rb#63
 ActionView::RecordIdentifier::NEW = T.let(T.unsafe(nil), String)
 
 # source://actionview//lib/action_view/ripper_ast_parser.rb#6
@@ -14063,8 +13585,6 @@ end
 # source://actionview//lib/action_view/ripper_ast_parser.rb#150
 ActionView::RenderParser::RipperASTParser::RenderCallExtractor::METHODS_TO_PARSE = T.let(T.unsafe(nil), Array)
 
-# = Action View \Renderer
-#
 # This is the main entry point for rendering. It basically delegates
 # to other objects like TemplateRenderer and PartialRenderer which
 # actually renders the template.
@@ -14075,31 +13595,31 @@ ActionView::RenderParser::RipperASTParser::RenderCallExtractor::METHODS_TO_PARSE
 # the setup and logic necessary to render a view and a new object is created
 # each time +render+ is called.
 #
-# source://actionview//lib/action_view/renderer/renderer.rb#15
+# source://actionview//lib/action_view/renderer/renderer.rb#13
 class ActionView::Renderer
   # @return [Renderer] a new instance of Renderer
   #
-  # source://actionview//lib/action_view/renderer/renderer.rb#18
+  # source://actionview//lib/action_view/renderer/renderer.rb#16
   def initialize(lookup_context); end
 
-  # source://actionview//lib/action_view/renderer/renderer.rb#58
+  # source://actionview//lib/action_view/renderer/renderer.rb#56
   def cache_hits; end
 
   # Returns the value of attribute lookup_context.
   #
-  # source://actionview//lib/action_view/renderer/renderer.rb#16
+  # source://actionview//lib/action_view/renderer/renderer.rb#14
   def lookup_context; end
 
   # Sets the attribute lookup_context
   #
   # @param value the value to set the attribute lookup_context to.
   #
-  # source://actionview//lib/action_view/renderer/renderer.rb#16
+  # source://actionview//lib/action_view/renderer/renderer.rb#14
   def lookup_context=(_arg0); end
 
   # Main render entry point shared by Action View and Action Controller.
   #
-  # source://actionview//lib/action_view/renderer/renderer.rb#23
+  # source://actionview//lib/action_view/renderer/renderer.rb#21
   def render(context, options); end
 
   # Render but returns a valid Rack body. If fibers are defined, we return
@@ -14108,38 +13628,38 @@ class ActionView::Renderer
   # Note that partials are not supported to be rendered with streaming,
   # so in such cases, we just wrap them in an array.
   #
-  # source://actionview//lib/action_view/renderer/renderer.rb#40
+  # source://actionview//lib/action_view/renderer/renderer.rb#38
   def render_body(context, options); end
 
   # Direct access to partial rendering.
   #
-  # source://actionview//lib/action_view/renderer/renderer.rb#54
+  # source://actionview//lib/action_view/renderer/renderer.rb#52
   def render_partial(context, options, &block); end
 
-  # source://actionview//lib/action_view/renderer/renderer.rb#66
+  # source://actionview//lib/action_view/renderer/renderer.rb#64
   def render_partial_to_object(context, options, &block); end
 
   # Direct access to template rendering.
   #
-  # source://actionview//lib/action_view/renderer/renderer.rb#49
+  # source://actionview//lib/action_view/renderer/renderer.rb#47
   def render_template(context, options); end
 
-  # source://actionview//lib/action_view/renderer/renderer.rb#62
+  # source://actionview//lib/action_view/renderer/renderer.rb#60
   def render_template_to_object(context, options); end
 
-  # source://actionview//lib/action_view/renderer/renderer.rb#27
+  # source://actionview//lib/action_view/renderer/renderer.rb#25
   def render_to_object(context, options); end
 
   private
 
-  # source://actionview//lib/action_view/renderer/renderer.rb#109
+  # source://actionview//lib/action_view/renderer/renderer.rb#107
   def collection_from_object(object); end
 
-  # source://actionview//lib/action_view/renderer/renderer.rb#102
+  # source://actionview//lib/action_view/renderer/renderer.rb#100
   def collection_from_options(options); end
 end
 
-# source://actionview//lib/action_view/rendering.rb#26
+# source://actionview//lib/action_view/rendering.rb#25
 module ActionView::Rendering
   extend ::ActiveSupport::Concern
   include ::ActionView::ViewPaths
@@ -14147,20 +13667,20 @@ module ActionView::Rendering
   mixes_in_class_methods ::ActionView::ViewPaths::ClassMethods
   mixes_in_class_methods ::ActionView::Rendering::ClassMethods
 
-  # source://actionview//lib/action_view/rendering.rb#32
+  # source://actionview//lib/action_view/rendering.rb#31
   def initialize; end
 
   # Override process to set up I18n proxy.
   #
-  # source://actionview//lib/action_view/rendering.rb#38
+  # source://actionview//lib/action_view/rendering.rb#37
   def process(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/rendering.rb#119
+  # source://actionview//lib/action_view/rendering.rb#101
   def render_to_body(options = T.unsafe(nil)); end
 
   # Returns the value of attribute rendered_format.
   #
-  # source://actionview//lib/action_view/rendering.rb#30
+  # source://actionview//lib/action_view/rendering.rb#29
   def rendered_format; end
 
   # An instance of a view class. The default view class is ActionView::Base.
@@ -14174,61 +13694,53 @@ module ActionView::Rendering
   #
   # Override this method in a module to change the default behavior.
   #
-  # source://actionview//lib/action_view/rendering.rb#109
+  # source://actionview//lib/action_view/rendering.rb#91
   def view_context; end
 
-  # source://actionview//lib/action_view/rendering.rb#95
+  # source://actionview//lib/action_view/rendering.rb#77
   def view_context_class; end
 
   # Returns an object that is able to render templates.
   #
-  # source://actionview//lib/action_view/rendering.rb#114
+  # source://actionview//lib/action_view/rendering.rb#96
   def view_renderer; end
 
   private
 
-  # Normalize args by converting render "foo" to render action: "foo" and
-  # render "foo/bar" to render template: "foo/bar".
+  # Normalize args by converting render "foo" to render :action => "foo" and
+  # render "foo/bar" to render :template => "foo/bar".
   #
-  # source://actionview//lib/action_view/rendering.rb#152
+  # source://actionview//lib/action_view/rendering.rb#134
   def _normalize_args(action = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Normalize options.
   #
-  # source://actionview//lib/action_view/rendering.rb#176
+  # source://actionview//lib/action_view/rendering.rb#158
   def _normalize_options(options); end
 
   # Assign the rendered format to look up context.
   #
-  # source://actionview//lib/action_view/rendering.rb#145
+  # source://actionview//lib/action_view/rendering.rb#127
   def _process_format(format); end
 
   # Find and render a template based on the options given.
   #
-  # source://actionview//lib/action_view/rendering.rb#126
+  # source://actionview//lib/action_view/rendering.rb#108
   def _render_template(options); end
 end
 
-# source://actionview//lib/action_view/rendering.rb#45
+# source://actionview//lib/action_view/rendering.rb#44
 module ActionView::Rendering::ClassMethods
-  # source://actionview//lib/action_view/rendering.rb#49
+  # source://actionview//lib/action_view/rendering.rb#48
   def _helpers; end
 
-  # source://actionview//lib/action_view/rendering.rb#46
+  # source://actionview//lib/action_view/rendering.rb#45
   def _routes; end
 
-  # source://actionview//lib/action_view/rendering.rb#59
+  # source://actionview//lib/action_view/rendering.rb#51
   def build_view_context_class(klass, supports_path, routes, helpers); end
 
-  # source://actionview//lib/action_view/rendering.rb#76
-  def eager_load!; end
-
-  # @return [Boolean]
-  #
-  # source://actionview//lib/action_view/rendering.rb#52
-  def inherit_view_context_class?; end
-
-  # source://actionview//lib/action_view/rendering.rb#82
+  # source://actionview//lib/action_view/rendering.rb#64
   def view_context_class; end
 end
 
@@ -14236,34 +13748,29 @@ end
 #
 # source://actionview//lib/action_view/template/resolver.rb#12
 class ActionView::Resolver
-  include ::ActiveSupport::Deprecation::DeprecatedConstantAccessor
-
-  # source://actionview//lib/action_view/template/resolver.rb#72
+  # source://actionview//lib/action_view/template/resolver.rb#68
   def all_template_paths; end
 
-  # source://actionview//lib/action_view/template/resolver.rb#67
-  def built_templates; end
-
-  # source://actionview//lib/action_view/template/resolver.rb#53
+  # source://actionview//lib/action_view/template/resolver.rb#54
   def caching; end
 
-  # source://actionview//lib/action_view/template/resolver.rb#53
+  # source://actionview//lib/action_view/template/resolver.rb#54
   def caching=(val); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#82
-  def caching?(&block); end
+  # source://actionview//lib/action_view/template/resolver.rb#78
+  def caching?(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionview//lib/action_view/template/resolver.rb#59
+  # source://actionview//lib/action_view/template/resolver.rb#60
   def clear_cache; end
 
   # Normalizes the arguments and passes it on to find_templates.
   #
-  # source://actionview//lib/action_view/template/resolver.rb#63
+  # source://actionview//lib/action_view/template/resolver.rb#64
   def find_all(name, prefix = T.unsafe(nil), partial = T.unsafe(nil), details = T.unsafe(nil), key = T.unsafe(nil), locals = T.unsafe(nil)); end
 
   private
 
-  # source://actionview//lib/action_view/template/resolver.rb#78
+  # source://actionview//lib/action_view/template/resolver.rb#74
   def _find_all(name, prefix, partial, details, key, locals); end
 
   # This is what child classes implement. No defaults are needed
@@ -14272,31 +13779,34 @@ class ActionView::Resolver
   #
   # @raise [NotImplementedError]
   #
-  # source://actionview//lib/action_view/template/resolver.rb#87
+  # source://actionview//lib/action_view/template/resolver.rb#83
   def find_templates(name, prefix, partial, details, locals = T.unsafe(nil)); end
 
   class << self
-    # source://actionview//lib/action_view/template/resolver.rb#53
+    # source://actionview//lib/action_view/template/resolver.rb#54
     def caching; end
 
-    # source://actionview//lib/action_view/template/resolver.rb#53
+    # source://actionview//lib/action_view/template/resolver.rb#54
     def caching=(val); end
 
-    # source://actionview//lib/action_view/template/resolver.rb#53
+    # source://actionview//lib/action_view/template/resolver.rb#54
     def caching?; end
   end
 end
 
-# source://actionview//lib/action_view/template/resolver.rb#15
+# source://actionview//lib/action_view/template/resolver.rb#13
+ActionView::Resolver::Path = ActionView::TemplatePath
+
+# source://actionview//lib/action_view/template/resolver.rb#16
 class ActionView::Resolver::PathParser
-  # source://actionview//lib/action_view/template/resolver.rb#18
+  # source://actionview//lib/action_view/template/resolver.rb#19
   def build_path_regex; end
 
-  # source://actionview//lib/action_view/template/resolver.rb#39
+  # source://actionview//lib/action_view/template/resolver.rb#40
   def parse(path); end
 end
 
-# source://actionview//lib/action_view/template/resolver.rb#16
+# source://actionview//lib/action_view/template/resolver.rb#17
 class ActionView::Resolver::PathParser::ParsedPath < ::Struct
   # Returns the value of attribute details
   #
@@ -14333,7 +13843,7 @@ end
 module ActionView::RoutingUrlFor
   include ::ActionDispatch::Routing::PolymorphicRoutes
 
-  # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#99
+  # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#97
   def default_url_options=(val); end
 
   # Returns the URL for the set of +options+ provided. This takes the
@@ -14435,50 +13945,39 @@ module ActionView::RoutingUrlFor
   def optimize_routes_generation?; end
 
   class << self
-    # source://actionpack/7.1.0/lib/action_dispatch/routing/url_for.rb#99
+    # source://actionpack/7.0.8/lib/action_dispatch/routing/url_for.rb#97
     def default_url_options=(val); end
   end
 end
 
-# source://actionview//lib/action_view/buffers.rb#108
+# source://actionview//lib/action_view/buffers.rb#41
 class ActionView::StreamingBuffer
   # @return [StreamingBuffer] a new instance of StreamingBuffer
   #
-  # source://actionview//lib/action_view/buffers.rb#109
+  # source://actionview//lib/action_view/buffers.rb#42
   def initialize(block); end
 
-  # source://actionview//lib/action_view/buffers.rb#113
+  # source://actionview//lib/action_view/buffers.rb#46
   def <<(value); end
 
-  # source://actionview//lib/action_view/buffers.rb#113
+  # source://actionview//lib/action_view/buffers.rb#46
   def append=(value); end
 
-  # Returns the value of attribute block.
-  #
-  # source://actionview//lib/action_view/buffers.rb#147
-  def block; end
-
-  # source://actionview//lib/action_view/buffers.rb#126
-  def capture; end
-
-  # source://actionview//lib/action_view/buffers.rb#113
+  # source://actionview//lib/action_view/buffers.rb#46
   def concat(value); end
 
-  # source://actionview//lib/action_view/buffers.rb#139
+  # source://actionview//lib/action_view/buffers.rb#63
   def html_safe; end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/buffers.rb#135
+  # source://actionview//lib/action_view/buffers.rb#59
   def html_safe?; end
 
-  # source://actionview//lib/action_view/buffers.rb#143
-  def raw; end
-
-  # source://actionview//lib/action_view/buffers.rb#121
+  # source://actionview//lib/action_view/buffers.rb#54
   def safe_append=(value); end
 
-  # source://actionview//lib/action_view/buffers.rb#121
+  # source://actionview//lib/action_view/buffers.rb#54
   def safe_concat(value); end
 end
 
@@ -14553,21 +14052,21 @@ class ActionView::StreamingTemplateRenderer::Body
   def log_error(exception); end
 end
 
-# source://actionview//lib/action_view/template/error.rb#245
+# source://actionview//lib/action_view/template/error.rb#232
 class ActionView::SyntaxErrorInTemplate < ::ActionView::Template::Error
   # @return [SyntaxErrorInTemplate] a new instance of SyntaxErrorInTemplate
   #
-  # source://actionview//lib/action_view/template/error.rb#246
+  # source://actionview//lib/action_view/template/error.rb#233
   def initialize(template, offending_code_string); end
 
-  # source://actionview//lib/action_view/template/error.rb#257
+  # source://actionview//lib/action_view/template/error.rb#244
   def annotated_source_code; end
 
-  # source://actionview//lib/action_view/template/error.rb#251
+  # source://actionview//lib/action_view/template/error.rb#238
   def message; end
 end
 
-# = Action View \Template
+# = Action View Template
 #
 # source://actionview//lib/action_view/template.rb#8
 class ActionView::Template
@@ -14576,7 +14075,7 @@ class ActionView::Template
 
   # @return [Template] a new instance of Template
   #
-  # source://actionview//lib/action_view/template.rb#186
+  # source://actionview//lib/action_view/template.rb#123
   def initialize(source, identifier, handler, locals:, format: T.unsafe(nil), variant: T.unsafe(nil), virtual_path: T.unsafe(nil)); end
 
   # This method is responsible for properly setting the encoding of the
@@ -14589,45 +14088,41 @@ class ActionView::Template
   # before passing the source on to the template engine, leaving a
   # blank line in its stead.
   #
-  # source://actionview//lib/action_view/template.rb#290
+  # source://actionview//lib/action_view/template.rb#189
   def encode!; end
 
   # Returns the value of attribute format.
   #
-  # source://actionview//lib/action_view/template.rb#182
+  # source://actionview//lib/action_view/template.rb#121
   def format; end
 
   # Returns the value of attribute handler.
   #
-  # source://actionview//lib/action_view/template.rb#181
+  # source://actionview//lib/action_view/template.rb#120
   def handler; end
 
   # Returns the value of attribute identifier.
   #
-  # source://actionview//lib/action_view/template.rb#181
+  # source://actionview//lib/action_view/template.rb#120
   def identifier; end
 
-  # source://actionview//lib/action_view/template.rb#269
+  # source://actionview//lib/action_view/template.rb#171
   def inspect; end
 
-  # The locals this template has been or will be compiled for, or nil if this
-  # is a strict locals template.
+  # Returns the value of attribute locals.
   #
-  # source://actionview//lib/action_view/template.rb#209
+  # source://actionview//lib/action_view/template.rb#121
   def locals; end
 
   # Exceptions are marshalled when using the parallel test runner with DRb, so we need
   # to ensure that references to the template object can be marshalled as well. This means forgoing
   # the marshalling of the compiler mutex and instantiating that again on unmarshalling.
   #
-  # source://actionview//lib/action_view/template.rb#356
+  # source://actionview//lib/action_view/template.rb#229
   def marshal_dump; end
 
-  # source://actionview//lib/action_view/template.rb#360
+  # source://actionview//lib/action_view/template.rb#233
   def marshal_load(array); end
-
-  # source://actionview//lib/action_view/template.rb#365
-  def method_name; end
 
   # Render a template. If the template was not compiled yet, it is done
   # exactly before rendering.
@@ -14636,68 +14131,39 @@ class ActionView::Template
   # we use a bang in this instrumentation because you don't want to
   # consume this in production. This is only slow if it's being listened to.
   #
-  # source://actionview//lib/action_view/template.rb#247
+  # source://actionview//lib/action_view/template.rb#154
   def render(view, locals, buffer = T.unsafe(nil), add_to_stack: T.unsafe(nil), &block); end
 
-  # source://actionview//lib/action_view/template.rb#265
+  # source://actionview//lib/action_view/template.rb#167
   def short_identifier; end
 
-  # source://actionview//lib/action_view/template.rb#273
+  # source://actionview//lib/action_view/template.rb#175
   def source; end
-
-  # source://actionview//lib/action_view/template.rb#217
-  def spot(location); end
-
-  # This method is responsible for marking a template as having strict locals
-  # which means the template can only accept the locals defined in a magic
-  # comment. For example, if your template acceps the locals +title+ and
-  # +comment_count+, add the following to your template file:
-  #
-  #   <%# locals: (title: "Default title", comment_count: 0) %>
-  #
-  # Strict locals are useful for validating template arguments and for
-  # specifying defaults.
-  #
-  # source://actionview//lib/action_view/template.rb#335
-  def strict_locals!; end
-
-  # Returns whether a template is using strict locals.
-  #
-  # @return [Boolean]
-  #
-  # source://actionview//lib/action_view/template.rb#349
-  def strict_locals?; end
 
   # Returns whether the underlying handler supports streaming. If so,
   # a streaming buffer *may* be passed when it starts rendering.
   #
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template.rb#237
+  # source://actionview//lib/action_view/template.rb#144
   def supports_streaming?; end
 
-  # Translate an error location returned by ErrorHighlight to the correct
-  # source location inside the template.
-  #
-  # source://actionview//lib/action_view/template.rb#227
-  def translate_location(backtrace_location, spot); end
-
-  # source://actionview//lib/action_view/template.rb#261
+  # source://actionview//lib/action_view/template.rb#163
   def type; end
 
   # Returns the value of attribute variable.
   #
-  # source://actionview//lib/action_view/template.rb#182
+  # source://actionview//lib/action_view/template.rb#121
   def variable; end
 
   # Returns the value of attribute variant.
   #
-  # source://actionview//lib/action_view/template.rb#182
+  # source://actionview//lib/action_view/template.rb#121
   def variant; end
 
   # Returns the value of attribute virtual_path.
   #
-  # source://actionview//lib/action_view/template.rb#182
+  # source://actionview//lib/action_view/template.rb#121
   def virtual_path; end
 
   private
@@ -14714,57 +14180,42 @@ class ActionView::Template
   # In general, this means that templates will be UTF-8 inside of Rails,
   # regardless of the original source encoding.
   #
-  # @raise [ArgumentError]
-  #
-  # source://actionview//lib/action_view/template.rb#465
+  # source://actionview//lib/action_view/template.rb#275
   def compile(mod); end
 
   # Compile a template. This method ensures a template is compiled
   # just once and removes the source after it is compiled.
   #
-  # source://actionview//lib/action_view/template.rb#387
+  # source://actionview//lib/action_view/template.rb#241
   def compile!(view); end
 
-  # This method compiles the source of the template. The compilation of templates
-  # involves setting strict_locals! if applicable, encoding the template, and setting
-  # frozen string literal.
-  #
-  # source://actionview//lib/action_view/template.rb#412
-  def compiled_source; end
-
-  # source://actionview//lib/action_view/template.rb#374
-  def find_node_by_id(node, node_id); end
-
-  # source://actionview//lib/action_view/template.rb#504
+  # source://actionview//lib/action_view/template.rb#316
   def handle_render_error(view, e); end
 
-  # source://actionview//lib/action_view/template.rb#526
+  # source://actionview//lib/action_view/template.rb#352
   def identifier_method_name; end
 
-  # source://actionview//lib/action_view/template.rb#530
+  # source://actionview//lib/action_view/template.rb#356
   def instrument(action, &block); end
 
-  # source://actionview//lib/action_view/template.rb#538
+  # source://actionview//lib/action_view/template.rb#364
   def instrument_payload; end
 
-  # source://actionview//lib/action_view/template.rb#534
+  # source://actionview//lib/action_view/template.rb#360
   def instrument_render_template(&block); end
 
-  # source://actionview//lib/action_view/template.rb#513
+  # source://actionview//lib/action_view/template.rb#325
   def locals_code; end
 
-  # source://actionview//lib/action_view/template.rb#496
-  def offset; end
+  # source://actionview//lib/action_view/template.rb#344
+  def method_name; end
 
   class << self
-    # source://actionview//lib/action_view/template.rb#167
+    # source://actionview//lib/action_view/template.rb#117
     def frozen_string_literal; end
 
-    # source://actionview//lib/action_view/template.rb#167
+    # source://actionview//lib/action_view/template.rb#117
     def frozen_string_literal=(_arg0); end
-
-    # source://actionview//lib/action_view/template.rb#171
-    def mime_types_implementation=(implementation); end
   end
 end
 
@@ -14772,61 +14223,48 @@ end
 # fails. This exception then gathers a bunch of intimate details and uses it to report a
 # precise exception message.
 #
-# source://actionview//lib/action_view/template/error.rb#154
+# source://actionview//lib/action_view/template/error.rb#153
 class ActionView::Template::Error < ::ActionView::ActionViewError
   # @return [Error] a new instance of Error
   #
-  # source://actionview//lib/action_view/template/error.rb#162
+  # source://actionview//lib/action_view/template/error.rb#159
   def initialize(template); end
 
-  # source://actionview//lib/action_view/template/error.rb#220
+  # source://actionview//lib/action_view/template/error.rb#207
   def annotated_source_code; end
-
-  # source://actionview//lib/action_view/template/error.rb#171
-  def backtrace; end
-
-  # source://actionview//lib/action_view/template/error.rb#175
-  def backtrace_locations; end
 
   # Override to prevent #cause resetting during re-raise.
   #
-  # source://actionview//lib/action_view/template/error.rb#158
+  # source://actionview//lib/action_view/template/error.rb#157
   def cause; end
 
-  # source://actionview//lib/action_view/template/error.rb#179
+  # source://actionview//lib/action_view/template/error.rb#166
   def file_name; end
 
-  # source://actionview//lib/action_view/template/error.rb#212
+  # source://actionview//lib/action_view/template/error.rb#199
   def line_number; end
 
-  # source://actionview//lib/action_view/template/error.rb#192
+  # source://actionview//lib/action_view/template/error.rb#179
   def source_extract(indentation = T.unsafe(nil)); end
 
-  # source://actionview//lib/action_view/template/error.rb#183
+  # source://actionview//lib/action_view/template/error.rb#170
   def sub_template_message; end
 
-  # source://actionview//lib/action_view/template/error.rb#207
+  # source://actionview//lib/action_view/template/error.rb#194
   def sub_template_of(template_path); end
-
-  # Returns the value of attribute template.
-  #
-  # source://actionview//lib/action_view/template/error.rb#160
-  def template; end
 
   private
 
-  # source://actionview//lib/action_view/template/error.rb#233
+  # source://actionview//lib/action_view/template/error.rb#220
   def formatted_code_for(source_code, line_counter, indent); end
 
-  # source://actionview//lib/action_view/template/error.rb#225
+  # source://actionview//lib/action_view/template/error.rb#212
   def source_location; end
 end
 
-# source://actionview//lib/action_view/template/error.rb#155
+# source://actionview//lib/action_view/template/error.rb#154
 ActionView::Template::Error::SOURCE_CODE_RADIUS = T.let(T.unsafe(nil), Integer)
 
-# = Action View HTML Template
-#
 # source://actionview//lib/action_view/template/html.rb#6
 class ActionView::Template::HTML
   # @return [HTML] a new instance of HTML
@@ -14853,8 +14291,6 @@ class ActionView::Template::HTML
   def type; end
 end
 
-# = Action View Template Handlers
-#
 # source://actionview//lib/action_view/template/handlers.rb#6
 module ActionView::Template::Handlers
   # source://actionview//lib/action_view/template/handlers.rb#61
@@ -14926,116 +14362,107 @@ class ActionView::Template::Handlers::Builder
   end
 end
 
-# source://actionview//lib/action_view/template/handlers/erb.rb#9
+# source://actionview//lib/action_view/template/handlers/erb.rb#6
 class ActionView::Template::Handlers::ERB
-  # source://actionview//lib/action_view/template/handlers/erb.rb#61
+  # source://actionview//lib/action_view/template/handlers/erb.rb#36
   def call(template, source); end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#17
+  # source://actionview//lib/action_view/template/handlers/erb.rb#14
   def erb_implementation; end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#17
+  # source://actionview//lib/action_view/template/handlers/erb.rb#14
   def erb_implementation=(_arg0); end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#17
+  # source://actionview//lib/action_view/template/handlers/erb.rb#14
   def erb_implementation?; end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#14
+  # source://actionview//lib/action_view/template/handlers/erb.rb#11
   def erb_trim_mode; end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#14
+  # source://actionview//lib/action_view/template/handlers/erb.rb#11
   def erb_trim_mode=(_arg0); end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#14
+  # source://actionview//lib/action_view/template/handlers/erb.rb#11
   def erb_trim_mode?; end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#20
+  # source://actionview//lib/action_view/template/handlers/erb.rb#17
   def escape_ignore_list; end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#20
+  # source://actionview//lib/action_view/template/handlers/erb.rb#17
   def escape_ignore_list=(_arg0); end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#20
+  # source://actionview//lib/action_view/template/handlers/erb.rb#17
   def escape_ignore_list?; end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template/handlers/erb.rb#37
+  # source://actionview//lib/action_view/template/handlers/erb.rb#32
   def handles_encoding?; end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#23
+  # source://actionview//lib/action_view/template/handlers/erb.rb#20
   def strip_trailing_newlines; end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#23
+  # source://actionview//lib/action_view/template/handlers/erb.rb#20
   def strip_trailing_newlines=(_arg0); end
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#23
+  # source://actionview//lib/action_view/template/handlers/erb.rb#20
   def strip_trailing_newlines?; end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template/handlers/erb.rb#33
+  # source://actionview//lib/action_view/template/handlers/erb.rb#28
   def supports_streaming?; end
-
-  # Translate an error location returned by ErrorHighlight to the correct
-  # source location inside the template.
-  #
-  # source://actionview//lib/action_view/template/handlers/erb.rb#43
-  def translate_location(spot, backtrace_location, source); end
 
   private
 
-  # source://actionview//lib/action_view/template/handlers/erb.rb#108
-  def find_offset(compiled, source_tokens, error_column); end
-
   # @raise [WrongEncodingError]
   #
-  # source://actionview//lib/action_view/template/handlers/erb.rb#93
+  # source://actionview//lib/action_view/template/handlers/erb.rb#68
   def valid_encoding(string, encoding); end
 
   class << self
-    # source://actionview//lib/action_view/template/handlers/erb.rb#29
+    # source://actionview//lib/action_view/template/handlers/erb.rb#24
     def call(template, source); end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#17
+    # source://actionview//lib/action_view/template/handlers/erb.rb#14
     def erb_implementation; end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#17
+    # source://actionview//lib/action_view/template/handlers/erb.rb#14
     def erb_implementation=(value); end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#17
+    # source://actionview//lib/action_view/template/handlers/erb.rb#14
     def erb_implementation?; end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#14
+    # source://actionview//lib/action_view/template/handlers/erb.rb#11
     def erb_trim_mode; end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#14
+    # source://actionview//lib/action_view/template/handlers/erb.rb#11
     def erb_trim_mode=(value); end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#14
+    # source://actionview//lib/action_view/template/handlers/erb.rb#11
     def erb_trim_mode?; end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#20
+    # source://actionview//lib/action_view/template/handlers/erb.rb#17
     def escape_ignore_list; end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#20
+    # source://actionview//lib/action_view/template/handlers/erb.rb#17
     def escape_ignore_list=(value); end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#20
+    # source://actionview//lib/action_view/template/handlers/erb.rb#17
     def escape_ignore_list?; end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#23
+    # source://actionview//lib/action_view/template/handlers/erb.rb#20
     def strip_trailing_newlines; end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#23
+    # source://actionview//lib/action_view/template/handlers/erb.rb#20
     def strip_trailing_newlines=(value); end
 
-    # source://actionview//lib/action_view/template/handlers/erb.rb#23
+    # source://actionview//lib/action_view/template/handlers/erb.rb#20
     def strip_trailing_newlines?; end
   end
 end
 
-# source://actionview//lib/action_view/template/handlers/erb.rb#25
+# source://actionview//lib/action_view/template/handlers/erb.rb#22
 ActionView::Template::Handlers::ERB::ENCODING_TAG = T.let(T.unsafe(nil), Regexp)
 
 # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#10
@@ -15045,29 +14472,29 @@ class ActionView::Template::Handlers::ERB::Erubi < ::Erubi::Engine
   # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#11
   def initialize(input, properties = T.unsafe(nil)); end
 
+  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#26
+  def evaluate(action_view_erb_handler_context); end
+
   private
 
-  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#65
+  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#69
   def add_code(code); end
 
-  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#47
+  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#53
   def add_expression(indicator, code); end
 
-  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#70
+  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#74
   def add_postamble(_); end
 
-  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#30
+  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#36
   def add_text(text); end
 
-  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#75
+  # source://actionview//lib/action_view/template/handlers/erb/erubi.rb#79
   def flush_newline_if_pending(src); end
 end
 
-# source://actionview//lib/action_view/template/handlers/erb/erubi.rb#45
+# source://actionview//lib/action_view/template/handlers/erb/erubi.rb#51
 ActionView::Template::Handlers::ERB::Erubi::BLOCK_EXPR = T.let(T.unsafe(nil), Regexp)
-
-# source://actionview//lib/action_view/template/handlers/erb.rb#27
-class ActionView::Template::Handlers::ERB::LocationParsingError < ::StandardError; end
 
 # source://actionview//lib/action_view/template/handlers/html.rb#5
 class ActionView::Template::Handlers::Html < ::ActionView::Template::Handlers::Raw
@@ -15093,14 +14520,6 @@ end
 # source://actionview//lib/action_view/template/inline.rb#8
 ActionView::Template::Inline::Finalizer = T.let(T.unsafe(nil), Proc)
 
-# source://actionview//lib/action_view/template.rb#277
-ActionView::Template::LEADING_ENCODING_REGEXP = T.let(T.unsafe(nil), Regexp)
-
-# source://actionview//lib/action_view/template.rb#184
-ActionView::Template::NONE = T.let(T.unsafe(nil), Object)
-
-# = Action View RawFile Template
-#
 # source://actionview//lib/action_view/template/raw_file.rb#6
 class ActionView::Template::RawFile
   # @return [RawFile] a new instance of RawFile
@@ -15127,8 +14546,6 @@ class ActionView::Template::RawFile
   def type=(_arg0); end
 end
 
-# = Action View Renderable Template for objects that respond to #render_in
-#
 # source://actionview//lib/action_view/template/renderable.rb#6
 class ActionView::Template::Renderable
   # @return [Renderable] a new instance of Renderable
@@ -15144,57 +14561,6 @@ class ActionView::Template::Renderable
 
   # source://actionview//lib/action_view/template/renderable.rb#15
   def render(context, *args); end
-end
-
-# source://actionview//lib/action_view/template.rb#11
-ActionView::Template::STRICT_LOCALS_REGEX = T.let(T.unsafe(nil), Regexp)
-
-# SimpleType is mostly just a stub implementation for when Action View
-# is used without Action Dispatch.
-#
-# source://actionview//lib/action_view/template/types.rb#9
-class ActionView::Template::SimpleType
-  # @return [SimpleType] a new instance of SimpleType
-  #
-  # source://actionview//lib/action_view/template/types.rb#29
-  def initialize(symbol); end
-
-  # source://actionview//lib/action_view/template/types.rb#43
-  def ==(type); end
-
-  # source://actionview//lib/action_view/template/types.rb#38
-  def ref; end
-
-  # Returns the value of attribute symbol.
-  #
-  # source://actionview//lib/action_view/template/types.rb#27
-  def symbol; end
-
-  # source://actionview//lib/action_view/template/types.rb#33
-  def to_s; end
-
-  # source://actionview//lib/action_view/template/types.rb#33
-  def to_str; end
-
-  # source://actionview//lib/action_view/template/types.rb#38
-  def to_sym; end
-
-  class << self
-    # source://actionview//lib/action_view/template/types.rb#14
-    def [](type); end
-
-    # Returns the value of attribute symbols.
-    #
-    # source://actionview//lib/action_view/template/types.rb#12
-    def symbols; end
-
-    # :nodoc
-    #
-    # @return [Boolean]
-    #
-    # source://actionview//lib/action_view/template/types.rb#22
-    def valid_symbols?(symbols); end
-  end
 end
 
 # source://actionview//lib/action_view/template/sources.rb#5
@@ -15213,8 +14579,6 @@ class ActionView::Template::Sources::File
   def to_s; end
 end
 
-# = Action View Text Template
-#
 # source://actionview//lib/action_view/template/text.rb#6
 class ActionView::Template::Text
   # @return [Text] a new instance of Text
@@ -15244,8 +14608,67 @@ class ActionView::Template::Text
   def type=(_arg0); end
 end
 
-# source://actionview//lib/action_view/template.rb#176
-ActionView::Template::Types = Mime
+# source://actionview//lib/action_view/template/types.rb#7
+module ActionView::Template::Types
+  class << self
+    # source://actionview//lib/action_view/template/types.rb#47
+    def [](type); end
+
+    # source://actionview//lib/action_view/template/types.rb#43
+    def delegate_to(klass); end
+
+    # source://actionview//lib/action_view/template/types.rb#51
+    def symbols; end
+
+    # Returns the value of attribute type_klass.
+    #
+    # source://actionview//lib/action_view/template/types.rb#41
+    def type_klass; end
+
+    # Sets the attribute type_klass
+    #
+    # @param value the value to set the attribute type_klass to.
+    #
+    # source://actionview//lib/action_view/template/types.rb#41
+    def type_klass=(_arg0); end
+  end
+end
+
+# source://actionview//lib/action_view/template/types.rb#8
+class ActionView::Template::Types::Type
+  # @return [Type] a new instance of Type
+  #
+  # source://actionview//lib/action_view/template/types.rb#21
+  def initialize(symbol); end
+
+  # source://actionview//lib/action_view/template/types.rb#35
+  def ==(type); end
+
+  # source://actionview//lib/action_view/template/types.rb#30
+  def ref; end
+
+  # Returns the value of attribute symbol.
+  #
+  # source://actionview//lib/action_view/template/types.rb#19
+  def symbol; end
+
+  # source://actionview//lib/action_view/template/types.rb#25
+  def to_s; end
+
+  # source://actionview//lib/action_view/template/types.rb#25
+  def to_str; end
+
+  # source://actionview//lib/action_view/template/types.rb#30
+  def to_sym; end
+
+  class << self
+    # source://actionview//lib/action_view/template/types.rb#11
+    def [](type); end
+  end
+end
+
+# source://actionview//lib/action_view/template/types.rb#9
+ActionView::Template::Types::Type::SET = T.let(T.unsafe(nil), T.untyped)
 
 # source://actionview//lib/action_view/template_details.rb#4
 class ActionView::TemplateDetails
@@ -15345,91 +14768,89 @@ end
 # source://actionview//lib/action_view/template_details.rb#9
 ActionView::TemplateDetails::Requested::ANY_HASH = T.let(T.unsafe(nil), Hash)
 
-# source://actionview//lib/action_view/template/error.rb#243
+# source://actionview//lib/action_view/template/error.rb#230
 ActionView::TemplateError = ActionView::Template::Error
 
-# = Action View \TemplatePath
-#
 # Represents a template path within ActionView's lookup and rendering system,
 # like "users/show"
 #
 # TemplatePath makes it convenient to convert between separate name, prefix,
 # partial arguments and the virtual path.
 #
-# source://actionview//lib/action_view/template_path.rb#11
+# source://actionview//lib/action_view/template_path.rb#9
 class ActionView::TemplatePath
   # @return [TemplatePath] a new instance of TemplatePath
   #
-  # source://actionview//lib/action_view/template_path.rb#47
+  # source://actionview//lib/action_view/template_path.rb#45
   def initialize(name, prefix, partial, virtual); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template_path.rb#61
+  # source://actionview//lib/action_view/template_path.rb#59
   def ==(other); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/template_path.rb#61
+  # source://actionview//lib/action_view/template_path.rb#59
   def eql?(other); end
 
-  # source://actionview//lib/action_view/template_path.rb#57
+  # source://actionview//lib/action_view/template_path.rb#55
   def hash; end
 
   # Returns the value of attribute name.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def name; end
 
   # Returns the value of attribute partial.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def partial; end
 
   # Returns the value of attribute partial.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def partial?; end
 
   # Returns the value of attribute prefix.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def prefix; end
 
   # Returns the value of attribute virtual.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def to_s; end
 
   # Returns the value of attribute virtual.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def to_str; end
 
   # Returns the value of attribute virtual.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def virtual; end
 
   # Returns the value of attribute virtual.
   #
-  # source://actionview//lib/action_view/template_path.rb#12
+  # source://actionview//lib/action_view/template_path.rb#10
   def virtual_path; end
 
   class << self
     # Convert name, prefix, and partial into a TemplatePath
     #
-    # source://actionview//lib/action_view/template_path.rb#43
+    # source://actionview//lib/action_view/template_path.rb#41
     def build(name, prefix, partial); end
 
     # Build a TemplatePath form a virtual path
     #
-    # source://actionview//lib/action_view/template_path.rb#28
+    # source://actionview//lib/action_view/template_path.rb#26
     def parse(virtual); end
 
     # Convert name, prefix, and partial into a virtual path string
     #
-    # source://actionview//lib/action_view/template_path.rb#17
+    # source://actionview//lib/action_view/template_path.rb#15
     def virtual(name, prefix, partial); end
   end
 end
@@ -15450,7 +14871,7 @@ class ActionView::TemplateRenderer < ::ActionView::AbstractRenderer
   # context object. If no layout is found, it checks if at least a layout with
   # the given name exists across all details before raising the error.
   #
-  # source://actionview//lib/action_view/renderer/template_renderer.rb#88
+  # source://actionview//lib/action_view/renderer/template_renderer.rb#87
   def find_layout(layout, keys, formats); end
 
   # Renders the given template. A string representing the layout can be
@@ -15459,29 +14880,17 @@ class ActionView::TemplateRenderer < ::ActionView::AbstractRenderer
   # source://actionview//lib/action_view/renderer/template_renderer.rb#58
   def render_template(view, template, layout_name, locals); end
 
-  # source://actionview//lib/action_view/renderer/template_renderer.rb#71
+  # source://actionview//lib/action_view/renderer/template_renderer.rb#70
   def render_with_layout(view, template, path, locals); end
 
-  # source://actionview//lib/action_view/renderer/template_renderer.rb#92
+  # source://actionview//lib/action_view/renderer/template_renderer.rb#91
   def resolve_layout(layout, keys, formats); end
 end
 
 # = Action View Test Case
 #
-# Read more about <tt>ActionView::TestCase</tt> in {Testing Rails Applications}[https://guides.rubyonrails.org/testing.html#testing-view-partials]
-# in the guides.
-#
-# source://actionview//lib/action_view/test_case.rb#15
+# source://actionview//lib/action_view/test_case.rb#12
 class ActionView::TestCase < ::ActiveSupport::TestCase
-  include ::ActionDispatch::Assertions::RoutingAssertions
-  include ::ActionDispatch::Assertions::ResponseAssertions
-  include ::ActionDispatch::TestProcess::FixtureFile
-  include ::ActionDispatch::TestProcess
-  include ::Rails::Dom::Testing::Assertions::DomAssertions
-  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
-  include ::Rails::Dom::Testing::Assertions
-  include ::ActionDispatch::Assertions
-  include ::ActiveSupport::Deprecation::DeprecatedConstantAccessor
   include ::AbstractController::Helpers
   include ::ActiveSupport::Benchmarkable
   include ::ActionView::Helpers::ActiveModelHelper
@@ -15489,12 +14898,11 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   include ::ActionView::Helpers::CaptureHelper
   include ::ActionView::Helpers::OutputSafetyHelper
   include ::ActionView::Helpers::TagHelper
+  include ::ActionView::Helpers::UrlHelper
+  include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::AssetTagHelper
   include ::ActionView::Helpers::AtomFeedHelper
   include ::ActionView::Helpers::CacheHelper
-  include ::ActionView::Helpers::ContentExfiltrationPreventionHelper
-  include ::ActionView::Helpers::UrlHelper
-  include ::ActionView::Helpers::SanitizeHelper
   include ::ActionView::Helpers::ControllerHelper
   include ::ActionView::Helpers::CspHelper
   include ::ActionView::Helpers::CsrfHelper
@@ -15502,6 +14910,14 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   include ::ActionView::Helpers::DebugHelper
   include ::ActionView::Helpers::TextHelper
   include ::ActionView::Helpers::FormTagHelper
+  include ::ActionDispatch::TestProcess::FixtureFile
+  include ::ActionDispatch::TestProcess
+  include ::ActionDispatch::Assertions::ResponseAssertions
+  include ::ActionDispatch::Assertions::RoutingAssertions
+  include ::Rails::Dom::Testing::Assertions::DomAssertions
+  include ::Rails::Dom::Testing::Assertions::SelectorAssertions
+  include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions
   include ::ActionController::TemplateAssertions
   include ::ActionView::Context
   include ::ActionDispatch::Routing::PolymorphicRoutes
@@ -15518,21 +14934,19 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   include ::ActionDispatch::Routing::UrlFor
   include ::ActionView::RoutingUrlFor
   include ::ActionView::TestCase::Behavior
-  extend ::ActionDispatch::Assertions::RoutingAssertions::ClassMethods
-  extend ::AbstractController::Helpers::Resolution
   extend ::AbstractController::Helpers::ClassMethods
   extend ::ActionView::Helpers::UrlHelper::ClassMethods
   extend ::ActionView::Helpers::SanitizeHelper::ClassMethods
   extend ::ActiveSupport::Testing::ConstantLookup::ClassMethods
   extend ::ActionView::TestCase::Behavior::ClassMethods
 
-  # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+  # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
   def _helper_methods; end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+  # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
   def _helper_methods=(_arg0); end
 
-  # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+  # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
   def _helper_methods?; end
 
   # source://actionview//lib/action_view/helpers/translation_helper.rb#18
@@ -15542,29 +14956,20 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   def debug_missing_translation=(val); end
 
   class << self
-    # source://activesupport/7.1.0/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
     def _helper_methods; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
     def _helper_methods=(value); end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#12
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#11
     def _helper_methods?; end
 
-    # source://actionpack/7.1.0/lib/abstract_controller/helpers.rb#16
+    # source://actionpack/7.0.8/lib/abstract_controller/helpers.rb#15
     def _helpers; end
-
-    # source://actionview//lib/action_view/test_case.rb#199
-    def content_class; end
-
-    # source://actionview//lib/action_view/test_case.rb#199
-    def content_class=(value); end
-
-    # source://actionview//lib/action_view/test_case.rb#199
-    def content_class?; end
 
     # source://actionview//lib/action_view/helpers/translation_helper.rb#18
     def debug_missing_translation; end
@@ -15574,13 +14979,16 @@ class ActionView::TestCase < ::ActiveSupport::TestCase
   end
 end
 
-# source://actionview//lib/action_view/test_case.rb#45
+# source://actionview//lib/action_view/test_case.rb#42
 module ActionView::TestCase::Behavior
   include ::ActionDispatch::TestProcess::FixtureFile
   include ::ActionDispatch::TestProcess
+  include ::ActionDispatch::Assertions::ResponseAssertions
+  include ::ActionDispatch::Assertions::RoutingAssertions
   include ::Rails::Dom::Testing::Assertions::DomAssertions
   include ::Rails::Dom::Testing::Assertions::SelectorAssertions
   include ::Rails::Dom::Testing::Assertions
+  include ::ActionDispatch::Assertions
   include ::ActionController::TemplateAssertions
   include ::ActionView::Context
   include ::ActionDispatch::Routing::PolymorphicRoutes
@@ -15590,8 +14998,6 @@ module ActionView::TestCase::Behavior
   include ::ActionView::RoutingUrlFor
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
-  include ::ActionDispatch::Assertions::RoutingAssertions
-  include ::ActionDispatch::Assertions
   include ::AbstractController::Helpers
   include ::ActionView::Helpers::UrlHelper
   include ::ActionView::Helpers::SanitizeHelper
@@ -15603,144 +15009,104 @@ module ActionView::TestCase::Behavior
   include ::ActiveSupport::Testing::ConstantLookup
 
   mixes_in_class_methods GeneratedClassMethods
-  mixes_in_class_methods ::ActionDispatch::Assertions::RoutingAssertions::ClassMethods
   mixes_in_class_methods ::AbstractController::Helpers::ClassMethods
   mixes_in_class_methods ::ActionView::Helpers::UrlHelper::ClassMethods
   mixes_in_class_methods ::ActionView::Helpers::SanitizeHelper::ClassMethods
   mixes_in_class_methods ::ActiveSupport::Testing::ConstantLookup::ClassMethods
   mixes_in_class_methods ::ActionView::TestCase::Behavior::ClassMethods
 
-  # source://actionview//lib/action_view/test_case.rb#296
+  # source://actionview//lib/action_view/test_case.rb#136
   def _routes; end
 
-  # source://actionview//lib/action_view/test_case.rb#231
+  # source://actionview//lib/action_view/test_case.rb#122
   def config; end
 
   # Returns the value of attribute controller.
   #
-  # source://actionview//lib/action_view/test_case.rb#63
+  # source://actionview//lib/action_view/test_case.rb#60
   def controller; end
 
   # Sets the attribute controller
   #
   # @param value the value to set the attribute controller to.
   #
-  # source://actionview//lib/action_view/test_case.rb#63
+  # source://actionview//lib/action_view/test_case.rb#60
   def controller=(_arg0); end
 
-  # source://actionview//lib/action_view/test_case.rb#62
+  # source://actionview//lib/action_view/test_case.rb#59
   def lookup_context(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute output_buffer.
   #
-  # source://actionview//lib/action_view/test_case.rb#63
+  # source://actionview//lib/action_view/test_case.rb#60
   def output_buffer; end
 
   # Sets the attribute output_buffer
   #
   # @param value the value to set the attribute output_buffer to.
   #
-  # source://actionview//lib/action_view/test_case.rb#63
+  # source://actionview//lib/action_view/test_case.rb#60
   def output_buffer=(_arg0); end
 
-  # source://actionview//lib/action_view/test_case.rb#235
+  # source://actionview//lib/action_view/test_case.rb#126
   def render(options = T.unsafe(nil), local_assigns = T.unsafe(nil), &block); end
 
-  # Returns the content rendered by the last +render+ call.
+  # Returns the value of attribute rendered.
   #
-  # The returned object behaves like a string but also exposes a number of methods
-  # that allows you to parse the content string in formats registered using
-  # <tt>.register_parser</tt>.
-  #
-  # By default includes the following parsers:
-  #
-  # +.html+
-  #
-  # Parse the <tt>rendered</tt> content String into HTML. By default, this means
-  # a <tt>Nokogiri::XML::Node</tt>.
-  #
-  #   test "renders HTML" do
-  #     article = Article.create!(title: "Hello, world")
-  #
-  #     render partial: "articles/article", locals: { article: article }
-  #
-  #     assert_pattern { rendered.html.at("main h1") => { content: "Hello, world" } }
-  #   end
-  #
-  # To parse the rendered content into a <tt>Capybara::Simple::Node</tt>,
-  # re-register an <tt>:html</tt> parser with a call to
-  # <tt>Capybara.string</tt>:
-  #
-  #   register_parser :html, -> rendered { Capybara.string(rendered) }
-  #
-  #   test "renders HTML" do
-  #     article = Article.create!(title: "Hello, world")
-  #
-  #     render partial: article
-  #
-  #     rendered.html.assert_css "h1", text: "Hello, world"
-  #   end
-  #
-  # +.json+
-  #
-  # Parse the <tt>rendered</tt> content String into JSON. By default, this means
-  # a <tt>ActiveSupport::HashWithIndifferentAccess</tt>.
-  #
-  #   test "renders JSON" do
-  #     article = Article.create!(title: "Hello, world")
-  #
-  #     render formats: :json, partial: "articles/article", locals: { article: article }
-  #
-  #     assert_pattern { rendered.json => { title: "Hello, world" } }
-  #   end
-  #
-  # source://actionview//lib/action_view/test_case.rb#292
+  # source://actionview//lib/action_view/test_case.rb#60
   def rendered; end
 
-  # source://actionview//lib/action_view/test_case.rb#241
+  # Sets the attribute rendered
+  #
+  # @param value the value to set the attribute rendered to.
+  #
+  # source://actionview//lib/action_view/test_case.rb#60
+  def rendered=(_arg0); end
+
+  # source://actionview//lib/action_view/test_case.rb#132
   def rendered_views; end
 
   # Returns the value of attribute request.
   #
-  # source://actionview//lib/action_view/test_case.rb#63
+  # source://actionview//lib/action_view/test_case.rb#60
   def request; end
 
   # Sets the attribute request
   #
   # @param value the value to set the attribute request to.
   #
-  # source://actionview//lib/action_view/test_case.rb#63
+  # source://actionview//lib/action_view/test_case.rb#60
   def request=(_arg0); end
 
-  # source://actionview//lib/action_view/test_case.rb#219
+  # source://actionview//lib/action_view/test_case.rb#108
   def setup_with_controller; end
 
   private
 
-  # source://actionview//lib/action_view/test_case.rb#403
+  # source://actionview//lib/action_view/test_case.rb#251
   def _user_defined_ivars; end
 
   # The instance of ActionView::Base that is used by +render+.
   #
-  # source://actionview//lib/action_view/test_case.rb#355
+  # source://actionview//lib/action_view/test_case.rb#207
   def _view; end
 
   # Need to experiment if this priority is the best one: rendered => output_buffer
   #
-  # source://actionview//lib/action_view/test_case.rb#331
+  # source://actionview//lib/action_view/test_case.rb#183
   def document_root_element; end
 
-  # source://actionview//lib/action_view/test_case.rb#417
-  def method_missing(selector, *args, **_arg2); end
+  # source://actionview//lib/action_view/test_case.rb#265
+  def method_missing(selector, *args); end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/test_case.rb#434
+  # source://actionview//lib/action_view/test_case.rb#281
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 
   # The instance of ActionView::Base that is used by +render+.
   #
-  # source://actionview//lib/action_view/test_case.rb#355
+  # source://actionview//lib/action_view/test_case.rb#207
   def view; end
 
   # Returns a Hash of instance variables and their values, as defined by
@@ -15748,16 +15114,13 @@ module ActionView::TestCase::Behavior
   # rendered. This is generally intended for internal use and extension
   # frameworks.
   #
-  # source://actionview//lib/action_view/test_case.rb#411
+  # source://actionview//lib/action_view/test_case.rb#259
   def view_assigns; end
 
   module GeneratedClassMethods
     def _helper_methods; end
     def _helper_methods=(value); end
     def _helper_methods?; end
-    def content_class; end
-    def content_class=(value); end
-    def content_class?; end
   end
 
   module GeneratedInstanceMethods
@@ -15767,243 +15130,159 @@ module ActionView::TestCase::Behavior
   end
 end
 
-# source://actionview//lib/action_view/test_case.rb#65
+# source://actionview//lib/action_view/test_case.rb#62
 module ActionView::TestCase::Behavior::ClassMethods
-  # source://actionview//lib/action_view/test_case.rb#162
+  # source://actionview//lib/action_view/test_case.rb#72
   def determine_default_helper_class(name); end
 
-  # source://actionview//lib/action_view/test_case.rb#182
+  # source://actionview//lib/action_view/test_case.rb#92
   def helper_class; end
 
   # Sets the attribute helper_class
   #
   # @param value the value to set the attribute helper_class to.
   #
-  # source://actionview//lib/action_view/test_case.rb#180
+  # source://actionview//lib/action_view/test_case.rb#90
   def helper_class=(_arg0); end
 
-  # source://actionview//lib/action_view/test_case.rb#168
+  # source://actionview//lib/action_view/test_case.rb#78
   def helper_method(*methods); end
 
-  # source://actionview//lib/action_view/test_case.rb#66
-  def inherited(descendant); end
-
-  # source://actionview//lib/action_view/test_case.rb#186
+  # source://actionview//lib/action_view/test_case.rb#96
   def new(*_arg0); end
 
-  # Register a callable to parse rendered content for a given template
-  # format.
-  #
-  # Each registered parser will also define a +#rendered.[FORMAT]+ helper
-  # method, where +[FORMAT]+ corresponds to the value of the
-  # +format+ argument.
-  #
-  # === Arguments
-  #
-  # <tt>format</tt> - Symbol the name of the format used to render view's content
-  # <tt>callable</tt> - Callable to parse the String. Accepts the String.
-  #                     value as its only argument.
-  # <tt>block</tt> - Block serves as the parser when the
-  #                  <tt>callable</tt> is omitted.
-  #
-  # By default, ActionView::TestCase defines a parser for:
-  #
-  #   * :html - returns an instance of Nokogiri::XML::Node
-  #   * :json - returns an instance of ActiveSupport::HashWithIndifferentAccess
-  #
-  # Each pre-registered parser also defines a corresponding helper:
-  #
-  #   * :html - defines `rendered.html`
-  #   * :json - defines `rendered.json`
-  #
-  # === Examples
-  #
-  #   test "renders HTML" do
-  #     article = Article.create!(title: "Hello, world")
-  #
-  #     render partial: "articles/article", locals: { article: article }
-  #
-  #     assert_pattern { rendered.html.at("main h1") => { content: "Hello, world" } }
-  #   end
-  #
-  #   test "renders JSON" do
-  #     article = Article.create!(title: "Hello, world")
-  #
-  #     render formats: :json, partial: "articles/article", locals: { article: article }
-  #
-  #     assert_pattern { rendered.json => { title: "Hello, world" } }
-  #   end
-  #
-  # To parse the rendered content into RSS, register a call to <tt>RSS::Parser.parse</tt>:
-  #
-  #   register_parser :rss, -> rendered { RSS::Parser.parse(rendered) }
-  #
-  #   test "renders RSS" do
-  #     article = Article.create!(title: "Hello, world")
-  #
-  #     render formats: :rss, partial: article
-  #
-  #     assert_equal "Hello, world", rendered.rss.items.last.title
-  #   end
-  #
-  # To parse the rendered content into a Capybara::Simple::Node,
-  # re-register an <tt>:html</tt> parser with a call to
-  # <tt>Capybara.string</tt>:
-  #
-  #   register_parser :html, -> rendered { Capybara.string(rendered) }
-  #
-  #   test "renders HTML" do
-  #     article = Article.create!(title: "Hello, world")
-  #
-  #     render partial: article
-  #
-  #     rendered.html.assert_css "h1", text: "Hello, world"
-  #   end
-  #
-  # source://actionview//lib/action_view/test_case.rb#146
-  def register_parser(format, callable = T.unsafe(nil), &block); end
-
-  # source://actionview//lib/action_view/test_case.rb#153
+  # source://actionview//lib/action_view/test_case.rb#63
   def tests(helper_class); end
 
   private
 
-  # source://actionview//lib/action_view/test_case.rb#192
+  # source://actionview//lib/action_view/test_case.rb#102
   def include_helper_modules!; end
 end
 
-# source://actionview//lib/action_view/test_case.rb#300
-class ActionView::TestCase::Behavior::Content < ::SimpleDelegator
-  # source://actionview//lib/action_view/test_case.rb#148
-  def html; end
-
-  # source://actionview//lib/action_view/test_case.rb#148
-  def json; end
-end
-
-# source://actionview//lib/action_view/test_case.rb#368
+# source://actionview//lib/action_view/test_case.rb#220
 ActionView::TestCase::Behavior::INTERNAL_IVARS = T.let(T.unsafe(nil), Array)
 
-# source://actionview//lib/action_view/test_case.rb#335
+# source://actionview//lib/action_view/test_case.rb#187
 module ActionView::TestCase::Behavior::Locals
-  # source://actionview//lib/action_view/test_case.rb#338
+  # source://actionview//lib/action_view/test_case.rb#190
   def render(options = T.unsafe(nil), local_assigns = T.unsafe(nil)); end
 
   # Returns the value of attribute rendered_views.
   #
-  # source://actionview//lib/action_view/test_case.rb#336
+  # source://actionview//lib/action_view/test_case.rb#188
   def rendered_views; end
 
   # Sets the attribute rendered_views
   #
   # @param value the value to set the attribute rendered_views to.
   #
-  # source://actionview//lib/action_view/test_case.rb#336
+  # source://actionview//lib/action_view/test_case.rb#188
   def rendered_views=(_arg0); end
 end
 
 # Need to experiment if this priority is the best one: rendered => output_buffer
 #
-# source://actionview//lib/action_view/test_case.rb#304
+# source://actionview//lib/action_view/test_case.rb#141
 class ActionView::TestCase::Behavior::RenderedViewsCollection
   # @return [RenderedViewsCollection] a new instance of RenderedViewsCollection
   #
-  # source://actionview//lib/action_view/test_case.rb#305
+  # source://actionview//lib/action_view/test_case.rb#142
   def initialize; end
 
-  # source://actionview//lib/action_view/test_case.rb#309
+  # source://actionview//lib/action_view/test_case.rb#146
   def add(view, locals); end
 
-  # source://actionview//lib/action_view/test_case.rb#314
+  # source://actionview//lib/action_view/test_case.rb#151
   def locals_for(view); end
 
-  # source://actionview//lib/action_view/test_case.rb#318
+  # source://actionview//lib/action_view/test_case.rb#155
   def rendered_views; end
 
   # @return [Boolean]
   #
-  # source://actionview//lib/action_view/test_case.rb#322
+  # source://actionview//lib/action_view/test_case.rb#159
   def view_rendered?(view, expected_locals); end
 end
 
 # source://actionview//lib/action_view/test_case.rb#0
 module ActionView::TestCase::HelperMethods
-  # source://actionview//lib/action_view/test_case.rb#213
+  # source://actionview//lib/action_view/test_case.rb#175
   def _test_case; end
 
-  # source://actionview//lib/action_view/test_case.rb#209
+  # source://actionview//lib/action_view/test_case.rb#171
   def protect_against_forgery?; end
 end
 
-# source://actionview//lib/action_view/test_case.rb#16
+# source://actionview//lib/action_view/test_case.rb#13
 class ActionView::TestCase::TestController < ::ActionController::Base
   include ::ActionDispatch::TestProcess::FixtureFile
   include ::ActionDispatch::TestProcess
 
   # @return [TestController] a new instance of TestController
   #
-  # source://actionview//lib/action_view/test_case.rb#34
+  # source://actionview//lib/action_view/test_case.rb#31
   def initialize; end
 
-  # source://actionview//lib/action_view/test_case.rb#26
+  # source://actionview//lib/action_view/test_case.rb#23
   def controller_path=(path); end
 
   # Returns the value of attribute params.
   #
-  # source://actionview//lib/action_view/test_case.rb#19
+  # source://actionview//lib/action_view/test_case.rb#16
   def params; end
 
   # Sets the attribute params
   #
   # @param value the value to set the attribute params to.
   #
-  # source://actionview//lib/action_view/test_case.rb#19
+  # source://actionview//lib/action_view/test_case.rb#16
   def params=(_arg0); end
 
   # Returns the value of attribute request.
   #
-  # source://actionview//lib/action_view/test_case.rb#19
+  # source://actionview//lib/action_view/test_case.rb#16
   def request; end
 
   # Sets the attribute request
   #
   # @param value the value to set the attribute request to.
   #
-  # source://actionview//lib/action_view/test_case.rb#19
+  # source://actionview//lib/action_view/test_case.rb#16
   def request=(_arg0); end
 
   # Returns the value of attribute response.
   #
-  # source://actionview//lib/action_view/test_case.rb#19
+  # source://actionview//lib/action_view/test_case.rb#16
   def response; end
 
   # Sets the attribute response
   #
   # @param value the value to set the attribute response to.
   #
-  # source://actionview//lib/action_view/test_case.rb#19
+  # source://actionview//lib/action_view/test_case.rb#16
   def response=(_arg0); end
 
   private
 
-  # source://actionview//lib/action_view/layouts.rb#330
+  # source://actionview//lib/action_view/layouts.rb#328
   def _layout(lookup_context, formats); end
 
   class << self
-    # source://actionview//lib/action_view/test_case.rb#30
+    # source://actionview//lib/action_view/test_case.rb#27
     def controller_name; end
 
     # Overrides AbstractController::Base#controller_path
     #
-    # source://actionview//lib/action_view/test_case.rb#23
+    # source://actionview//lib/action_view/test_case.rb#20
     def controller_path; end
 
     # Overrides AbstractController::Base#controller_path
     #
-    # source://actionview//lib/action_view/test_case.rb#23
+    # source://actionview//lib/action_view/test_case.rb#20
     def controller_path=(_arg0); end
 
-    # source://actionpack/7.1.0/lib/action_controller/metal.rb#262
+    # source://actionpack/7.0.8/lib/action_controller/metal.rb#210
     def middleware_stack; end
   end
 end
@@ -16017,9 +15296,6 @@ class ActionView::UnboundTemplate
 
   # source://actionview//lib/action_view/unbound_template.rb#20
   def bind_locals(locals); end
-
-  # source://actionview//lib/action_view/unbound_template.rb#44
-  def built_templates; end
 
   # Returns the value of attribute details.
   #
@@ -16045,10 +15321,10 @@ class ActionView::UnboundTemplate
 
   private
 
-  # source://actionview//lib/action_view/unbound_template.rb#49
+  # source://actionview//lib/action_view/unbound_template.rb#39
   def build_template(locals); end
 
-  # source://actionview//lib/action_view/unbound_template.rb#63
+  # source://actionview//lib/action_view/unbound_template.rb#53
   def normalize_locals(locals); end
 end
 
@@ -16078,7 +15354,7 @@ module ActionView::ViewPaths
 
   # The prefixes used in render "foo" shortcuts.
   #
-  # source://actionview//lib/action_view/view_paths.rb#81
+  # source://actionview//lib/action_view/view_paths.rb#90
   def _prefixes; end
 
   # source://actionview//lib/action_view/view_paths.rb#11
@@ -16091,10 +15367,10 @@ module ActionView::ViewPaths
   #   the default view path. You may also provide a custom view path
   #   (see ActionView::PathSet for more information)
   #
-  # source://actionview//lib/action_view/view_paths.rb#103
+  # source://actionview//lib/action_view/view_paths.rb#112
   def append_view_path(path); end
 
-  # source://actionview//lib/action_view/view_paths.rb#93
+  # source://actionview//lib/action_view/view_paths.rb#102
   def details_for_lookup; end
 
   # source://actionview//lib/action_view/view_paths.rb#11
@@ -16113,7 +15389,7 @@ module ActionView::ViewPaths
   # information required for looking up templates, i.e. view paths and
   # details. Check ActionView::LookupContext for more information.
   #
-  # source://actionview//lib/action_view/view_paths.rb#88
+  # source://actionview//lib/action_view/view_paths.rb#97
   def lookup_context; end
 
   # Prepend a path to the list of view paths for the current LookupContext.
@@ -16123,7 +15399,7 @@ module ActionView::ViewPaths
   #   the default view path. You may also provide a custom view path
   #   (see ActionView::PathSet for more information)
   #
-  # source://actionview//lib/action_view/view_paths.rb#113
+  # source://actionview//lib/action_view/view_paths.rb#122
   def prepend_view_path(path); end
 
   # source://actionview//lib/action_view/view_paths.rb#11
@@ -16131,13 +15407,21 @@ module ActionView::ViewPaths
 
   # source://actionview//lib/action_view/view_paths.rb#11
   def view_paths(*_arg0, **_arg1, &_arg2); end
+
+  class << self
+    # source://actionview//lib/action_view/view_paths.rb#84
+    def all_view_paths; end
+
+    # source://actionview//lib/action_view/view_paths.rb#76
+    def get_view_paths(klass); end
+
+    # source://actionview//lib/action_view/view_paths.rb#80
+    def set_view_paths(klass, paths); end
+  end
 end
 
 # source://actionview//lib/action_view/view_paths.rb#14
 module ActionView::ViewPaths::ClassMethods
-  # source://actionview//lib/action_view/view_paths.rb#31
-  def _build_view_paths(paths); end
-
   # source://actionview//lib/action_view/view_paths.rb#23
   def _prefixes; end
 
@@ -16154,7 +15438,7 @@ module ActionView::ViewPaths::ClassMethods
   #   the default view path. You may also provide a custom view path
   #   (see ActionView::PathSet for more information)
   #
-  # source://actionview//lib/action_view/view_paths.rb#44
+  # source://actionview//lib/action_view/view_paths.rb#37
   def append_view_path(path); end
 
   # Prepend a path to the list of view paths for this controller.
@@ -16164,12 +15448,12 @@ module ActionView::ViewPaths::ClassMethods
   #   the default view path. You may also provide a custom view path
   #   (see ActionView::PathSet for more information)
   #
-  # source://actionview//lib/action_view/view_paths.rb#54
+  # source://actionview//lib/action_view/view_paths.rb#47
   def prepend_view_path(path); end
 
   # A list of all of the default view paths for this controller.
   #
-  # source://actionview//lib/action_view/view_paths.rb#59
+  # source://actionview//lib/action_view/view_paths.rb#52
   def view_paths; end
 
   # Set the view paths.
@@ -16178,7 +15462,7 @@ module ActionView::ViewPaths::ClassMethods
   # * <tt>paths</tt> - If a PathSet is provided, use that;
   #   otherwise, process the parameter into a PathSet.
   #
-  # source://actionview//lib/action_view/view_paths.rb#68
+  # source://actionview//lib/action_view/view_paths.rb#61
   def view_paths=(paths); end
 
   private
@@ -16186,17 +15470,17 @@ module ActionView::ViewPaths::ClassMethods
   # Override this method in your controller if you want to change paths prefixes for finding views.
   # Prefixes defined here will still be added to parents' <tt>._prefixes</tt>.
   #
-  # source://actionview//lib/action_view/view_paths.rb#75
+  # source://actionview//lib/action_view/view_paths.rb#68
   def local_prefixes; end
 end
 
-# source://actionview//lib/action_view/template/error.rb#14
+# source://actionview//lib/action_view/template/error.rb#13
 class ActionView::WrongEncodingError < ::ActionView::EncodingError
   # @return [WrongEncodingError] a new instance of WrongEncodingError
   #
-  # source://actionview//lib/action_view/template/error.rb#15
+  # source://actionview//lib/action_view/template/error.rb#14
   def initialize(string, encoding); end
 
-  # source://actionview//lib/action_view/template/error.rb#19
+  # source://actionview//lib/action_view/template/error.rb#18
   def message; end
 end
