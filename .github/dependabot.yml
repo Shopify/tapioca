@@ -14,6 +14,8 @@ updates:
         update-types:
           - "minor"
           - "patch"
+        exclude-patterns:
+          - "rails"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
