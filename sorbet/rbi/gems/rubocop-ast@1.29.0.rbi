@@ -5114,13 +5114,13 @@ RuboCop::AST::NodePattern::Sets::SET_ABSTRACT_OVERRIDE_OVERRIDABLE_ETC = T.let(T
 RuboCop::AST::NodePattern::Sets::SET_ADD_DEPENDENCY_ADD_RUNTIME_DEPENDENCY_ADD_DEVELOPMENT_DEPENDENCY = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_ALL_ANY_CLASS_OF_ETC = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ALL_CONTEXT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_AND_RETURN_AND_RAISE_AND_THROW_ETC = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_ANY_ALL_NORETURN_ETC = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ANY_EMPTY = T.let(T.unsafe(nil), Set)
@@ -5228,6 +5228,9 @@ RuboCop::AST::NodePattern::Sets::SET_EXPECT_ALLOW = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_FACTORYGIRL_FACTORYBOT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_FACTORY_TRAIT = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_FILETEST_FILE_DIR_SHELL = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5309,7 +5312,7 @@ RuboCop::AST::NodePattern::Sets::SET_PIPELINE_PIPELINE_R_PIPELINE_RW_ETC = T.let
 RuboCop::AST::NodePattern::Sets::SET_PRESENT_ANY_BLANK_EMPTY = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_PRIVATE_PROTECTED = T.let(T.unsafe(nil), Set)
+RuboCop::AST::NodePattern::Sets::SET_PRIVATE_PROTECTED_PRIVATE_CLASS_METHOD = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_PRIVATE_PROTECTED_PUBLIC = T.let(T.unsafe(nil), Set)
@@ -5372,6 +5375,9 @@ RuboCop::AST::NodePattern::Sets::SET_SEND_PUBLIC_SEND___SEND__ = T.let(T.unsafe(
 RuboCop::AST::NodePattern::Sets::SET_SHOULD_SHOULD_NOT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_SIG_HELPERS = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_SKIP_PENDING = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5390,6 +5396,12 @@ RuboCop::AST::NodePattern::Sets::SET_STATUS_CODE = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_STRUCT_CLASS = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_STRUCT_IMMUTABLESTRUCT = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
+RuboCop::AST::NodePattern::Sets::SET_STRUCT_IMMUTABLESTRUCT_INEXACTSTRUCT = T.let(T.unsafe(nil), Set)
+
+# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_SUCC_PRED_NEXT = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
@@ -5406,9 +5418,6 @@ RuboCop::AST::NodePattern::Sets::SET_TO_TO_NOT_NOT_TO = T.let(T.unsafe(nil), Set
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_TRUE_FALSE = T.let(T.unsafe(nil), Set)
-
-# source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
-RuboCop::AST::NodePattern::Sets::SET_TYPE_TEMPLATE_TYPE_MEMBER = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-ast//lib/rubocop/ast/node_pattern/sets.rb#10
 RuboCop::AST::NodePattern::Sets::SET_ZERO_EMPTY = T.let(T.unsafe(nil), Set)

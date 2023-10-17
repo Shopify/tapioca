@@ -2172,7 +2172,7 @@ Sprockets::EncodingUtils::CHARSET_SIZE = T.let(T.unsafe(nil), Integer)
 # source://sprockets//lib/sprockets/encoding_utils.rb#200
 Sprockets::EncodingUtils::CHARSET_START = T.let(T.unsafe(nil), Array)
 
-# source://sprockets//lib/sprockets/environment.rb#12
+# source://sprockets//lib/sprockets/environment.rb#7
 class Sprockets::Environment < ::Sprockets::Base
   # `Environment` should be initialized with your application's root
   # directory. This should be the same as your Rails or Rack root.

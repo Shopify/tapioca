@@ -144,7 +144,7 @@ class Sidekiq::Client
   #
   # Any options valid for a job class's sidekiq_options are also available here.
   #
-  # All options must be strings, not symbols.  NB: because we are serializing to JSON, all
+  # All keys must be strings, not symbols.  NB: because we are serializing to JSON, all
   # symbols in 'args' will be converted to strings.  Note that +backtrace: true+ can take quite a bit of
   # space in Redis; a large volume of failing jobs can start Redis swapping if you aren't careful.
   #
@@ -171,7 +171,7 @@ class Sidekiq::Client
   # prevented a job push.
   #
   # Example (pushing jobs in batches):
-  #   push_bulk('class' => 'MyJob', 'args' => (1..100_000).to_a, batch_size: 1_000)
+  #   push_bulk('class' => MyJob, 'args' => (1..100_000).to_a, batch_size: 1_000)
   #
   # @raise [ArgumentError]
   #
@@ -192,10 +192,10 @@ class Sidekiq::Client
 
   private
 
-  # source://sidekiq//lib/sidekiq/client.rb#246
+  # source://sidekiq//lib/sidekiq/client.rb#248
   def atomic_push(conn, payloads); end
 
-  # source://sidekiq//lib/sidekiq/client.rb#222
+  # source://sidekiq//lib/sidekiq/client.rb#224
   def raw_push(payloads); end
 
   class << self
@@ -207,31 +207,31 @@ class Sidekiq::Client
     #
     # Messages are enqueued to the 'default' queue.
     #
-    # source://sidekiq//lib/sidekiq/client.rb#187
+    # source://sidekiq//lib/sidekiq/client.rb#189
     def enqueue(klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_in(3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # source://sidekiq//lib/sidekiq/client.rb#215
+    # source://sidekiq//lib/sidekiq/client.rb#217
     def enqueue_in(interval, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to(:queue_name, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # source://sidekiq//lib/sidekiq/client.rb#194
+    # source://sidekiq//lib/sidekiq/client.rb#196
     def enqueue_to(queue, klass, *args); end
 
     # Example usage:
     #   Sidekiq::Client.enqueue_to_in(:queue_name, 3.minutes, MyJob, 'foo', 1, :bat => 'bar')
     #
-    # source://sidekiq//lib/sidekiq/client.rb#201
+    # source://sidekiq//lib/sidekiq/client.rb#203
     def enqueue_to_in(queue, interval, klass, *args); end
 
-    # source://sidekiq//lib/sidekiq/client.rb#171
+    # source://sidekiq//lib/sidekiq/client.rb#173
     def push(item); end
 
-    # source://sidekiq//lib/sidekiq/client.rb#175
+    # source://sidekiq//lib/sidekiq/client.rb#177
     def push_bulk(*_arg0, **_arg1, &_arg2); end
 
     # Allows sharding of jobs across any number of Redis instances.  All jobs
@@ -247,7 +247,7 @@ class Sidekiq::Client
     # thousands of jobs per second.  I do not recommend sharding unless
     # you cannot scale any other way (e.g. splitting your app into smaller apps).
     #
-    # source://sidekiq//lib/sidekiq/client.rb#161
+    # source://sidekiq//lib/sidekiq/client.rb#163
     def via(pool); end
   end
 end
@@ -265,7 +265,7 @@ class Sidekiq::Config
 
   # @return [Config] a new instance of Config
   #
-  # source://sidekiq//lib/sidekiq/config.rb#48
+  # source://sidekiq//lib/sidekiq/config.rb#47
   def initialize(options = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -280,33 +280,33 @@ class Sidekiq::Config
   #
   # See sidekiq/scheduled.rb for an in-depth explanation of this value
   #
-  # source://sidekiq//lib/sidekiq/config.rb#213
+  # source://sidekiq//lib/sidekiq/config.rb#212
   def average_scheduled_poll_interval=(interval); end
 
   # register a new queue processing subsystem
   #
   # @yield [cap]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#112
+  # source://sidekiq//lib/sidekiq/config.rb#111
   def capsule(name); end
 
   # Returns the value of attribute capsules.
   #
-  # source://sidekiq//lib/sidekiq/config.rb#57
+  # source://sidekiq//lib/sidekiq/config.rb#56
   def capsules; end
 
   # @yield [@client_chain]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#95
+  # source://sidekiq//lib/sidekiq/config.rb#94
   def client_middleware; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#69
+  # source://sidekiq//lib/sidekiq/config.rb#68
   def concurrency; end
 
   # LEGACY: edits the default capsule
   # config.concurrency = 5
   #
-  # source://sidekiq//lib/sidekiq/config.rb#65
+  # source://sidekiq//lib/sidekiq/config.rb#64
   def concurrency=(val); end
 
   # Death handlers are called when all retries for a job have been exhausted and
@@ -318,10 +318,10 @@ class Sidekiq::Config
   #   end
   # end
   #
-  # source://sidekiq//lib/sidekiq/config.rb#204
+  # source://sidekiq//lib/sidekiq/config.rb#203
   def death_handlers; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#107
+  # source://sidekiq//lib/sidekiq/config.rb#106
   def default_capsule(&block); end
 
   # Register a proc to handle any error which occurs within the Sidekiq process.
@@ -332,7 +332,7 @@ class Sidekiq::Config
   #
   # The default error handler logs errors to @logger.
   #
-  # source://sidekiq//lib/sidekiq/config.rb#224
+  # source://sidekiq//lib/sidekiq/config.rb#223
   def error_handlers; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -340,7 +340,7 @@ class Sidekiq::Config
 
   # INTERNAL USE ONLY
   #
-  # source://sidekiq//lib/sidekiq/config.rb#263
+  # source://sidekiq//lib/sidekiq/config.rb#267
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -349,21 +349,21 @@ class Sidekiq::Config
   # source://forwardable/1.3.3/forwardable.rb#231
   def key?(*args, **_arg1, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#242
+  # source://sidekiq//lib/sidekiq/config.rb#241
   def logger; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#253
+  # source://sidekiq//lib/sidekiq/config.rb#252
   def logger=(logger); end
 
   # find a singleton
   #
-  # source://sidekiq//lib/sidekiq/config.rb#187
+  # source://sidekiq//lib/sidekiq/config.rb#186
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def merge!(*args, **_arg1, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#137
+  # source://sidekiq//lib/sidekiq/config.rb#136
   def new_redis_pool(size, name = T.unsafe(nil)); end
 
   # Register a block to run at a point in the Sidekiq lifecycle.
@@ -377,10 +377,10 @@ class Sidekiq::Config
   #
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#236
+  # source://sidekiq//lib/sidekiq/config.rb#235
   def on(event, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#91
+  # source://sidekiq//lib/sidekiq/config.rb#90
   def queues; end
 
   # Edit the default capsule.
@@ -394,44 +394,47 @@ class Sidekiq::Config
   # are ridiculous and unnecessarily expensive. You can get random queue ordering
   # by explicitly setting all weights to 1.
   #
-  # source://sidekiq//lib/sidekiq/config.rb#87
+  # source://sidekiq//lib/sidekiq/config.rb#86
   def queues=(val); end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#159
+  # source://sidekiq//lib/sidekiq/config.rb#158
   def redis; end
 
   # All capsules must use the same Redis configuration
   #
-  # source://sidekiq//lib/sidekiq/config.rb#123
+  # source://sidekiq//lib/sidekiq/config.rb#122
   def redis=(hash); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#143
+  # source://sidekiq//lib/sidekiq/config.rb#142
   def redis_info; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#127
+  # source://sidekiq//lib/sidekiq/config.rb#126
   def redis_pool; end
 
   # register global singletons which can be accessed elsewhere
   #
-  # source://sidekiq//lib/sidekiq/config.rb#182
+  # source://sidekiq//lib/sidekiq/config.rb#181
   def register(name, instance); end
 
   # @yield [@server_chain]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#101
+  # source://sidekiq//lib/sidekiq/config.rb#100
   def server_middleware; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#59
+  # source://sidekiq//lib/sidekiq/config.rb#58
   def to_json(*_arg0); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#73
+  # source://sidekiq//lib/sidekiq/config.rb#72
   def total_concurrency; end
 
   private
 
-  # source://sidekiq//lib/sidekiq/config.rb#131
+  # source://sidekiq//lib/sidekiq/config.rb#261
+  def arity(handler); end
+
+  # source://sidekiq//lib/sidekiq/config.rb#130
   def local_redis_pool; end
 end
 
@@ -1084,9 +1087,6 @@ class Sidekiq::Rails::Reloader
 
   # source://sidekiq//lib/sidekiq/rails.rb#20
   def inspect; end
-
-  # source://sidekiq//lib/sidekiq/rails.rb#24
-  def to_json(*_arg0); end
 end
 
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#8
@@ -1159,10 +1159,10 @@ module Sidekiq::RedisConnection
 
     private
 
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#50
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#51
     def determine_redis_provider; end
 
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#29
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#30
     def scrub(options); end
   end
 end

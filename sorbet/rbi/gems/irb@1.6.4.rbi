@@ -2144,7 +2144,7 @@ end
 # object you create, sibling notifiers can be initialized with
 # #def_notifier.
 #
-# source://irb//lib/irb/notifier.rb#116
+# source://irb//lib/irb/notifier.rb#114
 class IRB::Notifier::CompositeNotifier < ::IRB::Notifier::AbstractNotifier
   # Create a new composite notifier object with the given +prefix+, and
   # +base_notifier+ to use for output.
@@ -2279,7 +2279,7 @@ end
 # This notifier is used as the +zero+ index, or level +0+, for
 # CompositeNotifier#notifiers, and will not output messages of any sort.
 #
-# source://irb//lib/irb/notifier.rb#214
+# source://irb//lib/irb/notifier.rb#213
 class IRB::Notifier::NoMsgNotifier < ::IRB::Notifier::LeveledNotifier
   # Creates a new notifier that should not be used to output messages.
   #
@@ -2476,7 +2476,7 @@ IRB::RelineInputMethod::SHOW_DOC_DIALOG = T.let(T.unsafe(nil), Proc)
 # source://irb//lib/irb/input-method.rb#14
 IRB::STDIN_FILE_NAME = T.let(T.unsafe(nil), String)
 
-# source://irb//lib/irb/input-method.rb#58
+# source://irb//lib/irb/input-method.rb#57
 class IRB::StdioInputMethod < ::IRB::InputMethod
   # Creates a new input method object
   #
@@ -2534,7 +2534,7 @@ end
 
 # A standard output printer
 #
-# source://irb//lib/irb/output-method.rb#81
+# source://irb//lib/irb/output-method.rb#79
 class IRB::StdioOutputMethod < ::IRB::OutputMethod
   # Prints the given +opts+ to standard output, see IO#print for more
   # information.
