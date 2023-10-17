@@ -73,20 +73,17 @@ module Tapioca
         sig { returns(T::Class[ActiveRecord::TestFixtures]) }
         def fixture_loader
           @fixture_loader ||= T.let(
-            T.cast(
-              Class.new do
-                T.unsafe(self).include(ActiveRecord::TestFixtures)
+            Class.new do
+              T.unsafe(self).include(ActiveRecord::TestFixtures)
 
-                T.unsafe(self).fixture_path = Rails.root.join("test", "fixtures")
-                # https://github.com/rails/rails/blob/7c70791470fc517deb7c640bead9f1b47efb5539/activerecord/lib/active_record/test_fixtures.rb#L46
-                singleton_class.define_method(:file_fixture_path) do
-                  Rails.root.join("test", "fixtures", "files")
-                end
+              T.unsafe(self).fixture_path = Rails.root.join("test", "fixtures")
+              # https://github.com/rails/rails/blob/7c70791470fc517deb7c640bead9f1b47efb5539/activerecord/lib/active_record/test_fixtures.rb#L46
+              singleton_class.define_method(:file_fixture_path) do
+                Rails.root.join("test", "fixtures", "files")
+              end
 
-                T.unsafe(self).fixtures(:all)
-              end,
-              T::Class[ActiveRecord::TestFixtures],
-            ),
+              T.unsafe(self).fixtures(:all)
+            end,
             T.nilable(T::Class[ActiveRecord::TestFixtures]),
           )
         end
