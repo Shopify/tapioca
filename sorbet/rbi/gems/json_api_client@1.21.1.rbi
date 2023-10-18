@@ -1412,10 +1412,10 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/helpers/associatable.rb#9
   def __cached_associations=(_arg0); end
 
-  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
   def __callbacks; end
 
-  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
   def __callbacks?; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#44
@@ -1424,16 +1424,16 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#44
   def _immutable?; end
 
-  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
   def _run_validate_callbacks(&block); end
 
-  # source://activesupport/7.0.6/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
   def _validate_callbacks; end
 
-  # source://activemodel/7.0.6/lib/active_model/validations.rb#52
+  # source://activemodel/7.0.8/lib/active_model/validations.rb#52
   def _validators; end
 
-  # source://activemodel/7.0.6/lib/active_model/validations.rb#52
+  # source://activemodel/7.0.8/lib/active_model/validations.rb#52
   def _validators?; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#41
@@ -1512,7 +1512,7 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#403
   def mark_as_persisted!; end
 
-  # source://activemodel/7.0.6/lib/active_model/naming.rb#244
+  # source://activemodel/7.0.8/lib/active_model/naming.rb#244
   def model_name(*_arg0, **_arg1, &_arg2); end
 
   # Returns true if this is a new record (never persisted to the database)
@@ -1611,7 +1611,7 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#468
   def valid?(context = T.unsafe(nil)); end
 
-  # source://activemodel/7.0.6/lib/active_model/validations.rb#48
+  # source://activemodel/7.0.8/lib/active_model/validations.rb#48
   def validation_context; end
 
   protected
@@ -1670,17 +1670,17 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#609
   def respond_to_missing?(symbol, include_all = T.unsafe(nil)); end
 
-  # source://activemodel/7.0.6/lib/active_model/validations.rb#48
+  # source://activemodel/7.0.8/lib/active_model/validations.rb#48
   def validation_context=(_arg0); end
 
   class << self
-    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks; end
 
-    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
     def __callbacks?; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#44
@@ -1692,19 +1692,19 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#44
     def _immutable?; end
 
-    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
     def _validate_callbacks; end
 
-    # source://activesupport/7.0.6/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
     def _validate_callbacks=(value); end
 
-    # source://activemodel/7.0.6/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.8/lib/active_model/validations.rb#52
     def _validators; end
 
-    # source://activemodel/7.0.6/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.8/lib/active_model/validations.rb#52
     def _validators=(value); end
 
-    # source://activemodel/7.0.6/lib/active_model/validations.rb#52
+    # source://activemodel/7.0.8/lib/active_model/validations.rb#52
     def _validators?; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#41

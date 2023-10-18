@@ -47,8 +47,6 @@ module Tapioca
             end
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
-          when GraphQL::Schema::NonNull.singleton_class
-            type_for(unwrapped_type.of_type)
           when Module
             Runtime::Reflection.qualified_name_of(unwrapped_type) || "T.untyped"
           else

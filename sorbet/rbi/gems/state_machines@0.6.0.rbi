@@ -84,6 +84,13 @@ class StateMachines::AllMatcher < ::StateMachines::Matcher
   #
   # source://state_machines//lib/state_machines/matcher.rb#38
   def matches?(value, context = T.unsafe(nil)); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # Represents a collection of transitions that were generated from attribute-
@@ -122,7 +129,7 @@ end
 
 # Matches everything but a specific set of values
 #
-# source://state_machines//lib/state_machines/matcher.rb#82
+# source://state_machines//lib/state_machines/matcher.rb#74
 class StateMachines::BlacklistMatcher < ::StateMachines::Matcher
   # A human-readable description of this matcher
   #
@@ -564,7 +571,7 @@ end
 
 # An error occurred during a state machine invocation
 #
-# source://state_machines//lib/state_machines/error.rb#4
+# source://state_machines//lib/state_machines/error.rb#3
 class StateMachines::Error < ::StandardError
   # @return [Error] a new instance of Error
   #
@@ -1263,7 +1270,7 @@ class StateMachines::InvalidContext < ::StateMachines::Error; end
 
 # An invalid event was specified
 #
-# source://state_machines//lib/state_machines/error.rb#47
+# source://state_machines//lib/state_machines/error.rb#46
 class StateMachines::InvalidEvent < ::StateMachines::Error
   # @return [InvalidEvent] a new instance of InvalidEvent
   #
@@ -1278,7 +1285,7 @@ end
 
 # A set of transition failed to run in parallel
 #
-# source://state_machines//lib/state_machines/error.rb#99
+# source://state_machines//lib/state_machines/error.rb#98
 class StateMachines::InvalidParallelTransition < ::StateMachines::Error
   # @return [InvalidParallelTransition] a new instance of InvalidParallelTransition
   #
@@ -1293,7 +1300,7 @@ end
 
 # An invalid transition was attempted
 #
-# source://state_machines//lib/state_machines/error.rb#58
+# source://state_machines//lib/state_machines/error.rb#57
 class StateMachines::InvalidTransition < ::StateMachines::Error
   # @return [InvalidTransition] a new instance of InvalidTransition
   #
@@ -1357,6 +1364,13 @@ class StateMachines::LoopbackMatcher < ::StateMachines::Matcher
   #
   # source://state_machines//lib/state_machines/matcher.rb#112
   def matches?(value, context); end
+
+  class << self
+    private
+
+    def allocate; end
+    def new(*_arg0); end
+  end
 end
 
 # Represents a state machine for a particular attribute.  State machines
@@ -3750,7 +3764,7 @@ end
 
 # Represents a collection of state machines for a class
 #
-# source://state_machines//lib/state_machines/machine_collection.rb#21
+# source://state_machines//lib/state_machines/machine_collection.rb#3
 class StateMachines::MachineCollection < ::Hash
   # Runs one or more events in parallel on the given object.  See
   # StateMachines::InstanceMethods#fire_events for more information.
@@ -5721,7 +5735,7 @@ StateMachines::VERSION = T.let(T.unsafe(nil), String)
 
 # Matches a specific set of values
 #
-# source://state_machines//lib/state_machines/matcher.rb#62
+# source://state_machines//lib/state_machines/matcher.rb#54
 class StateMachines::WhitelistMatcher < ::StateMachines::Matcher
   # A human-readable description of this matcher
   #
