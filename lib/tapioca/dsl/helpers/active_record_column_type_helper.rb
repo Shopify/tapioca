@@ -85,6 +85,9 @@ module Tapioca
             "::String"
           when ActiveRecord::Type::Serialized
             serialized_column_type(column_type)
+          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
+            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid
+            "::String"
           when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore) &&
             ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore
             "T::Hash[::String, ::String]"
