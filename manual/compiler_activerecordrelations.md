@@ -114,6 +114,9 @@ class Post
     include GeneratedAssociationRelationMethods
 
     sig { returns(T::Array[::Post]) }
+    def to_a; end
+
+    sig { returns(T::Array[::Post]) }
     def to_ary; end
 
     Elem = type_member { { fixed: ::Post } }
@@ -135,6 +138,9 @@ class Post
   class PrivateRelation < ::ActiveRecord::Relation
     include CommonRelationMethods
     include GeneratedRelationMethods
+
+    sig { returns(T::Array[::Post]) }
+    def to_a; end
 
     sig { returns(T::Array[::Post]) }
     def to_ary; end
