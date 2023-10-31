@@ -182,7 +182,7 @@ module Tapioca
       end
 
       # Rails 7.2 renamed `eager_load_paths` to `all_eager_load_paths`, which maintains the same original functionality.
-      # The `eager_load_paths` method still exists, but doens't return all paths anymore and causes Tapioca to miss some
+      # The `eager_load_paths` method still exists, but doesn't return all paths anymore and causes Tapioca to miss some
       # engine paths. The following commit is the change:
       # https://github.com/rails/rails/commit/ebfca905db14020589c22e6937382e6f8f687664
       #
