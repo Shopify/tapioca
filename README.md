@@ -341,6 +341,7 @@ permissions:
 jobs:
   dependabot_update_rbis:
     uses: Shopify/tapioca/.github/workflows/dependabot_update_rbis.yml@main
+    secrets: inherit
 ```
 
 Note: Currently this script requires a `dev.yml` file which specifies the Ruby version.
