@@ -321,31 +321,6 @@ Nothing to do, all RBIs are up-to-date.
 
 This option can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking. **Warning**: doing so will break your normal Dependabot workflow as every pull-request opened to bump a gem version will fail CI since the RBI will be out-of-date and will require you to manually run `bin/tapioca gems` to update them.
 
-To avoid this problem, you can use a reusable GitHub Actions workflow to automatically update the RBIs:
-
-```yaml
-# .github/workflows/dependabot_update_rbis.yml
-
-name: Update gem RBIs on Dependabot PRs
-
-on:
-  pull_request:
-    types: [opened, synchronize]
-    paths:
-      - 'Gemfile.lock'
-
-permissions:
-  contents: write
-  pull-requests: write
-
-jobs:
-  dependabot_update_rbis:
-    uses: Shopify/tapioca/.github/workflows/dependabot_update_rbis.yml@main
-    secrets: inherit
-```
-
-Note: Currently this script requires a `dev.yml` file which specifies the Ruby version.
-
 ### Pulling RBI annotations from remote sources
 
 Since Tapioca does not perform any type inference, the RBI files generated for the gems do not contain any type signatures. Instead, Tapioca relies on the community to provide high-quality, manually written RBI annotations for public gems.
