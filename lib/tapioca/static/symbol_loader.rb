@@ -27,7 +27,15 @@ module Tapioca
 
           return Set.new unless gem_engine
 
-          paths = gem_engine.config.all_eager_load_paths.flat_map do |load_path|
+          # https://github.com/rails/rails/commit/ebfca905db14020589c22e6937382e6f8f687664
+          config = gem_engine.config
+          eager_load_paths = if config.respond_to?(:all_eager_load_paths)
+            config.all_eager_load_paths
+          else
+            config.eager_load_paths
+          end
+
+          paths = eager_load_paths.flat_map do |load_path|
             Pathname.glob("#{load_path}/**/*.rb")
           end
 
