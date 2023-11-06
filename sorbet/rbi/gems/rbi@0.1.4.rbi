@@ -1302,21 +1302,21 @@ class RBI::Parser
   end
 end
 
-# source://rbi//lib/rbi/parser.rb#793
+# source://rbi//lib/rbi/parser.rb#791
 class RBI::Parser::SigBuilder < ::RBI::Parser::Visitor
-  # source://rbi//lib/rbi/parser.rb#800
+  # source://rbi//lib/rbi/parser.rb#798
   sig { params(content: ::String, file: ::String).void }
   def initialize(content, file:); end
 
-  # source://rbi//lib/rbi/parser.rb#797
+  # source://rbi//lib/rbi/parser.rb#795
   sig { returns(::RBI::Sig) }
   def current; end
 
-  # source://rbi//lib/rbi/parser.rb#852
+  # source://rbi//lib/rbi/parser.rb#850
   sig { override.params(node: ::Prism::AssocNode).void }
   def visit_assoc_node(node); end
 
-  # source://rbi//lib/rbi/parser.rb#807
+  # source://rbi//lib/rbi/parser.rb#805
   sig { override.params(node: ::Prism::CallNode).void }
   def visit_call_node(node); end
 end
@@ -1413,11 +1413,11 @@ class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
   sig { params(node: T.nilable(::Prism::Node)).returns(T::Array[::RBI::Arg]) }
   def parse_send_args(node); end
 
-  # source://rbi//lib/rbi/parser.rb#650
+  # source://rbi//lib/rbi/parser.rb#648
   sig { params(node: ::Prism::CallNode).returns(::RBI::Sig) }
   def parse_sig(node); end
 
-  # source://rbi//lib/rbi/parser.rb#660
+  # source://rbi//lib/rbi/parser.rb#658
   sig do
     params(
       node: T.any(::Prism::ConstantPathWriteNode, ::Prism::ConstantWriteNode)
@@ -1425,23 +1425,23 @@ class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
   end
   def parse_struct(node); end
 
-  # source://rbi//lib/rbi/parser.rb#710
+  # source://rbi//lib/rbi/parser.rb#708
   sig { params(send: ::Prism::CallNode).void }
   def parse_tstruct_field(send); end
 
-  # source://rbi//lib/rbi/parser.rb#747
+  # source://rbi//lib/rbi/parser.rb#745
   sig { params(name: ::String, node: ::Prism::Node).returns(::RBI::Visibility) }
   def parse_visibility(name, node); end
 
-  # source://rbi//lib/rbi/parser.rb#761
+  # source://rbi//lib/rbi/parser.rb#759
   sig { void }
   def separate_header_comments; end
 
-  # source://rbi//lib/rbi/parser.rb#771
+  # source://rbi//lib/rbi/parser.rb#769
   sig { void }
   def set_root_tree_loc; end
 
-  # source://rbi//lib/rbi/parser.rb#785
+  # source://rbi//lib/rbi/parser.rb#783
   sig { params(node: T.nilable(::Prism::Node)).returns(T::Boolean) }
   def type_variable_definition?(node); end
 end

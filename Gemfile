@@ -55,5 +55,3 @@ group :test do
 end
 
 gem "kramdown", "~> 2.4"
-
-gem "prism", "< 0.16"
