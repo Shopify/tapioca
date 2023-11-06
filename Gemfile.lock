@@ -296,7 +296,7 @@ GEM
       thor (~> 1.0)
       zeitwerk (~> 2.5)
     rainbow (3.1.1)
-    rake (13.0.6)
+    rake (13.1.0)
     rbi (0.1.4)
       prism (>= 0.17.1, < 0.18)
       sorbet-runtime (>= 0.5.9204)
