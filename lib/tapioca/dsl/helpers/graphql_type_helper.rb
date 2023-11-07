@@ -28,7 +28,7 @@ module Tapioca
             type_for_constant(Float)
           when GraphQL::Types::ID.singleton_class, GraphQL::Types::String.singleton_class
             type_for_constant(String)
-          when GraphQL::Types::Int.singleton_class
+          when GraphQL::Types::Int.singleton_class, GraphQL::Types::BigInt.singleton_class
             type_for_constant(Integer)
           when GraphQL::Types::ISO8601Date.singleton_class
             type_for_constant(Date)
@@ -44,6 +44,16 @@ module Tapioca
               T.must(value_types.first)
             else
               "T.any(#{value_types.join(", ")})"
+            end
+          when GraphQL::Schema::Scalar.singleton_class
+            method = Runtime::Reflection.method_of(unwrapped_type, :coerce_input)
+            signature = Runtime::Reflection.signature_of(method)
+            return_type = signature&.return_type
+
+            if return_type && !(T::Private::Types::Void === return_type || T::Private::Types::NotTyped === return_type)
+              return_type.to_s
+            else
+              "T.untyped"
             end
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)

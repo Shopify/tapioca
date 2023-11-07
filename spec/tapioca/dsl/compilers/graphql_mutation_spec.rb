@@ -144,6 +144,7 @@ module Tapioca
                   argument :float, Float, required: true
                   argument :id, ID, required: true
                   argument :int, Int, required: true
+                  argument :big_int, GraphQL::Types::BigInt, required: true
                   argument :date, GraphQL::Types::ISO8601Date, required: true
                   argument :datetime, GraphQL::Types::ISO8601DateTime, required: true
                   argument :json, GraphQL::Types::JSON, required: true
@@ -153,7 +154,7 @@ module Tapioca
                   argument :input_object, CreateCommentInput, required: true
                   argument :custom_scalar, CustomScalar, required: true
 
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:)
+                  def resolve(boolean:, float:, id:, int:, big_int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:)
                     # ...
                   end
                 end
@@ -163,8 +164,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: ::CustomScalar).returns(T.untyped) }
-                  def resolve(boolean:, float:, id:, int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:); end
+                  sig { params(boolean: T::Boolean, float: ::Float, id: ::String, int: ::Integer, big_int: ::Integer, date: ::Date, datetime: ::Time, json: T::Hash[::String, T.untyped], string: ::String, enum_a: ::String, enum_b: T.any(::String, ::Symbol), input_object: ::CreateCommentInput, custom_scalar: T.untyped).returns(T.untyped) }
+                  def resolve(boolean:, float:, id:, int:, big_int:, date:, datetime:, json:, string:, enum_a:, enum_b:, input_object:, custom_scalar:); end
                 end
               RBI
 
@@ -196,6 +197,63 @@ module Tapioca
                 class CreateComment
                   sig { params(loaded_argument: ::LoadedType, loaded_arguments: T::Array[::LoadedType], custom_name: ::LoadedType, optional_loaded_argument: T.nilable(::LoadedType), optional_loaded_arguments: T.nilable(T::Array[::LoadedType])).returns(T.untyped) }
                   def resolve(loaded_argument:, loaded_arguments:, custom_name:, optional_loaded_argument: T.unsafe(nil), optional_loaded_arguments: T.unsafe(nil)); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
+            it "generates correct RBI for custom scalars with return types" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CustomScalar; end
+
+                class CustomScalarType < GraphQL::Schema::Scalar
+                  class << self
+                    extend T::Sig
+
+                    sig { params(value: T.untyped, context: GraphQL::Query::Context).returns(CustomScalar) }
+                    def coerce_input(value, context)
+                      CustomScalar.new
+                    end
+                  end
+                end
+
+                class BrokenScalarType < GraphQL::Schema::Scalar
+                  class << self
+                    extend T::Sig
+
+                    sig { params(value: T.untyped, context: GraphQL::Query::Context).void }
+                    def coerce_input(value, context)
+                    end
+                  end
+                end
+
+                class NoSigScalarType < GraphQL::Schema::Scalar
+                  class << self
+                    def coerce_input(value, context)
+                    end
+                  end
+                end
+
+                class CreateComment < GraphQL::Schema::Mutation
+                  argument :custom_scalar, CustomScalarType, required: true
+                  argument :custom_scalar_array, [CustomScalarType], required: true
+                  argument :broken_scalar, BrokenScalarType, required: true
+                  argument :no_sig_scalar, NoSigScalarType, required: true
+                  argument :optional_custom_scalar, CustomScalarType, required: false
+
+                  def resolve(custom_scalar:, custom_scalar_array:, broken_scalar:, no_sig_scalar:, optional_custom_scalar: nil)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(custom_scalar: ::CustomScalar, custom_scalar_array: T::Array[::CustomScalar], broken_scalar: T.untyped, no_sig_scalar: T.untyped, optional_custom_scalar: T.nilable(::CustomScalar)).returns(T.untyped) }
+                  def resolve(custom_scalar:, custom_scalar_array:, broken_scalar:, no_sig_scalar:, optional_custom_scalar: T.unsafe(nil)); end
                 end
               RBI
 
