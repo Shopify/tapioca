@@ -48,7 +48,13 @@ module Tapioca
           when GraphQL::Schema::Scalar.singleton_class
             method = Runtime::Reflection.method_of(unwrapped_type, :coerce_input)
             signature = Runtime::Reflection.signature_of(method)
-            signature&.return_type&.to_s || "T.untyped"
+            return_type = signature&.return_type
+
+            if return_type && !(T::Private::Types::Void === return_type || T::Private::Types::NotTyped === return_type)
+              return_type.to_s
+            else
+              "T.untyped"
+            end
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when GraphQL::Schema::NonNull.singleton_class

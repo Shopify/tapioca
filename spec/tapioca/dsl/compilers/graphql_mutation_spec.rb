@@ -218,12 +218,31 @@ module Tapioca
                   end
                 end
 
+                class BrokenScalarType < GraphQL::Schema::Scalar
+                  class << self
+                    extend T::Sig
+
+                    sig { params(value: T.untyped, context: GraphQL::Query::Context).void }
+                    def coerce_input(value, context)
+                    end
+                  end
+                end
+
+                class NoSigScalarType < GraphQL::Schema::Scalar
+                  class << self
+                    def coerce_input(value, context)
+                    end
+                  end
+                end
+
                 class CreateComment < GraphQL::Schema::Mutation
                   argument :custom_scalar, CustomScalarType, required: true
                   argument :custom_scalar_array, [CustomScalarType], required: true
+                  argument :broken_scalar, BrokenScalarType, required: true
+                  argument :no_sig_scalar, NoSigScalarType, required: true
                   argument :optional_custom_scalar, CustomScalarType, required: false
 
-                  def resolve(custom_scalar:, custom_scalar_array:, optional_custom_scalar: nil)
+                  def resolve(custom_scalar:, custom_scalar_array:, broken_scalar:, no_sig_scalar:, optional_custom_scalar: nil)
                     # ...
                   end
                 end
@@ -233,8 +252,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(custom_scalar: ::CustomScalar, custom_scalar_array: T::Array[::CustomScalar], optional_custom_scalar: T.nilable(::CustomScalar)).returns(T.untyped) }
-                  def resolve(custom_scalar:, custom_scalar_array:, optional_custom_scalar: T.unsafe(nil)); end
+                  sig { params(custom_scalar: ::CustomScalar, custom_scalar_array: T::Array[::CustomScalar], broken_scalar: T.untyped, no_sig_scalar: T.untyped, optional_custom_scalar: T.nilable(::CustomScalar)).returns(T.untyped) }
+                  def resolve(custom_scalar:, custom_scalar_array:, broken_scalar:, no_sig_scalar:, optional_custom_scalar: T.unsafe(nil)); end
                 end
               RBI
 
