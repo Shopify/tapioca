@@ -120,6 +120,7 @@ module Tapioca
           "sorbet-runtime",
           "sorbet-static-and-runtime",
           "debug",
+          "irb",
           "fakefs",
         ].freeze,
         T::Array[String],
