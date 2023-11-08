@@ -300,7 +300,6 @@ GEM
     rbi (0.1.4)
       prism (>= 0.17.1, < 0.18)
       sorbet-runtime (>= 0.5.9204)
-      yarp (>= 0.11.0)
     redis (5.0.8)
       redis-client (>= 0.17.0)
     redis-client (0.17.1)
@@ -386,7 +385,6 @@ GEM
     yard-sorbet (0.8.1)
       sorbet-runtime (>= 0.5)
       yard (>= 0.9)
-    yarp (0.13.0)
     zeitwerk (2.6.11)
 
 PLATFORMS
