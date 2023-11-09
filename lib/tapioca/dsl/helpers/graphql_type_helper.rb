@@ -15,7 +15,7 @@ module Tapioca
             constant: T.any(T.class_of(GraphQL::Schema::Mutation), T.class_of(GraphQL::Schema::InputObject)),
           ).returns(String)
         end
-        def type_for(argument, constant)
+        def type_for_argument(argument, constant)
           type = if argument.loads
             loads_type = ::GraphQL::Schema::Wrapper.new(argument.loads)
             loads_type = loads_type.to_list_type if argument.type.list?
@@ -25,6 +25,36 @@ module Tapioca
             argument.type
           end
 
+          prepare = argument.prepare
+          prepare_method = if prepare.is_a?(Symbol) || prepare.is_a?(String)
+            if constant.respond_to?(prepare)
+              constant.method(prepare)
+            end
+          end
+
+          type_for(
+            type,
+            ignore_nilable_wrapper: has_replaceable_default?(argument),
+            prepare_method: prepare_method,
+          )
+        end
+
+        sig do
+          params(
+            type: T.any(
+              GraphQL::Schema::Wrapper,
+              T.class_of(GraphQL::Schema::Scalar),
+              T.class_of(GraphQL::Schema::Enum),
+              T.class_of(GraphQL::Schema::Union),
+              T.class_of(GraphQL::Schema::Object),
+              T.class_of(GraphQL::Schema::Interface),
+              T.class_of(GraphQL::Schema::InputObject),
+            ),
+            ignore_nilable_wrapper: T::Boolean,
+            prepare_method: T.nilable(Method),
+          ).returns(String)
+        end
+        def type_for(type, ignore_nilable_wrapper: false, prepare_method: nil)
           unwrapped_type = type.unwrap
 
           parsed_type = case unwrapped_type
@@ -65,14 +95,11 @@ module Tapioca
             "T.untyped"
           end
 
-          if argument.prepare.is_a?(Symbol) || argument.prepare.is_a?(String)
-            if constant.respond_to?(argument.prepare)
-              prepare_method = constant.method(argument.prepare)
-              prepare_signature = Runtime::Reflection.signature_of(prepare_method)
-
-              if valid_return_type?(prepare_signature&.return_type)
-                parsed_type = prepare_signature.return_type&.to_s
-              end
+          if prepare_method
+            prepare_signature = Runtime::Reflection.signature_of(prepare_method)
+            prepare_return_type = prepare_signature&.return_type
+            if valid_return_type?(prepare_return_type)
+              parsed_type = prepare_return_type&.to_s
             end
           end
 
@@ -80,7 +107,7 @@ module Tapioca
             parsed_type = "T::Array[#{parsed_type}]"
           end
 
-          unless type.non_null? || has_replaceable_default?(argument)
+          unless type.non_null? || ignore_nilable_wrapper
             parsed_type = RBIHelper.as_nilable_type(parsed_type)
           end
 

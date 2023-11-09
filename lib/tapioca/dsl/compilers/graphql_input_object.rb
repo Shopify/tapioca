@@ -55,7 +55,10 @@ module Tapioca
           root.create_path(constant) do |input_object|
             arguments.each do |argument|
               name = argument.keyword.to_s
-              input_object.create_method(name, return_type: Helpers::GraphqlTypeHelper.type_for(argument, constant))
+              input_object.create_method(
+                name,
+                return_type: Helpers::GraphqlTypeHelper.type_for_argument(argument, constant),
+              )
             end
           end
         end
