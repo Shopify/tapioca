@@ -126,6 +126,9 @@ module Tapioca
       #     include GeneratedAssociationRelationMethods
       #
       #     sig { returns(T::Array[::Post]) }
+      #     def to_a; end
+      #
+      #     sig { returns(T::Array[::Post]) }
       #     def to_ary; end
       #
       #     Elem = type_member { { fixed: ::Post } }
@@ -147,6 +150,9 @@ module Tapioca
       #   class PrivateRelation < ::ActiveRecord::Relation
       #     include CommonRelationMethods
       #     include GeneratedRelationMethods
+      #
+      #     sig { returns(T::Array[::Post]) }
+      #     def to_a; end
       #
       #     sig { returns(T::Array[::Post]) }
       #     def to_ary; end
@@ -226,6 +232,7 @@ module Tapioca
           T::Array[Symbol],
         )
         BUILDER_METHODS = T.let([:new, :build, :create, :create!], T::Array[Symbol])
+        TO_ARRAY_METHODS = T.let([:to_ary, :to_a], T::Array[Symbol])
 
         private
 
@@ -296,7 +303,9 @@ module Tapioca
             klass.create_include(RelationMethodsModuleName)
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
-            klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            TO_ARRAY_METHODS.each do |method_name|
+              klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
+            end
           end
 
           create_relation_where_chain_class
@@ -312,7 +321,9 @@ module Tapioca
             klass.create_include(AssociationRelationMethodsModuleName)
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
-            klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            TO_ARRAY_METHODS.each do |method_name|
+              klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
+            end
           end
 
           create_association_relation_where_chain_class
@@ -372,7 +383,9 @@ module Tapioca
             klass.create_include(AssociationRelationMethodsModuleName)
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
 
-            klass.create_method("to_ary", return_type: "T::Array[#{constant_name}]")
+            TO_ARRAY_METHODS.each do |method_name|
+              klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
+            end
             create_collection_proxy_methods(klass)
           end
         end

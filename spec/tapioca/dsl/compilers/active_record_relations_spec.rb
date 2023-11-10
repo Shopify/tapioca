@@ -561,6 +561,9 @@ module Tapioca
                     Elem = type_member { { fixed: ::Post } }
 
                     sig { returns(T::Array[::Post]) }
+                    def to_a; end
+
+                    sig { returns(T::Array[::Post]) }
                     def to_ary; end
                   end
 
@@ -622,6 +625,9 @@ module Tapioca
                     def target; end
 
                     sig { returns(T::Array[::Post]) }
+                    def to_a; end
+
+                    sig { returns(T::Array[::Post]) }
                     def to_ary; end
                   end
 
@@ -630,6 +636,9 @@ module Tapioca
                     include GeneratedRelationMethods
 
                     Elem = type_member { { fixed: ::Post } }
+
+                    sig { returns(T::Array[::Post]) }
+                    def to_a; end
 
                     sig { returns(T::Array[::Post]) }
                     def to_ary; end
