@@ -152,6 +152,66 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:Shop))
             end
+
+            it "generates method sigs for attribute with type set on attribute is a custom ActiveModel::Type::Value" do
+              add_ruby_file("shop.rb", <<~RUBY)
+                class MyCustomType < ActiveModel::Type::Value
+                  def type
+                    :custom
+                  end
+                end
+
+                class Shop
+                  include ActiveModel::Attributes
+
+                  attribute :custom_attr, MyCustomType.new
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Shop
+                  sig { returns(T.nilable(MyCustomType)) }
+                  def custom_attr; end
+
+                  sig { params(value: T.nilable(MyCustomType)).returns(T.nilable(MyCustomType)) }
+                  def custom_attr=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Shop))
+            end
+
+            it "generates method sigs for attribute with custom class not inheriting from ActiveModel::Type::Value" do
+              add_ruby_file("shop.rb", <<~RUBY)
+                class MyCustomClass
+                  def type
+                    :custom
+                  end
+                end
+
+                class Shop
+                  include ActiveModel::Attributes
+
+                  attribute :custom_attr, MyCustomClass.new
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Shop
+                  sig { returns(T.untyped) }
+                  def custom_attr; end
+
+                  sig { params(value: T.untyped).returns(T.untyped) }
+                  def custom_attr=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Shop))
+            end
           end
         end
       end
