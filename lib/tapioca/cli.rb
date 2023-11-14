@@ -22,6 +22,11 @@ module Tapioca
       type: :boolean,
       desc: "Verbose output for debugging purposes",
       default: false
+    class_option :workers,
+      aliases: ["-w"],
+      type: :numeric,
+      desc: "Number of parallel workers to use when generating RBIs (default: 2)",
+      default: 2
 
     desc "init", "Get project ready for type checking"
     def init
@@ -108,11 +113,6 @@ module Tapioca
       type: :boolean,
       desc: "Suppresses file creation output",
       default: false
-    option :workers,
-      aliases: ["-w"],
-      type: :numeric,
-      desc: "Number of parallel workers to use when generating RBIs (default: 2)",
-      default: 2
     option :rbi_max_line_length,
       type: :numeric,
       desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
