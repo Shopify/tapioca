@@ -172,6 +172,45 @@ module Tapioca
               assert_equal(expected, rbi_for(:CreateComment))
             end
 
+            it "generates correct RBI with a prepare method" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class DateRangeInput < GraphQL::Schema::InputObject
+                  extend T::Sig
+                  description "Range of dates"
+                  argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range"
+                  argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range"
+
+                  sig { returns(T::Range[Date]) }
+                  def prepare
+                    min..max
+                  end
+                end
+
+
+                class CreateComment < GraphQL::Schema::Mutation
+                  extend T::Sig
+
+
+                  argument :date_range, DateRangeInput, required: true
+
+                  def resolve(date_range:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(date_range: T::Range[::Date]).returns(T.untyped) }
+                  def resolve(date_range:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
             it "generates correct RBI for mutation loaders" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class LoadedType < GraphQL::Schema::Object

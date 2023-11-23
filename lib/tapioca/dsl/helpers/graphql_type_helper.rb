@@ -19,6 +19,7 @@ module Tapioca
           else
             argument.type
           end
+
           unwrapped_type = type.unwrap
 
           parsed_type = case unwrapped_type
@@ -78,6 +79,13 @@ module Tapioca
 
         sig { params(constant: Module).returns(String) }
         def type_for_constant(constant)
+          if constant.instance_methods.include?(:prepare)
+            prepare_method = constant.instance_method(:prepare)
+            if (prepare_signature = Runtime::Reflection.signature_of(prepare_method))
+              return prepare_signature.return_type&.to_s if prepare_signature.return_type
+            end
+          end
+
           Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
         end
 
