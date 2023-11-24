@@ -19,6 +19,7 @@ module Tapioca
           else
             argument.type
           end
+
           unwrapped_type = type.unwrap
 
           parsed_type = case unwrapped_type
@@ -50,11 +51,7 @@ module Tapioca
             signature = Runtime::Reflection.signature_of(method)
             return_type = signature&.return_type
 
-            if return_type && !(T::Private::Types::Void === return_type || T::Private::Types::NotTyped === return_type)
-              return_type.to_s
-            else
-              "T.untyped"
-            end
+            valid_return_type?(return_type) ? return_type.to_s : "T.untyped"
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when Module
@@ -78,12 +75,24 @@ module Tapioca
 
         sig { params(constant: Module).returns(String) }
         def type_for_constant(constant)
+          if constant.instance_methods.include?(:prepare)
+            prepare_method = constant.instance_method(:prepare)
+            prepare_signature = Runtime::Reflection.signature_of(prepare_method)
+
+            return prepare_signature.return_type&.to_s if valid_return_type?(prepare_signature&.return_type)
+          end
+
           Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
         end
 
         sig { params(argument: GraphQL::Schema::Argument).returns(T::Boolean) }
         def has_replaceable_default?(argument)
           !!argument.replace_null_with_default? && !argument.default_value.nil?
+        end
+
+        sig { params(return_type: T.nilable(T::Types::Base)).returns(T::Boolean) }
+        def valid_return_type?(return_type)
+          !!return_type && !(T::Private::Types::Void === return_type || T::Private::Types::NotTyped === return_type)
         end
       end
     end
