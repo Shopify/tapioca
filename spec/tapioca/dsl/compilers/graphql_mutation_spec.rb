@@ -176,6 +176,7 @@ module Tapioca
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class DateRangeInput < GraphQL::Schema::InputObject
                   extend T::Sig
+
                   description "Range of dates"
                   argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range"
                   argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range"
@@ -186,14 +187,32 @@ module Tapioca
                   end
                 end
 
+                class VoidInput < GraphQL::Schema::InputObject
+                  extend T::Sig
+
+                  argument :void, String, "Not a real input"
+
+                  sig { void }
+                  def prepare; end
+                end
+
+                class UntypedInput < GraphQL::Schema::InputObject
+                  argument :string, String, "Not a real input"
+
+                  def prepare
+                    string.to_i
+                  end
+                end
 
                 class CreateComment < GraphQL::Schema::Mutation
                   extend T::Sig
 
 
                   argument :date_range, DateRangeInput, required: true
+                  argument :void_input, VoidInput, required: true
+                  argument :untyped_input, UntypedInput, required: true
 
-                  def resolve(date_range:)
+                  def resolve(date_range:, void_input:, untyped_input:)
                     # ...
                   end
                 end
@@ -203,8 +222,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(date_range: T::Range[::Date]).returns(T.untyped) }
-                  def resolve(date_range:); end
+                  sig { params(date_range: T::Range[::Date], void_input: ::VoidInput, untyped_input: ::UntypedInput).returns(T.untyped) }
+                  def resolve(date_range:, void_input:, untyped_input:); end
                 end
               RBI
 
