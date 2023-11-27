@@ -9,8 +9,13 @@ module Tapioca
 
         extend T::Sig
 
-        sig { params(argument: GraphQL::Schema::Argument).returns(String) }
-        def type_for(argument)
+        sig do
+          params(
+            argument: GraphQL::Schema::Argument,
+            constant: T.any(T.class_of(GraphQL::Schema::Mutation), T.class_of(GraphQL::Schema::InputObject)),
+          ).returns(String)
+        end
+        def type_for(argument, constant)
           type = if argument.loads
             loads_type = ::GraphQL::Schema::Wrapper.new(argument.loads)
             loads_type = loads_type.to_list_type if argument.type.list?
@@ -58,6 +63,12 @@ module Tapioca
             Runtime::Reflection.qualified_name_of(unwrapped_type) || "T.untyped"
           else
             "T.untyped"
+          end
+
+          if argument.prepare.is_a?(Symbol) || argument.prepare.is_a?(String)
+            prepare_signature = Runtime::Reflection.signature_of(constant.method(argument.prepare))
+
+            parsed_type = prepare_signature.return_type&.to_s if valid_return_type?(prepare_signature&.return_type)
           end
 
           if type.list?
