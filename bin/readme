@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-bundle exec rake readme
+THOR_COLUMNS=120 bundle exec rake readme

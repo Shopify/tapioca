@@ -95,19 +95,19 @@ class Redis
 
   private
 
-  # source://redis//lib/redis.rb#177
+  # source://redis//lib/redis.rb#164
   def _subscription(method, timeout, channels, block); end
 
   # source://redis//lib/redis.rb#134
   def initialize_client(options); end
 
-  # source://redis//lib/redis.rb#171
+  # source://redis//lib/redis.rb#158
   def send_blocking_command(command, timeout, &block); end
 
-  # source://redis//lib/redis.rb#165
+  # source://redis//lib/redis.rb#150
   def send_command(command, &block); end
 
-  # source://redis//lib/redis.rb#161
+  # source://redis//lib/redis.rb#146
   def synchronize; end
 
   class << self
@@ -160,60 +160,47 @@ class Redis::CannotConnectError < ::Redis::BaseConnectionError; end
 
 # source://redis//lib/redis/client.rb#6
 class Redis::Client < ::RedisClient
-  # source://redis//lib/redis/client.rb#78
+  # source://redis//lib/redis/client.rb#95
   def blocking_call_v(timeout, command, &block); end
 
-  # source://redis//lib/redis/client.rb#72
+  # source://redis//lib/redis/client.rb#89
   def call_v(command, &block); end
 
-  # source://redis//lib/redis/client.rb#43
+  # source://redis//lib/redis/client.rb#60
   def db; end
 
-  # source://redis//lib/redis/client.rb#103
-  def disable_reconnection(&block); end
-
-  # source://redis//lib/redis/client.rb#47
+  # source://redis//lib/redis/client.rb#64
   def host; end
 
-  # source://redis//lib/redis/client.rb#31
+  # source://redis//lib/redis/client.rb#48
   def id; end
 
-  # source://redis//lib/redis/client.rb#107
+  # source://redis//lib/redis/client.rb#120
   def inherit_socket!; end
 
-  # source://redis//lib/redis/client.rb#97
+  # source://redis//lib/redis/client.rb#114
   def multi; end
 
-  # source://redis//lib/redis/client.rb#63
+  # source://redis//lib/redis/client.rb#80
   def password; end
 
-  # source://redis//lib/redis/client.rb#55
+  # source://redis//lib/redis/client.rb#72
   def path; end
 
-  # source://redis//lib/redis/client.rb#91
+  # source://redis//lib/redis/client.rb#108
   def pipelined; end
 
-  # source://redis//lib/redis/client.rb#51
+  # source://redis//lib/redis/client.rb#68
   def port; end
 
-  # source://redis//lib/redis/client.rb#35
+  # source://redis//lib/redis/client.rb#52
   def server_url; end
 
-  # source://redis//lib/redis/client.rb#39
+  # source://redis//lib/redis/client.rb#56
   def timeout; end
 
-  # source://redis//lib/redis/client.rb#59
+  # source://redis//lib/redis/client.rb#76
   def username; end
-
-  private
-
-  # @raise [redis_error]
-  #
-  # source://redis//lib/redis/client.rb#113
-  def translate_error!(error); end
-
-  # source://redis//lib/redis/client.rb#118
-  def translate_error_class(error_class); end
 
   class << self
     # source://redis//lib/redis/client.rb#22
@@ -221,6 +208,16 @@ class Redis::Client < ::RedisClient
 
     # source://redis//lib/redis/client.rb#26
     def sentinel(**kwargs); end
+
+    # @raise [redis_error]
+    #
+    # source://redis//lib/redis/client.rb#30
+    def translate_error!(error); end
+
+    private
+
+    # source://redis//lib/redis/client.rb#37
+    def translate_error_class(error_class); end
   end
 end
 
@@ -1109,6 +1106,21 @@ module Redis::Commands::Lists
   # source://redis//lib/redis/commands/lists.rb#55
   def blmove(source, destination, where_source, where_destination, timeout: T.unsafe(nil)); end
 
+  # Pops one or more elements from the first non-empty list key from the list
+  # of provided key names. If lists are empty, blocks until timeout has passed.
+  #
+  # @example Popping a element
+  #   redis.blmpop(1.0, 'list')
+  #   #=> ['list', ['a']]
+  # @example With count option
+  #   redis.blmpop(1.0, 'list', count: 2)
+  #   #=> ['list', ['a', 'b']]
+  # @raise [ArgumentError]
+  # @return [Array<String, Array<String, Float>>] list of popped elements or nil
+  #
+  # source://redis//lib/redis/commands/lists.rb#205
+  def blmpop(timeout, *keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
+
   # Remove and get the first element in a list, or block until one is available.
   #
   # @example With timeout
@@ -1160,7 +1172,7 @@ module Redis::Commands::Lists
   # @param index [Integer]
   # @return [String]
   #
-  # source://redis//lib/redis/commands/lists.rb#191
+  # source://redis//lib/redis/commands/lists.rb#245
   def lindex(key, index); end
 
   # Insert an element before or after another element in a list.
@@ -1172,7 +1184,7 @@ module Redis::Commands::Lists
   # @return [Integer] length of the list after the insert operation, or `-1`
   #   when the element `pivot` was not found
   #
-  # source://redis//lib/redis/commands/lists.rb#203
+  # source://redis//lib/redis/commands/lists.rb#257
   def linsert(key, where, pivot, value); end
 
   # Get the length of a list.
@@ -1197,6 +1209,21 @@ module Redis::Commands::Lists
   #
   # source://redis//lib/redis/commands/lists.rb#27
   def lmove(source, destination, where_source, where_destination); end
+
+  # Pops one or more elements from the first non-empty list key from the list
+  # of provided key names.
+  #
+  # @example Popping a element
+  #   redis.lmpop('list')
+  #   #=> ['list', ['a']]
+  # @example With count option
+  #   redis.lmpop('list', count: 2)
+  #   #=> ['list', ['a', 'b']]
+  # @raise [ArgumentError]
+  # @return [Array<String, Array<String, Float>>] list of popped elements or nil
+  #
+  # source://redis//lib/redis/commands/lists.rb#231
+  def lmpop(*keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
 
   # Remove and get the first elements in a list.
   #
@@ -1232,7 +1259,7 @@ module Redis::Commands::Lists
   # @param stop [Integer] stop index
   # @return [Array<String>]
   #
-  # source://redis//lib/redis/commands/lists.rb#213
+  # source://redis//lib/redis/commands/lists.rb#267
   def lrange(key, start, stop); end
 
   # Remove elements from a list.
@@ -1245,7 +1272,7 @@ module Redis::Commands::Lists
   # @param value [String]
   # @return [Integer] the number of removed elements
   #
-  # source://redis//lib/redis/commands/lists.rb#226
+  # source://redis//lib/redis/commands/lists.rb#280
   def lrem(key, count, value); end
 
   # Set the value of an element in a list by its index.
@@ -1255,7 +1282,7 @@ module Redis::Commands::Lists
   # @param value [String]
   # @return [String] `OK`
   #
-  # source://redis//lib/redis/commands/lists.rb#236
+  # source://redis//lib/redis/commands/lists.rb#290
   def lset(key, index, value); end
 
   # Trim a list to the specified range.
@@ -1265,7 +1292,7 @@ module Redis::Commands::Lists
   # @param stop [Integer] stop index
   # @return [String] `OK`
   #
-  # source://redis//lib/redis/commands/lists.rb#246
+  # source://redis//lib/redis/commands/lists.rb#300
   def ltrim(key, start, stop); end
 
   # Remove and get the last elements in a list.
@@ -1306,10 +1333,10 @@ module Redis::Commands::Lists
 
   private
 
-  # source://redis//lib/redis/commands/lists.rb#252
+  # source://redis//lib/redis/commands/lists.rb#306
   def _bpop(cmd, args, &blk); end
 
-  # source://redis//lib/redis/commands/lists.rb#269
+  # source://redis//lib/redis/commands/lists.rb#323
   def _normalize_move_wheres(where_source, where_destination); end
 end
 
@@ -1348,6 +1375,22 @@ module Redis::Commands::Pubsub
   # source://redis//lib/redis/commands/pubsub.rb#43
   def punsubscribe(*channels); end
 
+  # Post a message to a channel in a shard.
+  #
+  # source://redis//lib/redis/commands/pubsub.rb#54
+  def spublish(channel, message); end
+
+  # Listen for messages published to the given channels in a shard.
+  #
+  # source://redis//lib/redis/commands/pubsub.rb#59
+  def ssubscribe(*channels, &block); end
+
+  # Listen for messages published to the given channels in a shard.
+  # Throw a timeout error if there is no messages for a timeout period.
+  #
+  # source://redis//lib/redis/commands/pubsub.rb#65
+  def ssubscribe_with_timeout(timeout, *channels, &block); end
+
   # Listen for messages published to the given channels.
   #
   # source://redis//lib/redis/commands/pubsub.rb#16
@@ -1363,6 +1406,11 @@ module Redis::Commands::Pubsub
   #
   # source://redis//lib/redis/commands/pubsub.rb#11
   def subscribed?; end
+
+  # Stop listening for messages posted to the given channels in a shard.
+  #
+  # source://redis//lib/redis/commands/pubsub.rb#70
+  def sunsubscribe(*channels); end
 
   # Stop listening for messages posted to the given channels.
   #
@@ -1752,6 +1800,20 @@ end
 
 # source://redis//lib/redis/commands/sorted_sets.rb#5
 module Redis::Commands::SortedSets
+  # Removes and returns up to count members with scores in the sorted set stored at key.
+  #
+  # @example Popping a member
+  #   redis.bzmpop('zset')
+  #   #=> ['zset', ['a', 1.0]]
+  # @example With count option
+  #   redis.bzmpop('zset', count: 2)
+  #   #=> ['zset', [['a', 1.0], ['b', 2.0]]
+  # @raise [ArgumentError]
+  # @return [Array<String, Array<String, Float>>] list of popped elements and scores
+  #
+  # source://redis//lib/redis/commands/sorted_sets.rb#188
+  def bzmpop(timeout, *keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
+
   # Removes and returns up to count members with the highest scores in the sorted set stored at keys,
   #   or block until one is available.
   #
@@ -1764,7 +1826,7 @@ module Redis::Commands::SortedSets
   # @return [Array<String, String, Float>] a touple of key, member and score
   # @return [nil] when no element could be popped and the timeout expired
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#185
+  # source://redis//lib/redis/commands/sorted_sets.rb#251
   def bzpopmax(*args); end
 
   # Removes and returns up to count members with the lowest scores in the sorted set stored at keys,
@@ -1779,7 +1841,7 @@ module Redis::Commands::SortedSets
   # @return [Array<String, String, Float>] a touple of key, member and score
   # @return [nil] when no element could be popped and the timeout expired
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#206
+  # source://redis//lib/redis/commands/sorted_sets.rb#272
   def bzpopmin(*args); end
 
   # Add one or more members to a sorted set, or update the score for members
@@ -1842,7 +1904,7 @@ module Redis::Commands::SortedSets
   #   - exclusive maximum score is specified by prefixing `(`
   # @return [Integer] number of members in within the specified range
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#612
+  # source://redis//lib/redis/commands/sorted_sets.rb#678
   def zcount(key, min, max); end
 
   # Return the difference between the first and all successive input sorted sets
@@ -1862,7 +1924,7 @@ module Redis::Commands::SortedSets
   # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#721
+  # source://redis//lib/redis/commands/sorted_sets.rb#787
   def zdiff(*keys, with_scores: T.unsafe(nil)); end
 
   # Compute the difference between the first and all successive input sorted sets
@@ -1877,7 +1939,7 @@ module Redis::Commands::SortedSets
   # @param keys [Array<String>] source keys
   # @return [Integer] number of elements in the resulting sorted set
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#737
+  # source://redis//lib/redis/commands/sorted_sets.rb#803
   def zdiffstore(*args, **_arg1); end
 
   # Increment the score of a member in a sorted set.
@@ -1909,7 +1971,7 @@ module Redis::Commands::SortedSets
   # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#635
+  # source://redis//lib/redis/commands/sorted_sets.rb#701
   def zinter(*args, **_arg1); end
 
   # Intersect multiple sorted sets and store the resulting sorted set in a new
@@ -1925,7 +1987,7 @@ module Redis::Commands::SortedSets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max)
   # @return [Integer] number of elements in the resulting sorted set
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#654
+  # source://redis//lib/redis/commands/sorted_sets.rb#720
   def zinterstore(*args, **_arg1); end
 
   # Count the members, with the same score in a sorted set, within the given lexicographical range.
@@ -1943,8 +2005,22 @@ module Redis::Commands::SortedSets
   #   - exclusive maximum is specified by prefixing `[`
   # @return [Integer] number of members within the specified lexicographical range
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#443
+  # source://redis//lib/redis/commands/sorted_sets.rb#509
   def zlexcount(key, min, max); end
+
+  # Removes and returns up to count members with scores in the sorted set stored at key.
+  #
+  # @example Popping a member
+  #   redis.zmpop('zset')
+  #   #=> ['zset', ['a', 1.0]]
+  # @example With count option
+  #   redis.zmpop('zset', count: 2)
+  #   #=> ['zset', [['a', 1.0], ['b', 2.0]]
+  # @raise [ArgumentError]
+  # @return [Array<String, Array<String, Float>>] list of popped elements and scores
+  #
+  # source://redis//lib/redis/commands/sorted_sets.rb#220
+  def zmpop(*keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
 
   # Get the scores associated with the given members in a sorted set.
   #
@@ -1955,7 +2031,7 @@ module Redis::Commands::SortedSets
   # @param members [String, Array<String>]
   # @return [Array<Float>] scores of the members
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#234
+  # source://redis//lib/redis/commands/sorted_sets.rb#300
   def zmscore(key, *members); end
 
   # Removes and returns up to count members with the highest scores in the sorted set stored at key.
@@ -2005,7 +2081,7 @@ module Redis::Commands::SortedSets
   #   - when `count` is specified and `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#262
+  # source://redis//lib/redis/commands/sorted_sets.rb#328
   def zrandmember(key, count = T.unsafe(nil), withscores: T.unsafe(nil), with_scores: T.unsafe(nil)); end
 
   # Return a range of members in a sorted set, by index, score or lexicographical ordering.
@@ -2028,7 +2104,7 @@ module Redis::Commands::SortedSets
   # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#301
+  # source://redis//lib/redis/commands/sorted_sets.rb#367
   def zrange(key, start, stop, byscore: T.unsafe(nil), by_score: T.unsafe(nil), bylex: T.unsafe(nil), by_lex: T.unsafe(nil), rev: T.unsafe(nil), limit: T.unsafe(nil), withscores: T.unsafe(nil), with_scores: T.unsafe(nil)); end
 
   # Return a range of members with the same score in a sorted set, by lexicographical ordering
@@ -2048,7 +2124,7 @@ module Redis::Commands::SortedSets
   #   `count` members
   # @return [Array<String>, Array<[String, Float]>]
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#468
+  # source://redis//lib/redis/commands/sorted_sets.rb#534
   def zrangebylex(key, min, max, limit: T.unsafe(nil)); end
 
   # Return a range of members in a sorted set, by score.
@@ -2073,7 +2149,7 @@ module Redis::Commands::SortedSets
   # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#528
+  # source://redis//lib/redis/commands/sorted_sets.rb#594
   def zrangebyscore(key, min, max, withscores: T.unsafe(nil), with_scores: T.unsafe(nil), limit: T.unsafe(nil)); end
 
   # Select a range of members in a sorted set, by index, score or lexicographical ordering
@@ -2088,7 +2164,7 @@ module Redis::Commands::SortedSets
   # @return [Integer] the number of elements in the resulting sorted set
   # @see #zrange
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#343
+  # source://redis//lib/redis/commands/sorted_sets.rb#409
   def zrangestore(dest_key, src_key, start, stop, byscore: T.unsafe(nil), by_score: T.unsafe(nil), bylex: T.unsafe(nil), by_lex: T.unsafe(nil), rev: T.unsafe(nil), limit: T.unsafe(nil)); end
 
   # Determine the index of a member in a sorted set.
@@ -2097,7 +2173,7 @@ module Redis::Commands::SortedSets
   # @param member [String]
   # @return [Integer]
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#394
+  # source://redis//lib/redis/commands/sorted_sets.rb#460
   def zrank(key, member); end
 
   # Remove one or more members from a sorted set.
@@ -2130,7 +2206,7 @@ module Redis::Commands::SortedSets
   # @param stop [Integer] stop index
   # @return [Integer] number of members that were removed
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#421
+  # source://redis//lib/redis/commands/sorted_sets.rb#487
   def zremrangebyrank(key, start, stop); end
 
   # Remove all members in a sorted set within the given scores.
@@ -2148,7 +2224,7 @@ module Redis::Commands::SortedSets
   #   - exclusive maximum score is specified by prefixing `(`
   # @return [Integer] number of members that were removed
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#591
+  # source://redis//lib/redis/commands/sorted_sets.rb#657
   def zremrangebyscore(key, min, max); end
 
   # Return a range of members in a sorted set, by index, with scores ordered
@@ -2162,7 +2238,7 @@ module Redis::Commands::SortedSets
   #   # => [["b", 64.0], ["a", 32.0]]
   # @see #zrange
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#378
+  # source://redis//lib/redis/commands/sorted_sets.rb#444
   def zrevrange(key, start, stop, withscores: T.unsafe(nil), with_scores: T.unsafe(nil)); end
 
   # Return a range of members with the same score in a sorted set, by reversed lexicographical ordering.
@@ -2176,7 +2252,7 @@ module Redis::Commands::SortedSets
   #   # => ["abbygail", "abby"]
   # @see #zrangebylex
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#490
+  # source://redis//lib/redis/commands/sorted_sets.rb#556
   def zrevrangebylex(key, max, min, limit: T.unsafe(nil)); end
 
   # Return a range of members in a sorted set, by score, with scores ordered
@@ -2193,7 +2269,7 @@ module Redis::Commands::SortedSets
   #   # => [["b", 64.0], ["a", 32.0]]
   # @see #zrangebyscore
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#558
+  # source://redis//lib/redis/commands/sorted_sets.rb#624
   def zrevrangebyscore(key, max, min, withscores: T.unsafe(nil), with_scores: T.unsafe(nil), limit: T.unsafe(nil)); end
 
   # Determine the index of a member in a sorted set, with scores ordered from
@@ -2203,7 +2279,7 @@ module Redis::Commands::SortedSets
   # @param member [String]
   # @return [Integer]
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#404
+  # source://redis//lib/redis/commands/sorted_sets.rb#470
   def zrevrank(key, member); end
 
   # Scan a sorted set
@@ -2216,7 +2292,7 @@ module Redis::Commands::SortedSets
   # @return [String, Array<[String, Float]>] the next cursor and all found
   #   members and scores
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#754
+  # source://redis//lib/redis/commands/sorted_sets.rb#820
   def zscan(key, cursor, **options); end
 
   # Scan a sorted set
@@ -2228,7 +2304,7 @@ module Redis::Commands::SortedSets
   #   - `:count => Integer`: return count keys at most per iteration
   # @return [Enumerator] an enumerator for all found scores and members
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#771
+  # source://redis//lib/redis/commands/sorted_sets.rb#837
   def zscan_each(key, **options, &block); end
 
   # Get the score associated with the given member in a sorted set.
@@ -2240,7 +2316,7 @@ module Redis::Commands::SortedSets
   # @param member [String]
   # @return [Float] score of the member
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#221
+  # source://redis//lib/redis/commands/sorted_sets.rb#287
   def zscore(key, member); end
 
   # Return the union of multiple sorted sets
@@ -2259,7 +2335,7 @@ module Redis::Commands::SortedSets
   # @return [Array<String>, Array<[String, Float]>] - when `:with_scores` is not specified, an array of members
   #   - when `:with_scores` is specified, an array with `[member, score]` pairs
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#678
+  # source://redis//lib/redis/commands/sorted_sets.rb#744
   def zunion(*args, **_arg1); end
 
   # Add multiple sorted sets and store the resulting sorted set in a new key.
@@ -2274,15 +2350,15 @@ module Redis::Commands::SortedSets
   #   - `:aggregate => String`: aggregate function to use (sum, min, max, ...)
   # @return [Integer] number of elements in the resulting sorted set
   #
-  # source://redis//lib/redis/commands/sorted_sets.rb#696
+  # source://redis//lib/redis/commands/sorted_sets.rb#762
   def zunionstore(*args, **_arg1); end
 
   private
 
-  # source://redis//lib/redis/commands/sorted_sets.rb#784
+  # source://redis//lib/redis/commands/sorted_sets.rb#850
   def _zsets_operation(cmd, *keys, weights: T.unsafe(nil), aggregate: T.unsafe(nil), with_scores: T.unsafe(nil)); end
 
-  # source://redis//lib/redis/commands/sorted_sets.rb#803
+  # source://redis//lib/redis/commands/sorted_sets.rb#869
   def _zsets_operation_store(cmd, destination, keys, weights: T.unsafe(nil), aggregate: T.unsafe(nil)); end
 end
 
@@ -2948,7 +3024,7 @@ class Redis::Distributed
   # source://redis//lib/redis/distributed.rb#466
   def _bpop(cmd, args); end
 
-  # source://redis//lib/redis/distributed.rb#1000
+  # source://redis//lib/redis/distributed.rb#1028
   def _eval(cmd, args); end
 
   # source://redis//lib/redis/distributed.rb#41
@@ -2985,6 +3061,11 @@ class Redis::Distributed
   # source://redis//lib/redis/distributed.rb#422
   def blmove(source, destination, where_source, where_destination, timeout: T.unsafe(nil)); end
 
+  # Iterate over keys, blocking and removing elements from the first non empty liist found.
+  #
+  # source://redis//lib/redis/distributed.rb#546
+  def blmpop(timeout, *keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
+
   # Remove and get the first element in a list, or block until one is
   # available.
   #
@@ -3002,6 +3083,11 @@ class Redis::Distributed
   #
   # source://redis//lib/redis/distributed.rb#509
   def brpoplpush(source, destination, **options); end
+
+  # Iterate over keys, blocking and removing members from the first non empty sorted set found.
+  #
+  # source://redis//lib/redis/distributed.rb#712
+  def bzmpop(timeout, *keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
 
   # source://redis//lib/redis/distributed.rb#489
   def bzpopmax(*args); end
@@ -3041,7 +3127,7 @@ class Redis::Distributed
   #
   # @raise [CannotDistribute]
   #
-  # source://redis//lib/redis/distributed.rb#967
+  # source://redis//lib/redis/distributed.rb#995
   def discard; end
 
   # Return a serialized version of the value stored at a key.
@@ -3049,7 +3135,7 @@ class Redis::Distributed
   # source://redis//lib/redis/distributed.rb#154
   def dump(key); end
 
-  # source://redis//lib/redis/distributed.rb#1027
+  # source://redis//lib/redis/distributed.rb#1055
   def dup; end
 
   # Echo the given string.
@@ -3059,19 +3145,19 @@ class Redis::Distributed
 
   # Evaluate Lua script.
   #
-  # source://redis//lib/redis/distributed.rb#1014
+  # source://redis//lib/redis/distributed.rb#1042
   def eval(*args); end
 
   # Evaluate Lua script by its SHA.
   #
-  # source://redis//lib/redis/distributed.rb#1019
+  # source://redis//lib/redis/distributed.rb#1047
   def evalsha(*args); end
 
   # Execute all commands issued after MULTI.
   #
   # @raise [CannotDistribute]
   #
-  # source://redis//lib/redis/distributed.rb#958
+  # source://redis//lib/redis/distributed.rb#986
   def exec; end
 
   # Determine if a key exists.
@@ -3138,70 +3224,70 @@ class Redis::Distributed
 
   # Delete one or more hash fields.
   #
-  # source://redis//lib/redis/distributed.rb#848
+  # source://redis//lib/redis/distributed.rb#876
   def hdel(key, *fields); end
 
   # Determine if a hash field exists.
   #
-  # source://redis//lib/redis/distributed.rb#854
+  # source://redis//lib/redis/distributed.rb#882
   def hexists(key, field); end
 
   # Get the value of a hash field.
   #
-  # source://redis//lib/redis/distributed.rb#828
+  # source://redis//lib/redis/distributed.rb#856
   def hget(key, field); end
 
   # Get all the fields and values in a hash.
   #
-  # source://redis//lib/redis/distributed.rb#879
+  # source://redis//lib/redis/distributed.rb#907
   def hgetall(key); end
 
   # Increment the integer value of a hash field by the given integer number.
   #
-  # source://redis//lib/redis/distributed.rb#859
+  # source://redis//lib/redis/distributed.rb#887
   def hincrby(key, field, increment); end
 
   # Increment the numeric value of a hash field by the given float number.
   #
-  # source://redis//lib/redis/distributed.rb#864
+  # source://redis//lib/redis/distributed.rb#892
   def hincrbyfloat(key, field, increment); end
 
   # Get all the fields in a hash.
   #
-  # source://redis//lib/redis/distributed.rb#869
+  # source://redis//lib/redis/distributed.rb#897
   def hkeys(key); end
 
   # Get the number of fields in a hash.
   #
-  # source://redis//lib/redis/distributed.rb#804
+  # source://redis//lib/redis/distributed.rb#832
   def hlen(key); end
 
   # Get the values of all the given hash fields.
   #
-  # source://redis//lib/redis/distributed.rb#833
+  # source://redis//lib/redis/distributed.rb#861
   def hmget(key, *fields); end
 
   # Set multiple hash fields to multiple values.
   #
-  # source://redis//lib/redis/distributed.rb#819
+  # source://redis//lib/redis/distributed.rb#847
   def hmset(key, *attrs); end
 
-  # source://redis//lib/redis/distributed.rb#843
+  # source://redis//lib/redis/distributed.rb#871
   def hrandfield(key, count = T.unsafe(nil), **options); end
 
   # Set multiple hash fields to multiple values.
   #
-  # source://redis//lib/redis/distributed.rb#809
+  # source://redis//lib/redis/distributed.rb#837
   def hset(key, *attrs); end
 
   # Set the value of a hash field, only if the field does not exist.
   #
-  # source://redis//lib/redis/distributed.rb#814
+  # source://redis//lib/redis/distributed.rb#842
   def hsetnx(key, field, value); end
 
   # Get all the values in a hash.
   #
-  # source://redis//lib/redis/distributed.rb#874
+  # source://redis//lib/redis/distributed.rb#902
   def hvals(key); end
 
   # Increment the integer value of a key by one.
@@ -3224,7 +3310,7 @@ class Redis::Distributed
   # source://redis//lib/redis/distributed.rb#94
   def info(cmd = T.unsafe(nil)); end
 
-  # source://redis//lib/redis/distributed.rb#1023
+  # source://redis//lib/redis/distributed.rb#1051
   def inspect; end
 
   # Find all keys matching the given pattern.
@@ -3256,6 +3342,11 @@ class Redis::Distributed
   #
   # source://redis//lib/redis/distributed.rb#414
   def lmove(source, destination, where_source, where_destination); end
+
+  # Iterate over keys, removing elements from the first non list found.
+  #
+  # source://redis//lib/redis/distributed.rb#553
+  def lmpop(*keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
 
   # Remove and get the first elements in a list.
   #
@@ -3292,10 +3383,10 @@ class Redis::Distributed
   # source://redis//lib/redis/distributed.rb#541
   def ltrim(key, start, stop); end
 
-  # source://redis//lib/redis/distributed.rb#838
+  # source://redis//lib/redis/distributed.rb#866
   def mapped_hmget(key, *fields); end
 
-  # source://redis//lib/redis/distributed.rb#823
+  # source://redis//lib/redis/distributed.rb#851
   def mapped_hmset(key, hash); end
 
   # Get the values of all the given keys as a Hash.
@@ -3355,7 +3446,7 @@ class Redis::Distributed
   #
   # @raise [CannotDistribute]
   #
-  # source://redis//lib/redis/distributed.rb#951
+  # source://redis//lib/redis/distributed.rb#979
   def multi(&block); end
 
   # @raise [CannotDistribute]
@@ -3383,18 +3474,18 @@ class Redis::Distributed
 
   # Add one or more members to a HyperLogLog structure.
   #
-  # source://redis//lib/redis/distributed.rb#981
+  # source://redis//lib/redis/distributed.rb#1009
   def pfadd(key, member); end
 
   # Get the approximate cardinality of members added to HyperLogLog structure.
   #
-  # source://redis//lib/redis/distributed.rb#986
+  # source://redis//lib/redis/distributed.rb#1014
   def pfcount(*keys); end
 
   # Merge multiple HyperLogLog values into an unique value that will approximate the cardinality of the union of
   # the observed Sets of the source HyperLogLog structures.
   #
-  # source://redis//lib/redis/distributed.rb#994
+  # source://redis//lib/redis/distributed.rb#1022
   def pfmerge(dest_key, *source_key); end
 
   # Ping the server.
@@ -3404,7 +3495,7 @@ class Redis::Distributed
 
   # @raise [CannotDistribute]
   #
-  # source://redis//lib/redis/distributed.rb#946
+  # source://redis//lib/redis/distributed.rb#974
   def pipelined; end
 
   # Set the time to live in milliseconds of a key.
@@ -3416,7 +3507,7 @@ class Redis::Distributed
   #
   # @raise [NotImplementedError]
   #
-  # source://redis//lib/redis/distributed.rb#913
+  # source://redis//lib/redis/distributed.rb#941
   def psubscribe(*channels, &block); end
 
   # Get the time to live (in milliseconds) for a key.
@@ -3426,7 +3517,7 @@ class Redis::Distributed
 
   # Post a message to a channel.
   #
-  # source://redis//lib/redis/distributed.rb#884
+  # source://redis//lib/redis/distributed.rb#912
   def publish(channel, message); end
 
   # Stop listening for messages posted to channels matching the given
@@ -3434,7 +3525,7 @@ class Redis::Distributed
   #
   # @raise [NotImplementedError]
   #
-  # source://redis//lib/redis/distributed.rb#919
+  # source://redis//lib/redis/distributed.rb#947
   def punsubscribe(*channels); end
 
   # Close the connection.
@@ -3492,14 +3583,14 @@ class Redis::Distributed
 
   # Add one or more members to a set.
   #
-  # source://redis//lib/redis/distributed.rb#551
+  # source://redis//lib/redis/distributed.rb#565
   def sadd(key, *members); end
 
   # Add one or more members to a set.
   #
   # @return [Boolean]
   #
-  # source://redis//lib/redis/distributed.rb#556
+  # source://redis//lib/redis/distributed.rb#570
   def sadd?(key, *members); end
 
   # Synchronously save the dataset to disk.
@@ -3509,22 +3600,22 @@ class Redis::Distributed
 
   # Get the number of members in a set.
   #
-  # source://redis//lib/redis/distributed.rb#546
+  # source://redis//lib/redis/distributed.rb#560
   def scard(key); end
 
   # Control remote script registry.
   #
-  # source://redis//lib/redis/distributed.rb#976
+  # source://redis//lib/redis/distributed.rb#1004
   def script(subcommand, *args); end
 
   # Subtract multiple sets.
   #
-  # source://redis//lib/redis/distributed.rb#613
+  # source://redis//lib/redis/distributed.rb#627
   def sdiff(*keys); end
 
   # Subtract multiple sets and store the resulting set in a key.
   #
-  # source://redis//lib/redis/distributed.rb#621
+  # source://redis//lib/redis/distributed.rb#635
   def sdiffstore(destination, *keys); end
 
   # Change the selected database for the current connection.
@@ -3559,32 +3650,32 @@ class Redis::Distributed
 
   # Intersect multiple sets.
   #
-  # source://redis//lib/redis/distributed.rb#629
+  # source://redis//lib/redis/distributed.rb#643
   def sinter(*keys); end
 
   # Intersect multiple sets and store the resulting set in a key.
   #
-  # source://redis//lib/redis/distributed.rb#637
+  # source://redis//lib/redis/distributed.rb#651
   def sinterstore(destination, *keys); end
 
   # Determine if a given value is a member of a set.
   #
-  # source://redis//lib/redis/distributed.rb#588
+  # source://redis//lib/redis/distributed.rb#602
   def sismember(key, member); end
 
   # Get all the members in a set.
   #
-  # source://redis//lib/redis/distributed.rb#598
+  # source://redis//lib/redis/distributed.rb#612
   def smembers(key); end
 
   # Determine if multiple values are members of a set.
   #
-  # source://redis//lib/redis/distributed.rb#593
+  # source://redis//lib/redis/distributed.rb#607
   def smismember(key, *members); end
 
   # Move a member from one set to another.
   #
-  # source://redis//lib/redis/distributed.rb#581
+  # source://redis//lib/redis/distributed.rb#595
   def smove(source, destination, member); end
 
   # Sort the elements in a list, set or sorted set.
@@ -3594,34 +3685,34 @@ class Redis::Distributed
 
   # Remove and return a random member from a set.
   #
-  # source://redis//lib/redis/distributed.rb#571
+  # source://redis//lib/redis/distributed.rb#585
   def spop(key, count = T.unsafe(nil)); end
 
   # Get a random member from a set.
   #
-  # source://redis//lib/redis/distributed.rb#576
+  # source://redis//lib/redis/distributed.rb#590
   def srandmember(key, count = T.unsafe(nil)); end
 
   # Remove one or more members from a set.
   #
-  # source://redis//lib/redis/distributed.rb#561
+  # source://redis//lib/redis/distributed.rb#575
   def srem(key, *members); end
 
   # Remove one or more members from a set.
   #
   # @return [Boolean]
   #
-  # source://redis//lib/redis/distributed.rb#566
+  # source://redis//lib/redis/distributed.rb#580
   def srem?(key, *members); end
 
   # Scan a set
   #
-  # source://redis//lib/redis/distributed.rb#603
+  # source://redis//lib/redis/distributed.rb#617
   def sscan(key, cursor, **options); end
 
   # Scan a set and return an enumerator
   #
-  # source://redis//lib/redis/distributed.rb#608
+  # source://redis//lib/redis/distributed.rb#622
   def sscan_each(key, **options, &block); end
 
   # Get the length of the value stored in a key.
@@ -3631,22 +3722,22 @@ class Redis::Distributed
 
   # Listen for messages published to the given channels.
   #
-  # source://redis//lib/redis/distributed.rb#893
+  # source://redis//lib/redis/distributed.rb#921
   def subscribe(channel, *channels, &block); end
 
   # @return [Boolean]
   #
-  # source://redis//lib/redis/distributed.rb#888
+  # source://redis//lib/redis/distributed.rb#916
   def subscribed?; end
 
   # Add multiple sets.
   #
-  # source://redis//lib/redis/distributed.rb#645
+  # source://redis//lib/redis/distributed.rb#659
   def sunion(*keys); end
 
   # Add multiple sets and store the resulting set in a key.
   #
-  # source://redis//lib/redis/distributed.rb#653
+  # source://redis//lib/redis/distributed.rb#667
   def sunionstore(destination, *keys); end
 
   # Get server time: an UNIX timestamp and the elapsed microseconds in the current second.
@@ -3673,157 +3764,162 @@ class Redis::Distributed
   #
   # @raise [SubscriptionError]
   #
-  # source://redis//lib/redis/distributed.rb#906
+  # source://redis//lib/redis/distributed.rb#934
   def unsubscribe(*channels); end
 
   # Forget about all watched keys.
   #
   # @raise [CannotDistribute]
   #
-  # source://redis//lib/redis/distributed.rb#938
+  # source://redis//lib/redis/distributed.rb#966
   def unwatch; end
 
   # Watch the given keys to determine execution of the MULTI/EXEC block.
   #
-  # source://redis//lib/redis/distributed.rb#924
+  # source://redis//lib/redis/distributed.rb#952
   def watch(*keys, &block); end
 
   # Add one or more members to a sorted set, or update the score for members
   # that already exist.
   #
-  # source://redis//lib/redis/distributed.rb#667
+  # source://redis//lib/redis/distributed.rb#681
   def zadd(key, *args, **_arg2); end
 
   # Get the number of members in a sorted set.
   #
-  # source://redis//lib/redis/distributed.rb#661
+  # source://redis//lib/redis/distributed.rb#675
   def zcard(key); end
 
   # Get the number of members in a particular score range.
   #
-  # source://redis//lib/redis/distributed.rb#749
+  # source://redis//lib/redis/distributed.rb#777
   def zcount(key, min, max); end
 
   # Return the difference between the first and all successive input sorted sets.
   #
-  # source://redis//lib/redis/distributed.rb#787
+  # source://redis//lib/redis/distributed.rb#815
   def zdiff(*keys, **options); end
 
   # Compute the difference between the first and all successive input sorted sets
   # and store the resulting sorted set in a new key.
   #
-  # source://redis//lib/redis/distributed.rb#796
+  # source://redis//lib/redis/distributed.rb#824
   def zdiffstore(destination, *keys, **options); end
 
   # Increment the score of a member in a sorted set.
   #
-  # source://redis//lib/redis/distributed.rb#673
+  # source://redis//lib/redis/distributed.rb#687
   def zincrby(key, increment, member); end
 
   # Get the intersection of multiple sorted sets
   #
-  # source://redis//lib/redis/distributed.rb#754
+  # source://redis//lib/redis/distributed.rb#782
   def zinter(*keys, **options); end
 
   # Intersect multiple sorted sets and store the resulting sorted set in a new
   # key.
   #
-  # source://redis//lib/redis/distributed.rb#763
+  # source://redis//lib/redis/distributed.rb#791
   def zinterstore(destination, *keys, **options); end
+
+  # Iterate over keys, removing members from the first non empty sorted set found.
+  #
+  # source://redis//lib/redis/distributed.rb#719
+  def zmpop(*keys, modifier: T.unsafe(nil), count: T.unsafe(nil)); end
 
   # Get the scores associated with the given members in a sorted set.
   #
-  # source://redis//lib/redis/distributed.rb#693
+  # source://redis//lib/redis/distributed.rb#707
   def zmscore(key, *members); end
 
   # Get one or more random members from a sorted set.
   #
-  # source://redis//lib/redis/distributed.rb#688
+  # source://redis//lib/redis/distributed.rb#702
   def zrandmember(key, count = T.unsafe(nil), **options); end
 
   # Return a range of members in a sorted set, by index, score or lexicographical ordering.
   #
-  # source://redis//lib/redis/distributed.rb#698
+  # source://redis//lib/redis/distributed.rb#726
   def zrange(key, start, stop, **options); end
 
   # Return a range of members in a sorted set, by score.
   #
-  # source://redis//lib/redis/distributed.rb#733
+  # source://redis//lib/redis/distributed.rb#761
   def zrangebyscore(key, min, max, **options); end
 
   # Select a range of members in a sorted set, by index, score or lexicographical ordering
   # and store the resulting sorted set in a new key.
   #
-  # source://redis//lib/redis/distributed.rb#704
+  # source://redis//lib/redis/distributed.rb#732
   def zrangestore(dest_key, src_key, start, stop, **options); end
 
   # Determine the index of a member in a sorted set.
   #
-  # source://redis//lib/redis/distributed.rb#717
+  # source://redis//lib/redis/distributed.rb#745
   def zrank(key, member); end
 
   # Remove one or more members from a sorted set.
   #
-  # source://redis//lib/redis/distributed.rb#678
+  # source://redis//lib/redis/distributed.rb#692
   def zrem(key, member); end
 
   # Remove all members in a sorted set within the given indexes.
   #
-  # source://redis//lib/redis/distributed.rb#728
+  # source://redis//lib/redis/distributed.rb#756
   def zremrangebyrank(key, start, stop); end
 
   # Remove all members in a sorted set within the given scores.
   #
-  # source://redis//lib/redis/distributed.rb#744
+  # source://redis//lib/redis/distributed.rb#772
   def zremrangebyscore(key, min, max); end
 
   # Return a range of members in a sorted set, by index, with scores ordered
   # from high to low.
   #
-  # source://redis//lib/redis/distributed.rb#712
+  # source://redis//lib/redis/distributed.rb#740
   def zrevrange(key, start, stop, **options); end
 
   # Return a range of members in a sorted set, by score, with scores ordered
   # from high to low.
   #
-  # source://redis//lib/redis/distributed.rb#739
+  # source://redis//lib/redis/distributed.rb#767
   def zrevrangebyscore(key, max, min, **options); end
 
   # Determine the index of a member in a sorted set, with scores ordered from
   # high to low.
   #
-  # source://redis//lib/redis/distributed.rb#723
+  # source://redis//lib/redis/distributed.rb#751
   def zrevrank(key, member); end
 
   # Get the score associated with the given member in a sorted set.
   #
-  # source://redis//lib/redis/distributed.rb#683
+  # source://redis//lib/redis/distributed.rb#697
   def zscore(key, member); end
 
   # Return the union of multiple sorted sets.
   #
-  # source://redis//lib/redis/distributed.rb#771
+  # source://redis//lib/redis/distributed.rb#799
   def zunion(*keys, **options); end
 
   # Add multiple sorted sets and store the resulting sorted set in a new key.
   #
-  # source://redis//lib/redis/distributed.rb#779
+  # source://redis//lib/redis/distributed.rb#807
   def zunionstore(destination, *keys, **options); end
 
   protected
 
   # @yield [node_for(keys.first)]
   #
-  # source://redis//lib/redis/distributed.rb#1048
+  # source://redis//lib/redis/distributed.rb#1076
   def ensure_same_node(command, keys); end
 
-  # source://redis//lib/redis/distributed.rb#1043
+  # source://redis//lib/redis/distributed.rb#1071
   def key_tag(key); end
 
-  # source://redis//lib/redis/distributed.rb#1039
+  # source://redis//lib/redis/distributed.rb#1067
   def node_index_for(key); end
 
-  # source://redis//lib/redis/distributed.rb#1033
+  # source://redis//lib/redis/distributed.rb#1061
   def on_each_node(command, *args); end
 end
 
@@ -4075,7 +4171,7 @@ class Redis::SubscribedClient
   # source://redis//lib/redis/subscribe.rb#10
   def call_v(command); end
 
-  # source://redis//lib/redis/subscribe.rb#40
+  # source://redis//lib/redis/subscribe.rb#52
   def close; end
 
   # source://redis//lib/redis/subscribe.rb#24
@@ -4084,8 +4180,14 @@ class Redis::SubscribedClient
   # source://redis//lib/redis/subscribe.rb#28
   def psubscribe_with_timeout(timeout, *channels, &block); end
 
-  # source://redis//lib/redis/subscribe.rb#36
+  # source://redis//lib/redis/subscribe.rb#44
   def punsubscribe(*channels); end
+
+  # source://redis//lib/redis/subscribe.rb#32
+  def ssubscribe(*channels, &block); end
+
+  # source://redis//lib/redis/subscribe.rb#36
+  def ssubscribe_with_timeout(timeout, *channels, &block); end
 
   # source://redis//lib/redis/subscribe.rb#16
   def subscribe(*channels, &block); end
@@ -4093,45 +4195,57 @@ class Redis::SubscribedClient
   # source://redis//lib/redis/subscribe.rb#20
   def subscribe_with_timeout(timeout, *channels, &block); end
 
-  # source://redis//lib/redis/subscribe.rb#32
+  # source://redis//lib/redis/subscribe.rb#48
+  def sunsubscribe(*channels); end
+
+  # source://redis//lib/redis/subscribe.rb#40
   def unsubscribe(*channels); end
 
   protected
 
-  # source://redis//lib/redis/subscribe.rb#46
+  # source://redis//lib/redis/subscribe.rb#58
   def subscription(start, stop, channels, block, timeout = T.unsafe(nil)); end
 end
 
-# source://redis//lib/redis/subscribe.rb#66
+# source://redis//lib/redis/subscribe.rb#82
 class Redis::Subscription
   # @return [Subscription] a new instance of Subscription
   # @yield [_self]
   # @yieldparam _self [Redis::Subscription] the object that the method was called on
   #
-  # source://redis//lib/redis/subscribe.rb#69
+  # source://redis//lib/redis/subscribe.rb#85
   def initialize; end
 
   # Returns the value of attribute callbacks.
   #
-  # source://redis//lib/redis/subscribe.rb#67
+  # source://redis//lib/redis/subscribe.rb#83
   def callbacks; end
 
-  # source://redis//lib/redis/subscribe.rb#82
+  # source://redis//lib/redis/subscribe.rb#98
   def message(&block); end
 
-  # source://redis//lib/redis/subscribe.rb#94
+  # source://redis//lib/redis/subscribe.rb#110
   def pmessage(&block); end
 
-  # source://redis//lib/redis/subscribe.rb#86
+  # source://redis//lib/redis/subscribe.rb#102
   def psubscribe(&block); end
 
-  # source://redis//lib/redis/subscribe.rb#90
+  # source://redis//lib/redis/subscribe.rb#106
   def punsubscribe(&block); end
 
-  # source://redis//lib/redis/subscribe.rb#74
+  # source://redis//lib/redis/subscribe.rb#122
+  def smessage(&block); end
+
+  # source://redis//lib/redis/subscribe.rb#114
+  def ssubscribe(&block); end
+
+  # source://redis//lib/redis/subscribe.rb#90
   def subscribe(&block); end
 
-  # source://redis//lib/redis/subscribe.rb#78
+  # source://redis//lib/redis/subscribe.rb#118
+  def sunsubscribe(&block); end
+
+  # source://redis//lib/redis/subscribe.rb#94
   def unsubscribe(&block); end
 end
 

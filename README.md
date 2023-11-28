@@ -86,6 +86,7 @@ Options:
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
+                                     # Default: false
 
 ```
 <!-- END_HELP -->
@@ -119,6 +120,7 @@ Options:
   -c, [--config=<config file path>]  # Path to the Tapioca configuration file
                                      # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]    # Verbose output for debugging purposes
+                                     # Default: false
 
 Get project ready for type checking
 ```
@@ -167,14 +169,17 @@ Options:
                [--file-header], [--no-file-header]                    # Add a "This file is generated" header on top of each generated RBI file
                                                                       # Default: true
                [--all], [--no-all]                                    # Regenerate RBI files for all gems
+                                                                      # Default: false
   --pre, -b,   [--prerequire=file]                                    # A file to be required before Bundler.require is called
   --post, -a,  [--postrequire=file]                                   # A file to be required after Bundler.require is called
                                                                       # Default: sorbet/tapioca/require.rb
   -x,          [--exclude=gem [gem ...]]                              # Exclude the given gem(s) from RBI generation
                [--include-dependencies], [--no-include-dependencies]  # Generate RBI files for dependencies of the given gem(s)
+                                                                      # Default: false
   --typed, -t, [--typed-overrides=gem:level [gem:level ...]]          # Override for typed sigils for generated gem RBIs
                                                                       # Default: {"activesupport"=>"false"}
                [--verify], [--no-verify]                              # Verify RBIs are up-to-date
+                                                                      # Default: false
                [--doc], [--no-doc]                                    # Include YARD documentation from sources when generating RBIs. Warning: this might be slow
                                                                       # Default: true
                [--loc], [--no-loc]                                    # Include comments with source location when generating RBIs
@@ -195,6 +200,7 @@ Options:
   -c,          [--config=<config file path>]                          # Path to the Tapioca configuration file
                                                                       # Default: sorbet/tapioca/config.yml
   -V,          [--verbose], [--no-verbose]                            # Verbose output for debugging purposes
+                                                                      # Default: false
 
 Generate RBIs from gems
 ```
@@ -350,7 +356,7 @@ Usage:
 
 Options:
                [--sources=one two three]                      # URIs of the sources to pull gem RBI annotations from
-                                                              # Default: ["https://raw.githubusercontent.com/Shopify/rbi-central/main"]
+                                                              # Default: "https://raw.githubusercontent.com/Shopify/rbi-central/main"
                [--netrc], [--no-netrc]                        # Use .netrc to authenticate to private sources
                                                               # Default: true
                [--netrc-file=NETRC_FILE]                      # Path to .netrc file
@@ -359,6 +365,7 @@ Options:
   -c,          [--config=<config file path>]                  # Path to the Tapioca configuration file
                                                               # Default: sorbet/tapioca/config.yml
   -V,          [--verbose], [--no-verbose]                    # Verbose output for debugging purposes
+                                                              # Default: false
 
 Pull gem RBI annotations from remote sources
 ```
@@ -467,7 +474,9 @@ Options:
              [--only=compiler [compiler ...]]                       # Only run supplied DSL compiler(s)
              [--exclude=compiler [compiler ...]]                    # Exclude supplied DSL compiler(s)
              [--verify], [--no-verify]                              # Verifies RBIs are up-to-date
+                                                                    # Default: false
   -q,        [--quiet], [--no-quiet]                                # Suppresses file creation output
+                                                                    # Default: false
   -w,        [--workers=N]                                          # Number of parallel workers to use when generating RBIs (default: 2)
                                                                     # Default: 2
              [--rbi-max-line-length=N]                              # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
@@ -475,6 +484,7 @@ Options:
   -e,        [--environment=ENVIRONMENT]                            # The Rack/Rails environment to use when generating RBIs
                                                                     # Default: development
   -l,        [--list-compilers], [--no-list-compilers]              # List all loaded compilers
+                                                                    # Default: false
              [--app-root=APP_ROOT]                                  # The path to the Rails application
                                                                     # Default: .
              [--halt-upon-load-error], [--no-halt-upon-load-error]  # Halt upon a load error while loading the Rails application
@@ -482,6 +492,7 @@ Options:
   -c,        [--config=<config file path>]                          # Path to the Tapioca configuration file
                                                                     # Default: sorbet/tapioca/config.yml
   -V,        [--verbose], [--no-verbose]                            # Verbose output for debugging purposes
+                                                                    # Default: false
 
 Generate RBIs for dynamic methods
 ```
@@ -845,6 +856,7 @@ Options:
   -c, [--config=<config file path>]                # Path to the Tapioca configuration file
                                                    # Default: sorbet/tapioca/config.yml
   -V, [--verbose], [--no-verbose]                  # Verbose output for debugging purposes
+                                                   # Default: false
 
 Check duplicated definitions in shim RBIs
 ```
