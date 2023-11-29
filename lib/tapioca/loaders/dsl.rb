@@ -70,6 +70,14 @@ module Tapioca
           require File.expand_path(compiler)
         end
 
+        if defined?(Rails::Engine)
+          Rails::Engine.descendants.reject(&:abstract_railtie).each do |engine|
+            engine.root.glob("tapioca/dsl/compilers/*.rb").each do |compiler|
+              require File.expand_path(compiler)
+            end
+          end
+        end
+
         ::Gem.find_files("tapioca/dsl/compilers/*.rb").each do |compiler|
           require File.expand_path(compiler)
         end
