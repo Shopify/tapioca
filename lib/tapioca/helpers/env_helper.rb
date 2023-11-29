@@ -11,7 +11,7 @@ module Tapioca
     sig { params(options: T::Hash[Symbol, T.untyped]).void }
     def set_environment(options) # rubocop:disable Naming/AccessorMethodName
       ENV["RAILS_ENV"] = ENV["RACK_ENV"] = options[:environment]
-      ENV["RUBY_DEBUG_ENABLE"] = "0"
+      ENV["RUBY_DEBUG_LAZY"] = "1"
     end
   end
 end
