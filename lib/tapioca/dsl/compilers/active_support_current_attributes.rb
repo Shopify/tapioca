@@ -40,23 +40,27 @@ module Tapioca
       # # typed: true
       #
       # class Current
-      #   sig { returns(T.untyped) }
-      #   def self.account; end
+      #   include CurrentAttributesMethods
       #
-      #   sig { returns(T.untyped) }
-      #   def account; end
+      #   module CurrentAttributesMethods
+      #     sig { returns(T.untyped) }
+      #     def self.account; end
       #
-      #   sig { params(account: T.untyped).returns(T.untyped) }
-      #   def self.account=(account); end
+      #     sig { returns(T.untyped) }
+      #     def account; end
       #
-      #   sig { params(account: T.untyped).returns(T.untyped) }
-      #   def account=(account); end
+      #     sig { params(account: T.untyped).returns(T.untyped) }
+      #     def self.account=(account); end
       #
-      #   sig { params(user_id: Integer).void }
-      #   def self.authenticate(user_id); end
+      #     sig { params(account: T.untyped).returns(T.untyped) }
+      #     def account=(account); end
       #
-      #   sig { returns(T.untyped) }
-      #   def self.helper; end
+      #     sig { params(user_id: Integer).void }
+      #     def self.authenticate(user_id); end
+      #
+      #     sig { returns(T.untyped) }
+      #     def self.helper; end
+      #   end
       # end
       # ~~~
       class ActiveSupportCurrentAttributes < Compiler
@@ -71,20 +75,25 @@ module Tapioca
           return if dynamic_methods.empty? && instance_methods.empty?
 
           root.create_path(constant) do |current_attributes|
-            dynamic_methods.each do |method|
-              method = method.to_s
-              # We want to generate each method both on the class
-              generate_method(current_attributes, method, class_method: true)
-              # and on the instance
-              generate_method(current_attributes, method, class_method: false)
+            current_attributes_methods_name = "CurrentAttributesMethods"
+            current_attributes.create_module(current_attributes_methods_name) do |mod|
+              dynamic_methods.each do |method|
+                method = method.to_s
+                # We want to generate each method both on the class
+                generate_method(current_attributes, method, class_method: true)
+                # and on the instance
+                generate_method(mod, method, class_method: false)
+              end
+
+              instance_methods.each do |method|
+                # instance methods are only elevated to class methods
+                # no need to add separate instance methods for them
+                method = constant.instance_method(method)
+                create_method_from_def(current_attributes, method, class_method: true)
+              end
             end
 
-            instance_methods.each do |method|
-              # instance methods are only elevated to class methods
-              # no need to add separate instance methods for them
-              method = constant.instance_method(method)
-              create_method_from_def(current_attributes, method, class_method: true)
-            end
+            current_attributes.create_include(current_attributes_methods_name)
           end
         end
 

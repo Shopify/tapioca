@@ -28,22 +28,26 @@ this compiler will produce an RBI file with the following content:
 # typed: true
 
 class Current
-  sig { returns(T.untyped) }
-  def self.account; end
+  include CurrentAttributesMethods
 
-  sig { returns(T.untyped) }
-  def account; end
+  module CurrentAttributesMethods
+    sig { returns(T.untyped) }
+    def self.account; end
 
-  sig { params(account: T.untyped).returns(T.untyped) }
-  def self.account=(account); end
+    sig { returns(T.untyped) }
+    def account; end
 
-  sig { params(account: T.untyped).returns(T.untyped) }
-  def account=(account); end
+    sig { params(account: T.untyped).returns(T.untyped) }
+    def self.account=(account); end
 
-  sig { params(user_id: Integer).void }
-  def self.authenticate(user_id); end
+    sig { params(account: T.untyped).returns(T.untyped) }
+    def account=(account); end
 
-  sig { returns(T.untyped) }
-  def self.helper; end
+    sig { params(user_id: Integer).void }
+    def self.authenticate(user_id); end
+
+    sig { returns(T.untyped) }
+    def self.helper; end
+  end
 end
 ~~~
