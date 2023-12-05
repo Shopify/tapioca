@@ -42,24 +42,26 @@ module Tapioca
       # class Current
       #   include GeneratedAttributeMethods
       #
-      #   module GeneratedAttributeMethods
-      #     sig { returns(T.untyped) }
-      #     def self.account; end
-      #
+      #   class << self
       #     sig { returns(T.untyped) }
       #     def account; end
-      #
-      #     sig { params(account: T.untyped).returns(T.untyped) }
-      #     def self.account=(account); end
       #
       #     sig { params(account: T.untyped).returns(T.untyped) }
       #     def account=(account); end
       #
       #     sig { params(user_id: Integer).void }
-      #     def self.authenticate(user_id); end
+      #     def authenticate(user_id); end
       #
       #     sig { returns(T.untyped) }
-      #     def self.helper; end
+      #     def helper; end
+      #   end
+      #
+      #   module GeneratedAttributeMethods
+      #     sig { returns(T.untyped) }
+      #     def account; end
+      #
+      #     sig { params(account: T.untyped).returns(T.untyped) }
+      #     def account=(account); end
       #   end
       # end
       # ~~~
