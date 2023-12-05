@@ -28,9 +28,9 @@ this compiler will produce an RBI file with the following content:
 # typed: true
 
 class Current
-  include CurrentAttributesMethods
+  include GeneratedAttributeMethods
 
-  module CurrentAttributesMethods
+  module GeneratedAttributeMethods
     sig { returns(T.untyped) }
     def self.account; end
 

@@ -51,7 +51,7 @@ module Tapioca
                 # typed: strong
 
                 class Current
-                  include CurrentAttributesMethods
+                  include GeneratedAttributeMethods
 
                   class << self
                     sig { returns(T.untyped) }
@@ -67,7 +67,7 @@ module Tapioca
                     def user=(value); end
                   end
 
-                  module CurrentAttributesMethods
+                  module GeneratedAttributeMethods
                     sig { returns(T.untyped) }
                     def account; end
 
@@ -108,7 +108,7 @@ module Tapioca
                 # typed: strong
 
                 class Current
-                  include CurrentAttributesMethods
+                  include GeneratedAttributeMethods
 
                   class << self
                     sig { returns(T.untyped) }
@@ -124,7 +124,7 @@ module Tapioca
                     def helper; end
                   end
 
-                  module CurrentAttributesMethods
+                  module GeneratedAttributeMethods
                     sig { returns(T.untyped) }
                     def account; end
 

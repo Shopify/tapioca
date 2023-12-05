@@ -40,9 +40,9 @@ module Tapioca
       # # typed: true
       #
       # class Current
-      #   include CurrentAttributesMethods
+      #   include GeneratedAttributeMethods
       #
-      #   module CurrentAttributesMethods
+      #   module GeneratedAttributeMethods
       #     sig { returns(T.untyped) }
       #     def self.account; end
       #
@@ -75,7 +75,7 @@ module Tapioca
           return if dynamic_methods.empty? && instance_methods.empty?
 
           root.create_path(constant) do |current_attributes|
-            current_attributes_methods_name = "CurrentAttributesMethods"
+            current_attributes_methods_name = "GeneratedAttributeMethods"
             current_attributes.create_module(current_attributes_methods_name) do |mod|
               dynamic_methods.each do |method|
                 method = method.to_s
