@@ -76,13 +76,13 @@ module Tapioca
 
           root.create_path(constant) do |current_attributes|
             current_attributes_methods_name = "GeneratedAttributeMethods"
-            current_attributes.create_module(current_attributes_methods_name) do |mod|
+            current_attributes.create_module(current_attributes_methods_name) do |generated_attribute_methods|
               dynamic_methods.each do |method|
                 method = method.to_s
                 # We want to generate each method both on the class
                 generate_method(current_attributes, method, class_method: true)
                 # and on the instance
-                generate_method(mod, method, class_method: false)
+                generate_method(generated_attribute_methods, method, class_method: false)
               end
 
               instance_methods.each do |method|
