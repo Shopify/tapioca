@@ -51,19 +51,23 @@ module Tapioca
                 # typed: strong
 
                 class Current
-                  sig { returns(T.untyped) }
-                  def account; end
-
-                  sig { params(value: T.untyped).returns(T.untyped) }
-                  def account=(value); end
-
-                  sig { returns(T.untyped) }
-                  def user; end
-
-                  sig { params(value: T.untyped).returns(T.untyped) }
-                  def user=(value); end
+                  include GeneratedAttributeMethods
 
                   class << self
+                    sig { returns(T.untyped) }
+                    def account; end
+
+                    sig { params(value: T.untyped).returns(T.untyped) }
+                    def account=(value); end
+
+                    sig { returns(T.untyped) }
+                    def user; end
+
+                    sig { params(value: T.untyped).returns(T.untyped) }
+                    def user=(value); end
+                  end
+
+                  module GeneratedAttributeMethods
                     sig { returns(T.untyped) }
                     def account; end
 
@@ -104,11 +108,7 @@ module Tapioca
                 # typed: strong
 
                 class Current
-                  sig { returns(T.untyped) }
-                  def account; end
-
-                  sig { params(value: T.untyped).returns(T.untyped) }
-                  def account=(value); end
+                  include GeneratedAttributeMethods
 
                   class << self
                     sig { returns(T.untyped) }
@@ -122,6 +122,14 @@ module Tapioca
 
                     sig { returns(T.untyped) }
                     def helper; end
+                  end
+
+                  module GeneratedAttributeMethods
+                    sig { returns(T.untyped) }
+                    def account; end
+
+                    sig { params(value: T.untyped).returns(T.untyped) }
+                    def account=(value); end
                   end
                 end
               RBI
