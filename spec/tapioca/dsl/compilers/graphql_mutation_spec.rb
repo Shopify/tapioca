@@ -173,6 +173,8 @@ module Tapioca
             end
 
             it "generates correct RBI arguments with a prepare method" do
+              # Prepare Methods that return void are technically invalid,
+              # but we don't raise anything and default to the input type
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class CreateComment < GraphQL::Schema::Mutation
                   extend T::Sig
