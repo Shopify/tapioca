@@ -195,8 +195,8 @@ module Tapioca
                   end
 
                   argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range", prepare: :prepare_dates
-                  argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range" #, prepare: prepare_dates_void
-                  argument :other, GraphQL::Types::ISO8601Date, "Some value of the range " #, prepare: prepare_dates_untyped
+                  argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range", prepare: :prepare_dates_void
+                  argument :other, GraphQL::Types::ISO8601Date, "Some value of the range ", prepare: :prepare_dates_untyped
 
                   def resolve(min:, max:, other:)
                     # ...
@@ -210,6 +210,54 @@ module Tapioca
                 class CreateComment
                   sig { params(min: T::Range[::Date], max: ::Date, other: ::Date).returns(T.untyped) }
                   def resolve(min:, max:, other:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
+            it "generates correct RBI arguments with a prepare method on the argument class" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CommentInput < GraphQL::Schema::InputObject
+                  extend T::Sig
+
+                  class << self
+                    extend T::Sig
+                    sig { params(min: Date).returns(T::Range[Date]) }
+                    def prepare_dates(min)
+                      min..(min + 1.day)
+                    end
+
+                    sig { params(min: Date, _context: T::Hash).void }
+                    def prepare_dates_void(max, _context)
+                      (max - 1.day)..max
+                    end
+
+                    def prepare_dates_untyped(other, _context)
+                      other
+                    end
+                  end
+
+                  argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range", prepare: :prepare_dates
+                  argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range", prepare: :prepare_dates_void
+                  argument :other, GraphQL::Types::ISO8601Date, "Some value of the range ", prepare: :prepare_dates_untyped
+                end
+
+                class CreateComment < GraphQL::Schema::Mutation
+                  argument :input, CommentInput, "A comment input"
+
+                  def resolve(comment_input:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(comment_input: T.untyped).returns(T.untyped) }
+                  def resolve(comment_input:); end
                 end
               RBI
 
