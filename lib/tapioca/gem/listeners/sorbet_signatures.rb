@@ -67,7 +67,11 @@ module Tapioca
         sig { params(signature: T.untyped).returns(T::Boolean) }
         def signature_final?(signature)
           modules_with_final = T::Private::Methods.instance_variable_get(:@modules_with_final)
-          final_methods = modules_with_final[signature.owner.object_id]
+          final_methods = if sorbet_supports?(:identity_comparison)
+            modules_with_final[signature.owner]
+          else
+            modules_with_final[signature.owner.object_id]
+          end
 
           return false unless final_methods
 
