@@ -59,7 +59,7 @@ module Tapioca
           params = compile_method_parameters_to_rbi(method_def).map do |param|
             name = param.param.name
             argument = arguments_by_name.fetch(name, nil)
-            create_typed_param(param.param, argument_type(argument))
+            create_typed_param(param.param, argument_type(argument, constant))
           end
 
           root.create_path(constant) do |mutation|
@@ -67,11 +67,16 @@ module Tapioca
           end
         end
 
-        sig { params(argument: T.nilable(GraphQL::Schema::Argument)).returns(String) }
-        def argument_type(argument)
+        sig do
+          params(
+            argument: T.nilable(GraphQL::Schema::Argument),
+            constant: T.class_of(GraphQL::Schema::Mutation),
+          ).returns(String)
+        end
+        def argument_type(argument, constant)
           return "T.untyped" unless argument
 
-          Helpers::GraphqlTypeHelper.type_for(argument)
+          Helpers::GraphqlTypeHelper.type_for(argument, constant)
         end
 
         class << self
