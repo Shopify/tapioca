@@ -461,7 +461,7 @@ module Tapioca
           assert_stderr_includes(result, "RBIs exported by `foo` contain errors and can't be used:")
           assert_stderr_includes(
             result,
-            "Cause: Cannot parse the expression. Expected an `end` to close the `module` statement. ",
+            "Cause: cannot parse the expression. expected an `end` to close the `module` statement. ",
           )
           assert_stderr_includes(result, "foo/rbi/foo.rbi:2:0")
 

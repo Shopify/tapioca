@@ -470,7 +470,7 @@ module Tapioca
 
           assert_equal(<<~ERR, result.err)
 
-            Warning: Cannot parse the expression. Expected an `end` to close the `class` statement. (sorbet/rbi/shims/foo.rbi:2:0)
+            Warning: cannot parse the expression. expected an `end` to close the `class` statement. (sorbet/rbi/shims/foo.rbi:2:0)
 
             Duplicated RBI for ::Foo#foo:
              * sorbet/rbi/shims/bar.rbi:2:2-2:14
