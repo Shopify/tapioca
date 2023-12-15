@@ -28,6 +28,7 @@ In the following section you will find all available DSL compilers:
 * [FrozenRecord](compiler_frozenrecord.md)
 * [GraphqlInputObject](compiler_graphqlinputobject.md)
 * [GraphqlMutation](compiler_graphqlmutation.md)
+* [GraphqlSchema](compiler_graphqlschema.md)
 * [IdentityCache](compiler_identitycache.md)
 * [JsonApiClientResource](compiler_jsonapiclientresource.md)
 * [Kredis](compiler_kredis.md)
