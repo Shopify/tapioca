@@ -474,6 +474,44 @@ module Tapioca
           end
         end
 
+        it "generates RBI file for constants that might have overriden the hash method" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+
+              def self.hash
+                raise "Cannot call `hash` on `Post`"
+              end
+            end
+          RB
+
+          result = @project.tapioca("dsl")
+
+          assert_equal(<<~OUT, result.out)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_empty_stderr(result)
+          assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+          assert_success_status(result)
+        end
+
         it "generates RBI files in the correct output directory" do
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
