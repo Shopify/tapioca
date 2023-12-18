@@ -26,7 +26,6 @@ module Tapioca
         # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
         non_generic_weak_map: ::Gem::Requirement.new(">= 0.5.10587"), # https://github.com/sorbet/sorbet/pull/6610
         generic_class: ::Gem::Requirement.new(">= 0.5.10820"), # https://github.com/sorbet/sorbet/pull/6781
-        identity_comparison: ::Gem::Requirement.new(">= 0.5.11155"), # https://github.com/sorbet/sorbet/pull/7531
       }.freeze,
       T::Hash[Symbol, ::Gem::Requirement],
     )
