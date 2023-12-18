@@ -30,8 +30,13 @@ module Tapioca
       # # notify_user_job.rbi
       # # typed: true
       # class NotifyUserJob
-      #   sig { params(user: User).returns(T.any(NotifyUserJob, FalseClass)) }
-      #   def self.perform_later(user); end
+      #   sig do
+      #     params(
+      #       user: User,
+      #       block: T.nilable(T.proc.params(job: NotifyUserJob).void),
+      #     ).returns(T.any(NotifyUserJob, FalseClass))
+      #   end
+      #   def self.perform_later(user, &block); end
       #
       #   sig { params(user: User).returns(Mail) }
       #   def self.perform_now(user); end
@@ -48,13 +53,14 @@ module Tapioca
 
           root.create_path(constant) do |job|
             method = constant.instance_method(:perform)
+            constant_name = name_of(constant)
             parameters = compile_method_parameters_to_rbi(method)
             return_type = compile_method_return_type_to_rbi(method)
 
             job.create_method(
               "perform_later",
-              parameters: parameters,
-              return_type: "T.any(#{name_of(constant)}, FalseClass)",
+              parameters: perform_later_parameters(parameters, constant_name),
+              return_type: "T.any(#{constant_name}, FalseClass)",
               class_method: true,
             )
 
@@ -64,6 +70,25 @@ module Tapioca
               return_type: return_type,
               class_method: true,
             )
+          end
+        end
+
+        private
+
+        sig do
+          params(
+            parameters: T::Array[RBI::TypedParam],
+            constant_name: T.nilable(String),
+          ).returns(T::Array[RBI::TypedParam])
+        end
+        def perform_later_parameters(parameters, constant_name)
+          if ::Gem::Requirement.new(">= 7.0").satisfied_by?(::ActiveJob.gem_version)
+            parameters + [create_block_param(
+              "block",
+              type: "T.nilable(T.proc.params(job: #{constant_name}).void)",
+            )]
+          else
+            parameters
           end
         end
 
