@@ -23,11 +23,11 @@ module Tapioca
 
         IGNORED_SIG_TAGS = T.let(["param", "return"], T::Array[String])
 
-        sig { params(pipeline: Pipeline).void }
-        def initialize(pipeline)
-          YARD::Registry.clear
+        sig { params(pipeline: Pipeline, indexer: DocIndexer).void }
+        def initialize(pipeline, indexer)
           super(pipeline)
-          pipeline.gem.parse_yard_docs
+          @indexer = indexer
+          @index = T.let(pipeline.gem.index(indexer), T.untyped)
         end
 
         private
@@ -53,7 +53,31 @@ module Tapioca
 
         sig { params(name: String, sigs: T::Array[RBI::Sig]).returns(T::Array[RBI::Comment]) }
         def documentation_comments(name, sigs: [])
-          yard_docs = YARD::Registry.at(name)
+          case @indexer
+          when DocIndexer::YARD
+            doc_comments_from_yard(name, sigs: sigs)
+          when DocIndexer::RubyIndexer
+            entries = if name =~ /[.#]/
+              owner, name = name.split(/[.#]/)
+              Array(@index.resolve_method(name, owner))
+            else
+              @index[name]
+            end
+            return [] unless entries
+
+            docstring = entries.flat_map(&:comments).join("\n")
+            return [] if /(copyright|license)/i.match?(docstring)
+
+            docstring.lines
+              .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
+              .grep_v(/\s*#\s*/)
+              .map! { |line| RBI::Comment.new(line) }
+          end
+        end
+
+        sig { params(name: String, sigs: T::Array[RBI::Sig]).returns(T::Array[RBI::Comment]) }
+        def doc_comments_from_yard(name, sigs: [])
+          yard_docs = @index[name]
           return [] unless yard_docs
 
           docstring = yard_docs.docstring

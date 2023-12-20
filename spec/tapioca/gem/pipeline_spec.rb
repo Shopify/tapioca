@@ -13,8 +13,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::SorbetHelper
 
   describe Tapioca::Gem::Pipeline do
-    sig { params(include_doc: T::Boolean, include_loc: T::Boolean).returns(String) }
-    def compile(include_doc: false, include_loc: false)
+    sig { params(doc_indexer: T.nilable(Tapioca::DocIndexer), include_loc: T::Boolean).returns(String) }
+    def compile(doc_indexer: nil, include_loc: false)
       # create a fake gemspec
       spec = ::Gem::Specification.new("the-dep", "1.1.2") do |spec|
         spec.platform = nil
@@ -29,7 +29,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       gem = Tapioca::Gemfile::GemSpec.new(spec)
 
       # push it through the pipeline
-      tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc, include_loc: include_loc).compile
+      tree = Tapioca::Gem::Pipeline.new(gem, doc_indexer: doc_indexer, include_loc: include_loc).compile
 
       # NOTE: This is not returning a `RBI::File`.
       # The following test suite is based on the string output of the `RBI::Tree` rather
@@ -3913,7 +3913,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
       RBI
 
-      assert_equal(output, compile(include_doc: true))
+      assert_equal(output, compile(doc_indexer: Tapioca::DocIndexer::YARD))
     end
 
     it "doesn't include YARD docs by default" do
@@ -4005,7 +4005,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         Namespace::Foo::CONSTANT = T.let(T.unsafe(nil), String)
       RBI
 
-      assert_equal(output, compile(include_doc: false))
+      assert_equal(output, compile(doc_indexer: nil))
     end
 
     it "properly processes void in type aliases" do
@@ -4262,7 +4262,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RBI
 
-      compiled = compile(include_doc: true, include_loc: true)
+      compiled = compile(doc_indexer: Tapioca::DocIndexer::YARD, include_loc: true)
         .gsub(%r{\s+# source://activesupport/.+?\nString::.+$}m, "")
         .rstrip.concat("\n")
 

@@ -181,6 +181,22 @@ module Tapioca
         files.each { |path| YARD.parse(path.to_s, [], Logger::Severity::FATAL) }
       end
 
+      sig { params(indexer: DocIndexer).returns(T.untyped) }
+      def index(indexer)
+        case indexer
+        when DocIndexer::YARD
+          YARD::Registry.clear
+          parse_yard_docs
+          YARD::Registry
+        when DocIndexer::RubyIndexer
+          require "prism"
+          require "ruby_indexer/ruby_indexer"
+          index = RubyIndexer::Index.new
+          files.each { |path| index.index_single(RubyIndexer::IndexablePath.new(nil, path.to_s)) }
+          index
+        end
+      end
+
       sig { returns(T::Array[String]) }
       def exported_rbi_files
         @exported_rbi_files ||= Dir.glob("#{full_gem_path}/rbi/**/*.rbi").sort

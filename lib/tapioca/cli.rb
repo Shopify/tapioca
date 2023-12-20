@@ -214,8 +214,13 @@ module Tapioca
       default: false
     option :doc,
       type: :boolean,
-      desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
+      desc: "Include documentation from sources when generating RBIs. Warning: this might be slow",
       default: true
+    option :doc_indexer,
+      type: :string,
+      enum: DocIndexer.values.map(&:serialize),
+      desc: "The documentation indexer to use when generating RBIs",
+      default: DocIndexer::YARD.serialize
     option :loc,
       type: :boolean,
       desc: "Include comments with source location when generating RBIs",
@@ -276,7 +281,7 @@ module Tapioca
         typed_overrides: options[:typed_overrides],
         outpath: Pathname.new(options[:outdir]),
         file_header: options[:file_header],
-        include_doc: options[:doc],
+        doc_indexer: options[:doc] ? DocIndexer.deserialize(options[:doc_indexer]) : nil,
         include_loc: options[:loc],
         include_exported_rbis: options[:exported_gem_rbis],
         number_of_workers: options[:workers],

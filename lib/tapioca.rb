@@ -29,6 +29,13 @@ module Tapioca
 
   class Error < StandardError; end
 
+  class DocIndexer < T::Enum
+    enums do
+      YARD = new("yard")
+      RubyIndexer = new("ruby_indexer")
+    end
+  end
+
   SORBET_DIR = T.let("sorbet", String)
   SORBET_CONFIG_FILE = T.let("#{SORBET_DIR}/config", String)
   TAPIOCA_DIR = T.let("#{SORBET_DIR}/tapioca", String)

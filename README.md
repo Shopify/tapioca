@@ -180,8 +180,11 @@ Options:
                                                                       # Default: {"activesupport"=>"false"}
                [--verify], [--no-verify]                              # Verify RBIs are up-to-date
                                                                       # Default: false
-               [--doc], [--no-doc]                                    # Include YARD documentation from sources when generating RBIs. Warning: this might be slow
+               [--doc], [--no-doc]                                    # Include documentation from sources when generating RBIs. Warning: this might be slow
                                                                       # Default: true
+               [--doc-indexer=DOC_INDEXER]                            # The documentation indexer to use when generating RBIs
+                                                                      # Default: yard
+                                                                      # Possible values: yard, ruby_indexer
                [--loc], [--no-loc]                                    # Include comments with source location when generating RBIs
                                                                       # Default: true
                [--exported-gem-rbis], [--no-exported-gem-rbis]        # Include RBIs found in the `rbi/` directory of the gem
@@ -922,6 +925,7 @@ gem:
     activesupport: 'false'
   verify: false
   doc: true
+  doc_indexer: yard
   loc: true
   exported_gem_rbis: true
   workers: 1
