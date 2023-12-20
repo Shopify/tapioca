@@ -122,7 +122,7 @@ module Tapioca
               constant.attribute_aliases.each do |attribute_name, column_name|
                 attribute_name = attribute_name.to_s
                 column_name = column_name.to_s
-                patterns = if constant.respond_to?(:attribute_method_patterns)
+                patterns = if Helpers::ActiveRecordColumnTypeHelper::HasAttributeMethodPatternsMethod
                   # https://github.com/rails/rails/pull/44367
                   T.unsafe(constant).attribute_method_patterns
                 else

@@ -8,6 +8,13 @@ module Tapioca
         extend T::Sig
         include RBIHelper
 
+        HasAttributeMethodPatternsMethod = T.let(
+          Class.new do
+            include ActiveModel::AttributeMethods
+          end.method_defined?(:attribute_method_patterns),
+          T::Boolean,
+        )
+
         sig { params(constant: T.class_of(ActiveRecord::Base)).void }
         def initialize(constant)
           @constant = constant

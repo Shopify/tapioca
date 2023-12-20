@@ -70,7 +70,7 @@ module Tapioca
 
         sig { returns(T::Array[[::String, ::String]]) }
         def attribute_methods_for_constant
-          patterns = if constant.respond_to?(:attribute_method_patterns)
+          patterns = if Helpers::ActiveRecordColumnTypeHelper::HasAttributeMethodPatternsMethod
             # https://github.com/rails/rails/pull/44367
             T.unsafe(constant).attribute_method_patterns
           else
