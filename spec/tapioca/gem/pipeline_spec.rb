@@ -2043,11 +2043,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        <% if sorbet_supports?(:non_generic_weak_map) %>
         Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
-        <% else %>
-        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
-        <% end %>
       RBI
 
       assert_equal(output, compile)
