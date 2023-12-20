@@ -1,24 +1,6 @@
 # typed: true
 # frozen_string_literal: true
 
-unless defined?(T.anything)
-  module T
-    class << self
-      def anything
-        T.untyped
-      end
-    end
-  end
-end
+# This file contains patches to make Tapioca work with older versions of Sorbet.
 
-unless defined?(T::Class)
-  module T
-    module Class
-      class << self
-        def [](type)
-          T.untyped
-        end
-      end
-    end
-  end
-end
+# NOTE: If there is currently no need for any patches, this file will be empty.
