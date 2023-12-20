@@ -55,3 +55,4 @@ group :test do
 end
 
 gem "kramdown", "~> 2.4"
+gem "ruby-lsp", path: "../ruby-lsp"
