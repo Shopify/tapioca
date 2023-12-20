@@ -119,9 +119,9 @@ module Tapioca
                 column_name = column_name.to_s
                 patterns = if constant.respond_to?(:attribute_method_patterns)
                   # https://github.com/rails/rails/pull/44367
-                  T.unsafe(constant).attribute_method_patterns
+                  constant.attribute_method_patterns
                 else
-                  constant.attribute_method_matchers
+                  T.unsafe(constant).attribute_method_matchers
                 end
                 new_method_names = patterns.map { |m| m.method_name(attribute_name) }
                 old_method_names = patterns.map { |m| m.method_name(column_name) }
