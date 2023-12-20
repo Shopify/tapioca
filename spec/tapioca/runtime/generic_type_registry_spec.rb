@@ -36,18 +36,12 @@ module Tapioca
               Tapioca::TypeVariableModule::Type::Member,
               :invariant,
               nil,
-              nil,
-              nil,
-              nil,
             )
 
             fake_type_member2 = Tapioca::TypeVariableModule.new(
               not_actually_generic,
               Tapioca::TypeVariableModule::Type::Member,
               :invariant,
-              nil,
-              nil,
-              nil,
               nil,
             )
 
