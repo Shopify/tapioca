@@ -100,41 +100,6 @@ module Tapioca
       end
     RBI
 
-    TYPE_VARIABLE_RB = <<~RB
-      # typed: true
-
-      class ComplexGenericType
-        extend T::Generic
-
-        A = type_template(:in)
-        B = type_template(:out)
-        C = type_template
-        # The constants below are using the old type variable syntax specifically,
-        # so that we can be certain that we handle the old syntax properly.
-        D = type_member(fixed: Integer)
-        E = type_member(fixed: Integer, upper: Numeric)
-        F = type_member(fixed: Integer, lower: Complex, upper: Numeric)
-        G = type_member(:in, fixed: Integer)
-        H = type_member(:in, fixed: Integer, upper: Numeric)
-        I = type_member(:in, fixed: Integer, lower: Complex, upper: Numeric)
-
-        class << self
-          extend T::Generic
-
-          A = type_template(:in)
-          B = type_template(:out)
-          C = type_template
-
-          D = type_member { { fixed: Integer } }
-          E = type_member { { fixed: Integer, upper: Numeric } }
-          F = type_member { { fixed: Integer, lower: Complex, upper: Numeric } }
-          G = type_member(:in) { { fixed: Integer } }
-          H = type_member(:in) { { fixed: Integer, upper: Numeric } }
-          I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
-        end
-      end
-    RB
-
     describe "cli::gem" do
       before(:all) do
         @project.bundle_install!
@@ -2088,7 +2053,38 @@ module Tapioca
 
       it "generates the correct type variable syntax" do
         type_variable = mock_gem("type_variable", "0.0.1") do
-          write!("lib/type_variable.rb", TYPE_VARIABLE_RB)
+          write!("lib/type_variable.rb", <<~RB)
+            # typed: true
+
+            class ComplexGenericType
+              extend T::Generic
+
+              A = type_template(:in)
+              B = type_template(:out)
+              C = type_template
+              D = type_member { { fixed: Integer } }
+              E = type_member { { fixed: Integer, upper: Numeric } }
+              F = type_member { { fixed: Integer, lower: Complex, upper: Numeric } }
+              G = type_member(:in) { { fixed: Integer } }
+              H = type_member(:in) { { fixed: Integer, upper: Numeric } }
+              I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
+
+              class << self
+                extend T::Generic
+
+                A = type_template(:in)
+                B = type_template(:out)
+                C = type_template
+
+                D = type_member { { fixed: Integer } }
+                E = type_member { { fixed: Integer, upper: Numeric } }
+                F = type_member { { fixed: Integer, lower: Complex, upper: Numeric } }
+                G = type_member(:in) { { fixed: Integer } }
+                H = type_member(:in) { { fixed: Integer, upper: Numeric } }
+                I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
+              end
+            end
+          RB
         end
 
         @project.require_mock_gem(type_variable)

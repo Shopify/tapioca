@@ -18,32 +18,26 @@ module T
         Tapioca::Runtime::GenericTypeRegistry.register_type(constant, types)
       end
 
-      def type_member(variance = :invariant, fixed: nil, lower: nil, upper: nil, &bounds_proc)
+      def type_member(variance = :invariant, &bounds_proc)
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Member,
           variance,
-          fixed,
-          lower,
-          upper,
           bounds_proc,
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
 
-      def type_template(variance = :invariant, fixed: nil, lower: nil, upper: nil, &bounds_proc)
+      def type_template(variance = :invariant, &bounds_proc)
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
         Tapioca::TypeVariableModule.new(
           T.cast(self, Module),
           Tapioca::TypeVariableModule::Type::Template,
           variance,
-          fixed,
-          lower,
-          upper,
           bounds_proc,
         ).tap do |type_variable|
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
@@ -57,9 +51,6 @@ module T
             T.cast(self, Module),
             Tapioca::TypeVariableModule::Type::HasAttachedClass,
             variance,
-            nil,
-            nil,
-            nil,
             bounds_proc,
           ),
         )
@@ -159,35 +150,27 @@ module Tapioca
       end
     end
 
+    DEFAULT_BOUNDS_PROC = T.let(-> { {} }, T.proc.returns(T::Hash[Symbol, T.untyped]))
+
     sig { returns(Type) }
     attr_reader :type
 
-    # rubocop:disable Metrics/ParameterLists
     sig do
       params(
         context: Module,
         type: Type,
         variance: Symbol,
-        fixed: T.untyped,
-        lower: T.untyped,
-        upper: T.untyped,
         bounds_proc: T.nilable(T.proc.returns(T::Hash[Symbol, T.untyped])),
       ).void
     end
-    def initialize(context, type, variance, fixed, lower, upper, bounds_proc)
+    def initialize(context, type, variance, bounds_proc)
       @context = context
       @type = type
       @variance = variance
-      @bounds_proc = if bounds_proc
-        bounds_proc
-      else
-        build_bounds_proc(fixed, lower, upper)
-      end
+      @bounds_proc = bounds_proc || DEFAULT_BOUNDS_PROC
 
       super()
     end
-    # rubocop:enable Metrics/ParameterLists
-
     sig { returns(T.nilable(String)) }
     def name
       constant_name = super
@@ -220,19 +203,6 @@ module Tapioca
     end
 
     private
-
-    sig do
-      params(fixed: T.untyped, lower: T.untyped, upper: T.untyped)
-        .returns(T.proc.returns(T::Hash[Symbol, T.untyped]))
-    end
-    def build_bounds_proc(fixed, lower, upper)
-      bounds = {}
-      bounds[:fixed] = fixed unless fixed.nil?
-      bounds[:lower] = lower unless lower.nil?
-      bounds[:upper] = upper unless upper.nil?
-
-      -> { bounds }
-    end
 
     sig { returns(T::Hash[Symbol, T.untyped]) }
     def bounds
