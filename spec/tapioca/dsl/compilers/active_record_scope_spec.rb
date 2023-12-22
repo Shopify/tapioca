@@ -416,12 +416,7 @@ module Tapioca
               require "tapioca/dsl/compilers/active_record_relations"
               activate_other_dsl_compilers(ActiveRecordRelations)
 
-              require "active_record"
-              require "active_storage/attached"
-              require "active_storage/reflection"
-              ::ActiveRecord::Base.include(::ActiveStorage::Attached::Model)
-              ::ActiveRecord::Base.include(::ActiveStorage::Reflection::ActiveRecordExtensions)
-              ::ActiveRecord::Reflection.singleton_class.prepend(::ActiveStorage::Reflection::ReflectionExtension)
+              Tapioca::RailsSpecHelper.load_active_storage
             end
 
             it "generates RBI file for ActiveRecord classes with has_one_attached scope fields" do
