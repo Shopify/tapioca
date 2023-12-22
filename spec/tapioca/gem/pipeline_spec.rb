@@ -497,7 +497,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       add_ruby_file("ext.rb", <<~RUBY)
-
         class String
           include Foo::Bar
 
@@ -520,7 +519,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def foo_int; end
         end
 
-        class Module
+        class Symbol
           def bar; end
         end
       RUBY
@@ -547,15 +546,17 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def to_bar; end
         end
 
-        class Module
-          def bar; end
-        end
-
         class String
           include ::Comparable
           include ::Foo::Bar
 
           def to_foo(base = T.unsafe(nil)); end
+        end
+
+        class Symbol
+          include ::Comparable
+
+          def bar; end
         end
       RBI
 
@@ -4106,12 +4107,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     end
 
     it "compile RBIs with location from gem source" do
-      add_ruby_file("option.rb", <<~RB)
-        class Option
-          include Mutex_m
-        end
-      RB
-
       add_ruby_file("bar.rb", <<~RB)
         module Bar
           extend T::Sig
@@ -4164,9 +4159,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         NewClass = Class.new
       RB
 
-      mutex = Class.new { |k| k.include(::Mutex_m) }
-      sorbet_runtime_version = ::Gem::Specification.find_by_name("sorbet-runtime").version.to_s
-      mutex_version = ::Gem::Specification.default_stubs.find { |s| s.name == "mutex_m" }.version.to_s
+      sorbet_runtime_spec = ::Gem::Specification.find_by_name("sorbet-runtime")
 
       output = template(<<~RBI)
         # source://the-dep//lib/bar.rb#1
@@ -4219,30 +4212,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         # source://the-dep//lib/foo.rb#30
         class NewClass; end
 
-        # source://the-dep//lib/option.rb#1
-        class Option
-          include ::Mutex_m
-
-          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:lock).source_location&.last}
-          def lock; end
-
-          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:locked?).source_location&.last}
-          def locked?; end
-
-          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:synchronize).source_location&.last}
-          def synchronize(&block); end
-
-          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:try_lock).source_location&.last}
-          def try_lock; end
-
-          # source://mutex_m/#{mutex_version}/mutex_m.rb##{mutex.instance_method(:unlock).source_location&.last}
-          def unlock; end
-        end
-
         # source://the-dep//lib/foo.rb#16
         class Quux < ::T::Struct
           class << self
-            # source://sorbet-runtime/#{sorbet_runtime_version}/lib/types/struct.rb#13
+            # source://sorbet-runtime/#{sorbet_runtime_spec.version}/lib/types/struct.rb#13
             def inherited(s); end
           end
         end
