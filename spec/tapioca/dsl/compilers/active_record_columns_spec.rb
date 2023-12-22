@@ -113,7 +113,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable(::Integer)) }
                       def id_value; end
 
@@ -169,7 +169,7 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
@@ -180,7 +180,7 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id_value; end
 
@@ -1215,7 +1215,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable(::Integer)) }
                       def id_value; end
 
@@ -1271,7 +1271,7 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
@@ -1282,7 +1282,7 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id_value; end
 
@@ -1367,7 +1367,7 @@ module Tapioca
                       sig { returns(T.untyped) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.untyped) }
                       def id_value; end
 
@@ -1423,7 +1423,7 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
@@ -1434,7 +1434,7 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def saved_change_to_id_value; end
 
@@ -1489,7 +1489,7 @@ module Tapioca
                 assert_includes(rbi_for(:Post), expected)
               end
 
-              if rails_version(">= 7.1.alpha")
+              if rails_version(">= 7.1")
                 it "generates composite id type if models has composite primary keys" do
                   T.bind(self, ActiveRecordColumnsSpec)
                   add_ruby_file("schema.rb", <<~RUBY)

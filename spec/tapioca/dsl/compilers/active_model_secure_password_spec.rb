@@ -73,7 +73,7 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def password_challenge; end
 
@@ -120,7 +120,7 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def token_challenge; end
 
@@ -174,7 +174,7 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def password_challenge; end
 
@@ -200,7 +200,7 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def token_challenge; end
 
