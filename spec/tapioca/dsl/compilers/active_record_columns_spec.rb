@@ -427,8 +427,8 @@ module Tapioca
               it "generates correct types for serialized columns" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   class CustomCoder
-                    def dump(value); nil end
-                    def load; nil end
+                    def self.dump(value); nil end
+                    def self.load; nil end
                   end
 
                   ActiveRecord::Migration.suppress_messages do
@@ -443,14 +443,25 @@ module Tapioca
                   end
                 RUBY
 
-                add_ruby_file("post.rb", <<~RUBY)
-                  class Post < ActiveRecord::Base
-                    serialize :serialized_column_array, Array
-                    serialize :serialized_column_custom, CustomCoder
-                    serialize :serialized_column_hash, Hash
-                    serialize :serialized_column_json, JSON
-                  end
-                RUBY
+                if rails_version(">= 7.1")
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      serialize :serialized_column_array, type: Array
+                      serialize :serialized_column_hash, type: Hash
+                      serialize :serialized_column_json, coder: JSON
+                      serialize :serialized_column_custom, coder: CustomCoder
+                    end
+                  RUBY
+                else
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      serialize :serialized_column_array, Array
+                      serialize :serialized_column_hash, Hash
+                      serialize :serialized_column_json, JSON
+                      serialize :serialized_column_custom, CustomCoder
+                    end
+                  RUBY
+                end
 
                 output = rbi_for(:Post)
 
