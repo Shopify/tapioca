@@ -26,6 +26,9 @@ module Tapioca
             }
             config.logger = Logger.new('/dev/null')
           end
+          # The defaults are loaded with the first two version numbers (e.g. "7.1")
+          defaults_version = Rails.gem_version.segments.take(2).join(".")
+          Rails.configuration.load_defaults(defaults_version)
           Rails.application.initialize!
         RUBY
       end
