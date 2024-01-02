@@ -202,10 +202,10 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.untyped) }
+                  sig { returns(T.nilable(MyCustomClass)) }
                   def custom_attr; end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: T.nilable(MyCustomClass)).returns(T.nilable(MyCustomClass)) }
                   def custom_attr=(value); end
                 end
               RBI

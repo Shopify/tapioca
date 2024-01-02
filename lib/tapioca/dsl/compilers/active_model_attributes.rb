@@ -104,14 +104,8 @@ module Tapioca
         sig { params(attribute_type_value: T.untyped).returns(::String) }
         def type_for(attribute_type_value)
           # This guarantees that the type will remain as T.untyped for attributes in the following form:
-          #
-          # class SomeClass
-          #   ...
-          # end
-          # attribute :name, SomeClass.new
-          return "T.untyped" unless attribute_type_value.is_a?(ActiveModel::Type::Value)
-          # This guarantees that the type will remain as T.untyped for attributes in the following form:
           # attribute :name
+          # This is because for a generic attribute with no specified type, ActiveModel::Type::Value.new is returned
           return "T.untyped" if attribute_type_value.instance_of?(ActiveModel::Type::Value)
 
           type = case attribute_type_value
@@ -129,7 +123,7 @@ module Tapioca
             "::Integer"
           when ActiveModel::Type::String
             "::String"
-          when ActiveModel::Type::Value
+          else
             attribute_type_value.class.name.to_s
           end
 
