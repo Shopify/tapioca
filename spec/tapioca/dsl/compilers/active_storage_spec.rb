@@ -9,19 +9,15 @@ module Tapioca
       class ActiveStorageSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveStorage" do
           before do
-            add_ruby_file("require.rb", <<~RUBY)
-              require "active_record"
-              require "active_storage/attached"
-              require "active_storage/reflection"
-              ActiveRecord::Base.include(ActiveStorage::Attached::Model)
-              ActiveRecord::Base.include(ActiveStorage::Reflection::ActiveRecordExtensions)
-              ActiveRecord::Reflection.singleton_class.prepend(ActiveStorage::Reflection::ReflectionExtension)
-            RUBY
+            Tapioca::RailsSpecHelper.load_active_storage
           end
 
           describe "initialize" do
             it "gathers no constants if there are no ActiveRecord classes" do
-              assert_empty(gathered_constants)
+              assert_equal(
+                ["ActiveStorage::Attachment", "ActiveStorage::Blob", "ActiveStorage::VariantRecord"],
+                gathered_constants,
+              )
             end
 
             it "gathers only ActiveRecord constants with no abstract classes" do
@@ -37,7 +33,15 @@ module Tapioca
                 end
               RUBY
 
-              assert_equal(["Post"], gathered_constants)
+              assert_equal(
+                [
+                  "ActiveStorage::Attachment",
+                  "ActiveStorage::Blob",
+                  "ActiveStorage::VariantRecord",
+                  "Post",
+                ],
+                gathered_constants,
+              )
             end
           end
 

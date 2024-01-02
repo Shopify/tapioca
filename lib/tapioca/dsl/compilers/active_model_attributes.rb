@@ -72,9 +72,9 @@ module Tapioca
         def attribute_methods_for_constant
           patterns = if constant.respond_to?(:attribute_method_patterns)
             # https://github.com/rails/rails/pull/44367
-            T.unsafe(constant).attribute_method_patterns
+            constant.attribute_method_patterns
           else
-            constant.attribute_method_matchers
+            T.unsafe(constant).attribute_method_matchers
           end
           patterns.flat_map do |pattern|
             constant.attribute_types.filter_map do |name, value|

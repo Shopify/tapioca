@@ -147,7 +147,7 @@ module Tapioca
                     sig { returns(Array) }
                     def ids; end
 
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.nilable(T.proc.params(object: PrivateRelation).void)).returns(T.nilable(::ActiveRecord::Batches::BatchEnumerator)) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
                 <% else %>
@@ -317,7 +317,7 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def none(*args, &blk); end
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def null_relation?(*args, &blk); end
@@ -346,7 +346,7 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def references(*args, &blk); end
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def regroup(*args, &blk); end
@@ -389,7 +389,7 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
                     def where(*args, &blk); end
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def with(*args, &blk); end
@@ -476,7 +476,7 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def none(*args, &blk); end
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def null_relation?(*args, &blk); end
@@ -505,7 +505,7 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def references(*args, &blk); end
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def regroup(*args, &blk); end
@@ -542,7 +542,7 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
                     def where(*args, &blk); end
-                <% if rails_version(">= 7.1.alpha") %>
+                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def with(*args, &blk); end

@@ -108,6 +108,11 @@ module Tapioca
         def decorate
           return unless constant.table_exists?
 
+          # We need to call this to ensure that some attribute aliases are defined, e.g.
+          # `id_value` as an alias for `id`.
+          # I think this is a regression on Rails 7.1, but we are where we are.
+          constant.define_attribute_methods
+
           root.create_path(constant) do |model|
             model.create_module(AttributeMethodsModuleName) do |mod|
               (constant.attribute_names + ["id"]).uniq.each do |attribute_name|
@@ -119,9 +124,9 @@ module Tapioca
                 column_name = column_name.to_s
                 patterns = if constant.respond_to?(:attribute_method_patterns)
                   # https://github.com/rails/rails/pull/44367
-                  T.unsafe(constant).attribute_method_patterns
+                  constant.attribute_method_patterns
                 else
-                  constant.attribute_method_matchers
+                  T.unsafe(constant).attribute_method_matchers
                 end
                 new_method_names = patterns.map { |m| m.method_name(attribute_name) }
                 old_method_names = patterns.map { |m| m.method_name(column_name) }

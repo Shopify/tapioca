@@ -113,7 +113,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable(::Integer)) }
                       def id_value; end
 
@@ -169,7 +169,7 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
@@ -180,7 +180,7 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id_value; end
 
@@ -427,8 +427,8 @@ module Tapioca
               it "generates correct types for serialized columns" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   class CustomCoder
-                    def dump(value); nil end
-                    def load; nil end
+                    def self.dump(value); nil end
+                    def self.load; nil end
                   end
 
                   ActiveRecord::Migration.suppress_messages do
@@ -443,14 +443,25 @@ module Tapioca
                   end
                 RUBY
 
-                add_ruby_file("post.rb", <<~RUBY)
-                  class Post < ActiveRecord::Base
-                    serialize :serialized_column_array, Array
-                    serialize :serialized_column_custom, CustomCoder
-                    serialize :serialized_column_hash, Hash
-                    serialize :serialized_column_json, JSON
-                  end
-                RUBY
+                if rails_version(">= 7.1")
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      serialize :serialized_column_array, type: Array
+                      serialize :serialized_column_hash, type: Hash
+                      serialize :serialized_column_json, coder: JSON
+                      serialize :serialized_column_custom, coder: CustomCoder
+                    end
+                  RUBY
+                else
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      serialize :serialized_column_array, Array
+                      serialize :serialized_column_hash, Hash
+                      serialize :serialized_column_json, JSON
+                      serialize :serialized_column_custom, CustomCoder
+                    end
+                  RUBY
+                end
 
                 output = rbi_for(:Post)
 
@@ -1215,7 +1226,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable(::Integer)) }
                       def id_value; end
 
@@ -1271,7 +1282,7 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
@@ -1282,7 +1293,7 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id_value; end
 
@@ -1367,7 +1378,7 @@ module Tapioca
                       sig { returns(T.untyped) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.untyped) }
                       def id_value; end
 
@@ -1423,7 +1434,7 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
@@ -1434,7 +1445,7 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
-                    <%- if rails_version(">= 7.1.alpha") -%>
+                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def saved_change_to_id_value; end
 
@@ -1489,7 +1500,7 @@ module Tapioca
                 assert_includes(rbi_for(:Post), expected)
               end
 
-              if rails_version(">= 7.1.alpha")
+              if rails_version(">= 7.1")
                 it "generates composite id type if models has composite primary keys" do
                   T.bind(self, ActiveRecordColumnsSpec)
                   add_ruby_file("schema.rb", <<~RUBY)
