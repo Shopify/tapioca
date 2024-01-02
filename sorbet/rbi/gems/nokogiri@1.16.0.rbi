@@ -894,7 +894,7 @@ class Nokogiri::HTML4::Builder < ::Nokogiri::XML::Builder
   def to_html; end
 end
 
-# source://nokogiri//lib/nokogiri/html4/document.rb#8
+# source://nokogiri//lib/nokogiri/html4/document.rb#11
 class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   # Create a Nokogiri::XML::DocumentFragment from +tags+
   #
@@ -1004,7 +1004,7 @@ class Nokogiri::HTML4::Document < ::Nokogiri::XML::Document
   end
 end
 
-# source://nokogiri//lib/nokogiri/html4/document_fragment.rb#5
+# source://nokogiri//lib/nokogiri/html4/document_fragment.rb#7
 class Nokogiri::HTML4::DocumentFragment < ::Nokogiri::XML::DocumentFragment
   # @return [DocumentFragment] a new instance of DocumentFragment
   # @yield [options]
@@ -1516,7 +1516,7 @@ module Nokogiri::HTML4::SAX; end
 #
 # For more information on SAX parsers, see Nokogiri::XML::SAX
 #
-# source://nokogiri//lib/nokogiri/html4/sax/parser.rb#27
+# source://nokogiri//lib/nokogiri/html4/sax/parser.rb#29
 class Nokogiri::HTML4::SAX::Parser < ::Nokogiri::XML::SAX::Parser
   # Parse a file with +filename+
   #
@@ -1836,7 +1836,7 @@ end
 #
 # 💡 HTML5 functionality is not available when running JRuby.
 #
-# source://nokogiri//lib/nokogiri/html5/document.rb#39
+# source://nokogiri//lib/nokogiri/html5/document.rb#41
 class Nokogiri::HTML5::Document < ::Nokogiri::HTML4::Document
   # @return [Document] a new instance of Document
   #
@@ -2162,13 +2162,6 @@ class Nokogiri::VersionInfo
   #
   # source://nokogiri//lib/nokogiri/version/info.rb#14
   def windows?; end
-
-  class << self
-    private
-
-    def allocate; end
-    def new(*_arg0); end
-  end
 end
 
 # source://nokogiri//lib/nokogiri/xml.rb#12
@@ -2676,7 +2669,7 @@ class Nokogiri::XML::Builder::NodeBuilder
   def method_missing(method, *args, &block); end
 end
 
-# source://nokogiri//lib/nokogiri/xml/cdata.rb#5
+# source://nokogiri//lib/nokogiri/xml/cdata.rb#7
 class Nokogiri::XML::CDATA < ::Nokogiri::XML::Text
   # Get the name of this CDATA node
   #
@@ -2735,7 +2728,7 @@ end
 # For searching a Document, see Nokogiri::XML::Searchable#css and
 # Nokogiri::XML::Searchable#xpath
 #
-# source://nokogiri//lib/nokogiri/xml/document.rb#14
+# source://nokogiri//lib/nokogiri/xml/document.rb#17
 class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # @return [Document] a new instance of Document
   #
@@ -3158,7 +3151,7 @@ Nokogiri::XML::Document::NCNAME_RE = T.let(T.unsafe(nil), Regexp)
 # source://nokogiri//lib/nokogiri/xml/document.rb#18
 Nokogiri::XML::Document::NCNAME_START_CHAR = T.let(T.unsafe(nil), String)
 
-# source://nokogiri//lib/nokogiri/xml/document_fragment.rb#6
+# source://nokogiri//lib/nokogiri/xml/document_fragment.rb#8
 class Nokogiri::XML::DocumentFragment < ::Nokogiri::XML::Node
   # Create a new DocumentFragment from +tags+.
   #
@@ -5590,7 +5583,7 @@ Nokogiri::XML::NodeSet::IMPLIED_XPATH_CONTEXTS = T.let(T.unsafe(nil), Array)
 
 # Struct representing an {XML Schema Notation}[https://www.w3.org/TR/xml/#Notations]
 #
-# source://nokogiri//lib/nokogiri/xml/notation.rb#6
+# source://nokogiri//lib/nokogiri/xml/notation.rb#7
 class Nokogiri::XML::Notation < ::Struct; end
 
 # source://nokogiri//lib/nokogiri/xml/pp/node.rb#6
