@@ -44,6 +44,9 @@ jobs:
             experimental: true
           - ruby: "head"
             experimental: true
+        exclude:
+          - gemfile: gemfiles/Gemfile-rails-main
+            ruby: "3.0"
     name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
     env:
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
