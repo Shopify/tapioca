@@ -2497,7 +2497,7 @@ module JsonApiClient::Utils
     # source://json_api_client//lib/json_api_client/utils.rb#4
     def compute_type(klass, type_name); end
 
-    # source://json_api_client//lib/json_api_client/utils.rb#28
+    # source://json_api_client//lib/json_api_client/utils.rb#33
     def parse_includes(klass, *tables); end
   end
 end

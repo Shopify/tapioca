@@ -2043,11 +2043,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       output = template(<<~RBI)
-        <% if sorbet_supports?(:non_generic_weak_map) %>
         Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap)
-        <% else %>
-        Foo = T.let(T.unsafe(nil), ObjectSpace::WeakMap[T.untyped])
-        <% end %>
       RBI
 
       assert_equal(output, compile)
@@ -2894,18 +2890,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             B = type_template(:out)
             C = type_template
 
-            # The constants below are using the old type variable syntax specifically,
-            # so that we can be certain that we handle the old syntax properly.
-            D = type_member(fixed: Integer)
-            E = type_member(fixed: Integer, upper: T::Array[Numeric])
-            F = type_member(
+            D = type_member { { fixed: Integer } }
+            E = type_member { { fixed: Integer, upper: T::Array[Numeric] } }
+            F = type_member { {
               fixed: Integer,
               lower: T.any(Complex, T::Hash[Symbol, T::Array[Integer]]),
-              upper: T.nilable(Numeric)
-            )
-            G = type_member(:in, fixed: Integer)
-            H = type_member(:in, fixed: Integer, upper: Numeric)
-            I = type_member(:in, fixed: Integer, lower: Complex, upper: Numeric)
+              upper: T.nilable(Numeric),
+            } }
+            G = type_member(:in) { { fixed: Integer } }
+            H = type_member(:in) { { fixed: Integer, upper: Numeric } }
+            I = type_member(:in) { { fixed: Integer, lower: Complex, upper: Numeric } }
 
             class << self
               extend(T::Generic)

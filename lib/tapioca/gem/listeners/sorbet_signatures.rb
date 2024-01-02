@@ -67,8 +67,9 @@ module Tapioca
         sig { params(signature: T.untyped).returns(T::Boolean) }
         def signature_final?(signature)
           modules_with_final = T::Private::Methods.instance_variable_get(:@modules_with_final)
-          final_methods = modules_with_final[signature.owner.object_id]
-
+          # In https://github.com/sorbet/sorbet/pull/7531, Sorbet changed internal hashes to be compared by identity,
+          # starting on version 0.5.11155
+          final_methods = modules_with_final[signature.owner] || modules_with_final[signature.owner.object_id]
           return false unless final_methods
 
           final_methods.include?(signature.method_name)

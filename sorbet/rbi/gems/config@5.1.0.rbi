@@ -79,10 +79,10 @@ class Config::Options < ::OpenStruct
   # An alternative mechanism for property access.
   # This let's you do foo['bar'] along with foo.bar.
   #
-  # source://config//lib/config/options.rb#119
+  # source://config//lib/config/options.rb#122
   def [](param); end
 
-  # source://config//lib/config/options.rb#124
+  # source://config//lib/config/options.rb#128
   def []=(param, value); end
 
   # source://config//lib/config/options.rb#17
@@ -91,10 +91,10 @@ class Config::Options < ::OpenStruct
   # source://config//lib/config/options.rb#95
   def as_json(options = T.unsafe(nil)); end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def collect; end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def count; end
 
   # source://config//lib/config/options.rb#86
@@ -105,17 +105,17 @@ class Config::Options < ::OpenStruct
   # source://config//lib/config/options.rb#13
   def empty?; end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def exit!; end
 
   # @return [Boolean]
   #
-  # source://config//lib/config/options.rb#138
+  # source://config//lib/config/options.rb#148
   def has_key?(key); end
 
   # @return [Boolean]
   #
-  # source://config//lib/config/options.rb#134
+  # source://config//lib/config/options.rb#144
   def key?(key); end
 
   # source://config//lib/config/options.rb#9
@@ -126,17 +126,23 @@ class Config::Options < ::OpenStruct
   # source://config//lib/config/options.rb#35
   def load!; end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def max; end
+
+  # source://config//lib/config/options.rb#139
+  def maximum; end
 
   # source://config//lib/config/options.rb#99
   def merge!(hash); end
 
-  # source://config//lib/config/options.rb#142
+  # source://config//lib/config/options.rb#152
   def method_missing(method_name, *args); end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def min; end
+
+  # source://config//lib/config/options.rb#139
+  def minimum; end
 
   # source://config//lib/config/options.rb#26
   def prepend_source!(source); end
@@ -149,13 +155,13 @@ class Config::Options < ::OpenStruct
   # source://config//lib/config/options.rb#65
   def reload_from_files(*files); end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def select; end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def table; end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def test; end
 
   # source://config//lib/config/options.rb#70
@@ -167,26 +173,31 @@ class Config::Options < ::OpenStruct
   # source://config//lib/config/options.rb#90
   def to_json(*args); end
 
-  # source://config//lib/config/options.rb#129
+  # source://config//lib/config/options.rb#133
   def zip; end
 
   protected
 
   # Recursively converts Hashes to Options (including Hashes inside Arrays)
   #
-  # source://config//lib/config/options.rb#168
+  # source://config//lib/config/options.rb#178
   def __convert(h); end
 
-  # source://config//lib/config/options.rb#155
+  # source://config//lib/config/options.rb#165
   def descend_array(array); end
 
   private
 
   # @return [Boolean]
   #
-  # source://config//lib/config/options.rb#149
+  # source://config//lib/config/options.rb#159
   def respond_to_missing?(*args); end
 end
+
+# Some keywords that don't play nicely with Rails 7.*
+#
+# source://config//lib/config/options.rb#118
+Config::Options::RAILS_RESERVED_NAMES = T.let(T.unsafe(nil), Array)
 
 # Some keywords that don't play nicely with OpenStruct
 #

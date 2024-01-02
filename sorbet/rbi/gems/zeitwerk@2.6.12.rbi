@@ -293,6 +293,12 @@ class Zeitwerk::Loader
   # source://zeitwerk//lib/zeitwerk/loader.rb#33
   def autoloads; end
 
+  # source://zeitwerk//lib/zeitwerk/loader.rb#493
+  def define_autoload(parent, cname, abspath); end
+
+  # source://zeitwerk//lib/zeitwerk/loader.rb#410
+  def define_autoloads_for_dir(dir, parent); end
+
   # Returns the value of attribute dirs_autoload_monitor.
   #
   # source://zeitwerk//lib/zeitwerk/loader.rb#96
@@ -334,12 +340,6 @@ class Zeitwerk::Loader
 
   # source://zeitwerk//lib/zeitwerk/loader.rb#552
   def run_on_unload_callbacks(cpath, value, abspath); end
-
-  # source://zeitwerk//lib/zeitwerk/loader.rb#493
-  def set_autoload(parent, cname, abspath); end
-
-  # source://zeitwerk//lib/zeitwerk/loader.rb#410
-  def set_autoloads_in_dir(dir, parent); end
 
   # source://zeitwerk//lib/zeitwerk/loader.rb#310
   def shadowed_file?(file); end
@@ -447,21 +447,13 @@ end
 # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#3
 module Zeitwerk::Loader::Callbacks
   include ::Zeitwerk::RealModName
+  extend ::Zeitwerk::Internal
 
-  # Invoked from our decorated Kernel#require when a managed directory is
-  # autoloaded.
-  #
-  # @private
-  #
-  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#34
-  def on_dir_autoloaded(dir); end
+  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#41
+  def __on_dir_autoloaded(dir); end
 
-  # Invoked from our decorated Kernel#require when a managed file is autoloaded.
-  #
-  # @private
-  #
   # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#10
-  def on_file_autoloaded(file); end
+  def __on_file_autoloaded(file); end
 
   # Invoked when a class or module is created or reopened, either from the
   # tracer or from module autovivification. If the namespace has matching
@@ -469,12 +461,18 @@ module Zeitwerk::Loader::Callbacks
   #
   # @private
   #
-  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#74
+  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#81
   def on_namespace_loaded(namespace); end
 
   private
 
-  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#85
+  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#41
+  def on_dir_autoloaded(dir); end
+
+  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#10
+  def on_file_autoloaded(file); end
+
+  # source://zeitwerk//lib/zeitwerk/loader/callbacks.rb#92
   def run_on_load_callbacks(cpath, value, abspath); end
 end
 

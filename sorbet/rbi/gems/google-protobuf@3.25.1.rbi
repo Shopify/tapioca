@@ -7,30 +7,32 @@
 # We define these before requiring the platform-specific modules.
 # That way the module init can grab references to these.
 #
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#31
+# source://google-protobuf//lib/google/protobuf/message_exts.rb#8
 module Google; end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#32
+# source://google-protobuf//lib/google/protobuf/message_exts.rb#9
 module Google::Protobuf
   class << self
-    # source://google-protobuf//lib/google/protobuf.rb#71
+    # source://google-protobuf//lib/google/protobuf.rb#38
     def decode(klass, proto, options = T.unsafe(nil)); end
 
-    # source://google-protobuf//lib/google/protobuf.rb#75
+    # source://google-protobuf//lib/google/protobuf.rb#42
     def decode_json(klass, json, options = T.unsafe(nil)); end
 
     def deep_copy(_arg0); end
+
+    # @raise [FrozenError]
     def discard_unknown(_arg0); end
 
-    # source://google-protobuf//lib/google/protobuf.rb#63
+    # source://google-protobuf//lib/google/protobuf.rb#30
     def encode(msg, options = T.unsafe(nil)); end
 
-    # source://google-protobuf//lib/google/protobuf.rb#67
+    # source://google-protobuf//lib/google/protobuf.rb#34
     def encode_json(msg, options = T.unsafe(nil)); end
   end
 end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#52
+# source://google-protobuf//lib/google/protobuf/message_exts.rb#29
 class Google::Protobuf::AbstractMessage
   include ::Google::Protobuf::MessageExts
   extend ::Google::Protobuf::MessageExts::ClassMethods
@@ -63,9 +65,11 @@ class Google::Protobuf::AbstractMessage
   end
 end
 
+# Message Descriptor - Descriptor for short.
 class Google::Protobuf::Descriptor
   include ::Enumerable
 
+  # @return [Descriptor] a new instance of Descriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def each; end
@@ -75,12 +79,14 @@ class Google::Protobuf::Descriptor
   def lookup_oneof(_arg0); end
   def msgclass; end
   def name; end
+  def options; end
 end
 
 # Re-open the class (the rest of the class is implemented in C)
 #
 # source://google-protobuf//lib/google/protobuf/descriptor_dsl.rb#457
 class Google::Protobuf::DescriptorPool
+  # @raise [ArgumentError]
   def add_serialized_file(_arg0); end
 
   # source://google-protobuf//lib/google/protobuf/descriptor_dsl.rb#458
@@ -97,9 +103,45 @@ class Google::Protobuf::DescriptorProto < ::Google::Protobuf::AbstractMessage; e
 class Google::Protobuf::DescriptorProto::ExtensionRange < ::Google::Protobuf::AbstractMessage; end
 class Google::Protobuf::DescriptorProto::ReservedRange < ::Google::Protobuf::AbstractMessage; end
 
+module Google::Protobuf::Edition
+  class << self
+    def descriptor; end
+    def lookup(_arg0); end
+    def resolve(_arg0); end
+  end
+end
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_1_TEST_ONLY = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_2023 = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_2_TEST_ONLY = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_99997_TEST_ONLY = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_99998_TEST_ONLY = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_99999_TEST_ONLY = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_PROTO2 = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_PROTO3 = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#84
+Google::Protobuf::Edition::EDITION_UNKNOWN = T.let(T.unsafe(nil), Integer)
+
 class Google::Protobuf::EnumDescriptor
   include ::Enumerable
 
+  # @return [EnumDescriptor] a new instance of EnumDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def each; end
@@ -108,6 +150,7 @@ class Google::Protobuf::EnumDescriptor
   def lookup_name(_arg0); end
   def lookup_value(_arg0); end
   def name; end
+  def options; end
 end
 
 class Google::Protobuf::EnumDescriptorProto < ::Google::Protobuf::AbstractMessage; end
@@ -116,7 +159,7 @@ class Google::Protobuf::EnumOptions < ::Google::Protobuf::AbstractMessage; end
 class Google::Protobuf::EnumValueDescriptorProto < ::Google::Protobuf::AbstractMessage; end
 class Google::Protobuf::EnumValueOptions < ::Google::Protobuf::AbstractMessage; end
 
-# source://google-protobuf//lib/google/protobuf.rb#39
+# source://google-protobuf//lib/google/protobuf.rb#16
 class Google::Protobuf::Error < ::StandardError; end
 
 class Google::Protobuf::ExtensionRangeOptions < ::Google::Protobuf::AbstractMessage; end
@@ -226,7 +269,7 @@ Google::Protobuf::FeatureSet::RepeatedFieldEncoding::PACKED = T.let(T.unsafe(nil
 # source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#73
 Google::Protobuf::FeatureSet::RepeatedFieldEncoding::REPEATED_FIELD_ENCODING_UNKNOWN = T.let(T.unsafe(nil), Integer)
 
-module Google::Protobuf::FeatureSet::StringFieldValidation
+module Google::Protobuf::FeatureSet::Utf8Validation
   class << self
     def descriptor; end
     def lookup(_arg0); end
@@ -235,29 +278,58 @@ module Google::Protobuf::FeatureSet::StringFieldValidation
 end
 
 # source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#74
-Google::Protobuf::FeatureSet::StringFieldValidation::HINT = T.let(T.unsafe(nil), Integer)
+Google::Protobuf::FeatureSet::Utf8Validation::NONE = T.let(T.unsafe(nil), Integer)
 
 # source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#74
-Google::Protobuf::FeatureSet::StringFieldValidation::MANDATORY = T.let(T.unsafe(nil), Integer)
+Google::Protobuf::FeatureSet::Utf8Validation::UTF8_VALIDATION_UNKNOWN = T.let(T.unsafe(nil), Integer)
 
 # source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#74
-Google::Protobuf::FeatureSet::StringFieldValidation::NONE = T.let(T.unsafe(nil), Integer)
+Google::Protobuf::FeatureSet::Utf8Validation::VERIFY = T.let(T.unsafe(nil), Integer)
 
-# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#74
-Google::Protobuf::FeatureSet::StringFieldValidation::STRING_FIELD_VALIDATION_UNKNOWN = T.let(T.unsafe(nil), Integer)
+class Google::Protobuf::FeatureSetDefaults < ::Google::Protobuf::AbstractMessage; end
+class Google::Protobuf::FeatureSetDefaults::FeatureSetEditionDefault < ::Google::Protobuf::AbstractMessage; end
 
 class Google::Protobuf::FieldDescriptor
+  # @return [FieldDescriptor] a new instance of FieldDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
+  # @param msg [Google::Protobuf::Message]
   def clear(_arg0); end
+
   def default; end
+
+  # Tests if this field has been set on the argument message.
+  #
+  # @param msg [Google::Protobuf::Message]
+  # @raise [TypeError] If the field is not defined on this message.
+  # @return [Object] Value of the field on this message.
   def get(_arg0); end
+
+  # Tests if this field has been set on the argument message.
+  #
+  # @param msg [Google::Protobuf::Message]
+  # @raise [TypeError] If this field does not exist on the message
+  # @raise [ArgumentError] If this field does not track presence
+  # @return [Boolean] True iff message has this field set
   def has?(_arg0); end
+
   def json_name; end
   def label; end
   def name; end
   def number; end
+  def options; end
+
+  # call-seq:
+  #     FieldDescriptor.set(message, value)
+  #
+  # Sets the value corresponding to this field to the given value on the given
+  # message. Raises an exception if message is of the wrong type. Performs the
+  # ordinary type-checks for field setting.
+  #
+  # @param msg [Google::Protobuf::Message]
+  # @param value [Object]
   def set(_arg0, _arg1); end
+
   def submsg_name; end
   def subtype; end
   def type; end
@@ -438,9 +510,11 @@ Google::Protobuf::FieldOptions::OptionTargetType::TARGET_TYPE_SERVICE = T.let(T.
 Google::Protobuf::FieldOptions::OptionTargetType::TARGET_TYPE_UNKNOWN = T.let(T.unsafe(nil), Integer)
 
 class Google::Protobuf::FileDescriptor
+  # @return [FileDescriptor] a new instance of FileDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def name; end
+  def options; end
   def syntax; end
 end
 
@@ -476,14 +550,17 @@ module Google::Protobuf::GeneratedCodeInfo::Annotation::Semantic
   end
 end
 
-# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#81
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#83
 Google::Protobuf::GeneratedCodeInfo::Annotation::Semantic::ALIAS = T.let(T.unsafe(nil), Integer)
 
-# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#81
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#83
 Google::Protobuf::GeneratedCodeInfo::Annotation::Semantic::NONE = T.let(T.unsafe(nil), Integer)
 
-# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#81
+# source://google-protobuf//lib/google/protobuf/descriptor_pb.rb#83
 Google::Protobuf::GeneratedCodeInfo::Annotation::Semantic::SET = T.let(T.unsafe(nil), Integer)
+
+# source://google-protobuf//lib/google/protobuf.rb#46
+Google::Protobuf::IMPLEMENTATION = T.let(T.unsafe(nil), Symbol)
 
 # source://google-protobuf//lib/google/protobuf/descriptor_dsl.rb#16
 module Google::Protobuf::Internal; end
@@ -690,69 +767,149 @@ class Google::Protobuf::Internal::OneofBuilder
   def optional(name, type, number, type_class = T.unsafe(nil), options = T.unsafe(nil)); end
 end
 
-# source://google-protobuf//lib/google/protobuf/object_cache.rb#64
+# source://google-protobuf//lib/google/protobuf/object_cache.rb#41
 class Google::Protobuf::LegacyObjectCache
   # @return [LegacyObjectCache] a new instance of LegacyObjectCache
   #
-  # source://google-protobuf//lib/google/protobuf/object_cache.rb#65
+  # source://google-protobuf//lib/google/protobuf/object_cache.rb#42
   def initialize; end
 
-  # source://google-protobuf//lib/google/protobuf/object_cache.rb#71
+  # source://google-protobuf//lib/google/protobuf/object_cache.rb#48
   def get(key); end
 
-  # source://google-protobuf//lib/google/protobuf/object_cache.rb#93
+  # source://google-protobuf//lib/google/protobuf/object_cache.rb#70
   def try_add(key, value); end
 
   private
 
-  # source://google-protobuf//lib/google/protobuf/object_cache.rb#108
+  # source://google-protobuf//lib/google/protobuf/object_cache.rb#85
   def purge; end
 end
 
 class Google::Protobuf::Map
   include ::Enumerable
 
+  # @return [Map] a new instance of Map
   def initialize(*_arg0); end
 
+  # call-seq:
+  #     Map.==(other) => boolean
+  #
+  # Compares this map to another. Maps are equal if they have identical key sets,
+  # and for each key, the values in both maps compare equal. Elements are
+  # compared as per normal Ruby semantics, by calling their :== methods (or
+  # performing a more efficient comparison for primitive types).
+  #
+  # Maps with dissimilar key types or value types/typeclasses are never equal,
+  # even if value comparison (for example, between integers and floats) would
+  # have otherwise indicated that every element has equal value.
   def ==(_arg0); end
+
+  # call-seq:
+  #    Map.[](key) => value
+  #
+  #  Accesses the element at the given key. Throws an exception if the key type is
+  #  incorrect. Returns nil when the key is not present in the map.
   def [](_arg0); end
+
+  # call-seq:
+  #     Map.[]=(key, value) => value
+  #
+  # Inserts or overwrites the value at the given key with the given new value.
+  # Throws an exception if the key type is incorrect. Returns the new value that
+  # was just inserted.
   def []=(_arg0, _arg1); end
+
   def clear; end
+
+  # call-seq:
+  #    Map.dup => new_map
+  #
+  # Duplicates this map with a shallow copy. References to all non-primitive
+  # element objects (e.g., submessages) are shared.
   def clone; end
+
+  # call-seq:
+  #    Map.delete(key) => old_value
+  #
+  # Deletes the value at the given key, if any, returning either the old value or
+  # nil if none was present. Throws an exception if the key is of the wrong type.
   def delete(_arg0); end
+
+  # call-seq:
+  #    Map.dup => new_map
+  #
+  # Duplicates this map with a shallow copy. References to all non-primitive
+  # element objects (e.g., submessages) are shared.
   def dup; end
+
+  # call-seq:
+  #    Map.each(&block)
+  #
+  # Invokes &block on each |key, value| pair in the map, in unspecified order.
+  # Note that Map also includes Enumerable; map thus acts like a normal Ruby
+  # sequence.
   def each; end
+
   def freeze; end
+
+  # @return [Boolean]
   def has_key?(_arg0); end
+
   def hash; end
   def inspect; end
+
+  # call-seq:
+  #     Map.keys => [list_of_keys]
+  #
+  # Returns the list of keys contained in the map, in unspecified order.
   def keys; end
+
   def length; end
+
+  # call-seq:
+  #    Map.merge(other_map) => map
+  #
+  # Copies key/value pairs from other_map into a copy of this map. If a key is
+  # set in other_map and this map, the value from other_map overwrites the value
+  # in the new copy of this map. Returns the new copy of this map with merged
+  # contents.
   def merge(_arg0); end
+
   def size; end
+
+  # call-seq:
+  #    Map.to_h => {}
+  #
+  # Returns a Ruby Hash object containing all the values within the map
   def to_h; end
+
+  # call-seq:
+  #     Map.values => [list_of_values]
+  #
+  # Returns the list of values contained in the map, in unspecified order.
   def values; end
 end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#33
+# source://google-protobuf//lib/google/protobuf/message_exts.rb#10
 module Google::Protobuf::MessageExts
   mixes_in_class_methods ::Google::Protobuf::MessageExts::ClassMethods
 
-  # source://google-protobuf//lib/google/protobuf/message_exts.rb#43
+  # source://google-protobuf//lib/google/protobuf/message_exts.rb#20
   def to_json(options = T.unsafe(nil)); end
 
-  # source://google-protobuf//lib/google/protobuf/message_exts.rb#47
+  # source://google-protobuf//lib/google/protobuf/message_exts.rb#24
   def to_proto(options = T.unsafe(nil)); end
 
   class << self
     # this is only called in jruby; mri loades the ClassMethods differently
     #
-    # source://google-protobuf//lib/google/protobuf/message_exts.rb#36
+    # source://google-protobuf//lib/google/protobuf/message_exts.rb#13
     def included(klass); end
   end
 end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#40
+# source://google-protobuf//lib/google/protobuf/message_exts.rb#17
 module Google::Protobuf::MessageExts::ClassMethods; end
 
 class Google::Protobuf::MessageOptions < ::Google::Protobuf::AbstractMessage; end
@@ -793,40 +950,46 @@ Google::Protobuf::OBJECT_CACHE = T.let(T.unsafe(nil), Google::Protobuf::ObjectCa
 # are 32 bits. In this case, we enable the secondary Hash to hold the keys
 # and prevent them from being collected.
 #
-# source://google-protobuf//lib/google/protobuf/object_cache.rb#47
+# source://google-protobuf//lib/google/protobuf/object_cache.rb#24
 class Google::Protobuf::ObjectCache
   # @return [ObjectCache] a new instance of ObjectCache
   #
-  # source://google-protobuf//lib/google/protobuf/object_cache.rb#48
+  # source://google-protobuf//lib/google/protobuf/object_cache.rb#25
   def initialize; end
 
-  # source://google-protobuf//lib/google/protobuf/object_cache.rb#53
+  # source://google-protobuf//lib/google/protobuf/object_cache.rb#30
   def get(key); end
 
-  # source://google-protobuf//lib/google/protobuf/object_cache.rb#57
+  # source://google-protobuf//lib/google/protobuf/object_cache.rb#34
   def try_add(key, value); end
 end
 
 class Google::Protobuf::OneofDescriptor
   include ::Enumerable
 
+  # @return [OneofDescriptor] a new instance of OneofDescriptor
   def initialize(_arg0, _arg1, _arg2); end
 
   def each; end
   def name; end
+  def options; end
 end
 
 class Google::Protobuf::OneofDescriptorProto < ::Google::Protobuf::AbstractMessage; end
 class Google::Protobuf::OneofOptions < ::Google::Protobuf::AbstractMessage; end
 
-# source://google-protobuf//lib/google/protobuf.rb#40
+# source://google-protobuf//lib/google/protobuf.rb#20
+Google::Protobuf::PREFER_FFI = T.let(T.unsafe(nil), FalseClass)
+
+# source://google-protobuf//lib/google/protobuf.rb#17
 class Google::Protobuf::ParseError < ::Google::Protobuf::Error; end
 
-# source://google-protobuf//lib/google/protobuf/repeated_field.rb#50
+# source://google-protobuf//lib/google/protobuf/repeated_field.rb#27
 class Google::Protobuf::RepeatedField
   include ::Enumerable
   extend ::Forwardable
 
+  # @return [RepeatedField] a new instance of RepeatedField
   def initialize(*_arg0); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -840,6 +1003,7 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def -(*args, **_arg1, &block); end
 
+  # @raise [FrozenError]
   def <<(_arg0); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -847,6 +1011,8 @@ class Google::Protobuf::RepeatedField
 
   def ==(_arg0); end
   def [](*_arg0); end
+
+  # @raise [FrozenError]
   def []=(_arg0, _arg1); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -860,10 +1026,12 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def bsearch_index(*args, **_arg1, &block); end
 
+  # @raise [FrozenError]
   def clear; end
+
   def clone; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def collect!(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -872,7 +1040,7 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def compact(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def compact!(*args, &block); end
 
   def concat(_arg0); end
@@ -883,13 +1051,13 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def cycle(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#128
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#105
   def delete(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#128
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#105
   def delete_at(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def delete_if(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -902,6 +1070,13 @@ class Google::Protobuf::RepeatedField
   def drop_while(*args, **_arg1, &block); end
 
   def dup; end
+
+  # call-seq:
+  #     RepeatedField.each(&block)
+  #
+  # Invokes the block once for each element of the repeated field. RepeatedField
+  # also includes Enumerable; combined with this method, the repeated field thus
+  # acts like an ordinary Ruby sequence.
   def each; end
 
   # array aliases into enumerable
@@ -909,7 +1084,7 @@ class Google::Protobuf::RepeatedField
 
   # @return [Boolean]
   #
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#115
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#92
   def empty?; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -918,19 +1093,19 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def fetch(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def fill(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def find_index(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#81
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#58
   def first(n = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def flatten(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def flatten!(*args, &block); end
 
   def freeze; end
@@ -942,7 +1117,7 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def index(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def insert(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -951,16 +1126,16 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def join(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def keep_if(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#92
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#69
   def last(n = T.unsafe(nil)); end
 
   def length; end
   def map; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def map!(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -969,7 +1144,7 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def permutation(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#104
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#81
   def pop(n = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -981,12 +1156,13 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def product(*args, **_arg1, &block); end
 
+  # @raise [FrozenError]
   def push(*_arg0); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def rassoc(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def reject!(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -995,12 +1171,13 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def repeated_permutation(*args, **_arg1, &block); end
 
+  # @raise [FrozenError]
   def replace(_arg0); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def reverse(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def reverse!(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -1009,39 +1186,44 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def rotate(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def rotate!(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def sample(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def select!(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def shelljoin(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#128
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#105
   def shift(*args, &block); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def shuffle(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def shuffle!(*args, &block); end
 
   def size; end
   def slice(*_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#128
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#105
   def slice!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def sort!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def sort_by!(*args, &block); end
 
+  # call-seq:
+  #    RepeatedField.to_ary => array
+  #
+  # Used when converted implicitly into array, e.g. compared to an Array.
+  # Also called as a fallback of Object#to_a
   def to_ary; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -1053,10 +1235,10 @@ class Google::Protobuf::RepeatedField
   # source://forwardable/1.3.3/forwardable.rb#231
   def uniq(*args, **_arg1, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#140
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#117
   def uniq!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#128
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#105
   def unshift(*args, &block); end
 
   def values_at; end
@@ -1066,15 +1248,16 @@ class Google::Protobuf::RepeatedField
 
   private
 
+  # @raise [FrozenError]
   def pop_one; end
 
   class << self
     private
 
-    # source://google-protobuf//lib/google/protobuf/repeated_field.rb#127
+    # source://google-protobuf//lib/google/protobuf/repeated_field.rb#104
     def define_array_wrapper_method(method_name); end
 
-    # source://google-protobuf//lib/google/protobuf/repeated_field.rb#139
+    # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
     def define_array_wrapper_with_result_method(method_name); end
   end
 end
@@ -1083,9 +1266,9 @@ end
 # This only applies in cases where the calling function which created the enumerator,
 # such as #sort!, modifies itself rather than a new array, such as #sort
 #
-# source://google-protobuf//lib/google/protobuf/repeated_field.rb#183
+# source://google-protobuf//lib/google/protobuf/repeated_field.rb#160
 class Google::Protobuf::RepeatedField::ProxyingEnumerator < ::Struct
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#184
+  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#161
   def each(*args, &block); end
 end
 
@@ -1096,7 +1279,7 @@ class Google::Protobuf::ServiceOptions < ::Google::Protobuf::AbstractMessage; en
 class Google::Protobuf::SourceCodeInfo < ::Google::Protobuf::AbstractMessage; end
 class Google::Protobuf::SourceCodeInfo::Location < ::Google::Protobuf::AbstractMessage; end
 
-# source://google-protobuf//lib/google/protobuf.rb#41
+# source://google-protobuf//lib/google/protobuf.rb#18
 class Google::Protobuf::TypeError < ::TypeError; end
 
 class Google::Protobuf::UninterpretedOption < ::Google::Protobuf::AbstractMessage; end

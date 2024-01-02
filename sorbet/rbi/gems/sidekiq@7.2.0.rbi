@@ -431,11 +431,11 @@ class Sidekiq::Config
 
   private
 
-  # source://sidekiq//lib/sidekiq/config.rb#261
-  def arity(handler); end
-
   # source://sidekiq//lib/sidekiq/config.rb#130
   def local_redis_pool; end
+
+  # source://sidekiq//lib/sidekiq/config.rb#261
+  def parameter_size(handler); end
 end
 
 # source://sidekiq//lib/sidekiq/config.rb#11
@@ -1093,15 +1093,15 @@ end
 class Sidekiq::RedisClientAdapter
   # @return [RedisClientAdapter] a new instance of RedisClientAdapter
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#47
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#63
   def initialize(options); end
 
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#56
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#72
   def new_client; end
 
   private
 
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#62
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#78
   def client_opts(options); end
 end
 
@@ -1115,7 +1115,7 @@ Sidekiq::RedisClientAdapter::CommandError = RedisClient::CommandError
 class Sidekiq::RedisClientAdapter::CompatClient < ::RedisClient::Decorator::Client
   include ::Sidekiq::RedisClientAdapter::CompatMethods
 
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#42
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#58
   def config; end
 end
 
@@ -1126,25 +1126,176 @@ end
 
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#15
 module Sidekiq::RedisClientAdapter::CompatMethods
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def bitfield(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def bitfield_ro(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def del(*args); end
+
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#20
   def evalsha(sha, keys, argv); end
 
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def exists(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def expire(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def flushdb(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def get(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hdel(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hget(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hgetall(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hincrby(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hlen(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hmget(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hset(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def hsetnx(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def incr(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def incrby(*args); end
+
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#16
   def info; end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def lindex(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def llen(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def lmove(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def lpop(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def lpush(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def lrange(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def lrem(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def mget(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def mset(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def ping(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def pttl(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def publish(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def rpop(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def rpush(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def sadd(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def scard(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def script(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def set(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def sismember(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def smembers(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def srem(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def ttl(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def type(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def unlink(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def zadd(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def zcard(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def zincrby(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def zrange(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def zrem(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def zremrangebyrank(*args); end
+
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
+  def zremrangebyscore(*args); end
 
   private
 
   # this allows us to use methods like `conn.hmset(...)` instead of having to use
   # redis-client's native `conn.call("hmset", ...)`
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#28
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#44
   def method_missing(*args, **_arg1, &block); end
 
   # @return [Boolean]
   #
-  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#34
+  # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#50
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
+
+# this is the set of Redis commands used by Sidekiq. Not guaranteed
+# to be comprehensive, we use this as a performance enhancement to
+# avoid calling method_missing on most commands
+#
+# source://sidekiq//lib/sidekiq/redis_client_adapter.rb#27
+Sidekiq::RedisClientAdapter::CompatMethods::USED_COMMANDS = T.let(T.unsafe(nil), Array)
 
 # You can add/remove items or clear the whole thing if you don't want deprecation warnings.
 #

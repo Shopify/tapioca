@@ -28,15 +28,15 @@ module Prism
     def lex(*_arg0); end
 
     # :call-seq:
-    #   Prism::lex_compat(source, **options) -> Array
+    #   Prism::lex_compat(source, **options) -> ParseResult
     #
-    # Returns an array of tokens that closely resembles that of the Ripper lexer.
-    # The only difference is that since we don't keep track of lexer state in the
-    # same way, it's going to always return the NONE state.
+    # Returns a parse result whose value is an array of tokens that closely
+    # resembles the return value of Ripper::lex. The main difference is that the
+    # `:on_sp` token is not emitted.
     #
     # For supported options, see Prism::parse.
     #
-    # source://prism//lib/prism.rb#45
+    # source://prism//lib/prism.rb#46
     def lex_compat(source, **options); end
 
     # Mirror the Prism.lex_file API by using the serialization API.
@@ -49,7 +49,7 @@ module Prism
     # returns the same tokens. Raises SyntaxError if the syntax in source is
     # invalid.
     #
-    # source://prism//lib/prism.rb#55
+    # source://prism//lib/prism.rb#56
     def lex_ripper(source); end
 
     # :call-seq:
@@ -57,7 +57,7 @@ module Prism
     #
     # Load the serialized AST using the source as a reference into a tree.
     #
-    # source://prism//lib/prism.rb#63
+    # source://prism//lib/prism.rb#64
     def load(source, serialized); end
 
     # Mirror the Prism.parse API by using the serialization API.
@@ -65,6 +65,16 @@ module Prism
 
     # Mirror the Prism.parse_comments API by using the serialization API.
     def parse_comments(*_arg0); end
+
+    # :call-seq:
+    #   Prism::parse_failure?(source, **options) -> bool
+    #
+    # Returns true if the source parses with errors.
+    #
+    # @return [Boolean]
+    #
+    # source://prism//lib/prism.rb#72
+    def parse_failure?(source, **options); end
 
     # Mirror the Prism.parse_file API by using the serialization API. This uses
     # native strings instead of Ruby strings because it allows us to use mmap when
@@ -76,11 +86,31 @@ module Prism
     # to use mmap when it is available.
     def parse_file_comments(*_arg0); end
 
+    # :call-seq:
+    #   Prism::parse_file_failure?(filepath, **options) -> bool
+    #
+    # Returns true if the file at filepath parses with errors.
+    #
+    # @return [Boolean]
+    #
+    # source://prism//lib/prism.rb#80
+    def parse_file_failure?(filepath, **options); end
+
+    # Mirror the Prism.parse_file_success? API by using the serialization API.
+    #
+    # @return [Boolean]
+    def parse_file_success?(*_arg0); end
+
     # Mirror the Prism.parse_lex API by using the serialization API.
     def parse_lex(*_arg0); end
 
     # Mirror the Prism.parse_lex_file API by using the serialization API.
     def parse_lex_file(*_arg0); end
+
+    # Mirror the Prism.parse_success? API by using the serialization API.
+    #
+    # @return [Boolean]
+    def parse_success?(*_arg0); end
   end
 end
 
@@ -89,13 +119,13 @@ end
 #     alias $foo $bar
 #     ^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#47
+# source://prism//lib/prism/node.rb#52
 class Prism::AliasGlobalVariableNode < ::Prism::Node
   # def initialize: (new_name: Node, old_name: Node, keyword_loc: Location, location: Location) -> void
   #
   # @return [AliasGlobalVariableNode] a new instance of AliasGlobalVariableNode
   #
-  # source://prism//lib/prism/node.rb#58
+  # source://prism//lib/prism/node.rb#63
   sig do
     params(
       new_name: Prism::Node,
@@ -108,42 +138,42 @@ class Prism::AliasGlobalVariableNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#66
+  # source://prism//lib/prism/node.rb#71
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#71
+  # source://prism//lib/prism/node.rb#76
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#81
+  # source://prism//lib/prism/node.rb#86
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#76
+  # source://prism//lib/prism/node.rb#81
   def compact_child_nodes; end
 
   # def copy: (**params) -> AliasGlobalVariableNode
   #
-  # source://prism//lib/prism/node.rb#86
+  # source://prism//lib/prism/node.rb#91
   sig { params(params: T.untyped).returns(Prism::AliasGlobalVariableNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#71
+  # source://prism//lib/prism/node.rb#76
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#99
+  # source://prism//lib/prism/node.rb#104
   sig do
     params(
       keys: T::Array[Symbol]
@@ -153,30 +183,30 @@ class Prism::AliasGlobalVariableNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#109
+  # source://prism//lib/prism/node.rb#114
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#104
+  # source://prism//lib/prism/node.rb#109
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#55
+  # source://prism//lib/prism/node.rb#60
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader new_name: Node
   #
-  # source://prism//lib/prism/node.rb#49
+  # source://prism//lib/prism/node.rb#54
   sig { returns(Prism::Node) }
   def new_name; end
 
   # attr_reader old_name: Node
   #
-  # source://prism//lib/prism/node.rb#52
+  # source://prism//lib/prism/node.rb#57
   sig { returns(Prism::Node) }
   def old_name; end
 
@@ -195,7 +225,7 @@ class Prism::AliasGlobalVariableNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#133
+  # source://prism//lib/prism/node.rb#138
   def type; end
 
   class << self
@@ -206,7 +236,7 @@ class Prism::AliasGlobalVariableNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#143
+    # source://prism//lib/prism/node.rb#148
     def type; end
   end
 end
@@ -216,13 +246,13 @@ end
 #     alias foo bar
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#152
+# source://prism//lib/prism/node.rb#157
 class Prism::AliasMethodNode < ::Prism::Node
   # def initialize: (new_name: Node, old_name: Node, keyword_loc: Location, location: Location) -> void
   #
   # @return [AliasMethodNode] a new instance of AliasMethodNode
   #
-  # source://prism//lib/prism/node.rb#163
+  # source://prism//lib/prism/node.rb#168
   sig do
     params(
       new_name: Prism::Node,
@@ -235,42 +265,42 @@ class Prism::AliasMethodNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#171
+  # source://prism//lib/prism/node.rb#176
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#176
+  # source://prism//lib/prism/node.rb#181
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#186
+  # source://prism//lib/prism/node.rb#191
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#181
+  # source://prism//lib/prism/node.rb#186
   def compact_child_nodes; end
 
   # def copy: (**params) -> AliasMethodNode
   #
-  # source://prism//lib/prism/node.rb#191
+  # source://prism//lib/prism/node.rb#196
   sig { params(params: T.untyped).returns(Prism::AliasMethodNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#176
+  # source://prism//lib/prism/node.rb#181
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#204
+  # source://prism//lib/prism/node.rb#209
   sig do
     params(
       keys: T::Array[Symbol]
@@ -280,30 +310,30 @@ class Prism::AliasMethodNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#214
+  # source://prism//lib/prism/node.rb#219
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#209
+  # source://prism//lib/prism/node.rb#214
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#160
+  # source://prism//lib/prism/node.rb#165
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader new_name: Node
   #
-  # source://prism//lib/prism/node.rb#154
+  # source://prism//lib/prism/node.rb#159
   sig { returns(Prism::Node) }
   def new_name; end
 
   # attr_reader old_name: Node
   #
-  # source://prism//lib/prism/node.rb#157
+  # source://prism//lib/prism/node.rb#162
   sig { returns(Prism::Node) }
   def old_name; end
 
@@ -322,7 +352,7 @@ class Prism::AliasMethodNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#238
+  # source://prism//lib/prism/node.rb#243
   def type; end
 
   class << self
@@ -333,7 +363,7 @@ class Prism::AliasMethodNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#248
+    # source://prism//lib/prism/node.rb#253
     def type; end
   end
 end
@@ -343,54 +373,54 @@ end
 #     foo => bar | baz
 #            ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#257
+# source://prism//lib/prism/node.rb#262
 class Prism::AlternationPatternNode < ::Prism::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [AlternationPatternNode] a new instance of AlternationPatternNode
   #
-  # source://prism//lib/prism/node.rb#268
+  # source://prism//lib/prism/node.rb#273
   sig { params(left: Prism::Node, right: Prism::Node, operator_loc: Prism::Location, location: Prism::Location).void }
   def initialize(left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#276
+  # source://prism//lib/prism/node.rb#281
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#281
+  # source://prism//lib/prism/node.rb#286
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#291
+  # source://prism//lib/prism/node.rb#296
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#286
+  # source://prism//lib/prism/node.rb#291
   def compact_child_nodes; end
 
   # def copy: (**params) -> AlternationPatternNode
   #
-  # source://prism//lib/prism/node.rb#296
+  # source://prism//lib/prism/node.rb#301
   sig { params(params: T.untyped).returns(Prism::AlternationPatternNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#281
+  # source://prism//lib/prism/node.rb#286
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#309
+  # source://prism//lib/prism/node.rb#314
   sig do
     params(
       keys: T::Array[Symbol]
@@ -400,30 +430,30 @@ class Prism::AlternationPatternNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#319
+  # source://prism//lib/prism/node.rb#324
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://prism//lib/prism/node.rb#259
+  # source://prism//lib/prism/node.rb#264
   sig { returns(Prism::Node) }
   def left; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#314
+  # source://prism//lib/prism/node.rb#319
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#265
+  # source://prism//lib/prism/node.rb#270
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader right: Node
   #
-  # source://prism//lib/prism/node.rb#262
+  # source://prism//lib/prism/node.rb#267
   sig { returns(Prism::Node) }
   def right; end
 
@@ -442,7 +472,7 @@ class Prism::AlternationPatternNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#343
+  # source://prism//lib/prism/node.rb#348
   def type; end
 
   class << self
@@ -453,7 +483,7 @@ class Prism::AlternationPatternNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#353
+    # source://prism//lib/prism/node.rb#358
     def type; end
   end
 end
@@ -463,54 +493,54 @@ end
 #     left and right
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#362
+# source://prism//lib/prism/node.rb#367
 class Prism::AndNode < ::Prism::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [AndNode] a new instance of AndNode
   #
-  # source://prism//lib/prism/node.rb#373
+  # source://prism//lib/prism/node.rb#378
   sig { params(left: Prism::Node, right: Prism::Node, operator_loc: Prism::Location, location: Prism::Location).void }
   def initialize(left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#381
+  # source://prism//lib/prism/node.rb#386
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#386
+  # source://prism//lib/prism/node.rb#391
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#396
+  # source://prism//lib/prism/node.rb#401
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#391
+  # source://prism//lib/prism/node.rb#396
   def compact_child_nodes; end
 
   # def copy: (**params) -> AndNode
   #
-  # source://prism//lib/prism/node.rb#401
+  # source://prism//lib/prism/node.rb#406
   sig { params(params: T.untyped).returns(Prism::AndNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#386
+  # source://prism//lib/prism/node.rb#391
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#414
+  # source://prism//lib/prism/node.rb#419
   sig do
     params(
       keys: T::Array[Symbol]
@@ -520,30 +550,30 @@ class Prism::AndNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#424
+  # source://prism//lib/prism/node.rb#429
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://prism//lib/prism/node.rb#364
+  # source://prism//lib/prism/node.rb#369
   sig { returns(Prism::Node) }
   def left; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#419
+  # source://prism//lib/prism/node.rb#424
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#370
+  # source://prism//lib/prism/node.rb#375
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader right: Node
   #
-  # source://prism//lib/prism/node.rb#367
+  # source://prism//lib/prism/node.rb#372
   sig { returns(Prism::Node) }
   def right; end
 
@@ -562,7 +592,7 @@ class Prism::AndNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#448
+  # source://prism//lib/prism/node.rb#453
   def type; end
 
   class << self
@@ -573,7 +603,7 @@ class Prism::AndNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#458
+    # source://prism//lib/prism/node.rb#463
     def type; end
   end
 end
@@ -583,60 +613,68 @@ end
 #     return foo, bar, baz
 #            ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#467
+# source://prism//lib/prism/node.rb#472
 class Prism::ArgumentsNode < ::Prism::Node
-  # def initialize: (arguments: Array[Node], flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, arguments: Array[Node], location: Location) -> void
   #
   # @return [ArgumentsNode] a new instance of ArgumentsNode
   #
-  # source://prism//lib/prism/node.rb#475
-  sig { params(arguments: T::Array[Prism::Node], flags: Integer, location: Prism::Location).void }
-  def initialize(arguments, flags, location); end
+  # source://prism//lib/prism/node.rb#480
+  sig { params(flags: Integer, arguments: T::Array[Prism::Node], location: Prism::Location).void }
+  def initialize(flags, arguments, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#482
+  # source://prism//lib/prism/node.rb#487
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#469
+  # source://prism//lib/prism/node.rb#477
   sig { returns(T::Array[Prism::Node]) }
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#487
+  # source://prism//lib/prism/node.rb#492
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#497
+  # source://prism//lib/prism/node.rb#502
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#492
+  # source://prism//lib/prism/node.rb#497
   def compact_child_nodes; end
+
+  # def contains_keyword_splat?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#524
+  sig { returns(T::Boolean) }
+  def contains_keyword_splat?; end
 
   # def copy: (**params) -> ArgumentsNode
   #
-  # source://prism//lib/prism/node.rb#502
+  # source://prism//lib/prism/node.rb#507
   sig { params(params: T.untyped).returns(Prism::ArgumentsNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#487
+  # source://prism//lib/prism/node.rb#492
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#514
+  # source://prism//lib/prism/node.rb#519
   sig do
     params(
       keys: T::Array[Symbol]
@@ -646,16 +684,8 @@ class Prism::ArgumentsNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#524
+  # source://prism//lib/prism/node.rb#529
   def inspect(inspector = T.unsafe(nil)); end
-
-  # def keyword_splat?: () -> bool
-  #
-  # @return [Boolean]
-  #
-  # source://prism//lib/prism/node.rb#519
-  sig { returns(T::Boolean) }
-  def keyword_splat?; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -672,14 +702,14 @@ class Prism::ArgumentsNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#546
+  # source://prism//lib/prism/node.rb#551
   def type; end
 
   private
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#472
+  # source://prism//lib/prism/node.rb#474
   sig { returns(Integer) }
   def flags; end
 
@@ -691,20 +721,20 @@ class Prism::ArgumentsNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#556
+    # source://prism//lib/prism/node.rb#561
     def type; end
   end
 end
 
 # Flags for arguments nodes.
 #
-# source://prism//lib/prism/node.rb#16536
+# source://prism//lib/prism/node.rb#17277
 module Prism::ArgumentsNodeFlags; end
 
 # if arguments contain keyword splat
 #
-# source://prism//lib/prism/node.rb#16538
-Prism::ArgumentsNodeFlags::KEYWORD_SPLAT = T.let(T.unsafe(nil), Integer)
+# source://prism//lib/prism/node.rb#17279
+Prism::ArgumentsNodeFlags::CONTAINS_KEYWORD_SPLAT = T.let(T.unsafe(nil), Integer)
 
 # Represents an array literal. This can be a regular array using brackets or
 # a special array using % like %w or %i.
@@ -712,73 +742,82 @@ Prism::ArgumentsNodeFlags::KEYWORD_SPLAT = T.let(T.unsafe(nil), Integer)
 #     [1, 2, 3]
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#566
+# source://prism//lib/prism/node.rb#571
 class Prism::ArrayNode < ::Prism::Node
-  # def initialize: (elements: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
+  # def initialize: (flags: Integer, elements: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [ArrayNode] a new instance of ArrayNode
   #
-  # source://prism//lib/prism/node.rb#577
+  # source://prism//lib/prism/node.rb#585
   sig do
     params(
+      flags: Integer,
       elements: T::Array[Prism::Node],
       opening_loc: T.nilable(Prism::Location),
       closing_loc: T.nilable(Prism::Location),
       location: Prism::Location
     ).void
   end
-  def initialize(elements, opening_loc, closing_loc, location); end
+  def initialize(flags, elements, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#585
+  # source://prism//lib/prism/node.rb#594
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#590
+  # source://prism//lib/prism/node.rb#599
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#628
+  # source://prism//lib/prism/node.rb#643
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#574
+  # source://prism//lib/prism/node.rb#582
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#600
+  # source://prism//lib/prism/node.rb#609
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#595
+  # source://prism//lib/prism/node.rb#604
   def compact_child_nodes; end
+
+  # def contains_splat?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#633
+  sig { returns(T::Boolean) }
+  def contains_splat?; end
 
   # def copy: (**params) -> ArrayNode
   #
-  # source://prism//lib/prism/node.rb#605
+  # source://prism//lib/prism/node.rb#614
   sig { params(params: T.untyped).returns(Prism::ArrayNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#590
+  # source://prism//lib/prism/node.rb#599
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#618
+  # source://prism//lib/prism/node.rb#628
   sig do
     params(
       keys: T::Array[Symbol]
@@ -788,24 +827,24 @@ class Prism::ArrayNode < ::Prism::Node
 
   # attr_reader elements: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#568
+  # source://prism//lib/prism/node.rb#576
   sig { returns(T::Array[Prism::Node]) }
   def elements; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#633
+  # source://prism//lib/prism/node.rb#648
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#623
+  # source://prism//lib/prism/node.rb#638
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#571
+  # source://prism//lib/prism/node.rb#579
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
@@ -824,8 +863,16 @@ class Prism::ArrayNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#655
+  # source://prism//lib/prism/node.rb#672
   def type; end
+
+  private
+
+  # Returns the value of attribute flags.
+  #
+  # source://prism//lib/prism/node.rb#573
+  sig { returns(Integer) }
+  def flags; end
 
   class << self
     # Similar to #type, this method returns a symbol that you can use for
@@ -835,10 +882,20 @@ class Prism::ArrayNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#665
+    # source://prism//lib/prism/node.rb#682
     def type; end
   end
 end
+
+# Flags for array nodes.
+#
+# source://prism//lib/prism/node.rb#17283
+module Prism::ArrayNodeFlags; end
+
+# if array contains splat nodes
+#
+# source://prism//lib/prism/node.rb#17285
+Prism::ArrayNodeFlags::CONTAINS_SPLAT = T.let(T.unsafe(nil), Integer)
 
 # Represents an array pattern in pattern matching.
 #
@@ -857,13 +914,13 @@ end
 #     foo in Bar[1, 2, 3]
 #     ^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#686
+# source://prism//lib/prism/node.rb#703
 class Prism::ArrayPatternNode < ::Prism::Node
   # def initialize: (constant: Node?, requireds: Array[Node], rest: Node?, posts: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [ArrayPatternNode] a new instance of ArrayPatternNode
   #
-  # source://prism//lib/prism/node.rb#706
+  # source://prism//lib/prism/node.rb#723
   sig do
     params(
       constant: T.nilable(Prism::Node),
@@ -879,60 +936,60 @@ class Prism::ArrayPatternNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#717
+  # source://prism//lib/prism/node.rb#734
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#722
+  # source://prism//lib/prism/node.rb#739
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#768
+  # source://prism//lib/prism/node.rb#785
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#703
+  # source://prism//lib/prism/node.rb#720
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#737
+  # source://prism//lib/prism/node.rb#754
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#727
+  # source://prism//lib/prism/node.rb#744
   def compact_child_nodes; end
 
   # attr_reader constant: Node?
   #
-  # source://prism//lib/prism/node.rb#688
+  # source://prism//lib/prism/node.rb#705
   sig { returns(T.nilable(Prism::Node)) }
   def constant; end
 
   # def copy: (**params) -> ArrayPatternNode
   #
-  # source://prism//lib/prism/node.rb#742
+  # source://prism//lib/prism/node.rb#759
   sig { params(params: T.untyped).returns(Prism::ArrayPatternNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#722
+  # source://prism//lib/prism/node.rb#739
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#758
+  # source://prism//lib/prism/node.rb#775
   sig do
     params(
       keys: T::Array[Symbol]
@@ -942,36 +999,36 @@ class Prism::ArrayPatternNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#773
+  # source://prism//lib/prism/node.rb#790
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#763
+  # source://prism//lib/prism/node.rb#780
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#700
+  # source://prism//lib/prism/node.rb#717
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
   # attr_reader posts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#697
+  # source://prism//lib/prism/node.rb#714
   sig { returns(T::Array[Prism::Node]) }
   def posts; end
 
   # attr_reader requireds: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#691
+  # source://prism//lib/prism/node.rb#708
   sig { returns(T::Array[Prism::Node]) }
   def requireds; end
 
   # attr_reader rest: Node?
   #
-  # source://prism//lib/prism/node.rb#694
+  # source://prism//lib/prism/node.rb#711
   sig { returns(T.nilable(Prism::Node)) }
   def rest; end
 
@@ -990,7 +1047,7 @@ class Prism::ArrayPatternNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#808
+  # source://prism//lib/prism/node.rb#825
   def type; end
 
   class << self
@@ -1001,7 +1058,7 @@ class Prism::ArrayPatternNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#818
+    # source://prism//lib/prism/node.rb#835
     def type; end
   end
 end
@@ -1011,13 +1068,13 @@ end
 #     { a => b }
 #       ^^^^^^
 #
-# source://prism//lib/prism/node.rb#827
+# source://prism//lib/prism/node.rb#844
 class Prism::AssocNode < ::Prism::Node
   # def initialize: (key: Node, value: Node?, operator_loc: Location?, location: Location) -> void
   #
   # @return [AssocNode] a new instance of AssocNode
   #
-  # source://prism//lib/prism/node.rb#838
+  # source://prism//lib/prism/node.rb#855
   sig do
     params(
       key: Prism::Node,
@@ -1030,42 +1087,42 @@ class Prism::AssocNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#846
+  # source://prism//lib/prism/node.rb#863
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#851
+  # source://prism//lib/prism/node.rb#868
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#864
+  # source://prism//lib/prism/node.rb#881
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#856
+  # source://prism//lib/prism/node.rb#873
   def compact_child_nodes; end
 
   # def copy: (**params) -> AssocNode
   #
-  # source://prism//lib/prism/node.rb#869
+  # source://prism//lib/prism/node.rb#886
   sig { params(params: T.untyped).returns(Prism::AssocNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#851
+  # source://prism//lib/prism/node.rb#868
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#882
+  # source://prism//lib/prism/node.rb#899
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1075,24 +1132,24 @@ class Prism::AssocNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#892
+  # source://prism//lib/prism/node.rb#909
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader key: Node
   #
-  # source://prism//lib/prism/node.rb#829
+  # source://prism//lib/prism/node.rb#846
   sig { returns(Prism::Node) }
   def key; end
 
   # def operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#887
+  # source://prism//lib/prism/node.rb#904
   sig { returns(T.nilable(String)) }
   def operator; end
 
   # attr_reader operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#835
+  # source://prism//lib/prism/node.rb#852
   sig { returns(T.nilable(Prism::Location)) }
   def operator_loc; end
 
@@ -1111,12 +1168,12 @@ class Prism::AssocNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#920
+  # source://prism//lib/prism/node.rb#937
   def type; end
 
   # attr_reader value: Node?
   #
-  # source://prism//lib/prism/node.rb#832
+  # source://prism//lib/prism/node.rb#849
   sig { returns(T.nilable(Prism::Node)) }
   def value; end
 
@@ -1128,7 +1185,7 @@ class Prism::AssocNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#930
+    # source://prism//lib/prism/node.rb#947
     def type; end
   end
 end
@@ -1138,54 +1195,54 @@ end
 #     { **foo }
 #       ^^^^^
 #
-# source://prism//lib/prism/node.rb#939
+# source://prism//lib/prism/node.rb#956
 class Prism::AssocSplatNode < ::Prism::Node
   # def initialize: (value: Node?, operator_loc: Location, location: Location) -> void
   #
   # @return [AssocSplatNode] a new instance of AssocSplatNode
   #
-  # source://prism//lib/prism/node.rb#947
+  # source://prism//lib/prism/node.rb#964
   sig { params(value: T.nilable(Prism::Node), operator_loc: Prism::Location, location: Prism::Location).void }
   def initialize(value, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#954
+  # source://prism//lib/prism/node.rb#971
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#959
+  # source://prism//lib/prism/node.rb#976
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#971
+  # source://prism//lib/prism/node.rb#988
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#964
+  # source://prism//lib/prism/node.rb#981
   def compact_child_nodes; end
 
   # def copy: (**params) -> AssocSplatNode
   #
-  # source://prism//lib/prism/node.rb#976
+  # source://prism//lib/prism/node.rb#993
   sig { params(params: T.untyped).returns(Prism::AssocSplatNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#959
+  # source://prism//lib/prism/node.rb#976
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#988
+  # source://prism//lib/prism/node.rb#1005
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1195,18 +1252,18 @@ class Prism::AssocSplatNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#998
+  # source://prism//lib/prism/node.rb#1015
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#993
+  # source://prism//lib/prism/node.rb#1010
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#944
+  # source://prism//lib/prism/node.rb#961
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -1225,12 +1282,12 @@ class Prism::AssocSplatNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1024
+  # source://prism//lib/prism/node.rb#1041
   def type; end
 
   # attr_reader value: Node?
   #
-  # source://prism//lib/prism/node.rb#941
+  # source://prism//lib/prism/node.rb#958
   sig { returns(T.nilable(Prism::Node)) }
   def value; end
 
@@ -1242,7 +1299,7 @@ class Prism::AssocSplatNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1034
+    # source://prism//lib/prism/node.rb#1051
     def type; end
   end
 end
@@ -1254,54 +1311,54 @@ Prism::BACKEND = T.let(T.unsafe(nil), Symbol)
 #     $'
 #     ^^
 #
-# source://prism//lib/prism/node.rb#1043
+# source://prism//lib/prism/node.rb#1060
 class Prism::BackReferenceReadNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [BackReferenceReadNode] a new instance of BackReferenceReadNode
   #
-  # source://prism//lib/prism/node.rb#1048
+  # source://prism//lib/prism/node.rb#1065
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1054
+  # source://prism//lib/prism/node.rb#1071
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1059
+  # source://prism//lib/prism/node.rb#1076
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1069
+  # source://prism//lib/prism/node.rb#1086
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1064
+  # source://prism//lib/prism/node.rb#1081
   def compact_child_nodes; end
 
   # def copy: (**params) -> BackReferenceReadNode
   #
-  # source://prism//lib/prism/node.rb#1074
+  # source://prism//lib/prism/node.rb#1091
   sig { params(params: T.untyped).returns(Prism::BackReferenceReadNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1059
+  # source://prism//lib/prism/node.rb#1076
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1085
+  # source://prism//lib/prism/node.rb#1102
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1311,12 +1368,12 @@ class Prism::BackReferenceReadNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1090
+  # source://prism//lib/prism/node.rb#1107
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#1045
+  # source://prism//lib/prism/node.rb#1062
   sig { returns(Symbol) }
   def name; end
 
@@ -1335,7 +1392,7 @@ class Prism::BackReferenceReadNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1110
+  # source://prism//lib/prism/node.rb#1127
   def type; end
 
   class << self
@@ -1346,7 +1403,7 @@ class Prism::BackReferenceReadNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1120
+    # source://prism//lib/prism/node.rb#1137
     def type; end
   end
 end
@@ -1385,13 +1442,13 @@ end
 #     end
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#1131
+# source://prism//lib/prism/node.rb#1148
 class Prism::BeginNode < ::Prism::Node
   # def initialize: (begin_keyword_loc: Location?, statements: StatementsNode?, rescue_clause: RescueNode?, else_clause: ElseNode?, ensure_clause: EnsureNode?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [BeginNode] a new instance of BeginNode
   #
-  # source://prism//lib/prism/node.rb#1151
+  # source://prism//lib/prism/node.rb#1168
   sig do
     params(
       begin_keyword_loc: T.nilable(Prism::Location),
@@ -1407,54 +1464,54 @@ class Prism::BeginNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1162
+  # source://prism//lib/prism/node.rb#1179
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def begin_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#1212
+  # source://prism//lib/prism/node.rb#1229
   sig { returns(T.nilable(String)) }
   def begin_keyword; end
 
   # attr_reader begin_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#1133
+  # source://prism//lib/prism/node.rb#1150
   sig { returns(T.nilable(Prism::Location)) }
   def begin_keyword_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1171
+  # source://prism//lib/prism/node.rb#1188
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1186
+  # source://prism//lib/prism/node.rb#1203
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1176
+  # source://prism//lib/prism/node.rb#1193
   def compact_child_nodes; end
 
   # def copy: (**params) -> BeginNode
   #
-  # source://prism//lib/prism/node.rb#1191
+  # source://prism//lib/prism/node.rb#1208
   sig { params(params: T.untyped).returns(Prism::BeginNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1171
+  # source://prism//lib/prism/node.rb#1188
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1207
+  # source://prism//lib/prism/node.rb#1224
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1464,45 +1521,45 @@ class Prism::BeginNode < ::Prism::Node
 
   # attr_reader else_clause: ElseNode?
   #
-  # source://prism//lib/prism/node.rb#1142
+  # source://prism//lib/prism/node.rb#1159
   sig { returns(T.nilable(Prism::ElseNode)) }
   def else_clause; end
 
   # def end_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#1217
+  # source://prism//lib/prism/node.rb#1234
   sig { returns(T.nilable(String)) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#1148
+  # source://prism//lib/prism/node.rb#1165
   sig { returns(T.nilable(Prism::Location)) }
   def end_keyword_loc; end
 
   # attr_reader ensure_clause: EnsureNode?
   #
-  # source://prism//lib/prism/node.rb#1145
+  # source://prism//lib/prism/node.rb#1162
   sig { returns(T.nilable(Prism::EnsureNode)) }
   def ensure_clause; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1222
+  # source://prism//lib/prism/node.rb#1239
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader rescue_clause: RescueNode?
   #
-  # source://prism//lib/prism/node.rb#1139
+  # source://prism//lib/prism/node.rb#1156
   sig { returns(T.nilable(Prism::RescueNode)) }
   def rescue_clause; end
 
-  # source://prism//lib/prism/node.rb#1166
+  # source://prism//lib/prism/node.rb#1183
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#1136
+  # source://prism//lib/prism/node.rb#1153
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -1521,7 +1578,7 @@ class Prism::BeginNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1267
+  # source://prism//lib/prism/node.rb#1284
   def type; end
 
   class << self
@@ -1532,7 +1589,7 @@ class Prism::BeginNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1277
+    # source://prism//lib/prism/node.rb#1294
     def type; end
   end
 end
@@ -1542,54 +1599,54 @@ end
 #     bar(&args)
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#1286
+# source://prism//lib/prism/node.rb#1303
 class Prism::BlockArgumentNode < ::Prism::Node
   # def initialize: (expression: Node?, operator_loc: Location, location: Location) -> void
   #
   # @return [BlockArgumentNode] a new instance of BlockArgumentNode
   #
-  # source://prism//lib/prism/node.rb#1294
+  # source://prism//lib/prism/node.rb#1311
   sig { params(expression: T.nilable(Prism::Node), operator_loc: Prism::Location, location: Prism::Location).void }
   def initialize(expression, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1301
+  # source://prism//lib/prism/node.rb#1318
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1306
+  # source://prism//lib/prism/node.rb#1323
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1318
+  # source://prism//lib/prism/node.rb#1335
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1311
+  # source://prism//lib/prism/node.rb#1328
   def compact_child_nodes; end
 
   # def copy: (**params) -> BlockArgumentNode
   #
-  # source://prism//lib/prism/node.rb#1323
+  # source://prism//lib/prism/node.rb#1340
   sig { params(params: T.untyped).returns(Prism::BlockArgumentNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1306
+  # source://prism//lib/prism/node.rb#1323
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1335
+  # source://prism//lib/prism/node.rb#1352
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1599,24 +1656,24 @@ class Prism::BlockArgumentNode < ::Prism::Node
 
   # attr_reader expression: Node?
   #
-  # source://prism//lib/prism/node.rb#1288
+  # source://prism//lib/prism/node.rb#1305
   sig { returns(T.nilable(Prism::Node)) }
   def expression; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1345
+  # source://prism//lib/prism/node.rb#1362
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#1340
+  # source://prism//lib/prism/node.rb#1357
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#1291
+  # source://prism//lib/prism/node.rb#1308
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -1635,7 +1692,7 @@ class Prism::BlockArgumentNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1371
+  # source://prism//lib/prism/node.rb#1388
   def type; end
 
   class << self
@@ -1646,7 +1703,7 @@ class Prism::BlockArgumentNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1381
+    # source://prism//lib/prism/node.rb#1398
     def type; end
   end
 end
@@ -1656,54 +1713,54 @@ end
 #     a { |; b| }
 #            ^
 #
-# source://prism//lib/prism/node.rb#1390
+# source://prism//lib/prism/node.rb#1407
 class Prism::BlockLocalVariableNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [BlockLocalVariableNode] a new instance of BlockLocalVariableNode
   #
-  # source://prism//lib/prism/node.rb#1395
+  # source://prism//lib/prism/node.rb#1412
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1401
+  # source://prism//lib/prism/node.rb#1418
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1406
+  # source://prism//lib/prism/node.rb#1423
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1416
+  # source://prism//lib/prism/node.rb#1433
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1411
+  # source://prism//lib/prism/node.rb#1428
   def compact_child_nodes; end
 
   # def copy: (**params) -> BlockLocalVariableNode
   #
-  # source://prism//lib/prism/node.rb#1421
+  # source://prism//lib/prism/node.rb#1438
   sig { params(params: T.untyped).returns(Prism::BlockLocalVariableNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1406
+  # source://prism//lib/prism/node.rb#1423
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1432
+  # source://prism//lib/prism/node.rb#1449
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1713,12 +1770,12 @@ class Prism::BlockLocalVariableNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1437
+  # source://prism//lib/prism/node.rb#1454
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#1392
+  # source://prism//lib/prism/node.rb#1409
   sig { returns(Symbol) }
   def name; end
 
@@ -1737,7 +1794,7 @@ class Prism::BlockLocalVariableNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1457
+  # source://prism//lib/prism/node.rb#1474
   def type; end
 
   class << self
@@ -1748,7 +1805,7 @@ class Prism::BlockLocalVariableNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1467
+    # source://prism//lib/prism/node.rb#1484
     def type; end
   end
 end
@@ -1758,81 +1815,82 @@ end
 # [1, 2, 3].each { |i| puts x }
 #                ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#1476
+# source://prism//lib/prism/node.rb#1493
 class Prism::BlockNode < ::Prism::Node
-  # def initialize: (locals: Array[Symbol], parameters: BlockParametersNode?, body: Node?, opening_loc: Location, closing_loc: Location, location: Location) -> void
+  # def initialize: (locals: Array[Symbol], locals_body_index: Integer, parameters: Node?, body: Node?, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [BlockNode] a new instance of BlockNode
   #
-  # source://prism//lib/prism/node.rb#1493
+  # source://prism//lib/prism/node.rb#1513
   sig do
     params(
       locals: T::Array[Symbol],
-      parameters: T.nilable(Prism::BlockParametersNode),
+      locals_body_index: Integer,
+      parameters: T.nilable(Prism::Node),
       body: T.nilable(Prism::Node),
       opening_loc: Prism::Location,
       closing_loc: Prism::Location,
       location: Prism::Location
     ).void
   end
-  def initialize(locals, parameters, body, opening_loc, closing_loc, location); end
+  def initialize(locals, locals_body_index, parameters, body, opening_loc, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1503
+  # source://prism//lib/prism/node.rb#1524
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://prism//lib/prism/node.rb#1484
+  # source://prism//lib/prism/node.rb#1504
   sig { returns(T.nilable(Prism::Node)) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1508
+  # source://prism//lib/prism/node.rb#1529
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#1551
+  # source://prism//lib/prism/node.rb#1573
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#1490
+  # source://prism//lib/prism/node.rb#1510
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1521
+  # source://prism//lib/prism/node.rb#1542
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1513
+  # source://prism//lib/prism/node.rb#1534
   def compact_child_nodes; end
 
   # def copy: (**params) -> BlockNode
   #
-  # source://prism//lib/prism/node.rb#1526
+  # source://prism//lib/prism/node.rb#1547
   sig { params(params: T.untyped).returns(Prism::BlockNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1508
+  # source://prism//lib/prism/node.rb#1529
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1541
+  # source://prism//lib/prism/node.rb#1563
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1842,31 +1900,37 @@ class Prism::BlockNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1556
+  # source://prism//lib/prism/node.rb#1578
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://prism//lib/prism/node.rb#1478
+  # source://prism//lib/prism/node.rb#1495
   sig { returns(T::Array[Symbol]) }
   def locals; end
 
+  # attr_reader locals_body_index: Integer
+  #
+  # source://prism//lib/prism/node.rb#1498
+  sig { returns(Integer) }
+  def locals_body_index; end
+
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#1546
+  # source://prism//lib/prism/node.rb#1568
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#1487
+  # source://prism//lib/prism/node.rb#1507
   sig { returns(Prism::Location) }
   def opening_loc; end
 
-  # attr_reader parameters: BlockParametersNode?
+  # attr_reader parameters: Node?
   #
-  # source://prism//lib/prism/node.rb#1481
-  sig { returns(T.nilable(Prism::BlockParametersNode)) }
+  # source://prism//lib/prism/node.rb#1501
+  sig { returns(T.nilable(Prism::Node)) }
   def parameters; end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -1884,7 +1948,7 @@ class Prism::BlockNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1590
+  # source://prism//lib/prism/node.rb#1613
   def type; end
 
   class << self
@@ -1895,7 +1959,7 @@ class Prism::BlockNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1600
+    # source://prism//lib/prism/node.rb#1623
     def type; end
   end
 end
@@ -1906,13 +1970,13 @@ end
 #           ^^
 #     end
 #
-# source://prism//lib/prism/node.rb#1610
+# source://prism//lib/prism/node.rb#1633
 class Prism::BlockParameterNode < ::Prism::Node
   # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
   # @return [BlockParameterNode] a new instance of BlockParameterNode
   #
-  # source://prism//lib/prism/node.rb#1621
+  # source://prism//lib/prism/node.rb#1644
   sig do
     params(
       name: T.nilable(Symbol),
@@ -1925,42 +1989,42 @@ class Prism::BlockParameterNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1629
+  # source://prism//lib/prism/node.rb#1652
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1634
+  # source://prism//lib/prism/node.rb#1657
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1644
+  # source://prism//lib/prism/node.rb#1667
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1639
+  # source://prism//lib/prism/node.rb#1662
   def compact_child_nodes; end
 
   # def copy: (**params) -> BlockParameterNode
   #
-  # source://prism//lib/prism/node.rb#1649
+  # source://prism//lib/prism/node.rb#1672
   sig { params(params: T.untyped).returns(Prism::BlockParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1634
+  # source://prism//lib/prism/node.rb#1657
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1662
+  # source://prism//lib/prism/node.rb#1685
   sig do
     params(
       keys: T::Array[Symbol]
@@ -1970,30 +2034,30 @@ class Prism::BlockParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1672
+  # source://prism//lib/prism/node.rb#1695
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol?
   #
-  # source://prism//lib/prism/node.rb#1612
+  # source://prism//lib/prism/node.rb#1635
   sig { returns(T.nilable(Symbol)) }
   def name; end
 
   # attr_reader name_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#1615
+  # source://prism//lib/prism/node.rb#1638
   sig { returns(T.nilable(Prism::Location)) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#1667
+  # source://prism//lib/prism/node.rb#1690
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#1618
+  # source://prism//lib/prism/node.rb#1641
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -2012,7 +2076,7 @@ class Prism::BlockParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1698
+  # source://prism//lib/prism/node.rb#1721
   def type; end
 
   class << self
@@ -2023,7 +2087,7 @@ class Prism::BlockParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1708
+    # source://prism//lib/prism/node.rb#1731
     def type; end
   end
 end
@@ -2037,13 +2101,13 @@ end
 #            ^^^^^^^^^^^^^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#1721
+# source://prism//lib/prism/node.rb#1744
 class Prism::BlockParametersNode < ::Prism::Node
   # def initialize: (parameters: ParametersNode?, locals: Array[Node], opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [BlockParametersNode] a new instance of BlockParametersNode
   #
-  # source://prism//lib/prism/node.rb#1735
+  # source://prism//lib/prism/node.rb#1758
   sig do
     params(
       parameters: T.nilable(Prism::ParametersNode),
@@ -2057,54 +2121,54 @@ class Prism::BlockParametersNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1744
+  # source://prism//lib/prism/node.rb#1767
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1749
+  # source://prism//lib/prism/node.rb#1772
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#1791
+  # source://prism//lib/prism/node.rb#1814
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#1732
+  # source://prism//lib/prism/node.rb#1755
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1762
+  # source://prism//lib/prism/node.rb#1785
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1754
+  # source://prism//lib/prism/node.rb#1777
   def compact_child_nodes; end
 
   # def copy: (**params) -> BlockParametersNode
   #
-  # source://prism//lib/prism/node.rb#1767
+  # source://prism//lib/prism/node.rb#1790
   sig { params(params: T.untyped).returns(Prism::BlockParametersNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1749
+  # source://prism//lib/prism/node.rb#1772
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1781
+  # source://prism//lib/prism/node.rb#1804
   sig do
     params(
       keys: T::Array[Symbol]
@@ -2114,30 +2178,30 @@ class Prism::BlockParametersNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1796
+  # source://prism//lib/prism/node.rb#1819
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1726
+  # source://prism//lib/prism/node.rb#1749
   sig { returns(T::Array[Prism::Node]) }
   def locals; end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#1786
+  # source://prism//lib/prism/node.rb#1809
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#1729
+  # source://prism//lib/prism/node.rb#1752
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
   # attr_reader parameters: ParametersNode?
   #
-  # source://prism//lib/prism/node.rb#1723
+  # source://prism//lib/prism/node.rb#1746
   sig { returns(T.nilable(Prism::ParametersNode)) }
   def parameters; end
 
@@ -2156,7 +2220,7 @@ class Prism::BlockParametersNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1824
+  # source://prism//lib/prism/node.rb#1847
   def type; end
 
   class << self
@@ -2167,7 +2231,7 @@ class Prism::BlockParametersNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1834
+    # source://prism//lib/prism/node.rb#1857
     def type; end
   end
 end
@@ -2177,13 +2241,13 @@ end
 #     break foo
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#1843
+# source://prism//lib/prism/node.rb#1866
 class Prism::BreakNode < ::Prism::Node
   # def initialize: (arguments: ArgumentsNode?, keyword_loc: Location, location: Location) -> void
   #
   # @return [BreakNode] a new instance of BreakNode
   #
-  # source://prism//lib/prism/node.rb#1851
+  # source://prism//lib/prism/node.rb#1874
   sig do
     params(
       arguments: T.nilable(Prism::ArgumentsNode),
@@ -2195,48 +2259,48 @@ class Prism::BreakNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1858
+  # source://prism//lib/prism/node.rb#1881
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#1845
+  # source://prism//lib/prism/node.rb#1868
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1863
+  # source://prism//lib/prism/node.rb#1886
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#1875
+  # source://prism//lib/prism/node.rb#1898
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1868
+  # source://prism//lib/prism/node.rb#1891
   def compact_child_nodes; end
 
   # def copy: (**params) -> BreakNode
   #
-  # source://prism//lib/prism/node.rb#1880
+  # source://prism//lib/prism/node.rb#1903
   sig { params(params: T.untyped).returns(Prism::BreakNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1863
+  # source://prism//lib/prism/node.rb#1886
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#1892
+  # source://prism//lib/prism/node.rb#1915
   sig do
     params(
       keys: T::Array[Symbol]
@@ -2246,18 +2310,18 @@ class Prism::BreakNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#1902
+  # source://prism//lib/prism/node.rb#1925
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#1897
+  # source://prism//lib/prism/node.rb#1920
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#1848
+  # source://prism//lib/prism/node.rb#1871
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
@@ -2276,7 +2340,7 @@ class Prism::BreakNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#1928
+  # source://prism//lib/prism/node.rb#1951
   def type; end
 
   class << self
@@ -2287,7 +2351,7 @@ class Prism::BreakNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#1938
+    # source://prism//lib/prism/node.rb#1961
     def type; end
   end
 end
@@ -2297,19 +2361,19 @@ end
 #     foo.bar &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#1947
+# source://prism//lib/prism/node.rb#1970
 class Prism::CallAndWriteNode < ::Prism::Node
-  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, flags: Integer, read_name: Symbol, write_name: Symbol, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (flags: Integer, receiver: Node?, call_operator_loc: Location?, message_loc: Location?, read_name: Symbol, write_name: Symbol, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [CallAndWriteNode] a new instance of CallAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#1973
+  # source://prism//lib/prism/node.rb#1996
   sig do
     params(
+      flags: Integer,
       receiver: T.nilable(Prism::Node),
       call_operator_loc: T.nilable(Prism::Location),
       message_loc: T.nilable(Prism::Location),
-      flags: Integer,
       read_name: Symbol,
       write_name: Symbol,
       operator_loc: Prism::Location,
@@ -2317,58 +2381,66 @@ class Prism::CallAndWriteNode < ::Prism::Node
       location: Prism::Location
     ).void
   end
-  def initialize(receiver, call_operator_loc, message_loc, flags, read_name, write_name, operator_loc, value, location); end
+  def initialize(flags, receiver, call_operator_loc, message_loc, read_name, write_name, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#1986
+  # source://prism//lib/prism/node.rb#2009
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#2065
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
   # def call_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2032
+  # source://prism//lib/prism/node.rb#2070
   sig { returns(T.nilable(String)) }
   def call_operator; end
 
   # attr_reader call_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#1952
+  # source://prism//lib/prism/node.rb#1978
   sig { returns(T.nilable(Prism::Location)) }
   def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1991
+  # source://prism//lib/prism/node.rb#2014
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#2004
+  # source://prism//lib/prism/node.rb#2027
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#1996
+  # source://prism//lib/prism/node.rb#2019
   def compact_child_nodes; end
 
   # def copy: (**params) -> CallAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#2009
+  # source://prism//lib/prism/node.rb#2032
   sig { params(params: T.untyped).returns(Prism::CallAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#1991
+  # source://prism//lib/prism/node.rb#2014
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#2027
+  # source://prism//lib/prism/node.rb#2050
   sig do
     params(
       keys: T::Array[Symbol]
@@ -2378,42 +2450,42 @@ class Prism::CallAndWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#2057
+  # source://prism//lib/prism/node.rb#2085
   def inspect(inspector = T.unsafe(nil)); end
 
   # def message: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2037
+  # source://prism//lib/prism/node.rb#2075
   sig { returns(T.nilable(String)) }
   def message; end
 
   # attr_reader message_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#1955
+  # source://prism//lib/prism/node.rb#1981
   sig { returns(T.nilable(Prism::Location)) }
   def message_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#2052
+  # source://prism//lib/prism/node.rb#2080
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#1967
+  # source://prism//lib/prism/node.rb#1990
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader read_name: Symbol
   #
-  # source://prism//lib/prism/node.rb#1961
+  # source://prism//lib/prism/node.rb#1984
   sig { returns(Symbol) }
   def read_name; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#1949
+  # source://prism//lib/prism/node.rb#1975
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
@@ -2421,7 +2493,7 @@ class Prism::CallAndWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2042
+  # source://prism//lib/prism/node.rb#2055
   sig { returns(T::Boolean) }
   def safe_navigation?; end
 
@@ -2440,12 +2512,12 @@ class Prism::CallAndWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#2091
+  # source://prism//lib/prism/node.rb#2119
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#1970
+  # source://prism//lib/prism/node.rb#1993
   sig { returns(Prism::Node) }
   def value; end
 
@@ -2453,13 +2525,13 @@ class Prism::CallAndWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2047
+  # source://prism//lib/prism/node.rb#2060
   sig { returns(T::Boolean) }
   def variable_call?; end
 
   # attr_reader write_name: Symbol
   #
-  # source://prism//lib/prism/node.rb#1964
+  # source://prism//lib/prism/node.rb#1987
   sig { returns(Symbol) }
   def write_name; end
 
@@ -2467,7 +2539,7 @@ class Prism::CallAndWriteNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#1958
+  # source://prism//lib/prism/node.rb#1972
   sig { returns(Integer) }
   def flags; end
 
@@ -2479,7 +2551,7 @@ class Prism::CallAndWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#2101
+    # source://prism//lib/prism/node.rb#2129
     def type; end
   end
 end
@@ -2504,103 +2576,111 @@ end
 #     foo&.bar
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2125
+# source://prism//lib/prism/node.rb#2153
 class Prism::CallNode < ::Prism::Node
-  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, block: Node?, flags: Integer, name: Symbol, location: Location) -> void
+  # def initialize: (flags: Integer, receiver: Node?, call_operator_loc: Location?, name: Symbol, message_loc: Location?, opening_loc: Location?, arguments: ArgumentsNode?, closing_loc: Location?, block: Node?, location: Location) -> void
   #
   # @return [CallNode] a new instance of CallNode
   #
-  # source://prism//lib/prism/node.rb#2154
+  # source://prism//lib/prism/node.rb#2182
   sig do
     params(
+      flags: Integer,
       receiver: T.nilable(Prism::Node),
       call_operator_loc: T.nilable(Prism::Location),
+      name: Symbol,
       message_loc: T.nilable(Prism::Location),
       opening_loc: T.nilable(Prism::Location),
       arguments: T.nilable(Prism::ArgumentsNode),
       closing_loc: T.nilable(Prism::Location),
       block: T.nilable(Prism::Node),
-      flags: Integer,
-      name: Symbol,
       location: Prism::Location
     ).void
   end
-  def initialize(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, block, flags, name, location); end
+  def initialize(flags, receiver, call_operator_loc, name, message_loc, opening_loc, arguments, closing_loc, block, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#2168
+  # source://prism//lib/prism/node.rb#2196
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#2139
+  # source://prism//lib/prism/node.rb#2173
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#2254
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
   # attr_reader block: Node?
   #
-  # source://prism//lib/prism/node.rb#2145
+  # source://prism//lib/prism/node.rb#2179
   sig { returns(T.nilable(Prism::Node)) }
   def block; end
 
   # def call_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2216
+  # source://prism//lib/prism/node.rb#2259
   sig { returns(T.nilable(String)) }
   def call_operator; end
 
   # attr_reader call_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2130
+  # source://prism//lib/prism/node.rb#2161
   sig { returns(T.nilable(Prism::Location)) }
   def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2173
+  # source://prism//lib/prism/node.rb#2201
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2231
+  # source://prism//lib/prism/node.rb#2274
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2142
+  # source://prism//lib/prism/node.rb#2176
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#2187
+  # source://prism//lib/prism/node.rb#2215
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#2178
+  # source://prism//lib/prism/node.rb#2206
   def compact_child_nodes; end
 
   # def copy: (**params) -> CallNode
   #
-  # source://prism//lib/prism/node.rb#2192
+  # source://prism//lib/prism/node.rb#2220
   sig { params(params: T.untyped).returns(Prism::CallNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2173
+  # source://prism//lib/prism/node.rb#2201
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#2211
+  # source://prism//lib/prism/node.rb#2239
   sig do
     params(
       keys: T::Array[Symbol]
@@ -2610,42 +2690,42 @@ class Prism::CallNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#2246
+  # source://prism//lib/prism/node.rb#2279
   def inspect(inspector = T.unsafe(nil)); end
 
   # def message: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2221
+  # source://prism//lib/prism/node.rb#2264
   sig { returns(T.nilable(String)) }
   def message; end
 
   # attr_reader message_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2133
+  # source://prism//lib/prism/node.rb#2167
   sig { returns(T.nilable(Prism::Location)) }
   def message_loc; end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#2151
+  # source://prism//lib/prism/node.rb#2164
   sig { returns(Symbol) }
   def name; end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2226
+  # source://prism//lib/prism/node.rb#2269
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2136
+  # source://prism//lib/prism/node.rb#2170
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#2127
+  # source://prism//lib/prism/node.rb#2158
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
@@ -2653,7 +2733,7 @@ class Prism::CallNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2236
+  # source://prism//lib/prism/node.rb#2244
   sig { returns(T::Boolean) }
   def safe_navigation?; end
 
@@ -2672,14 +2752,14 @@ class Prism::CallNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#2290
+  # source://prism//lib/prism/node.rb#2323
   def type; end
 
   # def variable_call?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2241
+  # source://prism//lib/prism/node.rb#2249
   sig { returns(T::Boolean) }
   def variable_call?; end
 
@@ -2687,7 +2767,7 @@ class Prism::CallNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#2148
+  # source://prism//lib/prism/node.rb#2155
   sig { returns(Integer) }
   def flags; end
 
@@ -2699,24 +2779,29 @@ class Prism::CallNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#2300
+    # source://prism//lib/prism/node.rb#2333
     def type; end
   end
 end
 
 # Flags for call nodes.
 #
-# source://prism//lib/prism/node.rb#16542
+# source://prism//lib/prism/node.rb#17289
 module Prism::CallNodeFlags; end
+
+# a call that is an attribute write, so the value being written should be returned
+#
+# source://prism//lib/prism/node.rb#17297
+Prism::CallNodeFlags::ATTRIBUTE_WRITE = T.let(T.unsafe(nil), Integer)
 
 # &. operator
 #
-# source://prism//lib/prism/node.rb#16544
+# source://prism//lib/prism/node.rb#17291
 Prism::CallNodeFlags::SAFE_NAVIGATION = T.let(T.unsafe(nil), Integer)
 
 # a call that could have been a local variable
 #
-# source://prism//lib/prism/node.rb#16547
+# source://prism//lib/prism/node.rb#17294
 Prism::CallNodeFlags::VARIABLE_CALL = T.let(T.unsafe(nil), Integer)
 
 # Represents the use of an assignment operator on a call.
@@ -2724,19 +2809,19 @@ Prism::CallNodeFlags::VARIABLE_CALL = T.let(T.unsafe(nil), Integer)
 #     foo.bar += baz
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2309
+# source://prism//lib/prism/node.rb#2342
 class Prism::CallOperatorWriteNode < ::Prism::Node
-  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, flags: Integer, read_name: Symbol, write_name: Symbol, operator: Symbol, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (flags: Integer, receiver: Node?, call_operator_loc: Location?, message_loc: Location?, read_name: Symbol, write_name: Symbol, operator: Symbol, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [CallOperatorWriteNode] a new instance of CallOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#2338
+  # source://prism//lib/prism/node.rb#2371
   sig do
     params(
+      flags: Integer,
       receiver: T.nilable(Prism::Node),
       call_operator_loc: T.nilable(Prism::Location),
       message_loc: T.nilable(Prism::Location),
-      flags: Integer,
       read_name: Symbol,
       write_name: Symbol,
       operator: Symbol,
@@ -2745,58 +2830,66 @@ class Prism::CallOperatorWriteNode < ::Prism::Node
       location: Prism::Location
     ).void
   end
-  def initialize(receiver, call_operator_loc, message_loc, flags, read_name, write_name, operator, operator_loc, value, location); end
+  def initialize(flags, receiver, call_operator_loc, message_loc, read_name, write_name, operator, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#2352
+  # source://prism//lib/prism/node.rb#2385
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#2442
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
   # def call_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2399
+  # source://prism//lib/prism/node.rb#2447
   sig { returns(T.nilable(String)) }
   def call_operator; end
 
   # attr_reader call_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2314
+  # source://prism//lib/prism/node.rb#2350
   sig { returns(T.nilable(Prism::Location)) }
   def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2357
+  # source://prism//lib/prism/node.rb#2390
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#2370
+  # source://prism//lib/prism/node.rb#2403
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#2362
+  # source://prism//lib/prism/node.rb#2395
   def compact_child_nodes; end
 
   # def copy: (**params) -> CallOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#2375
+  # source://prism//lib/prism/node.rb#2408
   sig { params(params: T.untyped).returns(Prism::CallOperatorWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2357
+  # source://prism//lib/prism/node.rb#2390
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#2394
+  # source://prism//lib/prism/node.rb#2427
   sig do
     params(
       keys: T::Array[Symbol]
@@ -2806,42 +2899,42 @@ class Prism::CallOperatorWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#2419
+  # source://prism//lib/prism/node.rb#2457
   def inspect(inspector = T.unsafe(nil)); end
 
   # def message: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2404
+  # source://prism//lib/prism/node.rb#2452
   sig { returns(T.nilable(String)) }
   def message; end
 
   # attr_reader message_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2317
+  # source://prism//lib/prism/node.rb#2353
   sig { returns(T.nilable(Prism::Location)) }
   def message_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://prism//lib/prism/node.rb#2329
+  # source://prism//lib/prism/node.rb#2362
   sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#2332
+  # source://prism//lib/prism/node.rb#2365
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader read_name: Symbol
   #
-  # source://prism//lib/prism/node.rb#2323
+  # source://prism//lib/prism/node.rb#2356
   sig { returns(Symbol) }
   def read_name; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#2311
+  # source://prism//lib/prism/node.rb#2347
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
@@ -2849,7 +2942,7 @@ class Prism::CallOperatorWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2409
+  # source://prism//lib/prism/node.rb#2432
   sig { returns(T::Boolean) }
   def safe_navigation?; end
 
@@ -2868,12 +2961,12 @@ class Prism::CallOperatorWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#2454
+  # source://prism//lib/prism/node.rb#2492
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#2335
+  # source://prism//lib/prism/node.rb#2368
   sig { returns(Prism::Node) }
   def value; end
 
@@ -2881,13 +2974,13 @@ class Prism::CallOperatorWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2414
+  # source://prism//lib/prism/node.rb#2437
   sig { returns(T::Boolean) }
   def variable_call?; end
 
   # attr_reader write_name: Symbol
   #
-  # source://prism//lib/prism/node.rb#2326
+  # source://prism//lib/prism/node.rb#2359
   sig { returns(Symbol) }
   def write_name; end
 
@@ -2895,7 +2988,7 @@ class Prism::CallOperatorWriteNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#2320
+  # source://prism//lib/prism/node.rb#2344
   sig { returns(Integer) }
   def flags; end
 
@@ -2907,7 +3000,7 @@ class Prism::CallOperatorWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#2464
+    # source://prism//lib/prism/node.rb#2502
     def type; end
   end
 end
@@ -2917,19 +3010,19 @@ end
 #     foo.bar ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2473
+# source://prism//lib/prism/node.rb#2511
 class Prism::CallOrWriteNode < ::Prism::Node
-  # def initialize: (receiver: Node?, call_operator_loc: Location?, message_loc: Location?, flags: Integer, read_name: Symbol, write_name: Symbol, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (flags: Integer, receiver: Node?, call_operator_loc: Location?, message_loc: Location?, read_name: Symbol, write_name: Symbol, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [CallOrWriteNode] a new instance of CallOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#2499
+  # source://prism//lib/prism/node.rb#2537
   sig do
     params(
+      flags: Integer,
       receiver: T.nilable(Prism::Node),
       call_operator_loc: T.nilable(Prism::Location),
       message_loc: T.nilable(Prism::Location),
-      flags: Integer,
       read_name: Symbol,
       write_name: Symbol,
       operator_loc: Prism::Location,
@@ -2937,58 +3030,66 @@ class Prism::CallOrWriteNode < ::Prism::Node
       location: Prism::Location
     ).void
   end
-  def initialize(receiver, call_operator_loc, message_loc, flags, read_name, write_name, operator_loc, value, location); end
+  def initialize(flags, receiver, call_operator_loc, message_loc, read_name, write_name, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#2512
+  # source://prism//lib/prism/node.rb#2550
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#2606
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
   # def call_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2558
+  # source://prism//lib/prism/node.rb#2611
   sig { returns(T.nilable(String)) }
   def call_operator; end
 
   # attr_reader call_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2478
+  # source://prism//lib/prism/node.rb#2519
   sig { returns(T.nilable(Prism::Location)) }
   def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2517
+  # source://prism//lib/prism/node.rb#2555
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#2530
+  # source://prism//lib/prism/node.rb#2568
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#2522
+  # source://prism//lib/prism/node.rb#2560
   def compact_child_nodes; end
 
   # def copy: (**params) -> CallOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#2535
+  # source://prism//lib/prism/node.rb#2573
   sig { params(params: T.untyped).returns(Prism::CallOrWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2517
+  # source://prism//lib/prism/node.rb#2555
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#2553
+  # source://prism//lib/prism/node.rb#2591
   sig do
     params(
       keys: T::Array[Symbol]
@@ -2998,42 +3099,42 @@ class Prism::CallOrWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#2583
+  # source://prism//lib/prism/node.rb#2626
   def inspect(inspector = T.unsafe(nil)); end
 
   # def message: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2563
+  # source://prism//lib/prism/node.rb#2616
   sig { returns(T.nilable(String)) }
   def message; end
 
   # attr_reader message_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2481
+  # source://prism//lib/prism/node.rb#2522
   sig { returns(T.nilable(Prism::Location)) }
   def message_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#2578
+  # source://prism//lib/prism/node.rb#2621
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#2493
+  # source://prism//lib/prism/node.rb#2531
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader read_name: Symbol
   #
-  # source://prism//lib/prism/node.rb#2487
+  # source://prism//lib/prism/node.rb#2525
   sig { returns(Symbol) }
   def read_name; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#2475
+  # source://prism//lib/prism/node.rb#2516
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
@@ -3041,7 +3142,7 @@ class Prism::CallOrWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2568
+  # source://prism//lib/prism/node.rb#2596
   sig { returns(T::Boolean) }
   def safe_navigation?; end
 
@@ -3060,12 +3161,12 @@ class Prism::CallOrWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#2617
+  # source://prism//lib/prism/node.rb#2660
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#2496
+  # source://prism//lib/prism/node.rb#2534
   sig { returns(Prism::Node) }
   def value; end
 
@@ -3073,13 +3174,13 @@ class Prism::CallOrWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#2573
+  # source://prism//lib/prism/node.rb#2601
   sig { returns(T::Boolean) }
   def variable_call?; end
 
   # attr_reader write_name: Symbol
   #
-  # source://prism//lib/prism/node.rb#2490
+  # source://prism//lib/prism/node.rb#2528
   sig { returns(Symbol) }
   def write_name; end
 
@@ -3087,7 +3188,7 @@ class Prism::CallOrWriteNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#2484
+  # source://prism//lib/prism/node.rb#2513
   sig { returns(Integer) }
   def flags; end
 
@@ -3099,7 +3200,188 @@ class Prism::CallOrWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#2627
+    # source://prism//lib/prism/node.rb#2670
+    def type; end
+  end
+end
+
+# Represents assigning to a method call.
+#
+#     foo.bar, = 1
+#     ^^^^^^^
+#
+#     begin
+#     rescue => foo.bar
+#               ^^^^^^^
+#     end
+#
+#     for foo.bar in baz do end
+#         ^^^^^^^
+#
+# source://prism//lib/prism/node.rb#2687
+class Prism::CallTargetNode < ::Prism::Node
+  # def initialize: (flags: Integer, receiver: Node, call_operator_loc: Location, name: Symbol, message_loc: Location, location: Location) -> void
+  #
+  # @return [CallTargetNode] a new instance of CallTargetNode
+  #
+  # source://prism//lib/prism/node.rb#2704
+  sig do
+    params(
+      flags: Integer,
+      receiver: Prism::Node,
+      call_operator_loc: Prism::Location,
+      name: Symbol,
+      message_loc: Prism::Location,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(flags, receiver, call_operator_loc, name, message_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#2714
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#2764
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
+  # def call_operator: () -> String
+  #
+  # source://prism//lib/prism/node.rb#2769
+  sig { returns(String) }
+  def call_operator; end
+
+  # attr_reader call_operator_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#2695
+  sig { returns(Prism::Location) }
+  def call_operator_loc; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#2719
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#2729
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#2724
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> CallTargetNode
+  #
+  # source://prism//lib/prism/node.rb#2734
+  sig { params(params: T.untyped).returns(Prism::CallTargetNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#2719
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#2749
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#2779
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def message: () -> String
+  #
+  # source://prism//lib/prism/node.rb#2774
+  sig { returns(String) }
+  def message; end
+
+  # attr_reader message_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#2701
+  sig { returns(Prism::Location) }
+  def message_loc; end
+
+  # attr_reader name: Symbol
+  #
+  # source://prism//lib/prism/node.rb#2698
+  sig { returns(Symbol) }
+  def name; end
+
+  # attr_reader receiver: Node
+  #
+  # source://prism//lib/prism/node.rb#2692
+  sig { returns(Prism::Node) }
+  def receiver; end
+
+  # def safe_navigation?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#2754
+  sig { returns(T::Boolean) }
+  def safe_navigation?; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#2805
+  def type; end
+
+  # def variable_call?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#2759
+  sig { returns(T::Boolean) }
+  def variable_call?; end
+
+  private
+
+  # Returns the value of attribute flags.
+  #
+  # source://prism//lib/prism/node.rb#2689
+  sig { returns(Integer) }
+  def flags; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#2815
     def type; end
   end
 end
@@ -3109,13 +3391,13 @@ end
 #     foo => [bar => baz]
 #            ^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2636
+# source://prism//lib/prism/node.rb#2824
 class Prism::CapturePatternNode < ::Prism::Node
   # def initialize: (value: Node, target: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [CapturePatternNode] a new instance of CapturePatternNode
   #
-  # source://prism//lib/prism/node.rb#2647
+  # source://prism//lib/prism/node.rb#2835
   sig do
     params(
       value: Prism::Node,
@@ -3128,42 +3410,42 @@ class Prism::CapturePatternNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#2655
+  # source://prism//lib/prism/node.rb#2843
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2660
+  # source://prism//lib/prism/node.rb#2848
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#2670
+  # source://prism//lib/prism/node.rb#2858
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#2665
+  # source://prism//lib/prism/node.rb#2853
   def compact_child_nodes; end
 
   # def copy: (**params) -> CapturePatternNode
   #
-  # source://prism//lib/prism/node.rb#2675
+  # source://prism//lib/prism/node.rb#2863
   sig { params(params: T.untyped).returns(Prism::CapturePatternNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2660
+  # source://prism//lib/prism/node.rb#2848
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#2688
+  # source://prism//lib/prism/node.rb#2876
   sig do
     params(
       keys: T::Array[Symbol]
@@ -3173,24 +3455,24 @@ class Prism::CapturePatternNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#2698
+  # source://prism//lib/prism/node.rb#2886
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#2693
+  # source://prism//lib/prism/node.rb#2881
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#2644
+  # source://prism//lib/prism/node.rb#2832
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader target: Node
   #
-  # source://prism//lib/prism/node.rb#2641
+  # source://prism//lib/prism/node.rb#2829
   sig { returns(Prism::Node) }
   def target; end
 
@@ -3209,12 +3491,12 @@ class Prism::CapturePatternNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#2722
+  # source://prism//lib/prism/node.rb#2910
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#2638
+  # source://prism//lib/prism/node.rb#2826
   sig { returns(Prism::Node) }
   def value; end
 
@@ -3226,25 +3508,25 @@ class Prism::CapturePatternNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#2732
+    # source://prism//lib/prism/node.rb#2920
     def type; end
   end
 end
 
-# Represents the use of a case statement.
+# Represents the use of a case statement for pattern matching.
 #
 #     case true
-#     when false
+#     in false
 #     end
-#     ^^^^^^^^^^
+#     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2743
-class Prism::CaseNode < ::Prism::Node
+# source://prism//lib/prism/node.rb#2931
+class Prism::CaseMatchNode < ::Prism::Node
   # def initialize: (predicate: Node?, conditions: Array[Node], consequent: ElseNode?, case_keyword_loc: Location, end_keyword_loc: Location, location: Location) -> void
   #
-  # @return [CaseNode] a new instance of CaseNode
+  # @return [CaseMatchNode] a new instance of CaseMatchNode
   #
-  # source://prism//lib/prism/node.rb#2760
+  # source://prism//lib/prism/node.rb#2948
   sig do
     params(
       predicate: T.nilable(Prism::Node),
@@ -3259,66 +3541,66 @@ class Prism::CaseNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#2770
+  # source://prism//lib/prism/node.rb#2958
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def case_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#2814
+  # source://prism//lib/prism/node.rb#3002
   sig { returns(String) }
   def case_keyword; end
 
   # attr_reader case_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#2754
+  # source://prism//lib/prism/node.rb#2942
   sig { returns(Prism::Location) }
   def case_keyword_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2775
+  # source://prism//lib/prism/node.rb#2963
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#2789
+  # source://prism//lib/prism/node.rb#2977
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#2780
+  # source://prism//lib/prism/node.rb#2968
   def compact_child_nodes; end
 
   # attr_reader conditions: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#2748
+  # source://prism//lib/prism/node.rb#2936
   sig { returns(T::Array[Prism::Node]) }
   def conditions; end
 
   # attr_reader consequent: ElseNode?
   #
-  # source://prism//lib/prism/node.rb#2751
+  # source://prism//lib/prism/node.rb#2939
   sig { returns(T.nilable(Prism::ElseNode)) }
   def consequent; end
 
-  # def copy: (**params) -> CaseNode
+  # def copy: (**params) -> CaseMatchNode
   #
-  # source://prism//lib/prism/node.rb#2794
-  sig { params(params: T.untyped).returns(Prism::CaseNode) }
+  # source://prism//lib/prism/node.rb#2982
+  sig { params(params: T.untyped).returns(Prism::CaseMatchNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2775
+  # source://prism//lib/prism/node.rb#2963
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#2809
+  # source://prism//lib/prism/node.rb#2997
   sig do
     params(
       keys: T::Array[Symbol]
@@ -3328,24 +3610,24 @@ class Prism::CaseNode < ::Prism::Node
 
   # def end_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#2819
+  # source://prism//lib/prism/node.rb#3007
   sig { returns(String) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#2757
+  # source://prism//lib/prism/node.rb#2945
   sig { returns(Prism::Location) }
   def end_keyword_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#2824
+  # source://prism//lib/prism/node.rb#3012
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader predicate: Node?
   #
-  # source://prism//lib/prism/node.rb#2745
+  # source://prism//lib/prism/node.rb#2933
   sig { returns(T.nilable(Prism::Node)) }
   def predicate; end
 
@@ -3364,7 +3646,7 @@ class Prism::CaseNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#2858
+  # source://prism//lib/prism/node.rb#3046
   def type; end
 
   class << self
@@ -3375,7 +3657,156 @@ class Prism::CaseNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#2868
+    # source://prism//lib/prism/node.rb#3056
+    def type; end
+  end
+end
+
+# Represents the use of a case statement.
+#
+#     case true
+#     when false
+#     end
+#     ^^^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#3067
+class Prism::CaseNode < ::Prism::Node
+  # def initialize: (predicate: Node?, conditions: Array[Node], consequent: ElseNode?, case_keyword_loc: Location, end_keyword_loc: Location, location: Location) -> void
+  #
+  # @return [CaseNode] a new instance of CaseNode
+  #
+  # source://prism//lib/prism/node.rb#3084
+  sig do
+    params(
+      predicate: T.nilable(Prism::Node),
+      conditions: T::Array[Prism::Node],
+      consequent: T.nilable(Prism::ElseNode),
+      case_keyword_loc: Prism::Location,
+      end_keyword_loc: Prism::Location,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(predicate, conditions, consequent, case_keyword_loc, end_keyword_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#3094
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def case_keyword: () -> String
+  #
+  # source://prism//lib/prism/node.rb#3138
+  sig { returns(String) }
+  def case_keyword; end
+
+  # attr_reader case_keyword_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#3078
+  sig { returns(Prism::Location) }
+  def case_keyword_loc; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#3099
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#3113
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#3104
+  def compact_child_nodes; end
+
+  # attr_reader conditions: Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#3072
+  sig { returns(T::Array[Prism::Node]) }
+  def conditions; end
+
+  # attr_reader consequent: ElseNode?
+  #
+  # source://prism//lib/prism/node.rb#3075
+  sig { returns(T.nilable(Prism::ElseNode)) }
+  def consequent; end
+
+  # def copy: (**params) -> CaseNode
+  #
+  # source://prism//lib/prism/node.rb#3118
+  sig { params(params: T.untyped).returns(Prism::CaseNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#3099
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#3133
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def end_keyword: () -> String
+  #
+  # source://prism//lib/prism/node.rb#3143
+  sig { returns(String) }
+  def end_keyword; end
+
+  # attr_reader end_keyword_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#3081
+  sig { returns(Prism::Location) }
+  def end_keyword_loc; end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#3148
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader predicate: Node?
+  #
+  # source://prism//lib/prism/node.rb#3069
+  sig { returns(T.nilable(Prism::Node)) }
+  def predicate; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#3182
+  def type; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#3192
     def type; end
   end
 end
@@ -3385,13 +3816,13 @@ end
 #     class Foo end
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#2877
+# source://prism//lib/prism/node.rb#3201
 class Prism::ClassNode < ::Prism::Node
   # def initialize: (locals: Array[Symbol], class_keyword_loc: Location, constant_path: Node, inheritance_operator_loc: Location?, superclass: Node?, body: Node?, end_keyword_loc: Location, name: Symbol, location: Location) -> void
   #
   # @return [ClassNode] a new instance of ClassNode
   #
-  # source://prism//lib/prism/node.rb#2903
+  # source://prism//lib/prism/node.rb#3227
   sig do
     params(
       locals: T::Array[Symbol],
@@ -3409,66 +3840,66 @@ class Prism::ClassNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#2916
+  # source://prism//lib/prism/node.rb#3240
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://prism//lib/prism/node.rb#2894
+  # source://prism//lib/prism/node.rb#3218
   sig { returns(T.nilable(Prism::Node)) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2921
+  # source://prism//lib/prism/node.rb#3245
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def class_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#2963
+  # source://prism//lib/prism/node.rb#3287
   sig { returns(String) }
   def class_keyword; end
 
   # attr_reader class_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#2882
+  # source://prism//lib/prism/node.rb#3206
   sig { returns(Prism::Location) }
   def class_keyword_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#2935
+  # source://prism//lib/prism/node.rb#3259
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#2926
+  # source://prism//lib/prism/node.rb#3250
   def compact_child_nodes; end
 
   # attr_reader constant_path: Node
   #
-  # source://prism//lib/prism/node.rb#2885
+  # source://prism//lib/prism/node.rb#3209
   sig { returns(Prism::Node) }
   def constant_path; end
 
   # def copy: (**params) -> ClassNode
   #
-  # source://prism//lib/prism/node.rb#2940
+  # source://prism//lib/prism/node.rb#3264
   sig { params(params: T.untyped).returns(Prism::ClassNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#2921
+  # source://prism//lib/prism/node.rb#3245
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#2958
+  # source://prism//lib/prism/node.rb#3282
   sig do
     params(
       keys: T::Array[Symbol]
@@ -3478,48 +3909,48 @@ class Prism::ClassNode < ::Prism::Node
 
   # def end_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#2973
+  # source://prism//lib/prism/node.rb#3297
   sig { returns(String) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#2897
+  # source://prism//lib/prism/node.rb#3221
   sig { returns(Prism::Location) }
   def end_keyword_loc; end
 
   # def inheritance_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#2968
+  # source://prism//lib/prism/node.rb#3292
   sig { returns(T.nilable(String)) }
   def inheritance_operator; end
 
   # attr_reader inheritance_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#2888
+  # source://prism//lib/prism/node.rb#3212
   sig { returns(T.nilable(Prism::Location)) }
   def inheritance_operator_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#2978
+  # source://prism//lib/prism/node.rb#3302
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://prism//lib/prism/node.rb#2879
+  # source://prism//lib/prism/node.rb#3203
   sig { returns(T::Array[Symbol]) }
   def locals; end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#2900
+  # source://prism//lib/prism/node.rb#3224
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader superclass: Node?
   #
-  # source://prism//lib/prism/node.rb#2891
+  # source://prism//lib/prism/node.rb#3215
   sig { returns(T.nilable(Prism::Node)) }
   def superclass; end
 
@@ -3538,7 +3969,7 @@ class Prism::ClassNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3016
+  # source://prism//lib/prism/node.rb#3340
   def type; end
 
   class << self
@@ -3549,7 +3980,7 @@ class Prism::ClassNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3026
+    # source://prism//lib/prism/node.rb#3350
     def type; end
   end
 end
@@ -3559,13 +3990,13 @@ end
 #     @@target &&= value
 #     ^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3035
+# source://prism//lib/prism/node.rb#3359
 class Prism::ClassVariableAndWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ClassVariableAndWriteNode] a new instance of ClassVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#3049
+  # source://prism//lib/prism/node.rb#3373
   sig do
     params(
       name: Symbol,
@@ -3579,42 +4010,42 @@ class Prism::ClassVariableAndWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3058
+  # source://prism//lib/prism/node.rb#3382
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3063
+  # source://prism//lib/prism/node.rb#3387
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3073
+  # source://prism//lib/prism/node.rb#3397
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3068
+  # source://prism//lib/prism/node.rb#3392
   def compact_child_nodes; end
 
   # def copy: (**params) -> ClassVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#3078
+  # source://prism//lib/prism/node.rb#3402
   sig { params(params: T.untyped).returns(Prism::ClassVariableAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3063
+  # source://prism//lib/prism/node.rb#3387
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3092
+  # source://prism//lib/prism/node.rb#3416
   sig do
     params(
       keys: T::Array[Symbol]
@@ -3624,30 +4055,30 @@ class Prism::ClassVariableAndWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3102
+  # source://prism//lib/prism/node.rb#3426
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3037
+  # source://prism//lib/prism/node.rb#3361
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3040
+  # source://prism//lib/prism/node.rb#3364
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#3097
+  # source://prism//lib/prism/node.rb#3421
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3043
+  # source://prism//lib/prism/node.rb#3367
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -3666,12 +4097,12 @@ class Prism::ClassVariableAndWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3126
+  # source://prism//lib/prism/node.rb#3450
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#3046
+  # source://prism//lib/prism/node.rb#3370
   sig { returns(Prism::Node) }
   def value; end
 
@@ -3683,7 +4114,7 @@ class Prism::ClassVariableAndWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3136
+    # source://prism//lib/prism/node.rb#3460
     def type; end
   end
 end
@@ -3693,13 +4124,13 @@ end
 #     @@target += value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3145
+# source://prism//lib/prism/node.rb#3469
 class Prism::ClassVariableOperatorWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
   # @return [ClassVariableOperatorWriteNode] a new instance of ClassVariableOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#3162
+  # source://prism//lib/prism/node.rb#3486
   sig do
     params(
       name: Symbol,
@@ -3714,42 +4145,42 @@ class Prism::ClassVariableOperatorWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3172
+  # source://prism//lib/prism/node.rb#3496
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3177
+  # source://prism//lib/prism/node.rb#3501
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3187
+  # source://prism//lib/prism/node.rb#3511
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3182
+  # source://prism//lib/prism/node.rb#3506
   def compact_child_nodes; end
 
   # def copy: (**params) -> ClassVariableOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#3192
+  # source://prism//lib/prism/node.rb#3516
   sig { params(params: T.untyped).returns(Prism::ClassVariableOperatorWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3177
+  # source://prism//lib/prism/node.rb#3501
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3207
+  # source://prism//lib/prism/node.rb#3531
   sig do
     params(
       keys: T::Array[Symbol]
@@ -3759,30 +4190,30 @@ class Prism::ClassVariableOperatorWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3212
+  # source://prism//lib/prism/node.rb#3536
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3147
+  # source://prism//lib/prism/node.rb#3471
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3150
+  # source://prism//lib/prism/node.rb#3474
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://prism//lib/prism/node.rb#3159
+  # source://prism//lib/prism/node.rb#3483
   sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3153
+  # source://prism//lib/prism/node.rb#3477
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -3801,12 +4232,12 @@ class Prism::ClassVariableOperatorWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3237
+  # source://prism//lib/prism/node.rb#3561
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#3156
+  # source://prism//lib/prism/node.rb#3480
   sig { returns(Prism::Node) }
   def value; end
 
@@ -3818,7 +4249,7 @@ class Prism::ClassVariableOperatorWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3247
+    # source://prism//lib/prism/node.rb#3571
     def type; end
   end
 end
@@ -3828,13 +4259,13 @@ end
 #     @@target ||= value
 #     ^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3256
+# source://prism//lib/prism/node.rb#3580
 class Prism::ClassVariableOrWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ClassVariableOrWriteNode] a new instance of ClassVariableOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#3270
+  # source://prism//lib/prism/node.rb#3594
   sig do
     params(
       name: Symbol,
@@ -3848,42 +4279,42 @@ class Prism::ClassVariableOrWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3279
+  # source://prism//lib/prism/node.rb#3603
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3284
+  # source://prism//lib/prism/node.rb#3608
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3294
+  # source://prism//lib/prism/node.rb#3618
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3289
+  # source://prism//lib/prism/node.rb#3613
   def compact_child_nodes; end
 
   # def copy: (**params) -> ClassVariableOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#3299
+  # source://prism//lib/prism/node.rb#3623
   sig { params(params: T.untyped).returns(Prism::ClassVariableOrWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3284
+  # source://prism//lib/prism/node.rb#3608
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3313
+  # source://prism//lib/prism/node.rb#3637
   sig do
     params(
       keys: T::Array[Symbol]
@@ -3893,30 +4324,30 @@ class Prism::ClassVariableOrWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3323
+  # source://prism//lib/prism/node.rb#3647
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3258
+  # source://prism//lib/prism/node.rb#3582
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3261
+  # source://prism//lib/prism/node.rb#3585
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#3318
+  # source://prism//lib/prism/node.rb#3642
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3264
+  # source://prism//lib/prism/node.rb#3588
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -3935,12 +4366,12 @@ class Prism::ClassVariableOrWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3347
+  # source://prism//lib/prism/node.rb#3671
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#3267
+  # source://prism//lib/prism/node.rb#3591
   sig { returns(Prism::Node) }
   def value; end
 
@@ -3952,7 +4383,7 @@ class Prism::ClassVariableOrWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3357
+    # source://prism//lib/prism/node.rb#3681
     def type; end
   end
 end
@@ -3962,54 +4393,54 @@ end
 #     @@foo
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#3366
+# source://prism//lib/prism/node.rb#3690
 class Prism::ClassVariableReadNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ClassVariableReadNode] a new instance of ClassVariableReadNode
   #
-  # source://prism//lib/prism/node.rb#3371
+  # source://prism//lib/prism/node.rb#3695
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3377
+  # source://prism//lib/prism/node.rb#3701
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3382
+  # source://prism//lib/prism/node.rb#3706
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3392
+  # source://prism//lib/prism/node.rb#3716
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3387
+  # source://prism//lib/prism/node.rb#3711
   def compact_child_nodes; end
 
   # def copy: (**params) -> ClassVariableReadNode
   #
-  # source://prism//lib/prism/node.rb#3397
+  # source://prism//lib/prism/node.rb#3721
   sig { params(params: T.untyped).returns(Prism::ClassVariableReadNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3382
+  # source://prism//lib/prism/node.rb#3706
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3408
+  # source://prism//lib/prism/node.rb#3732
   sig do
     params(
       keys: T::Array[Symbol]
@@ -4019,12 +4450,12 @@ class Prism::ClassVariableReadNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3413
+  # source://prism//lib/prism/node.rb#3737
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3368
+  # source://prism//lib/prism/node.rb#3692
   sig { returns(Symbol) }
   def name; end
 
@@ -4043,7 +4474,7 @@ class Prism::ClassVariableReadNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3433
+  # source://prism//lib/prism/node.rb#3757
   def type; end
 
   class << self
@@ -4054,7 +4485,7 @@ class Prism::ClassVariableReadNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3443
+    # source://prism//lib/prism/node.rb#3767
     def type; end
   end
 end
@@ -4064,54 +4495,54 @@ end
 #     @@foo, @@bar = baz
 #     ^^^^^  ^^^^^
 #
-# source://prism//lib/prism/node.rb#3452
+# source://prism//lib/prism/node.rb#3776
 class Prism::ClassVariableTargetNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ClassVariableTargetNode] a new instance of ClassVariableTargetNode
   #
-  # source://prism//lib/prism/node.rb#3457
+  # source://prism//lib/prism/node.rb#3781
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3463
+  # source://prism//lib/prism/node.rb#3787
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3468
+  # source://prism//lib/prism/node.rb#3792
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3478
+  # source://prism//lib/prism/node.rb#3802
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3473
+  # source://prism//lib/prism/node.rb#3797
   def compact_child_nodes; end
 
   # def copy: (**params) -> ClassVariableTargetNode
   #
-  # source://prism//lib/prism/node.rb#3483
+  # source://prism//lib/prism/node.rb#3807
   sig { params(params: T.untyped).returns(Prism::ClassVariableTargetNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3468
+  # source://prism//lib/prism/node.rb#3792
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3494
+  # source://prism//lib/prism/node.rb#3818
   sig do
     params(
       keys: T::Array[Symbol]
@@ -4121,12 +4552,12 @@ class Prism::ClassVariableTargetNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3499
+  # source://prism//lib/prism/node.rb#3823
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3454
+  # source://prism//lib/prism/node.rb#3778
   sig { returns(Symbol) }
   def name; end
 
@@ -4145,7 +4576,7 @@ class Prism::ClassVariableTargetNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3519
+  # source://prism//lib/prism/node.rb#3843
   def type; end
 
   class << self
@@ -4156,7 +4587,7 @@ class Prism::ClassVariableTargetNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3529
+    # source://prism//lib/prism/node.rb#3853
     def type; end
   end
 end
@@ -4166,13 +4597,13 @@ end
 #     @@foo = 1
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3538
+# source://prism//lib/prism/node.rb#3862
 class Prism::ClassVariableWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location?, location: Location) -> void
   #
   # @return [ClassVariableWriteNode] a new instance of ClassVariableWriteNode
   #
-  # source://prism//lib/prism/node.rb#3552
+  # source://prism//lib/prism/node.rb#3876
   sig do
     params(
       name: Symbol,
@@ -4186,42 +4617,42 @@ class Prism::ClassVariableWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3561
+  # source://prism//lib/prism/node.rb#3885
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3566
+  # source://prism//lib/prism/node.rb#3890
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3576
+  # source://prism//lib/prism/node.rb#3900
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3571
+  # source://prism//lib/prism/node.rb#3895
   def compact_child_nodes; end
 
   # def copy: (**params) -> ClassVariableWriteNode
   #
-  # source://prism//lib/prism/node.rb#3581
+  # source://prism//lib/prism/node.rb#3905
   sig { params(params: T.untyped).returns(Prism::ClassVariableWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3566
+  # source://prism//lib/prism/node.rb#3890
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3595
+  # source://prism//lib/prism/node.rb#3919
   sig do
     params(
       keys: T::Array[Symbol]
@@ -4231,30 +4662,30 @@ class Prism::ClassVariableWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3605
+  # source://prism//lib/prism/node.rb#3929
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3540
+  # source://prism//lib/prism/node.rb#3864
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3543
+  # source://prism//lib/prism/node.rb#3867
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#3600
+  # source://prism//lib/prism/node.rb#3924
   sig { returns(T.nilable(String)) }
   def operator; end
 
   # attr_reader operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#3549
+  # source://prism//lib/prism/node.rb#3873
   sig { returns(T.nilable(Prism::Location)) }
   def operator_loc; end
 
@@ -4273,12 +4704,12 @@ class Prism::ClassVariableWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3629
+  # source://prism//lib/prism/node.rb#3953
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#3546
+  # source://prism//lib/prism/node.rb#3870
   sig { returns(Prism::Node) }
   def value; end
 
@@ -4290,7 +4721,7 @@ class Prism::ClassVariableWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3639
+    # source://prism//lib/prism/node.rb#3963
     def type; end
   end
 end
@@ -4298,31 +4729,26 @@ end
 # This represents a comment that was encountered during parsing. It is the
 # base class for all comment types.
 #
-# source://prism//lib/prism/parse_result.rb#194
+# source://prism//lib/prism/parse_result.rb#228
 class Prism::Comment
   # Create a new comment object with the given location.
   #
   # @return [Comment] a new instance of Comment
   #
-  # source://prism//lib/prism/parse_result.rb#199
+  # source://prism//lib/prism/parse_result.rb#233
   def initialize(location); end
 
   # Implement the hash pattern matching interface for Comment.
   #
-  # source://prism//lib/prism/parse_result.rb#204
+  # source://prism//lib/prism/parse_result.rb#238
   def deconstruct_keys(keys); end
 
   # The location of this comment in the source.
   #
-  # source://prism//lib/prism/parse_result.rb#196
+  # source://prism//lib/prism/parse_result.rb#230
   sig { returns(Prism::Location) }
   def location; end
 
-  # This can only be true for inline comments.
-  #
-  # @return [Boolean]
-  #
-  # source://prism//lib/prism/parse_result.rb#209
   sig { returns(T::Boolean) }
   def trailing?; end
 end
@@ -4483,10 +4909,22 @@ class Prism::Compiler
   def visit_call_or_write_node(node); end
 
   # Visit the child nodes of the given node.
+  # Compile a CallTargetNode node
+  #
+  # source://prism//lib/prism/compiler.rb#38
+  def visit_call_target_node(node); end
+
+  # Visit the child nodes of the given node.
   # Compile a CapturePatternNode node
   #
   # source://prism//lib/prism/compiler.rb#38
   def visit_capture_pattern_node(node); end
+
+  # Visit the child nodes of the given node.
+  # Compile a CaseMatchNode node
+  #
+  # source://prism//lib/prism/compiler.rb#38
+  def visit_case_match_node(node); end
 
   # Visit the child nodes of the given node.
   # Compile a CaseNode node
@@ -4764,6 +5202,12 @@ class Prism::Compiler
   def visit_implicit_node(node); end
 
   # Visit the child nodes of the given node.
+  # Compile a ImplicitRestNode node
+  #
+  # source://prism//lib/prism/compiler.rb#38
+  def visit_implicit_rest_node(node); end
+
+  # Visit the child nodes of the given node.
   # Compile a InNode node
   #
   # source://prism//lib/prism/compiler.rb#38
@@ -4786,6 +5230,12 @@ class Prism::Compiler
   #
   # source://prism//lib/prism/compiler.rb#38
   def visit_index_or_write_node(node); end
+
+  # Visit the child nodes of the given node.
+  # Compile a IndexTargetNode node
+  #
+  # source://prism//lib/prism/compiler.rb#38
+  def visit_index_target_node(node); end
 
   # Visit the child nodes of the given node.
   # Compile a InstanceVariableAndWriteNode node
@@ -4980,6 +5430,12 @@ class Prism::Compiler
   def visit_no_keywords_parameter_node(node); end
 
   # Visit the child nodes of the given node.
+  # Compile a NumberedParametersNode node
+  #
+  # source://prism//lib/prism/compiler.rb#38
+  def visit_numbered_parameters_node(node); end
+
+  # Visit the child nodes of the given node.
   # Compile a NumberedReferenceReadNode node
   #
   # source://prism//lib/prism/compiler.rb#38
@@ -5154,12 +5610,6 @@ class Prism::Compiler
   def visit_statements_node(node); end
 
   # Visit the child nodes of the given node.
-  # Compile a StringConcatNode node
-  #
-  # source://prism//lib/prism/compiler.rb#38
-  def visit_string_concat_node(node); end
-
-  # Visit the child nodes of the given node.
   # Compile a StringNode node
   #
   # source://prism//lib/prism/compiler.rb#38
@@ -5231,13 +5681,13 @@ end
 #     Target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3648
+# source://prism//lib/prism/node.rb#3972
 class Prism::ConstantAndWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ConstantAndWriteNode] a new instance of ConstantAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#3662
+  # source://prism//lib/prism/node.rb#3986
   sig do
     params(
       name: Symbol,
@@ -5251,42 +5701,42 @@ class Prism::ConstantAndWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3671
+  # source://prism//lib/prism/node.rb#3995
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3676
+  # source://prism//lib/prism/node.rb#4000
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3686
+  # source://prism//lib/prism/node.rb#4010
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3681
+  # source://prism//lib/prism/node.rb#4005
   def compact_child_nodes; end
 
   # def copy: (**params) -> ConstantAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#3691
+  # source://prism//lib/prism/node.rb#4015
   sig { params(params: T.untyped).returns(Prism::ConstantAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3676
+  # source://prism//lib/prism/node.rb#4000
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3705
+  # source://prism//lib/prism/node.rb#4029
   sig do
     params(
       keys: T::Array[Symbol]
@@ -5296,30 +5746,30 @@ class Prism::ConstantAndWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3715
+  # source://prism//lib/prism/node.rb#4039
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3650
+  # source://prism//lib/prism/node.rb#3974
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3653
+  # source://prism//lib/prism/node.rb#3977
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#3710
+  # source://prism//lib/prism/node.rb#4034
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3656
+  # source://prism//lib/prism/node.rb#3980
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -5338,12 +5788,12 @@ class Prism::ConstantAndWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3739
+  # source://prism//lib/prism/node.rb#4063
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#3659
+  # source://prism//lib/prism/node.rb#3983
   sig { returns(Prism::Node) }
   def value; end
 
@@ -5355,7 +5805,7 @@ class Prism::ConstantAndWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3749
+    # source://prism//lib/prism/node.rb#4073
     def type; end
   end
 end
@@ -5365,13 +5815,13 @@ end
 #     Target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3758
+# source://prism//lib/prism/node.rb#4082
 class Prism::ConstantOperatorWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
   # @return [ConstantOperatorWriteNode] a new instance of ConstantOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#3775
+  # source://prism//lib/prism/node.rb#4099
   sig do
     params(
       name: Symbol,
@@ -5386,42 +5836,42 @@ class Prism::ConstantOperatorWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3785
+  # source://prism//lib/prism/node.rb#4109
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3790
+  # source://prism//lib/prism/node.rb#4114
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3800
+  # source://prism//lib/prism/node.rb#4124
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3795
+  # source://prism//lib/prism/node.rb#4119
   def compact_child_nodes; end
 
   # def copy: (**params) -> ConstantOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#3805
+  # source://prism//lib/prism/node.rb#4129
   sig { params(params: T.untyped).returns(Prism::ConstantOperatorWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3790
+  # source://prism//lib/prism/node.rb#4114
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3820
+  # source://prism//lib/prism/node.rb#4144
   sig do
     params(
       keys: T::Array[Symbol]
@@ -5431,30 +5881,30 @@ class Prism::ConstantOperatorWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3825
+  # source://prism//lib/prism/node.rb#4149
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3760
+  # source://prism//lib/prism/node.rb#4084
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3763
+  # source://prism//lib/prism/node.rb#4087
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://prism//lib/prism/node.rb#3772
+  # source://prism//lib/prism/node.rb#4096
   sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3766
+  # source://prism//lib/prism/node.rb#4090
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -5473,12 +5923,12 @@ class Prism::ConstantOperatorWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#3850
+  # source://prism//lib/prism/node.rb#4174
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#3769
+  # source://prism//lib/prism/node.rb#4093
   sig { returns(Prism::Node) }
   def value; end
 
@@ -5490,7 +5940,7 @@ class Prism::ConstantOperatorWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#3860
+    # source://prism//lib/prism/node.rb#4184
     def type; end
   end
 end
@@ -5500,13 +5950,13 @@ end
 #     Target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#3869
+# source://prism//lib/prism/node.rb#4193
 class Prism::ConstantOrWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [ConstantOrWriteNode] a new instance of ConstantOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#3883
+  # source://prism//lib/prism/node.rb#4207
   sig do
     params(
       name: Symbol,
@@ -5520,42 +5970,42 @@ class Prism::ConstantOrWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#3892
+  # source://prism//lib/prism/node.rb#4216
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3897
+  # source://prism//lib/prism/node.rb#4221
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#3907
+  # source://prism//lib/prism/node.rb#4231
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#3902
+  # source://prism//lib/prism/node.rb#4226
   def compact_child_nodes; end
 
   # def copy: (**params) -> ConstantOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#3912
+  # source://prism//lib/prism/node.rb#4236
   sig { params(params: T.untyped).returns(Prism::ConstantOrWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#3897
+  # source://prism//lib/prism/node.rb#4221
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#3926
+  # source://prism//lib/prism/node.rb#4250
   sig do
     params(
       keys: T::Array[Symbol]
@@ -5565,411 +6015,25 @@ class Prism::ConstantOrWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#3936
+  # source://prism//lib/prism/node.rb#4260
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#3871
+  # source://prism//lib/prism/node.rb#4195
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#3874
+  # source://prism//lib/prism/node.rb#4198
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#3931
+  # source://prism//lib/prism/node.rb#4255
   sig { returns(String) }
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#3877
-  sig { returns(Prism::Location) }
-  def operator_loc; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#3960
-  def type; end
-
-  # attr_reader value: Node
-  #
-  # source://prism//lib/prism/node.rb#3880
-  sig { returns(Prism::Node) }
-  def value; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#3970
-    def type; end
-  end
-end
-
-# Represents the use of the `&&=` operator for assignment to a constant path.
-#
-#     Parent::Child &&= value
-#     ^^^^^^^^^^^^^^^^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#3979
-class Prism::ConstantPathAndWriteNode < ::Prism::Node
-  # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
-  #
-  # @return [ConstantPathAndWriteNode] a new instance of ConstantPathAndWriteNode
-  #
-  # source://prism//lib/prism/node.rb#3990
-  sig do
-    params(
-      target: Prism::ConstantPathNode,
-      operator_loc: Prism::Location,
-      value: Prism::Node,
-      location: Prism::Location
-    ).void
-  end
-  def initialize(target, operator_loc, value, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#3998
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#4003
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#4013
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#4008
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> ConstantPathAndWriteNode
-  #
-  # source://prism//lib/prism/node.rb#4018
-  sig { params(params: T.untyped).returns(Prism::ConstantPathAndWriteNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#4003
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#4031
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#4041
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # def operator: () -> String
-  #
-  # source://prism//lib/prism/node.rb#4036
-  sig { returns(String) }
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#3984
-  sig { returns(Prism::Location) }
-  def operator_loc; end
-
-  # attr_reader target: ConstantPathNode
-  #
-  # source://prism//lib/prism/node.rb#3981
-  sig { returns(Prism::ConstantPathNode) }
-  def target; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#4065
-  def type; end
-
-  # attr_reader value: Node
-  #
-  # source://prism//lib/prism/node.rb#3987
-  sig { returns(Prism::Node) }
-  def value; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#4075
-    def type; end
-  end
-end
-
-# Represents accessing a constant through a path of `::` operators.
-#
-#     Foo::Bar
-#     ^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#4084
-class Prism::ConstantPathNode < ::Prism::Node
-  # def initialize: (parent: Node?, child: Node, delimiter_loc: Location, location: Location) -> void
-  #
-  # @return [ConstantPathNode] a new instance of ConstantPathNode
-  #
-  # source://prism//lib/prism/node.rb#4095
-  sig do
-    params(
-      parent: T.nilable(Prism::Node),
-      child: Prism::Node,
-      delimiter_loc: Prism::Location,
-      location: Prism::Location
-    ).void
-  end
-  def initialize(parent, child, delimiter_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#4103
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # attr_reader child: Node
-  #
-  # source://prism//lib/prism/node.rb#4089
-  sig { returns(Prism::Node) }
-  def child; end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#4108
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#4121
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#4113
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> ConstantPathNode
-  #
-  # source://prism//lib/prism/node.rb#4126
-  sig { params(params: T.untyped).returns(Prism::ConstantPathNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#4108
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#4139
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def delimiter: () -> String
-  #
-  # source://prism//lib/prism/node.rb#4144
-  sig { returns(String) }
-  def delimiter; end
-
-  # attr_reader delimiter_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#4092
-  sig { returns(Prism::Location) }
-  def delimiter_loc; end
-
-  # Returns the full name of this constant path. For example: "Foo::Bar"
-  #
-  # source://prism//lib/prism/node_ext.rb#90
-  def full_name; end
-
-  # Returns the list of parts for the full name of this constant path. For example: [:Foo, :Bar]
-  #
-  # source://prism//lib/prism/node_ext.rb#77
-  def full_name_parts; end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#4149
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader parent: Node?
-  #
-  # source://prism//lib/prism/node.rb#4086
-  sig { returns(T.nilable(Prism::Node)) }
-  def parent; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#4177
-  def type; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#4187
-    def type; end
-  end
-end
-
-# Represents assigning to a constant path using an operator that isn't `=`.
-#
-#     Parent::Child += value
-#     ^^^^^^^^^^^^^^^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#4196
-class Prism::ConstantPathOperatorWriteNode < ::Prism::Node
-  # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
-  #
-  # @return [ConstantPathOperatorWriteNode] a new instance of ConstantPathOperatorWriteNode
-  #
-  # source://prism//lib/prism/node.rb#4210
-  sig do
-    params(
-      target: Prism::ConstantPathNode,
-      operator_loc: Prism::Location,
-      value: Prism::Node,
-      operator: Symbol,
-      location: Prism::Location
-    ).void
-  end
-  def initialize(target, operator_loc, value, operator, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#4219
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#4224
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#4234
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#4229
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> ConstantPathOperatorWriteNode
-  #
-  # source://prism//lib/prism/node.rb#4239
-  sig { params(params: T.untyped).returns(Prism::ConstantPathOperatorWriteNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#4224
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#4253
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#4258
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader operator: Symbol
-  #
-  # source://prism//lib/prism/node.rb#4207
-  sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
@@ -5978,12 +6042,6 @@ class Prism::ConstantPathOperatorWriteNode < ::Prism::Node
   sig { returns(Prism::Location) }
   def operator_loc; end
 
-  # attr_reader target: ConstantPathNode
-  #
-  # source://prism//lib/prism/node.rb#4198
-  sig { returns(Prism::ConstantPathNode) }
-  def target; end
-
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
   # calling `[cls1, cls2].include?(node.class)` or putting the node into a
@@ -5999,7 +6057,7 @@ class Prism::ConstantPathOperatorWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#4283
+  # source://prism//lib/prism/node.rb#4284
   def type; end
 
   # attr_reader value: Node
@@ -6016,23 +6074,23 @@ class Prism::ConstantPathOperatorWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#4293
+    # source://prism//lib/prism/node.rb#4294
     def type; end
   end
 end
 
-# Represents the use of the `||=` operator for assignment to a constant path.
+# Represents the use of the `&&=` operator for assignment to a constant path.
 #
-#     Parent::Child ||= value
+#     Parent::Child &&= value
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4302
-class Prism::ConstantPathOrWriteNode < ::Prism::Node
+# source://prism//lib/prism/node.rb#4303
+class Prism::ConstantPathAndWriteNode < ::Prism::Node
   # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
   #
-  # @return [ConstantPathOrWriteNode] a new instance of ConstantPathOrWriteNode
+  # @return [ConstantPathAndWriteNode] a new instance of ConstantPathAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#4313
+  # source://prism//lib/prism/node.rb#4314
   sig do
     params(
       target: Prism::ConstantPathNode,
@@ -6045,42 +6103,42 @@ class Prism::ConstantPathOrWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#4321
+  # source://prism//lib/prism/node.rb#4322
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4326
+  # source://prism//lib/prism/node.rb#4327
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#4336
+  # source://prism//lib/prism/node.rb#4337
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#4331
+  # source://prism//lib/prism/node.rb#4332
   def compact_child_nodes; end
 
-  # def copy: (**params) -> ConstantPathOrWriteNode
+  # def copy: (**params) -> ConstantPathAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#4341
-  sig { params(params: T.untyped).returns(Prism::ConstantPathOrWriteNode) }
+  # source://prism//lib/prism/node.rb#4342
+  sig { params(params: T.untyped).returns(Prism::ConstantPathAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4326
+  # source://prism//lib/prism/node.rb#4327
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#4354
+  # source://prism//lib/prism/node.rb#4355
   sig do
     params(
       keys: T::Array[Symbol]
@@ -6090,24 +6148,24 @@ class Prism::ConstantPathOrWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#4364
+  # source://prism//lib/prism/node.rb#4365
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#4359
+  # source://prism//lib/prism/node.rb#4360
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#4307
+  # source://prism//lib/prism/node.rb#4308
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader target: ConstantPathNode
   #
-  # source://prism//lib/prism/node.rb#4304
+  # source://prism//lib/prism/node.rb#4305
   sig { returns(Prism::ConstantPathNode) }
   def target; end
 
@@ -6126,12 +6184,12 @@ class Prism::ConstantPathOrWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#4388
+  # source://prism//lib/prism/node.rb#4389
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#4310
+  # source://prism//lib/prism/node.rb#4311
   sig { returns(Prism::Node) }
   def value; end
 
@@ -6143,23 +6201,23 @@ class Prism::ConstantPathOrWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#4398
+    # source://prism//lib/prism/node.rb#4399
     def type; end
   end
 end
 
-# Represents writing to a constant path in a context that doesn't have an explicit value.
+# Represents accessing a constant through a path of `::` operators.
 #
-#     Foo::Foo, Bar::Bar = baz
-#     ^^^^^^^^  ^^^^^^^^
+#     Foo::Bar
+#     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4407
-class Prism::ConstantPathTargetNode < ::Prism::Node
+# source://prism//lib/prism/node.rb#4408
+class Prism::ConstantPathNode < ::Prism::Node
   # def initialize: (parent: Node?, child: Node, delimiter_loc: Location, location: Location) -> void
   #
-  # @return [ConstantPathTargetNode] a new instance of ConstantPathTargetNode
+  # @return [ConstantPathNode] a new instance of ConstantPathNode
   #
-  # source://prism//lib/prism/node.rb#4418
+  # source://prism//lib/prism/node.rb#4419
   sig do
     params(
       parent: T.nilable(Prism::Node),
@@ -6172,48 +6230,48 @@ class Prism::ConstantPathTargetNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#4426
+  # source://prism//lib/prism/node.rb#4427
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader child: Node
   #
-  # source://prism//lib/prism/node.rb#4412
+  # source://prism//lib/prism/node.rb#4413
   sig { returns(Prism::Node) }
   def child; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4431
+  # source://prism//lib/prism/node.rb#4432
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#4444
+  # source://prism//lib/prism/node.rb#4445
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#4436
+  # source://prism//lib/prism/node.rb#4437
   def compact_child_nodes; end
 
-  # def copy: (**params) -> ConstantPathTargetNode
+  # def copy: (**params) -> ConstantPathNode
   #
-  # source://prism//lib/prism/node.rb#4449
-  sig { params(params: T.untyped).returns(Prism::ConstantPathTargetNode) }
+  # source://prism//lib/prism/node.rb#4450
+  sig { params(params: T.untyped).returns(Prism::ConstantPathNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4431
+  # source://prism//lib/prism/node.rb#4432
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#4462
+  # source://prism//lib/prism/node.rb#4463
   sig do
     params(
       keys: T::Array[Symbol]
@@ -6223,34 +6281,35 @@ class Prism::ConstantPathTargetNode < ::Prism::Node
 
   # def delimiter: () -> String
   #
-  # source://prism//lib/prism/node.rb#4467
+  # source://prism//lib/prism/node.rb#4468
   sig { returns(String) }
   def delimiter; end
 
   # attr_reader delimiter_loc: Location
   #
-  # source://prism//lib/prism/node.rb#4415
+  # source://prism//lib/prism/node.rb#4416
   sig { returns(Prism::Location) }
   def delimiter_loc; end
 
   # Returns the full name of this constant path. For example: "Foo::Bar"
   #
-  # source://prism//lib/prism/node_ext.rb#102
+  # source://prism//lib/prism/node_ext.rb#129
   def full_name; end
 
-  # Returns the list of parts for the full name of this constant path. For example: [:Foo, :Bar]
+  # Returns the list of parts for the full name of this constant path.
+  # For example: [:Foo, :Bar]
   #
-  # source://prism//lib/prism/node_ext.rb#97
+  # source://prism//lib/prism/node_ext.rb#112
   def full_name_parts; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#4472
+  # source://prism//lib/prism/node.rb#4473
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader parent: Node?
   #
-  # source://prism//lib/prism/node.rb#4409
+  # source://prism//lib/prism/node.rb#4410
   sig { returns(T.nilable(Prism::Node)) }
   def parent; end
 
@@ -6269,7 +6328,7 @@ class Prism::ConstantPathTargetNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#4500
+  # source://prism//lib/prism/node.rb#4501
   def type; end
 
   class << self
@@ -6280,71 +6339,76 @@ class Prism::ConstantPathTargetNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#4510
+    # source://prism//lib/prism/node.rb#4511
     def type; end
   end
 end
 
-# Represents writing to a constant path.
+# An error class raised when dynamic parts are found while computing a
+# constant path's full name. For example:
+# Foo::Bar::Baz -> does not raise because all parts of the constant path are
+# simple constants
+# var::Bar::Baz -> raises because the first part of the constant path is a
+# local variable
 #
-#     ::Foo = 1
-#     ^^^^^^^^^
+# source://prism//lib/prism/node_ext.rb#108
+class Prism::ConstantPathNode::DynamicPartsInConstantPathError < ::StandardError; end
+
+# Represents assigning to a constant path using an operator that isn't `=`.
 #
-#     Foo::Bar = 1
-#     ^^^^^^^^^^^^
+#     Parent::Child += value
+#     ^^^^^^^^^^^^^^^^^^^^^^
 #
-#     ::Foo::Bar = 1
-#     ^^^^^^^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#4525
-class Prism::ConstantPathWriteNode < ::Prism::Node
-  # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
+# source://prism//lib/prism/node.rb#4520
+class Prism::ConstantPathOperatorWriteNode < ::Prism::Node
+  # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
-  # @return [ConstantPathWriteNode] a new instance of ConstantPathWriteNode
+  # @return [ConstantPathOperatorWriteNode] a new instance of ConstantPathOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#4536
+  # source://prism//lib/prism/node.rb#4534
   sig do
     params(
       target: Prism::ConstantPathNode,
       operator_loc: Prism::Location,
       value: Prism::Node,
+      operator: Symbol,
       location: Prism::Location
     ).void
   end
-  def initialize(target, operator_loc, value, location); end
+  def initialize(target, operator_loc, value, operator, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#4544
+  # source://prism//lib/prism/node.rb#4543
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4549
+  # source://prism//lib/prism/node.rb#4548
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#4559
+  # source://prism//lib/prism/node.rb#4558
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#4554
+  # source://prism//lib/prism/node.rb#4553
   def compact_child_nodes; end
 
-  # def copy: (**params) -> ConstantPathWriteNode
+  # def copy: (**params) -> ConstantPathOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#4564
-  sig { params(params: T.untyped).returns(Prism::ConstantPathWriteNode) }
+  # source://prism//lib/prism/node.rb#4563
+  sig { params(params: T.untyped).returns(Prism::ConstantPathOperatorWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4549
+  # source://prism//lib/prism/node.rb#4548
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
@@ -6360,24 +6424,24 @@ class Prism::ConstantPathWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#4587
+  # source://prism//lib/prism/node.rb#4582
   def inspect(inspector = T.unsafe(nil)); end
 
-  # def operator: () -> String
+  # attr_reader operator: Symbol
   #
-  # source://prism//lib/prism/node.rb#4582
-  sig { returns(String) }
+  # source://prism//lib/prism/node.rb#4531
+  sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#4530
+  # source://prism//lib/prism/node.rb#4525
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader target: ConstantPathNode
   #
-  # source://prism//lib/prism/node.rb#4527
+  # source://prism//lib/prism/node.rb#4522
   sig { returns(Prism::ConstantPathNode) }
   def target; end
 
@@ -6396,12 +6460,12 @@ class Prism::ConstantPathWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#4611
+  # source://prism//lib/prism/node.rb#4607
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#4533
+  # source://prism//lib/prism/node.rb#4528
   sig { returns(Prism::Node) }
   def value; end
 
@@ -6413,7 +6477,405 @@ class Prism::ConstantPathWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#4621
+    # source://prism//lib/prism/node.rb#4617
+    def type; end
+  end
+end
+
+# Represents the use of the `||=` operator for assignment to a constant path.
+#
+#     Parent::Child ||= value
+#     ^^^^^^^^^^^^^^^^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#4626
+class Prism::ConstantPathOrWriteNode < ::Prism::Node
+  # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [ConstantPathOrWriteNode] a new instance of ConstantPathOrWriteNode
+  #
+  # source://prism//lib/prism/node.rb#4637
+  sig do
+    params(
+      target: Prism::ConstantPathNode,
+      operator_loc: Prism::Location,
+      value: Prism::Node,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(target, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#4645
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#4650
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#4660
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#4655
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> ConstantPathOrWriteNode
+  #
+  # source://prism//lib/prism/node.rb#4665
+  sig { params(params: T.untyped).returns(Prism::ConstantPathOrWriteNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#4650
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#4678
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#4688
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def operator: () -> String
+  #
+  # source://prism//lib/prism/node.rb#4683
+  sig { returns(String) }
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#4631
+  sig { returns(Prism::Location) }
+  def operator_loc; end
+
+  # attr_reader target: ConstantPathNode
+  #
+  # source://prism//lib/prism/node.rb#4628
+  sig { returns(Prism::ConstantPathNode) }
+  def target; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#4712
+  def type; end
+
+  # attr_reader value: Node
+  #
+  # source://prism//lib/prism/node.rb#4634
+  sig { returns(Prism::Node) }
+  def value; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#4722
+    def type; end
+  end
+end
+
+# Represents writing to a constant path in a context that doesn't have an explicit value.
+#
+#     Foo::Foo, Bar::Bar = baz
+#     ^^^^^^^^  ^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#4731
+class Prism::ConstantPathTargetNode < ::Prism::Node
+  # def initialize: (parent: Node?, child: Node, delimiter_loc: Location, location: Location) -> void
+  #
+  # @return [ConstantPathTargetNode] a new instance of ConstantPathTargetNode
+  #
+  # source://prism//lib/prism/node.rb#4742
+  sig do
+    params(
+      parent: T.nilable(Prism::Node),
+      child: Prism::Node,
+      delimiter_loc: Prism::Location,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(parent, child, delimiter_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#4750
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # attr_reader child: Node
+  #
+  # source://prism//lib/prism/node.rb#4736
+  sig { returns(Prism::Node) }
+  def child; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#4755
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#4768
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#4760
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> ConstantPathTargetNode
+  #
+  # source://prism//lib/prism/node.rb#4773
+  sig { params(params: T.untyped).returns(Prism::ConstantPathTargetNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#4755
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#4786
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def delimiter: () -> String
+  #
+  # source://prism//lib/prism/node.rb#4791
+  sig { returns(String) }
+  def delimiter; end
+
+  # attr_reader delimiter_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#4739
+  sig { returns(Prism::Location) }
+  def delimiter_loc; end
+
+  # Returns the full name of this constant path. For example: "Foo::Bar"
+  #
+  # source://prism//lib/prism/node_ext.rb#142
+  def full_name; end
+
+  # Returns the list of parts for the full name of this constant path.
+  # For example: [:Foo, :Bar]
+  #
+  # source://prism//lib/prism/node_ext.rb#137
+  def full_name_parts; end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#4796
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader parent: Node?
+  #
+  # source://prism//lib/prism/node.rb#4733
+  sig { returns(T.nilable(Prism::Node)) }
+  def parent; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#4824
+  def type; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#4834
+    def type; end
+  end
+end
+
+# Represents writing to a constant path.
+#
+#     ::Foo = 1
+#     ^^^^^^^^^
+#
+#     Foo::Bar = 1
+#     ^^^^^^^^^^^^
+#
+#     ::Foo::Bar = 1
+#     ^^^^^^^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#4849
+class Prism::ConstantPathWriteNode < ::Prism::Node
+  # def initialize: (target: ConstantPathNode, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [ConstantPathWriteNode] a new instance of ConstantPathWriteNode
+  #
+  # source://prism//lib/prism/node.rb#4860
+  sig do
+    params(
+      target: Prism::ConstantPathNode,
+      operator_loc: Prism::Location,
+      value: Prism::Node,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(target, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#4868
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#4873
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#4883
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#4878
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> ConstantPathWriteNode
+  #
+  # source://prism//lib/prism/node.rb#4888
+  sig { params(params: T.untyped).returns(Prism::ConstantPathWriteNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#4873
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#4901
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#4911
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def operator: () -> String
+  #
+  # source://prism//lib/prism/node.rb#4906
+  sig { returns(String) }
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#4854
+  sig { returns(Prism::Location) }
+  def operator_loc; end
+
+  # attr_reader target: ConstantPathNode
+  #
+  # source://prism//lib/prism/node.rb#4851
+  sig { returns(Prism::ConstantPathNode) }
+  def target; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#4935
+  def type; end
+
+  # attr_reader value: Node
+  #
+  # source://prism//lib/prism/node.rb#4857
+  sig { returns(Prism::Node) }
+  def value; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#4945
     def type; end
   end
 end
@@ -6423,54 +6885,54 @@ end
 #     Foo
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#4630
+# source://prism//lib/prism/node.rb#4954
 class Prism::ConstantReadNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ConstantReadNode] a new instance of ConstantReadNode
   #
-  # source://prism//lib/prism/node.rb#4635
+  # source://prism//lib/prism/node.rb#4959
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#4641
+  # source://prism//lib/prism/node.rb#4965
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4646
+  # source://prism//lib/prism/node.rb#4970
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#4656
+  # source://prism//lib/prism/node.rb#4980
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#4651
+  # source://prism//lib/prism/node.rb#4975
   def compact_child_nodes; end
 
   # def copy: (**params) -> ConstantReadNode
   #
-  # source://prism//lib/prism/node.rb#4661
+  # source://prism//lib/prism/node.rb#4985
   sig { params(params: T.untyped).returns(Prism::ConstantReadNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4646
+  # source://prism//lib/prism/node.rb#4970
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#4672
+  # source://prism//lib/prism/node.rb#4996
   sig do
     params(
       keys: T::Array[Symbol]
@@ -6480,22 +6942,23 @@ class Prism::ConstantReadNode < ::Prism::Node
 
   # Returns the full name of this constant. For example: "Foo"
   #
-  # source://prism//lib/prism/node_ext.rb#70
+  # source://prism//lib/prism/node_ext.rb#96
   def full_name; end
 
-  # Returns the list of parts for the full name of this constant. For example: [:Foo]
+  # Returns the list of parts for the full name of this constant.
+  # For example: [:Foo]
   #
-  # source://prism//lib/prism/node_ext.rb#65
+  # source://prism//lib/prism/node_ext.rb#91
   def full_name_parts; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#4677
+  # source://prism//lib/prism/node.rb#5001
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#4632
+  # source://prism//lib/prism/node.rb#4956
   sig { returns(Symbol) }
   def name; end
 
@@ -6514,7 +6977,7 @@ class Prism::ConstantReadNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#4697
+  # source://prism//lib/prism/node.rb#5021
   def type; end
 
   class << self
@@ -6525,7 +6988,7 @@ class Prism::ConstantReadNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#4707
+    # source://prism//lib/prism/node.rb#5031
     def type; end
   end
 end
@@ -6535,54 +6998,54 @@ end
 #     Foo, Bar = baz
 #     ^^^  ^^^
 #
-# source://prism//lib/prism/node.rb#4716
+# source://prism//lib/prism/node.rb#5040
 class Prism::ConstantTargetNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [ConstantTargetNode] a new instance of ConstantTargetNode
   #
-  # source://prism//lib/prism/node.rb#4721
+  # source://prism//lib/prism/node.rb#5045
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#4727
+  # source://prism//lib/prism/node.rb#5051
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4732
+  # source://prism//lib/prism/node.rb#5056
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#4742
+  # source://prism//lib/prism/node.rb#5066
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#4737
+  # source://prism//lib/prism/node.rb#5061
   def compact_child_nodes; end
 
   # def copy: (**params) -> ConstantTargetNode
   #
-  # source://prism//lib/prism/node.rb#4747
+  # source://prism//lib/prism/node.rb#5071
   sig { params(params: T.untyped).returns(Prism::ConstantTargetNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4732
+  # source://prism//lib/prism/node.rb#5056
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#4758
+  # source://prism//lib/prism/node.rb#5082
   sig do
     params(
       keys: T::Array[Symbol]
@@ -6592,12 +7055,12 @@ class Prism::ConstantTargetNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#4763
+  # source://prism//lib/prism/node.rb#5087
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#4718
+  # source://prism//lib/prism/node.rb#5042
   sig { returns(Symbol) }
   def name; end
 
@@ -6616,7 +7079,7 @@ class Prism::ConstantTargetNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#4783
+  # source://prism//lib/prism/node.rb#5107
   def type; end
 
   class << self
@@ -6627,7 +7090,7 @@ class Prism::ConstantTargetNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#4793
+    # source://prism//lib/prism/node.rb#5117
     def type; end
   end
 end
@@ -6637,13 +7100,13 @@ end
 #     Foo = 1
 #     ^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4802
+# source://prism//lib/prism/node.rb#5126
 class Prism::ConstantWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [ConstantWriteNode] a new instance of ConstantWriteNode
   #
-  # source://prism//lib/prism/node.rb#4816
+  # source://prism//lib/prism/node.rb#5140
   sig do
     params(
       name: Symbol,
@@ -6657,42 +7120,42 @@ class Prism::ConstantWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#4825
+  # source://prism//lib/prism/node.rb#5149
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4830
+  # source://prism//lib/prism/node.rb#5154
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#4840
+  # source://prism//lib/prism/node.rb#5164
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#4835
+  # source://prism//lib/prism/node.rb#5159
   def compact_child_nodes; end
 
   # def copy: (**params) -> ConstantWriteNode
   #
-  # source://prism//lib/prism/node.rb#4845
+  # source://prism//lib/prism/node.rb#5169
   sig { params(params: T.untyped).returns(Prism::ConstantWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4830
+  # source://prism//lib/prism/node.rb#5154
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#4859
+  # source://prism//lib/prism/node.rb#5183
   sig do
     params(
       keys: T::Array[Symbol]
@@ -6702,30 +7165,30 @@ class Prism::ConstantWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#4869
+  # source://prism//lib/prism/node.rb#5193
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#4804
+  # source://prism//lib/prism/node.rb#5128
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#4807
+  # source://prism//lib/prism/node.rb#5131
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#4864
+  # source://prism//lib/prism/node.rb#5188
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#4813
+  # source://prism//lib/prism/node.rb#5137
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -6744,12 +7207,12 @@ class Prism::ConstantWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#4893
+  # source://prism//lib/prism/node.rb#5217
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#4810
+  # source://prism//lib/prism/node.rb#5134
   sig { returns(Prism::Node) }
   def value; end
 
@@ -6761,21 +7224,12 @@ class Prism::ConstantWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#4903
+    # source://prism//lib/prism/node.rb#5227
     def type; end
   end
 end
 
-# DATAComment objects correspond to comments that are after the __END__
-# keyword in a source file.
-#
-# source://prism//lib/prism/parse_result.rb#240
-class Prism::DATAComment < ::Prism::Comment
-  # Returns a string representation of this comment.
-  #
-  # source://prism//lib/prism/parse_result.rb#242
-  def inspect; end
-end
+class Prism::DATAComment < Prism::Comment; end
 
 # The DSL module provides a set of methods that can be used to create prism
 # nodes in a more concise manner. For example, instead of writing:
@@ -6833,12 +7287,12 @@ module Prism::DSL
   # Create a new ArgumentsNode node
   #
   # source://prism//lib/prism/dsl.rb#66
-  def ArgumentsNode(arguments, flags, location = T.unsafe(nil)); end
+  def ArgumentsNode(flags, arguments, location = T.unsafe(nil)); end
 
   # Create a new ArrayNode node
   #
   # source://prism//lib/prism/dsl.rb#71
-  def ArrayNode(elements, opening_loc, closing_loc, location = T.unsafe(nil)); end
+  def ArrayNode(flags, elements, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new ArrayPatternNode node
   #
@@ -6878,7 +7332,7 @@ module Prism::DSL
   # Create a new BlockNode node
   #
   # source://prism//lib/prism/dsl.rb#111
-  def BlockNode(locals, parameters, body, opening_loc, closing_loc, location = T.unsafe(nil)); end
+  def BlockNode(locals, locals_body_index, parameters, body, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new BlockParameterNode node
   #
@@ -6898,376 +7352,396 @@ module Prism::DSL
   # Create a new CallAndWriteNode node
   #
   # source://prism//lib/prism/dsl.rb#131
-  def CallAndWriteNode(receiver, call_operator_loc, message_loc, flags, read_name, write_name, operator_loc, value, location = T.unsafe(nil)); end
+  def CallAndWriteNode(flags, receiver, call_operator_loc, message_loc, read_name, write_name, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new CallNode node
   #
   # source://prism//lib/prism/dsl.rb#136
-  def CallNode(receiver, call_operator_loc, message_loc, opening_loc, arguments, closing_loc, block, flags, name, location = T.unsafe(nil)); end
+  def CallNode(flags, receiver, call_operator_loc, name, message_loc, opening_loc, arguments, closing_loc, block, location = T.unsafe(nil)); end
 
   # Create a new CallOperatorWriteNode node
   #
   # source://prism//lib/prism/dsl.rb#141
-  def CallOperatorWriteNode(receiver, call_operator_loc, message_loc, flags, read_name, write_name, operator, operator_loc, value, location = T.unsafe(nil)); end
+  def CallOperatorWriteNode(flags, receiver, call_operator_loc, message_loc, read_name, write_name, operator, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new CallOrWriteNode node
   #
   # source://prism//lib/prism/dsl.rb#146
-  def CallOrWriteNode(receiver, call_operator_loc, message_loc, flags, read_name, write_name, operator_loc, value, location = T.unsafe(nil)); end
+  def CallOrWriteNode(flags, receiver, call_operator_loc, message_loc, read_name, write_name, operator_loc, value, location = T.unsafe(nil)); end
+
+  # Create a new CallTargetNode node
+  #
+  # source://prism//lib/prism/dsl.rb#151
+  def CallTargetNode(flags, receiver, call_operator_loc, name, message_loc, location = T.unsafe(nil)); end
 
   # Create a new CapturePatternNode node
   #
-  # source://prism//lib/prism/dsl.rb#151
+  # source://prism//lib/prism/dsl.rb#156
   def CapturePatternNode(value, target, operator_loc, location = T.unsafe(nil)); end
+
+  # Create a new CaseMatchNode node
+  #
+  # source://prism//lib/prism/dsl.rb#161
+  def CaseMatchNode(predicate, conditions, consequent, case_keyword_loc, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new CaseNode node
   #
-  # source://prism//lib/prism/dsl.rb#156
+  # source://prism//lib/prism/dsl.rb#166
   def CaseNode(predicate, conditions, consequent, case_keyword_loc, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ClassNode node
   #
-  # source://prism//lib/prism/dsl.rb#161
+  # source://prism//lib/prism/dsl.rb#171
   def ClassNode(locals, class_keyword_loc, constant_path, inheritance_operator_loc, superclass, body, end_keyword_loc, name, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableAndWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#166
+  # source://prism//lib/prism/dsl.rb#176
   def ClassVariableAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#171
+  # source://prism//lib/prism/dsl.rb#181
   def ClassVariableOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableOrWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#176
+  # source://prism//lib/prism/dsl.rb#186
   def ClassVariableOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableReadNode node
   #
-  # source://prism//lib/prism/dsl.rb#181
+  # source://prism//lib/prism/dsl.rb#191
   def ClassVariableReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableTargetNode node
   #
-  # source://prism//lib/prism/dsl.rb#186
+  # source://prism//lib/prism/dsl.rb#196
   def ClassVariableTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new ClassVariableWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#191
+  # source://prism//lib/prism/dsl.rb#201
   def ClassVariableWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new ConstantAndWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#196
+  # source://prism//lib/prism/dsl.rb#206
   def ConstantAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantOperatorWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#201
+  # source://prism//lib/prism/dsl.rb#211
   def ConstantOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new ConstantOrWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#206
+  # source://prism//lib/prism/dsl.rb#216
   def ConstantOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathAndWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#211
+  # source://prism//lib/prism/dsl.rb#221
   def ConstantPathAndWriteNode(target, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathNode node
   #
-  # source://prism//lib/prism/dsl.rb#216
+  # source://prism//lib/prism/dsl.rb#226
   def ConstantPathNode(parent, child, delimiter_loc, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathOperatorWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#221
+  # source://prism//lib/prism/dsl.rb#231
   def ConstantPathOperatorWriteNode(target, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathOrWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#226
+  # source://prism//lib/prism/dsl.rb#236
   def ConstantPathOrWriteNode(target, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathTargetNode node
   #
-  # source://prism//lib/prism/dsl.rb#231
+  # source://prism//lib/prism/dsl.rb#241
   def ConstantPathTargetNode(parent, child, delimiter_loc, location = T.unsafe(nil)); end
 
   # Create a new ConstantPathWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#236
+  # source://prism//lib/prism/dsl.rb#246
   def ConstantPathWriteNode(target, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new ConstantReadNode node
   #
-  # source://prism//lib/prism/dsl.rb#241
+  # source://prism//lib/prism/dsl.rb#251
   def ConstantReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new ConstantTargetNode node
   #
-  # source://prism//lib/prism/dsl.rb#246
+  # source://prism//lib/prism/dsl.rb#256
   def ConstantTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new ConstantWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#251
+  # source://prism//lib/prism/dsl.rb#261
   def ConstantWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new DefNode node
   #
-  # source://prism//lib/prism/dsl.rb#256
-  def DefNode(name, name_loc, receiver, parameters, body, locals, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#266
+  def DefNode(name, name_loc, receiver, parameters, body, locals, locals_body_index, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new DefinedNode node
   #
-  # source://prism//lib/prism/dsl.rb#261
+  # source://prism//lib/prism/dsl.rb#271
   def DefinedNode(lparen_loc, value, rparen_loc, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ElseNode node
   #
-  # source://prism//lib/prism/dsl.rb#266
+  # source://prism//lib/prism/dsl.rb#276
   def ElseNode(else_keyword_loc, statements, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new EmbeddedStatementsNode node
   #
-  # source://prism//lib/prism/dsl.rb#271
+  # source://prism//lib/prism/dsl.rb#281
   def EmbeddedStatementsNode(opening_loc, statements, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new EmbeddedVariableNode node
   #
-  # source://prism//lib/prism/dsl.rb#276
+  # source://prism//lib/prism/dsl.rb#286
   def EmbeddedVariableNode(operator_loc, variable, location = T.unsafe(nil)); end
 
   # Create a new EnsureNode node
   #
-  # source://prism//lib/prism/dsl.rb#281
+  # source://prism//lib/prism/dsl.rb#291
   def EnsureNode(ensure_keyword_loc, statements, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new FalseNode node
   #
-  # source://prism//lib/prism/dsl.rb#286
+  # source://prism//lib/prism/dsl.rb#296
   def FalseNode(location = T.unsafe(nil)); end
 
   # Create a new FindPatternNode node
   #
-  # source://prism//lib/prism/dsl.rb#291
+  # source://prism//lib/prism/dsl.rb#301
   def FindPatternNode(constant, left, requireds, right, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new FlipFlopNode node
   #
-  # source://prism//lib/prism/dsl.rb#296
-  def FlipFlopNode(left, right, operator_loc, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#306
+  def FlipFlopNode(flags, left, right, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new FloatNode node
   #
-  # source://prism//lib/prism/dsl.rb#301
+  # source://prism//lib/prism/dsl.rb#311
   def FloatNode(location = T.unsafe(nil)); end
 
   # Create a new ForNode node
   #
-  # source://prism//lib/prism/dsl.rb#306
+  # source://prism//lib/prism/dsl.rb#316
   def ForNode(index, collection, statements, for_keyword_loc, in_keyword_loc, do_keyword_loc, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ForwardingArgumentsNode node
   #
-  # source://prism//lib/prism/dsl.rb#311
+  # source://prism//lib/prism/dsl.rb#321
   def ForwardingArgumentsNode(location = T.unsafe(nil)); end
 
   # Create a new ForwardingParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#316
+  # source://prism//lib/prism/dsl.rb#326
   def ForwardingParameterNode(location = T.unsafe(nil)); end
 
   # Create a new ForwardingSuperNode node
   #
-  # source://prism//lib/prism/dsl.rb#321
+  # source://prism//lib/prism/dsl.rb#331
   def ForwardingSuperNode(block, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableAndWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#326
+  # source://prism//lib/prism/dsl.rb#336
   def GlobalVariableAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#331
+  # source://prism//lib/prism/dsl.rb#341
   def GlobalVariableOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableOrWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#336
+  # source://prism//lib/prism/dsl.rb#346
   def GlobalVariableOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableReadNode node
   #
-  # source://prism//lib/prism/dsl.rb#341
+  # source://prism//lib/prism/dsl.rb#351
   def GlobalVariableReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableTargetNode node
   #
-  # source://prism//lib/prism/dsl.rb#346
+  # source://prism//lib/prism/dsl.rb#356
   def GlobalVariableTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new GlobalVariableWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#351
+  # source://prism//lib/prism/dsl.rb#361
   def GlobalVariableWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new HashNode node
   #
-  # source://prism//lib/prism/dsl.rb#356
+  # source://prism//lib/prism/dsl.rb#366
   def HashNode(opening_loc, elements, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new HashPatternNode node
   #
-  # source://prism//lib/prism/dsl.rb#361
+  # source://prism//lib/prism/dsl.rb#371
   def HashPatternNode(constant, elements, rest, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new IfNode node
   #
-  # source://prism//lib/prism/dsl.rb#366
-  def IfNode(if_keyword_loc, predicate, statements, consequent, end_keyword_loc, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#376
+  def IfNode(if_keyword_loc, predicate, then_keyword_loc, statements, consequent, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new ImaginaryNode node
   #
-  # source://prism//lib/prism/dsl.rb#371
+  # source://prism//lib/prism/dsl.rb#381
   def ImaginaryNode(numeric, location = T.unsafe(nil)); end
 
   # Create a new ImplicitNode node
   #
-  # source://prism//lib/prism/dsl.rb#376
+  # source://prism//lib/prism/dsl.rb#386
   def ImplicitNode(value, location = T.unsafe(nil)); end
+
+  # Create a new ImplicitRestNode node
+  #
+  # source://prism//lib/prism/dsl.rb#391
+  def ImplicitRestNode(location = T.unsafe(nil)); end
 
   # Create a new InNode node
   #
-  # source://prism//lib/prism/dsl.rb#381
+  # source://prism//lib/prism/dsl.rb#396
   def InNode(pattern, statements, in_loc, then_loc, location = T.unsafe(nil)); end
 
   # Create a new IndexAndWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#386
-  def IndexAndWriteNode(receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, flags, operator_loc, value, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#401
+  def IndexAndWriteNode(flags, receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new IndexOperatorWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#391
-  def IndexOperatorWriteNode(receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, flags, operator, operator_loc, value, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#406
+  def IndexOperatorWriteNode(flags, receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, operator, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new IndexOrWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#396
-  def IndexOrWriteNode(receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, flags, operator_loc, value, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#411
+  def IndexOrWriteNode(flags, receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, operator_loc, value, location = T.unsafe(nil)); end
+
+  # Create a new IndexTargetNode node
+  #
+  # source://prism//lib/prism/dsl.rb#416
+  def IndexTargetNode(flags, receiver, opening_loc, arguments, closing_loc, block, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableAndWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#401
+  # source://prism//lib/prism/dsl.rb#421
   def InstanceVariableAndWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#406
+  # source://prism//lib/prism/dsl.rb#426
   def InstanceVariableOperatorWriteNode(name, name_loc, operator_loc, value, operator, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableOrWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#411
+  # source://prism//lib/prism/dsl.rb#431
   def InstanceVariableOrWriteNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableReadNode node
   #
-  # source://prism//lib/prism/dsl.rb#416
+  # source://prism//lib/prism/dsl.rb#436
   def InstanceVariableReadNode(name, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableTargetNode node
   #
-  # source://prism//lib/prism/dsl.rb#421
+  # source://prism//lib/prism/dsl.rb#441
   def InstanceVariableTargetNode(name, location = T.unsafe(nil)); end
 
   # Create a new InstanceVariableWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#426
+  # source://prism//lib/prism/dsl.rb#446
   def InstanceVariableWriteNode(name, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new IntegerNode node
   #
-  # source://prism//lib/prism/dsl.rb#431
+  # source://prism//lib/prism/dsl.rb#451
   def IntegerNode(flags, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedMatchLastLineNode node
   #
-  # source://prism//lib/prism/dsl.rb#436
-  def InterpolatedMatchLastLineNode(opening_loc, parts, closing_loc, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#456
+  def InterpolatedMatchLastLineNode(flags, opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedRegularExpressionNode node
   #
-  # source://prism//lib/prism/dsl.rb#441
-  def InterpolatedRegularExpressionNode(opening_loc, parts, closing_loc, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#461
+  def InterpolatedRegularExpressionNode(flags, opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedStringNode node
   #
-  # source://prism//lib/prism/dsl.rb#446
+  # source://prism//lib/prism/dsl.rb#466
   def InterpolatedStringNode(opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedSymbolNode node
   #
-  # source://prism//lib/prism/dsl.rb#451
+  # source://prism//lib/prism/dsl.rb#471
   def InterpolatedSymbolNode(opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new InterpolatedXStringNode node
   #
-  # source://prism//lib/prism/dsl.rb#456
+  # source://prism//lib/prism/dsl.rb#476
   def InterpolatedXStringNode(opening_loc, parts, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new KeywordHashNode node
   #
-  # source://prism//lib/prism/dsl.rb#461
-  def KeywordHashNode(elements, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#481
+  def KeywordHashNode(flags, elements, location = T.unsafe(nil)); end
 
   # Create a new KeywordRestParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#466
+  # source://prism//lib/prism/dsl.rb#486
   def KeywordRestParameterNode(name, name_loc, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new LambdaNode node
   #
-  # source://prism//lib/prism/dsl.rb#471
-  def LambdaNode(locals, operator_loc, opening_loc, closing_loc, parameters, body, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#491
+  def LambdaNode(locals, locals_body_index, operator_loc, opening_loc, closing_loc, parameters, body, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableAndWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#476
+  # source://prism//lib/prism/dsl.rb#496
   def LocalVariableAndWriteNode(name_loc, operator_loc, value, name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#481
+  # source://prism//lib/prism/dsl.rb#501
   def LocalVariableOperatorWriteNode(name_loc, operator_loc, value, name, operator, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableOrWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#486
+  # source://prism//lib/prism/dsl.rb#506
   def LocalVariableOrWriteNode(name_loc, operator_loc, value, name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableReadNode node
   #
-  # source://prism//lib/prism/dsl.rb#491
+  # source://prism//lib/prism/dsl.rb#511
   def LocalVariableReadNode(name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableTargetNode node
   #
-  # source://prism//lib/prism/dsl.rb#496
+  # source://prism//lib/prism/dsl.rb#516
   def LocalVariableTargetNode(name, depth, location = T.unsafe(nil)); end
 
   # Create a new LocalVariableWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#501
+  # source://prism//lib/prism/dsl.rb#521
   def LocalVariableWriteNode(name, depth, name_loc, value, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new Location object
@@ -7277,262 +7751,262 @@ module Prism::DSL
 
   # Create a new MatchLastLineNode node
   #
-  # source://prism//lib/prism/dsl.rb#506
-  def MatchLastLineNode(opening_loc, content_loc, closing_loc, unescaped, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#526
+  def MatchLastLineNode(flags, opening_loc, content_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new MatchPredicateNode node
   #
-  # source://prism//lib/prism/dsl.rb#511
+  # source://prism//lib/prism/dsl.rb#531
   def MatchPredicateNode(value, pattern, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new MatchRequiredNode node
   #
-  # source://prism//lib/prism/dsl.rb#516
+  # source://prism//lib/prism/dsl.rb#536
   def MatchRequiredNode(value, pattern, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new MatchWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#521
-  def MatchWriteNode(call, locals, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#541
+  def MatchWriteNode(call, targets, location = T.unsafe(nil)); end
 
   # Create a new MissingNode node
   #
-  # source://prism//lib/prism/dsl.rb#526
+  # source://prism//lib/prism/dsl.rb#546
   def MissingNode(location = T.unsafe(nil)); end
 
   # Create a new ModuleNode node
   #
-  # source://prism//lib/prism/dsl.rb#531
+  # source://prism//lib/prism/dsl.rb#551
   def ModuleNode(locals, module_keyword_loc, constant_path, body, end_keyword_loc, name, location = T.unsafe(nil)); end
 
   # Create a new MultiTargetNode node
   #
-  # source://prism//lib/prism/dsl.rb#536
+  # source://prism//lib/prism/dsl.rb#556
   def MultiTargetNode(lefts, rest, rights, lparen_loc, rparen_loc, location = T.unsafe(nil)); end
 
   # Create a new MultiWriteNode node
   #
-  # source://prism//lib/prism/dsl.rb#541
+  # source://prism//lib/prism/dsl.rb#561
   def MultiWriteNode(lefts, rest, rights, lparen_loc, rparen_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new NextNode node
   #
-  # source://prism//lib/prism/dsl.rb#546
+  # source://prism//lib/prism/dsl.rb#566
   def NextNode(arguments, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new NilNode node
   #
-  # source://prism//lib/prism/dsl.rb#551
+  # source://prism//lib/prism/dsl.rb#571
   def NilNode(location = T.unsafe(nil)); end
 
   # Create a new NoKeywordsParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#556
+  # source://prism//lib/prism/dsl.rb#576
   def NoKeywordsParameterNode(operator_loc, keyword_loc, location = T.unsafe(nil)); end
+
+  # Create a new NumberedParametersNode node
+  #
+  # source://prism//lib/prism/dsl.rb#581
+  def NumberedParametersNode(maximum, location = T.unsafe(nil)); end
 
   # Create a new NumberedReferenceReadNode node
   #
-  # source://prism//lib/prism/dsl.rb#561
+  # source://prism//lib/prism/dsl.rb#586
   def NumberedReferenceReadNode(number, location = T.unsafe(nil)); end
 
   # Create a new OptionalKeywordParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#566
+  # source://prism//lib/prism/dsl.rb#591
   def OptionalKeywordParameterNode(name, name_loc, value, location = T.unsafe(nil)); end
 
   # Create a new OptionalParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#571
+  # source://prism//lib/prism/dsl.rb#596
   def OptionalParameterNode(name, name_loc, operator_loc, value, location = T.unsafe(nil)); end
 
   # Create a new OrNode node
   #
-  # source://prism//lib/prism/dsl.rb#576
+  # source://prism//lib/prism/dsl.rb#601
   def OrNode(left, right, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new ParametersNode node
   #
-  # source://prism//lib/prism/dsl.rb#581
+  # source://prism//lib/prism/dsl.rb#606
   def ParametersNode(requireds, optionals, rest, posts, keywords, keyword_rest, block, location = T.unsafe(nil)); end
 
   # Create a new ParenthesesNode node
   #
-  # source://prism//lib/prism/dsl.rb#586
+  # source://prism//lib/prism/dsl.rb#611
   def ParenthesesNode(body, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new PinnedExpressionNode node
   #
-  # source://prism//lib/prism/dsl.rb#591
+  # source://prism//lib/prism/dsl.rb#616
   def PinnedExpressionNode(expression, operator_loc, lparen_loc, rparen_loc, location = T.unsafe(nil)); end
 
   # Create a new PinnedVariableNode node
   #
-  # source://prism//lib/prism/dsl.rb#596
+  # source://prism//lib/prism/dsl.rb#621
   def PinnedVariableNode(variable, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new PostExecutionNode node
   #
-  # source://prism//lib/prism/dsl.rb#601
+  # source://prism//lib/prism/dsl.rb#626
   def PostExecutionNode(statements, keyword_loc, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new PreExecutionNode node
   #
-  # source://prism//lib/prism/dsl.rb#606
+  # source://prism//lib/prism/dsl.rb#631
   def PreExecutionNode(statements, keyword_loc, opening_loc, closing_loc, location = T.unsafe(nil)); end
 
   # Create a new ProgramNode node
   #
-  # source://prism//lib/prism/dsl.rb#611
+  # source://prism//lib/prism/dsl.rb#636
   def ProgramNode(locals, statements, location = T.unsafe(nil)); end
 
   # Create a new RangeNode node
   #
-  # source://prism//lib/prism/dsl.rb#616
-  def RangeNode(left, right, operator_loc, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#641
+  def RangeNode(flags, left, right, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new RationalNode node
   #
-  # source://prism//lib/prism/dsl.rb#621
+  # source://prism//lib/prism/dsl.rb#646
   def RationalNode(numeric, location = T.unsafe(nil)); end
 
   # Create a new RedoNode node
   #
-  # source://prism//lib/prism/dsl.rb#626
+  # source://prism//lib/prism/dsl.rb#651
   def RedoNode(location = T.unsafe(nil)); end
 
   # Create a new RegularExpressionNode node
   #
-  # source://prism//lib/prism/dsl.rb#631
-  def RegularExpressionNode(opening_loc, content_loc, closing_loc, unescaped, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#656
+  def RegularExpressionNode(flags, opening_loc, content_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new RequiredKeywordParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#636
+  # source://prism//lib/prism/dsl.rb#661
   def RequiredKeywordParameterNode(name, name_loc, location = T.unsafe(nil)); end
 
   # Create a new RequiredParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#641
+  # source://prism//lib/prism/dsl.rb#666
   def RequiredParameterNode(name, location = T.unsafe(nil)); end
 
   # Create a new RescueModifierNode node
   #
-  # source://prism//lib/prism/dsl.rb#646
+  # source://prism//lib/prism/dsl.rb#671
   def RescueModifierNode(expression, keyword_loc, rescue_expression, location = T.unsafe(nil)); end
 
   # Create a new RescueNode node
   #
-  # source://prism//lib/prism/dsl.rb#651
+  # source://prism//lib/prism/dsl.rb#676
   def RescueNode(keyword_loc, exceptions, operator_loc, reference, statements, consequent, location = T.unsafe(nil)); end
 
   # Create a new RestParameterNode node
   #
-  # source://prism//lib/prism/dsl.rb#656
+  # source://prism//lib/prism/dsl.rb#681
   def RestParameterNode(name, name_loc, operator_loc, location = T.unsafe(nil)); end
 
   # Create a new RetryNode node
   #
-  # source://prism//lib/prism/dsl.rb#661
+  # source://prism//lib/prism/dsl.rb#686
   def RetryNode(location = T.unsafe(nil)); end
 
   # Create a new ReturnNode node
   #
-  # source://prism//lib/prism/dsl.rb#666
+  # source://prism//lib/prism/dsl.rb#691
   def ReturnNode(keyword_loc, arguments, location = T.unsafe(nil)); end
 
   # Create a new SelfNode node
   #
-  # source://prism//lib/prism/dsl.rb#671
+  # source://prism//lib/prism/dsl.rb#696
   def SelfNode(location = T.unsafe(nil)); end
 
   # Create a new SingletonClassNode node
   #
-  # source://prism//lib/prism/dsl.rb#676
+  # source://prism//lib/prism/dsl.rb#701
   def SingletonClassNode(locals, class_keyword_loc, operator_loc, expression, body, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new SourceEncodingNode node
   #
-  # source://prism//lib/prism/dsl.rb#681
+  # source://prism//lib/prism/dsl.rb#706
   def SourceEncodingNode(location = T.unsafe(nil)); end
 
   # Create a new SourceFileNode node
   #
-  # source://prism//lib/prism/dsl.rb#686
+  # source://prism//lib/prism/dsl.rb#711
   def SourceFileNode(filepath, location = T.unsafe(nil)); end
 
   # Create a new SourceLineNode node
   #
-  # source://prism//lib/prism/dsl.rb#691
+  # source://prism//lib/prism/dsl.rb#716
   def SourceLineNode(location = T.unsafe(nil)); end
 
   # Create a new SplatNode node
   #
-  # source://prism//lib/prism/dsl.rb#696
+  # source://prism//lib/prism/dsl.rb#721
   def SplatNode(operator_loc, expression, location = T.unsafe(nil)); end
 
   # Create a new StatementsNode node
   #
-  # source://prism//lib/prism/dsl.rb#701
+  # source://prism//lib/prism/dsl.rb#726
   def StatementsNode(body, location = T.unsafe(nil)); end
-
-  # Create a new StringConcatNode node
-  #
-  # source://prism//lib/prism/dsl.rb#706
-  def StringConcatNode(left, right, location = T.unsafe(nil)); end
 
   # Create a new StringNode node
   #
-  # source://prism//lib/prism/dsl.rb#711
+  # source://prism//lib/prism/dsl.rb#731
   def StringNode(flags, opening_loc, content_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new SuperNode node
   #
-  # source://prism//lib/prism/dsl.rb#716
+  # source://prism//lib/prism/dsl.rb#736
   def SuperNode(keyword_loc, lparen_loc, arguments, rparen_loc, block, location = T.unsafe(nil)); end
 
   # Create a new SymbolNode node
   #
-  # source://prism//lib/prism/dsl.rb#721
-  def SymbolNode(opening_loc, value_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#741
+  def SymbolNode(flags, opening_loc, value_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new TrueNode node
   #
-  # source://prism//lib/prism/dsl.rb#726
+  # source://prism//lib/prism/dsl.rb#746
   def TrueNode(location = T.unsafe(nil)); end
 
   # Create a new UndefNode node
   #
-  # source://prism//lib/prism/dsl.rb#731
+  # source://prism//lib/prism/dsl.rb#751
   def UndefNode(names, keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new UnlessNode node
   #
-  # source://prism//lib/prism/dsl.rb#736
-  def UnlessNode(keyword_loc, predicate, statements, consequent, end_keyword_loc, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#756
+  def UnlessNode(keyword_loc, predicate, then_keyword_loc, statements, consequent, end_keyword_loc, location = T.unsafe(nil)); end
 
   # Create a new UntilNode node
   #
-  # source://prism//lib/prism/dsl.rb#741
-  def UntilNode(keyword_loc, closing_loc, predicate, statements, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#761
+  def UntilNode(flags, keyword_loc, closing_loc, predicate, statements, location = T.unsafe(nil)); end
 
   # Create a new WhenNode node
   #
-  # source://prism//lib/prism/dsl.rb#746
+  # source://prism//lib/prism/dsl.rb#766
   def WhenNode(keyword_loc, conditions, statements, location = T.unsafe(nil)); end
 
   # Create a new WhileNode node
   #
-  # source://prism//lib/prism/dsl.rb#751
-  def WhileNode(keyword_loc, closing_loc, predicate, statements, flags, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#771
+  def WhileNode(flags, keyword_loc, closing_loc, predicate, statements, location = T.unsafe(nil)); end
 
   # Create a new XStringNode node
   #
-  # source://prism//lib/prism/dsl.rb#756
-  def XStringNode(opening_loc, content_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
+  # source://prism//lib/prism/dsl.rb#776
+  def XStringNode(flags, opening_loc, content_loc, closing_loc, unescaped, location = T.unsafe(nil)); end
 
   # Create a new YieldNode node
   #
-  # source://prism//lib/prism/dsl.rb#761
+  # source://prism//lib/prism/dsl.rb#781
   def YieldNode(keyword_loc, lparen_loc, arguments, rparen_loc, location = T.unsafe(nil)); end
 end
 
@@ -7561,7 +8035,7 @@ module Prism::Debug
     # For the given source string, return the byte offsets of every newline in
     # the source.
     #
-    # source://prism//lib/prism/debug.rb#187
+    # source://prism//lib/prism/debug.rb#196
     def newlines(source); end
 
     # :call-seq:
@@ -7617,13 +8091,13 @@ end
 #     end
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#4913
+# source://prism//lib/prism/node.rb#5237
 class Prism::DefNode < ::Prism::Node
-  # def initialize: (name: Symbol, name_loc: Location, receiver: Node?, parameters: ParametersNode?, body: Node?, locals: Array[Symbol], def_keyword_loc: Location, operator_loc: Location?, lparen_loc: Location?, rparen_loc: Location?, equal_loc: Location?, end_keyword_loc: Location?, location: Location) -> void
+  # def initialize: (name: Symbol, name_loc: Location, receiver: Node?, parameters: ParametersNode?, body: Node?, locals: Array[Symbol], locals_body_index: Integer, def_keyword_loc: Location, operator_loc: Location?, lparen_loc: Location?, rparen_loc: Location?, equal_loc: Location?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [DefNode] a new instance of DefNode
   #
-  # source://prism//lib/prism/node.rb#4951
+  # source://prism//lib/prism/node.rb#5278
   sig do
     params(
       name: Symbol,
@@ -7632,6 +8106,7 @@ class Prism::DefNode < ::Prism::Node
       parameters: T.nilable(Prism::ParametersNode),
       body: T.nilable(Prism::Node),
       locals: T::Array[Symbol],
+      locals_body_index: Integer,
       def_keyword_loc: Prism::Location,
       operator_loc: T.nilable(Prism::Location),
       lparen_loc: T.nilable(Prism::Location),
@@ -7641,52 +8116,52 @@ class Prism::DefNode < ::Prism::Node
       location: Prism::Location
     ).void
   end
-  def initialize(name, name_loc, receiver, parameters, body, locals, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location); end
+  def initialize(name, name_loc, receiver, parameters, body, locals, locals_body_index, def_keyword_loc, operator_loc, lparen_loc, rparen_loc, equal_loc, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#4968
+  # source://prism//lib/prism/node.rb#5296
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://prism//lib/prism/node.rb#4927
+  # source://prism//lib/prism/node.rb#5251
   sig { returns(T.nilable(Prism::Node)) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4973
+  # source://prism//lib/prism/node.rb#5301
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#4987
+  # source://prism//lib/prism/node.rb#5315
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#4978
+  # source://prism//lib/prism/node.rb#5306
   def compact_child_nodes; end
 
   # def copy: (**params) -> DefNode
   #
-  # source://prism//lib/prism/node.rb#4992
+  # source://prism//lib/prism/node.rb#5320
   sig { params(params: T.untyped).returns(Prism::DefNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#4973
+  # source://prism//lib/prism/node.rb#5301
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5014
+  # source://prism//lib/prism/node.rb#5343
   sig do
     params(
       keys: T::Array[Symbol]
@@ -7696,108 +8171,114 @@ class Prism::DefNode < ::Prism::Node
 
   # def def_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#5019
+  # source://prism//lib/prism/node.rb#5348
   sig { returns(String) }
   def def_keyword; end
 
   # attr_reader def_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#4933
+  # source://prism//lib/prism/node.rb#5260
   sig { returns(Prism::Location) }
   def def_keyword_loc; end
 
   # def end_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5044
+  # source://prism//lib/prism/node.rb#5373
   sig { returns(T.nilable(String)) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#4948
+  # source://prism//lib/prism/node.rb#5275
   sig { returns(T.nilable(Prism::Location)) }
   def end_keyword_loc; end
 
   # def equal: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5039
+  # source://prism//lib/prism/node.rb#5368
   sig { returns(T.nilable(String)) }
   def equal; end
 
   # attr_reader equal_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#4945
+  # source://prism//lib/prism/node.rb#5272
   sig { returns(T.nilable(Prism::Location)) }
   def equal_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5049
+  # source://prism//lib/prism/node.rb#5378
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://prism//lib/prism/node.rb#4930
+  # source://prism//lib/prism/node.rb#5254
   sig { returns(T::Array[Symbol]) }
   def locals; end
 
+  # attr_reader locals_body_index: Integer
+  #
+  # source://prism//lib/prism/node.rb#5257
+  sig { returns(Integer) }
+  def locals_body_index; end
+
   # def lparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5029
+  # source://prism//lib/prism/node.rb#5358
   sig { returns(T.nilable(String)) }
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#4939
+  # source://prism//lib/prism/node.rb#5266
   sig { returns(T.nilable(Prism::Location)) }
   def lparen_loc; end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#4915
+  # source://prism//lib/prism/node.rb#5239
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#4918
+  # source://prism//lib/prism/node.rb#5242
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5024
+  # source://prism//lib/prism/node.rb#5353
   sig { returns(T.nilable(String)) }
   def operator; end
 
   # attr_reader operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#4936
+  # source://prism//lib/prism/node.rb#5263
   sig { returns(T.nilable(Prism::Location)) }
   def operator_loc; end
 
   # attr_reader parameters: ParametersNode?
   #
-  # source://prism//lib/prism/node.rb#4924
+  # source://prism//lib/prism/node.rb#5248
   sig { returns(T.nilable(Prism::ParametersNode)) }
   def parameters; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#4921
+  # source://prism//lib/prism/node.rb#5245
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
   # def rparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5034
+  # source://prism//lib/prism/node.rb#5363
   sig { returns(T.nilable(String)) }
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#4942
+  # source://prism//lib/prism/node.rb#5269
   sig { returns(T.nilable(Prism::Location)) }
   def rparen_loc; end
 
@@ -7816,7 +8297,7 @@ class Prism::DefNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5095
+  # source://prism//lib/prism/node.rb#5425
   def type; end
 
   class << self
@@ -7827,7 +8308,7 @@ class Prism::DefNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5105
+    # source://prism//lib/prism/node.rb#5435
     def type; end
   end
 end
@@ -7837,13 +8318,13 @@ end
 #     defined?(a)
 #     ^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5114
+# source://prism//lib/prism/node.rb#5444
 class Prism::DefinedNode < ::Prism::Node
   # def initialize: (lparen_loc: Location?, value: Node, rparen_loc: Location?, keyword_loc: Location, location: Location) -> void
   #
   # @return [DefinedNode] a new instance of DefinedNode
   #
-  # source://prism//lib/prism/node.rb#5128
+  # source://prism//lib/prism/node.rb#5458
   sig do
     params(
       lparen_loc: T.nilable(Prism::Location),
@@ -7857,42 +8338,42 @@ class Prism::DefinedNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5137
+  # source://prism//lib/prism/node.rb#5467
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5142
+  # source://prism//lib/prism/node.rb#5472
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5152
+  # source://prism//lib/prism/node.rb#5482
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5147
+  # source://prism//lib/prism/node.rb#5477
   def compact_child_nodes; end
 
   # def copy: (**params) -> DefinedNode
   #
-  # source://prism//lib/prism/node.rb#5157
+  # source://prism//lib/prism/node.rb#5487
   sig { params(params: T.untyped).returns(Prism::DefinedNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5142
+  # source://prism//lib/prism/node.rb#5472
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5171
+  # source://prism//lib/prism/node.rb#5501
   sig do
     params(
       keys: T::Array[Symbol]
@@ -7902,42 +8383,42 @@ class Prism::DefinedNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5191
+  # source://prism//lib/prism/node.rb#5521
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#5186
+  # source://prism//lib/prism/node.rb#5516
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5125
+  # source://prism//lib/prism/node.rb#5455
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # def lparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5176
+  # source://prism//lib/prism/node.rb#5506
   sig { returns(T.nilable(String)) }
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#5116
+  # source://prism//lib/prism/node.rb#5446
   sig { returns(T.nilable(Prism::Location)) }
   def lparen_loc; end
 
   # def rparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5181
+  # source://prism//lib/prism/node.rb#5511
   sig { returns(T.nilable(String)) }
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#5122
+  # source://prism//lib/prism/node.rb#5452
   sig { returns(T.nilable(Prism::Location)) }
   def rparen_loc; end
 
@@ -7956,12 +8437,12 @@ class Prism::DefinedNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5215
+  # source://prism//lib/prism/node.rb#5545
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#5119
+  # source://prism//lib/prism/node.rb#5449
   sig { returns(Prism::Node) }
   def value; end
 
@@ -7973,7 +8454,7 @@ class Prism::DefinedNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5225
+    # source://prism//lib/prism/node.rb#5555
     def type; end
   end
 end
@@ -8321,1476 +8802,2446 @@ class Prism::Dispatcher < ::Prism::Visitor
   # source://prism//lib/prism/dispatcher.rb#230
   def visit_call_or_write_node(node); end
 
-  # Dispatch enter and leave events for CapturePatternNode nodes and continue
+  # Dispatch enter and leave events for CallTargetNode nodes and continue
   # walking the tree.
   #
   # source://prism//lib/prism/dispatcher.rb#238
+  def visit_call_target_node(node); end
+
+  # Dispatch enter and leave events for CapturePatternNode nodes and continue
+  # walking the tree.
+  #
+  # source://prism//lib/prism/dispatcher.rb#246
   def visit_capture_pattern_node(node); end
+
+  # Dispatch enter and leave events for CaseMatchNode nodes and continue
+  # walking the tree.
+  #
+  # source://prism//lib/prism/dispatcher.rb#254
+  def visit_case_match_node(node); end
 
   # Dispatch enter and leave events for CaseNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#246
+  # source://prism//lib/prism/dispatcher.rb#262
   def visit_case_node(node); end
 
   # Dispatch enter and leave events for ClassNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#254
+  # source://prism//lib/prism/dispatcher.rb#270
   def visit_class_node(node); end
 
   # Dispatch enter and leave events for ClassVariableAndWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#262
+  # source://prism//lib/prism/dispatcher.rb#278
   def visit_class_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for ClassVariableOperatorWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#270
+  # source://prism//lib/prism/dispatcher.rb#286
   def visit_class_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for ClassVariableOrWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#278
+  # source://prism//lib/prism/dispatcher.rb#294
   def visit_class_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for ClassVariableReadNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#286
+  # source://prism//lib/prism/dispatcher.rb#302
   def visit_class_variable_read_node(node); end
 
   # Dispatch enter and leave events for ClassVariableTargetNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#294
+  # source://prism//lib/prism/dispatcher.rb#310
   def visit_class_variable_target_node(node); end
 
   # Dispatch enter and leave events for ClassVariableWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#302
+  # source://prism//lib/prism/dispatcher.rb#318
   def visit_class_variable_write_node(node); end
 
   # Dispatch enter and leave events for ConstantAndWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#310
+  # source://prism//lib/prism/dispatcher.rb#326
   def visit_constant_and_write_node(node); end
 
   # Dispatch enter and leave events for ConstantOperatorWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#318
+  # source://prism//lib/prism/dispatcher.rb#334
   def visit_constant_operator_write_node(node); end
 
   # Dispatch enter and leave events for ConstantOrWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#326
+  # source://prism//lib/prism/dispatcher.rb#342
   def visit_constant_or_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathAndWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#334
+  # source://prism//lib/prism/dispatcher.rb#350
   def visit_constant_path_and_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#342
+  # source://prism//lib/prism/dispatcher.rb#358
   def visit_constant_path_node(node); end
 
   # Dispatch enter and leave events for ConstantPathOperatorWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#350
+  # source://prism//lib/prism/dispatcher.rb#366
   def visit_constant_path_operator_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathOrWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#358
+  # source://prism//lib/prism/dispatcher.rb#374
   def visit_constant_path_or_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathTargetNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#366
+  # source://prism//lib/prism/dispatcher.rb#382
   def visit_constant_path_target_node(node); end
 
   # Dispatch enter and leave events for ConstantPathWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#374
+  # source://prism//lib/prism/dispatcher.rb#390
   def visit_constant_path_write_node(node); end
 
   # Dispatch enter and leave events for ConstantReadNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#382
+  # source://prism//lib/prism/dispatcher.rb#398
   def visit_constant_read_node(node); end
 
   # Dispatch enter and leave events for ConstantTargetNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#390
+  # source://prism//lib/prism/dispatcher.rb#406
   def visit_constant_target_node(node); end
 
   # Dispatch enter and leave events for ConstantWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#398
+  # source://prism//lib/prism/dispatcher.rb#414
   def visit_constant_write_node(node); end
 
   # Dispatch enter and leave events for DefNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#406
+  # source://prism//lib/prism/dispatcher.rb#422
   def visit_def_node(node); end
 
   # Dispatch enter and leave events for DefinedNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#414
+  # source://prism//lib/prism/dispatcher.rb#430
   def visit_defined_node(node); end
 
   # Dispatch enter and leave events for ElseNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#422
+  # source://prism//lib/prism/dispatcher.rb#438
   def visit_else_node(node); end
 
   # Dispatch enter and leave events for EmbeddedStatementsNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#430
+  # source://prism//lib/prism/dispatcher.rb#446
   def visit_embedded_statements_node(node); end
 
   # Dispatch enter and leave events for EmbeddedVariableNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#438
+  # source://prism//lib/prism/dispatcher.rb#454
   def visit_embedded_variable_node(node); end
 
   # Dispatch enter and leave events for EnsureNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#446
+  # source://prism//lib/prism/dispatcher.rb#462
   def visit_ensure_node(node); end
 
   # Dispatch enter and leave events for FalseNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#454
+  # source://prism//lib/prism/dispatcher.rb#470
   def visit_false_node(node); end
 
   # Dispatch enter and leave events for FindPatternNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#462
+  # source://prism//lib/prism/dispatcher.rb#478
   def visit_find_pattern_node(node); end
 
   # Dispatch enter and leave events for FlipFlopNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#470
+  # source://prism//lib/prism/dispatcher.rb#486
   def visit_flip_flop_node(node); end
 
   # Dispatch enter and leave events for FloatNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#478
+  # source://prism//lib/prism/dispatcher.rb#494
   def visit_float_node(node); end
 
   # Dispatch enter and leave events for ForNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#486
+  # source://prism//lib/prism/dispatcher.rb#502
   def visit_for_node(node); end
 
   # Dispatch enter and leave events for ForwardingArgumentsNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#494
+  # source://prism//lib/prism/dispatcher.rb#510
   def visit_forwarding_arguments_node(node); end
 
   # Dispatch enter and leave events for ForwardingParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#502
+  # source://prism//lib/prism/dispatcher.rb#518
   def visit_forwarding_parameter_node(node); end
 
   # Dispatch enter and leave events for ForwardingSuperNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#510
+  # source://prism//lib/prism/dispatcher.rb#526
   def visit_forwarding_super_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableAndWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#518
+  # source://prism//lib/prism/dispatcher.rb#534
   def visit_global_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableOperatorWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#526
+  # source://prism//lib/prism/dispatcher.rb#542
   def visit_global_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableOrWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#534
+  # source://prism//lib/prism/dispatcher.rb#550
   def visit_global_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableReadNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#542
+  # source://prism//lib/prism/dispatcher.rb#558
   def visit_global_variable_read_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableTargetNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#550
+  # source://prism//lib/prism/dispatcher.rb#566
   def visit_global_variable_target_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#558
+  # source://prism//lib/prism/dispatcher.rb#574
   def visit_global_variable_write_node(node); end
 
   # Dispatch enter and leave events for HashNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#566
+  # source://prism//lib/prism/dispatcher.rb#582
   def visit_hash_node(node); end
 
   # Dispatch enter and leave events for HashPatternNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#574
+  # source://prism//lib/prism/dispatcher.rb#590
   def visit_hash_pattern_node(node); end
 
   # Dispatch enter and leave events for IfNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#582
+  # source://prism//lib/prism/dispatcher.rb#598
   def visit_if_node(node); end
 
   # Dispatch enter and leave events for ImaginaryNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#590
+  # source://prism//lib/prism/dispatcher.rb#606
   def visit_imaginary_node(node); end
 
   # Dispatch enter and leave events for ImplicitNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#598
+  # source://prism//lib/prism/dispatcher.rb#614
   def visit_implicit_node(node); end
+
+  # Dispatch enter and leave events for ImplicitRestNode nodes and continue
+  # walking the tree.
+  #
+  # source://prism//lib/prism/dispatcher.rb#622
+  def visit_implicit_rest_node(node); end
 
   # Dispatch enter and leave events for InNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#606
+  # source://prism//lib/prism/dispatcher.rb#630
   def visit_in_node(node); end
 
   # Dispatch enter and leave events for IndexAndWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#614
+  # source://prism//lib/prism/dispatcher.rb#638
   def visit_index_and_write_node(node); end
 
   # Dispatch enter and leave events for IndexOperatorWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#622
+  # source://prism//lib/prism/dispatcher.rb#646
   def visit_index_operator_write_node(node); end
 
   # Dispatch enter and leave events for IndexOrWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#630
+  # source://prism//lib/prism/dispatcher.rb#654
   def visit_index_or_write_node(node); end
+
+  # Dispatch enter and leave events for IndexTargetNode nodes and continue
+  # walking the tree.
+  #
+  # source://prism//lib/prism/dispatcher.rb#662
+  def visit_index_target_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableAndWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#638
+  # source://prism//lib/prism/dispatcher.rb#670
   def visit_instance_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableOperatorWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#646
+  # source://prism//lib/prism/dispatcher.rb#678
   def visit_instance_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableOrWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#654
+  # source://prism//lib/prism/dispatcher.rb#686
   def visit_instance_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableReadNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#662
+  # source://prism//lib/prism/dispatcher.rb#694
   def visit_instance_variable_read_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableTargetNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#670
+  # source://prism//lib/prism/dispatcher.rb#702
   def visit_instance_variable_target_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#678
+  # source://prism//lib/prism/dispatcher.rb#710
   def visit_instance_variable_write_node(node); end
 
   # Dispatch enter and leave events for IntegerNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#686
+  # source://prism//lib/prism/dispatcher.rb#718
   def visit_integer_node(node); end
 
   # Dispatch enter and leave events for InterpolatedMatchLastLineNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#694
+  # source://prism//lib/prism/dispatcher.rb#726
   def visit_interpolated_match_last_line_node(node); end
 
   # Dispatch enter and leave events for InterpolatedRegularExpressionNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#702
+  # source://prism//lib/prism/dispatcher.rb#734
   def visit_interpolated_regular_expression_node(node); end
 
   # Dispatch enter and leave events for InterpolatedStringNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#710
+  # source://prism//lib/prism/dispatcher.rb#742
   def visit_interpolated_string_node(node); end
 
   # Dispatch enter and leave events for InterpolatedSymbolNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#718
+  # source://prism//lib/prism/dispatcher.rb#750
   def visit_interpolated_symbol_node(node); end
 
   # Dispatch enter and leave events for InterpolatedXStringNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#726
+  # source://prism//lib/prism/dispatcher.rb#758
   def visit_interpolated_x_string_node(node); end
 
   # Dispatch enter and leave events for KeywordHashNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#734
+  # source://prism//lib/prism/dispatcher.rb#766
   def visit_keyword_hash_node(node); end
 
   # Dispatch enter and leave events for KeywordRestParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#742
+  # source://prism//lib/prism/dispatcher.rb#774
   def visit_keyword_rest_parameter_node(node); end
 
   # Dispatch enter and leave events for LambdaNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#750
+  # source://prism//lib/prism/dispatcher.rb#782
   def visit_lambda_node(node); end
 
   # Dispatch enter and leave events for LocalVariableAndWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#758
+  # source://prism//lib/prism/dispatcher.rb#790
   def visit_local_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for LocalVariableOperatorWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#766
+  # source://prism//lib/prism/dispatcher.rb#798
   def visit_local_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for LocalVariableOrWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#774
+  # source://prism//lib/prism/dispatcher.rb#806
   def visit_local_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for LocalVariableReadNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#782
+  # source://prism//lib/prism/dispatcher.rb#814
   def visit_local_variable_read_node(node); end
 
   # Dispatch enter and leave events for LocalVariableTargetNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#790
+  # source://prism//lib/prism/dispatcher.rb#822
   def visit_local_variable_target_node(node); end
 
   # Dispatch enter and leave events for LocalVariableWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#798
+  # source://prism//lib/prism/dispatcher.rb#830
   def visit_local_variable_write_node(node); end
 
   # Dispatch enter and leave events for MatchLastLineNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#806
+  # source://prism//lib/prism/dispatcher.rb#838
   def visit_match_last_line_node(node); end
 
   # Dispatch enter and leave events for MatchPredicateNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#814
+  # source://prism//lib/prism/dispatcher.rb#846
   def visit_match_predicate_node(node); end
 
   # Dispatch enter and leave events for MatchRequiredNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#822
+  # source://prism//lib/prism/dispatcher.rb#854
   def visit_match_required_node(node); end
 
   # Dispatch enter and leave events for MatchWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#830
+  # source://prism//lib/prism/dispatcher.rb#862
   def visit_match_write_node(node); end
 
   # Dispatch enter and leave events for MissingNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#838
+  # source://prism//lib/prism/dispatcher.rb#870
   def visit_missing_node(node); end
 
   # Dispatch enter and leave events for ModuleNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#846
+  # source://prism//lib/prism/dispatcher.rb#878
   def visit_module_node(node); end
 
   # Dispatch enter and leave events for MultiTargetNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#854
+  # source://prism//lib/prism/dispatcher.rb#886
   def visit_multi_target_node(node); end
 
   # Dispatch enter and leave events for MultiWriteNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#862
+  # source://prism//lib/prism/dispatcher.rb#894
   def visit_multi_write_node(node); end
 
   # Dispatch enter and leave events for NextNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#870
+  # source://prism//lib/prism/dispatcher.rb#902
   def visit_next_node(node); end
 
   # Dispatch enter and leave events for NilNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#878
+  # source://prism//lib/prism/dispatcher.rb#910
   def visit_nil_node(node); end
 
   # Dispatch enter and leave events for NoKeywordsParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#886
+  # source://prism//lib/prism/dispatcher.rb#918
   def visit_no_keywords_parameter_node(node); end
+
+  # Dispatch enter and leave events for NumberedParametersNode nodes and continue
+  # walking the tree.
+  #
+  # source://prism//lib/prism/dispatcher.rb#926
+  def visit_numbered_parameters_node(node); end
 
   # Dispatch enter and leave events for NumberedReferenceReadNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#894
+  # source://prism//lib/prism/dispatcher.rb#934
   def visit_numbered_reference_read_node(node); end
 
   # Dispatch enter and leave events for OptionalKeywordParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#902
+  # source://prism//lib/prism/dispatcher.rb#942
   def visit_optional_keyword_parameter_node(node); end
 
   # Dispatch enter and leave events for OptionalParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#910
+  # source://prism//lib/prism/dispatcher.rb#950
   def visit_optional_parameter_node(node); end
 
   # Dispatch enter and leave events for OrNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#918
+  # source://prism//lib/prism/dispatcher.rb#958
   def visit_or_node(node); end
 
   # Dispatch enter and leave events for ParametersNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#926
+  # source://prism//lib/prism/dispatcher.rb#966
   def visit_parameters_node(node); end
 
   # Dispatch enter and leave events for ParenthesesNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#934
+  # source://prism//lib/prism/dispatcher.rb#974
   def visit_parentheses_node(node); end
 
   # Dispatch enter and leave events for PinnedExpressionNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#942
+  # source://prism//lib/prism/dispatcher.rb#982
   def visit_pinned_expression_node(node); end
 
   # Dispatch enter and leave events for PinnedVariableNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#950
+  # source://prism//lib/prism/dispatcher.rb#990
   def visit_pinned_variable_node(node); end
 
   # Dispatch enter and leave events for PostExecutionNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#958
+  # source://prism//lib/prism/dispatcher.rb#998
   def visit_post_execution_node(node); end
 
   # Dispatch enter and leave events for PreExecutionNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#966
+  # source://prism//lib/prism/dispatcher.rb#1006
   def visit_pre_execution_node(node); end
 
   # Dispatch enter and leave events for ProgramNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#974
+  # source://prism//lib/prism/dispatcher.rb#1014
   def visit_program_node(node); end
 
   # Dispatch enter and leave events for RangeNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#982
+  # source://prism//lib/prism/dispatcher.rb#1022
   def visit_range_node(node); end
 
   # Dispatch enter and leave events for RationalNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#990
+  # source://prism//lib/prism/dispatcher.rb#1030
   def visit_rational_node(node); end
 
   # Dispatch enter and leave events for RedoNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#998
+  # source://prism//lib/prism/dispatcher.rb#1038
   def visit_redo_node(node); end
 
   # Dispatch enter and leave events for RegularExpressionNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1006
+  # source://prism//lib/prism/dispatcher.rb#1046
   def visit_regular_expression_node(node); end
 
   # Dispatch enter and leave events for RequiredKeywordParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1014
+  # source://prism//lib/prism/dispatcher.rb#1054
   def visit_required_keyword_parameter_node(node); end
 
   # Dispatch enter and leave events for RequiredParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1022
+  # source://prism//lib/prism/dispatcher.rb#1062
   def visit_required_parameter_node(node); end
 
   # Dispatch enter and leave events for RescueModifierNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1030
+  # source://prism//lib/prism/dispatcher.rb#1070
   def visit_rescue_modifier_node(node); end
 
   # Dispatch enter and leave events for RescueNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1038
+  # source://prism//lib/prism/dispatcher.rb#1078
   def visit_rescue_node(node); end
 
   # Dispatch enter and leave events for RestParameterNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1046
+  # source://prism//lib/prism/dispatcher.rb#1086
   def visit_rest_parameter_node(node); end
 
   # Dispatch enter and leave events for RetryNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1054
+  # source://prism//lib/prism/dispatcher.rb#1094
   def visit_retry_node(node); end
 
   # Dispatch enter and leave events for ReturnNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1062
+  # source://prism//lib/prism/dispatcher.rb#1102
   def visit_return_node(node); end
 
   # Dispatch enter and leave events for SelfNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1070
+  # source://prism//lib/prism/dispatcher.rb#1110
   def visit_self_node(node); end
 
   # Dispatch enter and leave events for SingletonClassNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1078
+  # source://prism//lib/prism/dispatcher.rb#1118
   def visit_singleton_class_node(node); end
 
   # Dispatch enter and leave events for SourceEncodingNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1086
+  # source://prism//lib/prism/dispatcher.rb#1126
   def visit_source_encoding_node(node); end
 
   # Dispatch enter and leave events for SourceFileNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1094
+  # source://prism//lib/prism/dispatcher.rb#1134
   def visit_source_file_node(node); end
 
   # Dispatch enter and leave events for SourceLineNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1102
+  # source://prism//lib/prism/dispatcher.rb#1142
   def visit_source_line_node(node); end
 
   # Dispatch enter and leave events for SplatNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1110
+  # source://prism//lib/prism/dispatcher.rb#1150
   def visit_splat_node(node); end
 
   # Dispatch enter and leave events for StatementsNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1118
+  # source://prism//lib/prism/dispatcher.rb#1158
   def visit_statements_node(node); end
-
-  # Dispatch enter and leave events for StringConcatNode nodes and continue
-  # walking the tree.
-  #
-  # source://prism//lib/prism/dispatcher.rb#1126
-  def visit_string_concat_node(node); end
 
   # Dispatch enter and leave events for StringNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1134
+  # source://prism//lib/prism/dispatcher.rb#1166
   def visit_string_node(node); end
 
   # Dispatch enter and leave events for SuperNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1142
+  # source://prism//lib/prism/dispatcher.rb#1174
   def visit_super_node(node); end
 
   # Dispatch enter and leave events for SymbolNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1150
+  # source://prism//lib/prism/dispatcher.rb#1182
   def visit_symbol_node(node); end
 
   # Dispatch enter and leave events for TrueNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1158
+  # source://prism//lib/prism/dispatcher.rb#1190
   def visit_true_node(node); end
 
   # Dispatch enter and leave events for UndefNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1166
+  # source://prism//lib/prism/dispatcher.rb#1198
   def visit_undef_node(node); end
 
   # Dispatch enter and leave events for UnlessNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1174
+  # source://prism//lib/prism/dispatcher.rb#1206
   def visit_unless_node(node); end
 
   # Dispatch enter and leave events for UntilNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1182
+  # source://prism//lib/prism/dispatcher.rb#1214
   def visit_until_node(node); end
 
   # Dispatch enter and leave events for WhenNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1190
+  # source://prism//lib/prism/dispatcher.rb#1222
   def visit_when_node(node); end
 
   # Dispatch enter and leave events for WhileNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1198
+  # source://prism//lib/prism/dispatcher.rb#1230
   def visit_while_node(node); end
 
   # Dispatch enter and leave events for XStringNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1206
+  # source://prism//lib/prism/dispatcher.rb#1238
   def visit_x_string_node(node); end
 
   # Dispatch enter and leave events for YieldNode nodes and continue
   # walking the tree.
   #
-  # source://prism//lib/prism/dispatcher.rb#1214
+  # source://prism//lib/prism/dispatcher.rb#1246
   def visit_yield_node(node); end
 end
 
-# source://prism//lib/prism/dispatcher.rb#1220
+# source://prism//lib/prism/dispatcher.rb#1252
 class Prism::Dispatcher::DispatchOnce < ::Prism::Visitor
   # @return [DispatchOnce] a new instance of DispatchOnce
   #
-  # source://prism//lib/prism/dispatcher.rb#1223
+  # source://prism//lib/prism/dispatcher.rb#1255
   def initialize(listeners); end
 
   # Returns the value of attribute listeners.
   #
-  # source://prism//lib/prism/dispatcher.rb#1221
+  # source://prism//lib/prism/dispatcher.rb#1253
   def listeners; end
 
   # Dispatch enter and leave events for AliasGlobalVariableNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1228
+  # source://prism//lib/prism/dispatcher.rb#1260
   def visit_alias_global_variable_node(node); end
 
   # Dispatch enter and leave events for AliasMethodNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1234
+  # source://prism//lib/prism/dispatcher.rb#1266
   def visit_alias_method_node(node); end
 
   # Dispatch enter and leave events for AlternationPatternNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1240
+  # source://prism//lib/prism/dispatcher.rb#1272
   def visit_alternation_pattern_node(node); end
 
   # Dispatch enter and leave events for AndNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1246
+  # source://prism//lib/prism/dispatcher.rb#1278
   def visit_and_node(node); end
 
   # Dispatch enter and leave events for ArgumentsNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1252
+  # source://prism//lib/prism/dispatcher.rb#1284
   def visit_arguments_node(node); end
 
   # Dispatch enter and leave events for ArrayNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1258
+  # source://prism//lib/prism/dispatcher.rb#1290
   def visit_array_node(node); end
 
   # Dispatch enter and leave events for ArrayPatternNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1264
+  # source://prism//lib/prism/dispatcher.rb#1296
   def visit_array_pattern_node(node); end
 
   # Dispatch enter and leave events for AssocNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1270
+  # source://prism//lib/prism/dispatcher.rb#1302
   def visit_assoc_node(node); end
 
   # Dispatch enter and leave events for AssocSplatNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1276
+  # source://prism//lib/prism/dispatcher.rb#1308
   def visit_assoc_splat_node(node); end
 
   # Dispatch enter and leave events for BackReferenceReadNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1282
+  # source://prism//lib/prism/dispatcher.rb#1314
   def visit_back_reference_read_node(node); end
 
   # Dispatch enter and leave events for BeginNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1288
+  # source://prism//lib/prism/dispatcher.rb#1320
   def visit_begin_node(node); end
 
   # Dispatch enter and leave events for BlockArgumentNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1294
+  # source://prism//lib/prism/dispatcher.rb#1326
   def visit_block_argument_node(node); end
 
   # Dispatch enter and leave events for BlockLocalVariableNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1300
+  # source://prism//lib/prism/dispatcher.rb#1332
   def visit_block_local_variable_node(node); end
 
   # Dispatch enter and leave events for BlockNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1306
+  # source://prism//lib/prism/dispatcher.rb#1338
   def visit_block_node(node); end
 
   # Dispatch enter and leave events for BlockParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1312
+  # source://prism//lib/prism/dispatcher.rb#1344
   def visit_block_parameter_node(node); end
 
   # Dispatch enter and leave events for BlockParametersNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1318
+  # source://prism//lib/prism/dispatcher.rb#1350
   def visit_block_parameters_node(node); end
 
   # Dispatch enter and leave events for BreakNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1324
+  # source://prism//lib/prism/dispatcher.rb#1356
   def visit_break_node(node); end
 
   # Dispatch enter and leave events for CallAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1330
+  # source://prism//lib/prism/dispatcher.rb#1362
   def visit_call_and_write_node(node); end
 
   # Dispatch enter and leave events for CallNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1336
+  # source://prism//lib/prism/dispatcher.rb#1368
   def visit_call_node(node); end
 
   # Dispatch enter and leave events for CallOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1342
+  # source://prism//lib/prism/dispatcher.rb#1374
   def visit_call_operator_write_node(node); end
 
   # Dispatch enter and leave events for CallOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1348
+  # source://prism//lib/prism/dispatcher.rb#1380
   def visit_call_or_write_node(node); end
+
+  # Dispatch enter and leave events for CallTargetNode nodes.
+  #
+  # source://prism//lib/prism/dispatcher.rb#1386
+  def visit_call_target_node(node); end
 
   # Dispatch enter and leave events for CapturePatternNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1354
+  # source://prism//lib/prism/dispatcher.rb#1392
   def visit_capture_pattern_node(node); end
+
+  # Dispatch enter and leave events for CaseMatchNode nodes.
+  #
+  # source://prism//lib/prism/dispatcher.rb#1398
+  def visit_case_match_node(node); end
 
   # Dispatch enter and leave events for CaseNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1360
+  # source://prism//lib/prism/dispatcher.rb#1404
   def visit_case_node(node); end
 
   # Dispatch enter and leave events for ClassNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1366
+  # source://prism//lib/prism/dispatcher.rb#1410
   def visit_class_node(node); end
 
   # Dispatch enter and leave events for ClassVariableAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1372
+  # source://prism//lib/prism/dispatcher.rb#1416
   def visit_class_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for ClassVariableOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1378
+  # source://prism//lib/prism/dispatcher.rb#1422
   def visit_class_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for ClassVariableOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1384
+  # source://prism//lib/prism/dispatcher.rb#1428
   def visit_class_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for ClassVariableReadNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1390
+  # source://prism//lib/prism/dispatcher.rb#1434
   def visit_class_variable_read_node(node); end
 
   # Dispatch enter and leave events for ClassVariableTargetNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1396
+  # source://prism//lib/prism/dispatcher.rb#1440
   def visit_class_variable_target_node(node); end
 
   # Dispatch enter and leave events for ClassVariableWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1402
+  # source://prism//lib/prism/dispatcher.rb#1446
   def visit_class_variable_write_node(node); end
 
   # Dispatch enter and leave events for ConstantAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1408
+  # source://prism//lib/prism/dispatcher.rb#1452
   def visit_constant_and_write_node(node); end
 
   # Dispatch enter and leave events for ConstantOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1414
+  # source://prism//lib/prism/dispatcher.rb#1458
   def visit_constant_operator_write_node(node); end
 
   # Dispatch enter and leave events for ConstantOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1420
+  # source://prism//lib/prism/dispatcher.rb#1464
   def visit_constant_or_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1426
+  # source://prism//lib/prism/dispatcher.rb#1470
   def visit_constant_path_and_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1432
+  # source://prism//lib/prism/dispatcher.rb#1476
   def visit_constant_path_node(node); end
 
   # Dispatch enter and leave events for ConstantPathOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1438
+  # source://prism//lib/prism/dispatcher.rb#1482
   def visit_constant_path_operator_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1444
+  # source://prism//lib/prism/dispatcher.rb#1488
   def visit_constant_path_or_write_node(node); end
 
   # Dispatch enter and leave events for ConstantPathTargetNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1450
+  # source://prism//lib/prism/dispatcher.rb#1494
   def visit_constant_path_target_node(node); end
 
   # Dispatch enter and leave events for ConstantPathWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1456
+  # source://prism//lib/prism/dispatcher.rb#1500
   def visit_constant_path_write_node(node); end
 
   # Dispatch enter and leave events for ConstantReadNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1462
+  # source://prism//lib/prism/dispatcher.rb#1506
   def visit_constant_read_node(node); end
 
   # Dispatch enter and leave events for ConstantTargetNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1468
+  # source://prism//lib/prism/dispatcher.rb#1512
   def visit_constant_target_node(node); end
 
   # Dispatch enter and leave events for ConstantWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1474
+  # source://prism//lib/prism/dispatcher.rb#1518
   def visit_constant_write_node(node); end
 
   # Dispatch enter and leave events for DefNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1480
+  # source://prism//lib/prism/dispatcher.rb#1524
   def visit_def_node(node); end
 
   # Dispatch enter and leave events for DefinedNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1486
+  # source://prism//lib/prism/dispatcher.rb#1530
   def visit_defined_node(node); end
 
   # Dispatch enter and leave events for ElseNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1492
+  # source://prism//lib/prism/dispatcher.rb#1536
   def visit_else_node(node); end
 
   # Dispatch enter and leave events for EmbeddedStatementsNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1498
+  # source://prism//lib/prism/dispatcher.rb#1542
   def visit_embedded_statements_node(node); end
 
   # Dispatch enter and leave events for EmbeddedVariableNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1504
+  # source://prism//lib/prism/dispatcher.rb#1548
   def visit_embedded_variable_node(node); end
 
   # Dispatch enter and leave events for EnsureNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1510
+  # source://prism//lib/prism/dispatcher.rb#1554
   def visit_ensure_node(node); end
 
   # Dispatch enter and leave events for FalseNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1516
+  # source://prism//lib/prism/dispatcher.rb#1560
   def visit_false_node(node); end
 
   # Dispatch enter and leave events for FindPatternNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1522
+  # source://prism//lib/prism/dispatcher.rb#1566
   def visit_find_pattern_node(node); end
 
   # Dispatch enter and leave events for FlipFlopNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1528
+  # source://prism//lib/prism/dispatcher.rb#1572
   def visit_flip_flop_node(node); end
 
   # Dispatch enter and leave events for FloatNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1534
+  # source://prism//lib/prism/dispatcher.rb#1578
   def visit_float_node(node); end
 
   # Dispatch enter and leave events for ForNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1540
+  # source://prism//lib/prism/dispatcher.rb#1584
   def visit_for_node(node); end
 
   # Dispatch enter and leave events for ForwardingArgumentsNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1546
+  # source://prism//lib/prism/dispatcher.rb#1590
   def visit_forwarding_arguments_node(node); end
 
   # Dispatch enter and leave events for ForwardingParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1552
+  # source://prism//lib/prism/dispatcher.rb#1596
   def visit_forwarding_parameter_node(node); end
 
   # Dispatch enter and leave events for ForwardingSuperNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1558
+  # source://prism//lib/prism/dispatcher.rb#1602
   def visit_forwarding_super_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1564
+  # source://prism//lib/prism/dispatcher.rb#1608
   def visit_global_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1570
+  # source://prism//lib/prism/dispatcher.rb#1614
   def visit_global_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1576
+  # source://prism//lib/prism/dispatcher.rb#1620
   def visit_global_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableReadNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1582
+  # source://prism//lib/prism/dispatcher.rb#1626
   def visit_global_variable_read_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableTargetNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1588
+  # source://prism//lib/prism/dispatcher.rb#1632
   def visit_global_variable_target_node(node); end
 
   # Dispatch enter and leave events for GlobalVariableWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1594
+  # source://prism//lib/prism/dispatcher.rb#1638
   def visit_global_variable_write_node(node); end
 
   # Dispatch enter and leave events for HashNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1600
+  # source://prism//lib/prism/dispatcher.rb#1644
   def visit_hash_node(node); end
 
   # Dispatch enter and leave events for HashPatternNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1606
+  # source://prism//lib/prism/dispatcher.rb#1650
   def visit_hash_pattern_node(node); end
 
   # Dispatch enter and leave events for IfNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1612
+  # source://prism//lib/prism/dispatcher.rb#1656
   def visit_if_node(node); end
 
   # Dispatch enter and leave events for ImaginaryNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1618
+  # source://prism//lib/prism/dispatcher.rb#1662
   def visit_imaginary_node(node); end
 
   # Dispatch enter and leave events for ImplicitNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1624
+  # source://prism//lib/prism/dispatcher.rb#1668
   def visit_implicit_node(node); end
+
+  # Dispatch enter and leave events for ImplicitRestNode nodes.
+  #
+  # source://prism//lib/prism/dispatcher.rb#1674
+  def visit_implicit_rest_node(node); end
 
   # Dispatch enter and leave events for InNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1630
+  # source://prism//lib/prism/dispatcher.rb#1680
   def visit_in_node(node); end
 
   # Dispatch enter and leave events for IndexAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1636
+  # source://prism//lib/prism/dispatcher.rb#1686
   def visit_index_and_write_node(node); end
 
   # Dispatch enter and leave events for IndexOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1642
+  # source://prism//lib/prism/dispatcher.rb#1692
   def visit_index_operator_write_node(node); end
 
   # Dispatch enter and leave events for IndexOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1648
+  # source://prism//lib/prism/dispatcher.rb#1698
   def visit_index_or_write_node(node); end
+
+  # Dispatch enter and leave events for IndexTargetNode nodes.
+  #
+  # source://prism//lib/prism/dispatcher.rb#1704
+  def visit_index_target_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1654
+  # source://prism//lib/prism/dispatcher.rb#1710
   def visit_instance_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1660
+  # source://prism//lib/prism/dispatcher.rb#1716
   def visit_instance_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1666
+  # source://prism//lib/prism/dispatcher.rb#1722
   def visit_instance_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableReadNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1672
+  # source://prism//lib/prism/dispatcher.rb#1728
   def visit_instance_variable_read_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableTargetNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1678
+  # source://prism//lib/prism/dispatcher.rb#1734
   def visit_instance_variable_target_node(node); end
 
   # Dispatch enter and leave events for InstanceVariableWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1684
+  # source://prism//lib/prism/dispatcher.rb#1740
   def visit_instance_variable_write_node(node); end
 
   # Dispatch enter and leave events for IntegerNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1690
+  # source://prism//lib/prism/dispatcher.rb#1746
   def visit_integer_node(node); end
 
   # Dispatch enter and leave events for InterpolatedMatchLastLineNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1696
+  # source://prism//lib/prism/dispatcher.rb#1752
   def visit_interpolated_match_last_line_node(node); end
 
   # Dispatch enter and leave events for InterpolatedRegularExpressionNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1702
+  # source://prism//lib/prism/dispatcher.rb#1758
   def visit_interpolated_regular_expression_node(node); end
 
   # Dispatch enter and leave events for InterpolatedStringNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1708
+  # source://prism//lib/prism/dispatcher.rb#1764
   def visit_interpolated_string_node(node); end
 
   # Dispatch enter and leave events for InterpolatedSymbolNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1714
+  # source://prism//lib/prism/dispatcher.rb#1770
   def visit_interpolated_symbol_node(node); end
 
   # Dispatch enter and leave events for InterpolatedXStringNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1720
+  # source://prism//lib/prism/dispatcher.rb#1776
   def visit_interpolated_x_string_node(node); end
 
   # Dispatch enter and leave events for KeywordHashNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1726
+  # source://prism//lib/prism/dispatcher.rb#1782
   def visit_keyword_hash_node(node); end
 
   # Dispatch enter and leave events for KeywordRestParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1732
+  # source://prism//lib/prism/dispatcher.rb#1788
   def visit_keyword_rest_parameter_node(node); end
 
   # Dispatch enter and leave events for LambdaNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1738
+  # source://prism//lib/prism/dispatcher.rb#1794
   def visit_lambda_node(node); end
 
   # Dispatch enter and leave events for LocalVariableAndWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1744
+  # source://prism//lib/prism/dispatcher.rb#1800
   def visit_local_variable_and_write_node(node); end
 
   # Dispatch enter and leave events for LocalVariableOperatorWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1750
+  # source://prism//lib/prism/dispatcher.rb#1806
   def visit_local_variable_operator_write_node(node); end
 
   # Dispatch enter and leave events for LocalVariableOrWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1756
+  # source://prism//lib/prism/dispatcher.rb#1812
   def visit_local_variable_or_write_node(node); end
 
   # Dispatch enter and leave events for LocalVariableReadNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1762
+  # source://prism//lib/prism/dispatcher.rb#1818
   def visit_local_variable_read_node(node); end
 
   # Dispatch enter and leave events for LocalVariableTargetNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1768
+  # source://prism//lib/prism/dispatcher.rb#1824
   def visit_local_variable_target_node(node); end
 
   # Dispatch enter and leave events for LocalVariableWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1774
+  # source://prism//lib/prism/dispatcher.rb#1830
   def visit_local_variable_write_node(node); end
 
   # Dispatch enter and leave events for MatchLastLineNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1780
+  # source://prism//lib/prism/dispatcher.rb#1836
   def visit_match_last_line_node(node); end
 
   # Dispatch enter and leave events for MatchPredicateNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1786
+  # source://prism//lib/prism/dispatcher.rb#1842
   def visit_match_predicate_node(node); end
 
   # Dispatch enter and leave events for MatchRequiredNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1792
+  # source://prism//lib/prism/dispatcher.rb#1848
   def visit_match_required_node(node); end
 
   # Dispatch enter and leave events for MatchWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1798
+  # source://prism//lib/prism/dispatcher.rb#1854
   def visit_match_write_node(node); end
 
   # Dispatch enter and leave events for MissingNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1804
+  # source://prism//lib/prism/dispatcher.rb#1860
   def visit_missing_node(node); end
 
   # Dispatch enter and leave events for ModuleNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1810
+  # source://prism//lib/prism/dispatcher.rb#1866
   def visit_module_node(node); end
 
   # Dispatch enter and leave events for MultiTargetNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1816
+  # source://prism//lib/prism/dispatcher.rb#1872
   def visit_multi_target_node(node); end
 
   # Dispatch enter and leave events for MultiWriteNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1822
+  # source://prism//lib/prism/dispatcher.rb#1878
   def visit_multi_write_node(node); end
 
   # Dispatch enter and leave events for NextNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1828
+  # source://prism//lib/prism/dispatcher.rb#1884
   def visit_next_node(node); end
 
   # Dispatch enter and leave events for NilNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1834
+  # source://prism//lib/prism/dispatcher.rb#1890
   def visit_nil_node(node); end
 
   # Dispatch enter and leave events for NoKeywordsParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1840
+  # source://prism//lib/prism/dispatcher.rb#1896
   def visit_no_keywords_parameter_node(node); end
+
+  # Dispatch enter and leave events for NumberedParametersNode nodes.
+  #
+  # source://prism//lib/prism/dispatcher.rb#1902
+  def visit_numbered_parameters_node(node); end
 
   # Dispatch enter and leave events for NumberedReferenceReadNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1846
+  # source://prism//lib/prism/dispatcher.rb#1908
   def visit_numbered_reference_read_node(node); end
 
   # Dispatch enter and leave events for OptionalKeywordParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1852
+  # source://prism//lib/prism/dispatcher.rb#1914
   def visit_optional_keyword_parameter_node(node); end
 
   # Dispatch enter and leave events for OptionalParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1858
+  # source://prism//lib/prism/dispatcher.rb#1920
   def visit_optional_parameter_node(node); end
 
   # Dispatch enter and leave events for OrNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1864
+  # source://prism//lib/prism/dispatcher.rb#1926
   def visit_or_node(node); end
 
   # Dispatch enter and leave events for ParametersNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1870
+  # source://prism//lib/prism/dispatcher.rb#1932
   def visit_parameters_node(node); end
 
   # Dispatch enter and leave events for ParenthesesNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1876
+  # source://prism//lib/prism/dispatcher.rb#1938
   def visit_parentheses_node(node); end
 
   # Dispatch enter and leave events for PinnedExpressionNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1882
+  # source://prism//lib/prism/dispatcher.rb#1944
   def visit_pinned_expression_node(node); end
 
   # Dispatch enter and leave events for PinnedVariableNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1888
+  # source://prism//lib/prism/dispatcher.rb#1950
   def visit_pinned_variable_node(node); end
 
   # Dispatch enter and leave events for PostExecutionNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1894
+  # source://prism//lib/prism/dispatcher.rb#1956
   def visit_post_execution_node(node); end
 
   # Dispatch enter and leave events for PreExecutionNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1900
+  # source://prism//lib/prism/dispatcher.rb#1962
   def visit_pre_execution_node(node); end
 
   # Dispatch enter and leave events for ProgramNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1906
+  # source://prism//lib/prism/dispatcher.rb#1968
   def visit_program_node(node); end
 
   # Dispatch enter and leave events for RangeNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1912
+  # source://prism//lib/prism/dispatcher.rb#1974
   def visit_range_node(node); end
 
   # Dispatch enter and leave events for RationalNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1918
+  # source://prism//lib/prism/dispatcher.rb#1980
   def visit_rational_node(node); end
 
   # Dispatch enter and leave events for RedoNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1924
+  # source://prism//lib/prism/dispatcher.rb#1986
   def visit_redo_node(node); end
 
   # Dispatch enter and leave events for RegularExpressionNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1930
+  # source://prism//lib/prism/dispatcher.rb#1992
   def visit_regular_expression_node(node); end
 
   # Dispatch enter and leave events for RequiredKeywordParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1936
+  # source://prism//lib/prism/dispatcher.rb#1998
   def visit_required_keyword_parameter_node(node); end
 
   # Dispatch enter and leave events for RequiredParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1942
+  # source://prism//lib/prism/dispatcher.rb#2004
   def visit_required_parameter_node(node); end
 
   # Dispatch enter and leave events for RescueModifierNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1948
+  # source://prism//lib/prism/dispatcher.rb#2010
   def visit_rescue_modifier_node(node); end
 
   # Dispatch enter and leave events for RescueNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1954
+  # source://prism//lib/prism/dispatcher.rb#2016
   def visit_rescue_node(node); end
 
   # Dispatch enter and leave events for RestParameterNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1960
+  # source://prism//lib/prism/dispatcher.rb#2022
   def visit_rest_parameter_node(node); end
 
   # Dispatch enter and leave events for RetryNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1966
+  # source://prism//lib/prism/dispatcher.rb#2028
   def visit_retry_node(node); end
 
   # Dispatch enter and leave events for ReturnNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1972
+  # source://prism//lib/prism/dispatcher.rb#2034
   def visit_return_node(node); end
 
   # Dispatch enter and leave events for SelfNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1978
+  # source://prism//lib/prism/dispatcher.rb#2040
   def visit_self_node(node); end
 
   # Dispatch enter and leave events for SingletonClassNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1984
+  # source://prism//lib/prism/dispatcher.rb#2046
   def visit_singleton_class_node(node); end
 
   # Dispatch enter and leave events for SourceEncodingNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1990
+  # source://prism//lib/prism/dispatcher.rb#2052
   def visit_source_encoding_node(node); end
 
   # Dispatch enter and leave events for SourceFileNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#1996
+  # source://prism//lib/prism/dispatcher.rb#2058
   def visit_source_file_node(node); end
 
   # Dispatch enter and leave events for SourceLineNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2002
+  # source://prism//lib/prism/dispatcher.rb#2064
   def visit_source_line_node(node); end
 
   # Dispatch enter and leave events for SplatNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2008
+  # source://prism//lib/prism/dispatcher.rb#2070
   def visit_splat_node(node); end
 
   # Dispatch enter and leave events for StatementsNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2014
+  # source://prism//lib/prism/dispatcher.rb#2076
   def visit_statements_node(node); end
-
-  # Dispatch enter and leave events for StringConcatNode nodes.
-  #
-  # source://prism//lib/prism/dispatcher.rb#2020
-  def visit_string_concat_node(node); end
 
   # Dispatch enter and leave events for StringNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2026
+  # source://prism//lib/prism/dispatcher.rb#2082
   def visit_string_node(node); end
 
   # Dispatch enter and leave events for SuperNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2032
+  # source://prism//lib/prism/dispatcher.rb#2088
   def visit_super_node(node); end
 
   # Dispatch enter and leave events for SymbolNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2038
+  # source://prism//lib/prism/dispatcher.rb#2094
   def visit_symbol_node(node); end
 
   # Dispatch enter and leave events for TrueNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2044
+  # source://prism//lib/prism/dispatcher.rb#2100
   def visit_true_node(node); end
 
   # Dispatch enter and leave events for UndefNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2050
+  # source://prism//lib/prism/dispatcher.rb#2106
   def visit_undef_node(node); end
 
   # Dispatch enter and leave events for UnlessNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2056
+  # source://prism//lib/prism/dispatcher.rb#2112
   def visit_unless_node(node); end
 
   # Dispatch enter and leave events for UntilNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2062
+  # source://prism//lib/prism/dispatcher.rb#2118
   def visit_until_node(node); end
 
   # Dispatch enter and leave events for WhenNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2068
+  # source://prism//lib/prism/dispatcher.rb#2124
   def visit_when_node(node); end
 
   # Dispatch enter and leave events for WhileNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2074
+  # source://prism//lib/prism/dispatcher.rb#2130
   def visit_while_node(node); end
 
   # Dispatch enter and leave events for XStringNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2080
+  # source://prism//lib/prism/dispatcher.rb#2136
   def visit_x_string_node(node); end
 
   # Dispatch enter and leave events for YieldNode nodes.
   #
-  # source://prism//lib/prism/dispatcher.rb#2086
+  # source://prism//lib/prism/dispatcher.rb#2142
   def visit_yield_node(node); end
+end
+
+# This visitor provides the ability to call Node#to_dot, which converts a
+# subtree into a graphviz dot graph.
+#
+# source://prism//lib/prism/dot_visitor.rb#13
+class Prism::DotVisitor < ::Prism::Visitor
+  # Initialize a new dot visitor.
+  #
+  # @return [DotVisitor] a new instance of DotVisitor
+  #
+  # source://prism//lib/prism/dot_visitor.rb#105
+  def initialize; end
+
+  # The digraph that is being built.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#102
+  def digraph; end
+
+  # Convert this visitor into a graphviz dot graph string.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#110
+  def to_dot; end
+
+  # Visit a AliasGlobalVariableNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#115
+  def visit_alias_global_variable_node(node); end
+
+  # Visit a AliasMethodNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#140
+  def visit_alias_method_node(node); end
+
+  # Visit a AlternationPatternNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#165
+  def visit_alternation_pattern_node(node); end
+
+  # Visit a AndNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#190
+  def visit_and_node(node); end
+
+  # Visit a ArgumentsNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#215
+  def visit_arguments_node(node); end
+
+  # Visit a ArrayNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#245
+  def visit_array_node(node); end
+
+  # Visit a ArrayPatternNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#285
+  def visit_array_pattern_node(node); end
+
+  # Visit a AssocNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#347
+  def visit_assoc_node(node); end
+
+  # Visit a AssocSplatNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#376
+  def visit_assoc_splat_node(node); end
+
+  # Visit a BackReferenceReadNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#399
+  def visit_back_reference_read_node(node); end
+
+  # Visit a BeginNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#416
+  def visit_begin_node(node); end
+
+  # Visit a BlockArgumentNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#464
+  def visit_block_argument_node(node); end
+
+  # Visit a BlockLocalVariableNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#487
+  def visit_block_local_variable_node(node); end
+
+  # Visit a BlockNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#504
+  def visit_block_node(node); end
+
+  # Visit a BlockParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#542
+  def visit_block_parameter_node(node); end
+
+  # Visit a BlockParametersNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#567
+  def visit_block_parameters_node(node); end
+
+  # Visit a BreakNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#610
+  def visit_break_node(node); end
+
+  # Visit a CallAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#633
+  def visit_call_and_write_node(node); end
+
+  # Visit a CallNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#679
+  def visit_call_node(node); end
+
+  # Visit a CallOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#737
+  def visit_call_operator_write_node(node); end
+
+  # Visit a CallOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#786
+  def visit_call_or_write_node(node); end
+
+  # Visit a CallTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#832
+  def visit_call_target_node(node); end
+
+  # Visit a CapturePatternNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#862
+  def visit_capture_pattern_node(node); end
+
+  # Visit a CaseMatchNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#887
+  def visit_case_match_node(node); end
+
+  # Visit a CaseNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#932
+  def visit_case_node(node); end
+
+  # Visit a ClassNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#977
+  def visit_class_node(node); end
+
+  # Visit a ClassVariableAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1024
+  def visit_class_variable_and_write_node(node); end
+
+  # Visit a ClassVariableOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1051
+  def visit_class_variable_operator_write_node(node); end
+
+  # Visit a ClassVariableOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1081
+  def visit_class_variable_or_write_node(node); end
+
+  # Visit a ClassVariableReadNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1108
+  def visit_class_variable_read_node(node); end
+
+  # Visit a ClassVariableTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1125
+  def visit_class_variable_target_node(node); end
+
+  # Visit a ClassVariableWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1142
+  def visit_class_variable_write_node(node); end
+
+  # Visit a ConstantAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1171
+  def visit_constant_and_write_node(node); end
+
+  # Visit a ConstantOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1198
+  def visit_constant_operator_write_node(node); end
+
+  # Visit a ConstantOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1228
+  def visit_constant_or_write_node(node); end
+
+  # Visit a ConstantPathAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1255
+  def visit_constant_path_and_write_node(node); end
+
+  # Visit a ConstantPathNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1280
+  def visit_constant_path_node(node); end
+
+  # Visit a ConstantPathOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1307
+  def visit_constant_path_operator_write_node(node); end
+
+  # Visit a ConstantPathOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1335
+  def visit_constant_path_or_write_node(node); end
+
+  # Visit a ConstantPathTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1360
+  def visit_constant_path_target_node(node); end
+
+  # Visit a ConstantPathWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1387
+  def visit_constant_path_write_node(node); end
+
+  # Visit a ConstantReadNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1412
+  def visit_constant_read_node(node); end
+
+  # Visit a ConstantTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1429
+  def visit_constant_target_node(node); end
+
+  # Visit a ConstantWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1446
+  def visit_constant_write_node(node); end
+
+  # Visit a DefNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1473
+  def visit_def_node(node); end
+
+  # Visit a DefinedNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1545
+  def visit_defined_node(node); end
+
+  # Visit a ElseNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1576
+  def visit_else_node(node); end
+
+  # Visit a EmbeddedStatementsNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1604
+  def visit_embedded_statements_node(node); end
+
+  # Visit a EmbeddedVariableNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1630
+  def visit_embedded_variable_node(node); end
+
+  # Visit a EnsureNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1651
+  def visit_ensure_node(node); end
+
+  # Visit a FalseNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1677
+  def visit_false_node(node); end
+
+  # Visit a FindPatternNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1691
+  def visit_find_pattern_node(node); end
+
+  # Visit a FlipFlopNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1742
+  def visit_flip_flop_node(node); end
+
+  # Visit a FloatNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1774
+  def visit_float_node(node); end
+
+  # Visit a ForNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1788
+  def visit_for_node(node); end
+
+  # Visit a ForwardingArgumentsNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1830
+  def visit_forwarding_arguments_node(node); end
+
+  # Visit a ForwardingParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1844
+  def visit_forwarding_parameter_node(node); end
+
+  # Visit a ForwardingSuperNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1858
+  def visit_forwarding_super_node(node); end
+
+  # Visit a GlobalVariableAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1878
+  def visit_global_variable_and_write_node(node); end
+
+  # Visit a GlobalVariableOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1905
+  def visit_global_variable_operator_write_node(node); end
+
+  # Visit a GlobalVariableOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1935
+  def visit_global_variable_or_write_node(node); end
+
+  # Visit a GlobalVariableReadNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1962
+  def visit_global_variable_read_node(node); end
+
+  # Visit a GlobalVariableTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1979
+  def visit_global_variable_target_node(node); end
+
+  # Visit a GlobalVariableWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#1996
+  def visit_global_variable_write_node(node); end
+
+  # Visit a HashNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2023
+  def visit_hash_node(node); end
+
+  # Visit a HashPatternNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2056
+  def visit_hash_pattern_node(node); end
+
+  # Visit a IfNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2105
+  def visit_if_node(node); end
+
+  # Visit a ImaginaryNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2150
+  def visit_imaginary_node(node); end
+
+  # Visit a ImplicitNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2168
+  def visit_implicit_node(node); end
+
+  # Visit a ImplicitRestNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2186
+  def visit_implicit_rest_node(node); end
+
+  # Visit a InNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2200
+  def visit_in_node(node); end
+
+  # Visit a IndexAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2232
+  def visit_index_and_write_node(node); end
+
+  # Visit a IndexOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2285
+  def visit_index_operator_write_node(node); end
+
+  # Visit a IndexOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2341
+  def visit_index_or_write_node(node); end
+
+  # Visit a IndexTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2394
+  def visit_index_target_node(node); end
+
+  # Visit a InstanceVariableAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2433
+  def visit_instance_variable_and_write_node(node); end
+
+  # Visit a InstanceVariableOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2460
+  def visit_instance_variable_operator_write_node(node); end
+
+  # Visit a InstanceVariableOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2490
+  def visit_instance_variable_or_write_node(node); end
+
+  # Visit a InstanceVariableReadNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2517
+  def visit_instance_variable_read_node(node); end
+
+  # Visit a InstanceVariableTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2534
+  def visit_instance_variable_target_node(node); end
+
+  # Visit a InstanceVariableWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2551
+  def visit_instance_variable_write_node(node); end
+
+  # Visit a IntegerNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2578
+  def visit_integer_node(node); end
+
+  # Visit a InterpolatedMatchLastLineNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2595
+  def visit_interpolated_match_last_line_node(node); end
+
+  # Visit a InterpolatedRegularExpressionNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2631
+  def visit_interpolated_regular_expression_node(node); end
+
+  # Visit a InterpolatedStringNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2667
+  def visit_interpolated_string_node(node); end
+
+  # Visit a InterpolatedSymbolNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2704
+  def visit_interpolated_symbol_node(node); end
+
+  # Visit a InterpolatedXStringNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2741
+  def visit_interpolated_x_string_node(node); end
+
+  # Visit a KeywordHashNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2774
+  def visit_keyword_hash_node(node); end
+
+  # Visit a KeywordRestParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2804
+  def visit_keyword_rest_parameter_node(node); end
+
+  # Visit a LambdaNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2829
+  def visit_lambda_node(node); end
+
+  # Visit a LocalVariableAndWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2870
+  def visit_local_variable_and_write_node(node); end
+
+  # Visit a LocalVariableOperatorWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2900
+  def visit_local_variable_operator_write_node(node); end
+
+  # Visit a LocalVariableOrWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2933
+  def visit_local_variable_or_write_node(node); end
+
+  # Visit a LocalVariableReadNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2963
+  def visit_local_variable_read_node(node); end
+
+  # Visit a LocalVariableTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#2983
+  def visit_local_variable_target_node(node); end
+
+  # Visit a LocalVariableWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3003
+  def visit_local_variable_write_node(node); end
+
+  # Visit a MatchLastLineNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3033
+  def visit_match_last_line_node(node); end
+
+  # Visit a MatchPredicateNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3062
+  def visit_match_predicate_node(node); end
+
+  # Visit a MatchRequiredNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3087
+  def visit_match_required_node(node); end
+
+  # Visit a MatchWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3112
+  def visit_match_write_node(node); end
+
+  # Visit a MissingNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3143
+  def visit_missing_node(node); end
+
+  # Visit a ModuleNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3157
+  def visit_module_node(node); end
+
+  # Visit a MultiTargetNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3193
+  def visit_multi_target_node(node); end
+
+  # Visit a MultiWriteNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3249
+  def visit_multi_write_node(node); end
+
+  # Visit a NextNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3312
+  def visit_next_node(node); end
+
+  # Visit a NilNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3335
+  def visit_nil_node(node); end
+
+  # Visit a NoKeywordsParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3349
+  def visit_no_keywords_parameter_node(node); end
+
+  # Visit a NumberedParametersNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3369
+  def visit_numbered_parameters_node(node); end
+
+  # Visit a NumberedReferenceReadNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3386
+  def visit_numbered_reference_read_node(node); end
+
+  # Visit a OptionalKeywordParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3403
+  def visit_optional_keyword_parameter_node(node); end
+
+  # Visit a OptionalParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3427
+  def visit_optional_parameter_node(node); end
+
+  # Visit a OrNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3454
+  def visit_or_node(node); end
+
+  # Visit a ParametersNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3479
+  def visit_parameters_node(node); end
+
+  # Visit a ParenthesesNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3563
+  def visit_parentheses_node(node); end
+
+  # Visit a PinnedExpressionNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3589
+  def visit_pinned_expression_node(node); end
+
+  # Visit a PinnedVariableNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3616
+  def visit_pinned_variable_node(node); end
+
+  # Visit a PostExecutionNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3637
+  def visit_post_execution_node(node); end
+
+  # Visit a PreExecutionNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3666
+  def visit_pre_execution_node(node); end
+
+  # Visit a ProgramNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3695
+  def visit_program_node(node); end
+
+  # Visit a RangeNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3716
+  def visit_range_node(node); end
+
+  # Visit a RationalNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3748
+  def visit_rational_node(node); end
+
+  # Visit a RedoNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3766
+  def visit_redo_node(node); end
+
+  # Visit a RegularExpressionNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3780
+  def visit_regular_expression_node(node); end
+
+  # Visit a RequiredKeywordParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3809
+  def visit_required_keyword_parameter_node(node); end
+
+  # Visit a RequiredParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3829
+  def visit_required_parameter_node(node); end
+
+  # Visit a RescueModifierNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3846
+  def visit_rescue_modifier_node(node); end
+
+  # Visit a RescueNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3871
+  def visit_rescue_node(node); end
+
+  # Visit a RestParameterNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3924
+  def visit_rest_parameter_node(node); end
+
+  # Visit a RetryNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3949
+  def visit_retry_node(node); end
+
+  # Visit a ReturnNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3963
+  def visit_return_node(node); end
+
+  # Visit a SelfNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#3986
+  def visit_self_node(node); end
+
+  # Visit a SingletonClassNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4000
+  def visit_singleton_class_node(node); end
+
+  # Visit a SourceEncodingNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4036
+  def visit_source_encoding_node(node); end
+
+  # Visit a SourceFileNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4050
+  def visit_source_file_node(node); end
+
+  # Visit a SourceLineNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4067
+  def visit_source_line_node(node); end
+
+  # Visit a SplatNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4081
+  def visit_splat_node(node); end
+
+  # Visit a StatementsNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4104
+  def visit_statements_node(node); end
+
+  # Visit a StringNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4131
+  def visit_string_node(node); end
+
+  # Visit a SuperNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4164
+  def visit_super_node(node); end
+
+  # Visit a SymbolNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4203
+  def visit_symbol_node(node); end
+
+  # Visit a TrueNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4238
+  def visit_true_node(node); end
+
+  # Visit a UndefNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4252
+  def visit_undef_node(node); end
+
+  # Visit a UnlessNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4282
+  def visit_unless_node(node); end
+
+  # Visit a UntilNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4325
+  def visit_until_node(node); end
+
+  # Visit a WhenNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4360
+  def visit_when_node(node); end
+
+  # Visit a WhileNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4396
+  def visit_while_node(node); end
+
+  # Visit a XStringNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4431
+  def visit_x_string_node(node); end
+
+  # Visit a YieldNode node.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4460
+  def visit_yield_node(node); end
+
+  private
+
+  # Inspect a node that has arguments_node_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4506
+  def arguments_node_flags_inspect(node); end
+
+  # Inspect a node that has array_node_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4514
+  def array_node_flags_inspect(node); end
+
+  # Inspect a node that has call_node_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4522
+  def call_node_flags_inspect(node); end
+
+  # Inspect a node that has encoding_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4532
+  def encoding_flags_inspect(node); end
+
+  # Inspect a node that has integer_base_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4541
+  def integer_base_flags_inspect(node); end
+
+  # Inspect a node that has keyword_hash_node_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4552
+  def keyword_hash_node_flags_inspect(node); end
+
+  # Inspect a location to display the start and end line and column numbers.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4500
+  def location_inspect(location); end
+
+  # Inspect a node that has loop_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4560
+  def loop_flags_inspect(node); end
+
+  # Generate a unique node ID for a node throughout the digraph.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4495
+  def node_id(node); end
+
+  # Inspect a node that has range_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4568
+  def range_flags_inspect(node); end
+
+  # Inspect a node that has regular_expression_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4576
+  def regular_expression_flags_inspect(node); end
+
+  # Inspect a node that has string_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4594
+  def string_flags_inspect(node); end
+
+  # Inspect a node that has symbol_flags flags to display the flags as a
+  # comma-separated list.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#4604
+  def symbol_flags_inspect(node); end
+end
+
+# source://prism//lib/prism/dot_visitor.rb#58
+class Prism::DotVisitor::Digraph
+  # @return [Digraph] a new instance of Digraph
+  #
+  # source://prism//lib/prism/dot_visitor.rb#61
+  def initialize; end
+
+  # source://prism//lib/prism/dot_visitor.rb#75
+  def edge(value); end
+
+  # Returns the value of attribute edges.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#59
+  def edges; end
+
+  # source://prism//lib/prism/dot_visitor.rb#67
+  def node(value); end
+
+  # Returns the value of attribute nodes.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#59
+  def nodes; end
+
+  # source://prism//lib/prism/dot_visitor.rb#79
+  def to_dot; end
+
+  # source://prism//lib/prism/dot_visitor.rb#71
+  def waypoint(value); end
+
+  # Returns the value of attribute waypoints.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#59
+  def waypoints; end
+end
+
+# source://prism//lib/prism/dot_visitor.rb#14
+class Prism::DotVisitor::Field
+  # @return [Field] a new instance of Field
+  #
+  # source://prism//lib/prism/dot_visitor.rb#17
+  def initialize(name, value, port); end
+
+  # Returns the value of attribute name.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#15
+  def name; end
+
+  # Returns the value of attribute port.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#15
+  def port; end
+
+  # source://prism//lib/prism/dot_visitor.rb#23
+  def to_dot; end
+
+  # Returns the value of attribute value.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#15
+  def value; end
+end
+
+# source://prism//lib/prism/dot_visitor.rb#32
+class Prism::DotVisitor::Table
+  # @return [Table] a new instance of Table
+  #
+  # source://prism//lib/prism/dot_visitor.rb#35
+  def initialize(name); end
+
+  # source://prism//lib/prism/dot_visitor.rb#40
+  def field(name, value = T.unsafe(nil), port: T.unsafe(nil)); end
+
+  # Returns the value of attribute fields.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#33
+  def fields; end
+
+  # Returns the value of attribute name.
+  #
+  # source://prism//lib/prism/dot_visitor.rb#33
+  def name; end
+
+  # source://prism//lib/prism/dot_visitor.rb#44
+  def to_dot; end
 end
 
 # Represents an `else` clause in a `case`, `if`, or `unless` statement.
@@ -9798,13 +11249,13 @@ end
 #     if a then b else c end
 #                 ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5234
+# source://prism//lib/prism/node.rb#5564
 class Prism::ElseNode < ::Prism::Node
   # def initialize: (else_keyword_loc: Location, statements: StatementsNode?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [ElseNode] a new instance of ElseNode
   #
-  # source://prism//lib/prism/node.rb#5245
+  # source://prism//lib/prism/node.rb#5575
   sig do
     params(
       else_keyword_loc: Prism::Location,
@@ -9817,42 +11268,42 @@ class Prism::ElseNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5253
+  # source://prism//lib/prism/node.rb#5583
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5258
+  # source://prism//lib/prism/node.rb#5588
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5270
+  # source://prism//lib/prism/node.rb#5600
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5263
+  # source://prism//lib/prism/node.rb#5593
   def compact_child_nodes; end
 
   # def copy: (**params) -> ElseNode
   #
-  # source://prism//lib/prism/node.rb#5275
+  # source://prism//lib/prism/node.rb#5605
   sig { params(params: T.untyped).returns(Prism::ElseNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5258
+  # source://prism//lib/prism/node.rb#5588
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5288
+  # source://prism//lib/prism/node.rb#5618
   sig do
     params(
       keys: T::Array[Symbol]
@@ -9862,36 +11313,36 @@ class Prism::ElseNode < ::Prism::Node
 
   # def else_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#5293
+  # source://prism//lib/prism/node.rb#5623
   sig { returns(String) }
   def else_keyword; end
 
   # attr_reader else_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5236
+  # source://prism//lib/prism/node.rb#5566
   sig { returns(Prism::Location) }
   def else_keyword_loc; end
 
   # def end_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5298
+  # source://prism//lib/prism/node.rb#5628
   sig { returns(T.nilable(String)) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#5242
+  # source://prism//lib/prism/node.rb#5572
   sig { returns(T.nilable(Prism::Location)) }
   def end_keyword_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5303
+  # source://prism//lib/prism/node.rb#5633
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#5239
+  # source://prism//lib/prism/node.rb#5569
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -9910,7 +11361,7 @@ class Prism::ElseNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5330
+  # source://prism//lib/prism/node.rb#5660
   def type; end
 
   class << self
@@ -9921,7 +11372,7 @@ class Prism::ElseNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5340
+    # source://prism//lib/prism/node.rb#5670
     def type; end
   end
 end
@@ -9929,12 +11380,19 @@ end
 # EmbDocComment objects correspond to comments that are surrounded by =begin
 # and =end.
 #
-# source://prism//lib/prism/parse_result.rb#231
+# source://prism//lib/prism/parse_result.rb#260
 class Prism::EmbDocComment < ::Prism::Comment
   # Returns a string representation of this comment.
   #
-  # source://prism//lib/prism/parse_result.rb#233
+  # source://prism//lib/prism/parse_result.rb#267
   def inspect; end
+
+  # This can only be true for inline comments.
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/parse_result.rb#262
+  def trailing?; end
 end
 
 # Represents an interpolated set of statements.
@@ -9942,13 +11400,13 @@ end
 #     "foo #{bar}"
 #          ^^^^^^
 #
-# source://prism//lib/prism/node.rb#5349
+# source://prism//lib/prism/node.rb#5679
 class Prism::EmbeddedStatementsNode < ::Prism::Node
   # def initialize: (opening_loc: Location, statements: StatementsNode?, closing_loc: Location, location: Location) -> void
   #
   # @return [EmbeddedStatementsNode] a new instance of EmbeddedStatementsNode
   #
-  # source://prism//lib/prism/node.rb#5360
+  # source://prism//lib/prism/node.rb#5690
   sig do
     params(
       opening_loc: Prism::Location,
@@ -9961,54 +11419,54 @@ class Prism::EmbeddedStatementsNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5368
+  # source://prism//lib/prism/node.rb#5698
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5373
+  # source://prism//lib/prism/node.rb#5703
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#5413
+  # source://prism//lib/prism/node.rb#5743
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5357
+  # source://prism//lib/prism/node.rb#5687
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5385
+  # source://prism//lib/prism/node.rb#5715
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5378
+  # source://prism//lib/prism/node.rb#5708
   def compact_child_nodes; end
 
   # def copy: (**params) -> EmbeddedStatementsNode
   #
-  # source://prism//lib/prism/node.rb#5390
+  # source://prism//lib/prism/node.rb#5720
   sig { params(params: T.untyped).returns(Prism::EmbeddedStatementsNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5373
+  # source://prism//lib/prism/node.rb#5703
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5403
+  # source://prism//lib/prism/node.rb#5733
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10018,24 +11476,24 @@ class Prism::EmbeddedStatementsNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5418
+  # source://prism//lib/prism/node.rb#5748
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#5408
+  # source://prism//lib/prism/node.rb#5738
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5351
+  # source://prism//lib/prism/node.rb#5681
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#5354
+  # source://prism//lib/prism/node.rb#5684
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -10054,7 +11512,7 @@ class Prism::EmbeddedStatementsNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5445
+  # source://prism//lib/prism/node.rb#5775
   def type; end
 
   class << self
@@ -10065,7 +11523,7 @@ class Prism::EmbeddedStatementsNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5455
+    # source://prism//lib/prism/node.rb#5785
     def type; end
   end
 end
@@ -10075,54 +11533,54 @@ end
 #     "foo #@bar"
 #          ^^^^^
 #
-# source://prism//lib/prism/node.rb#5464
+# source://prism//lib/prism/node.rb#5794
 class Prism::EmbeddedVariableNode < ::Prism::Node
   # def initialize: (operator_loc: Location, variable: Node, location: Location) -> void
   #
   # @return [EmbeddedVariableNode] a new instance of EmbeddedVariableNode
   #
-  # source://prism//lib/prism/node.rb#5472
+  # source://prism//lib/prism/node.rb#5802
   sig { params(operator_loc: Prism::Location, variable: Prism::Node, location: Prism::Location).void }
   def initialize(operator_loc, variable, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5479
+  # source://prism//lib/prism/node.rb#5809
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5484
+  # source://prism//lib/prism/node.rb#5814
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5494
+  # source://prism//lib/prism/node.rb#5824
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5489
+  # source://prism//lib/prism/node.rb#5819
   def compact_child_nodes; end
 
   # def copy: (**params) -> EmbeddedVariableNode
   #
-  # source://prism//lib/prism/node.rb#5499
+  # source://prism//lib/prism/node.rb#5829
   sig { params(params: T.untyped).returns(Prism::EmbeddedVariableNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5484
+  # source://prism//lib/prism/node.rb#5814
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5511
+  # source://prism//lib/prism/node.rb#5841
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10132,18 +11590,18 @@ class Prism::EmbeddedVariableNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5521
+  # source://prism//lib/prism/node.rb#5851
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#5516
+  # source://prism//lib/prism/node.rb#5846
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5466
+  # source://prism//lib/prism/node.rb#5796
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -10162,12 +11620,12 @@ class Prism::EmbeddedVariableNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5543
+  # source://prism//lib/prism/node.rb#5873
   def type; end
 
   # attr_reader variable: Node
   #
-  # source://prism//lib/prism/node.rb#5469
+  # source://prism//lib/prism/node.rb#5799
   sig { returns(Prism::Node) }
   def variable; end
 
@@ -10179,10 +11637,25 @@ class Prism::EmbeddedVariableNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5553
+    # source://prism//lib/prism/node.rb#5883
     def type; end
   end
 end
+
+# Flags for nodes that have unescaped content.
+#
+# source://prism//lib/prism/node.rb#17301
+module Prism::EncodingFlags; end
+
+# internal bytes forced the encoding to binary
+#
+# source://prism//lib/prism/node.rb#17306
+Prism::EncodingFlags::FORCED_BINARY_ENCODING = T.let(T.unsafe(nil), Integer)
+
+# internal bytes forced the encoding to UTF-8
+#
+# source://prism//lib/prism/node.rb#17303
+Prism::EncodingFlags::FORCED_UTF8_ENCODING = T.let(T.unsafe(nil), Integer)
 
 # Represents an `ensure` clause in a `begin` statement.
 #
@@ -10193,13 +11666,13 @@ end
 #       bar
 #     end
 #
-# source://prism//lib/prism/node.rb#5566
+# source://prism//lib/prism/node.rb#5896
 class Prism::EnsureNode < ::Prism::Node
   # def initialize: (ensure_keyword_loc: Location, statements: StatementsNode?, end_keyword_loc: Location, location: Location) -> void
   #
   # @return [EnsureNode] a new instance of EnsureNode
   #
-  # source://prism//lib/prism/node.rb#5577
+  # source://prism//lib/prism/node.rb#5907
   sig do
     params(
       ensure_keyword_loc: Prism::Location,
@@ -10212,42 +11685,42 @@ class Prism::EnsureNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5585
+  # source://prism//lib/prism/node.rb#5915
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5590
+  # source://prism//lib/prism/node.rb#5920
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5602
+  # source://prism//lib/prism/node.rb#5932
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5595
+  # source://prism//lib/prism/node.rb#5925
   def compact_child_nodes; end
 
   # def copy: (**params) -> EnsureNode
   #
-  # source://prism//lib/prism/node.rb#5607
+  # source://prism//lib/prism/node.rb#5937
   sig { params(params: T.untyped).returns(Prism::EnsureNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5590
+  # source://prism//lib/prism/node.rb#5920
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5620
+  # source://prism//lib/prism/node.rb#5950
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10257,36 +11730,36 @@ class Prism::EnsureNode < ::Prism::Node
 
   # def end_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#5630
+  # source://prism//lib/prism/node.rb#5960
   sig { returns(String) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5574
+  # source://prism//lib/prism/node.rb#5904
   sig { returns(Prism::Location) }
   def end_keyword_loc; end
 
   # def ensure_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#5625
+  # source://prism//lib/prism/node.rb#5955
   sig { returns(String) }
   def ensure_keyword; end
 
   # attr_reader ensure_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5568
+  # source://prism//lib/prism/node.rb#5898
   sig { returns(Prism::Location) }
   def ensure_keyword_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5635
+  # source://prism//lib/prism/node.rb#5965
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#5571
+  # source://prism//lib/prism/node.rb#5901
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -10305,7 +11778,7 @@ class Prism::EnsureNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5662
+  # source://prism//lib/prism/node.rb#5992
   def type; end
 
   class << self
@@ -10316,7 +11789,7 @@ class Prism::EnsureNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5672
+    # source://prism//lib/prism/node.rb#6002
     def type; end
   end
 end
@@ -10326,54 +11799,54 @@ end
 #     false
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#5681
+# source://prism//lib/prism/node.rb#6011
 class Prism::FalseNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [FalseNode] a new instance of FalseNode
   #
-  # source://prism//lib/prism/node.rb#5683
+  # source://prism//lib/prism/node.rb#6013
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5688
+  # source://prism//lib/prism/node.rb#6018
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5693
+  # source://prism//lib/prism/node.rb#6023
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5703
+  # source://prism//lib/prism/node.rb#6033
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5698
+  # source://prism//lib/prism/node.rb#6028
   def compact_child_nodes; end
 
   # def copy: (**params) -> FalseNode
   #
-  # source://prism//lib/prism/node.rb#5708
+  # source://prism//lib/prism/node.rb#6038
   sig { params(params: T.untyped).returns(Prism::FalseNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5693
+  # source://prism//lib/prism/node.rb#6023
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5718
+  # source://prism//lib/prism/node.rb#6048
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10383,7 +11856,7 @@ class Prism::FalseNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5723
+  # source://prism//lib/prism/node.rb#6053
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -10401,7 +11874,7 @@ class Prism::FalseNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5742
+  # source://prism//lib/prism/node.rb#6072
   def type; end
 
   class << self
@@ -10412,7 +11885,7 @@ class Prism::FalseNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5752
+    # source://prism//lib/prism/node.rb#6082
     def type; end
   end
 end
@@ -10428,13 +11901,13 @@ end
 #     foo in Foo(*bar, baz, *qux)
 #            ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5767
+# source://prism//lib/prism/node.rb#6097
 class Prism::FindPatternNode < ::Prism::Node
   # def initialize: (constant: Node?, left: Node, requireds: Array[Node], right: Node, opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [FindPatternNode] a new instance of FindPatternNode
   #
-  # source://prism//lib/prism/node.rb#5787
+  # source://prism//lib/prism/node.rb#6117
   sig do
     params(
       constant: T.nilable(Prism::Node),
@@ -10450,60 +11923,60 @@ class Prism::FindPatternNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5798
+  # source://prism//lib/prism/node.rb#6128
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5803
+  # source://prism//lib/prism/node.rb#6133
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5849
+  # source://prism//lib/prism/node.rb#6179
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#5784
+  # source://prism//lib/prism/node.rb#6114
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5818
+  # source://prism//lib/prism/node.rb#6148
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5808
+  # source://prism//lib/prism/node.rb#6138
   def compact_child_nodes; end
 
   # attr_reader constant: Node?
   #
-  # source://prism//lib/prism/node.rb#5769
+  # source://prism//lib/prism/node.rb#6099
   sig { returns(T.nilable(Prism::Node)) }
   def constant; end
 
   # def copy: (**params) -> FindPatternNode
   #
-  # source://prism//lib/prism/node.rb#5823
+  # source://prism//lib/prism/node.rb#6153
   sig { params(params: T.untyped).returns(Prism::FindPatternNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5803
+  # source://prism//lib/prism/node.rb#6133
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5839
+  # source://prism//lib/prism/node.rb#6169
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10513,36 +11986,36 @@ class Prism::FindPatternNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5854
+  # source://prism//lib/prism/node.rb#6184
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://prism//lib/prism/node.rb#5772
+  # source://prism//lib/prism/node.rb#6102
   sig { returns(Prism::Node) }
   def left; end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#5844
+  # source://prism//lib/prism/node.rb#6174
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#5781
+  # source://prism//lib/prism/node.rb#6111
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
   # attr_reader requireds: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5775
+  # source://prism//lib/prism/node.rb#6105
   sig { returns(T::Array[Prism::Node]) }
   def requireds; end
 
   # attr_reader right: Node
   #
-  # source://prism//lib/prism/node.rb#5778
+  # source://prism//lib/prism/node.rb#6108
   sig { returns(Prism::Node) }
   def right; end
 
@@ -10561,7 +12034,7 @@ class Prism::FindPatternNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#5886
+  # source://prism//lib/prism/node.rb#6216
   def type; end
 
   class << self
@@ -10572,7 +12045,7 @@ class Prism::FindPatternNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#5896
+    # source://prism//lib/prism/node.rb#6226
     def type; end
   end
 end
@@ -10582,62 +12055,62 @@ end
 #     baz if foo .. bar
 #            ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#5905
+# source://prism//lib/prism/node.rb#6235
 class Prism::FlipFlopNode < ::Prism::Node
-  # def initialize: (left: Node?, right: Node?, operator_loc: Location, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, left: Node?, right: Node?, operator_loc: Location, location: Location) -> void
   #
   # @return [FlipFlopNode] a new instance of FlipFlopNode
   #
-  # source://prism//lib/prism/node.rb#5919
+  # source://prism//lib/prism/node.rb#6249
   sig do
     params(
+      flags: Integer,
       left: T.nilable(Prism::Node),
       right: T.nilable(Prism::Node),
       operator_loc: Prism::Location,
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(left, right, operator_loc, flags, location); end
+  def initialize(flags, left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#5928
+  # source://prism//lib/prism/node.rb#6258
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5933
+  # source://prism//lib/prism/node.rb#6263
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#5946
+  # source://prism//lib/prism/node.rb#6276
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#5938
+  # source://prism//lib/prism/node.rb#6268
   def compact_child_nodes; end
 
   # def copy: (**params) -> FlipFlopNode
   #
-  # source://prism//lib/prism/node.rb#5951
+  # source://prism//lib/prism/node.rb#6281
   sig { params(params: T.untyped).returns(Prism::FlipFlopNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#5933
+  # source://prism//lib/prism/node.rb#6263
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#5965
+  # source://prism//lib/prism/node.rb#6295
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10649,36 +12122,36 @@ class Prism::FlipFlopNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#5975
+  # source://prism//lib/prism/node.rb#6300
   sig { returns(T::Boolean) }
   def exclude_end?; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#5980
+  # source://prism//lib/prism/node.rb#6310
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node?
   #
-  # source://prism//lib/prism/node.rb#5907
+  # source://prism//lib/prism/node.rb#6240
   sig { returns(T.nilable(Prism::Node)) }
   def left; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#5970
+  # source://prism//lib/prism/node.rb#6305
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#5913
+  # source://prism//lib/prism/node.rb#6246
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader right: Node?
   #
-  # source://prism//lib/prism/node.rb#5910
+  # source://prism//lib/prism/node.rb#6243
   sig { returns(T.nilable(Prism::Node)) }
   def right; end
 
@@ -10697,14 +12170,14 @@ class Prism::FlipFlopNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6014
+  # source://prism//lib/prism/node.rb#6344
   def type; end
 
   private
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#5916
+  # source://prism//lib/prism/node.rb#6237
   sig { returns(Integer) }
   def flags; end
 
@@ -10716,7 +12189,7 @@ class Prism::FlipFlopNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6024
+    # source://prism//lib/prism/node.rb#6354
     def type; end
   end
 end
@@ -10726,54 +12199,54 @@ end
 #     1.0
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#6033
+# source://prism//lib/prism/node.rb#6363
 class Prism::FloatNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [FloatNode] a new instance of FloatNode
   #
-  # source://prism//lib/prism/node.rb#6035
+  # source://prism//lib/prism/node.rb#6365
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6040
+  # source://prism//lib/prism/node.rb#6370
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6045
+  # source://prism//lib/prism/node.rb#6375
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6055
+  # source://prism//lib/prism/node.rb#6385
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6050
+  # source://prism//lib/prism/node.rb#6380
   def compact_child_nodes; end
 
   # def copy: (**params) -> FloatNode
   #
-  # source://prism//lib/prism/node.rb#6060
+  # source://prism//lib/prism/node.rb#6390
   sig { params(params: T.untyped).returns(Prism::FloatNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6045
+  # source://prism//lib/prism/node.rb#6375
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6070
+  # source://prism//lib/prism/node.rb#6400
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10783,7 +12256,7 @@ class Prism::FloatNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6075
+  # source://prism//lib/prism/node.rb#6405
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -10801,12 +12274,12 @@ class Prism::FloatNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6094
+  # source://prism//lib/prism/node.rb#6424
   def type; end
 
   # Returns the value of the node as a Ruby Float.
   #
-  # source://prism//lib/prism/node_ext.rb#21
+  # source://prism//lib/prism/node_ext.rb#62
   def value; end
 
   class << self
@@ -10817,7 +12290,7 @@ class Prism::FloatNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6104
+    # source://prism//lib/prism/node.rb#6434
     def type; end
   end
 end
@@ -10827,13 +12300,13 @@ end
 #     for i in a end
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6113
+# source://prism//lib/prism/node.rb#6443
 class Prism::ForNode < ::Prism::Node
   # def initialize: (index: Node, collection: Node, statements: StatementsNode?, for_keyword_loc: Location, in_keyword_loc: Location, do_keyword_loc: Location?, end_keyword_loc: Location, location: Location) -> void
   #
   # @return [ForNode] a new instance of ForNode
   #
-  # source://prism//lib/prism/node.rb#6136
+  # source://prism//lib/prism/node.rb#6466
   sig do
     params(
       index: Prism::Node,
@@ -10850,48 +12323,48 @@ class Prism::ForNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6148
+  # source://prism//lib/prism/node.rb#6478
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6153
+  # source://prism//lib/prism/node.rb#6483
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # attr_reader collection: Node
   #
-  # source://prism//lib/prism/node.rb#6118
+  # source://prism//lib/prism/node.rb#6448
   sig { returns(Prism::Node) }
   def collection; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6167
+  # source://prism//lib/prism/node.rb#6497
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6158
+  # source://prism//lib/prism/node.rb#6488
   def compact_child_nodes; end
 
   # def copy: (**params) -> ForNode
   #
-  # source://prism//lib/prism/node.rb#6172
+  # source://prism//lib/prism/node.rb#6502
   sig { params(params: T.untyped).returns(Prism::ForNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6153
+  # source://prism//lib/prism/node.rb#6483
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6189
+  # source://prism//lib/prism/node.rb#6519
   sig do
     params(
       keys: T::Array[Symbol]
@@ -10901,66 +12374,66 @@ class Prism::ForNode < ::Prism::Node
 
   # def do_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#6204
+  # source://prism//lib/prism/node.rb#6534
   sig { returns(T.nilable(String)) }
   def do_keyword; end
 
   # attr_reader do_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#6130
+  # source://prism//lib/prism/node.rb#6460
   sig { returns(T.nilable(Prism::Location)) }
   def do_keyword_loc; end
 
   # def end_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#6209
+  # source://prism//lib/prism/node.rb#6539
   sig { returns(String) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6133
+  # source://prism//lib/prism/node.rb#6463
   sig { returns(Prism::Location) }
   def end_keyword_loc; end
 
   # def for_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#6194
+  # source://prism//lib/prism/node.rb#6524
   sig { returns(String) }
   def for_keyword; end
 
   # attr_reader for_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6124
+  # source://prism//lib/prism/node.rb#6454
   sig { returns(Prism::Location) }
   def for_keyword_loc; end
 
   # def in_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#6199
+  # source://prism//lib/prism/node.rb#6529
   sig { returns(String) }
   def in_keyword; end
 
   # attr_reader in_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6127
+  # source://prism//lib/prism/node.rb#6457
   sig { returns(Prism::Location) }
   def in_keyword_loc; end
 
   # attr_reader index: Node
   #
-  # source://prism//lib/prism/node.rb#6115
+  # source://prism//lib/prism/node.rb#6445
   sig { returns(Prism::Node) }
   def index; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6214
+  # source://prism//lib/prism/node.rb#6544
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#6121
+  # source://prism//lib/prism/node.rb#6451
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -10979,7 +12452,7 @@ class Prism::ForNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6247
+  # source://prism//lib/prism/node.rb#6577
   def type; end
 
   class << self
@@ -10990,7 +12463,7 @@ class Prism::ForNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6257
+    # source://prism//lib/prism/node.rb#6587
     def type; end
   end
 end
@@ -11002,54 +12475,54 @@ end
 #           ^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#6268
+# source://prism//lib/prism/node.rb#6598
 class Prism::ForwardingArgumentsNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [ForwardingArgumentsNode] a new instance of ForwardingArgumentsNode
   #
-  # source://prism//lib/prism/node.rb#6270
+  # source://prism//lib/prism/node.rb#6600
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6275
+  # source://prism//lib/prism/node.rb#6605
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6280
+  # source://prism//lib/prism/node.rb#6610
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6290
+  # source://prism//lib/prism/node.rb#6620
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6285
+  # source://prism//lib/prism/node.rb#6615
   def compact_child_nodes; end
 
   # def copy: (**params) -> ForwardingArgumentsNode
   #
-  # source://prism//lib/prism/node.rb#6295
+  # source://prism//lib/prism/node.rb#6625
   sig { params(params: T.untyped).returns(Prism::ForwardingArgumentsNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6280
+  # source://prism//lib/prism/node.rb#6610
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6305
+  # source://prism//lib/prism/node.rb#6635
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11059,7 +12532,7 @@ class Prism::ForwardingArgumentsNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6310
+  # source://prism//lib/prism/node.rb#6640
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -11077,7 +12550,7 @@ class Prism::ForwardingArgumentsNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6329
+  # source://prism//lib/prism/node.rb#6659
   def type; end
 
   class << self
@@ -11088,7 +12561,7 @@ class Prism::ForwardingArgumentsNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6339
+    # source://prism//lib/prism/node.rb#6669
     def type; end
   end
 end
@@ -11099,54 +12572,54 @@ end
 #             ^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#6349
+# source://prism//lib/prism/node.rb#6679
 class Prism::ForwardingParameterNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [ForwardingParameterNode] a new instance of ForwardingParameterNode
   #
-  # source://prism//lib/prism/node.rb#6351
+  # source://prism//lib/prism/node.rb#6681
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6356
+  # source://prism//lib/prism/node.rb#6686
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6361
+  # source://prism//lib/prism/node.rb#6691
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6371
+  # source://prism//lib/prism/node.rb#6701
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6366
+  # source://prism//lib/prism/node.rb#6696
   def compact_child_nodes; end
 
   # def copy: (**params) -> ForwardingParameterNode
   #
-  # source://prism//lib/prism/node.rb#6376
+  # source://prism//lib/prism/node.rb#6706
   sig { params(params: T.untyped).returns(Prism::ForwardingParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6361
+  # source://prism//lib/prism/node.rb#6691
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6386
+  # source://prism//lib/prism/node.rb#6716
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11156,7 +12629,7 @@ class Prism::ForwardingParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6391
+  # source://prism//lib/prism/node.rb#6721
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -11174,7 +12647,7 @@ class Prism::ForwardingParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6410
+  # source://prism//lib/prism/node.rb#6740
   def type; end
 
   class << self
@@ -11185,7 +12658,7 @@ class Prism::ForwardingParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6420
+    # source://prism//lib/prism/node.rb#6750
     def type; end
   end
 end
@@ -11195,60 +12668,60 @@ end
 #     super
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#6429
+# source://prism//lib/prism/node.rb#6759
 class Prism::ForwardingSuperNode < ::Prism::Node
   # def initialize: (block: BlockNode?, location: Location) -> void
   #
   # @return [ForwardingSuperNode] a new instance of ForwardingSuperNode
   #
-  # source://prism//lib/prism/node.rb#6434
+  # source://prism//lib/prism/node.rb#6764
   sig { params(block: T.nilable(Prism::BlockNode), location: Prism::Location).void }
   def initialize(block, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6440
+  # source://prism//lib/prism/node.rb#6770
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader block: BlockNode?
   #
-  # source://prism//lib/prism/node.rb#6431
+  # source://prism//lib/prism/node.rb#6761
   sig { returns(T.nilable(Prism::BlockNode)) }
   def block; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6445
+  # source://prism//lib/prism/node.rb#6775
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6457
+  # source://prism//lib/prism/node.rb#6787
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6450
+  # source://prism//lib/prism/node.rb#6780
   def compact_child_nodes; end
 
   # def copy: (**params) -> ForwardingSuperNode
   #
-  # source://prism//lib/prism/node.rb#6462
+  # source://prism//lib/prism/node.rb#6792
   sig { params(params: T.untyped).returns(Prism::ForwardingSuperNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6445
+  # source://prism//lib/prism/node.rb#6775
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6473
+  # source://prism//lib/prism/node.rb#6803
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11258,7 +12731,7 @@ class Prism::ForwardingSuperNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6478
+  # source://prism//lib/prism/node.rb#6808
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -11276,7 +12749,7 @@ class Prism::ForwardingSuperNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6503
+  # source://prism//lib/prism/node.rb#6833
   def type; end
 
   class << self
@@ -11287,7 +12760,7 @@ class Prism::ForwardingSuperNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6513
+    # source://prism//lib/prism/node.rb#6843
     def type; end
   end
 end
@@ -11297,13 +12770,13 @@ end
 #     $target &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6522
+# source://prism//lib/prism/node.rb#6852
 class Prism::GlobalVariableAndWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [GlobalVariableAndWriteNode] a new instance of GlobalVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#6536
+  # source://prism//lib/prism/node.rb#6866
   sig do
     params(
       name: Symbol,
@@ -11317,42 +12790,42 @@ class Prism::GlobalVariableAndWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6545
+  # source://prism//lib/prism/node.rb#6875
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6550
+  # source://prism//lib/prism/node.rb#6880
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6560
+  # source://prism//lib/prism/node.rb#6890
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6555
+  # source://prism//lib/prism/node.rb#6885
   def compact_child_nodes; end
 
   # def copy: (**params) -> GlobalVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#6565
+  # source://prism//lib/prism/node.rb#6895
   sig { params(params: T.untyped).returns(Prism::GlobalVariableAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6550
+  # source://prism//lib/prism/node.rb#6880
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6579
+  # source://prism//lib/prism/node.rb#6909
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11362,30 +12835,30 @@ class Prism::GlobalVariableAndWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6589
+  # source://prism//lib/prism/node.rb#6919
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#6524
+  # source://prism//lib/prism/node.rb#6854
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6527
+  # source://prism//lib/prism/node.rb#6857
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#6584
+  # source://prism//lib/prism/node.rb#6914
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6530
+  # source://prism//lib/prism/node.rb#6860
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -11404,12 +12877,12 @@ class Prism::GlobalVariableAndWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6613
+  # source://prism//lib/prism/node.rb#6943
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#6533
+  # source://prism//lib/prism/node.rb#6863
   sig { returns(Prism::Node) }
   def value; end
 
@@ -11421,7 +12894,7 @@ class Prism::GlobalVariableAndWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6623
+    # source://prism//lib/prism/node.rb#6953
     def type; end
   end
 end
@@ -11431,13 +12904,13 @@ end
 #     $target += value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6632
+# source://prism//lib/prism/node.rb#6962
 class Prism::GlobalVariableOperatorWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
   #
   # @return [GlobalVariableOperatorWriteNode] a new instance of GlobalVariableOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#6649
+  # source://prism//lib/prism/node.rb#6979
   sig do
     params(
       name: Symbol,
@@ -11452,42 +12925,42 @@ class Prism::GlobalVariableOperatorWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6659
+  # source://prism//lib/prism/node.rb#6989
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6664
+  # source://prism//lib/prism/node.rb#6994
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6674
+  # source://prism//lib/prism/node.rb#7004
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6669
+  # source://prism//lib/prism/node.rb#6999
   def compact_child_nodes; end
 
   # def copy: (**params) -> GlobalVariableOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#6679
+  # source://prism//lib/prism/node.rb#7009
   sig { params(params: T.untyped).returns(Prism::GlobalVariableOperatorWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6664
+  # source://prism//lib/prism/node.rb#6994
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6694
+  # source://prism//lib/prism/node.rb#7024
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11497,30 +12970,30 @@ class Prism::GlobalVariableOperatorWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6699
+  # source://prism//lib/prism/node.rb#7029
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#6634
+  # source://prism//lib/prism/node.rb#6964
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6637
+  # source://prism//lib/prism/node.rb#6967
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://prism//lib/prism/node.rb#6646
+  # source://prism//lib/prism/node.rb#6976
   sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6640
+  # source://prism//lib/prism/node.rb#6970
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -11539,12 +13012,12 @@ class Prism::GlobalVariableOperatorWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6724
+  # source://prism//lib/prism/node.rb#7054
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#6643
+  # source://prism//lib/prism/node.rb#6973
   sig { returns(Prism::Node) }
   def value; end
 
@@ -11556,7 +13029,7 @@ class Prism::GlobalVariableOperatorWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6734
+    # source://prism//lib/prism/node.rb#7064
     def type; end
   end
 end
@@ -11566,13 +13039,13 @@ end
 #     $target ||= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#6743
+# source://prism//lib/prism/node.rb#7073
 class Prism::GlobalVariableOrWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [GlobalVariableOrWriteNode] a new instance of GlobalVariableOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#6757
+  # source://prism//lib/prism/node.rb#7087
   sig do
     params(
       name: Symbol,
@@ -11586,42 +13059,42 @@ class Prism::GlobalVariableOrWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6766
+  # source://prism//lib/prism/node.rb#7096
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6771
+  # source://prism//lib/prism/node.rb#7101
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6781
+  # source://prism//lib/prism/node.rb#7111
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6776
+  # source://prism//lib/prism/node.rb#7106
   def compact_child_nodes; end
 
   # def copy: (**params) -> GlobalVariableOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#6786
+  # source://prism//lib/prism/node.rb#7116
   sig { params(params: T.untyped).returns(Prism::GlobalVariableOrWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6771
+  # source://prism//lib/prism/node.rb#7101
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6800
+  # source://prism//lib/prism/node.rb#7130
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11631,30 +13104,30 @@ class Prism::GlobalVariableOrWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6810
+  # source://prism//lib/prism/node.rb#7140
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#6745
+  # source://prism//lib/prism/node.rb#7075
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6748
+  # source://prism//lib/prism/node.rb#7078
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#6805
+  # source://prism//lib/prism/node.rb#7135
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#6751
+  # source://prism//lib/prism/node.rb#7081
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -11673,12 +13146,12 @@ class Prism::GlobalVariableOrWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6834
+  # source://prism//lib/prism/node.rb#7164
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#6754
+  # source://prism//lib/prism/node.rb#7084
   sig { returns(Prism::Node) }
   def value; end
 
@@ -11690,7 +13163,7 @@ class Prism::GlobalVariableOrWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6844
+    # source://prism//lib/prism/node.rb#7174
     def type; end
   end
 end
@@ -11700,54 +13173,54 @@ end
 #     $foo
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#6853
+# source://prism//lib/prism/node.rb#7183
 class Prism::GlobalVariableReadNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [GlobalVariableReadNode] a new instance of GlobalVariableReadNode
   #
-  # source://prism//lib/prism/node.rb#6858
+  # source://prism//lib/prism/node.rb#7188
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6864
+  # source://prism//lib/prism/node.rb#7194
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6869
+  # source://prism//lib/prism/node.rb#7199
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6879
+  # source://prism//lib/prism/node.rb#7209
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6874
+  # source://prism//lib/prism/node.rb#7204
   def compact_child_nodes; end
 
   # def copy: (**params) -> GlobalVariableReadNode
   #
-  # source://prism//lib/prism/node.rb#6884
+  # source://prism//lib/prism/node.rb#7214
   sig { params(params: T.untyped).returns(Prism::GlobalVariableReadNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6869
+  # source://prism//lib/prism/node.rb#7199
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6895
+  # source://prism//lib/prism/node.rb#7225
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11757,12 +13230,12 @@ class Prism::GlobalVariableReadNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6900
+  # source://prism//lib/prism/node.rb#7230
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#6855
+  # source://prism//lib/prism/node.rb#7185
   sig { returns(Symbol) }
   def name; end
 
@@ -11781,7 +13254,7 @@ class Prism::GlobalVariableReadNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#6920
+  # source://prism//lib/prism/node.rb#7250
   def type; end
 
   class << self
@@ -11792,7 +13265,7 @@ class Prism::GlobalVariableReadNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#6930
+    # source://prism//lib/prism/node.rb#7260
     def type; end
   end
 end
@@ -11802,54 +13275,54 @@ end
 #     $foo, $bar = baz
 #     ^^^^  ^^^^
 #
-# source://prism//lib/prism/node.rb#6939
+# source://prism//lib/prism/node.rb#7269
 class Prism::GlobalVariableTargetNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [GlobalVariableTargetNode] a new instance of GlobalVariableTargetNode
   #
-  # source://prism//lib/prism/node.rb#6944
+  # source://prism//lib/prism/node.rb#7274
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#6950
+  # source://prism//lib/prism/node.rb#7280
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6955
+  # source://prism//lib/prism/node.rb#7285
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#6965
+  # source://prism//lib/prism/node.rb#7295
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#6960
+  # source://prism//lib/prism/node.rb#7290
   def compact_child_nodes; end
 
   # def copy: (**params) -> GlobalVariableTargetNode
   #
-  # source://prism//lib/prism/node.rb#6970
+  # source://prism//lib/prism/node.rb#7300
   sig { params(params: T.untyped).returns(Prism::GlobalVariableTargetNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#6955
+  # source://prism//lib/prism/node.rb#7285
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#6981
+  # source://prism//lib/prism/node.rb#7311
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11859,12 +13332,12 @@ class Prism::GlobalVariableTargetNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#6986
+  # source://prism//lib/prism/node.rb#7316
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#6941
+  # source://prism//lib/prism/node.rb#7271
   sig { returns(Symbol) }
   def name; end
 
@@ -11883,7 +13356,7 @@ class Prism::GlobalVariableTargetNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7006
+  # source://prism//lib/prism/node.rb#7336
   def type; end
 
   class << self
@@ -11894,7 +13367,7 @@ class Prism::GlobalVariableTargetNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7016
+    # source://prism//lib/prism/node.rb#7346
     def type; end
   end
 end
@@ -11904,13 +13377,13 @@ end
 #     $foo = 1
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7025
+# source://prism//lib/prism/node.rb#7355
 class Prism::GlobalVariableWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [GlobalVariableWriteNode] a new instance of GlobalVariableWriteNode
   #
-  # source://prism//lib/prism/node.rb#7039
+  # source://prism//lib/prism/node.rb#7369
   sig do
     params(
       name: Symbol,
@@ -11924,42 +13397,42 @@ class Prism::GlobalVariableWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7048
+  # source://prism//lib/prism/node.rb#7378
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7053
+  # source://prism//lib/prism/node.rb#7383
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7063
+  # source://prism//lib/prism/node.rb#7393
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7058
+  # source://prism//lib/prism/node.rb#7388
   def compact_child_nodes; end
 
   # def copy: (**params) -> GlobalVariableWriteNode
   #
-  # source://prism//lib/prism/node.rb#7068
+  # source://prism//lib/prism/node.rb#7398
   sig { params(params: T.untyped).returns(Prism::GlobalVariableWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7053
+  # source://prism//lib/prism/node.rb#7383
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7082
+  # source://prism//lib/prism/node.rb#7412
   sig do
     params(
       keys: T::Array[Symbol]
@@ -11969,30 +13442,30 @@ class Prism::GlobalVariableWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7092
+  # source://prism//lib/prism/node.rb#7422
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#7027
+  # source://prism//lib/prism/node.rb#7357
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7030
+  # source://prism//lib/prism/node.rb#7360
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#7087
+  # source://prism//lib/prism/node.rb#7417
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7036
+  # source://prism//lib/prism/node.rb#7366
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -12011,12 +13484,12 @@ class Prism::GlobalVariableWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7116
+  # source://prism//lib/prism/node.rb#7446
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#7033
+  # source://prism//lib/prism/node.rb#7363
   sig { returns(Prism::Node) }
   def value; end
 
@@ -12028,7 +13501,7 @@ class Prism::GlobalVariableWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7126
+    # source://prism//lib/prism/node.rb#7456
     def type; end
   end
 end
@@ -12038,13 +13511,13 @@ end
 #     { a => b }
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7135
+# source://prism//lib/prism/node.rb#7465
 class Prism::HashNode < ::Prism::Node
   # def initialize: (opening_loc: Location, elements: Array[Node], closing_loc: Location, location: Location) -> void
   #
   # @return [HashNode] a new instance of HashNode
   #
-  # source://prism//lib/prism/node.rb#7146
+  # source://prism//lib/prism/node.rb#7476
   sig do
     params(
       opening_loc: Prism::Location,
@@ -12057,54 +13530,54 @@ class Prism::HashNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7154
+  # source://prism//lib/prism/node.rb#7484
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7159
+  # source://prism//lib/prism/node.rb#7489
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#7197
+  # source://prism//lib/prism/node.rb#7527
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7143
+  # source://prism//lib/prism/node.rb#7473
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7169
+  # source://prism//lib/prism/node.rb#7499
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7164
+  # source://prism//lib/prism/node.rb#7494
   def compact_child_nodes; end
 
   # def copy: (**params) -> HashNode
   #
-  # source://prism//lib/prism/node.rb#7174
+  # source://prism//lib/prism/node.rb#7504
   sig { params(params: T.untyped).returns(Prism::HashNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7159
+  # source://prism//lib/prism/node.rb#7489
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7187
+  # source://prism//lib/prism/node.rb#7517
   sig do
     params(
       keys: T::Array[Symbol]
@@ -12114,24 +13587,24 @@ class Prism::HashNode < ::Prism::Node
 
   # attr_reader elements: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7140
+  # source://prism//lib/prism/node.rb#7470
   sig { returns(T::Array[Prism::Node]) }
   def elements; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7202
+  # source://prism//lib/prism/node.rb#7532
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#7192
+  # source://prism//lib/prism/node.rb#7522
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7137
+  # source://prism//lib/prism/node.rb#7467
   sig { returns(Prism::Location) }
   def opening_loc; end
 
@@ -12150,7 +13623,7 @@ class Prism::HashNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7224
+  # source://prism//lib/prism/node.rb#7554
   def type; end
 
   class << self
@@ -12161,7 +13634,7 @@ class Prism::HashNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7234
+    # source://prism//lib/prism/node.rb#7564
     def type; end
   end
 end
@@ -12174,13 +13647,13 @@ end
 #     foo => { a: 1, b: 2, **c }
 #            ^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7246
+# source://prism//lib/prism/node.rb#7576
 class Prism::HashPatternNode < ::Prism::Node
   # def initialize: (constant: Node?, elements: Array[Node], rest: Node?, opening_loc: Location?, closing_loc: Location?, location: Location) -> void
   #
   # @return [HashPatternNode] a new instance of HashPatternNode
   #
-  # source://prism//lib/prism/node.rb#7263
+  # source://prism//lib/prism/node.rb#7593
   sig do
     params(
       constant: T.nilable(Prism::Node),
@@ -12195,60 +13668,60 @@ class Prism::HashPatternNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7273
+  # source://prism//lib/prism/node.rb#7603
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7278
+  # source://prism//lib/prism/node.rb#7608
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#7322
+  # source://prism//lib/prism/node.rb#7652
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#7260
+  # source://prism//lib/prism/node.rb#7590
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7292
+  # source://prism//lib/prism/node.rb#7622
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7283
+  # source://prism//lib/prism/node.rb#7613
   def compact_child_nodes; end
 
   # attr_reader constant: Node?
   #
-  # source://prism//lib/prism/node.rb#7248
+  # source://prism//lib/prism/node.rb#7578
   sig { returns(T.nilable(Prism::Node)) }
   def constant; end
 
   # def copy: (**params) -> HashPatternNode
   #
-  # source://prism//lib/prism/node.rb#7297
+  # source://prism//lib/prism/node.rb#7627
   sig { params(params: T.untyped).returns(Prism::HashPatternNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7278
+  # source://prism//lib/prism/node.rb#7608
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7312
+  # source://prism//lib/prism/node.rb#7642
   sig do
     params(
       keys: T::Array[Symbol]
@@ -12258,30 +13731,30 @@ class Prism::HashPatternNode < ::Prism::Node
 
   # attr_reader elements: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7251
+  # source://prism//lib/prism/node.rb#7581
   sig { returns(T::Array[Prism::Node]) }
   def elements; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7327
+  # source://prism//lib/prism/node.rb#7657
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#7317
+  # source://prism//lib/prism/node.rb#7647
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#7257
+  # source://prism//lib/prism/node.rb#7587
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
   # attr_reader rest: Node?
   #
-  # source://prism//lib/prism/node.rb#7254
+  # source://prism//lib/prism/node.rb#7584
   sig { returns(T.nilable(Prism::Node)) }
   def rest; end
 
@@ -12300,7 +13773,7 @@ class Prism::HashPatternNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7361
+  # source://prism//lib/prism/node.rb#7691
   def type; end
 
   class << self
@@ -12311,9 +13784,19 @@ class Prism::HashPatternNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7371
+    # source://prism//lib/prism/node.rb#7701
     def type; end
   end
+end
+
+# source://prism//lib/prism/node_ext.rb#35
+module Prism::HeredocQuery
+  # Returns true if this node was represented as a heredoc in the source code.
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node_ext.rb#37
+  def heredoc?; end
 end
 
 # Represents the use of the `if` keyword, either in the block form or the modifier form.
@@ -12324,69 +13807,70 @@ end
 #     if foo then bar end
 #     ^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7383
+# source://prism//lib/prism/node.rb#7713
 class Prism::IfNode < ::Prism::Node
-  # def initialize: (if_keyword_loc: Location?, predicate: Node, statements: StatementsNode?, consequent: Node?, end_keyword_loc: Location?, location: Location) -> void
+  # def initialize: (if_keyword_loc: Location?, predicate: Node, then_keyword_loc: Location?, statements: StatementsNode?, consequent: Node?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [IfNode] a new instance of IfNode
   #
-  # source://prism//lib/prism/node.rb#7400
+  # source://prism//lib/prism/node.rb#7733
   sig do
     params(
       if_keyword_loc: T.nilable(Prism::Location),
       predicate: Prism::Node,
+      then_keyword_loc: T.nilable(Prism::Location),
       statements: T.nilable(Prism::StatementsNode),
       consequent: T.nilable(Prism::Node),
       end_keyword_loc: T.nilable(Prism::Location),
       location: Prism::Location
     ).void
   end
-  def initialize(if_keyword_loc, predicate, statements, consequent, end_keyword_loc, location); end
+  def initialize(if_keyword_loc, predicate, then_keyword_loc, statements, consequent, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7410
+  # source://prism//lib/prism/node.rb#7744
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7419
+  # source://prism//lib/prism/node.rb#7753
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7433
+  # source://prism//lib/prism/node.rb#7767
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7424
+  # source://prism//lib/prism/node.rb#7758
   def compact_child_nodes; end
 
   # attr_reader consequent: Node?
   #
-  # source://prism//lib/prism/node.rb#7394
+  # source://prism//lib/prism/node.rb#7727
   sig { returns(T.nilable(Prism::Node)) }
   def consequent; end
 
   # def copy: (**params) -> IfNode
   #
-  # source://prism//lib/prism/node.rb#7438
+  # source://prism//lib/prism/node.rb#7772
   sig { params(params: T.untyped).returns(Prism::IfNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7419
+  # source://prism//lib/prism/node.rb#7753
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7453
+  # source://prism//lib/prism/node.rb#7788
   sig do
     params(
       keys: T::Array[Symbol]
@@ -12396,47 +13880,59 @@ class Prism::IfNode < ::Prism::Node
 
   # def end_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#7463
+  # source://prism//lib/prism/node.rb#7803
   sig { returns(T.nilable(String)) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#7397
+  # source://prism//lib/prism/node.rb#7730
   sig { returns(T.nilable(Prism::Location)) }
   def end_keyword_loc; end
 
   # def if_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#7458
+  # source://prism//lib/prism/node.rb#7793
   sig { returns(T.nilable(String)) }
   def if_keyword; end
 
   # attr_reader if_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#7385
+  # source://prism//lib/prism/node.rb#7715
   sig { returns(T.nilable(Prism::Location)) }
   def if_keyword_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7468
+  # source://prism//lib/prism/node.rb#7808
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader predicate: Node
   #
-  # source://prism//lib/prism/node.rb#7388
+  # source://prism//lib/prism/node.rb#7718
   sig { returns(Prism::Node) }
   def predicate; end
 
-  # source://prism//lib/prism/node.rb#7414
+  # source://prism//lib/prism/node.rb#7748
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#7391
+  # source://prism//lib/prism/node.rb#7724
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
+
+  # def then_keyword: () -> String?
+  #
+  # source://prism//lib/prism/node.rb#7798
+  sig { returns(T.nilable(String)) }
+  def then_keyword; end
+
+  # attr_reader then_keyword_loc: Location?
+  #
+  # source://prism//lib/prism/node.rb#7721
+  sig { returns(T.nilable(Prism::Location)) }
+  def then_keyword_loc; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -12453,7 +13949,7 @@ class Prism::IfNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7503
+  # source://prism//lib/prism/node.rb#7844
   def type; end
 
   class << self
@@ -12464,7 +13960,7 @@ class Prism::IfNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7513
+    # source://prism//lib/prism/node.rb#7854
     def type; end
   end
 end
@@ -12474,54 +13970,54 @@ end
 #     1.0i
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#7522
+# source://prism//lib/prism/node.rb#7863
 class Prism::ImaginaryNode < ::Prism::Node
   # def initialize: (numeric: Node, location: Location) -> void
   #
   # @return [ImaginaryNode] a new instance of ImaginaryNode
   #
-  # source://prism//lib/prism/node.rb#7527
+  # source://prism//lib/prism/node.rb#7868
   sig { params(numeric: Prism::Node, location: Prism::Location).void }
   def initialize(numeric, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7533
+  # source://prism//lib/prism/node.rb#7874
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7538
+  # source://prism//lib/prism/node.rb#7879
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7548
+  # source://prism//lib/prism/node.rb#7889
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7543
+  # source://prism//lib/prism/node.rb#7884
   def compact_child_nodes; end
 
   # def copy: (**params) -> ImaginaryNode
   #
-  # source://prism//lib/prism/node.rb#7553
+  # source://prism//lib/prism/node.rb#7894
   sig { params(params: T.untyped).returns(Prism::ImaginaryNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7538
+  # source://prism//lib/prism/node.rb#7879
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7564
+  # source://prism//lib/prism/node.rb#7905
   sig do
     params(
       keys: T::Array[Symbol]
@@ -12531,12 +14027,12 @@ class Prism::ImaginaryNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7569
+  # source://prism//lib/prism/node.rb#7910
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader numeric: Node
   #
-  # source://prism//lib/prism/node.rb#7524
+  # source://prism//lib/prism/node.rb#7865
   sig { returns(Prism::Node) }
   def numeric; end
 
@@ -12555,12 +14051,12 @@ class Prism::ImaginaryNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7590
+  # source://prism//lib/prism/node.rb#7931
   def type; end
 
   # Returns the value of the node as a Ruby Complex.
   #
-  # source://prism//lib/prism/node_ext.rb#28
+  # source://prism//lib/prism/node_ext.rb#69
   def value; end
 
   class << self
@@ -12571,7 +14067,7 @@ class Prism::ImaginaryNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7600
+    # source://prism//lib/prism/node.rb#7941
     def type; end
   end
 end
@@ -12585,54 +14081,54 @@ end
 #     { Foo: }
 #       ^^^^
 #
-# source://prism//lib/prism/node.rb#7613
+# source://prism//lib/prism/node.rb#7954
 class Prism::ImplicitNode < ::Prism::Node
   # def initialize: (value: Node, location: Location) -> void
   #
   # @return [ImplicitNode] a new instance of ImplicitNode
   #
-  # source://prism//lib/prism/node.rb#7618
+  # source://prism//lib/prism/node.rb#7959
   sig { params(value: Prism::Node, location: Prism::Location).void }
   def initialize(value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7624
+  # source://prism//lib/prism/node.rb#7965
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7629
+  # source://prism//lib/prism/node.rb#7970
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7639
+  # source://prism//lib/prism/node.rb#7980
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7634
+  # source://prism//lib/prism/node.rb#7975
   def compact_child_nodes; end
 
   # def copy: (**params) -> ImplicitNode
   #
-  # source://prism//lib/prism/node.rb#7644
+  # source://prism//lib/prism/node.rb#7985
   sig { params(params: T.untyped).returns(Prism::ImplicitNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7629
+  # source://prism//lib/prism/node.rb#7970
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7655
+  # source://prism//lib/prism/node.rb#7996
   sig do
     params(
       keys: T::Array[Symbol]
@@ -12642,7 +14138,7 @@ class Prism::ImplicitNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7660
+  # source://prism//lib/prism/node.rb#8001
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -12660,12 +14156,12 @@ class Prism::ImplicitNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7681
+  # source://prism//lib/prism/node.rb#8022
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#7615
+  # source://prism//lib/prism/node.rb#7956
   sig { returns(Prism::Node) }
   def value; end
 
@@ -12677,7 +14173,112 @@ class Prism::ImplicitNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7691
+    # source://prism//lib/prism/node.rb#8032
+    def type; end
+  end
+end
+
+# Represents using a trailing comma to indicate an implicit rest parameter.
+#
+#     foo { |bar,| }
+#               ^
+#
+#     foo in [bar,]
+#                ^
+#
+#     for foo, in bar do end
+#            ^
+#
+#     foo, = bar
+#        ^
+#
+# source://prism//lib/prism/node.rb#8050
+class Prism::ImplicitRestNode < ::Prism::Node
+  # def initialize: (location: Location) -> void
+  #
+  # @return [ImplicitRestNode] a new instance of ImplicitRestNode
+  #
+  # source://prism//lib/prism/node.rb#8052
+  sig { params(location: Prism::Location).void }
+  def initialize(location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#8057
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#8062
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#8072
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#8067
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> ImplicitRestNode
+  #
+  # source://prism//lib/prism/node.rb#8077
+  sig { params(params: T.untyped).returns(Prism::ImplicitRestNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#8062
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#8087
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#8092
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#8111
+  def type; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#8121
     def type; end
   end
 end
@@ -12687,13 +14288,13 @@ end
 #     case a; in b then c end
 #             ^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7700
+# source://prism//lib/prism/node.rb#8130
 class Prism::InNode < ::Prism::Node
   # def initialize: (pattern: Node, statements: StatementsNode?, in_loc: Location, then_loc: Location?, location: Location) -> void
   #
   # @return [InNode] a new instance of InNode
   #
-  # source://prism//lib/prism/node.rb#7714
+  # source://prism//lib/prism/node.rb#8144
   sig do
     params(
       pattern: Prism::Node,
@@ -12707,42 +14308,42 @@ class Prism::InNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7723
+  # source://prism//lib/prism/node.rb#8153
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7728
+  # source://prism//lib/prism/node.rb#8158
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7741
+  # source://prism//lib/prism/node.rb#8171
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7733
+  # source://prism//lib/prism/node.rb#8163
   def compact_child_nodes; end
 
   # def copy: (**params) -> InNode
   #
-  # source://prism//lib/prism/node.rb#7746
+  # source://prism//lib/prism/node.rb#8176
   sig { params(params: T.untyped).returns(Prism::InNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7728
+  # source://prism//lib/prism/node.rb#8158
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7760
+  # source://prism//lib/prism/node.rb#8190
   sig do
     params(
       keys: T::Array[Symbol]
@@ -12752,42 +14353,42 @@ class Prism::InNode < ::Prism::Node
 
   # def in: () -> String
   #
-  # source://prism//lib/prism/node.rb#7765
+  # source://prism//lib/prism/node.rb#8195
   sig { returns(String) }
   def in; end
 
   # attr_reader in_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7708
+  # source://prism//lib/prism/node.rb#8138
   sig { returns(Prism::Location) }
   def in_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7775
+  # source://prism//lib/prism/node.rb#8205
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader pattern: Node
   #
-  # source://prism//lib/prism/node.rb#7702
+  # source://prism//lib/prism/node.rb#8132
   sig { returns(Prism::Node) }
   def pattern; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#7705
+  # source://prism//lib/prism/node.rb#8135
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
   # def then: () -> String?
   #
-  # source://prism//lib/prism/node.rb#7770
+  # source://prism//lib/prism/node.rb#8200
   sig { returns(T.nilable(String)) }
   def then; end
 
   # attr_reader then_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#7711
+  # source://prism//lib/prism/node.rb#8141
   sig { returns(T.nilable(Prism::Location)) }
   def then_loc; end
 
@@ -12806,7 +14407,7 @@ class Prism::InNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7804
+  # source://prism//lib/prism/node.rb#8234
   def type; end
 
   class << self
@@ -12817,7 +14418,7 @@ class Prism::InNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#7814
+    # source://prism//lib/prism/node.rb#8244
     def type; end
   end
 end
@@ -12827,103 +14428,111 @@ end
 #     foo.bar[baz] &&= value
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#7823
+# source://prism//lib/prism/node.rb#8253
 class Prism::IndexAndWriteNode < ::Prism::Node
-  # def initialize: (receiver: Node?, call_operator_loc: Location?, opening_loc: Location, arguments: ArgumentsNode?, closing_loc: Location, block: Node?, flags: Integer, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (flags: Integer, receiver: Node?, call_operator_loc: Location?, opening_loc: Location, arguments: ArgumentsNode?, closing_loc: Location, block: Node?, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [IndexAndWriteNode] a new instance of IndexAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#7852
+  # source://prism//lib/prism/node.rb#8282
   sig do
     params(
+      flags: Integer,
       receiver: T.nilable(Prism::Node),
       call_operator_loc: T.nilable(Prism::Location),
       opening_loc: Prism::Location,
       arguments: T.nilable(Prism::ArgumentsNode),
       closing_loc: Prism::Location,
       block: T.nilable(Prism::Node),
-      flags: Integer,
       operator_loc: Prism::Location,
       value: Prism::Node,
       location: Prism::Location
     ).void
   end
-  def initialize(receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, flags, operator_loc, value, location); end
+  def initialize(flags, receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#7866
+  # source://prism//lib/prism/node.rb#8296
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#7834
+  # source://prism//lib/prism/node.rb#8267
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#8355
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
   # attr_reader block: Node?
   #
-  # source://prism//lib/prism/node.rb#7840
+  # source://prism//lib/prism/node.rb#8273
   sig { returns(T.nilable(Prism::Node)) }
   def block; end
 
   # def call_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#7915
+  # source://prism//lib/prism/node.rb#8360
   sig { returns(T.nilable(String)) }
   def call_operator; end
 
   # attr_reader call_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#7828
+  # source://prism//lib/prism/node.rb#8261
   sig { returns(T.nilable(Prism::Location)) }
   def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7871
+  # source://prism//lib/prism/node.rb#8301
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#7925
+  # source://prism//lib/prism/node.rb#8370
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7837
+  # source://prism//lib/prism/node.rb#8270
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#7886
+  # source://prism//lib/prism/node.rb#8316
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#7876
+  # source://prism//lib/prism/node.rb#8306
   def compact_child_nodes; end
 
   # def copy: (**params) -> IndexAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#7891
+  # source://prism//lib/prism/node.rb#8321
   sig { params(params: T.untyped).returns(Prism::IndexAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#7871
+  # source://prism//lib/prism/node.rb#8301
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#7910
+  # source://prism//lib/prism/node.rb#8340
   sig do
     params(
       keys: T::Array[Symbol]
@@ -12933,36 +14542,36 @@ class Prism::IndexAndWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#7945
+  # source://prism//lib/prism/node.rb#8380
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#7920
+  # source://prism//lib/prism/node.rb#8365
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7831
+  # source://prism//lib/prism/node.rb#8264
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#7940
+  # source://prism//lib/prism/node.rb#8375
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#7846
+  # source://prism//lib/prism/node.rb#8276
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#7825
+  # source://prism//lib/prism/node.rb#8258
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
@@ -12970,7 +14579,7 @@ class Prism::IndexAndWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#7930
+  # source://prism//lib/prism/node.rb#8345
   sig { returns(T::Boolean) }
   def safe_navigation?; end
 
@@ -12989,12 +14598,12 @@ class Prism::IndexAndWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#7990
+  # source://prism//lib/prism/node.rb#8425
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#7849
+  # source://prism//lib/prism/node.rb#8279
   sig { returns(Prism::Node) }
   def value; end
 
@@ -13002,7 +14611,7 @@ class Prism::IndexAndWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#7935
+  # source://prism//lib/prism/node.rb#8350
   sig { returns(T::Boolean) }
   def variable_call?; end
 
@@ -13010,7 +14619,7 @@ class Prism::IndexAndWriteNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#7843
+  # source://prism//lib/prism/node.rb#8255
   sig { returns(Integer) }
   def flags; end
 
@@ -13022,7 +14631,7 @@ class Prism::IndexAndWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#8000
+    # source://prism//lib/prism/node.rb#8435
     def type; end
   end
 end
@@ -13032,104 +14641,112 @@ end
 #     foo.bar[baz] += value
 #     ^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8009
+# source://prism//lib/prism/node.rb#8444
 class Prism::IndexOperatorWriteNode < ::Prism::Node
-  # def initialize: (receiver: Node?, call_operator_loc: Location?, opening_loc: Location, arguments: ArgumentsNode?, closing_loc: Location, block: Node?, flags: Integer, operator: Symbol, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (flags: Integer, receiver: Node?, call_operator_loc: Location?, opening_loc: Location, arguments: ArgumentsNode?, closing_loc: Location, block: Node?, operator: Symbol, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [IndexOperatorWriteNode] a new instance of IndexOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#8041
+  # source://prism//lib/prism/node.rb#8476
   sig do
     params(
+      flags: Integer,
       receiver: T.nilable(Prism::Node),
       call_operator_loc: T.nilable(Prism::Location),
       opening_loc: Prism::Location,
       arguments: T.nilable(Prism::ArgumentsNode),
       closing_loc: Prism::Location,
       block: T.nilable(Prism::Node),
-      flags: Integer,
       operator: Symbol,
       operator_loc: Prism::Location,
       value: Prism::Node,
       location: Prism::Location
     ).void
   end
-  def initialize(receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, flags, operator, operator_loc, value, location); end
+  def initialize(flags, receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, operator, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#8056
+  # source://prism//lib/prism/node.rb#8491
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#8020
+  # source://prism//lib/prism/node.rb#8458
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#8551
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
   # attr_reader block: Node?
   #
-  # source://prism//lib/prism/node.rb#8026
+  # source://prism//lib/prism/node.rb#8464
   sig { returns(T.nilable(Prism::Node)) }
   def block; end
 
   # def call_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#8106
+  # source://prism//lib/prism/node.rb#8556
   sig { returns(T.nilable(String)) }
   def call_operator; end
 
   # attr_reader call_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#8014
+  # source://prism//lib/prism/node.rb#8452
   sig { returns(T.nilable(Prism::Location)) }
   def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#8061
+  # source://prism//lib/prism/node.rb#8496
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#8116
+  # source://prism//lib/prism/node.rb#8566
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#8023
+  # source://prism//lib/prism/node.rb#8461
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#8076
+  # source://prism//lib/prism/node.rb#8511
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#8066
+  # source://prism//lib/prism/node.rb#8501
   def compact_child_nodes; end
 
   # def copy: (**params) -> IndexOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#8081
+  # source://prism//lib/prism/node.rb#8516
   sig { params(params: T.untyped).returns(Prism::IndexOperatorWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#8061
+  # source://prism//lib/prism/node.rb#8496
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#8101
+  # source://prism//lib/prism/node.rb#8536
   sig do
     params(
       keys: T::Array[Symbol]
@@ -13139,36 +14756,36 @@ class Prism::IndexOperatorWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#8131
+  # source://prism//lib/prism/node.rb#8571
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#8111
+  # source://prism//lib/prism/node.rb#8561
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#8017
+  # source://prism//lib/prism/node.rb#8455
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://prism//lib/prism/node.rb#8032
+  # source://prism//lib/prism/node.rb#8467
   sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#8035
+  # source://prism//lib/prism/node.rb#8470
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#8011
+  # source://prism//lib/prism/node.rb#8449
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
@@ -13176,7 +14793,7 @@ class Prism::IndexOperatorWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#8121
+  # source://prism//lib/prism/node.rb#8541
   sig { returns(T::Boolean) }
   def safe_navigation?; end
 
@@ -13195,12 +14812,12 @@ class Prism::IndexOperatorWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#8177
+  # source://prism//lib/prism/node.rb#8617
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#8038
+  # source://prism//lib/prism/node.rb#8473
   sig { returns(Prism::Node) }
   def value; end
 
@@ -13208,7 +14825,7 @@ class Prism::IndexOperatorWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#8126
+  # source://prism//lib/prism/node.rb#8546
   sig { returns(T::Boolean) }
   def variable_call?; end
 
@@ -13216,7 +14833,7 @@ class Prism::IndexOperatorWriteNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#8029
+  # source://prism//lib/prism/node.rb#8446
   sig { returns(Integer) }
   def flags; end
 
@@ -13228,7 +14845,7 @@ class Prism::IndexOperatorWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#8187
+    # source://prism//lib/prism/node.rb#8627
     def type; end
   end
 end
@@ -13238,103 +14855,111 @@ end
 #     foo.bar[baz] ||= value
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8196
+# source://prism//lib/prism/node.rb#8636
 class Prism::IndexOrWriteNode < ::Prism::Node
-  # def initialize: (receiver: Node?, call_operator_loc: Location?, opening_loc: Location, arguments: ArgumentsNode?, closing_loc: Location, block: Node?, flags: Integer, operator_loc: Location, value: Node, location: Location) -> void
+  # def initialize: (flags: Integer, receiver: Node?, call_operator_loc: Location?, opening_loc: Location, arguments: ArgumentsNode?, closing_loc: Location, block: Node?, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [IndexOrWriteNode] a new instance of IndexOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#8225
+  # source://prism//lib/prism/node.rb#8665
   sig do
     params(
+      flags: Integer,
       receiver: T.nilable(Prism::Node),
       call_operator_loc: T.nilable(Prism::Location),
       opening_loc: Prism::Location,
       arguments: T.nilable(Prism::ArgumentsNode),
       closing_loc: Prism::Location,
       block: T.nilable(Prism::Node),
-      flags: Integer,
       operator_loc: Prism::Location,
       value: Prism::Node,
       location: Prism::Location
     ).void
   end
-  def initialize(receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, flags, operator_loc, value, location); end
+  def initialize(flags, receiver, call_operator_loc, opening_loc, arguments, closing_loc, block, operator_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#8239
+  # source://prism//lib/prism/node.rb#8679
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#8207
+  # source://prism//lib/prism/node.rb#8650
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#8738
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
   # attr_reader block: Node?
   #
-  # source://prism//lib/prism/node.rb#8213
+  # source://prism//lib/prism/node.rb#8656
   sig { returns(T.nilable(Prism::Node)) }
   def block; end
 
   # def call_operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#8288
+  # source://prism//lib/prism/node.rb#8743
   sig { returns(T.nilable(String)) }
   def call_operator; end
 
   # attr_reader call_operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#8201
+  # source://prism//lib/prism/node.rb#8644
   sig { returns(T.nilable(Prism::Location)) }
   def call_operator_loc; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#8244
+  # source://prism//lib/prism/node.rb#8684
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#8298
+  # source://prism//lib/prism/node.rb#8753
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#8210
+  # source://prism//lib/prism/node.rb#8653
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#8259
+  # source://prism//lib/prism/node.rb#8699
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#8249
+  # source://prism//lib/prism/node.rb#8689
   def compact_child_nodes; end
 
   # def copy: (**params) -> IndexOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#8264
+  # source://prism//lib/prism/node.rb#8704
   sig { params(params: T.untyped).returns(Prism::IndexOrWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#8244
+  # source://prism//lib/prism/node.rb#8684
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#8283
+  # source://prism//lib/prism/node.rb#8723
   sig do
     params(
       keys: T::Array[Symbol]
@@ -13344,36 +14969,36 @@ class Prism::IndexOrWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#8318
+  # source://prism//lib/prism/node.rb#8763
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#8293
+  # source://prism//lib/prism/node.rb#8748
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#8204
+  # source://prism//lib/prism/node.rb#8647
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#8313
+  # source://prism//lib/prism/node.rb#8758
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#8219
+  # source://prism//lib/prism/node.rb#8659
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader receiver: Node?
   #
-  # source://prism//lib/prism/node.rb#8198
+  # source://prism//lib/prism/node.rb#8641
   sig { returns(T.nilable(Prism::Node)) }
   def receiver; end
 
@@ -13381,7 +15006,7 @@ class Prism::IndexOrWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#8303
+  # source://prism//lib/prism/node.rb#8728
   sig { returns(T::Boolean) }
   def safe_navigation?; end
 
@@ -13400,12 +15025,12 @@ class Prism::IndexOrWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#8363
+  # source://prism//lib/prism/node.rb#8808
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#8222
+  # source://prism//lib/prism/node.rb#8662
   sig { returns(Prism::Node) }
   def value; end
 
@@ -13413,7 +15038,7 @@ class Prism::IndexOrWriteNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#8308
+  # source://prism//lib/prism/node.rb#8733
   sig { returns(T::Boolean) }
   def variable_call?; end
 
@@ -13421,7 +15046,7 @@ class Prism::IndexOrWriteNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#8216
+  # source://prism//lib/prism/node.rb#8638
   sig { returns(Integer) }
   def flags; end
 
@@ -13433,7 +15058,195 @@ class Prism::IndexOrWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#8373
+    # source://prism//lib/prism/node.rb#8818
+    def type; end
+  end
+end
+
+# Represents assigning to an index.
+#
+#     foo[bar], = 1
+#     ^^^^^^^^
+#
+#     begin
+#     rescue => foo[bar]
+#               ^^^^^^^^
+#     end
+#
+#     for foo[bar] in baz do end
+#         ^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#8835
+class Prism::IndexTargetNode < ::Prism::Node
+  # def initialize: (flags: Integer, receiver: Node, opening_loc: Location, arguments: ArgumentsNode?, closing_loc: Location, block: Node?, location: Location) -> void
+  #
+  # @return [IndexTargetNode] a new instance of IndexTargetNode
+  #
+  # source://prism//lib/prism/node.rb#8855
+  sig do
+    params(
+      flags: Integer,
+      receiver: Prism::Node,
+      opening_loc: Prism::Location,
+      arguments: T.nilable(Prism::ArgumentsNode),
+      closing_loc: Prism::Location,
+      block: T.nilable(Prism::Node),
+      location: Prism::Location
+    ).void
+  end
+  def initialize(flags, receiver, opening_loc, arguments, closing_loc, block, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#8866
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # attr_reader arguments: ArgumentsNode?
+  #
+  # source://prism//lib/prism/node.rb#8846
+  sig { returns(T.nilable(Prism::ArgumentsNode)) }
+  def arguments; end
+
+  # def attribute_write?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#8921
+  sig { returns(T::Boolean) }
+  def attribute_write?; end
+
+  # attr_reader block: Node?
+  #
+  # source://prism//lib/prism/node.rb#8852
+  sig { returns(T.nilable(Prism::Node)) }
+  def block; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#8871
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def closing: () -> String
+  #
+  # source://prism//lib/prism/node.rb#8931
+  sig { returns(String) }
+  def closing; end
+
+  # attr_reader closing_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#8849
+  sig { returns(Prism::Location) }
+  def closing_loc; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#8885
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#8876
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> IndexTargetNode
+  #
+  # source://prism//lib/prism/node.rb#8890
+  sig { params(params: T.untyped).returns(Prism::IndexTargetNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#8871
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#8906
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#8936
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def opening: () -> String
+  #
+  # source://prism//lib/prism/node.rb#8926
+  sig { returns(String) }
+  def opening; end
+
+  # attr_reader opening_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#8843
+  sig { returns(Prism::Location) }
+  def opening_loc; end
+
+  # attr_reader receiver: Node
+  #
+  # source://prism//lib/prism/node.rb#8840
+  sig { returns(Prism::Node) }
+  def receiver; end
+
+  # def safe_navigation?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#8911
+  sig { returns(T::Boolean) }
+  def safe_navigation?; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#8973
+  def type; end
+
+  # def variable_call?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#8916
+  sig { returns(T::Boolean) }
+  def variable_call?; end
+
+  private
+
+  # Returns the value of attribute flags.
+  #
+  # source://prism//lib/prism/node.rb#8837
+  sig { returns(Integer) }
+  def flags; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#8983
     def type; end
   end
 end
@@ -13441,11 +15254,11 @@ end
 # InlineComment objects are the most common. They correspond to comments in
 # the source file like this one that start with #.
 #
-# source://prism//lib/prism/parse_result.rb#216
+# source://prism//lib/prism/parse_result.rb#245
 class Prism::InlineComment < ::Prism::Comment
   # Returns a string representation of this comment.
   #
-  # source://prism//lib/prism/parse_result.rb#224
+  # source://prism//lib/prism/parse_result.rb#253
   def inspect; end
 
   # Returns true if this comment happens on the same line as other code and
@@ -13453,7 +15266,7 @@ class Prism::InlineComment < ::Prism::Comment
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/parse_result.rb#219
+  # source://prism//lib/prism/parse_result.rb#248
   sig { override.returns(T::Boolean) }
   def trailing?; end
 end
@@ -13463,13 +15276,13 @@ end
 #     @target &&= value
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#8382
+# source://prism//lib/prism/node.rb#8992
 class Prism::InstanceVariableAndWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [InstanceVariableAndWriteNode] a new instance of InstanceVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#8396
+  # source://prism//lib/prism/node.rb#9006
   sig do
     params(
       name: Symbol,
@@ -13483,42 +15296,42 @@ class Prism::InstanceVariableAndWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#8405
+  # source://prism//lib/prism/node.rb#9015
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#8410
+  # source://prism//lib/prism/node.rb#9020
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#8420
+  # source://prism//lib/prism/node.rb#9030
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#8415
+  # source://prism//lib/prism/node.rb#9025
   def compact_child_nodes; end
 
   # def copy: (**params) -> InstanceVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#8425
+  # source://prism//lib/prism/node.rb#9035
   sig { params(params: T.untyped).returns(Prism::InstanceVariableAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#8410
+  # source://prism//lib/prism/node.rb#9020
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#8439
+  # source://prism//lib/prism/node.rb#9049
   sig do
     params(
       keys: T::Array[Symbol]
@@ -13528,798 +15341,32 @@ class Prism::InstanceVariableAndWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#8449
+  # source://prism//lib/prism/node.rb#9059
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#8384
+  # source://prism//lib/prism/node.rb#8994
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#8387
+  # source://prism//lib/prism/node.rb#8997
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#8444
+  # source://prism//lib/prism/node.rb#9054
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#8390
-  sig { returns(Prism::Location) }
-  def operator_loc; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#8473
-  def type; end
-
-  # attr_reader value: Node
-  #
-  # source://prism//lib/prism/node.rb#8393
-  sig { returns(Prism::Node) }
-  def value; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#8483
-    def type; end
-  end
-end
-
-# Represents assigning to an instance variable using an operator that isn't `=`.
-#
-#     @target += value
-#     ^^^^^^^^^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#8492
-class Prism::InstanceVariableOperatorWriteNode < ::Prism::Node
-  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
-  #
-  # @return [InstanceVariableOperatorWriteNode] a new instance of InstanceVariableOperatorWriteNode
-  #
-  # source://prism//lib/prism/node.rb#8509
-  sig do
-    params(
-      name: Symbol,
-      name_loc: Prism::Location,
-      operator_loc: Prism::Location,
-      value: Prism::Node,
-      operator: Symbol,
-      location: Prism::Location
-    ).void
-  end
-  def initialize(name, name_loc, operator_loc, value, operator, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#8519
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8524
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#8534
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#8529
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableOperatorWriteNode
-  #
-  # source://prism//lib/prism/node.rb#8539
-  sig { params(params: T.untyped).returns(Prism::InstanceVariableOperatorWriteNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8524
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#8554
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#8559
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader name: Symbol
-  #
-  # source://prism//lib/prism/node.rb#8494
-  sig { returns(Symbol) }
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#8497
-  sig { returns(Prism::Location) }
-  def name_loc; end
-
-  # attr_reader operator: Symbol
-  #
-  # source://prism//lib/prism/node.rb#8506
-  sig { returns(Symbol) }
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#8500
-  sig { returns(Prism::Location) }
-  def operator_loc; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#8584
-  def type; end
-
-  # attr_reader value: Node
-  #
-  # source://prism//lib/prism/node.rb#8503
-  sig { returns(Prism::Node) }
-  def value; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#8594
-    def type; end
-  end
-end
-
-# Represents the use of the `||=` operator for assignment to an instance variable.
-#
-#     @target ||= value
-#     ^^^^^^^^^^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#8603
-class Prism::InstanceVariableOrWriteNode < ::Prism::Node
-  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
-  #
-  # @return [InstanceVariableOrWriteNode] a new instance of InstanceVariableOrWriteNode
-  #
-  # source://prism//lib/prism/node.rb#8617
-  sig do
-    params(
-      name: Symbol,
-      name_loc: Prism::Location,
-      operator_loc: Prism::Location,
-      value: Prism::Node,
-      location: Prism::Location
-    ).void
-  end
-  def initialize(name, name_loc, operator_loc, value, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#8626
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8631
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#8641
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#8636
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableOrWriteNode
-  #
-  # source://prism//lib/prism/node.rb#8646
-  sig { params(params: T.untyped).returns(Prism::InstanceVariableOrWriteNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8631
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#8660
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#8670
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader name: Symbol
-  #
-  # source://prism//lib/prism/node.rb#8605
-  sig { returns(Symbol) }
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#8608
-  sig { returns(Prism::Location) }
-  def name_loc; end
-
-  # def operator: () -> String
-  #
-  # source://prism//lib/prism/node.rb#8665
-  sig { returns(String) }
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#8611
-  sig { returns(Prism::Location) }
-  def operator_loc; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#8694
-  def type; end
-
-  # attr_reader value: Node
-  #
-  # source://prism//lib/prism/node.rb#8614
-  sig { returns(Prism::Node) }
-  def value; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#8704
-    def type; end
-  end
-end
-
-# Represents referencing an instance variable.
-#
-#     @foo
-#     ^^^^
-#
-# source://prism//lib/prism/node.rb#8713
-class Prism::InstanceVariableReadNode < ::Prism::Node
-  # def initialize: (name: Symbol, location: Location) -> void
-  #
-  # @return [InstanceVariableReadNode] a new instance of InstanceVariableReadNode
-  #
-  # source://prism//lib/prism/node.rb#8718
-  sig { params(name: Symbol, location: Prism::Location).void }
-  def initialize(name, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#8724
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8729
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#8739
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#8734
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableReadNode
-  #
-  # source://prism//lib/prism/node.rb#8744
-  sig { params(params: T.untyped).returns(Prism::InstanceVariableReadNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8729
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#8755
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#8760
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader name: Symbol
-  #
-  # source://prism//lib/prism/node.rb#8715
-  sig { returns(Symbol) }
-  def name; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#8780
-  def type; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#8790
-    def type; end
-  end
-end
-
-# Represents writing to an instance variable in a context that doesn't have an explicit value.
-#
-#     @foo, @bar = baz
-#     ^^^^  ^^^^
-#
-# source://prism//lib/prism/node.rb#8799
-class Prism::InstanceVariableTargetNode < ::Prism::Node
-  # def initialize: (name: Symbol, location: Location) -> void
-  #
-  # @return [InstanceVariableTargetNode] a new instance of InstanceVariableTargetNode
-  #
-  # source://prism//lib/prism/node.rb#8804
-  sig { params(name: Symbol, location: Prism::Location).void }
-  def initialize(name, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#8810
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8815
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#8825
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#8820
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableTargetNode
-  #
-  # source://prism//lib/prism/node.rb#8830
-  sig { params(params: T.untyped).returns(Prism::InstanceVariableTargetNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8815
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#8841
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#8846
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader name: Symbol
-  #
-  # source://prism//lib/prism/node.rb#8801
-  sig { returns(Symbol) }
-  def name; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#8866
-  def type; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#8876
-    def type; end
-  end
-end
-
-# Represents writing to an instance variable.
-#
-#     @foo = 1
-#     ^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#8885
-class Prism::InstanceVariableWriteNode < ::Prism::Node
-  # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
-  #
-  # @return [InstanceVariableWriteNode] a new instance of InstanceVariableWriteNode
-  #
-  # source://prism//lib/prism/node.rb#8899
-  sig do
-    params(
-      name: Symbol,
-      name_loc: Prism::Location,
-      value: Prism::Node,
-      operator_loc: Prism::Location,
-      location: Prism::Location
-    ).void
-  end
-  def initialize(name, name_loc, value, operator_loc, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#8908
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8913
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#8923
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#8918
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> InstanceVariableWriteNode
-  #
-  # source://prism//lib/prism/node.rb#8928
-  sig { params(params: T.untyped).returns(Prism::InstanceVariableWriteNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#8913
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#8942
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#8952
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader name: Symbol
-  #
-  # source://prism//lib/prism/node.rb#8887
-  sig { returns(Symbol) }
-  def name; end
-
-  # attr_reader name_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#8890
-  sig { returns(Prism::Location) }
-  def name_loc; end
-
-  # def operator: () -> String
-  #
-  # source://prism//lib/prism/node.rb#8947
-  sig { returns(String) }
-  def operator; end
-
-  # attr_reader operator_loc: Location
-  #
-  # source://prism//lib/prism/node.rb#8896
-  sig { returns(Prism::Location) }
-  def operator_loc; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#8976
-  def type; end
-
-  # attr_reader value: Node
-  #
-  # source://prism//lib/prism/node.rb#8893
-  sig { returns(Prism::Node) }
-  def value; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#8986
-    def type; end
-  end
-end
-
-# Flags for integer nodes that correspond to the base of the integer.
-#
-# source://prism//lib/prism/node.rb#16551
-module Prism::IntegerBaseFlags; end
-
-# 0b prefix
-#
-# source://prism//lib/prism/node.rb#16553
-Prism::IntegerBaseFlags::BINARY = T.let(T.unsafe(nil), Integer)
-
-# 0d or no prefix
-#
-# source://prism//lib/prism/node.rb#16559
-Prism::IntegerBaseFlags::DECIMAL = T.let(T.unsafe(nil), Integer)
-
-# 0x prefix
-#
-# source://prism//lib/prism/node.rb#16562
-Prism::IntegerBaseFlags::HEXADECIMAL = T.let(T.unsafe(nil), Integer)
-
-# 0o or 0 prefix
-#
-# source://prism//lib/prism/node.rb#16556
-Prism::IntegerBaseFlags::OCTAL = T.let(T.unsafe(nil), Integer)
-
-# Represents an integer number literal.
-#
-#     1
-#     ^
-#
-# source://prism//lib/prism/node.rb#8995
-class Prism::IntegerNode < ::Prism::Node
-  # def initialize: (flags: Integer, location: Location) -> void
-  #
-  # @return [IntegerNode] a new instance of IntegerNode
   #
   # source://prism//lib/prism/node.rb#9000
-  sig { params(flags: Integer, location: Prism::Location).void }
-  def initialize(flags, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#9006
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def binary?: () -> bool
-  #
-  # @return [Boolean]
-  #
-  # source://prism//lib/prism/node.rb#9042
-  sig { returns(T::Boolean) }
-  def binary?; end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#9011
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#9021
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#9016
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> IntegerNode
-  #
-  # source://prism//lib/prism/node.rb#9026
-  sig { params(params: T.untyped).returns(Prism::IntegerNode) }
-  def copy(**params); end
-
-  # def decimal?: () -> bool
-  #
-  # @return [Boolean]
-  #
-  # source://prism//lib/prism/node.rb#9052
-  sig { returns(T::Boolean) }
-  def decimal?; end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#9011
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#9037
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def hexadecimal?: () -> bool
-  #
-  # @return [Boolean]
-  #
-  # source://prism//lib/prism/node.rb#9057
-  sig { returns(T::Boolean) }
-  def hexadecimal?; end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#9062
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # def octal?: () -> bool
-  #
-  # @return [Boolean]
-  #
-  # source://prism//lib/prism/node.rb#9047
-  sig { returns(T::Boolean) }
-  def octal?; end
+  sig { returns(Prism::Location) }
+  def operator_loc; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -14339,18 +15386,11 @@ class Prism::IntegerNode < ::Prism::Node
   # source://prism//lib/prism/node.rb#9083
   def type; end
 
-  # Returns the value of the node as a Ruby Integer.
+  # attr_reader value: Node
   #
-  # source://prism//lib/prism/node_ext.rb#35
+  # source://prism//lib/prism/node.rb#9003
+  sig { returns(Prism::Node) }
   def value; end
-
-  private
-
-  # Returns the value of attribute flags.
-  #
-  # source://prism//lib/prism/node.rb#8997
-  sig { returns(Integer) }
-  def flags; end
 
   class << self
     # Similar to #type, this method returns a symbol that you can use for
@@ -14365,6 +15405,779 @@ class Prism::IntegerNode < ::Prism::Node
   end
 end
 
+# Represents assigning to an instance variable using an operator that isn't `=`.
+#
+#     @target += value
+#     ^^^^^^^^^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#9102
+class Prism::InstanceVariableOperatorWriteNode < ::Prism::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, operator: Symbol, location: Location) -> void
+  #
+  # @return [InstanceVariableOperatorWriteNode] a new instance of InstanceVariableOperatorWriteNode
+  #
+  # source://prism//lib/prism/node.rb#9119
+  sig do
+    params(
+      name: Symbol,
+      name_loc: Prism::Location,
+      operator_loc: Prism::Location,
+      value: Prism::Node,
+      operator: Symbol,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(name, name_loc, operator_loc, value, operator, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#9129
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9134
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#9144
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#9139
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> InstanceVariableOperatorWriteNode
+  #
+  # source://prism//lib/prism/node.rb#9149
+  sig { params(params: T.untyped).returns(Prism::InstanceVariableOperatorWriteNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9134
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#9164
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#9169
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://prism//lib/prism/node.rb#9104
+  sig { returns(Symbol) }
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#9107
+  sig { returns(Prism::Location) }
+  def name_loc; end
+
+  # attr_reader operator: Symbol
+  #
+  # source://prism//lib/prism/node.rb#9116
+  sig { returns(Symbol) }
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#9110
+  sig { returns(Prism::Location) }
+  def operator_loc; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#9194
+  def type; end
+
+  # attr_reader value: Node
+  #
+  # source://prism//lib/prism/node.rb#9113
+  sig { returns(Prism::Node) }
+  def value; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#9204
+    def type; end
+  end
+end
+
+# Represents the use of the `||=` operator for assignment to an instance variable.
+#
+#     @target ||= value
+#     ^^^^^^^^^^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#9213
+class Prism::InstanceVariableOrWriteNode < ::Prism::Node
+  # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
+  #
+  # @return [InstanceVariableOrWriteNode] a new instance of InstanceVariableOrWriteNode
+  #
+  # source://prism//lib/prism/node.rb#9227
+  sig do
+    params(
+      name: Symbol,
+      name_loc: Prism::Location,
+      operator_loc: Prism::Location,
+      value: Prism::Node,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(name, name_loc, operator_loc, value, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#9236
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9241
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#9251
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#9246
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> InstanceVariableOrWriteNode
+  #
+  # source://prism//lib/prism/node.rb#9256
+  sig { params(params: T.untyped).returns(Prism::InstanceVariableOrWriteNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9241
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#9270
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#9280
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://prism//lib/prism/node.rb#9215
+  sig { returns(Symbol) }
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#9218
+  sig { returns(Prism::Location) }
+  def name_loc; end
+
+  # def operator: () -> String
+  #
+  # source://prism//lib/prism/node.rb#9275
+  sig { returns(String) }
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#9221
+  sig { returns(Prism::Location) }
+  def operator_loc; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#9304
+  def type; end
+
+  # attr_reader value: Node
+  #
+  # source://prism//lib/prism/node.rb#9224
+  sig { returns(Prism::Node) }
+  def value; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#9314
+    def type; end
+  end
+end
+
+# Represents referencing an instance variable.
+#
+#     @foo
+#     ^^^^
+#
+# source://prism//lib/prism/node.rb#9323
+class Prism::InstanceVariableReadNode < ::Prism::Node
+  # def initialize: (name: Symbol, location: Location) -> void
+  #
+  # @return [InstanceVariableReadNode] a new instance of InstanceVariableReadNode
+  #
+  # source://prism//lib/prism/node.rb#9328
+  sig { params(name: Symbol, location: Prism::Location).void }
+  def initialize(name, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#9334
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9339
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#9349
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#9344
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> InstanceVariableReadNode
+  #
+  # source://prism//lib/prism/node.rb#9354
+  sig { params(params: T.untyped).returns(Prism::InstanceVariableReadNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9339
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#9365
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#9370
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://prism//lib/prism/node.rb#9325
+  sig { returns(Symbol) }
+  def name; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#9390
+  def type; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#9400
+    def type; end
+  end
+end
+
+# Represents writing to an instance variable in a context that doesn't have an explicit value.
+#
+#     @foo, @bar = baz
+#     ^^^^  ^^^^
+#
+# source://prism//lib/prism/node.rb#9409
+class Prism::InstanceVariableTargetNode < ::Prism::Node
+  # def initialize: (name: Symbol, location: Location) -> void
+  #
+  # @return [InstanceVariableTargetNode] a new instance of InstanceVariableTargetNode
+  #
+  # source://prism//lib/prism/node.rb#9414
+  sig { params(name: Symbol, location: Prism::Location).void }
+  def initialize(name, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#9420
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9425
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#9435
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#9430
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> InstanceVariableTargetNode
+  #
+  # source://prism//lib/prism/node.rb#9440
+  sig { params(params: T.untyped).returns(Prism::InstanceVariableTargetNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9425
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#9451
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#9456
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://prism//lib/prism/node.rb#9411
+  sig { returns(Symbol) }
+  def name; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#9476
+  def type; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#9486
+    def type; end
+  end
+end
+
+# Represents writing to an instance variable.
+#
+#     @foo = 1
+#     ^^^^^^^^
+#
+# source://prism//lib/prism/node.rb#9495
+class Prism::InstanceVariableWriteNode < ::Prism::Node
+  # def initialize: (name: Symbol, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
+  #
+  # @return [InstanceVariableWriteNode] a new instance of InstanceVariableWriteNode
+  #
+  # source://prism//lib/prism/node.rb#9509
+  sig do
+    params(
+      name: Symbol,
+      name_loc: Prism::Location,
+      value: Prism::Node,
+      operator_loc: Prism::Location,
+      location: Prism::Location
+    ).void
+  end
+  def initialize(name, name_loc, value, operator_loc, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#9518
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9523
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#9533
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#9528
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> InstanceVariableWriteNode
+  #
+  # source://prism//lib/prism/node.rb#9538
+  sig { params(params: T.untyped).returns(Prism::InstanceVariableWriteNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9523
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#9552
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#9562
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader name: Symbol
+  #
+  # source://prism//lib/prism/node.rb#9497
+  sig { returns(Symbol) }
+  def name; end
+
+  # attr_reader name_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#9500
+  sig { returns(Prism::Location) }
+  def name_loc; end
+
+  # def operator: () -> String
+  #
+  # source://prism//lib/prism/node.rb#9557
+  sig { returns(String) }
+  def operator; end
+
+  # attr_reader operator_loc: Location
+  #
+  # source://prism//lib/prism/node.rb#9506
+  sig { returns(Prism::Location) }
+  def operator_loc; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#9586
+  def type; end
+
+  # attr_reader value: Node
+  #
+  # source://prism//lib/prism/node.rb#9503
+  sig { returns(Prism::Node) }
+  def value; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#9596
+    def type; end
+  end
+end
+
+# Flags for integer nodes that correspond to the base of the integer.
+#
+# source://prism//lib/prism/node.rb#17310
+module Prism::IntegerBaseFlags; end
+
+# 0b prefix
+#
+# source://prism//lib/prism/node.rb#17312
+Prism::IntegerBaseFlags::BINARY = T.let(T.unsafe(nil), Integer)
+
+# 0d or no prefix
+#
+# source://prism//lib/prism/node.rb#17315
+Prism::IntegerBaseFlags::DECIMAL = T.let(T.unsafe(nil), Integer)
+
+# 0x prefix
+#
+# source://prism//lib/prism/node.rb#17321
+Prism::IntegerBaseFlags::HEXADECIMAL = T.let(T.unsafe(nil), Integer)
+
+# 0o or 0 prefix
+#
+# source://prism//lib/prism/node.rb#17318
+Prism::IntegerBaseFlags::OCTAL = T.let(T.unsafe(nil), Integer)
+
+# Represents an integer number literal.
+#
+#     1
+#     ^
+#
+# source://prism//lib/prism/node.rb#9605
+class Prism::IntegerNode < ::Prism::Node
+  # def initialize: (flags: Integer, location: Location) -> void
+  #
+  # @return [IntegerNode] a new instance of IntegerNode
+  #
+  # source://prism//lib/prism/node.rb#9610
+  sig { params(flags: Integer, location: Prism::Location).void }
+  def initialize(flags, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#9616
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def binary?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9652
+  sig { returns(T::Boolean) }
+  def binary?; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9621
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#9631
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#9626
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> IntegerNode
+  #
+  # source://prism//lib/prism/node.rb#9636
+  sig { params(params: T.untyped).returns(Prism::IntegerNode) }
+  def copy(**params); end
+
+  # def decimal?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9657
+  sig { returns(T::Boolean) }
+  def decimal?; end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#9621
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#9647
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def hexadecimal?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9667
+  sig { returns(T::Boolean) }
+  def hexadecimal?; end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#9672
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # def octal?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9662
+  sig { returns(T::Boolean) }
+  def octal?; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#9693
+  def type; end
+
+  # Returns the value of the node as a Ruby Integer.
+  #
+  # source://prism//lib/prism/node_ext.rb#76
+  def value; end
+
+  private
+
+  # Returns the value of attribute flags.
+  #
+  # source://prism//lib/prism/node.rb#9607
+  sig { returns(Integer) }
+  def flags; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#9703
+    def type; end
+  end
+end
+
 # Represents a regular expression literal that contains interpolation that
 # is being used in the predicate of a conditional to implicitly match
 # against the last line read by an IO object.
@@ -14372,29 +16185,29 @@ end
 #     if /foo #{bar} baz/ then end
 #        ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9104
+# source://prism//lib/prism/node.rb#9714
 class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
-  # def initialize: (opening_loc: Location, parts: Array[Node], closing_loc: Location, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, opening_loc: Location, parts: Array[Node], closing_loc: Location, location: Location) -> void
   #
   # @return [InterpolatedMatchLastLineNode] a new instance of InterpolatedMatchLastLineNode
   #
-  # source://prism//lib/prism/node.rb#9118
+  # source://prism//lib/prism/node.rb#9728
   sig do
     params(
+      flags: Integer,
       opening_loc: Prism::Location,
       parts: T::Array[Prism::Node],
       closing_loc: Prism::Location,
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(opening_loc, parts, closing_loc, flags, location); end
+  def initialize(flags, opening_loc, parts, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9127
+  # source://prism//lib/prism/node.rb#9737
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
@@ -14402,54 +16215,54 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9206
+  # source://prism//lib/prism/node.rb#9806
   sig { returns(T::Boolean) }
   def ascii_8bit?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9137
+  # source://prism//lib/prism/node.rb#9747
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#9176
+  # source://prism//lib/prism/node.rb#9841
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9112
+  # source://prism//lib/prism/node.rb#9725
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#9147
+  # source://prism//lib/prism/node.rb#9757
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9142
+  # source://prism//lib/prism/node.rb#9752
   def compact_child_nodes; end
 
   # def copy: (**params) -> InterpolatedMatchLastLineNode
   #
-  # source://prism//lib/prism/node.rb#9152
+  # source://prism//lib/prism/node.rb#9762
   sig { params(params: T.untyped).returns(Prism::InterpolatedMatchLastLineNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9137
+  # source://prism//lib/prism/node.rb#9747
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#9166
+  # source://prism//lib/prism/node.rb#9776
   sig do
     params(
       keys: T::Array[Symbol]
@@ -14461,7 +16274,7 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9201
+  # source://prism//lib/prism/node.rb#9801
   sig { returns(T::Boolean) }
   def euc_jp?; end
 
@@ -14469,28 +16282,52 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9186
+  # source://prism//lib/prism/node.rb#9786
   sig { returns(T::Boolean) }
   def extended?; end
+
+  # def forced_binary_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9826
+  sig { returns(T::Boolean) }
+  def forced_binary_encoding?; end
+
+  # def forced_us_ascii_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9831
+  sig { returns(T::Boolean) }
+  def forced_us_ascii_encoding?; end
+
+  # def forced_utf8_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9821
+  sig { returns(T::Boolean) }
+  def forced_utf8_encoding?; end
 
   # def ignore_case?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9181
+  # source://prism//lib/prism/node.rb#9781
   sig { returns(T::Boolean) }
   def ignore_case?; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#9221
+  # source://prism//lib/prism/node.rb#9846
   def inspect(inspector = T.unsafe(nil)); end
 
   # def multi_line?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9191
+  # source://prism//lib/prism/node.rb#9791
   sig { returns(T::Boolean) }
   def multi_line?; end
 
@@ -14498,29 +16335,29 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9196
+  # source://prism//lib/prism/node.rb#9796
   sig { returns(T::Boolean) }
   def once?; end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#9171
+  # source://prism//lib/prism/node.rb#9836
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9106
+  # source://prism//lib/prism/node.rb#9719
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9109
+  # source://prism//lib/prism/node.rb#9722
   sig { returns(T::Array[Prism::Node]) }
   def parts; end
 
-  # source://prism//lib/prism/node.rb#9131
+  # source://prism//lib/prism/node.rb#9741
   def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -14538,14 +16375,14 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#9245
+  # source://prism//lib/prism/node.rb#9870
   def type; end
 
   # def utf_8?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9216
+  # source://prism//lib/prism/node.rb#9816
   sig { returns(T::Boolean) }
   def utf_8?; end
 
@@ -14553,7 +16390,7 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9211
+  # source://prism//lib/prism/node.rb#9811
   sig { returns(T::Boolean) }
   def windows_31j?; end
 
@@ -14561,7 +16398,7 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#9115
+  # source://prism//lib/prism/node.rb#9716
   sig { returns(Integer) }
   def flags; end
 
@@ -14573,7 +16410,7 @@ class Prism::InterpolatedMatchLastLineNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#9255
+    # source://prism//lib/prism/node.rb#9880
     def type; end
   end
 end
@@ -14583,29 +16420,29 @@ end
 #     /foo #{bar} baz/
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9264
+# source://prism//lib/prism/node.rb#9889
 class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
-  # def initialize: (opening_loc: Location, parts: Array[Node], closing_loc: Location, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, opening_loc: Location, parts: Array[Node], closing_loc: Location, location: Location) -> void
   #
   # @return [InterpolatedRegularExpressionNode] a new instance of InterpolatedRegularExpressionNode
   #
-  # source://prism//lib/prism/node.rb#9278
+  # source://prism//lib/prism/node.rb#9903
   sig do
     params(
+      flags: Integer,
       opening_loc: Prism::Location,
       parts: T::Array[Prism::Node],
       closing_loc: Prism::Location,
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(opening_loc, parts, closing_loc, flags, location); end
+  def initialize(flags, opening_loc, parts, closing_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9287
+  # source://prism//lib/prism/node.rb#9912
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
@@ -14613,54 +16450,54 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9366
+  # source://prism//lib/prism/node.rb#9981
   sig { returns(T::Boolean) }
   def ascii_8bit?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9297
+  # source://prism//lib/prism/node.rb#9922
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#9336
+  # source://prism//lib/prism/node.rb#10016
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9272
+  # source://prism//lib/prism/node.rb#9900
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#9307
+  # source://prism//lib/prism/node.rb#9932
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9302
+  # source://prism//lib/prism/node.rb#9927
   def compact_child_nodes; end
 
   # def copy: (**params) -> InterpolatedRegularExpressionNode
   #
-  # source://prism//lib/prism/node.rb#9312
+  # source://prism//lib/prism/node.rb#9937
   sig { params(params: T.untyped).returns(Prism::InterpolatedRegularExpressionNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9297
+  # source://prism//lib/prism/node.rb#9922
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#9326
+  # source://prism//lib/prism/node.rb#9951
   sig do
     params(
       keys: T::Array[Symbol]
@@ -14672,7 +16509,7 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9361
+  # source://prism//lib/prism/node.rb#9976
   sig { returns(T::Boolean) }
   def euc_jp?; end
 
@@ -14680,28 +16517,52 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9346
+  # source://prism//lib/prism/node.rb#9961
   sig { returns(T::Boolean) }
   def extended?; end
+
+  # def forced_binary_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#10001
+  sig { returns(T::Boolean) }
+  def forced_binary_encoding?; end
+
+  # def forced_us_ascii_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#10006
+  sig { returns(T::Boolean) }
+  def forced_us_ascii_encoding?; end
+
+  # def forced_utf8_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#9996
+  sig { returns(T::Boolean) }
+  def forced_utf8_encoding?; end
 
   # def ignore_case?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9341
+  # source://prism//lib/prism/node.rb#9956
   sig { returns(T::Boolean) }
   def ignore_case?; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#9381
+  # source://prism//lib/prism/node.rb#10021
   def inspect(inspector = T.unsafe(nil)); end
 
   # def multi_line?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9351
+  # source://prism//lib/prism/node.rb#9966
   sig { returns(T::Boolean) }
   def multi_line?; end
 
@@ -14709,29 +16570,29 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9356
+  # source://prism//lib/prism/node.rb#9971
   sig { returns(T::Boolean) }
   def once?; end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#9331
+  # source://prism//lib/prism/node.rb#10011
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9266
+  # source://prism//lib/prism/node.rb#9894
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9269
+  # source://prism//lib/prism/node.rb#9897
   sig { returns(T::Array[Prism::Node]) }
   def parts; end
 
-  # source://prism//lib/prism/node.rb#9291
+  # source://prism//lib/prism/node.rb#9916
   def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -14749,14 +16610,14 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#9405
+  # source://prism//lib/prism/node.rb#10045
   def type; end
 
   # def utf_8?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9376
+  # source://prism//lib/prism/node.rb#9991
   sig { returns(T::Boolean) }
   def utf_8?; end
 
@@ -14764,7 +16625,7 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#9371
+  # source://prism//lib/prism/node.rb#9986
   sig { returns(T::Boolean) }
   def windows_31j?; end
 
@@ -14772,7 +16633,7 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#9275
+  # source://prism//lib/prism/node.rb#9891
   sig { returns(Integer) }
   def flags; end
 
@@ -14784,7 +16645,7 @@ class Prism::InterpolatedRegularExpressionNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#9415
+    # source://prism//lib/prism/node.rb#10055
     def type; end
   end
 end
@@ -14794,13 +16655,15 @@ end
 #     "foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9424
+# source://prism//lib/prism/node.rb#10064
 class Prism::InterpolatedStringNode < ::Prism::Node
+  include ::Prism::HeredocQuery
+
   # def initialize: (opening_loc: Location?, parts: Array[Node], closing_loc: Location?, location: Location) -> void
   #
   # @return [InterpolatedStringNode] a new instance of InterpolatedStringNode
   #
-  # source://prism//lib/prism/node.rb#9435
+  # source://prism//lib/prism/node.rb#10075
   sig do
     params(
       opening_loc: T.nilable(Prism::Location),
@@ -14813,54 +16676,54 @@ class Prism::InterpolatedStringNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9443
+  # source://prism//lib/prism/node.rb#10083
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9453
+  # source://prism//lib/prism/node.rb#10093
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#9491
+  # source://prism//lib/prism/node.rb#10131
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#9432
+  # source://prism//lib/prism/node.rb#10072
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#9463
+  # source://prism//lib/prism/node.rb#10103
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9458
+  # source://prism//lib/prism/node.rb#10098
   def compact_child_nodes; end
 
   # def copy: (**params) -> InterpolatedStringNode
   #
-  # source://prism//lib/prism/node.rb#9468
+  # source://prism//lib/prism/node.rb#10108
   sig { params(params: T.untyped).returns(Prism::InterpolatedStringNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9453
+  # source://prism//lib/prism/node.rb#10093
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#9481
+  # source://prism//lib/prism/node.rb#10121
   sig do
     params(
       keys: T::Array[Symbol]
@@ -14870,28 +16733,28 @@ class Prism::InterpolatedStringNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#9496
+  # source://prism//lib/prism/node.rb#10136
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#9486
+  # source://prism//lib/prism/node.rb#10126
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#9426
+  # source://prism//lib/prism/node.rb#10066
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9429
+  # source://prism//lib/prism/node.rb#10069
   sig { returns(T::Array[Prism::Node]) }
   def parts; end
 
-  # source://prism//lib/prism/node.rb#9447
+  # source://prism//lib/prism/node.rb#10087
   def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -14909,7 +16772,7 @@ class Prism::InterpolatedStringNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#9518
+  # source://prism//lib/prism/node.rb#10158
   def type; end
 
   class << self
@@ -14920,7 +16783,7 @@ class Prism::InterpolatedStringNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#9528
+    # source://prism//lib/prism/node.rb#10168
     def type; end
   end
 end
@@ -14930,13 +16793,13 @@ end
 #     :"foo #{bar} baz"
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9537
+# source://prism//lib/prism/node.rb#10177
 class Prism::InterpolatedSymbolNode < ::Prism::Node
   # def initialize: (opening_loc: Location?, parts: Array[Node], closing_loc: Location?, location: Location) -> void
   #
   # @return [InterpolatedSymbolNode] a new instance of InterpolatedSymbolNode
   #
-  # source://prism//lib/prism/node.rb#9548
+  # source://prism//lib/prism/node.rb#10188
   sig do
     params(
       opening_loc: T.nilable(Prism::Location),
@@ -14949,54 +16812,54 @@ class Prism::InterpolatedSymbolNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9556
+  # source://prism//lib/prism/node.rb#10196
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9566
+  # source://prism//lib/prism/node.rb#10206
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#9604
+  # source://prism//lib/prism/node.rb#10244
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#9545
+  # source://prism//lib/prism/node.rb#10185
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#9576
+  # source://prism//lib/prism/node.rb#10216
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9571
+  # source://prism//lib/prism/node.rb#10211
   def compact_child_nodes; end
 
   # def copy: (**params) -> InterpolatedSymbolNode
   #
-  # source://prism//lib/prism/node.rb#9581
+  # source://prism//lib/prism/node.rb#10221
   sig { params(params: T.untyped).returns(Prism::InterpolatedSymbolNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9566
+  # source://prism//lib/prism/node.rb#10206
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#9594
+  # source://prism//lib/prism/node.rb#10234
   sig do
     params(
       keys: T::Array[Symbol]
@@ -15006,28 +16869,28 @@ class Prism::InterpolatedSymbolNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#9609
+  # source://prism//lib/prism/node.rb#10249
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#9599
+  # source://prism//lib/prism/node.rb#10239
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#9539
+  # source://prism//lib/prism/node.rb#10179
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9542
+  # source://prism//lib/prism/node.rb#10182
   sig { returns(T::Array[Prism::Node]) }
   def parts; end
 
-  # source://prism//lib/prism/node.rb#9560
+  # source://prism//lib/prism/node.rb#10200
   def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -15045,7 +16908,7 @@ class Prism::InterpolatedSymbolNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#9631
+  # source://prism//lib/prism/node.rb#10271
   def type; end
 
   class << self
@@ -15056,7 +16919,7 @@ class Prism::InterpolatedSymbolNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#9641
+    # source://prism//lib/prism/node.rb#10281
     def type; end
   end
 end
@@ -15066,13 +16929,15 @@ end
 #     `foo #{bar} baz`
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9650
+# source://prism//lib/prism/node.rb#10290
 class Prism::InterpolatedXStringNode < ::Prism::Node
+  include ::Prism::HeredocQuery
+
   # def initialize: (opening_loc: Location, parts: Array[Node], closing_loc: Location, location: Location) -> void
   #
   # @return [InterpolatedXStringNode] a new instance of InterpolatedXStringNode
   #
-  # source://prism//lib/prism/node.rb#9661
+  # source://prism//lib/prism/node.rb#10301
   sig do
     params(
       opening_loc: Prism::Location,
@@ -15085,54 +16950,54 @@ class Prism::InterpolatedXStringNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9669
+  # source://prism//lib/prism/node.rb#10309
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9679
+  # source://prism//lib/prism/node.rb#10319
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#9717
+  # source://prism//lib/prism/node.rb#10357
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9658
+  # source://prism//lib/prism/node.rb#10298
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#9689
+  # source://prism//lib/prism/node.rb#10329
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9684
+  # source://prism//lib/prism/node.rb#10324
   def compact_child_nodes; end
 
   # def copy: (**params) -> InterpolatedXStringNode
   #
-  # source://prism//lib/prism/node.rb#9694
+  # source://prism//lib/prism/node.rb#10334
   sig { params(params: T.untyped).returns(Prism::InterpolatedXStringNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9679
+  # source://prism//lib/prism/node.rb#10319
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#9707
+  # source://prism//lib/prism/node.rb#10347
   sig do
     params(
       keys: T::Array[Symbol]
@@ -15142,28 +17007,28 @@ class Prism::InterpolatedXStringNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#9722
+  # source://prism//lib/prism/node.rb#10362
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#9712
+  # source://prism//lib/prism/node.rb#10352
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9652
+  # source://prism//lib/prism/node.rb#10292
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # attr_reader parts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9655
+  # source://prism//lib/prism/node.rb#10295
   sig { returns(T::Array[Prism::Node]) }
   def parts; end
 
-  # source://prism//lib/prism/node.rb#9673
+  # source://prism//lib/prism/node.rb#10313
   def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -15181,7 +17046,7 @@ class Prism::InterpolatedXStringNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#9744
+  # source://prism//lib/prism/node.rb#10384
   def type; end
 
   class << self
@@ -15192,7 +17057,7 @@ class Prism::InterpolatedXStringNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#9754
+    # source://prism//lib/prism/node.rb#10394
     def type; end
   end
 end
@@ -15202,54 +17067,54 @@ end
 #     foo(a: b)
 #         ^^^^
 #
-# source://prism//lib/prism/node.rb#9763
+# source://prism//lib/prism/node.rb#10403
 class Prism::KeywordHashNode < ::Prism::Node
-  # def initialize: (elements: Array[Node], location: Location) -> void
+  # def initialize: (flags: Integer, elements: Array[Node], location: Location) -> void
   #
   # @return [KeywordHashNode] a new instance of KeywordHashNode
   #
-  # source://prism//lib/prism/node.rb#9768
-  sig { params(elements: T::Array[Prism::Node], location: Prism::Location).void }
-  def initialize(elements, location); end
+  # source://prism//lib/prism/node.rb#10411
+  sig { params(flags: Integer, elements: T::Array[Prism::Node], location: Prism::Location).void }
+  def initialize(flags, elements, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9774
+  # source://prism//lib/prism/node.rb#10418
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9779
+  # source://prism//lib/prism/node.rb#10423
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#9789
+  # source://prism//lib/prism/node.rb#10433
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9784
+  # source://prism//lib/prism/node.rb#10428
   def compact_child_nodes; end
 
   # def copy: (**params) -> KeywordHashNode
   #
-  # source://prism//lib/prism/node.rb#9794
+  # source://prism//lib/prism/node.rb#10438
   sig { params(params: T.untyped).returns(Prism::KeywordHashNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9779
+  # source://prism//lib/prism/node.rb#10423
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#9805
+  # source://prism//lib/prism/node.rb#10450
   sig do
     params(
       keys: T::Array[Symbol]
@@ -15259,14 +17124,22 @@ class Prism::KeywordHashNode < ::Prism::Node
 
   # attr_reader elements: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9765
+  # source://prism//lib/prism/node.rb#10408
   sig { returns(T::Array[Prism::Node]) }
   def elements; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#9810
+  # source://prism//lib/prism/node.rb#10460
   def inspect(inspector = T.unsafe(nil)); end
+
+  # def static_keys?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#10455
+  sig { returns(T::Boolean) }
+  def static_keys?; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -15283,8 +17156,16 @@ class Prism::KeywordHashNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#9830
+  # source://prism//lib/prism/node.rb#10482
   def type; end
+
+  private
+
+  # Returns the value of attribute flags.
+  #
+  # source://prism//lib/prism/node.rb#10405
+  sig { returns(Integer) }
+  def flags; end
 
   class << self
     # Similar to #type, this method returns a symbol that you can use for
@@ -15294,10 +17175,20 @@ class Prism::KeywordHashNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#9840
+    # source://prism//lib/prism/node.rb#10492
     def type; end
   end
 end
+
+# Flags for keyword hash nodes.
+#
+# source://prism//lib/prism/node.rb#17325
+module Prism::KeywordHashNodeFlags; end
+
+# a keyword hash which only has `AssocNode` elements all with static literal keys, which means the elements can be treated as keyword arguments
+#
+# source://prism//lib/prism/node.rb#17327
+Prism::KeywordHashNodeFlags::STATIC_KEYS = T.let(T.unsafe(nil), Integer)
 
 # Represents a keyword rest parameter to a method, block, or lambda definition.
 #
@@ -15305,13 +17196,13 @@ end
 #           ^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#9850
+# source://prism//lib/prism/node.rb#10502
 class Prism::KeywordRestParameterNode < ::Prism::Node
   # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
   # @return [KeywordRestParameterNode] a new instance of KeywordRestParameterNode
   #
-  # source://prism//lib/prism/node.rb#9861
+  # source://prism//lib/prism/node.rb#10513
   sig do
     params(
       name: T.nilable(Symbol),
@@ -15324,42 +17215,42 @@ class Prism::KeywordRestParameterNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9869
+  # source://prism//lib/prism/node.rb#10521
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9874
+  # source://prism//lib/prism/node.rb#10526
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#9884
+  # source://prism//lib/prism/node.rb#10536
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9879
+  # source://prism//lib/prism/node.rb#10531
   def compact_child_nodes; end
 
   # def copy: (**params) -> KeywordRestParameterNode
   #
-  # source://prism//lib/prism/node.rb#9889
+  # source://prism//lib/prism/node.rb#10541
   sig { params(params: T.untyped).returns(Prism::KeywordRestParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9874
+  # source://prism//lib/prism/node.rb#10526
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#9902
+  # source://prism//lib/prism/node.rb#10554
   sig do
     params(
       keys: T::Array[Symbol]
@@ -15369,30 +17260,30 @@ class Prism::KeywordRestParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#9912
+  # source://prism//lib/prism/node.rb#10564
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol?
   #
-  # source://prism//lib/prism/node.rb#9852
+  # source://prism//lib/prism/node.rb#10504
   sig { returns(T.nilable(Symbol)) }
   def name; end
 
   # attr_reader name_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#9855
+  # source://prism//lib/prism/node.rb#10507
   sig { returns(T.nilable(Prism::Location)) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#9907
+  # source://prism//lib/prism/node.rb#10559
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9858
+  # source://prism//lib/prism/node.rb#10510
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -15411,7 +17302,7 @@ class Prism::KeywordRestParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#9938
+  # source://prism//lib/prism/node.rb#10590
   def type; end
 
   class << self
@@ -15422,7 +17313,7 @@ class Prism::KeywordRestParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#9948
+    # source://prism//lib/prism/node.rb#10600
     def type; end
   end
 end
@@ -15432,82 +17323,83 @@ end
 #     ->(value) { value * 2 }
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#9957
+# source://prism//lib/prism/node.rb#10609
 class Prism::LambdaNode < ::Prism::Node
-  # def initialize: (locals: Array[Symbol], operator_loc: Location, opening_loc: Location, closing_loc: Location, parameters: BlockParametersNode?, body: Node?, location: Location) -> void
+  # def initialize: (locals: Array[Symbol], locals_body_index: Integer, operator_loc: Location, opening_loc: Location, closing_loc: Location, parameters: Node?, body: Node?, location: Location) -> void
   #
   # @return [LambdaNode] a new instance of LambdaNode
   #
-  # source://prism//lib/prism/node.rb#9977
+  # source://prism//lib/prism/node.rb#10632
   sig do
     params(
       locals: T::Array[Symbol],
+      locals_body_index: Integer,
       operator_loc: Prism::Location,
       opening_loc: Prism::Location,
       closing_loc: Prism::Location,
-      parameters: T.nilable(Prism::BlockParametersNode),
+      parameters: T.nilable(Prism::Node),
       body: T.nilable(Prism::Node),
       location: Prism::Location
     ).void
   end
-  def initialize(locals, operator_loc, opening_loc, closing_loc, parameters, body, location); end
+  def initialize(locals, locals_body_index, operator_loc, opening_loc, closing_loc, parameters, body, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#9988
+  # source://prism//lib/prism/node.rb#10644
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://prism//lib/prism/node.rb#9974
+  # source://prism//lib/prism/node.rb#10629
   sig { returns(T.nilable(Prism::Node)) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9993
+  # source://prism//lib/prism/node.rb#10649
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#10042
+  # source://prism//lib/prism/node.rb#10699
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9968
+  # source://prism//lib/prism/node.rb#10623
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10006
+  # source://prism//lib/prism/node.rb#10662
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#9998
+  # source://prism//lib/prism/node.rb#10654
   def compact_child_nodes; end
 
   # def copy: (**params) -> LambdaNode
   #
-  # source://prism//lib/prism/node.rb#10011
+  # source://prism//lib/prism/node.rb#10667
   sig { params(params: T.untyped).returns(Prism::LambdaNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#9993
+  # source://prism//lib/prism/node.rb#10649
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10027
+  # source://prism//lib/prism/node.rb#10684
   sig do
     params(
       keys: T::Array[Symbol]
@@ -15517,43 +17409,49 @@ class Prism::LambdaNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10047
+  # source://prism//lib/prism/node.rb#10704
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://prism//lib/prism/node.rb#9959
+  # source://prism//lib/prism/node.rb#10611
   sig { returns(T::Array[Symbol]) }
   def locals; end
 
+  # attr_reader locals_body_index: Integer
+  #
+  # source://prism//lib/prism/node.rb#10614
+  sig { returns(Integer) }
+  def locals_body_index; end
+
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#10037
+  # source://prism//lib/prism/node.rb#10694
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9965
+  # source://prism//lib/prism/node.rb#10620
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#10032
+  # source://prism//lib/prism/node.rb#10689
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#9962
+  # source://prism//lib/prism/node.rb#10617
   sig { returns(Prism::Location) }
   def operator_loc; end
 
-  # attr_reader parameters: BlockParametersNode?
+  # attr_reader parameters: Node?
   #
-  # source://prism//lib/prism/node.rb#9971
-  sig { returns(T.nilable(Prism::BlockParametersNode)) }
+  # source://prism//lib/prism/node.rb#10626
+  sig { returns(T.nilable(Prism::Node)) }
   def parameters; end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -15571,7 +17469,7 @@ class Prism::LambdaNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10082
+  # source://prism//lib/prism/node.rb#10740
   def type; end
 
   class << self
@@ -15582,7 +17480,7 @@ class Prism::LambdaNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10092
+    # source://prism//lib/prism/node.rb#10750
     def type; end
   end
 end
@@ -15817,17 +17715,17 @@ end
 # This is a class that wraps the Ripper lexer to produce almost exactly the
 # same tokens.
 #
-# source://prism//lib/prism/lex_compat.rb#842
+# source://prism//lib/prism/lex_compat.rb#852
 class Prism::LexRipper
   # @return [LexRipper] a new instance of LexRipper
   #
-  # source://prism//lib/prism/lex_compat.rb#845
+  # source://prism//lib/prism/lex_compat.rb#855
   def initialize(source); end
 
-  # source://prism//lib/prism/lex_compat.rb#849
+  # source://prism//lib/prism/lex_compat.rb#859
   def result; end
 
-  # source://prism//lib/prism/lex_compat.rb#843
+  # source://prism//lib/prism/lex_compat.rb#853
   def source; end
 end
 
@@ -15836,13 +17734,13 @@ end
 #     target &&= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10101
+# source://prism//lib/prism/node.rb#10759
 class Prism::LocalVariableAndWriteNode < ::Prism::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableAndWriteNode] a new instance of LocalVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#10118
+  # source://prism//lib/prism/node.rb#10776
   sig do
     params(
       name_loc: Prism::Location,
@@ -15857,42 +17755,42 @@ class Prism::LocalVariableAndWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10128
+  # source://prism//lib/prism/node.rb#10786
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10133
+  # source://prism//lib/prism/node.rb#10791
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10143
+  # source://prism//lib/prism/node.rb#10801
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10138
+  # source://prism//lib/prism/node.rb#10796
   def compact_child_nodes; end
 
   # def copy: (**params) -> LocalVariableAndWriteNode
   #
-  # source://prism//lib/prism/node.rb#10148
+  # source://prism//lib/prism/node.rb#10806
   sig { params(params: T.untyped).returns(Prism::LocalVariableAndWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10133
+  # source://prism//lib/prism/node.rb#10791
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10163
+  # source://prism//lib/prism/node.rb#10821
   sig do
     params(
       keys: T::Array[Symbol]
@@ -15902,36 +17800,36 @@ class Prism::LocalVariableAndWriteNode < ::Prism::Node
 
   # attr_reader depth: Integer
   #
-  # source://prism//lib/prism/node.rb#10115
+  # source://prism//lib/prism/node.rb#10773
   sig { returns(Integer) }
   def depth; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10173
+  # source://prism//lib/prism/node.rb#10831
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#10112
+  # source://prism//lib/prism/node.rb#10770
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10103
+  # source://prism//lib/prism/node.rb#10761
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#10168
+  # source://prism//lib/prism/node.rb#10826
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10106
+  # source://prism//lib/prism/node.rb#10764
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -15950,12 +17848,12 @@ class Prism::LocalVariableAndWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10198
+  # source://prism//lib/prism/node.rb#10856
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#10109
+  # source://prism//lib/prism/node.rb#10767
   sig { returns(Prism::Node) }
   def value; end
 
@@ -15967,7 +17865,7 @@ class Prism::LocalVariableAndWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10208
+    # source://prism//lib/prism/node.rb#10866
     def type; end
   end
 end
@@ -15977,13 +17875,13 @@ end
 #     target += value
 #     ^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10217
+# source://prism//lib/prism/node.rb#10875
 class Prism::LocalVariableOperatorWriteNode < ::Prism::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, operator: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableOperatorWriteNode] a new instance of LocalVariableOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#10237
+  # source://prism//lib/prism/node.rb#10895
   sig do
     params(
       name_loc: Prism::Location,
@@ -15999,42 +17897,42 @@ class Prism::LocalVariableOperatorWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10248
+  # source://prism//lib/prism/node.rb#10906
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10253
+  # source://prism//lib/prism/node.rb#10911
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10263
+  # source://prism//lib/prism/node.rb#10921
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10258
+  # source://prism//lib/prism/node.rb#10916
   def compact_child_nodes; end
 
   # def copy: (**params) -> LocalVariableOperatorWriteNode
   #
-  # source://prism//lib/prism/node.rb#10268
+  # source://prism//lib/prism/node.rb#10926
   sig { params(params: T.untyped).returns(Prism::LocalVariableOperatorWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10253
+  # source://prism//lib/prism/node.rb#10911
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10284
+  # source://prism//lib/prism/node.rb#10942
   sig do
     params(
       keys: T::Array[Symbol]
@@ -16044,36 +17942,36 @@ class Prism::LocalVariableOperatorWriteNode < ::Prism::Node
 
   # attr_reader depth: Integer
   #
-  # source://prism//lib/prism/node.rb#10234
+  # source://prism//lib/prism/node.rb#10892
   sig { returns(Integer) }
   def depth; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10289
+  # source://prism//lib/prism/node.rb#10947
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#10228
+  # source://prism//lib/prism/node.rb#10886
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10219
+  # source://prism//lib/prism/node.rb#10877
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # attr_reader operator: Symbol
   #
-  # source://prism//lib/prism/node.rb#10231
+  # source://prism//lib/prism/node.rb#10889
   sig { returns(Symbol) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10222
+  # source://prism//lib/prism/node.rb#10880
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -16092,12 +17990,12 @@ class Prism::LocalVariableOperatorWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10315
+  # source://prism//lib/prism/node.rb#10973
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#10225
+  # source://prism//lib/prism/node.rb#10883
   sig { returns(Prism::Node) }
   def value; end
 
@@ -16109,7 +18007,7 @@ class Prism::LocalVariableOperatorWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10325
+    # source://prism//lib/prism/node.rb#10983
     def type; end
   end
 end
@@ -16119,13 +18017,13 @@ end
 #     target ||= value
 #     ^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10334
+# source://prism//lib/prism/node.rb#10992
 class Prism::LocalVariableOrWriteNode < ::Prism::Node
   # def initialize: (name_loc: Location, operator_loc: Location, value: Node, name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableOrWriteNode] a new instance of LocalVariableOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#10351
+  # source://prism//lib/prism/node.rb#11009
   sig do
     params(
       name_loc: Prism::Location,
@@ -16140,42 +18038,42 @@ class Prism::LocalVariableOrWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10361
+  # source://prism//lib/prism/node.rb#11019
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10366
+  # source://prism//lib/prism/node.rb#11024
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10376
+  # source://prism//lib/prism/node.rb#11034
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10371
+  # source://prism//lib/prism/node.rb#11029
   def compact_child_nodes; end
 
   # def copy: (**params) -> LocalVariableOrWriteNode
   #
-  # source://prism//lib/prism/node.rb#10381
+  # source://prism//lib/prism/node.rb#11039
   sig { params(params: T.untyped).returns(Prism::LocalVariableOrWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10366
+  # source://prism//lib/prism/node.rb#11024
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10396
+  # source://prism//lib/prism/node.rb#11054
   sig do
     params(
       keys: T::Array[Symbol]
@@ -16185,36 +18083,36 @@ class Prism::LocalVariableOrWriteNode < ::Prism::Node
 
   # attr_reader depth: Integer
   #
-  # source://prism//lib/prism/node.rb#10348
+  # source://prism//lib/prism/node.rb#11006
   sig { returns(Integer) }
   def depth; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10406
+  # source://prism//lib/prism/node.rb#11064
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#10345
+  # source://prism//lib/prism/node.rb#11003
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10336
+  # source://prism//lib/prism/node.rb#10994
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#10401
+  # source://prism//lib/prism/node.rb#11059
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10339
+  # source://prism//lib/prism/node.rb#10997
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -16233,12 +18131,12 @@ class Prism::LocalVariableOrWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10431
+  # source://prism//lib/prism/node.rb#11089
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#10342
+  # source://prism//lib/prism/node.rb#11000
   sig { returns(Prism::Node) }
   def value; end
 
@@ -16250,7 +18148,7 @@ class Prism::LocalVariableOrWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10441
+    # source://prism//lib/prism/node.rb#11099
     def type; end
   end
 end
@@ -16262,54 +18160,54 @@ end
 #     foo
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#10452
+# source://prism//lib/prism/node.rb#11110
 class Prism::LocalVariableReadNode < ::Prism::Node
   # def initialize: (name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableReadNode] a new instance of LocalVariableReadNode
   #
-  # source://prism//lib/prism/node.rb#10460
+  # source://prism//lib/prism/node.rb#11118
   sig { params(name: Symbol, depth: Integer, location: Prism::Location).void }
   def initialize(name, depth, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10467
+  # source://prism//lib/prism/node.rb#11125
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10472
+  # source://prism//lib/prism/node.rb#11130
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10482
+  # source://prism//lib/prism/node.rb#11140
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10477
+  # source://prism//lib/prism/node.rb#11135
   def compact_child_nodes; end
 
   # def copy: (**params) -> LocalVariableReadNode
   #
-  # source://prism//lib/prism/node.rb#10487
+  # source://prism//lib/prism/node.rb#11145
   sig { params(params: T.untyped).returns(Prism::LocalVariableReadNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10472
+  # source://prism//lib/prism/node.rb#11130
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10499
+  # source://prism//lib/prism/node.rb#11157
   sig do
     params(
       keys: T::Array[Symbol]
@@ -16319,18 +18217,18 @@ class Prism::LocalVariableReadNode < ::Prism::Node
 
   # attr_reader depth: Integer
   #
-  # source://prism//lib/prism/node.rb#10457
+  # source://prism//lib/prism/node.rb#11115
   sig { returns(Integer) }
   def depth; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10504
+  # source://prism//lib/prism/node.rb#11162
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#10454
+  # source://prism//lib/prism/node.rb#11112
   sig { returns(Symbol) }
   def name; end
 
@@ -16349,7 +18247,7 @@ class Prism::LocalVariableReadNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10525
+  # source://prism//lib/prism/node.rb#11183
   def type; end
 
   class << self
@@ -16360,7 +18258,7 @@ class Prism::LocalVariableReadNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10535
+    # source://prism//lib/prism/node.rb#11193
     def type; end
   end
 end
@@ -16370,54 +18268,54 @@ end
 #     foo, bar = baz
 #     ^^^  ^^^
 #
-# source://prism//lib/prism/node.rb#10544
+# source://prism//lib/prism/node.rb#11202
 class Prism::LocalVariableTargetNode < ::Prism::Node
   # def initialize: (name: Symbol, depth: Integer, location: Location) -> void
   #
   # @return [LocalVariableTargetNode] a new instance of LocalVariableTargetNode
   #
-  # source://prism//lib/prism/node.rb#10552
+  # source://prism//lib/prism/node.rb#11210
   sig { params(name: Symbol, depth: Integer, location: Prism::Location).void }
   def initialize(name, depth, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10559
+  # source://prism//lib/prism/node.rb#11217
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10564
+  # source://prism//lib/prism/node.rb#11222
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10574
+  # source://prism//lib/prism/node.rb#11232
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10569
+  # source://prism//lib/prism/node.rb#11227
   def compact_child_nodes; end
 
   # def copy: (**params) -> LocalVariableTargetNode
   #
-  # source://prism//lib/prism/node.rb#10579
+  # source://prism//lib/prism/node.rb#11237
   sig { params(params: T.untyped).returns(Prism::LocalVariableTargetNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10564
+  # source://prism//lib/prism/node.rb#11222
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10591
+  # source://prism//lib/prism/node.rb#11249
   sig do
     params(
       keys: T::Array[Symbol]
@@ -16427,18 +18325,18 @@ class Prism::LocalVariableTargetNode < ::Prism::Node
 
   # attr_reader depth: Integer
   #
-  # source://prism//lib/prism/node.rb#10549
+  # source://prism//lib/prism/node.rb#11207
   sig { returns(Integer) }
   def depth; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10596
+  # source://prism//lib/prism/node.rb#11254
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#10546
+  # source://prism//lib/prism/node.rb#11204
   sig { returns(Symbol) }
   def name; end
 
@@ -16457,7 +18355,7 @@ class Prism::LocalVariableTargetNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10617
+  # source://prism//lib/prism/node.rb#11275
   def type; end
 
   class << self
@@ -16468,7 +18366,7 @@ class Prism::LocalVariableTargetNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10627
+    # source://prism//lib/prism/node.rb#11285
     def type; end
   end
 end
@@ -16478,13 +18376,13 @@ end
 #     foo = 1
 #     ^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10636
+# source://prism//lib/prism/node.rb#11294
 class Prism::LocalVariableWriteNode < ::Prism::Node
   # def initialize: (name: Symbol, depth: Integer, name_loc: Location, value: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [LocalVariableWriteNode] a new instance of LocalVariableWriteNode
   #
-  # source://prism//lib/prism/node.rb#10653
+  # source://prism//lib/prism/node.rb#11311
   sig do
     params(
       name: Symbol,
@@ -16499,42 +18397,42 @@ class Prism::LocalVariableWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10663
+  # source://prism//lib/prism/node.rb#11321
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10668
+  # source://prism//lib/prism/node.rb#11326
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10678
+  # source://prism//lib/prism/node.rb#11336
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10673
+  # source://prism//lib/prism/node.rb#11331
   def compact_child_nodes; end
 
   # def copy: (**params) -> LocalVariableWriteNode
   #
-  # source://prism//lib/prism/node.rb#10683
+  # source://prism//lib/prism/node.rb#11341
   sig { params(params: T.untyped).returns(Prism::LocalVariableWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10668
+  # source://prism//lib/prism/node.rb#11326
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10698
+  # source://prism//lib/prism/node.rb#11356
   sig do
     params(
       keys: T::Array[Symbol]
@@ -16544,36 +18442,36 @@ class Prism::LocalVariableWriteNode < ::Prism::Node
 
   # attr_reader depth: Integer
   #
-  # source://prism//lib/prism/node.rb#10641
+  # source://prism//lib/prism/node.rb#11299
   sig { returns(Integer) }
   def depth; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10708
+  # source://prism//lib/prism/node.rb#11366
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#10638
+  # source://prism//lib/prism/node.rb#11296
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10644
+  # source://prism//lib/prism/node.rb#11302
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#10703
+  # source://prism//lib/prism/node.rb#11361
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10650
+  # source://prism//lib/prism/node.rb#11308
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -16592,12 +18490,12 @@ class Prism::LocalVariableWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10733
+  # source://prism//lib/prism/node.rb#11391
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#10647
+  # source://prism//lib/prism/node.rb#11305
   sig { returns(Prism::Node) }
   def value; end
 
@@ -16609,115 +18507,139 @@ class Prism::LocalVariableWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10743
+    # source://prism//lib/prism/node.rb#11401
     def type; end
   end
 end
 
 # This represents a location in the source.
 #
-# source://prism//lib/prism/parse_result.rb#81
+# source://prism//lib/prism/parse_result.rb#91
 class Prism::Location
   # Create a new location object with the given source, start byte offset, and
   # byte length.
   #
   # @return [Location] a new instance of Location
   #
-  # source://prism//lib/prism/parse_result.rb#98
+  # source://prism//lib/prism/parse_result.rb#108
   sig { params(source: Prism::Source, start_offset: Integer, length: Integer).void }
   def initialize(source, start_offset, length); end
 
   # Returns true if the given other location is equal to this location.
   #
-  # source://prism//lib/prism/parse_result.rb#168
+  # source://prism//lib/prism/parse_result.rb#202
   def ==(other); end
 
   # The list of comments attached to this location
   #
-  # source://prism//lib/prism/parse_result.rb#94
+  # source://prism//lib/prism/parse_result.rb#104
   sig { returns(T::Array[Prism::Comment]) }
   def comments; end
 
   # Create a new location object with the given options.
   #
-  # source://prism//lib/prism/parse_result.rb#106
+  # source://prism//lib/prism/parse_result.rb#116
   sig { params(options: T.untyped).returns(Prism::Location) }
   def copy(**options); end
 
   # Implement the hash pattern matching interface for Location.
   #
-  # source://prism//lib/prism/parse_result.rb#158
+  # source://prism//lib/prism/parse_result.rb#192
   def deconstruct_keys(keys); end
+
+  # The column number in characters where this location ends from the start of
+  # the line.
+  #
+  # source://prism//lib/prism/parse_result.rb#187
+  def end_character_column; end
+
+  # The character offset from the beginning of the source where this location
+  # ends.
+  #
+  # source://prism//lib/prism/parse_result.rb#147
+  def end_character_offset; end
 
   # The column number in bytes where this location ends from the start of the
   # line.
   #
-  # source://prism//lib/prism/parse_result.rb#153
+  # source://prism//lib/prism/parse_result.rb#181
   sig { returns(Integer) }
   def end_column; end
 
   # The line number where this location ends.
   #
-  # source://prism//lib/prism/parse_result.rb#141
+  # source://prism//lib/prism/parse_result.rb#163
   sig { returns(Integer) }
   def end_line; end
 
   # The byte offset from the beginning of the source where this location ends.
   #
-  # source://prism//lib/prism/parse_result.rb#125
+  # source://prism//lib/prism/parse_result.rb#141
   sig { returns(Integer) }
   def end_offset; end
 
   # Returns a string representation of this location.
   #
-  # source://prism//lib/prism/parse_result.rb#115
+  # source://prism//lib/prism/parse_result.rb#125
   def inspect; end
 
   # Returns a new location that stretches from this location to the given
   # other location. Raises an error if this location is not before the other
   # location or if they don't share the same source.
   #
-  # source://prism//lib/prism/parse_result.rb#177
+  # source://prism//lib/prism/parse_result.rb#211
   def join(other); end
 
   # The length of this location in bytes.
   #
-  # source://prism//lib/prism/parse_result.rb#91
+  # source://prism//lib/prism/parse_result.rb#101
   def length; end
 
   # Implement the pretty print interface for Location.
   #
-  # source://prism//lib/prism/parse_result.rb#163
+  # source://prism//lib/prism/parse_result.rb#197
   def pretty_print(q); end
 
   # The source code that this location represents.
   #
-  # source://prism//lib/prism/parse_result.rb#120
+  # source://prism//lib/prism/parse_result.rb#130
   sig { returns(String) }
   def slice; end
+
+  # The column number in characters where this location ends from the start of
+  # the line.
+  #
+  # source://prism//lib/prism/parse_result.rb#175
+  def start_character_column; end
+
+  # The character offset from the beginning of the source where this location
+  # starts.
+  #
+  # source://prism//lib/prism/parse_result.rb#136
+  def start_character_offset; end
 
   # The column number in bytes where this location starts from the start of
   # the line.
   #
-  # source://prism//lib/prism/parse_result.rb#147
+  # source://prism//lib/prism/parse_result.rb#169
   sig { returns(Integer) }
   def start_column; end
 
   # The line number where this location starts.
   #
-  # source://prism//lib/prism/parse_result.rb#130
+  # source://prism//lib/prism/parse_result.rb#152
   sig { returns(Integer) }
   def start_line; end
 
   # The content of the line where this location starts before this location.
   #
-  # source://prism//lib/prism/parse_result.rb#135
+  # source://prism//lib/prism/parse_result.rb#157
   def start_line_slice; end
 
   # The byte offset from the beginning of the source where this location
   # starts.
   #
-  # source://prism//lib/prism/parse_result.rb#88
+  # source://prism//lib/prism/parse_result.rb#98
   sig { returns(Integer) }
   def start_offset; end
 
@@ -16725,7 +18647,7 @@ class Prism::Location
 
   # Returns the value of attribute source.
   #
-  # source://prism//lib/prism/parse_result.rb#84
+  # source://prism//lib/prism/parse_result.rb#94
   def source; end
 
   class << self
@@ -16733,60 +18655,60 @@ class Prism::Location
     # the beginning of the file. Useful for when you want a location object but
     # do not care where it points.
     #
-    # source://prism//lib/prism/parse_result.rb#187
+    # source://prism//lib/prism/parse_result.rb#221
     def null; end
   end
 end
 
 # Flags for while and until loop nodes.
 #
-# source://prism//lib/prism/node.rb#16566
+# source://prism//lib/prism/node.rb#17331
 module Prism::LoopFlags; end
 
 # a loop after a begin statement, so the body is executed first before the condition
 #
-# source://prism//lib/prism/node.rb#16568
+# source://prism//lib/prism/node.rb#17333
 Prism::LoopFlags::BEGIN_MODIFIER = T.let(T.unsafe(nil), Integer)
 
 # This represents a magic comment that was encountered during parsing.
 #
-# source://prism//lib/prism/parse_result.rb#248
+# source://prism//lib/prism/parse_result.rb#273
 class Prism::MagicComment
   # Create a new magic comment object with the given key and value locations.
   #
   # @return [MagicComment] a new instance of MagicComment
   #
-  # source://prism//lib/prism/parse_result.rb#256
+  # source://prism//lib/prism/parse_result.rb#281
   def initialize(key_loc, value_loc); end
 
   # Implement the hash pattern matching interface for MagicComment.
   #
-  # source://prism//lib/prism/parse_result.rb#272
+  # source://prism//lib/prism/parse_result.rb#297
   def deconstruct_keys(keys); end
 
   # Returns a string representation of this magic comment.
   #
-  # source://prism//lib/prism/parse_result.rb#277
+  # source://prism//lib/prism/parse_result.rb#302
   def inspect; end
 
   # Returns the key of the magic comment by slicing it from the source code.
   #
-  # source://prism//lib/prism/parse_result.rb#262
+  # source://prism//lib/prism/parse_result.rb#287
   def key; end
 
   # A Location object representing the location of the key in the source.
   #
-  # source://prism//lib/prism/parse_result.rb#250
+  # source://prism//lib/prism/parse_result.rb#275
   def key_loc; end
 
   # Returns the value of the magic comment by slicing it from the source code.
   #
-  # source://prism//lib/prism/parse_result.rb#267
+  # source://prism//lib/prism/parse_result.rb#292
   def value; end
 
   # A Location object representing the location of the value in the source.
   #
-  # source://prism//lib/prism/parse_result.rb#253
+  # source://prism//lib/prism/parse_result.rb#278
   def value_loc; end
 end
 
@@ -16797,30 +18719,30 @@ end
 #     if /foo/i then end
 #        ^^^^^^
 #
-# source://prism//lib/prism/node.rb#10754
+# source://prism//lib/prism/node.rb#11412
 class Prism::MatchLastLineNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
-  # def initialize: (opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, location: Location) -> void
   #
   # @return [MatchLastLineNode] a new instance of MatchLastLineNode
   #
-  # source://prism//lib/prism/node.rb#10771
+  # source://prism//lib/prism/node.rb#11429
   sig do
     params(
+      flags: Integer,
       opening_loc: Prism::Location,
       content_loc: Prism::Location,
       closing_loc: Prism::Location,
       unescaped: String,
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(opening_loc, content_loc, closing_loc, unescaped, flags, location); end
+  def initialize(flags, opening_loc, content_loc, closing_loc, unescaped, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10781
+  # source://prism//lib/prism/node.rb#11439
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
@@ -16828,66 +18750,66 @@ class Prism::MatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10861
+  # source://prism//lib/prism/node.rb#11504
   sig { returns(T::Boolean) }
   def ascii_8bit?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10786
+  # source://prism//lib/prism/node.rb#11444
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#10831
+  # source://prism//lib/prism/node.rb#11544
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10762
+  # source://prism//lib/prism/node.rb#11423
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10796
+  # source://prism//lib/prism/node.rb#11454
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10791
+  # source://prism//lib/prism/node.rb#11449
   def compact_child_nodes; end
 
   # def content: () -> String
   #
-  # source://prism//lib/prism/node.rb#10826
+  # source://prism//lib/prism/node.rb#11539
   sig { returns(String) }
   def content; end
 
   # attr_reader content_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10759
+  # source://prism//lib/prism/node.rb#11420
   sig { returns(Prism::Location) }
   def content_loc; end
 
   # def copy: (**params) -> MatchLastLineNode
   #
-  # source://prism//lib/prism/node.rb#10801
+  # source://prism//lib/prism/node.rb#11459
   sig { params(params: T.untyped).returns(Prism::MatchLastLineNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10786
+  # source://prism//lib/prism/node.rb#11444
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10816
+  # source://prism//lib/prism/node.rb#11474
   sig do
     params(
       keys: T::Array[Symbol]
@@ -16899,7 +18821,7 @@ class Prism::MatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10856
+  # source://prism//lib/prism/node.rb#11499
   sig { returns(T::Boolean) }
   def euc_jp?; end
 
@@ -16907,28 +18829,52 @@ class Prism::MatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10841
+  # source://prism//lib/prism/node.rb#11484
   sig { returns(T::Boolean) }
   def extended?; end
+
+  # def forced_binary_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#11524
+  sig { returns(T::Boolean) }
+  def forced_binary_encoding?; end
+
+  # def forced_us_ascii_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#11529
+  sig { returns(T::Boolean) }
+  def forced_us_ascii_encoding?; end
+
+  # def forced_utf8_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#11519
+  sig { returns(T::Boolean) }
+  def forced_utf8_encoding?; end
 
   # def ignore_case?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10836
+  # source://prism//lib/prism/node.rb#11479
   sig { returns(T::Boolean) }
   def ignore_case?; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10876
+  # source://prism//lib/prism/node.rb#11549
   def inspect(inspector = T.unsafe(nil)); end
 
   # def multi_line?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10846
+  # source://prism//lib/prism/node.rb#11489
   sig { returns(T::Boolean) }
   def multi_line?; end
 
@@ -16936,19 +18882,19 @@ class Prism::MatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10851
+  # source://prism//lib/prism/node.rb#11494
   sig { returns(T::Boolean) }
   def once?; end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#10821
+  # source://prism//lib/prism/node.rb#11534
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10756
+  # source://prism//lib/prism/node.rb#11417
   sig { returns(Prism::Location) }
   def opening_loc; end
 
@@ -16967,12 +18913,12 @@ class Prism::MatchLastLineNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#10901
+  # source://prism//lib/prism/node.rb#11574
   def type; end
 
   # attr_reader unescaped: String
   #
-  # source://prism//lib/prism/node.rb#10765
+  # source://prism//lib/prism/node.rb#11426
   sig { returns(String) }
   def unescaped; end
 
@@ -16980,7 +18926,7 @@ class Prism::MatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10871
+  # source://prism//lib/prism/node.rb#11514
   sig { returns(T::Boolean) }
   def utf_8?; end
 
@@ -16988,7 +18934,7 @@ class Prism::MatchLastLineNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#10866
+  # source://prism//lib/prism/node.rb#11509
   sig { returns(T::Boolean) }
   def windows_31j?; end
 
@@ -16996,7 +18942,7 @@ class Prism::MatchLastLineNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#10768
+  # source://prism//lib/prism/node.rb#11414
   sig { returns(Integer) }
   def flags; end
 
@@ -17008,7 +18954,7 @@ class Prism::MatchLastLineNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#10911
+    # source://prism//lib/prism/node.rb#11584
     def type; end
   end
 end
@@ -17018,13 +18964,13 @@ end
 #     foo in bar
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#10920
+# source://prism//lib/prism/node.rb#11593
 class Prism::MatchPredicateNode < ::Prism::Node
   # def initialize: (value: Node, pattern: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [MatchPredicateNode] a new instance of MatchPredicateNode
   #
-  # source://prism//lib/prism/node.rb#10931
+  # source://prism//lib/prism/node.rb#11604
   sig do
     params(
       value: Prism::Node,
@@ -17037,42 +18983,42 @@ class Prism::MatchPredicateNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#10939
+  # source://prism//lib/prism/node.rb#11612
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10944
+  # source://prism//lib/prism/node.rb#11617
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#10954
+  # source://prism//lib/prism/node.rb#11627
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#10949
+  # source://prism//lib/prism/node.rb#11622
   def compact_child_nodes; end
 
   # def copy: (**params) -> MatchPredicateNode
   #
-  # source://prism//lib/prism/node.rb#10959
+  # source://prism//lib/prism/node.rb#11632
   sig { params(params: T.untyped).returns(Prism::MatchPredicateNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#10944
+  # source://prism//lib/prism/node.rb#11617
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#10972
+  # source://prism//lib/prism/node.rb#11645
   sig do
     params(
       keys: T::Array[Symbol]
@@ -17082,24 +19028,24 @@ class Prism::MatchPredicateNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#10982
+  # source://prism//lib/prism/node.rb#11655
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#10977
+  # source://prism//lib/prism/node.rb#11650
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#10928
+  # source://prism//lib/prism/node.rb#11601
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader pattern: Node
   #
-  # source://prism//lib/prism/node.rb#10925
+  # source://prism//lib/prism/node.rb#11598
   sig { returns(Prism::Node) }
   def pattern; end
 
@@ -17118,12 +19064,12 @@ class Prism::MatchPredicateNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11006
+  # source://prism//lib/prism/node.rb#11679
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#10922
+  # source://prism//lib/prism/node.rb#11595
   sig { returns(Prism::Node) }
   def value; end
 
@@ -17135,7 +19081,7 @@ class Prism::MatchPredicateNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11016
+    # source://prism//lib/prism/node.rb#11689
     def type; end
   end
 end
@@ -17145,13 +19091,13 @@ end
 #     foo => bar
 #     ^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11025
+# source://prism//lib/prism/node.rb#11698
 class Prism::MatchRequiredNode < ::Prism::Node
   # def initialize: (value: Node, pattern: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [MatchRequiredNode] a new instance of MatchRequiredNode
   #
-  # source://prism//lib/prism/node.rb#11036
+  # source://prism//lib/prism/node.rb#11709
   sig do
     params(
       value: Prism::Node,
@@ -17164,42 +19110,42 @@ class Prism::MatchRequiredNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11044
+  # source://prism//lib/prism/node.rb#11717
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11049
+  # source://prism//lib/prism/node.rb#11722
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11059
+  # source://prism//lib/prism/node.rb#11732
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11054
+  # source://prism//lib/prism/node.rb#11727
   def compact_child_nodes; end
 
   # def copy: (**params) -> MatchRequiredNode
   #
-  # source://prism//lib/prism/node.rb#11064
+  # source://prism//lib/prism/node.rb#11737
   sig { params(params: T.untyped).returns(Prism::MatchRequiredNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11049
+  # source://prism//lib/prism/node.rb#11722
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11077
+  # source://prism//lib/prism/node.rb#11750
   sig do
     params(
       keys: T::Array[Symbol]
@@ -17209,24 +19155,24 @@ class Prism::MatchRequiredNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11087
+  # source://prism//lib/prism/node.rb#11760
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#11082
+  # source://prism//lib/prism/node.rb#11755
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#11033
+  # source://prism//lib/prism/node.rb#11706
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader pattern: Node
   #
-  # source://prism//lib/prism/node.rb#11030
+  # source://prism//lib/prism/node.rb#11703
   sig { returns(Prism::Node) }
   def pattern; end
 
@@ -17245,12 +19191,12 @@ class Prism::MatchRequiredNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11111
+  # source://prism//lib/prism/node.rb#11784
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#11027
+  # source://prism//lib/prism/node.rb#11700
   sig { returns(Prism::Node) }
   def value; end
 
@@ -17262,7 +19208,7 @@ class Prism::MatchRequiredNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11121
+    # source://prism//lib/prism/node.rb#11794
     def type; end
   end
 end
@@ -17273,60 +19219,60 @@ end
 #     /(?<foo>bar)/ =~ baz
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11131
+# source://prism//lib/prism/node.rb#11804
 class Prism::MatchWriteNode < ::Prism::Node
-  # def initialize: (call: CallNode, locals: Array[Symbol], location: Location) -> void
+  # def initialize: (call: CallNode, targets: Array[Node], location: Location) -> void
   #
   # @return [MatchWriteNode] a new instance of MatchWriteNode
   #
-  # source://prism//lib/prism/node.rb#11139
-  sig { params(call: Prism::CallNode, locals: T::Array[Symbol], location: Prism::Location).void }
-  def initialize(call, locals, location); end
+  # source://prism//lib/prism/node.rb#11812
+  sig { params(call: Prism::CallNode, targets: T::Array[Prism::Node], location: Prism::Location).void }
+  def initialize(call, targets, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11146
+  # source://prism//lib/prism/node.rb#11819
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader call: CallNode
   #
-  # source://prism//lib/prism/node.rb#11133
+  # source://prism//lib/prism/node.rb#11806
   sig { returns(Prism::CallNode) }
   def call; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11151
+  # source://prism//lib/prism/node.rb#11824
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11161
+  # source://prism//lib/prism/node.rb#11834
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11156
+  # source://prism//lib/prism/node.rb#11829
   def compact_child_nodes; end
 
   # def copy: (**params) -> MatchWriteNode
   #
-  # source://prism//lib/prism/node.rb#11166
+  # source://prism//lib/prism/node.rb#11839
   sig { params(params: T.untyped).returns(Prism::MatchWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11151
+  # source://prism//lib/prism/node.rb#11824
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11178
+  # source://prism//lib/prism/node.rb#11851
   sig do
     params(
       keys: T::Array[Symbol]
@@ -17336,14 +19282,14 @@ class Prism::MatchWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11183
+  # source://prism//lib/prism/node.rb#11856
   def inspect(inspector = T.unsafe(nil)); end
 
-  # attr_reader locals: Array[Symbol]
+  # attr_reader targets: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11136
-  sig { returns(T::Array[Symbol]) }
-  def locals; end
+  # source://prism//lib/prism/node.rb#11809
+  sig { returns(T::Array[Prism::Node]) }
+  def targets; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -17360,7 +19306,7 @@ class Prism::MatchWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11205
+  # source://prism//lib/prism/node.rb#11878
   def type; end
 
   class << self
@@ -17371,7 +19317,7 @@ class Prism::MatchWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11215
+    # source://prism//lib/prism/node.rb#11888
     def type; end
   end
 end
@@ -17379,54 +19325,54 @@ end
 # Represents a node that is missing from the source and results in a syntax
 # error.
 #
-# source://prism//lib/prism/node.rb#11222
+# source://prism//lib/prism/node.rb#11895
 class Prism::MissingNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [MissingNode] a new instance of MissingNode
   #
-  # source://prism//lib/prism/node.rb#11224
+  # source://prism//lib/prism/node.rb#11897
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11229
+  # source://prism//lib/prism/node.rb#11902
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11234
+  # source://prism//lib/prism/node.rb#11907
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11244
+  # source://prism//lib/prism/node.rb#11917
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11239
+  # source://prism//lib/prism/node.rb#11912
   def compact_child_nodes; end
 
   # def copy: (**params) -> MissingNode
   #
-  # source://prism//lib/prism/node.rb#11249
+  # source://prism//lib/prism/node.rb#11922
   sig { params(params: T.untyped).returns(Prism::MissingNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11234
+  # source://prism//lib/prism/node.rb#11907
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11259
+  # source://prism//lib/prism/node.rb#11932
   sig do
     params(
       keys: T::Array[Symbol]
@@ -17436,7 +19382,7 @@ class Prism::MissingNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11264
+  # source://prism//lib/prism/node.rb#11937
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -17454,7 +19400,7 @@ class Prism::MissingNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11283
+  # source://prism//lib/prism/node.rb#11956
   def type; end
 
   class << self
@@ -17465,7 +19411,7 @@ class Prism::MissingNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11293
+    # source://prism//lib/prism/node.rb#11966
     def type; end
   end
 end
@@ -17475,13 +19421,13 @@ end
 #     module Foo end
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11302
+# source://prism//lib/prism/node.rb#11975
 class Prism::ModuleNode < ::Prism::Node
   # def initialize: (locals: Array[Symbol], module_keyword_loc: Location, constant_path: Node, body: Node?, end_keyword_loc: Location, name: Symbol, location: Location) -> void
   #
   # @return [ModuleNode] a new instance of ModuleNode
   #
-  # source://prism//lib/prism/node.rb#11322
+  # source://prism//lib/prism/node.rb#11995
   sig do
     params(
       locals: T::Array[Symbol],
@@ -17497,54 +19443,54 @@ class Prism::ModuleNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11333
+  # source://prism//lib/prism/node.rb#12006
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://prism//lib/prism/node.rb#11313
+  # source://prism//lib/prism/node.rb#11986
   sig { returns(T.nilable(Prism::Node)) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11338
+  # source://prism//lib/prism/node.rb#12011
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11351
+  # source://prism//lib/prism/node.rb#12024
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11343
+  # source://prism//lib/prism/node.rb#12016
   def compact_child_nodes; end
 
   # attr_reader constant_path: Node
   #
-  # source://prism//lib/prism/node.rb#11310
+  # source://prism//lib/prism/node.rb#11983
   sig { returns(Prism::Node) }
   def constant_path; end
 
   # def copy: (**params) -> ModuleNode
   #
-  # source://prism//lib/prism/node.rb#11356
+  # source://prism//lib/prism/node.rb#12029
   sig { params(params: T.untyped).returns(Prism::ModuleNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11338
+  # source://prism//lib/prism/node.rb#12011
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11372
+  # source://prism//lib/prism/node.rb#12045
   sig do
     params(
       keys: T::Array[Symbol]
@@ -17554,42 +19500,42 @@ class Prism::ModuleNode < ::Prism::Node
 
   # def end_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#11382
+  # source://prism//lib/prism/node.rb#12055
   sig { returns(String) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#11316
+  # source://prism//lib/prism/node.rb#11989
   sig { returns(Prism::Location) }
   def end_keyword_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11387
+  # source://prism//lib/prism/node.rb#12060
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://prism//lib/prism/node.rb#11304
+  # source://prism//lib/prism/node.rb#11977
   sig { returns(T::Array[Symbol]) }
   def locals; end
 
   # def module_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#11377
+  # source://prism//lib/prism/node.rb#12050
   sig { returns(String) }
   def module_keyword; end
 
   # attr_reader module_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#11307
+  # source://prism//lib/prism/node.rb#11980
   sig { returns(Prism::Location) }
   def module_keyword_loc; end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#11319
+  # source://prism//lib/prism/node.rb#11992
   sig { returns(Symbol) }
   def name; end
 
@@ -17608,7 +19554,7 @@ class Prism::ModuleNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11418
+  # source://prism//lib/prism/node.rb#12091
   def type; end
 
   class << self
@@ -17619,7 +19565,7 @@ class Prism::ModuleNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11428
+    # source://prism//lib/prism/node.rb#12101
     def type; end
   end
 end
@@ -17629,13 +19575,13 @@ end
 #     a, (b, c) = 1, 2, 3
 #        ^^^^^^
 #
-# source://prism//lib/prism/node.rb#11437
+# source://prism//lib/prism/node.rb#12110
 class Prism::MultiTargetNode < ::Prism::Node
   # def initialize: (lefts: Array[Node], rest: Node?, rights: Array[Node], lparen_loc: Location?, rparen_loc: Location?, location: Location) -> void
   #
   # @return [MultiTargetNode] a new instance of MultiTargetNode
   #
-  # source://prism//lib/prism/node.rb#11454
+  # source://prism//lib/prism/node.rb#12127
   sig do
     params(
       lefts: T::Array[Prism::Node],
@@ -17650,42 +19596,42 @@ class Prism::MultiTargetNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11464
+  # source://prism//lib/prism/node.rb#12137
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11469
+  # source://prism//lib/prism/node.rb#12142
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11483
+  # source://prism//lib/prism/node.rb#12156
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11474
+  # source://prism//lib/prism/node.rb#12147
   def compact_child_nodes; end
 
   # def copy: (**params) -> MultiTargetNode
   #
-  # source://prism//lib/prism/node.rb#11488
+  # source://prism//lib/prism/node.rb#12161
   sig { params(params: T.untyped).returns(Prism::MultiTargetNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11469
+  # source://prism//lib/prism/node.rb#12142
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11503
+  # source://prism//lib/prism/node.rb#12176
   sig do
     params(
       keys: T::Array[Symbol]
@@ -17695,48 +19641,48 @@ class Prism::MultiTargetNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11518
+  # source://prism//lib/prism/node.rb#12191
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader lefts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11439
+  # source://prism//lib/prism/node.rb#12112
   sig { returns(T::Array[Prism::Node]) }
   def lefts; end
 
   # def lparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#11508
+  # source://prism//lib/prism/node.rb#12181
   sig { returns(T.nilable(String)) }
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#11448
+  # source://prism//lib/prism/node.rb#12121
   sig { returns(T.nilable(Prism::Location)) }
   def lparen_loc; end
 
   # attr_reader rest: Node?
   #
-  # source://prism//lib/prism/node.rb#11442
+  # source://prism//lib/prism/node.rb#12115
   sig { returns(T.nilable(Prism::Node)) }
   def rest; end
 
   # attr_reader rights: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11445
+  # source://prism//lib/prism/node.rb#12118
   sig { returns(T::Array[Prism::Node]) }
   def rights; end
 
   # def rparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#11513
+  # source://prism//lib/prism/node.rb#12186
   sig { returns(T.nilable(String)) }
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#11451
+  # source://prism//lib/prism/node.rb#12124
   sig { returns(T.nilable(Prism::Location)) }
   def rparen_loc; end
 
@@ -17755,7 +19701,7 @@ class Prism::MultiTargetNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11547
+  # source://prism//lib/prism/node.rb#12220
   def type; end
 
   class << self
@@ -17766,7 +19712,7 @@ class Prism::MultiTargetNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11557
+    # source://prism//lib/prism/node.rb#12230
     def type; end
   end
 end
@@ -17776,13 +19722,13 @@ end
 #     a, b, c = 1, 2, 3
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#11566
+# source://prism//lib/prism/node.rb#12239
 class Prism::MultiWriteNode < ::Prism::Node
   # def initialize: (lefts: Array[Node], rest: Node?, rights: Array[Node], lparen_loc: Location?, rparen_loc: Location?, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [MultiWriteNode] a new instance of MultiWriteNode
   #
-  # source://prism//lib/prism/node.rb#11589
+  # source://prism//lib/prism/node.rb#12262
   sig do
     params(
       lefts: T::Array[Prism::Node],
@@ -17799,42 +19745,42 @@ class Prism::MultiWriteNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11601
+  # source://prism//lib/prism/node.rb#12274
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11606
+  # source://prism//lib/prism/node.rb#12279
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11621
+  # source://prism//lib/prism/node.rb#12294
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11611
+  # source://prism//lib/prism/node.rb#12284
   def compact_child_nodes; end
 
   # def copy: (**params) -> MultiWriteNode
   #
-  # source://prism//lib/prism/node.rb#11626
+  # source://prism//lib/prism/node.rb#12299
   sig { params(params: T.untyped).returns(Prism::MultiWriteNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11606
+  # source://prism//lib/prism/node.rb#12279
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11643
+  # source://prism//lib/prism/node.rb#12316
   sig do
     params(
       keys: T::Array[Symbol]
@@ -17844,60 +19790,60 @@ class Prism::MultiWriteNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11663
+  # source://prism//lib/prism/node.rb#12336
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader lefts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11568
+  # source://prism//lib/prism/node.rb#12241
   sig { returns(T::Array[Prism::Node]) }
   def lefts; end
 
   # def lparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#11648
+  # source://prism//lib/prism/node.rb#12321
   sig { returns(T.nilable(String)) }
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#11577
+  # source://prism//lib/prism/node.rb#12250
   sig { returns(T.nilable(Prism::Location)) }
   def lparen_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#11658
+  # source://prism//lib/prism/node.rb#12331
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#11583
+  # source://prism//lib/prism/node.rb#12256
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader rest: Node?
   #
-  # source://prism//lib/prism/node.rb#11571
+  # source://prism//lib/prism/node.rb#12244
   sig { returns(T.nilable(Prism::Node)) }
   def rest; end
 
   # attr_reader rights: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11574
+  # source://prism//lib/prism/node.rb#12247
   sig { returns(T::Array[Prism::Node]) }
   def rights; end
 
   # def rparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#11653
+  # source://prism//lib/prism/node.rb#12326
   sig { returns(T.nilable(String)) }
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#11580
+  # source://prism//lib/prism/node.rb#12253
   sig { returns(T.nilable(Prism::Location)) }
   def rparen_loc; end
 
@@ -17916,12 +19862,12 @@ class Prism::MultiWriteNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11695
+  # source://prism//lib/prism/node.rb#12368
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#11586
+  # source://prism//lib/prism/node.rb#12259
   sig { returns(Prism::Node) }
   def value; end
 
@@ -17933,7 +19879,7 @@ class Prism::MultiWriteNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11705
+    # source://prism//lib/prism/node.rb#12378
     def type; end
   end
 end
@@ -18049,619 +19995,639 @@ class Prism::MutationCompiler < ::Prism::Compiler
   # source://prism//lib/prism/mutation_compiler.rb#114
   def visit_call_or_write_node(node); end
 
-  # Copy a CapturePatternNode node
+  # Copy a CallTargetNode node
   #
   # source://prism//lib/prism/mutation_compiler.rb#119
+  def visit_call_target_node(node); end
+
+  # Copy a CapturePatternNode node
+  #
+  # source://prism//lib/prism/mutation_compiler.rb#124
   def visit_capture_pattern_node(node); end
+
+  # Copy a CaseMatchNode node
+  #
+  # source://prism//lib/prism/mutation_compiler.rb#129
+  def visit_case_match_node(node); end
 
   # Copy a CaseNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#124
+  # source://prism//lib/prism/mutation_compiler.rb#134
   def visit_case_node(node); end
 
   # Copy a ClassNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#129
+  # source://prism//lib/prism/mutation_compiler.rb#139
   def visit_class_node(node); end
 
   # Copy a ClassVariableAndWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#134
+  # source://prism//lib/prism/mutation_compiler.rb#144
   def visit_class_variable_and_write_node(node); end
 
   # Copy a ClassVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#139
+  # source://prism//lib/prism/mutation_compiler.rb#149
   def visit_class_variable_operator_write_node(node); end
 
   # Copy a ClassVariableOrWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#144
+  # source://prism//lib/prism/mutation_compiler.rb#154
   def visit_class_variable_or_write_node(node); end
 
   # Copy a ClassVariableReadNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#149
+  # source://prism//lib/prism/mutation_compiler.rb#159
   def visit_class_variable_read_node(node); end
 
   # Copy a ClassVariableTargetNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#154
+  # source://prism//lib/prism/mutation_compiler.rb#164
   def visit_class_variable_target_node(node); end
 
   # Copy a ClassVariableWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#159
+  # source://prism//lib/prism/mutation_compiler.rb#169
   def visit_class_variable_write_node(node); end
 
   # Copy a ConstantAndWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#164
+  # source://prism//lib/prism/mutation_compiler.rb#174
   def visit_constant_and_write_node(node); end
 
   # Copy a ConstantOperatorWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#169
+  # source://prism//lib/prism/mutation_compiler.rb#179
   def visit_constant_operator_write_node(node); end
 
   # Copy a ConstantOrWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#174
+  # source://prism//lib/prism/mutation_compiler.rb#184
   def visit_constant_or_write_node(node); end
 
   # Copy a ConstantPathAndWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#179
+  # source://prism//lib/prism/mutation_compiler.rb#189
   def visit_constant_path_and_write_node(node); end
 
   # Copy a ConstantPathNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#184
+  # source://prism//lib/prism/mutation_compiler.rb#194
   def visit_constant_path_node(node); end
 
   # Copy a ConstantPathOperatorWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#189
+  # source://prism//lib/prism/mutation_compiler.rb#199
   def visit_constant_path_operator_write_node(node); end
 
   # Copy a ConstantPathOrWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#194
+  # source://prism//lib/prism/mutation_compiler.rb#204
   def visit_constant_path_or_write_node(node); end
 
   # Copy a ConstantPathTargetNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#199
+  # source://prism//lib/prism/mutation_compiler.rb#209
   def visit_constant_path_target_node(node); end
 
   # Copy a ConstantPathWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#204
+  # source://prism//lib/prism/mutation_compiler.rb#214
   def visit_constant_path_write_node(node); end
 
   # Copy a ConstantReadNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#209
+  # source://prism//lib/prism/mutation_compiler.rb#219
   def visit_constant_read_node(node); end
 
   # Copy a ConstantTargetNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#214
+  # source://prism//lib/prism/mutation_compiler.rb#224
   def visit_constant_target_node(node); end
 
   # Copy a ConstantWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#219
+  # source://prism//lib/prism/mutation_compiler.rb#229
   def visit_constant_write_node(node); end
 
   # Copy a DefNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#224
+  # source://prism//lib/prism/mutation_compiler.rb#234
   def visit_def_node(node); end
 
   # Copy a DefinedNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#229
+  # source://prism//lib/prism/mutation_compiler.rb#239
   def visit_defined_node(node); end
 
   # Copy a ElseNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#234
+  # source://prism//lib/prism/mutation_compiler.rb#244
   def visit_else_node(node); end
 
   # Copy a EmbeddedStatementsNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#239
+  # source://prism//lib/prism/mutation_compiler.rb#249
   def visit_embedded_statements_node(node); end
 
   # Copy a EmbeddedVariableNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#244
+  # source://prism//lib/prism/mutation_compiler.rb#254
   def visit_embedded_variable_node(node); end
 
   # Copy a EnsureNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#249
+  # source://prism//lib/prism/mutation_compiler.rb#259
   def visit_ensure_node(node); end
 
   # Copy a FalseNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#254
+  # source://prism//lib/prism/mutation_compiler.rb#264
   def visit_false_node(node); end
 
   # Copy a FindPatternNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#259
+  # source://prism//lib/prism/mutation_compiler.rb#269
   def visit_find_pattern_node(node); end
 
   # Copy a FlipFlopNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#264
+  # source://prism//lib/prism/mutation_compiler.rb#274
   def visit_flip_flop_node(node); end
 
   # Copy a FloatNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#269
+  # source://prism//lib/prism/mutation_compiler.rb#279
   def visit_float_node(node); end
 
   # Copy a ForNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#274
+  # source://prism//lib/prism/mutation_compiler.rb#284
   def visit_for_node(node); end
 
   # Copy a ForwardingArgumentsNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#279
+  # source://prism//lib/prism/mutation_compiler.rb#289
   def visit_forwarding_arguments_node(node); end
 
   # Copy a ForwardingParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#284
+  # source://prism//lib/prism/mutation_compiler.rb#294
   def visit_forwarding_parameter_node(node); end
 
   # Copy a ForwardingSuperNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#289
+  # source://prism//lib/prism/mutation_compiler.rb#299
   def visit_forwarding_super_node(node); end
 
   # Copy a GlobalVariableAndWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#294
+  # source://prism//lib/prism/mutation_compiler.rb#304
   def visit_global_variable_and_write_node(node); end
 
   # Copy a GlobalVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#299
+  # source://prism//lib/prism/mutation_compiler.rb#309
   def visit_global_variable_operator_write_node(node); end
 
   # Copy a GlobalVariableOrWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#304
+  # source://prism//lib/prism/mutation_compiler.rb#314
   def visit_global_variable_or_write_node(node); end
 
   # Copy a GlobalVariableReadNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#309
+  # source://prism//lib/prism/mutation_compiler.rb#319
   def visit_global_variable_read_node(node); end
 
   # Copy a GlobalVariableTargetNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#314
+  # source://prism//lib/prism/mutation_compiler.rb#324
   def visit_global_variable_target_node(node); end
 
   # Copy a GlobalVariableWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#319
+  # source://prism//lib/prism/mutation_compiler.rb#329
   def visit_global_variable_write_node(node); end
 
   # Copy a HashNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#324
+  # source://prism//lib/prism/mutation_compiler.rb#334
   def visit_hash_node(node); end
 
   # Copy a HashPatternNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#329
+  # source://prism//lib/prism/mutation_compiler.rb#339
   def visit_hash_pattern_node(node); end
 
   # Copy a IfNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#334
+  # source://prism//lib/prism/mutation_compiler.rb#344
   def visit_if_node(node); end
 
   # Copy a ImaginaryNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#339
+  # source://prism//lib/prism/mutation_compiler.rb#349
   def visit_imaginary_node(node); end
 
   # Copy a ImplicitNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#344
+  # source://prism//lib/prism/mutation_compiler.rb#354
   def visit_implicit_node(node); end
+
+  # Copy a ImplicitRestNode node
+  #
+  # source://prism//lib/prism/mutation_compiler.rb#359
+  def visit_implicit_rest_node(node); end
 
   # Copy a InNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#349
+  # source://prism//lib/prism/mutation_compiler.rb#364
   def visit_in_node(node); end
 
   # Copy a IndexAndWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#354
+  # source://prism//lib/prism/mutation_compiler.rb#369
   def visit_index_and_write_node(node); end
 
   # Copy a IndexOperatorWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#359
+  # source://prism//lib/prism/mutation_compiler.rb#374
   def visit_index_operator_write_node(node); end
 
   # Copy a IndexOrWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#364
+  # source://prism//lib/prism/mutation_compiler.rb#379
   def visit_index_or_write_node(node); end
+
+  # Copy a IndexTargetNode node
+  #
+  # source://prism//lib/prism/mutation_compiler.rb#384
+  def visit_index_target_node(node); end
 
   # Copy a InstanceVariableAndWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#369
+  # source://prism//lib/prism/mutation_compiler.rb#389
   def visit_instance_variable_and_write_node(node); end
 
   # Copy a InstanceVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#374
+  # source://prism//lib/prism/mutation_compiler.rb#394
   def visit_instance_variable_operator_write_node(node); end
 
   # Copy a InstanceVariableOrWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#379
+  # source://prism//lib/prism/mutation_compiler.rb#399
   def visit_instance_variable_or_write_node(node); end
 
   # Copy a InstanceVariableReadNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#384
+  # source://prism//lib/prism/mutation_compiler.rb#404
   def visit_instance_variable_read_node(node); end
 
   # Copy a InstanceVariableTargetNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#389
+  # source://prism//lib/prism/mutation_compiler.rb#409
   def visit_instance_variable_target_node(node); end
 
   # Copy a InstanceVariableWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#394
+  # source://prism//lib/prism/mutation_compiler.rb#414
   def visit_instance_variable_write_node(node); end
 
   # Copy a IntegerNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#399
+  # source://prism//lib/prism/mutation_compiler.rb#419
   def visit_integer_node(node); end
 
   # Copy a InterpolatedMatchLastLineNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#404
+  # source://prism//lib/prism/mutation_compiler.rb#424
   def visit_interpolated_match_last_line_node(node); end
 
   # Copy a InterpolatedRegularExpressionNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#409
+  # source://prism//lib/prism/mutation_compiler.rb#429
   def visit_interpolated_regular_expression_node(node); end
 
   # Copy a InterpolatedStringNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#414
+  # source://prism//lib/prism/mutation_compiler.rb#434
   def visit_interpolated_string_node(node); end
 
   # Copy a InterpolatedSymbolNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#419
+  # source://prism//lib/prism/mutation_compiler.rb#439
   def visit_interpolated_symbol_node(node); end
 
   # Copy a InterpolatedXStringNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#424
+  # source://prism//lib/prism/mutation_compiler.rb#444
   def visit_interpolated_x_string_node(node); end
 
   # Copy a KeywordHashNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#429
+  # source://prism//lib/prism/mutation_compiler.rb#449
   def visit_keyword_hash_node(node); end
 
   # Copy a KeywordRestParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#434
+  # source://prism//lib/prism/mutation_compiler.rb#454
   def visit_keyword_rest_parameter_node(node); end
 
   # Copy a LambdaNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#439
+  # source://prism//lib/prism/mutation_compiler.rb#459
   def visit_lambda_node(node); end
 
   # Copy a LocalVariableAndWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#444
+  # source://prism//lib/prism/mutation_compiler.rb#464
   def visit_local_variable_and_write_node(node); end
 
   # Copy a LocalVariableOperatorWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#449
+  # source://prism//lib/prism/mutation_compiler.rb#469
   def visit_local_variable_operator_write_node(node); end
 
   # Copy a LocalVariableOrWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#454
+  # source://prism//lib/prism/mutation_compiler.rb#474
   def visit_local_variable_or_write_node(node); end
 
   # Copy a LocalVariableReadNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#459
+  # source://prism//lib/prism/mutation_compiler.rb#479
   def visit_local_variable_read_node(node); end
 
   # Copy a LocalVariableTargetNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#464
+  # source://prism//lib/prism/mutation_compiler.rb#484
   def visit_local_variable_target_node(node); end
 
   # Copy a LocalVariableWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#469
+  # source://prism//lib/prism/mutation_compiler.rb#489
   def visit_local_variable_write_node(node); end
 
   # Copy a MatchLastLineNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#474
+  # source://prism//lib/prism/mutation_compiler.rb#494
   def visit_match_last_line_node(node); end
 
   # Copy a MatchPredicateNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#479
+  # source://prism//lib/prism/mutation_compiler.rb#499
   def visit_match_predicate_node(node); end
 
   # Copy a MatchRequiredNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#484
+  # source://prism//lib/prism/mutation_compiler.rb#504
   def visit_match_required_node(node); end
 
   # Copy a MatchWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#489
+  # source://prism//lib/prism/mutation_compiler.rb#509
   def visit_match_write_node(node); end
 
   # Copy a MissingNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#494
+  # source://prism//lib/prism/mutation_compiler.rb#514
   def visit_missing_node(node); end
 
   # Copy a ModuleNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#499
+  # source://prism//lib/prism/mutation_compiler.rb#519
   def visit_module_node(node); end
 
   # Copy a MultiTargetNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#504
+  # source://prism//lib/prism/mutation_compiler.rb#524
   def visit_multi_target_node(node); end
 
   # Copy a MultiWriteNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#509
+  # source://prism//lib/prism/mutation_compiler.rb#529
   def visit_multi_write_node(node); end
 
   # Copy a NextNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#514
+  # source://prism//lib/prism/mutation_compiler.rb#534
   def visit_next_node(node); end
 
   # Copy a NilNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#519
+  # source://prism//lib/prism/mutation_compiler.rb#539
   def visit_nil_node(node); end
 
   # Copy a NoKeywordsParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#524
+  # source://prism//lib/prism/mutation_compiler.rb#544
   def visit_no_keywords_parameter_node(node); end
+
+  # Copy a NumberedParametersNode node
+  #
+  # source://prism//lib/prism/mutation_compiler.rb#549
+  def visit_numbered_parameters_node(node); end
 
   # Copy a NumberedReferenceReadNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#529
+  # source://prism//lib/prism/mutation_compiler.rb#554
   def visit_numbered_reference_read_node(node); end
 
   # Copy a OptionalKeywordParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#534
+  # source://prism//lib/prism/mutation_compiler.rb#559
   def visit_optional_keyword_parameter_node(node); end
 
   # Copy a OptionalParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#539
+  # source://prism//lib/prism/mutation_compiler.rb#564
   def visit_optional_parameter_node(node); end
 
   # Copy a OrNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#544
+  # source://prism//lib/prism/mutation_compiler.rb#569
   def visit_or_node(node); end
 
   # Copy a ParametersNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#549
+  # source://prism//lib/prism/mutation_compiler.rb#574
   def visit_parameters_node(node); end
 
   # Copy a ParenthesesNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#554
+  # source://prism//lib/prism/mutation_compiler.rb#579
   def visit_parentheses_node(node); end
 
   # Copy a PinnedExpressionNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#559
+  # source://prism//lib/prism/mutation_compiler.rb#584
   def visit_pinned_expression_node(node); end
 
   # Copy a PinnedVariableNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#564
+  # source://prism//lib/prism/mutation_compiler.rb#589
   def visit_pinned_variable_node(node); end
 
   # Copy a PostExecutionNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#569
+  # source://prism//lib/prism/mutation_compiler.rb#594
   def visit_post_execution_node(node); end
 
   # Copy a PreExecutionNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#574
+  # source://prism//lib/prism/mutation_compiler.rb#599
   def visit_pre_execution_node(node); end
 
   # Copy a ProgramNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#579
+  # source://prism//lib/prism/mutation_compiler.rb#604
   def visit_program_node(node); end
 
   # Copy a RangeNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#584
+  # source://prism//lib/prism/mutation_compiler.rb#609
   def visit_range_node(node); end
 
   # Copy a RationalNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#589
+  # source://prism//lib/prism/mutation_compiler.rb#614
   def visit_rational_node(node); end
 
   # Copy a RedoNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#594
+  # source://prism//lib/prism/mutation_compiler.rb#619
   def visit_redo_node(node); end
 
   # Copy a RegularExpressionNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#599
+  # source://prism//lib/prism/mutation_compiler.rb#624
   def visit_regular_expression_node(node); end
 
   # Copy a RequiredKeywordParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#604
+  # source://prism//lib/prism/mutation_compiler.rb#629
   def visit_required_keyword_parameter_node(node); end
 
   # Copy a RequiredParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#609
+  # source://prism//lib/prism/mutation_compiler.rb#634
   def visit_required_parameter_node(node); end
 
   # Copy a RescueModifierNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#614
+  # source://prism//lib/prism/mutation_compiler.rb#639
   def visit_rescue_modifier_node(node); end
 
   # Copy a RescueNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#619
+  # source://prism//lib/prism/mutation_compiler.rb#644
   def visit_rescue_node(node); end
 
   # Copy a RestParameterNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#624
+  # source://prism//lib/prism/mutation_compiler.rb#649
   def visit_rest_parameter_node(node); end
 
   # Copy a RetryNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#629
+  # source://prism//lib/prism/mutation_compiler.rb#654
   def visit_retry_node(node); end
 
   # Copy a ReturnNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#634
+  # source://prism//lib/prism/mutation_compiler.rb#659
   def visit_return_node(node); end
 
   # Copy a SelfNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#639
+  # source://prism//lib/prism/mutation_compiler.rb#664
   def visit_self_node(node); end
 
   # Copy a SingletonClassNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#644
+  # source://prism//lib/prism/mutation_compiler.rb#669
   def visit_singleton_class_node(node); end
 
   # Copy a SourceEncodingNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#649
+  # source://prism//lib/prism/mutation_compiler.rb#674
   def visit_source_encoding_node(node); end
 
   # Copy a SourceFileNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#654
+  # source://prism//lib/prism/mutation_compiler.rb#679
   def visit_source_file_node(node); end
 
   # Copy a SourceLineNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#659
+  # source://prism//lib/prism/mutation_compiler.rb#684
   def visit_source_line_node(node); end
 
   # Copy a SplatNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#664
+  # source://prism//lib/prism/mutation_compiler.rb#689
   def visit_splat_node(node); end
 
   # Copy a StatementsNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#669
+  # source://prism//lib/prism/mutation_compiler.rb#694
   def visit_statements_node(node); end
-
-  # Copy a StringConcatNode node
-  #
-  # source://prism//lib/prism/mutation_compiler.rb#674
-  def visit_string_concat_node(node); end
 
   # Copy a StringNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#679
+  # source://prism//lib/prism/mutation_compiler.rb#699
   def visit_string_node(node); end
 
   # Copy a SuperNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#684
+  # source://prism//lib/prism/mutation_compiler.rb#704
   def visit_super_node(node); end
 
   # Copy a SymbolNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#689
+  # source://prism//lib/prism/mutation_compiler.rb#709
   def visit_symbol_node(node); end
 
   # Copy a TrueNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#694
+  # source://prism//lib/prism/mutation_compiler.rb#714
   def visit_true_node(node); end
 
   # Copy a UndefNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#699
+  # source://prism//lib/prism/mutation_compiler.rb#719
   def visit_undef_node(node); end
 
   # Copy a UnlessNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#704
+  # source://prism//lib/prism/mutation_compiler.rb#724
   def visit_unless_node(node); end
 
   # Copy a UntilNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#709
+  # source://prism//lib/prism/mutation_compiler.rb#729
   def visit_until_node(node); end
 
   # Copy a WhenNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#714
+  # source://prism//lib/prism/mutation_compiler.rb#734
   def visit_when_node(node); end
 
   # Copy a WhileNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#719
+  # source://prism//lib/prism/mutation_compiler.rb#739
   def visit_while_node(node); end
 
   # Copy a XStringNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#724
+  # source://prism//lib/prism/mutation_compiler.rb#744
   def visit_x_string_node(node); end
 
   # Copy a YieldNode node
   #
-  # source://prism//lib/prism/mutation_compiler.rb#729
+  # source://prism//lib/prism/mutation_compiler.rb#749
   def visit_yield_node(node); end
 end
 
@@ -18670,13 +20636,13 @@ end
 #     next 1
 #     ^^^^^^
 #
-# source://prism//lib/prism/node.rb#11714
+# source://prism//lib/prism/node.rb#12387
 class Prism::NextNode < ::Prism::Node
   # def initialize: (arguments: ArgumentsNode?, keyword_loc: Location, location: Location) -> void
   #
   # @return [NextNode] a new instance of NextNode
   #
-  # source://prism//lib/prism/node.rb#11722
+  # source://prism//lib/prism/node.rb#12395
   sig do
     params(
       arguments: T.nilable(Prism::ArgumentsNode),
@@ -18688,48 +20654,48 @@ class Prism::NextNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11729
+  # source://prism//lib/prism/node.rb#12402
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#11716
+  # source://prism//lib/prism/node.rb#12389
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11734
+  # source://prism//lib/prism/node.rb#12407
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11746
+  # source://prism//lib/prism/node.rb#12419
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11739
+  # source://prism//lib/prism/node.rb#12412
   def compact_child_nodes; end
 
   # def copy: (**params) -> NextNode
   #
-  # source://prism//lib/prism/node.rb#11751
+  # source://prism//lib/prism/node.rb#12424
   sig { params(params: T.untyped).returns(Prism::NextNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11734
+  # source://prism//lib/prism/node.rb#12407
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11763
+  # source://prism//lib/prism/node.rb#12436
   sig do
     params(
       keys: T::Array[Symbol]
@@ -18739,18 +20705,18 @@ class Prism::NextNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11773
+  # source://prism//lib/prism/node.rb#12446
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#11768
+  # source://prism//lib/prism/node.rb#12441
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#11719
+  # source://prism//lib/prism/node.rb#12392
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
@@ -18769,7 +20735,7 @@ class Prism::NextNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11799
+  # source://prism//lib/prism/node.rb#12472
   def type; end
 
   class << self
@@ -18780,7 +20746,7 @@ class Prism::NextNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11809
+    # source://prism//lib/prism/node.rb#12482
     def type; end
   end
 end
@@ -18790,54 +20756,54 @@ end
 #     nil
 #     ^^^
 #
-# source://prism//lib/prism/node.rb#11818
+# source://prism//lib/prism/node.rb#12491
 class Prism::NilNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [NilNode] a new instance of NilNode
   #
-  # source://prism//lib/prism/node.rb#11820
+  # source://prism//lib/prism/node.rb#12493
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11825
+  # source://prism//lib/prism/node.rb#12498
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11830
+  # source://prism//lib/prism/node.rb#12503
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11840
+  # source://prism//lib/prism/node.rb#12513
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11835
+  # source://prism//lib/prism/node.rb#12508
   def compact_child_nodes; end
 
   # def copy: (**params) -> NilNode
   #
-  # source://prism//lib/prism/node.rb#11845
+  # source://prism//lib/prism/node.rb#12518
   sig { params(params: T.untyped).returns(Prism::NilNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11830
+  # source://prism//lib/prism/node.rb#12503
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11855
+  # source://prism//lib/prism/node.rb#12528
   sig do
     params(
       keys: T::Array[Symbol]
@@ -18847,7 +20813,7 @@ class Prism::NilNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11860
+  # source://prism//lib/prism/node.rb#12533
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -18865,7 +20831,7 @@ class Prism::NilNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11879
+  # source://prism//lib/prism/node.rb#12552
   def type; end
 
   class << self
@@ -18876,7 +20842,7 @@ class Prism::NilNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11889
+    # source://prism//lib/prism/node.rb#12562
     def type; end
   end
 end
@@ -18887,54 +20853,54 @@ end
 #           ^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#11899
+# source://prism//lib/prism/node.rb#12572
 class Prism::NoKeywordsParameterNode < ::Prism::Node
   # def initialize: (operator_loc: Location, keyword_loc: Location, location: Location) -> void
   #
   # @return [NoKeywordsParameterNode] a new instance of NoKeywordsParameterNode
   #
-  # source://prism//lib/prism/node.rb#11907
+  # source://prism//lib/prism/node.rb#12580
   sig { params(operator_loc: Prism::Location, keyword_loc: Prism::Location, location: Prism::Location).void }
   def initialize(operator_loc, keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#11914
+  # source://prism//lib/prism/node.rb#12587
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11919
+  # source://prism//lib/prism/node.rb#12592
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#11929
+  # source://prism//lib/prism/node.rb#12602
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#11924
+  # source://prism//lib/prism/node.rb#12597
   def compact_child_nodes; end
 
   # def copy: (**params) -> NoKeywordsParameterNode
   #
-  # source://prism//lib/prism/node.rb#11934
+  # source://prism//lib/prism/node.rb#12607
   sig { params(params: T.untyped).returns(Prism::NoKeywordsParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#11919
+  # source://prism//lib/prism/node.rb#12592
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#11946
+  # source://prism//lib/prism/node.rb#12619
   sig do
     params(
       keys: T::Array[Symbol]
@@ -18944,30 +20910,30 @@ class Prism::NoKeywordsParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#11961
+  # source://prism//lib/prism/node.rb#12634
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#11956
+  # source://prism//lib/prism/node.rb#12629
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#11904
+  # source://prism//lib/prism/node.rb#12577
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#11951
+  # source://prism//lib/prism/node.rb#12624
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#11901
+  # source://prism//lib/prism/node.rb#12574
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -18986,7 +20952,7 @@ class Prism::NoKeywordsParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#11982
+  # source://prism//lib/prism/node.rb#12655
   def type; end
 
   class << self
@@ -18997,7 +20963,7 @@ class Prism::NoKeywordsParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#11992
+    # source://prism//lib/prism/node.rb#12665
     def type; end
   end
 end
@@ -19036,6 +21002,12 @@ class Prism::Node
   # source://prism//lib/prism/node.rb#29
   sig { returns(String) }
   def slice; end
+
+  # Convert this node into a graphviz dot graph string.
+  #
+  # source://prism//lib/prism/node.rb#43
+  sig { returns(String) }
+  def to_dot; end
 end
 
 # This object is responsible for generating the output for the inspect method
@@ -19103,59 +21075,60 @@ class Prism::NodeInspector
   def to_str; end
 end
 
-# Represents reading a numbered reference to a capture in the previous match.
+# Represents an implicit set of parameters through the use of numbered
+# parameters within a block or lambda.
 #
-#     $1
-#     ^^
+#     -> { _1 + _2 }
+#     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#12001
-class Prism::NumberedReferenceReadNode < ::Prism::Node
-  # def initialize: (number: Integer, location: Location) -> void
+# source://prism//lib/prism/node.rb#12675
+class Prism::NumberedParametersNode < ::Prism::Node
+  # def initialize: (maximum: Integer, location: Location) -> void
   #
-  # @return [NumberedReferenceReadNode] a new instance of NumberedReferenceReadNode
+  # @return [NumberedParametersNode] a new instance of NumberedParametersNode
   #
-  # source://prism//lib/prism/node.rb#12006
-  sig { params(number: Integer, location: Prism::Location).void }
-  def initialize(number, location); end
+  # source://prism//lib/prism/node.rb#12680
+  sig { params(maximum: Integer, location: Prism::Location).void }
+  def initialize(maximum, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12012
+  # source://prism//lib/prism/node.rb#12686
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12017
+  # source://prism//lib/prism/node.rb#12691
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12027
+  # source://prism//lib/prism/node.rb#12701
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12022
+  # source://prism//lib/prism/node.rb#12696
   def compact_child_nodes; end
 
-  # def copy: (**params) -> NumberedReferenceReadNode
+  # def copy: (**params) -> NumberedParametersNode
   #
-  # source://prism//lib/prism/node.rb#12032
-  sig { params(params: T.untyped).returns(Prism::NumberedReferenceReadNode) }
+  # source://prism//lib/prism/node.rb#12706
+  sig { params(params: T.untyped).returns(Prism::NumberedParametersNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12017
+  # source://prism//lib/prism/node.rb#12691
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12043
+  # source://prism//lib/prism/node.rb#12717
   sig do
     params(
       keys: T::Array[Symbol]
@@ -19165,12 +21138,114 @@ class Prism::NumberedReferenceReadNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12048
+  # source://prism//lib/prism/node.rb#12722
+  def inspect(inspector = T.unsafe(nil)); end
+
+  # attr_reader maximum: Integer
+  #
+  # source://prism//lib/prism/node.rb#12677
+  sig { returns(Integer) }
+  def maximum; end
+
+  # Sometimes you want to check an instance of a node against a list of
+  # classes to see what kind of behavior to perform. Usually this is done by
+  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
+  # case statement and doing `case node; when cls1; when cls2; end`. Both of
+  # these approaches are relatively slow because of the constant lookups,
+  # method calls, and/or array allocations.
+  #
+  # Instead, you can call #type, which will return to you a symbol that you
+  # can use for comparison. This is faster than the other approaches because
+  # it uses a single integer comparison, but also because if you're on CRuby
+  # you can take advantage of the fact that case statements with all symbol
+  # keys will use a jump table.
+  #
+  # def type: () -> Symbol
+  #
+  # source://prism//lib/prism/node.rb#12742
+  def type; end
+
+  class << self
+    # Similar to #type, this method returns a symbol that you can use for
+    # splitting on the type of the node without having to do a long === chain.
+    # Note that like #type, it will still be slower than using == for a single
+    # class, but should be faster in a case statement or an array comparison.
+    #
+    # def self.type: () -> Symbol
+    #
+    # source://prism//lib/prism/node.rb#12752
+    def type; end
+  end
+end
+
+# Represents reading a numbered reference to a capture in the previous match.
+#
+#     $1
+#     ^^
+#
+# source://prism//lib/prism/node.rb#12761
+class Prism::NumberedReferenceReadNode < ::Prism::Node
+  # def initialize: (number: Integer, location: Location) -> void
+  #
+  # @return [NumberedReferenceReadNode] a new instance of NumberedReferenceReadNode
+  #
+  # source://prism//lib/prism/node.rb#12766
+  sig { params(number: Integer, location: Prism::Location).void }
+  def initialize(number, location); end
+
+  # def accept: (visitor: Visitor) -> void
+  #
+  # source://prism//lib/prism/node.rb#12772
+  sig { params(visitor: Prism::Visitor).void }
+  def accept(visitor); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#12777
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def child_nodes; end
+
+  # def comment_targets: () -> Array[Node | Location]
+  #
+  # source://prism//lib/prism/node.rb#12787
+  def comment_targets; end
+
+  # def compact_child_nodes: () -> Array[Node]
+  #
+  # source://prism//lib/prism/node.rb#12782
+  def compact_child_nodes; end
+
+  # def copy: (**params) -> NumberedReferenceReadNode
+  #
+  # source://prism//lib/prism/node.rb#12792
+  sig { params(params: T.untyped).returns(Prism::NumberedReferenceReadNode) }
+  def copy(**params); end
+
+  # def child_nodes: () -> Array[nil | Node]
+  # def deconstruct: () -> Array[nil | Node]
+  #
+  # source://prism//lib/prism/node.rb#12777
+  sig { returns(T::Array[T.nilable(Prism::Node)]) }
+  def deconstruct; end
+
+  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
+  #
+  # source://prism//lib/prism/node.rb#12803
+  sig do
+    params(
+      keys: T::Array[Symbol]
+    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
+  end
+  def deconstruct_keys(keys); end
+
+  # def inspect(inspector: NodeInspector) -> String
+  #
+  # source://prism//lib/prism/node.rb#12808
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader number: Integer
   #
-  # source://prism//lib/prism/node.rb#12003
+  # source://prism//lib/prism/node.rb#12763
   sig { returns(Integer) }
   def number; end
 
@@ -19189,7 +21264,7 @@ class Prism::NumberedReferenceReadNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12068
+  # source://prism//lib/prism/node.rb#12828
   def type; end
 
   class << self
@@ -19200,7 +21275,7 @@ class Prism::NumberedReferenceReadNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12078
+    # source://prism//lib/prism/node.rb#12838
     def type; end
   end
 end
@@ -19211,54 +21286,54 @@ end
 #           ^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#12088
+# source://prism//lib/prism/node.rb#12848
 class Prism::OptionalKeywordParameterNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, value: Node, location: Location) -> void
   #
   # @return [OptionalKeywordParameterNode] a new instance of OptionalKeywordParameterNode
   #
-  # source://prism//lib/prism/node.rb#12099
+  # source://prism//lib/prism/node.rb#12859
   sig { params(name: Symbol, name_loc: Prism::Location, value: Prism::Node, location: Prism::Location).void }
   def initialize(name, name_loc, value, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12107
+  # source://prism//lib/prism/node.rb#12867
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12112
+  # source://prism//lib/prism/node.rb#12872
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12122
+  # source://prism//lib/prism/node.rb#12882
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12117
+  # source://prism//lib/prism/node.rb#12877
   def compact_child_nodes; end
 
   # def copy: (**params) -> OptionalKeywordParameterNode
   #
-  # source://prism//lib/prism/node.rb#12127
+  # source://prism//lib/prism/node.rb#12887
   sig { params(params: T.untyped).returns(Prism::OptionalKeywordParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12112
+  # source://prism//lib/prism/node.rb#12872
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12140
+  # source://prism//lib/prism/node.rb#12900
   sig do
     params(
       keys: T::Array[Symbol]
@@ -19268,18 +21343,18 @@ class Prism::OptionalKeywordParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12145
+  # source://prism//lib/prism/node.rb#12905
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#12090
+  # source://prism//lib/prism/node.rb#12850
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12093
+  # source://prism//lib/prism/node.rb#12853
   sig { returns(Prism::Location) }
   def name_loc; end
 
@@ -19298,12 +21373,12 @@ class Prism::OptionalKeywordParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12168
+  # source://prism//lib/prism/node.rb#12928
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#12096
+  # source://prism//lib/prism/node.rb#12856
   sig { returns(Prism::Node) }
   def value; end
 
@@ -19315,7 +21390,7 @@ class Prism::OptionalKeywordParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12178
+    # source://prism//lib/prism/node.rb#12938
     def type; end
   end
 end
@@ -19326,13 +21401,13 @@ end
 #           ^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#12188
+# source://prism//lib/prism/node.rb#12948
 class Prism::OptionalParameterNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, operator_loc: Location, value: Node, location: Location) -> void
   #
   # @return [OptionalParameterNode] a new instance of OptionalParameterNode
   #
-  # source://prism//lib/prism/node.rb#12202
+  # source://prism//lib/prism/node.rb#12962
   sig do
     params(
       name: Symbol,
@@ -19346,42 +21421,42 @@ class Prism::OptionalParameterNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12211
+  # source://prism//lib/prism/node.rb#12971
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12216
+  # source://prism//lib/prism/node.rb#12976
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12226
+  # source://prism//lib/prism/node.rb#12986
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12221
+  # source://prism//lib/prism/node.rb#12981
   def compact_child_nodes; end
 
   # def copy: (**params) -> OptionalParameterNode
   #
-  # source://prism//lib/prism/node.rb#12231
+  # source://prism//lib/prism/node.rb#12991
   sig { params(params: T.untyped).returns(Prism::OptionalParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12216
+  # source://prism//lib/prism/node.rb#12976
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12245
+  # source://prism//lib/prism/node.rb#13005
   sig do
     params(
       keys: T::Array[Symbol]
@@ -19391,30 +21466,30 @@ class Prism::OptionalParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12255
+  # source://prism//lib/prism/node.rb#13015
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#12190
+  # source://prism//lib/prism/node.rb#12950
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12193
+  # source://prism//lib/prism/node.rb#12953
   sig { returns(Prism::Location) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#12250
+  # source://prism//lib/prism/node.rb#13010
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12196
+  # source://prism//lib/prism/node.rb#12956
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -19433,12 +21508,12 @@ class Prism::OptionalParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12279
+  # source://prism//lib/prism/node.rb#13039
   def type; end
 
   # attr_reader value: Node
   #
-  # source://prism//lib/prism/node.rb#12199
+  # source://prism//lib/prism/node.rb#12959
   sig { returns(Prism::Node) }
   def value; end
 
@@ -19450,7 +21525,7 @@ class Prism::OptionalParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12289
+    # source://prism//lib/prism/node.rb#13049
     def type; end
   end
 end
@@ -19460,54 +21535,54 @@ end
 #     left or right
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#12298
+# source://prism//lib/prism/node.rb#13058
 class Prism::OrNode < ::Prism::Node
   # def initialize: (left: Node, right: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [OrNode] a new instance of OrNode
   #
-  # source://prism//lib/prism/node.rb#12309
+  # source://prism//lib/prism/node.rb#13069
   sig { params(left: Prism::Node, right: Prism::Node, operator_loc: Prism::Location, location: Prism::Location).void }
   def initialize(left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12317
+  # source://prism//lib/prism/node.rb#13077
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12322
+  # source://prism//lib/prism/node.rb#13082
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12332
+  # source://prism//lib/prism/node.rb#13092
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12327
+  # source://prism//lib/prism/node.rb#13087
   def compact_child_nodes; end
 
   # def copy: (**params) -> OrNode
   #
-  # source://prism//lib/prism/node.rb#12337
+  # source://prism//lib/prism/node.rb#13097
   sig { params(params: T.untyped).returns(Prism::OrNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12322
+  # source://prism//lib/prism/node.rb#13082
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12350
+  # source://prism//lib/prism/node.rb#13110
   sig do
     params(
       keys: T::Array[Symbol]
@@ -19517,30 +21592,30 @@ class Prism::OrNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12360
+  # source://prism//lib/prism/node.rb#13120
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node
   #
-  # source://prism//lib/prism/node.rb#12300
+  # source://prism//lib/prism/node.rb#13060
   sig { returns(Prism::Node) }
   def left; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#12355
+  # source://prism//lib/prism/node.rb#13115
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12306
+  # source://prism//lib/prism/node.rb#13066
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader right: Node
   #
-  # source://prism//lib/prism/node.rb#12303
+  # source://prism//lib/prism/node.rb#13063
   sig { returns(Prism::Node) }
   def right; end
 
@@ -19559,7 +21634,7 @@ class Prism::OrNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12384
+  # source://prism//lib/prism/node.rb#13144
   def type; end
 
   class << self
@@ -19570,7 +21645,7 @@ class Prism::OrNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12394
+    # source://prism//lib/prism/node.rb#13154
     def type; end
   end
 end
@@ -19823,18 +21898,18 @@ Prism::Pack::UTF8 = T.let(T.unsafe(nil), Symbol)
 #           ^^^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#12404
+# source://prism//lib/prism/node.rb#13164
 class Prism::ParametersNode < ::Prism::Node
-  # def initialize: (requireds: Array[Node], optionals: Array[Node], rest: RestParameterNode?, posts: Array[Node], keywords: Array[Node], keyword_rest: Node?, block: BlockParameterNode?, location: Location) -> void
+  # def initialize: (requireds: Array[Node], optionals: Array[Node], rest: Node?, posts: Array[Node], keywords: Array[Node], keyword_rest: Node?, block: BlockParameterNode?, location: Location) -> void
   #
   # @return [ParametersNode] a new instance of ParametersNode
   #
-  # source://prism//lib/prism/node.rb#12427
+  # source://prism//lib/prism/node.rb#13187
   sig do
     params(
       requireds: T::Array[Prism::Node],
       optionals: T::Array[Prism::Node],
-      rest: T.nilable(Prism::RestParameterNode),
+      rest: T.nilable(Prism::Node),
       posts: T::Array[Prism::Node],
       keywords: T::Array[Prism::Node],
       keyword_rest: T.nilable(Prism::Node),
@@ -19846,48 +21921,48 @@ class Prism::ParametersNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12439
+  # source://prism//lib/prism/node.rb#13199
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader block: BlockParameterNode?
   #
-  # source://prism//lib/prism/node.rb#12424
+  # source://prism//lib/prism/node.rb#13184
   sig { returns(T.nilable(Prism::BlockParameterNode)) }
   def block; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12444
+  # source://prism//lib/prism/node.rb#13204
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12462
+  # source://prism//lib/prism/node.rb#13222
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12449
+  # source://prism//lib/prism/node.rb#13209
   def compact_child_nodes; end
 
   # def copy: (**params) -> ParametersNode
   #
-  # source://prism//lib/prism/node.rb#12467
+  # source://prism//lib/prism/node.rb#13227
   sig { params(params: T.untyped).returns(Prism::ParametersNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12444
+  # source://prism//lib/prism/node.rb#13204
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12484
+  # source://prism//lib/prism/node.rb#13244
   sig do
     params(
       keys: T::Array[Symbol]
@@ -19897,44 +21972,49 @@ class Prism::ParametersNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12489
+  # source://prism//lib/prism/node.rb#13249
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader keyword_rest: Node?
   #
-  # source://prism//lib/prism/node.rb#12421
+  # source://prism//lib/prism/node.rb#13181
   sig { returns(T.nilable(Prism::Node)) }
   def keyword_rest; end
 
   # attr_reader keywords: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12418
+  # source://prism//lib/prism/node.rb#13178
   sig { returns(T::Array[Prism::Node]) }
   def keywords; end
 
   # attr_reader optionals: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12409
+  # source://prism//lib/prism/node.rb#13169
   sig { returns(T::Array[Prism::Node]) }
   def optionals; end
 
   # attr_reader posts: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12415
+  # source://prism//lib/prism/node.rb#13175
   sig { returns(T::Array[Prism::Node]) }
   def posts; end
 
   # attr_reader requireds: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12406
+  # source://prism//lib/prism/node.rb#13166
   sig { returns(T::Array[Prism::Node]) }
   def requireds; end
 
-  # attr_reader rest: RestParameterNode?
+  # attr_reader rest: Node?
   #
-  # source://prism//lib/prism/node.rb#12412
-  sig { returns(T.nilable(Prism::RestParameterNode)) }
+  # source://prism//lib/prism/node.rb#13172
+  sig { returns(T.nilable(Prism::Node)) }
   def rest; end
+
+  # Mirrors the Method#parameters method.
+  #
+  # source://prism//lib/prism/node_ext.rb#149
+  def signature; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -19951,7 +22031,7 @@ class Prism::ParametersNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12530
+  # source://prism//lib/prism/node.rb#13290
   def type; end
 
   class << self
@@ -19962,7 +22042,7 @@ class Prism::ParametersNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12540
+    # source://prism//lib/prism/node.rb#13300
     def type; end
   end
 end
@@ -19972,13 +22052,13 @@ end
 #     (10 + 34)
 #     ^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#12549
+# source://prism//lib/prism/node.rb#13309
 class Prism::ParenthesesNode < ::Prism::Node
   # def initialize: (body: Node?, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [ParenthesesNode] a new instance of ParenthesesNode
   #
-  # source://prism//lib/prism/node.rb#12560
+  # source://prism//lib/prism/node.rb#13320
   sig do
     params(
       body: T.nilable(Prism::Node),
@@ -19991,60 +22071,60 @@ class Prism::ParenthesesNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12568
+  # source://prism//lib/prism/node.rb#13328
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://prism//lib/prism/node.rb#12551
+  # source://prism//lib/prism/node.rb#13311
   sig { returns(T.nilable(Prism::Node)) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12577
+  # source://prism//lib/prism/node.rb#13337
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#12617
+  # source://prism//lib/prism/node.rb#13377
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12557
+  # source://prism//lib/prism/node.rb#13317
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12589
+  # source://prism//lib/prism/node.rb#13349
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12582
+  # source://prism//lib/prism/node.rb#13342
   def compact_child_nodes; end
 
   # def copy: (**params) -> ParenthesesNode
   #
-  # source://prism//lib/prism/node.rb#12594
+  # source://prism//lib/prism/node.rb#13354
   sig { params(params: T.untyped).returns(Prism::ParenthesesNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12577
+  # source://prism//lib/prism/node.rb#13337
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12607
+  # source://prism//lib/prism/node.rb#13367
   sig do
     params(
       keys: T::Array[Symbol]
@@ -20054,22 +22134,22 @@ class Prism::ParenthesesNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12622
+  # source://prism//lib/prism/node.rb#13382
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#12612
+  # source://prism//lib/prism/node.rb#13372
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12554
+  # source://prism//lib/prism/node.rb#13314
   sig { returns(Prism::Location) }
   def opening_loc; end
 
-  # source://prism//lib/prism/node.rb#12572
+  # source://prism//lib/prism/node.rb#13332
   def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -20087,7 +22167,7 @@ class Prism::ParenthesesNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12649
+  # source://prism//lib/prism/node.rb#13409
   def type; end
 
   class << self
@@ -20098,41 +22178,41 @@ class Prism::ParenthesesNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12659
+    # source://prism//lib/prism/node.rb#13419
     def type; end
   end
 end
 
 # This represents an error that was encountered during parsing.
 #
-# source://prism//lib/prism/parse_result.rb#283
+# source://prism//lib/prism/parse_result.rb#308
 class Prism::ParseError
   # Create a new error object with the given message and location.
   #
   # @return [ParseError] a new instance of ParseError
   #
-  # source://prism//lib/prism/parse_result.rb#291
+  # source://prism//lib/prism/parse_result.rb#316
   def initialize(message, location); end
 
   # Implement the hash pattern matching interface for ParseError.
   #
-  # source://prism//lib/prism/parse_result.rb#297
+  # source://prism//lib/prism/parse_result.rb#322
   def deconstruct_keys(keys); end
 
   # Returns a string representation of this error.
   #
-  # source://prism//lib/prism/parse_result.rb#302
+  # source://prism//lib/prism/parse_result.rb#327
   def inspect; end
 
   # A Location object representing the location of this error in the source.
   #
-  # source://prism//lib/prism/parse_result.rb#288
+  # source://prism//lib/prism/parse_result.rb#313
   sig { returns(Prism::Location) }
   def location; end
 
   # The message associated with this error.
   #
-  # source://prism//lib/prism/parse_result.rb#285
+  # source://prism//lib/prism/parse_result.rb#310
   sig { returns(String) }
   def message; end
 end
@@ -20141,14 +22221,14 @@ end
 # the AST, any comments that were encounters, and any errors that were
 # encountered.
 #
-# source://prism//lib/prism/parse_result.rb#335
+# source://prism//lib/prism/parse_result.rb#360
 class Prism::ParseResult
   # Create a new parse result object with the given values.
   #
   # @return [ParseResult] a new instance of ParseResult
   #
-  # source://prism//lib/prism/parse_result.rb#357
-  def initialize(value, comments, magic_comments, errors, warnings, source); end
+  # source://prism//lib/prism/parse_result.rb#387
+  def initialize(value, comments, magic_comments, data_loc, errors, warnings, source); end
 
   # Attach the list of comments to their respective locations in the tree.
   #
@@ -20157,18 +22237,25 @@ class Prism::ParseResult
 
   # The list of comments that were encountered during parsing.
   #
-  # source://prism//lib/prism/parse_result.rb#342
+  # source://prism//lib/prism/parse_result.rb#367
   sig { returns(T::Array[Prism::Comment]) }
   def comments; end
 
+  # An optional location that represents the location of the content after the
+  # __END__ marker. This content is loaded into the DATA constant when the
+  # file being parsed is the main file being executed.
+  #
+  # source://prism//lib/prism/parse_result.rb#375
+  def data_loc; end
+
   # Implement the hash pattern matching interface for ParseResult.
   #
-  # source://prism//lib/prism/parse_result.rb#367
+  # source://prism//lib/prism/parse_result.rb#398
   def deconstruct_keys(keys); end
 
   # The list of errors that were generated during parsing.
   #
-  # source://prism//lib/prism/parse_result.rb#348
+  # source://prism//lib/prism/parse_result.rb#378
   sig { returns(T::Array[Prism::ParseError]) }
   def errors; end
 
@@ -20177,12 +22264,12 @@ class Prism::ParseResult
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/parse_result.rb#379
+  # source://prism//lib/prism/parse_result.rb#410
   def failure?; end
 
   # The list of magic comments that were encountered during parsing.
   #
-  # source://prism//lib/prism/parse_result.rb#345
+  # source://prism//lib/prism/parse_result.rb#370
   def magic_comments; end
 
   # Walk the tree and mark nodes that are on a new line.
@@ -20192,7 +22279,7 @@ class Prism::ParseResult
 
   # A Source instance that represents the source code that was parsed.
   #
-  # source://prism//lib/prism/parse_result.rb#354
+  # source://prism//lib/prism/parse_result.rb#384
   sig { returns(Prism::Source) }
   def source; end
 
@@ -20201,20 +22288,20 @@ class Prism::ParseResult
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/parse_result.rb#373
+  # source://prism//lib/prism/parse_result.rb#404
   def success?; end
 
   # The value that was generated by parsing. Normally this holds the AST, but
   # it can sometimes how a list of tokens or other results passed back from
   # the parser.
   #
-  # source://prism//lib/prism/parse_result.rb#339
+  # source://prism//lib/prism/parse_result.rb#364
   sig { returns(Prism::ProgramNode) }
   def value; end
 
   # The list of warnings that were generated during parsing.
   #
-  # source://prism//lib/prism/parse_result.rb#351
+  # source://prism//lib/prism/parse_result.rb#381
   sig { returns(T::Array[Prism::ParseWarning]) }
   def warnings; end
 end
@@ -20373,34 +22460,34 @@ end
 
 # This represents a warning that was encountered during parsing.
 #
-# source://prism//lib/prism/parse_result.rb#308
+# source://prism//lib/prism/parse_result.rb#333
 class Prism::ParseWarning
   # Create a new warning object with the given message and location.
   #
   # @return [ParseWarning] a new instance of ParseWarning
   #
-  # source://prism//lib/prism/parse_result.rb#316
+  # source://prism//lib/prism/parse_result.rb#341
   def initialize(message, location); end
 
   # Implement the hash pattern matching interface for ParseWarning.
   #
-  # source://prism//lib/prism/parse_result.rb#322
+  # source://prism//lib/prism/parse_result.rb#347
   def deconstruct_keys(keys); end
 
   # Returns a string representation of this warning.
   #
-  # source://prism//lib/prism/parse_result.rb#327
+  # source://prism//lib/prism/parse_result.rb#352
   def inspect; end
 
   # A Location object representing the location of this warning in the source.
   #
-  # source://prism//lib/prism/parse_result.rb#313
+  # source://prism//lib/prism/parse_result.rb#338
   sig { returns(Prism::Location) }
   def location; end
 
   # The message associated with this warning.
   #
-  # source://prism//lib/prism/parse_result.rb#310
+  # source://prism//lib/prism/parse_result.rb#335
   sig { returns(String) }
   def message; end
 end
@@ -20565,13 +22652,13 @@ end
 #     foo in ^(bar)
 #            ^^^^^^
 #
-# source://prism//lib/prism/node.rb#12669
+# source://prism//lib/prism/node.rb#13429
 class Prism::PinnedExpressionNode < ::Prism::Node
   # def initialize: (expression: Node, operator_loc: Location, lparen_loc: Location, rparen_loc: Location, location: Location) -> void
   #
   # @return [PinnedExpressionNode] a new instance of PinnedExpressionNode
   #
-  # source://prism//lib/prism/node.rb#12683
+  # source://prism//lib/prism/node.rb#13443
   sig do
     params(
       expression: Prism::Node,
@@ -20585,42 +22672,42 @@ class Prism::PinnedExpressionNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12692
+  # source://prism//lib/prism/node.rb#13452
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12697
+  # source://prism//lib/prism/node.rb#13457
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12707
+  # source://prism//lib/prism/node.rb#13467
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12702
+  # source://prism//lib/prism/node.rb#13462
   def compact_child_nodes; end
 
   # def copy: (**params) -> PinnedExpressionNode
   #
-  # source://prism//lib/prism/node.rb#12712
+  # source://prism//lib/prism/node.rb#13472
   sig { params(params: T.untyped).returns(Prism::PinnedExpressionNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12697
+  # source://prism//lib/prism/node.rb#13457
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12726
+  # source://prism//lib/prism/node.rb#13486
   sig do
     params(
       keys: T::Array[Symbol]
@@ -20630,48 +22717,48 @@ class Prism::PinnedExpressionNode < ::Prism::Node
 
   # attr_reader expression: Node
   #
-  # source://prism//lib/prism/node.rb#12671
+  # source://prism//lib/prism/node.rb#13431
   sig { returns(Prism::Node) }
   def expression; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12746
+  # source://prism//lib/prism/node.rb#13506
   def inspect(inspector = T.unsafe(nil)); end
 
   # def lparen: () -> String
   #
-  # source://prism//lib/prism/node.rb#12736
+  # source://prism//lib/prism/node.rb#13496
   sig { returns(String) }
   def lparen; end
 
   # attr_reader lparen_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12677
+  # source://prism//lib/prism/node.rb#13437
   sig { returns(Prism::Location) }
   def lparen_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#12731
+  # source://prism//lib/prism/node.rb#13491
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12674
+  # source://prism//lib/prism/node.rb#13434
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # def rparen: () -> String
   #
-  # source://prism//lib/prism/node.rb#12741
+  # source://prism//lib/prism/node.rb#13501
   sig { returns(String) }
   def rparen; end
 
   # attr_reader rparen_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12680
+  # source://prism//lib/prism/node.rb#13440
   sig { returns(Prism::Location) }
   def rparen_loc; end
 
@@ -20690,7 +22777,7 @@ class Prism::PinnedExpressionNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12770
+  # source://prism//lib/prism/node.rb#13530
   def type; end
 
   class << self
@@ -20701,7 +22788,7 @@ class Prism::PinnedExpressionNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12780
+    # source://prism//lib/prism/node.rb#13540
     def type; end
   end
 end
@@ -20712,54 +22799,54 @@ end
 #     foo in ^bar
 #            ^^^^
 #
-# source://prism//lib/prism/node.rb#12790
+# source://prism//lib/prism/node.rb#13550
 class Prism::PinnedVariableNode < ::Prism::Node
   # def initialize: (variable: Node, operator_loc: Location, location: Location) -> void
   #
   # @return [PinnedVariableNode] a new instance of PinnedVariableNode
   #
-  # source://prism//lib/prism/node.rb#12798
+  # source://prism//lib/prism/node.rb#13558
   sig { params(variable: Prism::Node, operator_loc: Prism::Location, location: Prism::Location).void }
   def initialize(variable, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12805
+  # source://prism//lib/prism/node.rb#13565
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12810
+  # source://prism//lib/prism/node.rb#13570
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12820
+  # source://prism//lib/prism/node.rb#13580
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12815
+  # source://prism//lib/prism/node.rb#13575
   def compact_child_nodes; end
 
   # def copy: (**params) -> PinnedVariableNode
   #
-  # source://prism//lib/prism/node.rb#12825
+  # source://prism//lib/prism/node.rb#13585
   sig { params(params: T.untyped).returns(Prism::PinnedVariableNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12810
+  # source://prism//lib/prism/node.rb#13570
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12837
+  # source://prism//lib/prism/node.rb#13597
   sig do
     params(
       keys: T::Array[Symbol]
@@ -20769,18 +22856,18 @@ class Prism::PinnedVariableNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12847
+  # source://prism//lib/prism/node.rb#13607
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#12842
+  # source://prism//lib/prism/node.rb#13602
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12795
+  # source://prism//lib/prism/node.rb#13555
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -20799,12 +22886,12 @@ class Prism::PinnedVariableNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12869
+  # source://prism//lib/prism/node.rb#13629
   def type; end
 
   # attr_reader variable: Node
   #
-  # source://prism//lib/prism/node.rb#12792
+  # source://prism//lib/prism/node.rb#13552
   sig { returns(Prism::Node) }
   def variable; end
 
@@ -20816,7 +22903,7 @@ class Prism::PinnedVariableNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#12879
+    # source://prism//lib/prism/node.rb#13639
     def type; end
   end
 end
@@ -20826,13 +22913,13 @@ end
 #     END { foo }
 #     ^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#12888
+# source://prism//lib/prism/node.rb#13648
 class Prism::PostExecutionNode < ::Prism::Node
   # def initialize: (statements: StatementsNode?, keyword_loc: Location, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [PostExecutionNode] a new instance of PostExecutionNode
   #
-  # source://prism//lib/prism/node.rb#12902
+  # source://prism//lib/prism/node.rb#13662
   sig do
     params(
       statements: T.nilable(Prism::StatementsNode),
@@ -20846,54 +22933,54 @@ class Prism::PostExecutionNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#12911
+  # source://prism//lib/prism/node.rb#13671
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12916
+  # source://prism//lib/prism/node.rb#13676
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#12962
+  # source://prism//lib/prism/node.rb#13722
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12899
+  # source://prism//lib/prism/node.rb#13659
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#12928
+  # source://prism//lib/prism/node.rb#13688
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#12921
+  # source://prism//lib/prism/node.rb#13681
   def compact_child_nodes; end
 
   # def copy: (**params) -> PostExecutionNode
   #
-  # source://prism//lib/prism/node.rb#12933
+  # source://prism//lib/prism/node.rb#13693
   sig { params(params: T.untyped).returns(Prism::PostExecutionNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#12916
+  # source://prism//lib/prism/node.rb#13676
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#12947
+  # source://prism//lib/prism/node.rb#13707
   sig do
     params(
       keys: T::Array[Symbol]
@@ -20903,36 +22990,36 @@ class Prism::PostExecutionNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#12967
+  # source://prism//lib/prism/node.rb#13727
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#12952
+  # source://prism//lib/prism/node.rb#13712
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12893
+  # source://prism//lib/prism/node.rb#13653
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#12957
+  # source://prism//lib/prism/node.rb#13717
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#12896
+  # source://prism//lib/prism/node.rb#13656
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#12890
+  # source://prism//lib/prism/node.rb#13650
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -20951,7 +23038,7 @@ class Prism::PostExecutionNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#12995
+  # source://prism//lib/prism/node.rb#13755
   def type; end
 
   class << self
@@ -20962,7 +23049,7 @@ class Prism::PostExecutionNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13005
+    # source://prism//lib/prism/node.rb#13765
     def type; end
   end
 end
@@ -20972,13 +23059,13 @@ end
 #     BEGIN { foo }
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#13014
+# source://prism//lib/prism/node.rb#13774
 class Prism::PreExecutionNode < ::Prism::Node
   # def initialize: (statements: StatementsNode?, keyword_loc: Location, opening_loc: Location, closing_loc: Location, location: Location) -> void
   #
   # @return [PreExecutionNode] a new instance of PreExecutionNode
   #
-  # source://prism//lib/prism/node.rb#13028
+  # source://prism//lib/prism/node.rb#13788
   sig do
     params(
       statements: T.nilable(Prism::StatementsNode),
@@ -20992,54 +23079,54 @@ class Prism::PreExecutionNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13037
+  # source://prism//lib/prism/node.rb#13797
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13042
+  # source://prism//lib/prism/node.rb#13802
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#13088
+  # source://prism//lib/prism/node.rb#13848
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13025
+  # source://prism//lib/prism/node.rb#13785
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13054
+  # source://prism//lib/prism/node.rb#13814
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13047
+  # source://prism//lib/prism/node.rb#13807
   def compact_child_nodes; end
 
   # def copy: (**params) -> PreExecutionNode
   #
-  # source://prism//lib/prism/node.rb#13059
+  # source://prism//lib/prism/node.rb#13819
   sig { params(params: T.untyped).returns(Prism::PreExecutionNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13042
+  # source://prism//lib/prism/node.rb#13802
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13073
+  # source://prism//lib/prism/node.rb#13833
   sig do
     params(
       keys: T::Array[Symbol]
@@ -21049,36 +23136,36 @@ class Prism::PreExecutionNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13093
+  # source://prism//lib/prism/node.rb#13853
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#13078
+  # source://prism//lib/prism/node.rb#13838
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13019
+  # source://prism//lib/prism/node.rb#13779
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#13083
+  # source://prism//lib/prism/node.rb#13843
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13022
+  # source://prism//lib/prism/node.rb#13782
   sig { returns(Prism::Location) }
   def opening_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#13016
+  # source://prism//lib/prism/node.rb#13776
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -21097,7 +23184,7 @@ class Prism::PreExecutionNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13121
+  # source://prism//lib/prism/node.rb#13881
   def type; end
 
   class << self
@@ -21108,61 +23195,61 @@ class Prism::PreExecutionNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13131
+    # source://prism//lib/prism/node.rb#13891
     def type; end
   end
 end
 
 # The top level node of any parse tree.
 #
-# source://prism//lib/prism/node.rb#13137
+# source://prism//lib/prism/node.rb#13897
 class Prism::ProgramNode < ::Prism::Node
   # def initialize: (locals: Array[Symbol], statements: StatementsNode, location: Location) -> void
   #
   # @return [ProgramNode] a new instance of ProgramNode
   #
-  # source://prism//lib/prism/node.rb#13145
+  # source://prism//lib/prism/node.rb#13905
   sig { params(locals: T::Array[Symbol], statements: Prism::StatementsNode, location: Prism::Location).void }
   def initialize(locals, statements, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13152
+  # source://prism//lib/prism/node.rb#13912
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13157
+  # source://prism//lib/prism/node.rb#13917
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13167
+  # source://prism//lib/prism/node.rb#13927
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13162
+  # source://prism//lib/prism/node.rb#13922
   def compact_child_nodes; end
 
   # def copy: (**params) -> ProgramNode
   #
-  # source://prism//lib/prism/node.rb#13172
+  # source://prism//lib/prism/node.rb#13932
   sig { params(params: T.untyped).returns(Prism::ProgramNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13157
+  # source://prism//lib/prism/node.rb#13917
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13184
+  # source://prism//lib/prism/node.rb#13944
   sig do
     params(
       keys: T::Array[Symbol]
@@ -21172,18 +23259,18 @@ class Prism::ProgramNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13189
+  # source://prism//lib/prism/node.rb#13949
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://prism//lib/prism/node.rb#13139
+  # source://prism//lib/prism/node.rb#13899
   sig { returns(T::Array[Symbol]) }
   def locals; end
 
   # attr_reader statements: StatementsNode
   #
-  # source://prism//lib/prism/node.rb#13142
+  # source://prism//lib/prism/node.rb#13902
   sig { returns(Prism::StatementsNode) }
   def statements; end
 
@@ -21202,7 +23289,7 @@ class Prism::ProgramNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13211
+  # source://prism//lib/prism/node.rb#13971
   def type; end
 
   class << self
@@ -21213,19 +23300,19 @@ class Prism::ProgramNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13221
+    # source://prism//lib/prism/node.rb#13981
     def type; end
   end
 end
 
 # Flags for range and flip-flop nodes.
 #
-# source://prism//lib/prism/node.rb#16572
+# source://prism//lib/prism/node.rb#17337
 module Prism::RangeFlags; end
 
 # ... operator
 #
-# source://prism//lib/prism/node.rb#16574
+# source://prism//lib/prism/node.rb#17339
 Prism::RangeFlags::EXCLUDE_END = T.let(T.unsafe(nil), Integer)
 
 # Represents the use of the `..` or `...` operators.
@@ -21236,62 +23323,62 @@ Prism::RangeFlags::EXCLUDE_END = T.let(T.unsafe(nil), Integer)
 #     c if a =~ /left/ ... b =~ /right/
 #          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#13233
+# source://prism//lib/prism/node.rb#13993
 class Prism::RangeNode < ::Prism::Node
-  # def initialize: (left: Node?, right: Node?, operator_loc: Location, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, left: Node?, right: Node?, operator_loc: Location, location: Location) -> void
   #
   # @return [RangeNode] a new instance of RangeNode
   #
-  # source://prism//lib/prism/node.rb#13247
+  # source://prism//lib/prism/node.rb#14007
   sig do
     params(
+      flags: Integer,
       left: T.nilable(Prism::Node),
       right: T.nilable(Prism::Node),
       operator_loc: Prism::Location,
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(left, right, operator_loc, flags, location); end
+  def initialize(flags, left, right, operator_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13256
+  # source://prism//lib/prism/node.rb#14016
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13261
+  # source://prism//lib/prism/node.rb#14021
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13274
+  # source://prism//lib/prism/node.rb#14034
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13266
+  # source://prism//lib/prism/node.rb#14026
   def compact_child_nodes; end
 
   # def copy: (**params) -> RangeNode
   #
-  # source://prism//lib/prism/node.rb#13279
+  # source://prism//lib/prism/node.rb#14039
   sig { params(params: T.untyped).returns(Prism::RangeNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13261
+  # source://prism//lib/prism/node.rb#14021
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13293
+  # source://prism//lib/prism/node.rb#14053
   sig do
     params(
       keys: T::Array[Symbol]
@@ -21303,36 +23390,36 @@ class Prism::RangeNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13303
+  # source://prism//lib/prism/node.rb#14058
   sig { returns(T::Boolean) }
   def exclude_end?; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13308
+  # source://prism//lib/prism/node.rb#14068
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader left: Node?
   #
-  # source://prism//lib/prism/node.rb#13235
+  # source://prism//lib/prism/node.rb#13998
   sig { returns(T.nilable(Prism::Node)) }
   def left; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#13298
+  # source://prism//lib/prism/node.rb#14063
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13241
+  # source://prism//lib/prism/node.rb#14004
   sig { returns(Prism::Location) }
   def operator_loc; end
 
   # attr_reader right: Node?
   #
-  # source://prism//lib/prism/node.rb#13238
+  # source://prism//lib/prism/node.rb#14001
   sig { returns(T.nilable(Prism::Node)) }
   def right; end
 
@@ -21351,14 +23438,14 @@ class Prism::RangeNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13342
+  # source://prism//lib/prism/node.rb#14102
   def type; end
 
   private
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#13244
+  # source://prism//lib/prism/node.rb#13995
   sig { returns(Integer) }
   def flags; end
 
@@ -21370,7 +23457,7 @@ class Prism::RangeNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13352
+    # source://prism//lib/prism/node.rb#14112
     def type; end
   end
 end
@@ -21380,54 +23467,54 @@ end
 #     1.0r
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#13361
+# source://prism//lib/prism/node.rb#14121
 class Prism::RationalNode < ::Prism::Node
   # def initialize: (numeric: Node, location: Location) -> void
   #
   # @return [RationalNode] a new instance of RationalNode
   #
-  # source://prism//lib/prism/node.rb#13366
+  # source://prism//lib/prism/node.rb#14126
   sig { params(numeric: Prism::Node, location: Prism::Location).void }
   def initialize(numeric, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13372
+  # source://prism//lib/prism/node.rb#14132
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13377
+  # source://prism//lib/prism/node.rb#14137
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13387
+  # source://prism//lib/prism/node.rb#14147
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13382
+  # source://prism//lib/prism/node.rb#14142
   def compact_child_nodes; end
 
   # def copy: (**params) -> RationalNode
   #
-  # source://prism//lib/prism/node.rb#13392
+  # source://prism//lib/prism/node.rb#14152
   sig { params(params: T.untyped).returns(Prism::RationalNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13377
+  # source://prism//lib/prism/node.rb#14137
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13403
+  # source://prism//lib/prism/node.rb#14163
   sig do
     params(
       keys: T::Array[Symbol]
@@ -21437,12 +23524,12 @@ class Prism::RationalNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13408
+  # source://prism//lib/prism/node.rb#14168
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader numeric: Node
   #
-  # source://prism//lib/prism/node.rb#13363
+  # source://prism//lib/prism/node.rb#14123
   sig { returns(Prism::Node) }
   def numeric; end
 
@@ -21461,12 +23548,12 @@ class Prism::RationalNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13429
+  # source://prism//lib/prism/node.rb#14189
   def type; end
 
   # Returns the value of the node as a Ruby Rational.
   #
-  # source://prism//lib/prism/node_ext.rb#54
+  # source://prism//lib/prism/node_ext.rb#83
   def value; end
 
   class << self
@@ -21477,7 +23564,7 @@ class Prism::RationalNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13439
+    # source://prism//lib/prism/node.rb#14199
     def type; end
   end
 end
@@ -21487,54 +23574,54 @@ end
 #     redo
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#13448
+# source://prism//lib/prism/node.rb#14208
 class Prism::RedoNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [RedoNode] a new instance of RedoNode
   #
-  # source://prism//lib/prism/node.rb#13450
+  # source://prism//lib/prism/node.rb#14210
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13455
+  # source://prism//lib/prism/node.rb#14215
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13460
+  # source://prism//lib/prism/node.rb#14220
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13470
+  # source://prism//lib/prism/node.rb#14230
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13465
+  # source://prism//lib/prism/node.rb#14225
   def compact_child_nodes; end
 
   # def copy: (**params) -> RedoNode
   #
-  # source://prism//lib/prism/node.rb#13475
+  # source://prism//lib/prism/node.rb#14235
   sig { params(params: T.untyped).returns(Prism::RedoNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13460
+  # source://prism//lib/prism/node.rb#14220
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13485
+  # source://prism//lib/prism/node.rb#14245
   sig do
     params(
       keys: T::Array[Symbol]
@@ -21544,7 +23631,7 @@ class Prism::RedoNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13490
+  # source://prism//lib/prism/node.rb#14250
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -21562,7 +23649,7 @@ class Prism::RedoNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13509
+  # source://prism//lib/prism/node.rb#14269
   def type; end
 
   class << self
@@ -21573,54 +23660,69 @@ class Prism::RedoNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13519
+    # source://prism//lib/prism/node.rb#14279
     def type; end
   end
 end
 
 # Flags for regular expression and match last line nodes.
 #
-# source://prism//lib/prism/node.rb#16578
+# source://prism//lib/prism/node.rb#17343
 module Prism::RegularExpressionFlags; end
 
 # n - forces the ASCII-8BIT encoding
 #
-# source://prism//lib/prism/node.rb#16595
+# source://prism//lib/prism/node.rb#17360
 Prism::RegularExpressionFlags::ASCII_8BIT = T.let(T.unsafe(nil), Integer)
 
 # e - forces the EUC-JP encoding
 #
-# source://prism//lib/prism/node.rb#16592
+# source://prism//lib/prism/node.rb#17357
 Prism::RegularExpressionFlags::EUC_JP = T.let(T.unsafe(nil), Integer)
 
 # x - ignores whitespace and allows comments in regular expressions
 #
-# source://prism//lib/prism/node.rb#16583
+# source://prism//lib/prism/node.rb#17348
 Prism::RegularExpressionFlags::EXTENDED = T.let(T.unsafe(nil), Integer)
+
+# internal bytes forced the encoding to binary
+#
+# source://prism//lib/prism/node.rb#17372
+Prism::RegularExpressionFlags::FORCED_BINARY_ENCODING = T.let(T.unsafe(nil), Integer)
+
+# internal bytes forced the encoding to US-ASCII
+#
+# source://prism//lib/prism/node.rb#17375
+Prism::RegularExpressionFlags::FORCED_US_ASCII_ENCODING = T.let(T.unsafe(nil), Integer)
+
+# internal bytes forced the encoding to UTF-8
+#
+# source://prism//lib/prism/node.rb#17369
+Prism::RegularExpressionFlags::FORCED_UTF8_ENCODING = T.let(T.unsafe(nil), Integer)
 
 # i - ignores the case of characters when matching
 #
-# source://prism//lib/prism/node.rb#16580
+# source://prism//lib/prism/node.rb#17345
 Prism::RegularExpressionFlags::IGNORE_CASE = T.let(T.unsafe(nil), Integer)
 
 # m - allows $ to match the end of lines within strings
 #
-# source://prism//lib/prism/node.rb#16586
+# source://prism//lib/prism/node.rb#17351
 Prism::RegularExpressionFlags::MULTI_LINE = T.let(T.unsafe(nil), Integer)
 
 # o - only interpolates values into the regular expression once
 #
-# source://prism//lib/prism/node.rb#16589
+# source://prism//lib/prism/node.rb#17354
 Prism::RegularExpressionFlags::ONCE = T.let(T.unsafe(nil), Integer)
 
 # u - forces the UTF-8 encoding
 #
-# source://prism//lib/prism/node.rb#16601
+# source://prism//lib/prism/node.rb#17366
 Prism::RegularExpressionFlags::UTF_8 = T.let(T.unsafe(nil), Integer)
 
 # s - forces the Windows-31J encoding
 #
-# source://prism//lib/prism/node.rb#16598
+# source://prism//lib/prism/node.rb#17363
 Prism::RegularExpressionFlags::WINDOWS_31J = T.let(T.unsafe(nil), Integer)
 
 # Represents a regular expression literal with no interpolation.
@@ -21628,30 +23730,30 @@ Prism::RegularExpressionFlags::WINDOWS_31J = T.let(T.unsafe(nil), Integer)
 #     /foo/i
 #     ^^^^^^
 #
-# source://prism//lib/prism/node.rb#13528
+# source://prism//lib/prism/node.rb#14288
 class Prism::RegularExpressionNode < ::Prism::Node
   include ::Prism::RegularExpressionOptions
 
-  # def initialize: (opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, location: Location) -> void
   #
   # @return [RegularExpressionNode] a new instance of RegularExpressionNode
   #
-  # source://prism//lib/prism/node.rb#13545
+  # source://prism//lib/prism/node.rb#14305
   sig do
     params(
+      flags: Integer,
       opening_loc: Prism::Location,
       content_loc: Prism::Location,
       closing_loc: Prism::Location,
       unescaped: String,
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(opening_loc, content_loc, closing_loc, unescaped, flags, location); end
+  def initialize(flags, opening_loc, content_loc, closing_loc, unescaped, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13555
+  # source://prism//lib/prism/node.rb#14315
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
@@ -21659,66 +23761,66 @@ class Prism::RegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13635
+  # source://prism//lib/prism/node.rb#14380
   sig { returns(T::Boolean) }
   def ascii_8bit?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13560
+  # source://prism//lib/prism/node.rb#14320
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#13605
+  # source://prism//lib/prism/node.rb#14420
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13536
+  # source://prism//lib/prism/node.rb#14299
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13570
+  # source://prism//lib/prism/node.rb#14330
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13565
+  # source://prism//lib/prism/node.rb#14325
   def compact_child_nodes; end
 
   # def content: () -> String
   #
-  # source://prism//lib/prism/node.rb#13600
+  # source://prism//lib/prism/node.rb#14415
   sig { returns(String) }
   def content; end
 
   # attr_reader content_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13533
+  # source://prism//lib/prism/node.rb#14296
   sig { returns(Prism::Location) }
   def content_loc; end
 
   # def copy: (**params) -> RegularExpressionNode
   #
-  # source://prism//lib/prism/node.rb#13575
+  # source://prism//lib/prism/node.rb#14335
   sig { params(params: T.untyped).returns(Prism::RegularExpressionNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13560
+  # source://prism//lib/prism/node.rb#14320
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13590
+  # source://prism//lib/prism/node.rb#14350
   sig do
     params(
       keys: T::Array[Symbol]
@@ -21730,7 +23832,7 @@ class Prism::RegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13630
+  # source://prism//lib/prism/node.rb#14375
   sig { returns(T::Boolean) }
   def euc_jp?; end
 
@@ -21738,28 +23840,52 @@ class Prism::RegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13615
+  # source://prism//lib/prism/node.rb#14360
   sig { returns(T::Boolean) }
   def extended?; end
+
+  # def forced_binary_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#14400
+  sig { returns(T::Boolean) }
+  def forced_binary_encoding?; end
+
+  # def forced_us_ascii_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#14405
+  sig { returns(T::Boolean) }
+  def forced_us_ascii_encoding?; end
+
+  # def forced_utf8_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#14395
+  sig { returns(T::Boolean) }
+  def forced_utf8_encoding?; end
 
   # def ignore_case?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13610
+  # source://prism//lib/prism/node.rb#14355
   sig { returns(T::Boolean) }
   def ignore_case?; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13650
+  # source://prism//lib/prism/node.rb#14425
   def inspect(inspector = T.unsafe(nil)); end
 
   # def multi_line?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13620
+  # source://prism//lib/prism/node.rb#14365
   sig { returns(T::Boolean) }
   def multi_line?; end
 
@@ -21767,19 +23893,19 @@ class Prism::RegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13625
+  # source://prism//lib/prism/node.rb#14370
   sig { returns(T::Boolean) }
   def once?; end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#13595
+  # source://prism//lib/prism/node.rb#14410
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13530
+  # source://prism//lib/prism/node.rb#14293
   sig { returns(Prism::Location) }
   def opening_loc; end
 
@@ -21798,12 +23924,12 @@ class Prism::RegularExpressionNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13675
+  # source://prism//lib/prism/node.rb#14450
   def type; end
 
   # attr_reader unescaped: String
   #
-  # source://prism//lib/prism/node.rb#13539
+  # source://prism//lib/prism/node.rb#14302
   sig { returns(String) }
   def unescaped; end
 
@@ -21811,7 +23937,7 @@ class Prism::RegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13645
+  # source://prism//lib/prism/node.rb#14390
   sig { returns(T::Boolean) }
   def utf_8?; end
 
@@ -21819,7 +23945,7 @@ class Prism::RegularExpressionNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#13640
+  # source://prism//lib/prism/node.rb#14385
   sig { returns(T::Boolean) }
   def windows_31j?; end
 
@@ -21827,7 +23953,7 @@ class Prism::RegularExpressionNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#13542
+  # source://prism//lib/prism/node.rb#14290
   sig { returns(Integer) }
   def flags; end
 
@@ -21839,7 +23965,7 @@ class Prism::RegularExpressionNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13685
+    # source://prism//lib/prism/node.rb#14460
     def type; end
   end
 end
@@ -21859,54 +23985,54 @@ end
 #           ^^
 #     end
 #
-# source://prism//lib/prism/node.rb#13695
+# source://prism//lib/prism/node.rb#14470
 class Prism::RequiredKeywordParameterNode < ::Prism::Node
   # def initialize: (name: Symbol, name_loc: Location, location: Location) -> void
   #
   # @return [RequiredKeywordParameterNode] a new instance of RequiredKeywordParameterNode
   #
-  # source://prism//lib/prism/node.rb#13703
+  # source://prism//lib/prism/node.rb#14478
   sig { params(name: Symbol, name_loc: Prism::Location, location: Prism::Location).void }
   def initialize(name, name_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13710
+  # source://prism//lib/prism/node.rb#14485
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13715
+  # source://prism//lib/prism/node.rb#14490
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13725
+  # source://prism//lib/prism/node.rb#14500
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13720
+  # source://prism//lib/prism/node.rb#14495
   def compact_child_nodes; end
 
   # def copy: (**params) -> RequiredKeywordParameterNode
   #
-  # source://prism//lib/prism/node.rb#13730
+  # source://prism//lib/prism/node.rb#14505
   sig { params(params: T.untyped).returns(Prism::RequiredKeywordParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13715
+  # source://prism//lib/prism/node.rb#14490
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13742
+  # source://prism//lib/prism/node.rb#14517
   sig do
     params(
       keys: T::Array[Symbol]
@@ -21916,18 +24042,18 @@ class Prism::RequiredKeywordParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13747
+  # source://prism//lib/prism/node.rb#14522
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#13697
+  # source://prism//lib/prism/node.rb#14472
   sig { returns(Symbol) }
   def name; end
 
   # attr_reader name_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13700
+  # source://prism//lib/prism/node.rb#14475
   sig { returns(Prism::Location) }
   def name_loc; end
 
@@ -21946,7 +24072,7 @@ class Prism::RequiredKeywordParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13768
+  # source://prism//lib/prism/node.rb#14543
   def type; end
 
   class << self
@@ -21957,7 +24083,7 @@ class Prism::RequiredKeywordParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13778
+    # source://prism//lib/prism/node.rb#14553
     def type; end
   end
 end
@@ -21968,54 +24094,54 @@ end
 #           ^
 #     end
 #
-# source://prism//lib/prism/node.rb#13788
+# source://prism//lib/prism/node.rb#14563
 class Prism::RequiredParameterNode < ::Prism::Node
   # def initialize: (name: Symbol, location: Location) -> void
   #
   # @return [RequiredParameterNode] a new instance of RequiredParameterNode
   #
-  # source://prism//lib/prism/node.rb#13793
+  # source://prism//lib/prism/node.rb#14568
   sig { params(name: Symbol, location: Prism::Location).void }
   def initialize(name, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13799
+  # source://prism//lib/prism/node.rb#14574
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13804
+  # source://prism//lib/prism/node.rb#14579
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13814
+  # source://prism//lib/prism/node.rb#14589
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13809
+  # source://prism//lib/prism/node.rb#14584
   def compact_child_nodes; end
 
   # def copy: (**params) -> RequiredParameterNode
   #
-  # source://prism//lib/prism/node.rb#13819
+  # source://prism//lib/prism/node.rb#14594
   sig { params(params: T.untyped).returns(Prism::RequiredParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13804
+  # source://prism//lib/prism/node.rb#14579
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13830
+  # source://prism//lib/prism/node.rb#14605
   sig do
     params(
       keys: T::Array[Symbol]
@@ -22025,12 +24151,12 @@ class Prism::RequiredParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13835
+  # source://prism//lib/prism/node.rb#14610
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol
   #
-  # source://prism//lib/prism/node.rb#13790
+  # source://prism//lib/prism/node.rb#14565
   sig { returns(Symbol) }
   def name; end
 
@@ -22049,7 +24175,7 @@ class Prism::RequiredParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13855
+  # source://prism//lib/prism/node.rb#14630
   def type; end
 
   class << self
@@ -22060,7 +24186,7 @@ class Prism::RequiredParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13865
+    # source://prism//lib/prism/node.rb#14640
     def type; end
   end
 end
@@ -22070,13 +24196,13 @@ end
 #     foo rescue nil
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#13874
+# source://prism//lib/prism/node.rb#14649
 class Prism::RescueModifierNode < ::Prism::Node
   # def initialize: (expression: Node, keyword_loc: Location, rescue_expression: Node, location: Location) -> void
   #
   # @return [RescueModifierNode] a new instance of RescueModifierNode
   #
-  # source://prism//lib/prism/node.rb#13885
+  # source://prism//lib/prism/node.rb#14660
   sig do
     params(
       expression: Prism::Node,
@@ -22089,42 +24215,42 @@ class Prism::RescueModifierNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#13893
+  # source://prism//lib/prism/node.rb#14668
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13902
+  # source://prism//lib/prism/node.rb#14677
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#13912
+  # source://prism//lib/prism/node.rb#14687
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13907
+  # source://prism//lib/prism/node.rb#14682
   def compact_child_nodes; end
 
   # def copy: (**params) -> RescueModifierNode
   #
-  # source://prism//lib/prism/node.rb#13917
+  # source://prism//lib/prism/node.rb#14692
   sig { params(params: T.untyped).returns(Prism::RescueModifierNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#13902
+  # source://prism//lib/prism/node.rb#14677
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#13930
+  # source://prism//lib/prism/node.rb#14705
   sig do
     params(
       keys: T::Array[Symbol]
@@ -22134,34 +24260,34 @@ class Prism::RescueModifierNode < ::Prism::Node
 
   # attr_reader expression: Node
   #
-  # source://prism//lib/prism/node.rb#13876
+  # source://prism//lib/prism/node.rb#14651
   sig { returns(Prism::Node) }
   def expression; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#13940
+  # source://prism//lib/prism/node.rb#14715
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#13935
+  # source://prism//lib/prism/node.rb#14710
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13879
+  # source://prism//lib/prism/node.rb#14654
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader rescue_expression: Node
   #
-  # source://prism//lib/prism/node.rb#13882
+  # source://prism//lib/prism/node.rb#14657
   sig { returns(Prism::Node) }
   def rescue_expression; end
 
-  # source://prism//lib/prism/node.rb#13897
+  # source://prism//lib/prism/node.rb#14672
   def set_newline_flag(newline_marked); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -22179,7 +24305,7 @@ class Prism::RescueModifierNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#13964
+  # source://prism//lib/prism/node.rb#14739
   def type; end
 
   class << self
@@ -22190,7 +24316,7 @@ class Prism::RescueModifierNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#13974
+    # source://prism//lib/prism/node.rb#14749
     def type; end
   end
 end
@@ -22206,13 +24332,13 @@ end
 # `Foo, *splat, Bar` are in the `exceptions` field.
 # `ex` is in the `exception` field.
 #
-# source://prism//lib/prism/node.rb#13989
+# source://prism//lib/prism/node.rb#14764
 class Prism::RescueNode < ::Prism::Node
   # def initialize: (keyword_loc: Location, exceptions: Array[Node], operator_loc: Location?, reference: Node?, statements: StatementsNode?, consequent: RescueNode?, location: Location) -> void
   #
   # @return [RescueNode] a new instance of RescueNode
   #
-  # source://prism//lib/prism/node.rb#14009
+  # source://prism//lib/prism/node.rb#14784
   sig do
     params(
       keyword_loc: Prism::Location,
@@ -22228,48 +24354,48 @@ class Prism::RescueNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14020
+  # source://prism//lib/prism/node.rb#14795
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14025
+  # source://prism//lib/prism/node.rb#14800
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14040
+  # source://prism//lib/prism/node.rb#14815
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14030
+  # source://prism//lib/prism/node.rb#14805
   def compact_child_nodes; end
 
   # attr_reader consequent: RescueNode?
   #
-  # source://prism//lib/prism/node.rb#14006
+  # source://prism//lib/prism/node.rb#14781
   sig { returns(T.nilable(Prism::RescueNode)) }
   def consequent; end
 
   # def copy: (**params) -> RescueNode
   #
-  # source://prism//lib/prism/node.rb#14045
+  # source://prism//lib/prism/node.rb#14820
   sig { params(params: T.untyped).returns(Prism::RescueNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14025
+  # source://prism//lib/prism/node.rb#14800
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14061
+  # source://prism//lib/prism/node.rb#14836
   sig do
     params(
       keys: T::Array[Symbol]
@@ -22279,48 +24405,48 @@ class Prism::RescueNode < ::Prism::Node
 
   # attr_reader exceptions: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#13994
+  # source://prism//lib/prism/node.rb#14769
   sig { returns(T::Array[Prism::Node]) }
   def exceptions; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14076
+  # source://prism//lib/prism/node.rb#14851
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#14066
+  # source://prism//lib/prism/node.rb#14841
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#13991
+  # source://prism//lib/prism/node.rb#14766
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # def operator: () -> String?
   #
-  # source://prism//lib/prism/node.rb#14071
+  # source://prism//lib/prism/node.rb#14846
   sig { returns(T.nilable(String)) }
   def operator; end
 
   # attr_reader operator_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#13997
+  # source://prism//lib/prism/node.rb#14772
   sig { returns(T.nilable(Prism::Location)) }
   def operator_loc; end
 
   # attr_reader reference: Node?
   #
-  # source://prism//lib/prism/node.rb#14000
+  # source://prism//lib/prism/node.rb#14775
   sig { returns(T.nilable(Prism::Node)) }
   def reference; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#14003
+  # source://prism//lib/prism/node.rb#14778
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -22339,7 +24465,7 @@ class Prism::RescueNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14116
+  # source://prism//lib/prism/node.rb#14891
   def type; end
 
   class << self
@@ -22350,7 +24476,7 @@ class Prism::RescueNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14126
+    # source://prism//lib/prism/node.rb#14901
     def type; end
   end
 end
@@ -22361,13 +24487,13 @@ end
 #           ^^
 #     end
 #
-# source://prism//lib/prism/node.rb#14136
+# source://prism//lib/prism/node.rb#14911
 class Prism::RestParameterNode < ::Prism::Node
   # def initialize: (name: Symbol?, name_loc: Location?, operator_loc: Location, location: Location) -> void
   #
   # @return [RestParameterNode] a new instance of RestParameterNode
   #
-  # source://prism//lib/prism/node.rb#14147
+  # source://prism//lib/prism/node.rb#14922
   sig do
     params(
       name: T.nilable(Symbol),
@@ -22380,42 +24506,42 @@ class Prism::RestParameterNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14155
+  # source://prism//lib/prism/node.rb#14930
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14160
+  # source://prism//lib/prism/node.rb#14935
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14170
+  # source://prism//lib/prism/node.rb#14945
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14165
+  # source://prism//lib/prism/node.rb#14940
   def compact_child_nodes; end
 
   # def copy: (**params) -> RestParameterNode
   #
-  # source://prism//lib/prism/node.rb#14175
+  # source://prism//lib/prism/node.rb#14950
   sig { params(params: T.untyped).returns(Prism::RestParameterNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14160
+  # source://prism//lib/prism/node.rb#14935
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14188
+  # source://prism//lib/prism/node.rb#14963
   sig do
     params(
       keys: T::Array[Symbol]
@@ -22425,30 +24551,30 @@ class Prism::RestParameterNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14198
+  # source://prism//lib/prism/node.rb#14973
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader name: Symbol?
   #
-  # source://prism//lib/prism/node.rb#14138
+  # source://prism//lib/prism/node.rb#14913
   sig { returns(T.nilable(Symbol)) }
   def name; end
 
   # attr_reader name_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#14141
+  # source://prism//lib/prism/node.rb#14916
   sig { returns(T.nilable(Prism::Location)) }
   def name_loc; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#14193
+  # source://prism//lib/prism/node.rb#14968
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#14144
+  # source://prism//lib/prism/node.rb#14919
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -22467,7 +24593,7 @@ class Prism::RestParameterNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14224
+  # source://prism//lib/prism/node.rb#14999
   def type; end
 
   class << self
@@ -22478,7 +24604,7 @@ class Prism::RestParameterNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14234
+    # source://prism//lib/prism/node.rb#15009
     def type; end
   end
 end
@@ -22488,54 +24614,54 @@ end
 #     retry
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#14243
+# source://prism//lib/prism/node.rb#15018
 class Prism::RetryNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [RetryNode] a new instance of RetryNode
   #
-  # source://prism//lib/prism/node.rb#14245
+  # source://prism//lib/prism/node.rb#15020
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14250
+  # source://prism//lib/prism/node.rb#15025
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14255
+  # source://prism//lib/prism/node.rb#15030
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14265
+  # source://prism//lib/prism/node.rb#15040
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14260
+  # source://prism//lib/prism/node.rb#15035
   def compact_child_nodes; end
 
   # def copy: (**params) -> RetryNode
   #
-  # source://prism//lib/prism/node.rb#14270
+  # source://prism//lib/prism/node.rb#15045
   sig { params(params: T.untyped).returns(Prism::RetryNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14255
+  # source://prism//lib/prism/node.rb#15030
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14280
+  # source://prism//lib/prism/node.rb#15055
   sig do
     params(
       keys: T::Array[Symbol]
@@ -22545,7 +24671,7 @@ class Prism::RetryNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14285
+  # source://prism//lib/prism/node.rb#15060
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -22563,7 +24689,7 @@ class Prism::RetryNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14304
+  # source://prism//lib/prism/node.rb#15079
   def type; end
 
   class << self
@@ -22574,7 +24700,7 @@ class Prism::RetryNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14314
+    # source://prism//lib/prism/node.rb#15089
     def type; end
   end
 end
@@ -22584,13 +24710,13 @@ end
 #     return 1
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14323
+# source://prism//lib/prism/node.rb#15098
 class Prism::ReturnNode < ::Prism::Node
   # def initialize: (keyword_loc: Location, arguments: ArgumentsNode?, location: Location) -> void
   #
   # @return [ReturnNode] a new instance of ReturnNode
   #
-  # source://prism//lib/prism/node.rb#14331
+  # source://prism//lib/prism/node.rb#15106
   sig do
     params(
       keyword_loc: Prism::Location,
@@ -22602,48 +24728,48 @@ class Prism::ReturnNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14338
+  # source://prism//lib/prism/node.rb#15113
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#14328
+  # source://prism//lib/prism/node.rb#15103
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14343
+  # source://prism//lib/prism/node.rb#15118
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14355
+  # source://prism//lib/prism/node.rb#15130
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14348
+  # source://prism//lib/prism/node.rb#15123
   def compact_child_nodes; end
 
   # def copy: (**params) -> ReturnNode
   #
-  # source://prism//lib/prism/node.rb#14360
+  # source://prism//lib/prism/node.rb#15135
   sig { params(params: T.untyped).returns(Prism::ReturnNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14343
+  # source://prism//lib/prism/node.rb#15118
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14372
+  # source://prism//lib/prism/node.rb#15147
   sig do
     params(
       keys: T::Array[Symbol]
@@ -22653,18 +24779,18 @@ class Prism::ReturnNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14382
+  # source://prism//lib/prism/node.rb#15157
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#14377
+  # source://prism//lib/prism/node.rb#15152
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#14325
+  # source://prism//lib/prism/node.rb#15100
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
@@ -22683,7 +24809,7 @@ class Prism::ReturnNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14408
+  # source://prism//lib/prism/node.rb#15183
   def type; end
 
   class << self
@@ -22694,11 +24820,15 @@ class Prism::ReturnNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14418
+    # source://prism//lib/prism/node.rb#15193
     def type; end
   end
 end
 
+# Note: This integration is not finished, and therefore still has many
+# inconsistencies with Ripper. If you'd like to help out, pull requests would
+# be greatly appreciated!
+#
 # This class is meant to provide a compatibility layer between prism and
 # Ripper. It functions by parsing the entire tree first and then walking it
 # and executing each of the Ripper callbacks as it goes.
@@ -22707,94 +24837,101 @@ end
 # is meant as a stopgap until developers migrate to using prism. It is also
 # meant as a test harness for the prism parser.
 #
-# source://prism//lib/prism/ripper_compat.rb#13
-class Prism::RipperCompat
+# To use this class, you treat `Prism::RipperCompat` effectively as you would
+# treat the `Ripper` class.
+#
+# source://prism//lib/prism/ripper_compat.rb#20
+class Prism::RipperCompat < ::Prism::Visitor
   # Create a new RipperCompat object with the given source.
   #
   # @return [RipperCompat] a new instance of RipperCompat
   #
-  # source://prism//lib/prism/ripper_compat.rb#67
+  # source://prism//lib/prism/ripper_compat.rb#74
   def initialize(source); end
 
   # The current column number of the parser.
   #
-  # source://prism//lib/prism/ripper_compat.rb#64
+  # source://prism//lib/prism/ripper_compat.rb#71
   def column; end
 
   # True if the parser encountered an error during parsing.
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/ripper_compat.rb#79
+  # source://prism//lib/prism/ripper_compat.rb#86
   def error?; end
 
   # The current line number of the parser.
   #
-  # source://prism//lib/prism/ripper_compat.rb#61
+  # source://prism//lib/prism/ripper_compat.rb#68
   def lineno; end
 
   # Parse the source and return the result.
   #
-  # source://prism//lib/prism/ripper_compat.rb#84
+  # source://prism//lib/prism/ripper_compat.rb#91
   def parse; end
 
   # The source that is being parsed.
   #
-  # source://prism//lib/prism/ripper_compat.rb#58
+  # source://prism//lib/prism/ripper_compat.rb#65
   def source; end
-
-  # This method is responsible for dispatching to the correct visitor method
-  # based on the type of the node.
-  #
-  # source://prism//lib/prism/ripper_compat.rb#94
-  def visit(node); end
 
   # Visit a CallNode node.
   #
-  # source://prism//lib/prism/ripper_compat.rb#99
+  # source://prism//lib/prism/ripper_compat.rb#110
   def visit_call_node(node); end
+
+  # Visit a FloatNode node.
+  #
+  # source://prism//lib/prism/ripper_compat.rb#123
+  def visit_float_node(node); end
+
+  # Visit a ImaginaryNode node.
+  #
+  # source://prism//lib/prism/ripper_compat.rb#129
+  def visit_imaginary_node(node); end
 
   # Visit an IntegerNode node.
   #
-  # source://prism//lib/prism/ripper_compat.rb#114
+  # source://prism//lib/prism/ripper_compat.rb#135
   def visit_integer_node(node); end
 
   # Visit a ProgramNode node.
   #
-  # source://prism//lib/prism/ripper_compat.rb#142
+  # source://prism//lib/prism/ripper_compat.rb#155
   def visit_program_node(node); end
+
+  # Visit a RationalNode node.
+  #
+  # source://prism//lib/prism/ripper_compat.rb#141
+  def visit_rational_node(node); end
 
   # Visit a StatementsNode node.
   #
-  # source://prism//lib/prism/ripper_compat.rb#120
+  # source://prism//lib/prism/ripper_compat.rb#147
   def visit_statements_node(node); end
-
-  # Visit a token found during parsing.
-  #
-  # source://prism//lib/prism/ripper_compat.rb#128
-  def visit_token(node); end
 
   private
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def _dispatch0; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def _dispatch1(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def _dispatch2(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def _dispatch3(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#184
+  # source://prism//lib/prism/ripper_compat.rb#196
   def _dispatch4(_, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#185
+  # source://prism//lib/prism/ripper_compat.rb#197
   def _dispatch5(_, _, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#186
+  # source://prism//lib/prism/ripper_compat.rb#198
   def _dispatch7(_, _, _, _, _, _, _); end
 
   # This method is responsible for updating lineno and column information
@@ -22803,593 +24940,593 @@ class Prism::RipperCompat
   # This method could be drastically improved with some caching on the start
   # of every line, but for now it's good enough.
   #
-  # source://prism//lib/prism/ripper_compat.rb#168
+  # source://prism//lib/prism/ripper_compat.rb#182
   def bounds(location); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_BEGIN(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_CHAR(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_END(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on___end__(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_alias(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_alias_error(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_aref(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_aref_field(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_arg_ambiguous(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_arg_paren(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_args_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_args_add_block(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_args_add_star(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_args_forward; end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_args_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_array(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#184
+  # source://prism//lib/prism/ripper_compat.rb#196
   def on_aryptn(_, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_assign(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_assign_error(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_assoc_new(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_assoc_splat(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_assoclist_from_args(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_backref(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_backtick(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_bare_assoc_hash(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_begin(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_binary(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_block_var(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_blockarg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#184
+  # source://prism//lib/prism/ripper_compat.rb#196
   def on_bodystmt(_, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_brace_block(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_break(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_call(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_case(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_class(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_class_name_error(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_comma(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_command(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#184
+  # source://prism//lib/prism/ripper_compat.rb#196
   def on_command_call(_, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_comment(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_const(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_const_path_field(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_const_path_ref(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_const_ref(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_cvar(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_def(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_defined(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#185
+  # source://prism//lib/prism/ripper_compat.rb#197
   def on_defs(_, _, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_do_block(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_dot2(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_dot3(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_dyna_symbol(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_else(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_elsif(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_embdoc(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_embdoc_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_embdoc_end(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_embexpr_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_embexpr_end(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_embvar(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_ensure(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_excessed_comma; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_fcall(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_field(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_float(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#184
+  # source://prism//lib/prism/ripper_compat.rb#196
   def on_fndptn(_, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_for(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_gvar(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_hash(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_heredoc_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_heredoc_dedent(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_heredoc_end(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_hshptn(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_ident(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_if(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_if_mod(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_ifop(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_ignored_nl(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_ignored_sp(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_imaginary(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_in(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_int(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_ivar(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_kw(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_kwrest_param(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_label(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_label_end(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_lambda(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_lbrace(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_lbracket(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_lparen(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_magic_comment(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_massign(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_method_add_arg(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_method_add_block(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_mlhs_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_mlhs_add_post(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_mlhs_add_star(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_mlhs_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_mlhs_paren(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_module(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_mrhs_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_mrhs_add_star(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_mrhs_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_mrhs_new_from_args(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_next(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_nl(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_nokw_param(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_op(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_opassign(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_operator_ambiguous(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_param_error(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#186
+  # source://prism//lib/prism/ripper_compat.rb#198
   def on_params(_, _, _, _, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_paren(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_parse_error(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_period(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_program(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_qsymbols_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_qsymbols_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_qsymbols_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_qwords_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_qwords_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_qwords_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_rational(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_rbrace(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_rbracket(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_redo; end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_regexp_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_regexp_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_regexp_end(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_regexp_literal(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_regexp_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#184
+  # source://prism//lib/prism/ripper_compat.rb#196
   def on_rescue(_, _, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_rescue_mod(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_rest_param(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_retry; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_return(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_return0; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_rparen(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_sclass(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_semicolon(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_sp(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_stmts_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_stmts_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_string_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_string_concat(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_string_content; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_string_dvar(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_string_embexpr(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_string_literal(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_super(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_symbeg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_symbol(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_symbol_literal(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_symbols_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_symbols_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_symbols_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_tlambda(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_tlambeg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_top_const_field(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_top_const_ref(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_tstring_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_tstring_content(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_tstring_end(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_unary(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_undef(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_unless(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_unless_mod(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_until(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_until_mod(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_var_alias(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_var_field(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_var_ref(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_vcall(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_void_stmt; end
 
-  # source://prism//lib/prism/ripper_compat.rb#183
+  # source://prism//lib/prism/ripper_compat.rb#195
   def on_when(_, _, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_while(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_while_mod(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_word_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_word_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_words_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_words_beg(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_words_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_words_sep(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#182
+  # source://prism//lib/prism/ripper_compat.rb#194
   def on_xstring_add(_, _); end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_xstring_literal(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_xstring_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#181
+  # source://prism//lib/prism/ripper_compat.rb#193
   def on_yield(_); end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_yield0; end
 
-  # source://prism//lib/prism/ripper_compat.rb#180
+  # source://prism//lib/prism/ripper_compat.rb#192
   def on_zsuper; end
 
   # Lazily initialize the parse result.
   #
-  # source://prism//lib/prism/ripper_compat.rb#176
+  # source://prism//lib/prism/ripper_compat.rb#188
   def result; end
 
   class << self
     # This is a convenience method that runs the SexpBuilderPP subclass parser.
     #
-    # source://prism//lib/prism/ripper_compat.rb#157
+    # source://prism//lib/prism/ripper_compat.rb#171
     def sexp(source); end
 
     # This is a convenience method that runs the SexpBuilder subclass parser.
     #
-    # source://prism//lib/prism/ripper_compat.rb#152
+    # source://prism//lib/prism/ripper_compat.rb#166
     def sexp_raw(source); end
   end
 end
@@ -23397,578 +25534,578 @@ end
 # This class mirrors the ::Ripper::SexpBuilder subclass of ::Ripper that
 # returns the arrays of [type, *children].
 #
-# source://prism//lib/prism/ripper_compat.rb#16
+# source://prism//lib/prism/ripper_compat.rb#23
 class Prism::RipperCompat::SexpBuilder < ::Prism::RipperCompat
   private
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_BEGIN(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_CHAR(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_END(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on___end__(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_alias(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_alias_error(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_aref(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_aref_field(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_arg_ambiguous(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_arg_paren(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_args_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_args_add_block(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_args_add_star(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_args_forward(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_args_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_array(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_aryptn(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_assign(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_assign_error(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_assoc_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_assoc_splat(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_assoclist_from_args(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_backref(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_backtick(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_bare_assoc_hash(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_begin(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_binary(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_block_var(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_blockarg(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_bodystmt(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_brace_block(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_break(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_call(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_case(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_class(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_class_name_error(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_comma(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_command(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_command_call(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_comment(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_const(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_const_path_field(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_const_path_ref(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_const_ref(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_cvar(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_def(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_defined(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_defs(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_do_block(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_dot2(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_dot3(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_dyna_symbol(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_else(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_elsif(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_embdoc(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_embdoc_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_embdoc_end(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_embexpr_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_embexpr_end(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_embvar(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_ensure(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_excessed_comma(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_fcall(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_field(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_float(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_fndptn(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_for(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_gvar(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_hash(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_heredoc_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_heredoc_dedent(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_heredoc_end(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_hshptn(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_ident(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_if(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_if_mod(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_ifop(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_ignored_nl(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_ignored_sp(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_imaginary(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_in(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_int(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_ivar(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_kw(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_kwrest_param(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_label(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_label_end(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_lambda(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_lbrace(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_lbracket(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_lparen(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_magic_comment(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_massign(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_method_add_arg(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_method_add_block(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mlhs_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mlhs_add_post(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mlhs_add_star(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mlhs_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mlhs_paren(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_module(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mrhs_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mrhs_add_star(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mrhs_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_mrhs_new_from_args(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_next(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_nl(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_nokw_param(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_op(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_opassign(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_operator_ambiguous(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_param_error(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_params(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_paren(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_parse_error(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_period(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_program(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_qsymbols_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_qsymbols_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_qsymbols_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_qwords_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_qwords_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_qwords_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_rational(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_rbrace(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_rbracket(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_redo(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_regexp_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_regexp_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_regexp_end(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_regexp_literal(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_regexp_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_rescue(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_rescue_mod(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_rest_param(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_retry(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_return(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_return0(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_rparen(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_sclass(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_semicolon(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_sp(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_stmts_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_stmts_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_string_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_string_concat(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_string_content(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_string_dvar(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_string_embexpr(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_string_literal(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_super(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_symbeg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_symbol(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_symbol_literal(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_symbols_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_symbols_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_symbols_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_tlambda(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_tlambeg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_top_const_field(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_top_const_ref(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_tstring_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_tstring_content(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_tstring_end(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_unary(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_undef(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_unless(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_unless_mod(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_until(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_until_mod(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_var_alias(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_var_field(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_var_ref(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_vcall(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_void_stmt(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_when(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_while(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_while_mod(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_word_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_word_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_words_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_words_beg(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_words_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#26
+  # source://prism//lib/prism/ripper_compat.rb#33
   def on_words_sep(value); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_xstring_add(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_xstring_literal(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_xstring_new(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_yield(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_yield0(*args); end
 
-  # source://prism//lib/prism/ripper_compat.rb#20
+  # source://prism//lib/prism/ripper_compat.rb#27
   def on_zsuper(*args); end
 end
 
@@ -23976,83 +26113,83 @@ end
 # returns the same values as ::Ripper::SexpBuilder except with a couple of
 # niceties that flatten linked lists into arrays.
 #
-# source://prism//lib/prism/ripper_compat.rb#35
+# source://prism//lib/prism/ripper_compat.rb#42
 class Prism::RipperCompat::SexpBuilderPP < ::Prism::RipperCompat::SexpBuilder
   private
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def _dispatch_event_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def _dispatch_event_push(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_args_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_args_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_mlhs_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_mlhs_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_mrhs_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_mrhs_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_qsymbols_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_qsymbols_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_qwords_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_qwords_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_regexp_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_regexp_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_stmts_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_stmts_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_string_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_symbols_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_symbols_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_word_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_word_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_words_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_words_new; end
 
-  # source://prism//lib/prism/ripper_compat.rb#42
+  # source://prism//lib/prism/ripper_compat.rb#49
   def on_xstring_add(list, item); end
 
-  # source://prism//lib/prism/ripper_compat.rb#38
+  # source://prism//lib/prism/ripper_compat.rb#45
   def on_xstring_new; end
 end
 
@@ -24061,54 +26198,54 @@ end
 #     self
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#14427
+# source://prism//lib/prism/node.rb#15202
 class Prism::SelfNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [SelfNode] a new instance of SelfNode
   #
-  # source://prism//lib/prism/node.rb#14429
+  # source://prism//lib/prism/node.rb#15204
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14434
+  # source://prism//lib/prism/node.rb#15209
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14439
+  # source://prism//lib/prism/node.rb#15214
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14449
+  # source://prism//lib/prism/node.rb#15224
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14444
+  # source://prism//lib/prism/node.rb#15219
   def compact_child_nodes; end
 
   # def copy: (**params) -> SelfNode
   #
-  # source://prism//lib/prism/node.rb#14454
+  # source://prism//lib/prism/node.rb#15229
   sig { params(params: T.untyped).returns(Prism::SelfNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14439
+  # source://prism//lib/prism/node.rb#15214
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14464
+  # source://prism//lib/prism/node.rb#15239
   sig do
     params(
       keys: T::Array[Symbol]
@@ -24118,7 +26255,7 @@ class Prism::SelfNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14469
+  # source://prism//lib/prism/node.rb#15244
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -24136,7 +26273,7 @@ class Prism::SelfNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14488
+  # source://prism//lib/prism/node.rb#15263
   def type; end
 
   class << self
@@ -24147,7 +26284,7 @@ class Prism::SelfNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14498
+    # source://prism//lib/prism/node.rb#15273
     def type; end
   end
 end
@@ -24202,34 +26339,31 @@ class Prism::Serialize::Loader
   # source://prism//lib/prism/serialize.rb#54
   def io; end
 
-  # source://prism//lib/prism/serialize.rb#95
+  # source://prism//lib/prism/serialize.rb#92
   def load_comments; end
 
   # source://prism//lib/prism/serialize.rb#82
   def load_encoding; end
 
-  # source://prism//lib/prism/serialize.rb#86
-  def load_force_encoding; end
-
   # source://prism//lib/prism/serialize.rb#73
   def load_header; end
 
-  # source://prism//lib/prism/serialize.rb#105
+  # source://prism//lib/prism/serialize.rb#102
   def load_metadata; end
 
-  # source://prism//lib/prism/serialize.rb#140
+  # source://prism//lib/prism/serialize.rb#135
   def load_nodes; end
 
-  # source://prism//lib/prism/serialize.rb#153
+  # source://prism//lib/prism/serialize.rb#148
   def load_result; end
 
-  # source://prism//lib/prism/serialize.rb#91
+  # source://prism//lib/prism/serialize.rb#88
   def load_start_line; end
 
-  # source://prism//lib/prism/serialize.rb#113
+  # source://prism//lib/prism/serialize.rb#111
   def load_tokens; end
 
-  # source://prism//lib/prism/serialize.rb#126
+  # source://prism//lib/prism/serialize.rb#124
   def load_tokens_result; end
 
   # Returns the value of attribute serialized.
@@ -24279,11 +26413,14 @@ class Prism::Serialize::Loader
   # source://prism//lib/prism/serialize.rb#191
   def load_string; end
 
+  # source://prism//lib/prism/serialize.rb#171
+  def load_varsint; end
+
   # variable-length integer using https://en.wikipedia.org/wiki/LEB128
   # This is also what protobuf uses: https://protobuf.dev/programming-guides/encoding/#varints
   #
-  # source://prism//lib/prism/serialize.rb#162
-  def load_varint; end
+  # source://prism//lib/prism/serialize.rb#157
+  def load_varuint; end
 end
 
 # The major version of prism that we are expecting to find in the serialized
@@ -24306,7 +26443,7 @@ Prism::Serialize::PATCH_VERSION = T.let(T.unsafe(nil), Integer)
 
 # The token types that can be indexed by their enum values.
 #
-# source://prism//lib/prism/serialize.rb#1130
+# source://prism//lib/prism/serialize.rb#1154
 Prism::Serialize::TOKEN_TYPES = T.let(T.unsafe(nil), Array)
 
 # Represents a singleton class declaration involving the `class` keyword.
@@ -24314,13 +26451,13 @@ Prism::Serialize::TOKEN_TYPES = T.let(T.unsafe(nil), Array)
 #     class << self end
 #     ^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14507
+# source://prism//lib/prism/node.rb#15282
 class Prism::SingletonClassNode < ::Prism::Node
   # def initialize: (locals: Array[Symbol], class_keyword_loc: Location, operator_loc: Location, expression: Node, body: Node?, end_keyword_loc: Location, location: Location) -> void
   #
   # @return [SingletonClassNode] a new instance of SingletonClassNode
   #
-  # source://prism//lib/prism/node.rb#14527
+  # source://prism//lib/prism/node.rb#15302
   sig do
     params(
       locals: T::Array[Symbol],
@@ -24336,60 +26473,60 @@ class Prism::SingletonClassNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14538
+  # source://prism//lib/prism/node.rb#15313
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Node?
   #
-  # source://prism//lib/prism/node.rb#14521
+  # source://prism//lib/prism/node.rb#15296
   sig { returns(T.nilable(Prism::Node)) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14543
+  # source://prism//lib/prism/node.rb#15318
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def class_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#14582
+  # source://prism//lib/prism/node.rb#15357
   sig { returns(String) }
   def class_keyword; end
 
   # attr_reader class_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#14512
+  # source://prism//lib/prism/node.rb#15287
   sig { returns(Prism::Location) }
   def class_keyword_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14556
+  # source://prism//lib/prism/node.rb#15331
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14548
+  # source://prism//lib/prism/node.rb#15323
   def compact_child_nodes; end
 
   # def copy: (**params) -> SingletonClassNode
   #
-  # source://prism//lib/prism/node.rb#14561
+  # source://prism//lib/prism/node.rb#15336
   sig { params(params: T.untyped).returns(Prism::SingletonClassNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14543
+  # source://prism//lib/prism/node.rb#15318
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14577
+  # source://prism//lib/prism/node.rb#15352
   sig do
     params(
       keys: T::Array[Symbol]
@@ -24399,42 +26536,42 @@ class Prism::SingletonClassNode < ::Prism::Node
 
   # def end_keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#14592
+  # source://prism//lib/prism/node.rb#15367
   sig { returns(String) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#14524
+  # source://prism//lib/prism/node.rb#15299
   sig { returns(Prism::Location) }
   def end_keyword_loc; end
 
   # attr_reader expression: Node
   #
-  # source://prism//lib/prism/node.rb#14518
+  # source://prism//lib/prism/node.rb#15293
   sig { returns(Prism::Node) }
   def expression; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14597
+  # source://prism//lib/prism/node.rb#15372
   def inspect(inspector = T.unsafe(nil)); end
 
   # attr_reader locals: Array[Symbol]
   #
-  # source://prism//lib/prism/node.rb#14509
+  # source://prism//lib/prism/node.rb#15284
   sig { returns(T::Array[Symbol]) }
   def locals; end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#14587
+  # source://prism//lib/prism/node.rb#15362
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#14515
+  # source://prism//lib/prism/node.rb#15290
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -24453,7 +26590,7 @@ class Prism::SingletonClassNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14628
+  # source://prism//lib/prism/node.rb#15403
   def type; end
 
   class << self
@@ -24464,7 +26601,7 @@ class Prism::SingletonClassNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14638
+    # source://prism//lib/prism/node.rb#15413
     def type; end
   end
 end
@@ -24484,25 +26621,35 @@ class Prism::Source
   # source://prism//lib/prism/parse_result.rb#20
   def initialize(source, start_line = T.unsafe(nil), offsets = T.unsafe(nil)); end
 
+  # Return the column number in characters for the given byte offset.
+  #
+  # source://prism//lib/prism/parse_result.rb#55
+  def character_column(byte_offset); end
+
+  # Return the character offset for the given byte offset.
+  #
+  # source://prism//lib/prism/parse_result.rb#50
+  def character_offset(byte_offset); end
+
   # Return the column number for the given byte offset.
   #
   # source://prism//lib/prism/parse_result.rb#45
-  sig { params(value: Integer).returns(Integer) }
-  def column(value); end
+  def column(byte_offset); end
 
   # Binary search through the offsets to find the line number for the given
   # byte offset.
   #
   # source://prism//lib/prism/parse_result.rb#34
+  def line(byte_offset); end
+
   sig { params(value: Integer).returns(Integer) }
-  def line(value); end
+  def line_offset(value); end
 
   # Return the byte offset of the start of the line corresponding to the given
   # byte offset.
   #
   # source://prism//lib/prism/parse_result.rb#40
-  sig { params(value: Integer).returns(Integer) }
-  def line_offset(value); end
+  def line_start(byte_offset); end
 
   # The list of newline byte offsets in the source code.
   #
@@ -24514,8 +26661,7 @@ class Prism::Source
   # byte length.
   #
   # source://prism//lib/prism/parse_result.rb#28
-  sig { params(offset: Integer, length: Integer).returns(String) }
-  def slice(offset, length); end
+  def slice(byte_offset, length); end
 
   # The source code that this source object represents.
   #
@@ -24538,14 +26684,14 @@ class Prism::Source
   # Find all of the newlines in the source code and return their byte offsets
   # from the start of the string an array.
   #
-  # source://prism//lib/prism/parse_result.rb#73
+  # source://prism//lib/prism/parse_result.rb#83
   def compute_offsets(code); end
 
   # Binary search through the offsets to find the line number for the given
   # byte offset.
   #
-  # source://prism//lib/prism/parse_result.rb#53
-  def find_line(value); end
+  # source://prism//lib/prism/parse_result.rb#63
+  def find_line(byte_offset); end
 end
 
 # Represents the use of the `__ENCODING__` keyword.
@@ -24553,54 +26699,54 @@ end
 #     __ENCODING__
 #     ^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14647
+# source://prism//lib/prism/node.rb#15422
 class Prism::SourceEncodingNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [SourceEncodingNode] a new instance of SourceEncodingNode
   #
-  # source://prism//lib/prism/node.rb#14649
+  # source://prism//lib/prism/node.rb#15424
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14654
+  # source://prism//lib/prism/node.rb#15429
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14659
+  # source://prism//lib/prism/node.rb#15434
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14669
+  # source://prism//lib/prism/node.rb#15444
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14664
+  # source://prism//lib/prism/node.rb#15439
   def compact_child_nodes; end
 
   # def copy: (**params) -> SourceEncodingNode
   #
-  # source://prism//lib/prism/node.rb#14674
+  # source://prism//lib/prism/node.rb#15449
   sig { params(params: T.untyped).returns(Prism::SourceEncodingNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14659
+  # source://prism//lib/prism/node.rb#15434
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14684
+  # source://prism//lib/prism/node.rb#15459
   sig do
     params(
       keys: T::Array[Symbol]
@@ -24610,7 +26756,7 @@ class Prism::SourceEncodingNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14689
+  # source://prism//lib/prism/node.rb#15464
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -24628,7 +26774,7 @@ class Prism::SourceEncodingNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14708
+  # source://prism//lib/prism/node.rb#15483
   def type; end
 
   class << self
@@ -24639,7 +26785,7 @@ class Prism::SourceEncodingNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14718
+    # source://prism//lib/prism/node.rb#15493
     def type; end
   end
 end
@@ -24649,54 +26795,54 @@ end
 #     __FILE__
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14727
+# source://prism//lib/prism/node.rb#15502
 class Prism::SourceFileNode < ::Prism::Node
   # def initialize: (filepath: String, location: Location) -> void
   #
   # @return [SourceFileNode] a new instance of SourceFileNode
   #
-  # source://prism//lib/prism/node.rb#14732
+  # source://prism//lib/prism/node.rb#15507
   sig { params(filepath: String, location: Prism::Location).void }
   def initialize(filepath, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14738
+  # source://prism//lib/prism/node.rb#15513
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14743
+  # source://prism//lib/prism/node.rb#15518
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14753
+  # source://prism//lib/prism/node.rb#15528
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14748
+  # source://prism//lib/prism/node.rb#15523
   def compact_child_nodes; end
 
   # def copy: (**params) -> SourceFileNode
   #
-  # source://prism//lib/prism/node.rb#14758
+  # source://prism//lib/prism/node.rb#15533
   sig { params(params: T.untyped).returns(Prism::SourceFileNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14743
+  # source://prism//lib/prism/node.rb#15518
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14769
+  # source://prism//lib/prism/node.rb#15544
   sig do
     params(
       keys: T::Array[Symbol]
@@ -24706,13 +26852,13 @@ class Prism::SourceFileNode < ::Prism::Node
 
   # attr_reader filepath: String
   #
-  # source://prism//lib/prism/node.rb#14729
+  # source://prism//lib/prism/node.rb#15504
   sig { returns(String) }
   def filepath; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14774
+  # source://prism//lib/prism/node.rb#15549
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -24730,7 +26876,7 @@ class Prism::SourceFileNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14794
+  # source://prism//lib/prism/node.rb#15569
   def type; end
 
   class << self
@@ -24741,7 +26887,7 @@ class Prism::SourceFileNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14804
+    # source://prism//lib/prism/node.rb#15579
     def type; end
   end
 end
@@ -24751,54 +26897,54 @@ end
 #     __LINE__
 #     ^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14813
+# source://prism//lib/prism/node.rb#15588
 class Prism::SourceLineNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [SourceLineNode] a new instance of SourceLineNode
   #
-  # source://prism//lib/prism/node.rb#14815
+  # source://prism//lib/prism/node.rb#15590
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14820
+  # source://prism//lib/prism/node.rb#15595
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14825
+  # source://prism//lib/prism/node.rb#15600
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14835
+  # source://prism//lib/prism/node.rb#15610
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14830
+  # source://prism//lib/prism/node.rb#15605
   def compact_child_nodes; end
 
   # def copy: (**params) -> SourceLineNode
   #
-  # source://prism//lib/prism/node.rb#14840
+  # source://prism//lib/prism/node.rb#15615
   sig { params(params: T.untyped).returns(Prism::SourceLineNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14825
+  # source://prism//lib/prism/node.rb#15600
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14850
+  # source://prism//lib/prism/node.rb#15625
   sig do
     params(
       keys: T::Array[Symbol]
@@ -24808,7 +26954,7 @@ class Prism::SourceLineNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14855
+  # source://prism//lib/prism/node.rb#15630
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -24826,7 +26972,7 @@ class Prism::SourceLineNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14874
+  # source://prism//lib/prism/node.rb#15649
   def type; end
 
   class << self
@@ -24837,7 +26983,7 @@ class Prism::SourceLineNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14884
+    # source://prism//lib/prism/node.rb#15659
     def type; end
   end
 end
@@ -24847,54 +26993,54 @@ end
 #     [*a]
 #      ^^
 #
-# source://prism//lib/prism/node.rb#14893
+# source://prism//lib/prism/node.rb#15668
 class Prism::SplatNode < ::Prism::Node
   # def initialize: (operator_loc: Location, expression: Node?, location: Location) -> void
   #
   # @return [SplatNode] a new instance of SplatNode
   #
-  # source://prism//lib/prism/node.rb#14901
+  # source://prism//lib/prism/node.rb#15676
   sig { params(operator_loc: Prism::Location, expression: T.nilable(Prism::Node), location: Prism::Location).void }
   def initialize(operator_loc, expression, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#14908
+  # source://prism//lib/prism/node.rb#15683
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14913
+  # source://prism//lib/prism/node.rb#15688
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#14925
+  # source://prism//lib/prism/node.rb#15700
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14918
+  # source://prism//lib/prism/node.rb#15693
   def compact_child_nodes; end
 
   # def copy: (**params) -> SplatNode
   #
-  # source://prism//lib/prism/node.rb#14930
+  # source://prism//lib/prism/node.rb#15705
   sig { params(params: T.untyped).returns(Prism::SplatNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#14913
+  # source://prism//lib/prism/node.rb#15688
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#14942
+  # source://prism//lib/prism/node.rb#15717
   sig do
     params(
       keys: T::Array[Symbol]
@@ -24904,24 +27050,24 @@ class Prism::SplatNode < ::Prism::Node
 
   # attr_reader expression: Node?
   #
-  # source://prism//lib/prism/node.rb#14898
+  # source://prism//lib/prism/node.rb#15673
   sig { returns(T.nilable(Prism::Node)) }
   def expression; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#14952
+  # source://prism//lib/prism/node.rb#15727
   def inspect(inspector = T.unsafe(nil)); end
 
   # def operator: () -> String
   #
-  # source://prism//lib/prism/node.rb#14947
+  # source://prism//lib/prism/node.rb#15722
   sig { returns(String) }
   def operator; end
 
   # attr_reader operator_loc: Location
   #
-  # source://prism//lib/prism/node.rb#14895
+  # source://prism//lib/prism/node.rb#15670
   sig { returns(Prism::Location) }
   def operator_loc; end
 
@@ -24940,7 +27086,7 @@ class Prism::SplatNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#14978
+  # source://prism//lib/prism/node.rb#15753
   def type; end
 
   class << self
@@ -24951,7 +27097,7 @@ class Prism::SplatNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#14988
+    # source://prism//lib/prism/node.rb#15763
     def type; end
   end
 end
@@ -24961,60 +27107,60 @@ end
 #     foo; bar; baz
 #     ^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#14997
+# source://prism//lib/prism/node.rb#15772
 class Prism::StatementsNode < ::Prism::Node
   # def initialize: (body: Array[Node], location: Location) -> void
   #
   # @return [StatementsNode] a new instance of StatementsNode
   #
-  # source://prism//lib/prism/node.rb#15002
+  # source://prism//lib/prism/node.rb#15777
   sig { params(body: T::Array[Prism::Node], location: Prism::Location).void }
   def initialize(body, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15008
+  # source://prism//lib/prism/node.rb#15783
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader body: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#14999
+  # source://prism//lib/prism/node.rb#15774
   sig { returns(T::Array[Prism::Node]) }
   def body; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15013
+  # source://prism//lib/prism/node.rb#15788
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15023
+  # source://prism//lib/prism/node.rb#15798
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15018
+  # source://prism//lib/prism/node.rb#15793
   def compact_child_nodes; end
 
   # def copy: (**params) -> StatementsNode
   #
-  # source://prism//lib/prism/node.rb#15028
+  # source://prism//lib/prism/node.rb#15803
   sig { params(params: T.untyped).returns(Prism::StatementsNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15013
+  # source://prism//lib/prism/node.rb#15788
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15039
+  # source://prism//lib/prism/node.rb#15814
   sig do
     params(
       keys: T::Array[Symbol]
@@ -25024,7 +27170,7 @@ class Prism::StatementsNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15044
+  # source://prism//lib/prism/node.rb#15819
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -25042,7 +27188,7 @@ class Prism::StatementsNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#15064
+  # source://prism//lib/prism/node.rb#15839
   def type; end
 
   class << self
@@ -25053,127 +27199,29 @@ class Prism::StatementsNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#15074
-    def type; end
-  end
-end
-
-# Represents the use of compile-time string concatenation.
-#
-#     "foo" "bar"
-#     ^^^^^^^^^^^
-#
-# source://prism//lib/prism/node.rb#15083
-class Prism::StringConcatNode < ::Prism::Node
-  # def initialize: (left: Node, right: Node, location: Location) -> void
-  #
-  # @return [StringConcatNode] a new instance of StringConcatNode
-  #
-  # source://prism//lib/prism/node.rb#15091
-  sig { params(left: Prism::Node, right: Prism::Node, location: Prism::Location).void }
-  def initialize(left, right, location); end
-
-  # def accept: (visitor: Visitor) -> void
-  #
-  # source://prism//lib/prism/node.rb#15098
-  sig { params(visitor: Prism::Visitor).void }
-  def accept(visitor); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#15103
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def child_nodes; end
-
-  # def comment_targets: () -> Array[Node | Location]
-  #
-  # source://prism//lib/prism/node.rb#15113
-  def comment_targets; end
-
-  # def compact_child_nodes: () -> Array[Node]
-  #
-  # source://prism//lib/prism/node.rb#15108
-  def compact_child_nodes; end
-
-  # def copy: (**params) -> StringConcatNode
-  #
-  # source://prism//lib/prism/node.rb#15118
-  sig { params(params: T.untyped).returns(Prism::StringConcatNode) }
-  def copy(**params); end
-
-  # def child_nodes: () -> Array[nil | Node]
-  # def deconstruct: () -> Array[nil | Node]
-  #
-  # source://prism//lib/prism/node.rb#15103
-  sig { returns(T::Array[T.nilable(Prism::Node)]) }
-  def deconstruct; end
-
-  # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
-  #
-  # source://prism//lib/prism/node.rb#15130
-  sig do
-    params(
-      keys: T::Array[Symbol]
-    ).returns(T::Hash[Symbol, T.nilable(T.any(Prism::Node, T::Array[Prism::Node], String, Prism::Token, T::Array[Prism::Token], Prism::Location))])
-  end
-  def deconstruct_keys(keys); end
-
-  # def inspect(inspector: NodeInspector) -> String
-  #
-  # source://prism//lib/prism/node.rb#15135
-  def inspect(inspector = T.unsafe(nil)); end
-
-  # attr_reader left: Node
-  #
-  # source://prism//lib/prism/node.rb#15085
-  sig { returns(Prism::Node) }
-  def left; end
-
-  # attr_reader right: Node
-  #
-  # source://prism//lib/prism/node.rb#15088
-  sig { returns(Prism::Node) }
-  def right; end
-
-  # Sometimes you want to check an instance of a node against a list of
-  # classes to see what kind of behavior to perform. Usually this is done by
-  # calling `[cls1, cls2].include?(node.class)` or putting the node into a
-  # case statement and doing `case node; when cls1; when cls2; end`. Both of
-  # these approaches are relatively slow because of the constant lookups,
-  # method calls, and/or array allocations.
-  #
-  # Instead, you can call #type, which will return to you a symbol that you
-  # can use for comparison. This is faster than the other approaches because
-  # it uses a single integer comparison, but also because if you're on CRuby
-  # you can take advantage of the fact that case statements with all symbol
-  # keys will use a jump table.
-  #
-  # def type: () -> Symbol
-  #
-  # source://prism//lib/prism/node.rb#15158
-  def type; end
-
-  class << self
-    # Similar to #type, this method returns a symbol that you can use for
-    # splitting on the type of the node without having to do a long === chain.
-    # Note that like #type, it will still be slower than using == for a single
-    # class, but should be faster in a case statement or an array comparison.
-    #
-    # def self.type: () -> Symbol
-    #
-    # source://prism//lib/prism/node.rb#15168
+    # source://prism//lib/prism/node.rb#15849
     def type; end
   end
 end
 
 # Flags for string nodes.
 #
-# source://prism//lib/prism/node.rb#16605
+# source://prism//lib/prism/node.rb#17379
 module Prism::StringFlags; end
+
+# internal bytes forced the encoding to binary
+#
+# source://prism//lib/prism/node.rb#17384
+Prism::StringFlags::FORCED_BINARY_ENCODING = T.let(T.unsafe(nil), Integer)
+
+# internal bytes forced the encoding to UTF-8
+#
+# source://prism//lib/prism/node.rb#17381
+Prism::StringFlags::FORCED_UTF8_ENCODING = T.let(T.unsafe(nil), Integer)
 
 # frozen by virtue of a `frozen_string_literal` comment
 #
-# source://prism//lib/prism/node.rb#16607
+# source://prism//lib/prism/node.rb#17387
 Prism::StringFlags::FROZEN = T.let(T.unsafe(nil), Integer)
 
 # Represents a string literal, a string contained within a `%w` list, or
@@ -25188,13 +27236,15 @@ Prism::StringFlags::FROZEN = T.let(T.unsafe(nil), Integer)
 #     "foo #{bar} baz"
 #      ^^^^      ^^^^
 #
-# source://prism//lib/prism/node.rb#15184
+# source://prism//lib/prism/node.rb#15865
 class Prism::StringNode < ::Prism::Node
+  include ::Prism::HeredocQuery
+
   # def initialize: (flags: Integer, opening_loc: Location?, content_loc: Location, closing_loc: Location?, unescaped: String, location: Location) -> void
   #
   # @return [StringNode] a new instance of StringNode
   #
-  # source://prism//lib/prism/node.rb#15201
+  # source://prism//lib/prism/node.rb#15882
   sig do
     params(
       flags: Integer,
@@ -25209,66 +27259,66 @@ class Prism::StringNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15211
+  # source://prism//lib/prism/node.rb#15892
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15216
+  # source://prism//lib/prism/node.rb#15897
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15266
+  # source://prism//lib/prism/node.rb#15957
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15195
+  # source://prism//lib/prism/node.rb#15876
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15226
+  # source://prism//lib/prism/node.rb#15907
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15221
+  # source://prism//lib/prism/node.rb#15902
   def compact_child_nodes; end
 
   # def content: () -> String
   #
-  # source://prism//lib/prism/node.rb#15261
+  # source://prism//lib/prism/node.rb#15952
   sig { returns(String) }
   def content; end
 
   # attr_reader content_loc: Location
   #
-  # source://prism//lib/prism/node.rb#15192
+  # source://prism//lib/prism/node.rb#15873
   sig { returns(Prism::Location) }
   def content_loc; end
 
   # def copy: (**params) -> StringNode
   #
-  # source://prism//lib/prism/node.rb#15231
+  # source://prism//lib/prism/node.rb#15912
   sig { params(params: T.untyped).returns(Prism::StringNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15216
+  # source://prism//lib/prism/node.rb#15897
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15246
+  # source://prism//lib/prism/node.rb#15927
   sig do
     params(
       keys: T::Array[Symbol]
@@ -25276,28 +27326,44 @@ class Prism::StringNode < ::Prism::Node
   end
   def deconstruct_keys(keys); end
 
+  # def forced_binary_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#15937
+  sig { returns(T::Boolean) }
+  def forced_binary_encoding?; end
+
+  # def forced_utf8_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#15932
+  sig { returns(T::Boolean) }
+  def forced_utf8_encoding?; end
+
   # def frozen?: () -> bool
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#15251
+  # source://prism//lib/prism/node.rb#15942
   sig { returns(T::Boolean) }
   def frozen?; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15271
+  # source://prism//lib/prism/node.rb#15962
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15256
+  # source://prism//lib/prism/node.rb#15947
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15189
+  # source://prism//lib/prism/node.rb#15870
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
@@ -25316,12 +27382,12 @@ class Prism::StringNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#15296
+  # source://prism//lib/prism/node.rb#15987
   def type; end
 
   # attr_reader unescaped: String
   #
-  # source://prism//lib/prism/node.rb#15198
+  # source://prism//lib/prism/node.rb#15879
   sig { returns(String) }
   def unescaped; end
 
@@ -25329,7 +27395,7 @@ class Prism::StringNode < ::Prism::Node
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#15186
+  # source://prism//lib/prism/node.rb#15867
   sig { returns(Integer) }
   def flags; end
 
@@ -25341,7 +27407,7 @@ class Prism::StringNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#15306
+    # source://prism//lib/prism/node.rb#15997
     def type; end
   end
 end
@@ -25354,13 +27420,13 @@ end
 #     super foo, bar
 #     ^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15318
+# source://prism//lib/prism/node.rb#16009
 class Prism::SuperNode < ::Prism::Node
   # def initialize: (keyword_loc: Location, lparen_loc: Location?, arguments: ArgumentsNode?, rparen_loc: Location?, block: Node?, location: Location) -> void
   #
   # @return [SuperNode] a new instance of SuperNode
   #
-  # source://prism//lib/prism/node.rb#15335
+  # source://prism//lib/prism/node.rb#16026
   sig do
     params(
       keyword_loc: Prism::Location,
@@ -25375,54 +27441,54 @@ class Prism::SuperNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15345
+  # source://prism//lib/prism/node.rb#16036
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#15326
+  # source://prism//lib/prism/node.rb#16017
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
   # attr_reader block: Node?
   #
-  # source://prism//lib/prism/node.rb#15332
+  # source://prism//lib/prism/node.rb#16023
   sig { returns(T.nilable(Prism::Node)) }
   def block; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15350
+  # source://prism//lib/prism/node.rb#16041
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15363
+  # source://prism//lib/prism/node.rb#16054
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15355
+  # source://prism//lib/prism/node.rb#16046
   def compact_child_nodes; end
 
   # def copy: (**params) -> SuperNode
   #
-  # source://prism//lib/prism/node.rb#15368
+  # source://prism//lib/prism/node.rb#16059
   sig { params(params: T.untyped).returns(Prism::SuperNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15350
+  # source://prism//lib/prism/node.rb#16041
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15383
+  # source://prism//lib/prism/node.rb#16074
   sig do
     params(
       keys: T::Array[Symbol]
@@ -25432,42 +27498,42 @@ class Prism::SuperNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15403
+  # source://prism//lib/prism/node.rb#16094
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#15388
+  # source://prism//lib/prism/node.rb#16079
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#15320
+  # source://prism//lib/prism/node.rb#16011
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # def lparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15393
+  # source://prism//lib/prism/node.rb#16084
   sig { returns(T.nilable(String)) }
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15323
+  # source://prism//lib/prism/node.rb#16014
   sig { returns(T.nilable(Prism::Location)) }
   def lparen_loc; end
 
   # def rparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15398
+  # source://prism//lib/prism/node.rb#16089
   sig { returns(T.nilable(String)) }
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15329
+  # source://prism//lib/prism/node.rb#16020
   sig { returns(T.nilable(Prism::Location)) }
   def rparen_loc; end
 
@@ -25486,7 +27552,7 @@ class Prism::SuperNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#15437
+  # source://prism//lib/prism/node.rb#16128
   def type; end
 
   class << self
@@ -25497,10 +27563,30 @@ class Prism::SuperNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#15447
+    # source://prism//lib/prism/node.rb#16138
     def type; end
   end
 end
+
+# Flags for symbol nodes.
+#
+# source://prism//lib/prism/node.rb#17391
+module Prism::SymbolFlags; end
+
+# internal bytes forced the encoding to binary
+#
+# source://prism//lib/prism/node.rb#17396
+Prism::SymbolFlags::FORCED_BINARY_ENCODING = T.let(T.unsafe(nil), Integer)
+
+# internal bytes forced the encoding to US-ASCII
+#
+# source://prism//lib/prism/node.rb#17399
+Prism::SymbolFlags::FORCED_US_ASCII_ENCODING = T.let(T.unsafe(nil), Integer)
+
+# internal bytes forced the encoding to UTF-8
+#
+# source://prism//lib/prism/node.rb#17393
+Prism::SymbolFlags::FORCED_UTF8_ENCODING = T.let(T.unsafe(nil), Integer)
 
 # Represents a symbol literal or a symbol contained within a `%i` list.
 #
@@ -25510,15 +27596,16 @@ end
 #     %i[foo]
 #        ^^^
 #
-# source://prism//lib/prism/node.rb#15459
+# source://prism//lib/prism/node.rb#16150
 class Prism::SymbolNode < ::Prism::Node
-  # def initialize: (opening_loc: Location?, value_loc: Location?, closing_loc: Location?, unescaped: String, location: Location) -> void
+  # def initialize: (flags: Integer, opening_loc: Location?, value_loc: Location?, closing_loc: Location?, unescaped: String, location: Location) -> void
   #
   # @return [SymbolNode] a new instance of SymbolNode
   #
-  # source://prism//lib/prism/node.rb#15473
+  # source://prism//lib/prism/node.rb#16167
   sig do
     params(
+      flags: Integer,
       opening_loc: T.nilable(Prism::Location),
       value_loc: T.nilable(Prism::Location),
       closing_loc: T.nilable(Prism::Location),
@@ -25526,58 +27613,58 @@ class Prism::SymbolNode < ::Prism::Node
       location: Prism::Location
     ).void
   end
-  def initialize(opening_loc, value_loc, closing_loc, unescaped, location); end
+  def initialize(flags, opening_loc, value_loc, closing_loc, unescaped, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15482
+  # source://prism//lib/prism/node.rb#16177
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15487
+  # source://prism//lib/prism/node.rb#16182
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15531
+  # source://prism//lib/prism/node.rb#16242
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15467
+  # source://prism//lib/prism/node.rb#16161
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15497
+  # source://prism//lib/prism/node.rb#16192
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15492
+  # source://prism//lib/prism/node.rb#16187
   def compact_child_nodes; end
 
   # def copy: (**params) -> SymbolNode
   #
-  # source://prism//lib/prism/node.rb#15502
+  # source://prism//lib/prism/node.rb#16197
   sig { params(params: T.untyped).returns(Prism::SymbolNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15487
+  # source://prism//lib/prism/node.rb#16182
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15516
+  # source://prism//lib/prism/node.rb#16212
   sig do
     params(
       keys: T::Array[Symbol]
@@ -25585,20 +27672,44 @@ class Prism::SymbolNode < ::Prism::Node
   end
   def deconstruct_keys(keys); end
 
+  # def forced_binary_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#16222
+  sig { returns(T::Boolean) }
+  def forced_binary_encoding?; end
+
+  # def forced_us_ascii_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#16227
+  sig { returns(T::Boolean) }
+  def forced_us_ascii_encoding?; end
+
+  # def forced_utf8_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#16217
+  sig { returns(T::Boolean) }
+  def forced_utf8_encoding?; end
+
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15536
+  # source://prism//lib/prism/node.rb#16247
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15521
+  # source://prism//lib/prism/node.rb#16232
   sig { returns(T.nilable(String)) }
   def opening; end
 
   # attr_reader opening_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15461
+  # source://prism//lib/prism/node.rb#16155
   sig { returns(T.nilable(Prism::Location)) }
   def opening_loc; end
 
@@ -25617,26 +27728,34 @@ class Prism::SymbolNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#15559
+  # source://prism//lib/prism/node.rb#16272
   def type; end
 
   # attr_reader unescaped: String
   #
-  # source://prism//lib/prism/node.rb#15470
+  # source://prism//lib/prism/node.rb#16164
   sig { returns(String) }
   def unescaped; end
 
   # def value: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15526
+  # source://prism//lib/prism/node.rb#16237
   sig { returns(T.nilable(String)) }
   def value; end
 
   # attr_reader value_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15464
+  # source://prism//lib/prism/node.rb#16158
   sig { returns(T.nilable(Prism::Location)) }
   def value_loc; end
+
+  private
+
+  # Returns the value of attribute flags.
+  #
+  # source://prism//lib/prism/node.rb#16152
+  sig { returns(Integer) }
+  def flags; end
 
   class << self
     # Similar to #type, this method returns a symbol that you can use for
@@ -25646,56 +27765,56 @@ class Prism::SymbolNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#15569
+    # source://prism//lib/prism/node.rb#16282
     def type; end
   end
 end
 
 # This represents a token from the Ruby source.
 #
-# source://prism//lib/prism/parse_result.rb#385
+# source://prism//lib/prism/parse_result.rb#416
 class Prism::Token
   # Create a new token object with the given type, value, and location.
   #
   # @return [Token] a new instance of Token
   #
-  # source://prism//lib/prism/parse_result.rb#396
+  # source://prism//lib/prism/parse_result.rb#427
   sig { params(type: T.untyped, value: String, location: Prism::Location).void }
   def initialize(type, value, location); end
 
   # Returns true if the given other token is equal to this token.
   #
-  # source://prism//lib/prism/parse_result.rb#423
+  # source://prism//lib/prism/parse_result.rb#454
   sig { params(other: T.untyped).returns(T::Boolean) }
   def ==(other); end
 
   # Implement the hash pattern matching interface for Token.
   #
-  # source://prism//lib/prism/parse_result.rb#403
+  # source://prism//lib/prism/parse_result.rb#434
   sig { params(keys: T.untyped).returns(T.untyped) }
   def deconstruct_keys(keys); end
 
   # A Location object representing the location of this token in the source.
   #
-  # source://prism//lib/prism/parse_result.rb#393
+  # source://prism//lib/prism/parse_result.rb#424
   sig { returns(Prism::Location) }
   def location; end
 
   # Implement the pretty print interface for Token.
   #
-  # source://prism//lib/prism/parse_result.rb#408
+  # source://prism//lib/prism/parse_result.rb#439
   sig { params(q: T.untyped).returns(T.untyped) }
   def pretty_print(q); end
 
   # The type of token that this token is.
   #
-  # source://prism//lib/prism/parse_result.rb#387
+  # source://prism//lib/prism/parse_result.rb#418
   sig { returns(T.untyped) }
   def type; end
 
   # A byteslice of the source that this token represents.
   #
-  # source://prism//lib/prism/parse_result.rb#390
+  # source://prism//lib/prism/parse_result.rb#421
   sig { returns(String) }
   def value; end
 end
@@ -25705,54 +27824,54 @@ end
 #     true
 #     ^^^^
 #
-# source://prism//lib/prism/node.rb#15578
+# source://prism//lib/prism/node.rb#16291
 class Prism::TrueNode < ::Prism::Node
   # def initialize: (location: Location) -> void
   #
   # @return [TrueNode] a new instance of TrueNode
   #
-  # source://prism//lib/prism/node.rb#15580
+  # source://prism//lib/prism/node.rb#16293
   sig { params(location: Prism::Location).void }
   def initialize(location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15585
+  # source://prism//lib/prism/node.rb#16298
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15590
+  # source://prism//lib/prism/node.rb#16303
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15600
+  # source://prism//lib/prism/node.rb#16313
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15595
+  # source://prism//lib/prism/node.rb#16308
   def compact_child_nodes; end
 
   # def copy: (**params) -> TrueNode
   #
-  # source://prism//lib/prism/node.rb#15605
+  # source://prism//lib/prism/node.rb#16318
   sig { params(params: T.untyped).returns(Prism::TrueNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15590
+  # source://prism//lib/prism/node.rb#16303
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15615
+  # source://prism//lib/prism/node.rb#16328
   sig do
     params(
       keys: T::Array[Symbol]
@@ -25762,7 +27881,7 @@ class Prism::TrueNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15620
+  # source://prism//lib/prism/node.rb#16333
   def inspect(inspector = T.unsafe(nil)); end
 
   # Sometimes you want to check an instance of a node against a list of
@@ -25780,7 +27899,7 @@ class Prism::TrueNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#15639
+  # source://prism//lib/prism/node.rb#16352
   def type; end
 
   class << self
@@ -25791,7 +27910,7 @@ class Prism::TrueNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#15649
+    # source://prism//lib/prism/node.rb#16362
     def type; end
   end
 end
@@ -25801,54 +27920,54 @@ end
 #     undef :foo, :bar, :baz
 #     ^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15658
+# source://prism//lib/prism/node.rb#16371
 class Prism::UndefNode < ::Prism::Node
   # def initialize: (names: Array[Node], keyword_loc: Location, location: Location) -> void
   #
   # @return [UndefNode] a new instance of UndefNode
   #
-  # source://prism//lib/prism/node.rb#15666
+  # source://prism//lib/prism/node.rb#16379
   sig { params(names: T::Array[Prism::Node], keyword_loc: Prism::Location, location: Prism::Location).void }
   def initialize(names, keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15673
+  # source://prism//lib/prism/node.rb#16386
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15678
+  # source://prism//lib/prism/node.rb#16391
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15688
+  # source://prism//lib/prism/node.rb#16401
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15683
+  # source://prism//lib/prism/node.rb#16396
   def compact_child_nodes; end
 
   # def copy: (**params) -> UndefNode
   #
-  # source://prism//lib/prism/node.rb#15693
+  # source://prism//lib/prism/node.rb#16406
   sig { params(params: T.untyped).returns(Prism::UndefNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15678
+  # source://prism//lib/prism/node.rb#16391
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15705
+  # source://prism//lib/prism/node.rb#16418
   sig do
     params(
       keys: T::Array[Symbol]
@@ -25858,24 +27977,24 @@ class Prism::UndefNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15715
+  # source://prism//lib/prism/node.rb#16428
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#15710
+  # source://prism//lib/prism/node.rb#16423
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#15663
+  # source://prism//lib/prism/node.rb#16376
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader names: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15660
+  # source://prism//lib/prism/node.rb#16373
   sig { returns(T::Array[Prism::Node]) }
   def names; end
 
@@ -25894,7 +28013,7 @@ class Prism::UndefNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#15736
+  # source://prism//lib/prism/node.rb#16449
   def type; end
 
   class << self
@@ -25905,7 +28024,7 @@ class Prism::UndefNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#15746
+    # source://prism//lib/prism/node.rb#16459
     def type; end
   end
 end
@@ -25918,69 +28037,70 @@ end
 #     unless foo then bar end
 #     ^^^^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15758
+# source://prism//lib/prism/node.rb#16471
 class Prism::UnlessNode < ::Prism::Node
-  # def initialize: (keyword_loc: Location, predicate: Node, statements: StatementsNode?, consequent: ElseNode?, end_keyword_loc: Location?, location: Location) -> void
+  # def initialize: (keyword_loc: Location, predicate: Node, then_keyword_loc: Location?, statements: StatementsNode?, consequent: ElseNode?, end_keyword_loc: Location?, location: Location) -> void
   #
   # @return [UnlessNode] a new instance of UnlessNode
   #
-  # source://prism//lib/prism/node.rb#15775
+  # source://prism//lib/prism/node.rb#16491
   sig do
     params(
       keyword_loc: Prism::Location,
       predicate: Prism::Node,
+      then_keyword_loc: T.nilable(Prism::Location),
       statements: T.nilable(Prism::StatementsNode),
       consequent: T.nilable(Prism::ElseNode),
       end_keyword_loc: T.nilable(Prism::Location),
       location: Prism::Location
     ).void
   end
-  def initialize(keyword_loc, predicate, statements, consequent, end_keyword_loc, location); end
+  def initialize(keyword_loc, predicate, then_keyword_loc, statements, consequent, end_keyword_loc, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15785
+  # source://prism//lib/prism/node.rb#16502
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15794
+  # source://prism//lib/prism/node.rb#16511
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15808
+  # source://prism//lib/prism/node.rb#16525
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15799
+  # source://prism//lib/prism/node.rb#16516
   def compact_child_nodes; end
 
   # attr_reader consequent: ElseNode?
   #
-  # source://prism//lib/prism/node.rb#15769
+  # source://prism//lib/prism/node.rb#16485
   sig { returns(T.nilable(Prism::ElseNode)) }
   def consequent; end
 
   # def copy: (**params) -> UnlessNode
   #
-  # source://prism//lib/prism/node.rb#15813
+  # source://prism//lib/prism/node.rb#16530
   sig { params(params: T.untyped).returns(Prism::UnlessNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15794
+  # source://prism//lib/prism/node.rb#16511
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15828
+  # source://prism//lib/prism/node.rb#16546
   sig do
     params(
       keys: T::Array[Symbol]
@@ -25990,47 +28110,59 @@ class Prism::UnlessNode < ::Prism::Node
 
   # def end_keyword: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15838
+  # source://prism//lib/prism/node.rb#16561
   sig { returns(T.nilable(String)) }
   def end_keyword; end
 
   # attr_reader end_keyword_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15772
+  # source://prism//lib/prism/node.rb#16488
   sig { returns(T.nilable(Prism::Location)) }
   def end_keyword_loc; end
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15843
+  # source://prism//lib/prism/node.rb#16566
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#15833
+  # source://prism//lib/prism/node.rb#16551
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#15760
+  # source://prism//lib/prism/node.rb#16473
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader predicate: Node
   #
-  # source://prism//lib/prism/node.rb#15763
+  # source://prism//lib/prism/node.rb#16476
   sig { returns(Prism::Node) }
   def predicate; end
 
-  # source://prism//lib/prism/node.rb#15789
+  # source://prism//lib/prism/node.rb#16506
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#15766
+  # source://prism//lib/prism/node.rb#16482
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
+
+  # def then_keyword: () -> String?
+  #
+  # source://prism//lib/prism/node.rb#16556
+  sig { returns(T.nilable(String)) }
+  def then_keyword; end
+
+  # attr_reader then_keyword_loc: Location?
+  #
+  # source://prism//lib/prism/node.rb#16479
+  sig { returns(T.nilable(Prism::Location)) }
+  def then_keyword_loc; end
 
   # Sometimes you want to check an instance of a node against a list of
   # classes to see what kind of behavior to perform. Usually this is done by
@@ -26047,7 +28179,7 @@ class Prism::UnlessNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#15878
+  # source://prism//lib/prism/node.rb#16602
   def type; end
 
   class << self
@@ -26058,7 +28190,7 @@ class Prism::UnlessNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#15888
+    # source://prism//lib/prism/node.rb#16612
     def type; end
   end
 end
@@ -26071,28 +28203,28 @@ end
 #     until foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#15900
+# source://prism//lib/prism/node.rb#16624
 class Prism::UntilNode < ::Prism::Node
-  # def initialize: (keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, location: Location) -> void
   #
   # @return [UntilNode] a new instance of UntilNode
   #
-  # source://prism//lib/prism/node.rb#15917
+  # source://prism//lib/prism/node.rb#16641
   sig do
     params(
+      flags: Integer,
       keyword_loc: Prism::Location,
       closing_loc: T.nilable(Prism::Location),
       predicate: Prism::Node,
       statements: T.nilable(Prism::StatementsNode),
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(keyword_loc, closing_loc, predicate, statements, flags, location); end
+  def initialize(flags, keyword_loc, closing_loc, predicate, statements, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#15927
+  # source://prism//lib/prism/node.rb#16651
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
@@ -26100,54 +28232,54 @@ class Prism::UntilNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#15984
+  # source://prism//lib/prism/node.rb#16698
   sig { returns(T::Boolean) }
   def begin_modifier?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15936
+  # source://prism//lib/prism/node.rb#16660
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#15979
+  # source://prism//lib/prism/node.rb#16708
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#15905
+  # source://prism//lib/prism/node.rb#16632
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#15949
+  # source://prism//lib/prism/node.rb#16673
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#15941
+  # source://prism//lib/prism/node.rb#16665
   def compact_child_nodes; end
 
   # def copy: (**params) -> UntilNode
   #
-  # source://prism//lib/prism/node.rb#15954
+  # source://prism//lib/prism/node.rb#16678
   sig { params(params: T.untyped).returns(Prism::UntilNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#15936
+  # source://prism//lib/prism/node.rb#16660
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#15969
+  # source://prism//lib/prism/node.rb#16693
   sig do
     params(
       keys: T::Array[Symbol]
@@ -26157,33 +28289,33 @@ class Prism::UntilNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#15989
+  # source://prism//lib/prism/node.rb#16713
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#15974
+  # source://prism//lib/prism/node.rb#16703
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#15902
+  # source://prism//lib/prism/node.rb#16629
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader predicate: Node
   #
-  # source://prism//lib/prism/node.rb#15908
+  # source://prism//lib/prism/node.rb#16635
   sig { returns(Prism::Node) }
   def predicate; end
 
-  # source://prism//lib/prism/node.rb#15931
+  # source://prism//lib/prism/node.rb#16655
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#15911
+  # source://prism//lib/prism/node.rb#16638
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -26202,14 +28334,14 @@ class Prism::UntilNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#16020
+  # source://prism//lib/prism/node.rb#16744
   def type; end
 
   private
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#15914
+  # source://prism//lib/prism/node.rb#16626
   sig { returns(Integer) }
   def flags; end
 
@@ -26221,7 +28353,7 @@ class Prism::UntilNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#16030
+    # source://prism//lib/prism/node.rb#16754
     def type; end
   end
 end
@@ -26376,11 +28508,23 @@ class Prism::Visitor < ::Prism::BasicVisitor
   sig { params(node: Prism::CallOrWriteNode).void }
   def visit_call_or_write_node(node); end
 
+  # Visit a CallTargetNode node
+  #
+  # source://prism//lib/prism/visitor.rb#26
+  sig { params(node: Prism::CallTargetNode).void }
+  def visit_call_target_node(node); end
+
   # Visit a CapturePatternNode node
   #
   # source://prism//lib/prism/visitor.rb#26
   sig { params(node: Prism::CapturePatternNode).void }
   def visit_capture_pattern_node(node); end
+
+  # Visit a CaseMatchNode node
+  #
+  # source://prism//lib/prism/visitor.rb#26
+  sig { params(node: Prism::CaseMatchNode).void }
+  def visit_case_match_node(node); end
 
   # Visit a CaseNode node
   #
@@ -26652,6 +28796,12 @@ class Prism::Visitor < ::Prism::BasicVisitor
   sig { params(node: Prism::ImplicitNode).void }
   def visit_implicit_node(node); end
 
+  # Visit a ImplicitRestNode node
+  #
+  # source://prism//lib/prism/visitor.rb#26
+  sig { params(node: Prism::ImplicitRestNode).void }
+  def visit_implicit_rest_node(node); end
+
   # Visit a InNode node
   #
   # source://prism//lib/prism/visitor.rb#26
@@ -26675,6 +28825,12 @@ class Prism::Visitor < ::Prism::BasicVisitor
   # source://prism//lib/prism/visitor.rb#26
   sig { params(node: Prism::IndexOrWriteNode).void }
   def visit_index_or_write_node(node); end
+
+  # Visit a IndexTargetNode node
+  #
+  # source://prism//lib/prism/visitor.rb#26
+  sig { params(node: Prism::IndexTargetNode).void }
+  def visit_index_target_node(node); end
 
   # Visit a InstanceVariableAndWriteNode node
   #
@@ -26868,6 +29024,12 @@ class Prism::Visitor < ::Prism::BasicVisitor
   sig { params(node: Prism::NoKeywordsParameterNode).void }
   def visit_no_keywords_parameter_node(node); end
 
+  # Visit a NumberedParametersNode node
+  #
+  # source://prism//lib/prism/visitor.rb#26
+  sig { params(node: Prism::NumberedParametersNode).void }
+  def visit_numbered_parameters_node(node); end
+
   # Visit a NumberedReferenceReadNode node
   #
   # source://prism//lib/prism/visitor.rb#26
@@ -27042,12 +29204,6 @@ class Prism::Visitor < ::Prism::BasicVisitor
   sig { params(node: Prism::StatementsNode).void }
   def visit_statements_node(node); end
 
-  # Visit a StringConcatNode node
-  #
-  # source://prism//lib/prism/visitor.rb#26
-  sig { params(node: Prism::StringConcatNode).void }
-  def visit_string_concat_node(node); end
-
   # Visit a StringNode node
   #
   # source://prism//lib/prism/visitor.rb#26
@@ -27122,13 +29278,13 @@ end
 #     ^^^^^^^^^
 #     end
 #
-# source://prism//lib/prism/node.rb#16041
+# source://prism//lib/prism/node.rb#16765
 class Prism::WhenNode < ::Prism::Node
   # def initialize: (keyword_loc: Location, conditions: Array[Node], statements: StatementsNode?, location: Location) -> void
   #
   # @return [WhenNode] a new instance of WhenNode
   #
-  # source://prism//lib/prism/node.rb#16052
+  # source://prism//lib/prism/node.rb#16776
   sig do
     params(
       keyword_loc: Prism::Location,
@@ -27141,48 +29297,48 @@ class Prism::WhenNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#16060
+  # source://prism//lib/prism/node.rb#16784
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16065
+  # source://prism//lib/prism/node.rb#16789
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#16078
+  # source://prism//lib/prism/node.rb#16802
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#16070
+  # source://prism//lib/prism/node.rb#16794
   def compact_child_nodes; end
 
   # attr_reader conditions: Array[Node]
   #
-  # source://prism//lib/prism/node.rb#16046
+  # source://prism//lib/prism/node.rb#16770
   sig { returns(T::Array[Prism::Node]) }
   def conditions; end
 
   # def copy: (**params) -> WhenNode
   #
-  # source://prism//lib/prism/node.rb#16083
+  # source://prism//lib/prism/node.rb#16807
   sig { params(params: T.untyped).returns(Prism::WhenNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16065
+  # source://prism//lib/prism/node.rb#16789
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#16096
+  # source://prism//lib/prism/node.rb#16820
   sig do
     params(
       keys: T::Array[Symbol]
@@ -27192,24 +29348,24 @@ class Prism::WhenNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#16106
+  # source://prism//lib/prism/node.rb#16830
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#16101
+  # source://prism//lib/prism/node.rb#16825
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#16043
+  # source://prism//lib/prism/node.rb#16767
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#16049
+  # source://prism//lib/prism/node.rb#16773
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -27228,7 +29384,7 @@ class Prism::WhenNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#16133
+  # source://prism//lib/prism/node.rb#16857
   def type; end
 
   class << self
@@ -27239,7 +29395,7 @@ class Prism::WhenNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#16143
+    # source://prism//lib/prism/node.rb#16867
     def type; end
   end
 end
@@ -27252,28 +29408,28 @@ end
 #     while foo do bar end
 #     ^^^^^^^^^^^^^^^^^^^^
 #
-# source://prism//lib/prism/node.rb#16155
+# source://prism//lib/prism/node.rb#16879
 class Prism::WhileNode < ::Prism::Node
-  # def initialize: (keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, flags: Integer, location: Location) -> void
+  # def initialize: (flags: Integer, keyword_loc: Location, closing_loc: Location?, predicate: Node, statements: StatementsNode?, location: Location) -> void
   #
   # @return [WhileNode] a new instance of WhileNode
   #
-  # source://prism//lib/prism/node.rb#16172
+  # source://prism//lib/prism/node.rb#16896
   sig do
     params(
+      flags: Integer,
       keyword_loc: Prism::Location,
       closing_loc: T.nilable(Prism::Location),
       predicate: Prism::Node,
       statements: T.nilable(Prism::StatementsNode),
-      flags: Integer,
       location: Prism::Location
     ).void
   end
-  def initialize(keyword_loc, closing_loc, predicate, statements, flags, location); end
+  def initialize(flags, keyword_loc, closing_loc, predicate, statements, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#16182
+  # source://prism//lib/prism/node.rb#16906
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
@@ -27281,54 +29437,54 @@ class Prism::WhileNode < ::Prism::Node
   #
   # @return [Boolean]
   #
-  # source://prism//lib/prism/node.rb#16239
+  # source://prism//lib/prism/node.rb#16953
   sig { returns(T::Boolean) }
   def begin_modifier?; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16191
+  # source://prism//lib/prism/node.rb#16915
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String?
   #
-  # source://prism//lib/prism/node.rb#16234
+  # source://prism//lib/prism/node.rb#16963
   sig { returns(T.nilable(String)) }
   def closing; end
 
   # attr_reader closing_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#16160
+  # source://prism//lib/prism/node.rb#16887
   sig { returns(T.nilable(Prism::Location)) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#16204
+  # source://prism//lib/prism/node.rb#16928
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#16196
+  # source://prism//lib/prism/node.rb#16920
   def compact_child_nodes; end
 
   # def copy: (**params) -> WhileNode
   #
-  # source://prism//lib/prism/node.rb#16209
+  # source://prism//lib/prism/node.rb#16933
   sig { params(params: T.untyped).returns(Prism::WhileNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16191
+  # source://prism//lib/prism/node.rb#16915
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#16224
+  # source://prism//lib/prism/node.rb#16948
   sig do
     params(
       keys: T::Array[Symbol]
@@ -27338,33 +29494,33 @@ class Prism::WhileNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#16244
+  # source://prism//lib/prism/node.rb#16968
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#16229
+  # source://prism//lib/prism/node.rb#16958
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#16157
+  # source://prism//lib/prism/node.rb#16884
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # attr_reader predicate: Node
   #
-  # source://prism//lib/prism/node.rb#16163
+  # source://prism//lib/prism/node.rb#16890
   sig { returns(Prism::Node) }
   def predicate; end
 
-  # source://prism//lib/prism/node.rb#16186
+  # source://prism//lib/prism/node.rb#16910
   def set_newline_flag(newline_marked); end
 
   # attr_reader statements: StatementsNode?
   #
-  # source://prism//lib/prism/node.rb#16166
+  # source://prism//lib/prism/node.rb#16893
   sig { returns(T.nilable(Prism::StatementsNode)) }
   def statements; end
 
@@ -27383,14 +29539,14 @@ class Prism::WhileNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#16275
+  # source://prism//lib/prism/node.rb#16999
   def type; end
 
   private
 
   # Returns the value of attribute flags.
   #
-  # source://prism//lib/prism/node.rb#16169
+  # source://prism//lib/prism/node.rb#16881
   sig { returns(Integer) }
   def flags; end
 
@@ -27402,7 +29558,7 @@ class Prism::WhileNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#16285
+    # source://prism//lib/prism/node.rb#17009
     def type; end
   end
 end
@@ -27412,15 +29568,18 @@ end
 #     `foo`
 #     ^^^^^
 #
-# source://prism//lib/prism/node.rb#16294
+# source://prism//lib/prism/node.rb#17018
 class Prism::XStringNode < ::Prism::Node
-  # def initialize: (opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, location: Location) -> void
+  include ::Prism::HeredocQuery
+
+  # def initialize: (flags: Integer, opening_loc: Location, content_loc: Location, closing_loc: Location, unescaped: String, location: Location) -> void
   #
   # @return [XStringNode] a new instance of XStringNode
   #
-  # source://prism//lib/prism/node.rb#16308
+  # source://prism//lib/prism/node.rb#17035
   sig do
     params(
+      flags: Integer,
       opening_loc: Prism::Location,
       content_loc: Prism::Location,
       closing_loc: Prism::Location,
@@ -27428,70 +29587,70 @@ class Prism::XStringNode < ::Prism::Node
       location: Prism::Location
     ).void
   end
-  def initialize(opening_loc, content_loc, closing_loc, unescaped, location); end
+  def initialize(flags, opening_loc, content_loc, closing_loc, unescaped, location); end
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#16317
+  # source://prism//lib/prism/node.rb#17045
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16322
+  # source://prism//lib/prism/node.rb#17050
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def closing: () -> String
   #
-  # source://prism//lib/prism/node.rb#16366
+  # source://prism//lib/prism/node.rb#17105
   sig { returns(String) }
   def closing; end
 
   # attr_reader closing_loc: Location
   #
-  # source://prism//lib/prism/node.rb#16302
+  # source://prism//lib/prism/node.rb#17029
   sig { returns(Prism::Location) }
   def closing_loc; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#16332
+  # source://prism//lib/prism/node.rb#17060
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#16327
+  # source://prism//lib/prism/node.rb#17055
   def compact_child_nodes; end
 
   # def content: () -> String
   #
-  # source://prism//lib/prism/node.rb#16361
+  # source://prism//lib/prism/node.rb#17100
   sig { returns(String) }
   def content; end
 
   # attr_reader content_loc: Location
   #
-  # source://prism//lib/prism/node.rb#16299
+  # source://prism//lib/prism/node.rb#17026
   sig { returns(Prism::Location) }
   def content_loc; end
 
   # def copy: (**params) -> XStringNode
   #
-  # source://prism//lib/prism/node.rb#16337
+  # source://prism//lib/prism/node.rb#17065
   sig { params(params: T.untyped).returns(Prism::XStringNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16322
+  # source://prism//lib/prism/node.rb#17050
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#16351
+  # source://prism//lib/prism/node.rb#17080
   sig do
     params(
       keys: T::Array[Symbol]
@@ -27499,20 +29658,36 @@ class Prism::XStringNode < ::Prism::Node
   end
   def deconstruct_keys(keys); end
 
+  # def forced_binary_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#17090
+  sig { returns(T::Boolean) }
+  def forced_binary_encoding?; end
+
+  # def forced_utf8_encoding?: () -> bool
+  #
+  # @return [Boolean]
+  #
+  # source://prism//lib/prism/node.rb#17085
+  sig { returns(T::Boolean) }
+  def forced_utf8_encoding?; end
+
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#16371
+  # source://prism//lib/prism/node.rb#17110
   def inspect(inspector = T.unsafe(nil)); end
 
   # def opening: () -> String
   #
-  # source://prism//lib/prism/node.rb#16356
+  # source://prism//lib/prism/node.rb#17095
   sig { returns(String) }
   def opening; end
 
   # attr_reader opening_loc: Location
   #
-  # source://prism//lib/prism/node.rb#16296
+  # source://prism//lib/prism/node.rb#17023
   sig { returns(Prism::Location) }
   def opening_loc; end
 
@@ -27531,14 +29706,22 @@ class Prism::XStringNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#16394
+  # source://prism//lib/prism/node.rb#17135
   def type; end
 
   # attr_reader unescaped: String
   #
-  # source://prism//lib/prism/node.rb#16305
+  # source://prism//lib/prism/node.rb#17032
   sig { returns(String) }
   def unescaped; end
+
+  private
+
+  # Returns the value of attribute flags.
+  #
+  # source://prism//lib/prism/node.rb#17020
+  sig { returns(Integer) }
+  def flags; end
 
   class << self
     # Similar to #type, this method returns a symbol that you can use for
@@ -27548,7 +29731,7 @@ class Prism::XStringNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#16404
+    # source://prism//lib/prism/node.rb#17145
     def type; end
   end
 end
@@ -27558,13 +29741,13 @@ end
 #     yield 1
 #     ^^^^^^^
 #
-# source://prism//lib/prism/node.rb#16413
+# source://prism//lib/prism/node.rb#17154
 class Prism::YieldNode < ::Prism::Node
   # def initialize: (keyword_loc: Location, lparen_loc: Location?, arguments: ArgumentsNode?, rparen_loc: Location?, location: Location) -> void
   #
   # @return [YieldNode] a new instance of YieldNode
   #
-  # source://prism//lib/prism/node.rb#16427
+  # source://prism//lib/prism/node.rb#17168
   sig do
     params(
       keyword_loc: Prism::Location,
@@ -27578,48 +29761,48 @@ class Prism::YieldNode < ::Prism::Node
 
   # def accept: (visitor: Visitor) -> void
   #
-  # source://prism//lib/prism/node.rb#16436
+  # source://prism//lib/prism/node.rb#17177
   sig { params(visitor: Prism::Visitor).void }
   def accept(visitor); end
 
   # attr_reader arguments: ArgumentsNode?
   #
-  # source://prism//lib/prism/node.rb#16421
+  # source://prism//lib/prism/node.rb#17162
   sig { returns(T.nilable(Prism::ArgumentsNode)) }
   def arguments; end
 
   # def child_nodes: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16441
+  # source://prism//lib/prism/node.rb#17182
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def child_nodes; end
 
   # def comment_targets: () -> Array[Node | Location]
   #
-  # source://prism//lib/prism/node.rb#16453
+  # source://prism//lib/prism/node.rb#17194
   def comment_targets; end
 
   # def compact_child_nodes: () -> Array[Node]
   #
-  # source://prism//lib/prism/node.rb#16446
+  # source://prism//lib/prism/node.rb#17187
   def compact_child_nodes; end
 
   # def copy: (**params) -> YieldNode
   #
-  # source://prism//lib/prism/node.rb#16458
+  # source://prism//lib/prism/node.rb#17199
   sig { params(params: T.untyped).returns(Prism::YieldNode) }
   def copy(**params); end
 
   # def child_nodes: () -> Array[nil | Node]
   # def deconstruct: () -> Array[nil | Node]
   #
-  # source://prism//lib/prism/node.rb#16441
+  # source://prism//lib/prism/node.rb#17182
   sig { returns(T::Array[T.nilable(Prism::Node)]) }
   def deconstruct; end
 
   # def deconstruct_keys: (keys: Array[Symbol]) -> Hash[Symbol, nil | Node | Array[Node] | String | Token | Array[Token] | Location]
   #
-  # source://prism//lib/prism/node.rb#16472
+  # source://prism//lib/prism/node.rb#17213
   sig do
     params(
       keys: T::Array[Symbol]
@@ -27629,42 +29812,42 @@ class Prism::YieldNode < ::Prism::Node
 
   # def inspect(inspector: NodeInspector) -> String
   #
-  # source://prism//lib/prism/node.rb#16492
+  # source://prism//lib/prism/node.rb#17233
   def inspect(inspector = T.unsafe(nil)); end
 
   # def keyword: () -> String
   #
-  # source://prism//lib/prism/node.rb#16477
+  # source://prism//lib/prism/node.rb#17218
   sig { returns(String) }
   def keyword; end
 
   # attr_reader keyword_loc: Location
   #
-  # source://prism//lib/prism/node.rb#16415
+  # source://prism//lib/prism/node.rb#17156
   sig { returns(Prism::Location) }
   def keyword_loc; end
 
   # def lparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#16482
+  # source://prism//lib/prism/node.rb#17223
   sig { returns(T.nilable(String)) }
   def lparen; end
 
   # attr_reader lparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#16418
+  # source://prism//lib/prism/node.rb#17159
   sig { returns(T.nilable(Prism::Location)) }
   def lparen_loc; end
 
   # def rparen: () -> String?
   #
-  # source://prism//lib/prism/node.rb#16487
+  # source://prism//lib/prism/node.rb#17228
   sig { returns(T.nilable(String)) }
   def rparen; end
 
   # attr_reader rparen_loc: Location?
   #
-  # source://prism//lib/prism/node.rb#16424
+  # source://prism//lib/prism/node.rb#17165
   sig { returns(T.nilable(Prism::Location)) }
   def rparen_loc; end
 
@@ -27683,7 +29866,7 @@ class Prism::YieldNode < ::Prism::Node
   #
   # def type: () -> Symbol
   #
-  # source://prism//lib/prism/node.rb#16520
+  # source://prism//lib/prism/node.rb#17261
   def type; end
 
   class << self
@@ -27694,7 +29877,7 @@ class Prism::YieldNode < ::Prism::Node
     #
     # def self.type: () -> Symbol
     #
-    # source://prism//lib/prism/node.rb#16530
+    # source://prism//lib/prism/node.rb#17271
     def type; end
   end
 end

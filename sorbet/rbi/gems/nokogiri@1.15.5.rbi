@@ -2769,13 +2769,13 @@ end
 class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # @return [Document] a new instance of Document
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#178
+  # source://nokogiri//lib/nokogiri/xml/document.rb#177
   def initialize(*args); end
 
-  # source://nokogiri//lib/nokogiri/xml/document.rb#394
+  # source://nokogiri//lib/nokogiri/xml/document.rb#393
   def <<(node_or_tags); end
 
-  # source://nokogiri//lib/nokogiri/xml/document.rb#394
+  # source://nokogiri//lib/nokogiri/xml/document.rb#393
   def add_child(node_or_tags); end
 
   def canonicalize(*_arg0); end
@@ -2817,17 +2817,17 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   #
   #   {"xmlns:foo" => "baz"}
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#317
+  # source://nokogiri//lib/nokogiri/xml/document.rb#316
   def collect_namespaces; end
 
   # Create a CDATA Node containing +string+
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#262
+  # source://nokogiri//lib/nokogiri/xml/document.rb#261
   def create_cdata(string, &block); end
 
   # Create a Comment Node containing +string+
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#267
+  # source://nokogiri//lib/nokogiri/xml/document.rb#266
   def create_comment(string, &block); end
 
   # :call-seq:
@@ -2878,14 +2878,14 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   #
   #   doc.create_element("div") { |node| node["class"] = "blue" if before_noon? }
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#232
+  # source://nokogiri//lib/nokogiri/xml/document.rb#231
   def create_element(name, *contents_or_attrs, &block); end
 
   def create_entity(*_arg0); end
 
   # Create a Text Node with +string+
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#257
+  # source://nokogiri//lib/nokogiri/xml/document.rb#256
   def create_text_node(string, &block); end
 
   # :call-seq: deconstruct_keys(array_of_names) → Hash
@@ -2927,22 +2927,22 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   #    doc.deconstruct_keys([:root])
   #    # => {:root=>nil}
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#458
+  # source://nokogiri//lib/nokogiri/xml/document.rb#457
   def deconstruct_keys(keys); end
 
   # Apply any decorators to +node+
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#365
+  # source://nokogiri//lib/nokogiri/xml/document.rb#364
   def decorate(node); end
 
   # Get the list of decorators given +key+
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#324
+  # source://nokogiri//lib/nokogiri/xml/document.rb#323
   def decorators(key); end
 
   # A reference to +self+
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#277
+  # source://nokogiri//lib/nokogiri/xml/document.rb#276
   def document; end
 
   def dup(*_arg0); end
@@ -2966,12 +2966,12 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # Create a Nokogiri::XML::DocumentFragment from +tags+
   # Returns an empty fragment if +tags+ is nil.
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#386
+  # source://nokogiri//lib/nokogiri/xml/document.rb#385
   def fragment(tags = T.unsafe(nil)); end
 
   # The name of this document.  Always returns "document"
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#272
+  # source://nokogiri//lib/nokogiri/xml/document.rb#271
   def name; end
 
   # When `true`, reparented elements without a namespace will inherit their new parent's
@@ -3074,7 +3074,7 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
 
   # Get the hash of namespaces on the root Nokogiri::XML::Node
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#379
+  # source://nokogiri//lib/nokogiri/xml/document.rb#378
   def namespaces; end
 
   def remove_namespaces!; end
@@ -3096,7 +3096,7 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   #   irb> doc.slop!
   #   ... which does absolutely nothing.
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#354
+  # source://nokogiri//lib/nokogiri/xml/document.rb#353
   def slop!; end
 
   # source://nokogiri//lib/nokogiri/xml/node.rb#1280
@@ -3107,7 +3107,7 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   # Validate this Document against it's DTD.  Returns a list of errors on
   # the document or +nil+ when there is no DTD.
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#332
+  # source://nokogiri//lib/nokogiri/xml/document.rb#331
   def validate; end
 
   def version; end
@@ -3119,12 +3119,12 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   #
   # See XPathVisitor for more information.
   #
-  # source://nokogiri//lib/nokogiri/xml/document.rb#414
+  # source://nokogiri//lib/nokogiri/xml/document.rb#413
   def xpath_doctype; end
 
   private
 
-  # source://nokogiri//lib/nokogiri/xml/document.rb#466
+  # source://nokogiri//lib/nokogiri/xml/document.rb#465
   def inspect_attributes; end
 
   class << self
@@ -3172,7 +3172,7 @@ class Nokogiri::XML::Document < ::Nokogiri::XML::Node
   end
 end
 
-# source://nokogiri//lib/nokogiri/xml/document.rb#464
+# source://nokogiri//lib/nokogiri/xml/document.rb#463
 Nokogiri::XML::Document::IMPLIED_XPATH_CONTEXTS = T.let(T.unsafe(nil), Array)
 
 # source://nokogiri//lib/nokogiri/xml/document.rb#19

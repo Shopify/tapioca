@@ -247,7 +247,7 @@ class IdentityCache::CacheFetcher
   # source://identity_cache//lib/identity_cache/cache_fetcher.rb#59
   def delete(key); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#73
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#77
   def fetch(key, fill_lock_duration: T.unsafe(nil), lock_wait_tries: T.unsafe(nil), &block); end
 
   # source://identity_cache//lib/identity_cache/cache_fetcher.rb#67
@@ -258,42 +258,42 @@ class IdentityCache::CacheFetcher
 
   private
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#307
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#311
   def add(key, value, expiration_options = T.unsafe(nil)); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#301
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#305
   def add_multi(keys); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#272
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#276
   def cas_multi(keys); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#268
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#272
   def client_id; end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#253
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#257
   def fallback_key_expiration_options(fill_lock_duration); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#195
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#199
   def fetch_or_take_lock(key, old_lock:, **expiration_options); end
 
   # @raise [ArgumentError]
   #
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#99
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#103
   def fetch_with_fill_lock(key, fill_lock_duration, lock_wait_tries, &block); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#83
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#87
   def fetch_without_fill_lock(key); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#233
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#237
   def fill_with_lock(key, data, my_lock, expiration_options); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#249
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#253
   def lock_fill_fallback_key(key, lock); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#170
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#174
   def mark_fill_failure_on_lock(key, expiration_options); end
 
-  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#182
+  # source://identity_cache//lib/identity_cache/cache_fetcher.rb#186
   def upsert(key, expiration_options = T.unsafe(nil)); end
 end
 
@@ -1227,7 +1227,7 @@ class IdentityCache::FallbackFetcher
   # source://identity_cache//lib/identity_cache/fallback_fetcher.rb#15
   def delete(key); end
 
-  # source://identity_cache//lib/identity_cache/fallback_fetcher.rb#36
+  # source://identity_cache//lib/identity_cache/fallback_fetcher.rb#40
   def fetch(key, **cache_fetcher_options); end
 
   # source://identity_cache//lib/identity_cache/fallback_fetcher.rb#23

@@ -172,6 +172,158 @@ module Tapioca
               assert_equal(expected, rbi_for(:CreateComment))
             end
 
+            it "generates correct RBI arguments with a prepare method" do
+              # Prepare Methods that return void are technically invalid,
+              # but we don't raise anything and default to the input type
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CreateComment < GraphQL::Schema::Mutation
+                  extend T::Sig
+
+                  class << self
+                    extend T::Sig
+                    sig { params(min: Date).returns(T::Range[Date]) }
+                    def prepare_dates(min)
+                      min..(min + 1.day)
+                    end
+
+                    sig { params(min: Date, _context: T::Hash).void }
+                    def prepare_dates_void(max, _context)
+                      (max - 1.day)..max
+                    end
+
+                    def prepare_dates_untyped(other, _context)
+                      other
+                    end
+                  end
+
+                  argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range", prepare: :prepare_dates
+                  argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range", prepare: :prepare_dates_void
+                  argument :other, GraphQL::Types::ISO8601Date, "Some value of the range ", prepare: :prepare_dates_untyped
+
+                  def resolve(min:, max:, other:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(min: T::Range[::Date], max: ::Date, other: ::Date).returns(T.untyped) }
+                  def resolve(min:, max:, other:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
+            it "generates correct RBI arguments with a prepare method on the argument class" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class CommentInput < GraphQL::Schema::InputObject
+                  extend T::Sig
+
+                  class << self
+                    extend T::Sig
+                    sig { params(min: Date).returns(T::Range[Date]) }
+                    def prepare_dates(min)
+                      min..(min + 1.day)
+                    end
+
+                    sig { params(min: Date, _context: T::Hash).void }
+                    def prepare_dates_void(max, _context)
+                      (max - 1.day)..max
+                    end
+
+                    def prepare_dates_untyped(other, _context)
+                      other
+                    end
+                  end
+
+                  argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range", prepare: :prepare_dates
+                  argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range", prepare: :prepare_dates_void
+                  argument :other, GraphQL::Types::ISO8601Date, "Some value of the range ", prepare: :prepare_dates_untyped
+                end
+
+                class CreateComment < GraphQL::Schema::Mutation
+                  argument :input, CommentInput, "A comment input"
+
+                  def resolve(comment_input:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(comment_input: T.untyped).returns(T.untyped) }
+                  def resolve(comment_input:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
+            it "generates correct RBI for Inputs with a prepare method" do
+              add_ruby_file("create_comment.rb", <<~RUBY)
+                class DateRangeInput < GraphQL::Schema::InputObject
+                  extend T::Sig
+
+                  description "Range of dates"
+                  argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range"
+                  argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range"
+
+                  sig { returns(T::Range[Date]) }
+                  def prepare
+                    min..max
+                  end
+                end
+
+                class VoidInput < GraphQL::Schema::InputObject
+                  extend T::Sig
+
+                  argument :void, String, "Not a real input"
+
+                  sig { void }
+                  def prepare; end
+                end
+
+                class UntypedInput < GraphQL::Schema::InputObject
+                  argument :string, String, "Not a real input"
+
+                  def prepare
+                    string.to_i
+                  end
+                end
+
+                class CreateComment < GraphQL::Schema::Mutation
+                  extend T::Sig
+
+
+                  argument :date_range, DateRangeInput, required: true
+                  argument :void_input, VoidInput, required: true
+                  argument :untyped_input, UntypedInput, required: true
+
+                  def resolve(date_range:, void_input:, untyped_input:)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class CreateComment
+                  sig { params(date_range: T::Range[::Date], void_input: ::VoidInput, untyped_input: ::UntypedInput).returns(T.untyped) }
+                  def resolve(date_range:, void_input:, untyped_input:); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:CreateComment))
+            end
+
             it "generates correct RBI for mutation loaders" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class LoadedType < GraphQL::Schema::Object

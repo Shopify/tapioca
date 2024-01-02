@@ -97,12 +97,11 @@ module Tapioca
               # method and the parameter is required and there is a single
               # parameter and the signature also defines a single parameter and
               # the name of the method ends with a = character.
-              writer_method_with_sig = (
+              writer_method_with_sig =
                 signature && type == :req &&
                 parameters.size == 1 &&
                 signature.arg_types.size == 1 &&
                 method_name[-1] == "="
-              )
 
               if writer_method_with_sig
                 method_name.delete_suffix("=")
