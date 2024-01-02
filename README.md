@@ -521,6 +521,18 @@ Reason:
 
 This option can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking.
 
+If you are using Rails, you can configure `tapioca dsl` to run after each migration:
+
+```ruby
+# Rakefile
+if Rails.env.development?
+  namespace :db do
+    task :migrate do # Appends to the existing `db:migrate` task
+      system("bundle exec tapioca dsl", exception: true)
+    end
+  end
+```
+
 #### Writing custom DSL compilers
 
 It is possible to create your own compilers for DSLs not supported by Tapioca out of the box.
