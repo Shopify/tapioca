@@ -101,8 +101,13 @@ module Tapioca
           HANDLED_METHOD_TARGETS.include?(target.to_s)
         end
 
-        sig { params(attribute_type_value: ::ActiveModel::Type::Value).returns(::String) }
+        sig { params(attribute_type_value: T.untyped).returns(::String) }
         def type_for(attribute_type_value)
+          # This guarantees that the type will remain as T.untyped for attributes in the following form:
+          # attribute :name
+          # This is because for a generic attribute with no specified type, ActiveModel::Type::Value.new is returned
+          return "T.untyped" if attribute_type_value.instance_of?(ActiveModel::Type::Value)
+
           type = case attribute_type_value
           when ActiveModel::Type::Boolean
             "T::Boolean"
@@ -119,8 +124,7 @@ module Tapioca
           when ActiveModel::Type::String
             "::String"
           else
-            # we don't want untyped to be wrapped by T.nilable, so just return early
-            return "T.untyped"
+            attribute_type_value.class.name.to_s
           end
 
           as_nilable_type(type)
