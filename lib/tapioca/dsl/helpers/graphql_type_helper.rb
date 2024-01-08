@@ -26,7 +26,7 @@ module Tapioca
           end
 
           prepare = argument.prepare
-          prepare_method = if prepare.is_a?(Symbol) || prepare.is_a?(String)
+          prepare_method = if prepare
             if constant.respond_to?(prepare)
               constant.method(prepare)
             end
