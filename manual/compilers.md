@@ -6,6 +6,7 @@ In the following section you will find all available DSL compilers:
 * [AASM](compiler_aasm.md)
 * [ActionControllerHelpers](compiler_actioncontrollerhelpers.md)
 * [ActionMailer](compiler_actionmailer.md)
+* [ActionText](compiler_actiontext.md)
 * [ActiveJob](compiler_activejob.md)
 * [ActiveModelAttributes](compiler_activemodelattributes.md)
 * [ActiveModelSecurePassword](compiler_activemodelsecurepassword.md)
