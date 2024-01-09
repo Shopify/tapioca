@@ -85,6 +85,9 @@ module Tapioca
             "::String"
           when ActiveRecord::Type::Serialized
             serialized_column_type(column_type)
+          when defined?(ActiveRecord::Normalization::NormalizedValueType) &&
+            ActiveRecord::Normalization::NormalizedValueType
+            type_for_activerecord_value(column_type.cast_type)
           when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
             ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid
             "::String"

@@ -854,6 +854,41 @@ module Tapioca
                 assert_includes(output, expected)
               end
 
+              it "discovers cast type for normalized attributes" do
+                # Support for normalization was added in Rails 7.1 so this test is only relevant
+                # for that version and above.
+                return unless rails_version(">= 7.1")
+
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        t.string :title
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    normalizes :title, with: ->(title) { title.titleize }
+                  end
+                RUBY
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable(::String)) }
+                  def title; end
+
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  def title=(value); end
+
+                  sig { returns(T::Boolean) }
+                  def title?; end
+                RBI
+
+                assert_includes(rbi_for(:Post), expected)
+              end
+
               it "discovers custom type from signature on deserialize method" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
