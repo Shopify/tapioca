@@ -387,41 +387,35 @@ RuboCop::Cop::RSpec::BeNil::BE_NIL_MSG = T.let(T.unsafe(nil), String)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/be_nil.rb#33
 RuboCop::Cop::RSpec::BeNil::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
-# Check that before/after(:all) isn't being used.
+# Check that before/after(:all/:context) isn't being used.
 #
 # @example
-#   # bad
-#   #
-#   # Faster but risk of state leaking between examples
-#   #
+#   # bad - Faster but risk of state leaking between examples
 #   describe MyClass do
 #   before(:all) { Widget.create }
-#   after(:all) { Widget.delete_all }
+#   after(:context) { Widget.delete_all }
 #   end
 #
-#   # good
-#   #
-#   # Slower but examples are properly isolated
-#   #
+#   # good - Slower but examples are properly isolated
 #   describe MyClass do
 #   before(:each) { Widget.create }
 #   after(:each) { Widget.delete_all }
 #   end
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#27
+# source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#21
 class RuboCop::Cop::RSpec::BeforeAfterAll < ::RuboCop::Cop::RSpec::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#36
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#30
   def before_or_after_all(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#40
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#34
   def on_send(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#28
+# source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#22
 RuboCop::Cop::RSpec::BeforeAfterAll::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#33
-RuboCop::Cop::RSpec::BeforeAfterAll::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/before_after_all.rb#27
+RuboCop::Cop::RSpec::BeforeAfterAll::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/capybara/current_path_expectation.rb#6
 module RuboCop::Cop::RSpec::Capybara; end
@@ -2050,6 +2044,9 @@ RuboCop::Cop::RSpec::ExampleWithoutDescription::MSG_DEFAULT_ARGUMENT = T.let(T.u
 #   it 'should find nothing' do
 #   end
 #
+#   it 'will find nothing' do
+#   end
+#
 #   # good
 #   it 'finds nothing' do
 #   end
@@ -2071,65 +2068,71 @@ RuboCop::Cop::RSpec::ExampleWithoutDescription::MSG_DEFAULT_ARGUMENT = T.let(T.u
 #   end
 # @see http://betterspecs.org/#should
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#46
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#49
 class RuboCop::Cop::RSpec::ExampleWording < ::RuboCop::Cop::RSpec::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#58
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#63
   def it_description(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#65
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#71
   def on_block(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#80
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#89
   def add_wording_offense(node, message); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#127
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#136
   def custom_transform; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#90
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#99
   def docstring(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#131
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#140
   def ignored_words; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#135
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#144
   def insufficient_docstring?(description_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#139
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#148
   def insufficient_examples; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#144
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#153
   def preprocess(message); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#100
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#109
   def replacement_text(node); end
 
   # Recursive processing is required to process nested dstr nodes
   # that is the case for \-separated multiline strings with interpolation.
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#116
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#125
   def text(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#55
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#60
 RuboCop::Cop::RSpec::ExampleWording::IT_PREFIX = T.let(T.unsafe(nil), Regexp)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#51
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#55
 RuboCop::Cop::RSpec::ExampleWording::MSG_INSUFFICIENT_DESCRIPTION = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#50
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#54
 RuboCop::Cop::RSpec::ExampleWording::MSG_IT = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#49
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#52
 RuboCop::Cop::RSpec::ExampleWording::MSG_SHOULD = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#54
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#53
+RuboCop::Cop::RSpec::ExampleWording::MSG_WILL = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#58
 RuboCop::Cop::RSpec::ExampleWording::SHOULD_PREFIX = T.let(T.unsafe(nil), Regexp)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/example_wording.rb#59
+RuboCop::Cop::RSpec::ExampleWording::WILL_PREFIX = T.let(T.unsafe(nil), Regexp)
 
 # Checks for excessive whitespace in example descriptions.
 #
@@ -5935,6 +5938,73 @@ RuboCop::Cop::RSpec::RedundantAround::MSG = T.let(T.unsafe(nil), String)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_around.rb#21
 RuboCop::Cop::RSpec::RedundantAround::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Checks for redundant predicate matcher.
+#
+# @example
+#   # bad
+#   expect(foo).to be_exist(bar)
+#   expect(foo).not_to be_include(bar)
+#
+#   # good
+#   expect(foo).to exist(bar)
+#   expect(foo).not_to include(bar)
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_predicate_matcher.rb#17
+class RuboCop::Cop::RSpec::RedundantPredicateMatcher < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_predicate_matcher.rb#26
+  def on_send(node); end
+
+  private
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_predicate_matcher.rb#42
+  def message(bad_method, good_method); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_predicate_matcher.rb#46
+  def replacable_arguments?(node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_predicate_matcher.rb#54
+  def replaced_method_name(method_name); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_predicate_matcher.rb#20
+RuboCop::Cop::RSpec::RedundantPredicateMatcher::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/redundant_predicate_matcher.rb#21
+RuboCop::Cop::RSpec::RedundantPredicateMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Checks that `remove_const` is not used in specs.
+#
+# @example
+#   # bad
+#   it 'does something' do
+#   Object.send(:remove_const, :SomeConstant)
+#   end
+#
+#   before do
+#   SomeClass.send(:remove_const, :SomeConstant)
+#   end
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/remove_const.rb#18
+class RuboCop::Cop::RSpec::RemoveConst < ::RuboCop::Cop::RSpec::Base
+  # Check for offenses
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/remove_const.rb#32
+  def on_send(node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/remove_const.rb#27
+  def remove_const(param0 = T.unsafe(nil)); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/remove_const.rb#22
+RuboCop::Cop::RSpec::RemoveConst::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/remove_const.rb#24
+RuboCop::Cop::RSpec::RemoveConst::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Check for repeated description strings in example groups.
 #
 # @example
@@ -6566,9 +6636,13 @@ RuboCop::Cop::RSpec::SharedContext::MSG_CONTEXT = T.let(T.unsafe(nil), String)
 # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_context.rb#56
 RuboCop::Cop::RSpec::SharedContext::MSG_EXAMPLES = T.let(T.unsafe(nil), String)
 
-# Enforces use of string to titleize shared examples.
+# Checks for consistent style for shared example names.
 #
-# @example
+# Enforces either `string` or `symbol` for shared example names.
+#
+# This cop can be configured using the `EnforcedStyle` option
+#
+# @example `EnforcedStyle: string` (default)
 #   # bad
 #   it_behaves_like :foo_bar_baz
 #   it_should_behave_like :foo_bar_baz
@@ -6582,47 +6656,86 @@ RuboCop::Cop::RSpec::SharedContext::MSG_EXAMPLES = T.let(T.unsafe(nil), String)
 #   shared_examples 'foo bar baz'
 #   shared_examples_for 'foo bar baz'
 #   include_examples 'foo bar baz'
+# @example `EnforcedStyle: symbol`
+#   # bad
+#   it_behaves_like 'foo bar baz'
+#   it_should_behave_like 'foo bar baz'
+#   shared_examples 'foo bar baz'
+#   shared_examples_for 'foo bar baz'
+#   include_examples 'foo bar baz'
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#23
+#   # good
+#   it_behaves_like :foo_bar_baz
+#   it_should_behave_like :foo_bar_baz
+#   shared_examples :foo_bar_baz
+#   shared_examples_for :foo_bar_baz
+#   include_examples :foo_bar_baz
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#42
 class RuboCop::Cop::RSpec::SharedExamples < ::RuboCop::Cop::RSpec::Base
+  include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#34
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#54
   def on_send(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#27
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#47
   def shared_examples(param0 = T.unsafe(nil)); end
+
+  private
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#75
+  def new_checker(ast_node); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#67
+  def offense?(ast_node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#47
-class RuboCop::Cop::RSpec::SharedExamples::Checker
-  # @return [Checker] a new instance of Checker
+# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#104
+class RuboCop::Cop::RSpec::SharedExamples::StringChecker
+  # @return [StringChecker] a new instance of StringChecker
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#53
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#110
   def initialize(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#57
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#114
   def message; end
 
   # Returns the value of attribute node.
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#51
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#108
   def node; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#61
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#118
   def preferred_style; end
-
-  private
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#68
-  def symbol; end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#72
-  def wrap_with_single_quotes(string); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#48
-RuboCop::Cop::RSpec::SharedExamples::Checker::MSG = T.let(T.unsafe(nil), String)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#105
+RuboCop::Cop::RSpec::SharedExamples::StringChecker::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#84
+class RuboCop::Cop::RSpec::SharedExamples::SymbolChecker
+  # @return [SymbolChecker] a new instance of SymbolChecker
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#90
+  def initialize(node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#94
+  def message; end
+
+  # Returns the value of attribute node.
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#88
+  def node; end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#98
+  def preferred_style; end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/shared_examples.rb#85
+RuboCop::Cop::RSpec::SharedExamples::SymbolChecker::MSG = T.let(T.unsafe(nil), String)
 
 # Checks that chains of messages contain more than one element.
 #
@@ -8105,56 +8218,56 @@ RuboCop::RSpec::Version::STRING = T.let(T.unsafe(nil), String)
 class RuboCop::RSpec::Wording
   # @return [Wording] a new instance of Wording
   #
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#12
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#14
   def initialize(text, ignore:, replace:); end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#18
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#21
   def rewrite; end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#72
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#80
   def append_suffix(word, suffix); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#57
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#65
   def ignored_word?(word); end
 
   # Returns the value of attribute ignores.
   #
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#31
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#39
   def ignores; end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#43
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#51
   def remove_should_and_pluralize; end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#33
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#41
   def replace_prefix(pattern, replacement); end
 
   # Returns the value of attribute replacements.
   #
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#31
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#39
   def replacements; end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#61
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#69
   def substitute(word); end
 
   # Returns the value of attribute text.
   #
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#31
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#39
   def text; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#39
+  # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#47
   def uppercase?(word); end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/wording.rb#9
+# source://rubocop-rspec//lib/rubocop/rspec/wording.rb#11
 RuboCop::RSpec::Wording::ES_SUFFIX_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source://rubocop-rspec//lib/rubocop/rspec/wording.rb#10
+# source://rubocop-rspec//lib/rubocop/rspec/wording.rb#12
 RuboCop::RSpec::Wording::IES_SUFFIX_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#8
@@ -8162,3 +8275,9 @@ RuboCop::RSpec::Wording::SHOULDNT_BE_PREFIX = T.let(T.unsafe(nil), Regexp)
 
 # source://rubocop-rspec//lib/rubocop/rspec/wording.rb#7
 RuboCop::RSpec::Wording::SHOULDNT_PREFIX = T.let(T.unsafe(nil), Regexp)
+
+# source://rubocop-rspec//lib/rubocop/rspec/wording.rb#9
+RuboCop::RSpec::Wording::WILL_NOT_PREFIX = T.let(T.unsafe(nil), Regexp)
+
+# source://rubocop-rspec//lib/rubocop/rspec/wording.rb#10
+RuboCop::RSpec::Wording::WONT_PREFIX = T.let(T.unsafe(nil), Regexp)

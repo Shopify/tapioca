@@ -45,25 +45,25 @@ module Kredis::Attributes
 
   private
 
-  # source://kredis//lib/kredis/attributes.rb#119
+  # source://kredis//lib/kredis/attributes.rb#123
   def enrich_after_change_with_record_access(type, original_after_change); end
 
-  # source://kredis//lib/kredis/attributes.rb#115
+  # source://kredis//lib/kredis/attributes.rb#119
   def extract_kredis_id; end
 
-  # source://kredis//lib/kredis/attributes.rb#126
+  # source://kredis//lib/kredis/attributes.rb#130
   def kredis_default_evaluated(default); end
 
-  # source://kredis//lib/kredis/attributes.rb#103
+  # source://kredis//lib/kredis/attributes.rb#107
   def kredis_key_evaluated(key); end
 
-  # source://kredis//lib/kredis/attributes.rb#111
+  # source://kredis//lib/kredis/attributes.rb#115
   def kredis_key_for_attribute(name); end
 end
 
 # source://kredis//lib/kredis/attributes.rb#0
 module Kredis::Attributes::ClassMethods
-  # source://kredis//lib/kredis/attributes.rb#79
+  # source://kredis//lib/kredis/attributes.rb#83
   def kredis_boolean(name, key: T.unsafe(nil), default: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil), expires_in: T.unsafe(nil)); end
 
   # source://kredis//lib/kredis/attributes.rb#71
@@ -84,7 +84,7 @@ module Kredis::Attributes::ClassMethods
   # source://kredis//lib/kredis/attributes.rb#35
   def kredis_float(name, key: T.unsafe(nil), default: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil), expires_in: T.unsafe(nil)); end
 
-  # source://kredis//lib/kredis/attributes.rb#75
+  # source://kredis//lib/kredis/attributes.rb#79
   def kredis_hash(name, key: T.unsafe(nil), default: T.unsafe(nil), typed: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil)); end
 
   # source://kredis//lib/kredis/attributes.rb#15
@@ -92,6 +92,9 @@ module Kredis::Attributes::ClassMethods
 
   # source://kredis//lib/kredis/attributes.rb#43
   def kredis_json(name, key: T.unsafe(nil), default: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil), expires_in: T.unsafe(nil)); end
+
+  # source://kredis//lib/kredis/attributes.rb#75
+  def kredis_limiter(name, limit:, key: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil), expires_in: T.unsafe(nil)); end
 
   # source://kredis//lib/kredis/attributes.rb#47
   def kredis_list(name, key: T.unsafe(nil), default: T.unsafe(nil), typed: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil)); end
@@ -119,56 +122,62 @@ module Kredis::Attributes::ClassMethods
 
   private
 
-  # source://kredis//lib/kredis/attributes.rb#84
+  # source://kredis//lib/kredis/attributes.rb#88
   def kredis_connection_with(method, name, key, **options); end
 end
 
 # source://kredis//lib/kredis/connections.rb#5
 module Kredis::Connections
-  # source://kredis//lib/kredis/connections.rb#16
+  # source://kredis//lib/kredis/connections.rb#25
   def clear_all; end
 
-  # source://kredis//lib/kredis/connections.rb#7
+  # source://kredis//lib/kredis/connections.rb#10
   def configurator; end
 
-  # source://kredis//lib/kredis/connections.rb#7
+  # source://kredis//lib/kredis/connections.rb#10
   def configurator=(val); end
 
-  # source://kredis//lib/kredis/connections.rb#10
+  # source://kredis//lib/kredis/connections.rb#13
   def configured_for(name); end
 
-  # source://kredis//lib/kredis/connections.rb#6
+  # source://kredis//lib/kredis/connections.rb#9
   def connections; end
 
-  # source://kredis//lib/kredis/connections.rb#6
+  # source://kredis//lib/kredis/connections.rb#9
   def connections=(val); end
 
-  # source://kredis//lib/kredis/connections.rb#8
+  # source://kredis//lib/kredis/connections.rb#11
   def connector; end
 
-  # source://kredis//lib/kredis/connections.rb#8
+  # source://kredis//lib/kredis/connections.rb#11
   def connector=(val); end
 
   class << self
-    # source://kredis//lib/kredis/connections.rb#7
+    # source://kredis//lib/kredis/connections.rb#10
     def configurator; end
 
-    # source://kredis//lib/kredis/connections.rb#7
+    # source://kredis//lib/kredis/connections.rb#10
     def configurator=(val); end
 
-    # source://kredis//lib/kredis/connections.rb#6
+    # source://kredis//lib/kredis/connections.rb#9
     def connections; end
 
-    # source://kredis//lib/kredis/connections.rb#6
+    # source://kredis//lib/kredis/connections.rb#9
     def connections=(val); end
 
-    # source://kredis//lib/kredis/connections.rb#8
+    # source://kredis//lib/kredis/connections.rb#11
     def connector; end
 
-    # source://kredis//lib/kredis/connections.rb#8
+    # source://kredis//lib/kredis/connections.rb#11
     def connector=(val); end
   end
 end
+
+# source://kredis//lib/kredis/connections.rb#7
+Kredis::Connections::DEFAULT_REDIS_TIMEOUT = T.let(T.unsafe(nil), Integer)
+
+# source://kredis//lib/kredis/connections.rb#6
+Kredis::Connections::DEFAULT_REDIS_URL = T.let(T.unsafe(nil), String)
 
 # source://kredis//lib/kredis/default_values.rb#3
 module Kredis::DefaultValues
@@ -339,6 +348,9 @@ module Kredis::Types
   # source://kredis//lib/kredis/types.rb#39
   def json(key, default: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil), expires_in: T.unsafe(nil)); end
 
+  # source://kredis//lib/kredis/types.rb#88
+  def limiter(key, limit:, expires_in: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil)); end
+
   # source://kredis//lib/kredis/types.rb#64
   def list(key, default: T.unsafe(nil), typed: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil)); end
 
@@ -368,7 +380,7 @@ module Kredis::Types
 
   private
 
-  # source://kredis//lib/kredis/types.rb#89
+  # source://kredis//lib/kredis/types.rb#93
   def type_from(type_klass, config, key, after_change: T.unsafe(nil), **options); end
 end
 
@@ -707,6 +719,38 @@ class Kredis::Types::Hash < ::Kredis::Types::Proxying
   def set_default; end
 end
 
+# A limiter is a specialized form of a counter that can be checked whether it has been exceeded and is provided fail safe. This means it can be used to guard login screens from brute force attacks without denying access in case Redis is offline.
+#
+# It will usually be used as an expiring limiter. Note that the limiter expires in total after the `expires_in` time used upon the first poke.
+#
+# It offers no guarentee that you can't poke yourself above the limit. You're responsible for checking `#exceeded?` yourself first, and this may produce a race condition. So only use this when the exact number of pokes is not critical.
+#
+# source://kredis//lib/kredis/types/limiter.rb#8
+class Kredis::Types::Limiter < ::Kredis::Types::Counter
+  # @return [Boolean]
+  #
+  # source://kredis//lib/kredis/types/limiter.rb#19
+  def exceeded?; end
+
+  # Returns the value of attribute limit.
+  #
+  # source://kredis//lib/kredis/types/limiter.rb#11
+  def limit; end
+
+  # Sets the attribute limit
+  #
+  # @param value the value to set the attribute limit to.
+  #
+  # source://kredis//lib/kredis/types/limiter.rb#11
+  def limit=(_arg0); end
+
+  # source://kredis//lib/kredis/types/limiter.rb#13
+  def poke; end
+end
+
+# source://kredis//lib/kredis/types/limiter.rb#9
+class Kredis::Types::Limiter::LimitExceeded < ::StandardError; end
+
 # source://kredis//lib/kredis/types/list.rb#3
 class Kredis::Types::List < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
@@ -920,10 +964,10 @@ class Kredis::Types::Proxy
   # source://kredis//lib/kredis/types/proxy.rb#16
   def multi(*args, **kwargs, &block); end
 
-  # source://activesupport/7.0.8/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#56
+  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#74
   def pipeline; end
 
-  # source://activesupport/7.0.8/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#100
+  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#116
   def pipeline=(obj); end
 
   # source://kredis//lib/kredis/types/proxy.rb#31
@@ -941,10 +985,10 @@ class Kredis::Types::Proxy
   def redis; end
 
   class << self
-    # source://activesupport/7.0.8/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#48
+    # source://activesupport/7.1.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#49
     def pipeline; end
 
-    # source://activesupport/7.0.8/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#92
+    # source://activesupport/7.1.2/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#108
     def pipeline=(obj); end
   end
 end
