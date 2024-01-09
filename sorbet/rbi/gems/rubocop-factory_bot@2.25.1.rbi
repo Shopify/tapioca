@@ -316,35 +316,38 @@ class RuboCop::Cop::FactoryBot::ConsistentParenthesesStyle < ::RuboCop::Cop::Bas
   # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#71
   def factory_call(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#82
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#79
+  def omit_hash_value?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#93
   def on_send(node); end
 
   private
 
   # @return [Boolean]
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#118
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#130
   def ambiguous_without_parentheses?(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#90
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#101
   def register_offense(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#97
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#108
   def register_offense_with_parentheses(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#107
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#119
   def register_offense_without_parentheses(node); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#122
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#134
   def remove_parentheses(corrector, node); end
 
   class << self
-    # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#78
+    # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#89
     def autocorrect_incompatible_with; end
   end
 end
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#116
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#128
 RuboCop::Cop::FactoryBot::ConsistentParenthesesStyle::AMBIGUOUS_TYPES = T.let(T.unsafe(nil), Array)
 
 # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/consistent_parentheses_style.rb#67
@@ -563,6 +566,43 @@ class RuboCop::Cop::FactoryBot::CreateList::TimesCorrector
   def node; end
 end
 
+# Check for excessive model creation in a list.
+#
+# @example MaxAmount: 10 (default)
+#   # We do not allow more than 10 items to be created
+#
+#   # bad
+#   create_list(:merge_request, 1000, state: :opened)
+#
+#   # good
+#   create_list(:merge_request, 10, state: :opened)
+# @example MaxAmount: 20
+#   # We do not allow more than 20 items to be created
+#
+#   # bad
+#   create_list(:merge_request, 1000, state: :opened)
+#
+#   # good
+#   create_list(:merge_request, 15, state: :opened)
+#
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/excessive_create_list.rb#26
+class RuboCop::Cop::FactoryBot::ExcessiveCreateList < ::RuboCop::Cop::Base
+  include ::RuboCop::FactoryBot::Language
+  include ::RuboCop::Cop::FactoryBot::ConfigurableExplicitOnly
+
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/excessive_create_list.rb#33
+  def create_list?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/excessive_create_list.rb#39
+  def on_send(node); end
+end
+
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/excessive_create_list.rb#29
+RuboCop::Cop::FactoryBot::ExcessiveCreateList::MESSAGE = T.let(T.unsafe(nil), String)
+
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/excessive_create_list.rb#37
+RuboCop::Cop::FactoryBot::ExcessiveCreateList::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Use definition in factory association instead of hard coding a strategy.
 #
 # @example
@@ -657,6 +697,9 @@ RuboCop::Cop::FactoryBot::FactoryClassName::RESTRICT_ON_SEND = T.let(T.unsafe(ni
 #   # good
 #   create(:user)
 #   build :user, username: "NAME"
+#
+#   # good - namespaced models
+#   create('users/internal')
 # @example EnforcedStyle: string
 #   # bad
 #   create(:user)
@@ -686,42 +729,47 @@ RuboCop::Cop::FactoryBot::FactoryClassName::RESTRICT_ON_SEND = T.let(T.unsafe(ni
 #   FactoryBot.create(:user)
 #   create(:user)
 #
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#48
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#51
 class RuboCop::Cop::FactoryBot::FactoryNameStyle < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::FactoryBot::Language
   include ::RuboCop::Cop::FactoryBot::ConfigurableExplicitOnly
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#59
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#62
   def factory_call(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#66
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#69
   def on_send(node); end
 
   private
 
   # @return [Boolean]
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#82
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#89
+  def namespaced?(name); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#85
   def offense_for_string_style?(name); end
 
   # @return [Boolean]
   #
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#78
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#81
   def offense_for_symbol_style?(name); end
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#86
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#93
   def register_offense(name, prefer); end
 end
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#55
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#58
 RuboCop::Cop::FactoryBot::FactoryNameStyle::FACTORY_CALLS = T.let(T.unsafe(nil), Set)
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#54
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#57
 RuboCop::Cop::FactoryBot::FactoryNameStyle::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#56
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/factory_name_style.rb#59
 RuboCop::Cop::FactoryBot::FactoryNameStyle::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set)
 
 # Do not create a FactoryBot sequence for an id column.
@@ -740,16 +788,17 @@ RuboCop::Cop::FactoryBot::FactoryNameStyle::RESTRICT_ON_SEND = T.let(T.unsafe(ni
 # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#19
 class RuboCop::Cop::FactoryBot::IdSequence < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::RangeHelp
+  include ::RuboCop::FactoryBot::Language
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#26
+  # source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#27
   def on_send(node); end
 end
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#23
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#24
 RuboCop::Cop::FactoryBot::IdSequence::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#24
+# source://rubocop-factory_bot//lib/rubocop/cop/factory_bot/id_sequence.rb#25
 RuboCop::Cop::FactoryBot::IdSequence::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Checks for redundant `factory` option.

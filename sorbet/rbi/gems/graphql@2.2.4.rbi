@@ -359,10 +359,10 @@ class GraphQL::Analysis::AST::QueryComplexity < ::GraphQL::Analysis::AST::Analyz
   # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#9
   def initialize(query); end
 
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#61
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#49
   def on_enter_field(node, parent, visitor); end
 
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#83
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#66
   def on_leave_field(node, parent, visitor); end
 
   # Overide this method to use the complexity result
@@ -372,11 +372,6 @@ class GraphQL::Analysis::AST::QueryComplexity < ::GraphQL::Analysis::AST::Analyz
 
   private
 
-  # @return [Boolean]
-  #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#161
-  def applies_to?(query, left_scope, right_scope); end
-
   # A hook which is called whenever a field's max complexity is calculated.
   # Override this method to capture individual field complexity details.
   #
@@ -384,87 +379,75 @@ class GraphQL::Analysis::AST::QueryComplexity < ::GraphQL::Analysis::AST::Analyz
   # @param max_complexity [Numeric] Field's maximum complexity including child complexity
   # @param child_complexity [Numeric, nil] Field's child complexity
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#179
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#134
   def field_complexity(scoped_type_complexity, max_complexity:, child_complexity: T.unsafe(nil)); end
 
   # @return [Integer]
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#95
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#78
   def max_possible_complexity; end
 
-  # (`{field_key => complexity}`)
+  # @param inner_selections [Array<Hash<String, ScopedTypeComplexity>>] Field selections for a scope
+  # @return [Integer] Total complexity value for all these selections in the parent scope
   #
-  # @param children_for_scope [Array<Hash>] An array of `scoped_children[scope]` hashes
-  # @return [Integer] Complexity value for all these selections in the current scope
-  #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#185
-  def merged_max_complexity(query, children_for_scope); end
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#139
+  def merged_max_complexity(query, inner_selections); end
 
   # @param query [GraphQL::Query] Used for `query.possible_types`
-  # @param scoped_children_hashes [Array<Hash>] Array of scoped children hashes
+  # @param scopes [Array<ScopedTypeComplexity>] Array of scoped type complexities
   # @return [Integer]
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#107
-  def merged_max_complexity_for_scopes(query, scoped_children_hashes); end
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#87
+  def merged_max_complexity_for_scopes(query, scopes); end
+
+  # @return [Boolean]
+  #
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#121
+  def types_intersect?(query, a, b); end
 end
 
-# source://graphql//lib/graphql/analysis/ast/query_complexity.rb#19
-class GraphQL::Analysis::AST::QueryComplexity::ScopedTypeComplexity
+# ScopedTypeComplexity models a tree of GraphQL types mapped to inner selections, ie:
+# Hash<GraphQL::BaseType, Hash<String, ScopedTypeComplexity>>
+#
+# source://graphql//lib/graphql/analysis/ast/query_complexity.rb#21
+class GraphQL::Analysis::AST::QueryComplexity::ScopedTypeComplexity < ::Hash
   # @param parent_type [Class] The owner of `field_definition`
   # @param field_definition [GraphQL::Field, GraphQL::Schema::Field] Used for getting the `.complexity` configuration
   # @param query [GraphQL::Query] Used for `query.possible_types`
   # @param response_path [Array<String>] The path to the response key for the field
-  # @return [ScopedTypeComplexity] a new instance of ScopedTypeComplexity
+  # @return [Hash<GraphQL::BaseType, Hash<String, ScopedTypeComplexity>>]
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#30
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#32
   def initialize(parent_type, field_definition, query, response_path); end
 
   # Returns the value of attribute field_definition.
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#24
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#25
   def field_definition; end
 
   # @return [Array<GraphQL::Language::Nodes::Field>]
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#40
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#42
   def nodes; end
 
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#56
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#44
   def own_complexity(child_complexity); end
 
   # Returns the value of attribute query.
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#24
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#25
   def query; end
 
   # Returns the value of attribute response_path.
   #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#24
+  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#25
   def response_path; end
-
-  # This value is only calculated when asked for to avoid needless hash allocations.
-  # Also, if it's never asked for, we determine that this scope complexity
-  # is a scalar field ({#terminal?}).
-  #
-  # @return [Hash<Hash<Class => ScopedTypeComplexity>]] Hash<Hash<Class => ScopedTypeComplexity>]
-  #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#52
-  def scoped_children; end
-
-  # Returns true if this field has no selections, ie, it's a scalar.
-  # We need a quick way to check whether we should continue traversing.
-  #
-  # @return [Boolean]
-  #
-  # source://graphql//lib/graphql/analysis/ast/query_complexity.rb#44
-  def terminal?; end
 end
 
-# A single proc for {#scoped_children} hashes. Use this to avoid repeated allocations,
-# since the lexical binding isn't important.
+# A proc for defaulting empty namespace requests as a new scope hash.
 #
-# source://graphql//lib/graphql/analysis/ast/query_complexity.rb#22
-GraphQL::Analysis::AST::QueryComplexity::ScopedTypeComplexity::HASH_CHILDREN = T.let(T.unsafe(nil), Proc)
+# source://graphql//lib/graphql/analysis/ast/query_complexity.rb#23
+GraphQL::Analysis::AST::QueryComplexity::ScopedTypeComplexity::DEFAULT_PROC = T.let(T.unsafe(nil), Proc)
 
 # source://graphql//lib/graphql/analysis/ast/query_depth.rb#27
 class GraphQL::Analysis::AST::QueryDepth < ::GraphQL::Analysis::AST::Analyzer
@@ -950,14 +933,14 @@ class GraphQL::Dataloader
 
   # @api private Nothing to see here
   #
-  # source://graphql//lib/graphql/dataloader.rb#132
+  # source://graphql//lib/graphql/dataloader.rb#127
   def append_job(&job); end
 
   # Clear any already-loaded objects from {Source} caches
   #
   # @return [void]
   #
-  # source://graphql//lib/graphql/dataloader.rb#141
+  # source://graphql//lib/graphql/dataloader.rb#136
   def clear_cache; end
 
   # This is called before the fiber is spawned, from the parent context (i.e. from
@@ -973,15 +956,15 @@ class GraphQL::Dataloader
   # source://graphql//lib/graphql/dataloader.rb#61
   def nonblocking?; end
 
-  # source://graphql//lib/graphql/dataloader.rb#176
+  # source://graphql//lib/graphql/dataloader.rb#175
   def run; end
 
-  # source://graphql//lib/graphql/dataloader.rb#217
+  # source://graphql//lib/graphql/dataloader.rb#225
   def run_fiber(f); end
 
   # Use a self-contained queue for the work in the block.
   #
-  # source://graphql//lib/graphql/dataloader.rb#149
+  # source://graphql//lib/graphql/dataloader.rb#144
   def run_isolated; end
 
   # Set up the fiber variables in a new fiber.
@@ -994,7 +977,7 @@ class GraphQL::Dataloader
   # source://graphql//lib/graphql/dataloader.rb#86
   def set_fiber_variables(vars); end
 
-  # source://graphql//lib/graphql/dataloader.rb#225
+  # source://graphql//lib/graphql/dataloader.rb#229
   def spawn_fiber; end
 
   # truffle-ruby wasn't doing well with the implementation below
@@ -1013,19 +996,14 @@ class GraphQL::Dataloader
 
   private
 
-  # source://graphql//lib/graphql/dataloader.rb#244
+  # source://graphql//lib/graphql/dataloader.rb#242
   def join_queues(prev_queue, new_queue); end
 
-  # source://graphql//lib/graphql/dataloader.rb#259
+  # source://graphql//lib/graphql/dataloader.rb#248
   def spawn_job_fiber; end
 
-  # source://graphql//lib/graphql/dataloader.rb#269
+  # source://graphql//lib/graphql/dataloader.rb#258
   def spawn_source_fiber; end
-
-  # @return [Boolean]
-  #
-  # source://graphql//lib/graphql/dataloader.rb#250
-  def use_fiber_resume?; end
 
   class << self
     # Returns the value of attribute default_nonblocking.
@@ -1053,7 +1031,7 @@ end
 
 # source://graphql//lib/graphql/dataloader/async_dataloader.rb#4
 class GraphQL::Dataloader::AsyncDataloader < ::GraphQL::Dataloader
-  # source://graphql//lib/graphql/dataloader/async_dataloader.rb#10
+  # source://graphql//lib/graphql/dataloader/async_dataloader.rb#14
   def run; end
 
   # source://graphql//lib/graphql/dataloader/async_dataloader.rb#5
@@ -1061,10 +1039,7 @@ class GraphQL::Dataloader::AsyncDataloader < ::GraphQL::Dataloader
 
   private
 
-  # source://graphql//lib/graphql/dataloader/async_dataloader.rb#58
-  def spawn_job_task(parent_task, condition); end
-
-  # source://graphql//lib/graphql/dataloader/async_dataloader.rb#71
+  # source://graphql//lib/graphql/dataloader/async_dataloader.rb#63
   def spawn_source_task(parent_task, condition); end
 end
 
@@ -1201,6 +1176,11 @@ class GraphQL::Dataloader::Source
   #
   # source://graphql//lib/graphql/dataloader/source.rb#34
   def result_key_for(value); end
+
+  # Returns the value of attribute results.
+  #
+  # source://graphql//lib/graphql/dataloader/source.rb#172
+  def results; end
 
   # Called by {GraphQL::Dataloader} to resolve and pending requests to this source.
   #
@@ -4993,77 +4973,77 @@ class GraphQL::Language::Parser
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/language/parser.rb#684
+  # source://graphql//lib/graphql/language/parser.rb#695
   def at?(expected_token_name); end
 
   # token_value works for when the scanner matched something
   # which is usually fine and it's good for it to be fast at that.
   #
-  # source://graphql//lib/graphql/language/parser.rb#720
+  # source://graphql//lib/graphql/language/parser.rb#731
   def debug_token_value; end
 
-  # source://graphql//lib/graphql/language/parser.rb#76
+  # source://graphql//lib/graphql/language/parser.rb#78
   def definition; end
 
   # source://graphql//lib/graphql/language/parser.rb#63
   def document; end
 
-  # source://graphql//lib/graphql/language/parser.rb#695
+  # source://graphql//lib/graphql/language/parser.rb#706
   def expect_one_of(token_names); end
 
-  # source://graphql//lib/graphql/language/parser.rb#688
+  # source://graphql//lib/graphql/language/parser.rb#699
   def expect_token(expected_token_name); end
 
   # Only use when we care about the expected token's value
   #
-  # source://graphql//lib/graphql/language/parser.rb#712
+  # source://graphql//lib/graphql/language/parser.rb#723
   def expect_token_value(tok); end
 
-  # source://graphql//lib/graphql/language/parser.rb#439
+  # source://graphql//lib/graphql/language/parser.rb#441
   def list_type; end
 
-  # source://graphql//lib/graphql/language/parser.rb#393
+  # source://graphql//lib/graphql/language/parser.rb#395
   def parse_argument_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#610
+  # source://graphql//lib/graphql/language/parser.rb#621
   def parse_arguments; end
 
-  # source://graphql//lib/graphql/language/parser.rb#593
+  # source://graphql//lib/graphql/language/parser.rb#604
   def parse_directives; end
 
   # Any identifier, but not true, false, or null
   #
-  # source://graphql//lib/graphql/language/parser.rb#581
+  # source://graphql//lib/graphql/language/parser.rb#592
   def parse_enum_name; end
 
-  # source://graphql//lib/graphql/language/parser.rb#326
+  # source://graphql//lib/graphql/language/parser.rb#328
   def parse_enum_value_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#374
+  # source://graphql//lib/graphql/language/parser.rb#376
   def parse_field_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#359
+  # source://graphql//lib/graphql/language/parser.rb#361
   def parse_implements; end
 
-  # source://graphql//lib/graphql/language/parser.rb#312
+  # source://graphql//lib/graphql/language/parser.rb#314
   def parse_input_object_field_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#407
+  # source://graphql//lib/graphql/language/parser.rb#409
   def parse_input_value_definition; end
 
-  # source://graphql//lib/graphql/language/parser.rb#512
+  # source://graphql//lib/graphql/language/parser.rb#514
   def parse_name; end
 
-  # source://graphql//lib/graphql/language/parser.rb#572
+  # source://graphql//lib/graphql/language/parser.rb#583
   def parse_name_without_on; end
 
-  # source://graphql//lib/graphql/language/parser.rb#447
+  # source://graphql//lib/graphql/language/parser.rb#449
   def parse_operation_type; end
 
-  # source://graphql//lib/graphql/language/parser.rb#589
+  # source://graphql//lib/graphql/language/parser.rb#600
   def parse_type_name; end
 
-  # source://graphql//lib/graphql/language/parser.rb#345
+  # source://graphql//lib/graphql/language/parser.rb#347
   def parse_union_members; end
 
   # source://graphql//lib/graphql/language/parser.rb#59
@@ -5071,13 +5051,13 @@ class GraphQL::Language::Parser
 
   # @raise [GraphQL::ParseError]
   #
-  # source://graphql//lib/graphql/language/parser.rb#699
+  # source://graphql//lib/graphql/language/parser.rb#710
   def raise_parse_error(message); end
 
-  # source://graphql//lib/graphql/language/parser.rb#461
+  # source://graphql//lib/graphql/language/parser.rb#463
   def selection_set; end
 
-  # source://graphql//lib/graphql/language/parser.rb#630
+  # source://graphql//lib/graphql/language/parser.rb#641
   def string_value; end
 
   # Returns the value of attribute token_name.
@@ -5085,10 +5065,10 @@ class GraphQL::Language::Parser
   # source://graphql//lib/graphql/language/parser.rb#53
   def token_name; end
 
-  # source://graphql//lib/graphql/language/parser.rb#424
+  # source://graphql//lib/graphql/language/parser.rb#426
   def type; end
 
-  # source://graphql//lib/graphql/language/parser.rb#636
+  # source://graphql//lib/graphql/language/parser.rb#647
   def value; end
 
   class << self
