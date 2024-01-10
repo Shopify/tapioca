@@ -76,7 +76,7 @@ module Tapioca
         def argument_type(argument, constant)
           return "T.untyped" unless argument
 
-          Helpers::GraphqlTypeHelper.type_for(argument, constant)
+          Helpers::GraphqlTypeHelper.type_for_argument(argument, constant)
         end
 
         class << self
