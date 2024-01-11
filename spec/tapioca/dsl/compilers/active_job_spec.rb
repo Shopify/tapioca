@@ -115,6 +115,36 @@ module Tapioca
               RBI
               assert_equal(expected, rbi_for(:NotifyJob))
             end
+
+            it "generates correct RBI file for subclass with block argument" do
+              add_ruby_file("job.rb", <<~RUBY)
+                class NotifyJob < ActiveJob::Base
+                  def perform(user_id, &blk)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class NotifyJob
+                  class << self
+                <% if rails_version(">= 7.0") %>
+                    sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    def perform_later(user_id, &block); end
+                <% else %>
+                    sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
+                    def perform_later(user_id); end
+                <% end %>
+
+                    sig { params(user_id: T.untyped).returns(T.untyped) }
+                    def perform_now(user_id); end
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:NotifyJob))
+            end
           end
         end
       end

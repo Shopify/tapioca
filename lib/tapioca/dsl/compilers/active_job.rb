@@ -83,6 +83,7 @@ module Tapioca
         end
         def perform_later_parameters(parameters, constant_name)
           if ::Gem::Requirement.new(">= 7.0").satisfied_by?(::ActiveJob.gem_version)
+            parameters.reject! { |typed_param| RBI::BlockParam === typed_param.param }
             parameters + [create_block_param(
               "block",
               type: "T.nilable(T.proc.params(job: #{constant_name}).void)",
