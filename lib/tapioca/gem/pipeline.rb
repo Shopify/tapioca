@@ -391,6 +391,7 @@ module Tapioca
       def skip_alias?(name, constant)
         return true if symbol_in_payload?(name)
         return true unless constant_in_gem?(name)
+        return true if has_aliased_namespace?(name)
 
         false
       end

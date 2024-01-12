@@ -255,6 +255,23 @@ module Tapioca
       def method_defined_by_forwardable_module?(method)
         method.source_location&.first == Object.const_source_location(:Forwardable)&.first
       end
+
+      sig { params(name: String).returns(T::Boolean) }
+      def has_aliased_namespace?(name)
+        name_parts = name.split("::")
+        name_parts.pop # drop the constant name, leaving just the namespace
+
+        name_parts.each_with_object([]) do |name_part, namespaces|
+          namespaces << "#{namespaces.last}::#{name_part}".delete_prefix("::")
+        end.any? do |namespace|
+          constant = constantize(namespace)
+          next unless Module === constant
+
+          # If the constant name doesn't match the namespace,
+          # the namespace must contain an alias
+          name_of(constant) != namespace
+        end
+      end
     end
   end
 end
