@@ -224,7 +224,6 @@ module Tapioca
         def create_aliased_fetch_by_methods(field, klass)
           type, _ = Helpers::ActiveRecordColumnTypeHelper.new(constant).type_for(field.alias_name.to_s)
           multi_type = type.delete_prefix("T.nilable(").delete_suffix(")").delete_prefix("::")
-          length = field.key_fields.length
           suffix = field.send(:fetch_method_suffix)
 
           parameters = field.key_fields.map do |arg|
@@ -238,14 +237,12 @@ module Tapioca
             return_type: type,
           )
 
-          if length == 1
-            klass.create_method(
-              "fetch_multi_#{suffix}",
-              class_method: true,
-              parameters: [create_param("keys", type: "T::Enumerable[T.untyped]")],
-              return_type: COLLECTION_TYPE.call(multi_type),
-            )
-          end
+          klass.create_method(
+            "fetch_multi_#{suffix}",
+            class_method: true,
+            parameters: [create_param("keys", type: "T::Enumerable[T.untyped]")],
+            return_type: COLLECTION_TYPE.call(multi_type),
+          )
         end
       end
     end

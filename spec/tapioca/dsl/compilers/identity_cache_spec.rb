@@ -171,6 +171,48 @@ module Tapioca
               assert_equal(expected, rbi_for(:Post))
             end
 
+            it "generates multiple methods for cache_index with multiple fields" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :posts do |t|
+                      t.integer :blog_id
+                      t.string :title
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                  include IdentityCache
+                  cache_index :blog_id, :title
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Post
+                  class << self
+                    sig { params(blog_id: T.untyped, title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+                    def fetch_by_blog_id_and_title(blog_id, title, includes: nil); end
+
+                    sig { params(blog_id: T.untyped, title: T.untyped).returns(T.nilable(::Integer)) }
+                    def fetch_id_by_blog_id_and_title(blog_id, title); end
+
+                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    def fetch_multi_by_blog_id_and_title(index_values, includes: nil); end
+
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    def fetch_multi_id_by_blog_id_and_title(keys); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Post))
+            end
+
             it "generates methods for combined cache_indexes" do
               add_ruby_file("schema.rb", <<~RUBY)
                 ActiveRecord::Migration.suppress_messages do
@@ -219,6 +261,9 @@ module Tapioca
 
                     sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_title(keys); end
+
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    def fetch_multi_id_by_title_and_review_date(keys); end
                   end
                 end
               RBI
@@ -365,6 +410,7 @@ module Tapioca
                   include IdentityCache
 
                   cache_attribute :author, by: :id
+                  cache_attribute :author, by: [:id, :author]
                 end
               RUBY
 
@@ -376,8 +422,14 @@ module Tapioca
                     sig { params(id: T.untyped).returns(T.nilable(::String)) }
                     def fetch_author_by_id(id); end
 
+                    sig { params(id: T.untyped, author: T.untyped).returns(T.nilable(::String)) }
+                    def fetch_author_by_id_and_author(id, author); end
+
                     sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
                     def fetch_multi_author_by_id(keys); end
+
+                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
+                    def fetch_multi_author_by_id_and_author(keys); end
                   end
                 end
               RBI
