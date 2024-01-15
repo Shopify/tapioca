@@ -1371,7 +1371,7 @@ module Tapioca
             RB
 
             @project.require_real_gem("rake", "13.0.6")
-            @project.require_real_gem("activerecord")
+            @project.require_real_gem("activerecord", require: "active_record")
             @project.bundle_install!
           end
 
