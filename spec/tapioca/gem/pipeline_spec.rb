@@ -436,6 +436,245 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_includes(compiled, output)
     end
 
+    it "must do mixin attribution properly when include occurs in other gem" do
+      mock_gem("some_engine") do
+        add_ruby_file("lib/some_engine.rb", <<~RUBY)
+          require "action_controller"
+
+          module SomeEngine
+            class SomeController < ActionController::Base
+              # This method triggers a dynamic mixin which should be attributed to this gem
+              # and not actionpack, even though the real `include` happens inside actionpack
+              helper_method :foo
+            end
+          end
+        RUBY
+      end
+
+      output = template(<<~RBI)
+        module SomeEngine; end
+
+        class SomeEngine::SomeController < ::ActionController::Base
+          private
+
+          def _layout(lookup_context, formats); end
+
+          class << self
+            def _helper_methods; end
+            def middleware_stack; end
+          end
+        end
+
+        module SomeEngine::SomeController::HelperMethods
+          include ::ActionController::Base::HelperMethods
+
+        <% if ruby_version(">= 3.1") %>
+          def foo(*args, **_arg1, &block); end
+        <% else %>
+          def foo(*args, &block); end
+        <% end %>
+        end
+      RBI
+
+      assert_equal(output, compile("some_engine"))
+    end
+
+    it "must generate RBIs for constants defined in a different gem but with mixins in this gem" do
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RBI)
+          class Foo
+            def baz; end
+            def buzz; end
+          end
+        RBI
+      end
+
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RBI)
+          module Bar; end
+
+          Foo.prepend(Bar)
+        RBI
+      end
+
+      output = <<~RBI
+        module Bar; end
+
+        class Foo
+          include ::Bar
+        end
+      RBI
+
+      assert_equal(output, compile("bar"))
+    end
+
+    it "must not generate RBIs for constants that have dynamic mixins performed in other gems" do
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RBI)
+          module Bar; end
+        RBI
+      end
+
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RBI)
+          class Foo; end
+          String.prepend(Bar)
+        RBI
+      end
+
+      output = <<~RBI
+        module Bar; end
+      RBI
+
+      assert_equal(output, compile("bar"))
+    end
+
+    it "must generate RBIs for constants that have dynamic mixins performed in the gem" do
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RBI)
+          class Bar
+            def bar; end
+          end
+        RBI
+      end
+
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RBI)
+          module Foo; end
+          class Baz < Bar; end
+
+          Bar.prepend(Foo)
+        RBI
+      end
+
+      output = <<~RBI
+        class Bar
+          include ::Foo
+        end
+
+        class Baz < ::Bar; end
+        module Foo; end
+      RBI
+
+      assert_equal(output, compile("foo"))
+    end
+
+    it "must generate RBIs for foreign constants whose singleton class overrides #inspect" do
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RBI)
+          class Bar
+            def self.inspect
+              "Override!"
+            end
+          end
+        RBI
+      end
+
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RBI)
+          module Foo; end
+
+          Bar.singleton_class.include(Foo)
+        RBI
+      end
+
+      output = <<~RBI
+        class Bar
+          extend ::Foo
+        end
+
+        module Foo; end
+      RBI
+
+      assert_equal(output, compile("foo"))
+    end
+
+    it "generates documentation only for the gem that defines it" do
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RB)
+          # Most objects are cloneable
+          class Object
+            def foo; end
+          end
+        RB
+      end
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RB)
+          class Object
+            def bar; end
+          end
+        RB
+      end
+      mock_gem("baz") do
+        add_ruby_file("lib/baz.rb", <<~RB)
+          def baz; end
+        RB
+      end
+
+      documentation = <<~RBI
+        # Most objects are cloneable
+      RBI
+
+      assert_includes(compile("foo", include_doc: true), documentation)
+      refute_includes(compile("bar", include_doc: true), documentation)
+      refute_includes(compile("baz", include_doc: true), documentation)
+    end
+
+    it "does not generate RBI if namespace contains alias from different gem" do
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RB)
+          module Foo; end
+          F = Foo
+        RB
+      end
+
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RB)
+          module Foo
+            module Bar; end
+          end
+          F::B = Foo::Bar
+        RB
+      end
+
+      assert_equal(<<~RBI, compile("foo"))
+        F = Foo
+        module Foo; end
+      RBI
+
+      assert_equal(<<~RBI, compile("bar"))
+        module Foo; end
+        Foo::B = Foo::Bar
+        module Foo::Bar; end
+      RBI
+    end
+
+    it "must do mixin attribution properly" do
+      # This is pattern is taken from the private `typed_parameters` gem.
+      add_ruby_file("lib/typed_parameters.rb", <<~RUBY)
+        require "action_controller"
+
+        module TypedParameters
+        end
+
+        # This dynamic mixin should be generated in the gem RBI
+        ActionController::Parameters.include(TypedParameters)
+      RUBY
+
+      # actionpack RBI should have nothing in it about `TypedParameters`
+      refute_includes(compile("actionpack"), "TypedParameters")
+
+      output = <<~RBI
+        class ActionController::Parameters
+          include ::TypedParameters
+        end
+
+        module TypedParameters; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles mixins in the correct order" do
       add_ruby_file("bar.rb", <<~RUBY)
         module ModuleA
