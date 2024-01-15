@@ -199,8 +199,9 @@ module Tapioca
                   argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range", prepare: :prepare_dates
                   argument :max, GraphQL::Types::ISO8601Date, "Maximum value of the range", prepare: :prepare_dates_void
                   argument :other, GraphQL::Types::ISO8601Date, "Some value of the range ", prepare: :prepare_dates_untyped
+                  argument :proc, GraphQL::Types::ISO8601Date, "Some value of the range ", prepare: ->(value, _ctx) { value }
 
-                  def resolve(min:, max:, other:)
+                  def resolve(min:, max:, other:, proc:)
                     # ...
                   end
                 end
@@ -210,8 +211,8 @@ module Tapioca
                 # typed: strong
 
                 class CreateComment
-                  sig { params(min: T::Range[::Date], max: ::Date, other: ::Date).returns(T.untyped) }
-                  def resolve(min:, max:, other:); end
+                  sig { params(min: T::Range[::Date], max: ::Date, other: ::Date, proc: ::Date).returns(T.untyped) }
+                  def resolve(min:, max:, other:, proc:); end
                 end
               RBI
 
