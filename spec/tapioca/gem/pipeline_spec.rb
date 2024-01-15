@@ -12,34 +12,60 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::Helpers::Test::Isolation
   include Tapioca::SorbetHelper
 
-  describe Tapioca::Gem::Pipeline do
-    sig { params(include_doc: T::Boolean, include_loc: T::Boolean).returns(String) }
-    def compile(include_doc: false, include_loc: false)
-      # create a fake gemspec
-      spec = ::Gem::Specification.new("the-dep", "1.1.2") do |spec|
+  DEFAULT_GEM_NAME = T.let("the-default-gem", String)
+
+  private
+
+  sig { params(gem_name: String, include_doc: T::Boolean, include_loc: T::Boolean).returns(String) }
+  def compile(gem_name = DEFAULT_GEM_NAME, include_doc: false, include_loc: false)
+    mock_gem_path = mock_gems[gem_name]
+
+    # If we are compiling for a mock gem, we need to create a fake gemspec
+    if mock_gem_path
+      spec = ::Gem::Specification.new(gem_name, "1.0.0") do |spec|
         spec.platform = nil
-        spec.full_gem_path = tmp_path
+        spec.full_gem_path = mock_gem_path
         spec.require_paths = ["lib"]
       end
 
-      # add it to the list of gem specification stubs
-      Gem::Specification.stubs[spec.name] = spec
-
-      # wrap it in our gemspec wrapper
-      gem = Tapioca::Gemfile::GemSpec.new(spec)
-
-      # push it through the pipeline
-      tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc, include_loc: include_loc).compile
-
-      # NOTE: This is not returning a `RBI::File`.
-      # The following test suite is based on the string output of the `RBI::Tree` rather
-      # than the, now used, `RBI::File`. The file output includes the sigils, comments, etc.
-      # We should eventually update these tests to be based on the `RBI::File`.
-      Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
-
-      tree.string
+      # add spec to the list of gem specification stubs
+      Gem::Specification.stubs[gem_name] = spec
     end
 
+    # wrap it in our gemspec wrapper
+    gem = Tapioca::Gemfile::GemSpec.new(Gem::Specification.stubs[gem_name].first)
+
+    # push it through the pipeline
+    tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc, include_loc: include_loc).compile
+
+    # NOTE: This is not returning a `RBI::File`.
+    # The following test suite is based on the string output of the `RBI::Tree` rather
+    # than the, now used, `RBI::File`. The file output includes the sigils, comments, etc.
+    # We should eventually update these tests to be based on the `RBI::File`.
+    Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
+
+    tree.string
+  end
+
+  sig { params(gem_name: String, block: T.proc.void).void }
+  def mock_gem(gem_name, &block)
+    current_tmp_path = tmp_path
+
+    @tmp_path = mock_gems.fetch(gem_name) { mock_gems[gem_name] = Dir.mktmpdir }
+
+    block.call
+  ensure
+    @tmp_path = current_tmp_path
+  end
+
+  sig { returns(T::Hash[String, String]) }
+  def mock_gems
+    @gems ||= T.let({}, T.nilable(T::Hash[String, String]))
+    @gems[DEFAULT_GEM_NAME] = tmp_path if @gems.empty?
+    @gems
+  end
+
+  describe Tapioca::Gem::Pipeline do
     before do
       # We need to undefine and unload `ActiveSupport` so that the test object
       # space is as clean as possible.
@@ -4162,57 +4188,57 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       sorbet_runtime_spec = ::Gem::Specification.find_by_name("sorbet-runtime")
 
       output = template(<<~RBI)
-        # source://the-dep//lib/bar.rb#1
+        # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#1
         module Bar
           # Some documentation
           #
-          # source://the-dep//lib/bar.rb#6
+          # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#6
           sig { void }
           def bar; end
 
           def foo1; end
 
-          # source://the-dep//lib/bar.rb#15
+          # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#15
           def foo2; end
 
           class << self
             # Some documentation
             #
-            # source://the-dep//lib/bar.rb#9
+            # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#9
             def bar; end
           end
         end
 
-        # source://the-dep//lib/bar.rb#11
+        # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#11
         Bar::BAR = T.let(T.unsafe(nil), Integer)
 
-        # source://the-dep//lib/foo.rb#23
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#23
         class BasicFoo < ::BasicObject
-          # source://the-dep//lib/foo.rb#27
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#27
           sig { void }
           def foo; end
         end
 
         # @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
         #
-        # source://the-dep//lib/foo.rb#11
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#11
         class Baz
           abstract!
         end
 
-        # source://the-dep//lib/foo.rb#1
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#1
         class Foo; end
 
-        # source://the-dep//lib/foo.rb#6
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#6
         module Foo::Helper
-          # source://the-dep//lib/foo.rb#7
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#7
           def helper_method; end
         end
 
-        # source://the-dep//lib/foo.rb#30
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#30
         class NewClass; end
 
-        # source://the-dep//lib/foo.rb#16
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
         class Quux < ::T::Struct
           class << self
             # source://sorbet-runtime/#{sorbet_runtime_spec.version}/lib/types/struct.rb#13
@@ -4220,11 +4246,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
         end
 
-        # source://the-dep//lib/foo.rb#19
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#19
         class String
           include ::Comparable
 
-          # source://the-dep//lib/foo.rb#20
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#20
           def foo; end
         end
       RBI
