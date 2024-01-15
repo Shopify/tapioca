@@ -71,7 +71,7 @@ module Tapioca
           when GraphQL::Types::ISO8601DateTime.singleton_class
             type_for_constant(Time)
           when GraphQL::Types::JSON.singleton_class
-            "T::Hash[::String, T.untyped]"
+            type_for_constant(String)
           when GraphQL::Schema::Enum.singleton_class
             enum_values = T.cast(unwrapped_type.enum_values, T::Array[GraphQL::Schema::EnumValue])
             value_types = enum_values.map { |v| type_for_constant(v.value.class) }.uniq

@@ -175,19 +175,19 @@ module Tapioca
         it "generates the expected sorbet type expression when using type GraphQL::Types::JSON" do
           type = GraphQL::Types::JSON
           assert_equal(
-            "T.nilable(T::Hash[::String, T.untyped])",
+            "T.nilable(::String)",
             Tapioca::Dsl::Helpers::GraphqlTypeHelper.type_for(type),
           )
           assert_equal(
-            "T.nilable(T::Hash[::String, T.untyped])",
+            "T.nilable(::String)",
             Tapioca::Dsl::Helpers::GraphqlTypeHelper.type_for(GraphQL::Schema::Wrapper.new(type)),
           )
           assert_equal(
-            "T.nilable(T::Array[T::Hash[::String, T.untyped]])",
+            "T.nilable(T::Array[::String])",
             Tapioca::Dsl::Helpers::GraphqlTypeHelper.type_for(GraphQL::Schema::List.new(type)),
           )
           assert_equal(
-            "T::Hash[::String, T.untyped]",
+            "::String",
             Tapioca::Dsl::Helpers::GraphqlTypeHelper.type_for(GraphQL::Schema::NonNull.new(type)),
           )
         end
