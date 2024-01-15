@@ -2505,7 +2505,7 @@ module Tapioca
           @project.tapioca("configure")
           @project.require_real_gem("smart_properties")
           @project.require_real_gem("sidekiq")
-          @project.require_real_gem("activerecord")
+          @project.require_real_gem("activerecord", require: "active_record")
           @project.bundle_install!
 
           @project.write!("lib/compilers/post_compiler.rb", <<~RB)
@@ -2527,6 +2527,7 @@ module Tapioca
             Loaded DSL compiler classes:
 
               PostCompiler                                                 enabled
+              Tapioca::Dsl::Compilers::ActionText                          enabled
               Tapioca::Dsl::Compilers::ActiveModelAttributes               enabled
               Tapioca::Dsl::Compilers::ActiveModelSecurePassword           enabled
               Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmation  enabled
@@ -2534,6 +2535,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordColumns                 enabled
               Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes          enabled
               Tapioca::Dsl::Compilers::ActiveRecordEnum                    enabled
+              Tapioca::Dsl::Compilers::ActiveRecordFixtures                enabled
               Tapioca::Dsl::Compilers::ActiveRecordRelations               enabled
               Tapioca::Dsl::Compilers::ActiveRecordScope                   enabled
               Tapioca::Dsl::Compilers::ActiveRecordSecureToken             enabled
@@ -2560,6 +2562,7 @@ module Tapioca
             Loaded DSL compiler classes:
 
               PostCompiler                                                 enabled
+              Tapioca::Dsl::Compilers::ActionText                          enabled
               Tapioca::Dsl::Compilers::ActiveModelAttributes               enabled
               Tapioca::Dsl::Compilers::ActiveModelSecurePassword           enabled
               Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmation  enabled
@@ -2567,6 +2570,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordColumns                 enabled
               Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes          enabled
               Tapioca::Dsl::Compilers::ActiveRecordEnum                    disabled
+              Tapioca::Dsl::Compilers::ActiveRecordFixtures                enabled
               Tapioca::Dsl::Compilers::ActiveRecordRelations               enabled
               Tapioca::Dsl::Compilers::ActiveRecordScope                   enabled
               Tapioca::Dsl::Compilers::ActiveRecordSecureToken             enabled
@@ -2593,6 +2597,7 @@ module Tapioca
             Loaded DSL compiler classes:
 
               PostCompiler                                                 disabled
+              Tapioca::Dsl::Compilers::ActionText                          disabled
               Tapioca::Dsl::Compilers::ActiveModelAttributes               disabled
               Tapioca::Dsl::Compilers::ActiveModelSecurePassword           disabled
               Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmation  disabled
@@ -2600,6 +2605,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordColumns                 disabled
               Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypes          disabled
               Tapioca::Dsl::Compilers::ActiveRecordEnum                    enabled
+              Tapioca::Dsl::Compilers::ActiveRecordFixtures                disabled
               Tapioca::Dsl::Compilers::ActiveRecordRelations               disabled
               Tapioca::Dsl::Compilers::ActiveRecordScope                   disabled
               Tapioca::Dsl::Compilers::ActiveRecordSecureToken             disabled
