@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class MixedInClassAttributesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::MixedInClassAttributes" do
+          sig { void }
+          def before_setup
+            require "active_support/core_ext/class/attribute"
+          end
+
           before do
             require "active_support/core_ext/class/attribute"
             require "active_support/concern"

@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActiveResourceSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveResource" do
+          sig { void }
+          def before_setup
+            require "active_resource"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no ActiveResource classes" do
               assert_empty(gathered_constants)

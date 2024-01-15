@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class GraphqlInputObjectSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::GraphqlInputObject" do
+          sig { void }
+          def before_setup
+            require "graphql"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no GraphQL::Schema::InputObject subclasses" do
               assert_empty(gathered_constants)

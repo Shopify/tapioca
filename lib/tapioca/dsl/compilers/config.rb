@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "config"
-rescue LoadError
-  return
-end
+return unless defined?(Config)
 
 module Tapioca
   module Dsl

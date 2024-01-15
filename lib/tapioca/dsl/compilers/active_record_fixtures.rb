@@ -1,14 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "rails"
-  require "active_record"
-  require "active_record/fixtures"
-  require "active_support/test_case"
-rescue LoadError
-  return
-end
+return unless defined?(Rails) && defined?(ActiveSupport::TestCase) && defined?(ActiveRecord::TestFixtures)
 
 module Tapioca
   module Dsl
@@ -62,7 +55,7 @@ module Tapioca
 
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
-            return [] unless Rails.application
+            return [] unless defined?(Rails.application) && Rails.application
 
             [ActiveSupport::TestCase]
           end

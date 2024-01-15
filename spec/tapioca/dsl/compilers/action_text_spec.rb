@@ -8,10 +8,14 @@ module Tapioca
     module Compilers
       class ActionTextSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActionText" do
+          sig { void }
+          def before_setup
+            require "active_record"
+            require "action_text"
+          end
+
           before do
             add_ruby_file("require.rb", <<~RUBY)
-              require "active_record"
-              require "action_text"
               ::ActiveRecord::Base.include(::ActionText::Attribute)
               ::ActiveRecord::Base.prepend(::ActionText::Encryption) if defined?(::ActionText::Encryption)
             RUBY

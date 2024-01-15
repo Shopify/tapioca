@@ -8,6 +8,13 @@ module Tapioca
     module Compilers
       class UrlHelpersSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::UrlHelper" do
+          sig { void }
+          def before_setup
+            require "rails"
+            require "action_controller"
+            require "action_view"
+          end
+
           describe "initialize" do
             it "does not gather constants when url_helpers is not included" do
               add_ruby_file("content.rb", <<~RUBY)

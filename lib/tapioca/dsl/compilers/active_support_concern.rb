@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_support"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveSupport::Concern)
 
 module Tapioca
   module Dsl

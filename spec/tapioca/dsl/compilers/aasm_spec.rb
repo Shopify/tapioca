@@ -8,6 +8,12 @@ module Tapioca
     module Compilers
       class AASMSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::AASM" do
+          sig { void }
+          def before_setup
+            require "active_record"
+            require "aasm"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no classes that include AASM" do
               assert_empty(gathered_constants)

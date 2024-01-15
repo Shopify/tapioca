@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActiveModelSecurePasswordSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveModelSecurePasswordSpec" do
+          sig { void }
+          def before_setup
+            require "active_model"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no classes using ActiveModel::SecurePassword" do
               assert_empty(gathered_constants)

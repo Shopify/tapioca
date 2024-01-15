@@ -1,11 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
-begin
-  require "kredis"
-rescue LoadError
-  return
-end
+return unless defined?(Kredis::Attributes::ClassMethods)
 
 module Tapioca
   module Dsl

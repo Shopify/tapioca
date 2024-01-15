@@ -1,13 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_record"
-rescue LoadError
-  # means ActiveRecord is not installed,
-  # so let's not even define the compiler.
-  return
-end
+return unless defined?(ActiveRecord::Base)
 
 module Tapioca
   module Dsl

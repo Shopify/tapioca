@@ -10,6 +10,11 @@ module Tapioca
         extend Tapioca::Helpers::Test::Template
 
         describe "Tapioca::Dsl::Compilers::ActiveRecordColumns" do
+          sig { void }
+          def before_setup
+            require "active_record"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no ActiveRecord subclasses" do
               assert_empty(gathered_constants)

@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActiveSupportConcernSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveSupportConcern" do
+          sig { void }
+          def before_setup
+            require "active_support"
+          end
+
           describe "gather_constants" do
             it "does not gather anonymous constants" do
               add_ruby_file("test_case.rb", <<~RUBY)

@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_job"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveJob::Base)
 
 module Tapioca
   module Dsl

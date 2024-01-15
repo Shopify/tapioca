@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActionControllerHelpersSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActionControllerHelpers" do
+          sig { void }
+          def before_setup
+            require "action_controller"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no  classes" do
               assert_empty(gathered_constants)

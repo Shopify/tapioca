@@ -1,13 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "activerecord-typedstore"
-rescue LoadError
-  # means ActiveRecord::TypedStore is not installed,
-  # so let's not even define the compiler.
-  return
-end
+return unless defined?(ActiveRecord::Base) && defined?(ActiveRecord::TypedStore)
 
 module Tapioca
   module Dsl

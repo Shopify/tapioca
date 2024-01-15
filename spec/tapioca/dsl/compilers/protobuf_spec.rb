@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ProtobufSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::Protobuf" do
+          sig { void }
+          def before_setup
+            require "google/protobuf"
+          end
+
           describe "gather_constants" do
             it "gathers no constants if there are no Google::Protobuf classes" do
               add_ruby_file("content.rb", <<~RUBY)

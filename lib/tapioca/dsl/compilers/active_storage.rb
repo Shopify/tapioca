@@ -1,12 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_storage"
-  require "active_storage/reflection"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)
 
 module Tapioca
   module Dsl

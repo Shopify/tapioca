@@ -1,13 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "rails"
-  require "action_controller"
-  require "action_view"
-rescue LoadError
-  return
-end
+return unless defined?(Rails) && defined?(ActionDispatch::IntegrationTest) && defined?(ActionView::Helpers)
 
 module Tapioca
   module Dsl

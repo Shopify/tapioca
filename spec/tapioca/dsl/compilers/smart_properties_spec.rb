@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class SmartPropertiesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::SmartProperties" do
+          sig { void }
+          def before_setup
+            require "smart_properties"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no SmartProperty classes" do
               assert_empty(gathered_constants)

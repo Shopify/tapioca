@@ -8,6 +8,12 @@ module Tapioca
     module Compilers
       class RailsGeneratorsSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::RailsGenerators" do
+          sig { void }
+          def before_setup
+            require "rails/generators"
+            require "rails/generators/app_base"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no Rails generator classes" do
               assert_empty(gathered_constants)

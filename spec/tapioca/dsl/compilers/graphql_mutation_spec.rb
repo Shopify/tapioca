@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class GraphqlMutationSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::GraphqlMutation" do
+          sig { void }
+          def before_setup
+            require "graphql"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no GraphQL::Schema::Mutation subclasses" do
               assert_empty(gathered_constants)

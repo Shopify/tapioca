@@ -8,6 +8,12 @@ module Tapioca
     module Compilers
       class ActiveRecordFixturesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordFixtures" do
+          sig { void }
+          def before_setup
+            require "active_record"
+            require "active_record/fixtures"
+          end
+
           describe "without a Rails app" do
             it "gathers nothing if not in a Rails application" do
               add_ruby_file("post_test.rb", <<~RUBY)
@@ -24,18 +30,12 @@ module Tapioca
 
           describe "with a Rails app" do
             before do
-              require "active_record"
               require "rails"
 
               define_fake_rails_app
             end
 
             it "gathers only the ActiveSupport::TestCase base class" do
-              require "active_record"
-              require "rails"
-
-              define_fake_rails_app
-
               add_ruby_file("post_test.rb", <<~RUBY)
                 class PostTest < ActiveSupport::TestCase
                 end

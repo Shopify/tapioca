@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActionMailerSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActionMailer" do
+          sig { void }
+          def before_setup
+            require "action_mailer"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no ActionMailer subclasses" do
               assert_empty(gathered_constants)

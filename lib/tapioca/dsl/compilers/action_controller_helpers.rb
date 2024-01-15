@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "action_controller"
-rescue LoadError
-  return
-end
+return unless defined?(ActionController::Base)
 
 module Tapioca
   module Dsl

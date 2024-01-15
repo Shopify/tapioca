@@ -10,6 +10,11 @@ module Tapioca
         include Tapioca::SorbetHelper
 
         describe "Tapioca::Dsl::Compilers::ActiveRecordRelations" do
+          sig { void }
+          def before_setup
+            require "active_record"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no ActiveRecord classes" do
               assert_empty(gathered_constants)

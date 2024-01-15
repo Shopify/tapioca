@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_resource"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveResource::Base)
 
 module Tapioca
   module Dsl

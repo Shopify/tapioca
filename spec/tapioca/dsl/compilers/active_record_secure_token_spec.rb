@@ -10,6 +10,7 @@ module Tapioca
         describe "Tapioca::Dsl::Compilers::ActiveRecordSecureTokenSpec" do
           sig { void }
           def before_setup
+            require "active_record"
             require "tapioca/dsl/extensions/active_record"
           end
 

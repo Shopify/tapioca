@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActiveModelAttributesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveModelAttributes" do
+          sig { void }
+          def before_setup
+            require "active_model"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no classes using ActiveModel::Attributes" do
               assert_empty(gathered_constants)

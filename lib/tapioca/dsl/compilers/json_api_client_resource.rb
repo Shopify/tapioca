@@ -1,13 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "json_api_client"
-rescue LoadError
-  # means JsonApiClient is not installed,
-  # so let's not even define the compiler.
-  return
-end
+return unless defined?(JsonApiClient::Resource)
 
 module Tapioca
   module Dsl

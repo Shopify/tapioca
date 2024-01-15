@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "sidekiq"
-rescue LoadError
-  return
-end
+return unless defined?(Sidekiq::Worker)
 
 module Tapioca
   module Dsl

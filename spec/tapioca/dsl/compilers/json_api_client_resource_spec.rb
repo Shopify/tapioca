@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class JsonApiClientResourceSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::JsonApiClientResource" do
+          sig { void }
+          def before_setup
+            require "json_api_client"
+          end
+
           describe "#initialize" do
             it "gathers no constants if there are no Resource classes" do
               assert_empty(gathered_constants)

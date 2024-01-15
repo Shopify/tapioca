@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "action_mailer"
-rescue LoadError
-  return
-end
+return unless defined?(ActionMailer::Base)
 
 module Tapioca
   module Dsl
