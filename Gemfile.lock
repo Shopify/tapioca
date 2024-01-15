@@ -196,7 +196,9 @@ GEM
       activemodel
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.1)
+    google-protobuf (3.25.1-arm64-darwin)
+    google-protobuf (3.25.1-x86_64-darwin)
+    google-protobuf (3.25.1-x86_64-linux)
     graphql (2.2.4)
       racc (~> 1.4)
     hashdiff (1.0.1)
@@ -252,7 +254,7 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.4.0)
+    net-smtp (0.4.0.1)
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.0)
@@ -432,7 +434,7 @@ DEPENDENCIES
   minitest
   minitest-hooks
   minitest-reporters
-  net-smtp (= 0.4.0)
+  net-smtp (= 0.4.0.1)
   nokogiri
   pry
   pry-byebug
