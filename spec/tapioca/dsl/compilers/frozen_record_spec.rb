@@ -11,8 +11,9 @@ module Tapioca
           sig { void }
           def before_setup
             require "rails/railtie"
-            require "frozen_record"
             require "tapioca/dsl/extensions/frozen_record"
+            require "frozen_record"
+            ActiveSupport.run_load_hooks(:before_configuration)
           end
 
           describe "initialize" do
