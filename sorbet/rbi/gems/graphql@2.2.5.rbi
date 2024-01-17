@@ -1258,14 +1258,6 @@ class GraphQL::DateEncodingError < ::GraphQL::RuntimeTypeError
   def date_value; end
 end
 
-# source://graphql//lib/graphql/deprecation.rb#4
-module GraphQL::Deprecation
-  class << self
-    # source://graphql//lib/graphql/deprecation.rb#5
-    def warn(message); end
-  end
-end
-
 # source://graphql//lib/graphql/dig.rb#3
 module GraphQL::Dig
   # implemented using the old activesupport #dig instead of the ruby built-in
@@ -9071,7 +9063,7 @@ end
 #   #   ONIONS
 #   #   PEPPERS
 #   # }
-#   class PizzaTopping < GraphQL::Enum
+#   class PizzaTopping < GraphQL::Schema::Enum
 #   value :MUSHROOMS
 #   value :ONIONS
 #   value :PEPPERS
