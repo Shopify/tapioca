@@ -3062,6 +3062,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :baz, T::Hash[String, T.untyped]
           prop :quux, T.untyped, default: [1, 2, 3]
           const :quuz, Integer, factory: -> { 1 }
+          prop :fuzz, T.proc.returns(String), default: -> { "" }
+          prop :buzz, T.proc.void, factory: -> { 42 }
         end
       RUBY
 
@@ -3236,6 +3238,8 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :baz, T::Hash[::String, T.untyped]
           prop :quux, T.untyped, default: T.unsafe(nil)
           const :quuz, ::Integer, default: T.unsafe(nil)
+          prop :fuzz, T.proc.returns(::String), default: T.unsafe(nil)
+          prop :buzz, T.proc.void, default: T.unsafe(nil)
 
           class << self
             def inherited(s); end

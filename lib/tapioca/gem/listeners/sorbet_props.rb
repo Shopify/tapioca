@@ -6,6 +6,7 @@ module Tapioca
     module Listeners
       class SorbetProps < Base
         extend T::Sig
+        include RBIHelper
 
         private
 
@@ -17,7 +18,7 @@ module Tapioca
           return unless T::Props::ClassMethods === constant
 
           constant.props.map do |name, prop|
-            type = prop.fetch(:type_object, "T.untyped").to_s.gsub(".returns(<VOID>)", ".void")
+            type = sanitize_signature_types(prop.fetch(:type_object, "T.untyped").to_s)
 
             default = prop.key?(:default) || prop.key?(:factory) ? "T.unsafe(nil)" : nil
             node << if prop.fetch(:immutable, false)
