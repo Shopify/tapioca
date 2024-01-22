@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-return unless defined?(Rails) && defined?(ActionDispatch::IntegrationTest) && defined?(ActionView::Helpers)
+return unless defined?(Rails) && defined?(ActionDispatch::Routing)
 
 module Tapioca
   module Dsl
@@ -96,19 +96,11 @@ module Tapioca
           end
         end
 
-        NON_DISCOVERABLE_INCLUDERS = T.let(
-          [
-            ActionDispatch::IntegrationTest,
-            ActionView::Helpers,
-          ],
-          T::Array[Module],
-        )
-
         class << self
           extend T::Sig
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
-            return [] unless Rails.application
+            return [] unless defined?(Rails.application) && Rails.application
 
             Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
             Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
@@ -125,6 +117,19 @@ module Tapioca
             constants.concat(NON_DISCOVERABLE_INCLUDERS)
           end
 
+          sig { returns(T::Array[Module]) }
+          def gather_non_discoverable_includers
+            [].tap do |includers|
+              if defined?(ActionController::TemplateAssertions) && defined?(ActionDispatch::IntegrationTest)
+                includers << ActionDispatch::IntegrationTest
+              end
+
+              if defined?(ActionView::Helpers)
+                includers << ActionView::Helpers
+              end
+            end.freeze
+          end
+
           sig { params(mod: Module, helper: Module).returns(T::Boolean) }
           private def includes_helper?(mod, helper)
             superclass_ancestors = []
@@ -138,6 +143,8 @@ module Tapioca
             ancestors.any? { |ancestor| helper == ancestor }
           end
         end
+
+        NON_DISCOVERABLE_INCLUDERS = T.let(gather_non_discoverable_includers, T::Array[Module])
 
         private
 
