@@ -70,21 +70,14 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
   end
 
   def load_registry
-    Dir.glob([
-      "lib/tapioca/dsl/compilers/*.rb",
-    ]).each do |compiler|
-      require File.expand_path(compiler)
-    end
+    YARD::Registry.all(:class).filter_map do |code_object|
+      next unless code_object.superclass.to_s == "Tapioca::Dsl::Compiler"
 
-    Tapioca::Runtime::Reflection.descendants_of(Tapioca::Dsl::Compiler)
-      .map do |compiler|
-        code_object = YARD::Registry.at(compiler.name)
-        RegistryEntry.new(code_object.name.to_s, compiler, code_object)
-      end
-      .sort_by(&:name)
+      RegistryEntry.new(code_object.name.to_s, code_object)
+    end.sort_by(&:name)
   end
 
-  RegistryEntry = Struct.new(:name, :compiler, :code_object) do
+  RegistryEntry = Struct.new(:name, :code_object) do
     def filename
       "#{Dir.pwd}/manual/compiler_#{name.downcase}.md"
     end
@@ -107,7 +100,7 @@ task generate_dsl_documentation: :yard_for_generate_documentation do
   end
 
   def main
-    YARD::Registry.load!
+    Dir.glob("lib/tapioca/dsl/{compiler.rb,compilers/**/*.rb}") { |file| YARD.parse(file) }
     registry = load_registry
 
     print_table_of_contents(registry)

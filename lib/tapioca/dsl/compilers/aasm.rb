@@ -1,12 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_record"
-  require "aasm"
-rescue LoadError
-  return
-end
+return unless defined?(AASM)
 
 module Tapioca
   module Dsl

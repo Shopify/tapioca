@@ -1,12 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  gem("graphql", ">= 1.13")
-  require "graphql"
-rescue LoadError
-  return
-end
+return unless defined?(GraphQL::Schema::InputObject)
+return unless Gem::Requirement.new(">= 1.13").satisfied_by?(Gem::Version.new(GraphQL::VERSION))
 
 require "tapioca/dsl/helpers/graphql_type_helper"
 

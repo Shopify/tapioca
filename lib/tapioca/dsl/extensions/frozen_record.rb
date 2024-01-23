@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 begin
-  require "frozen_record"
+  require "active_support"
 rescue LoadError
   return
 end
@@ -21,7 +21,11 @@ module Tapioca
             super
           end
 
-          ::FrozenRecord::Base.singleton_class.prepend(self)
+          ::ActiveSupport.on_load(:before_configuration) do
+            next unless defined?(::FrozenRecord::Base)
+
+            ::FrozenRecord::Base.singleton_class.prepend(::Tapioca::Dsl::Compilers::Extensions::FrozenRecord)
+          end
         end
       end
     end

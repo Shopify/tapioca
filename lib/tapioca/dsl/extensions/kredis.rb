@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 begin
-  require "kredis"
+  require "active_support"
 rescue LoadError
   return
 end
@@ -106,7 +106,11 @@ module Tapioca
             @__tapioca_kredis_types[method.to_s] = { type: type, values: values }
           end
 
-          ::Kredis::Attributes::ClassMethods.prepend(self)
+          ::ActiveSupport.on_load(:before_configuration) do
+            next unless defined?(::Kredis::Attributes::ClassMethods)
+
+            ::Kredis::Attributes::ClassMethods.prepend(::Tapioca::Dsl::Compilers::Extensions::Kredis)
+          end
         end
       end
     end

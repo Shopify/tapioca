@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class UrlHelpersSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::UrlHelper" do
+          sig { void }
+          def before_setup
+            require "rails"
+          end
+
           describe "initialize" do
             it "does not gather constants when url_helpers is not included" do
               add_ruby_file("content.rb", <<~RUBY)
@@ -20,8 +25,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                 ],
@@ -41,8 +44,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                   "MyClass",
@@ -63,8 +64,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                   "MyClass",
@@ -87,8 +86,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                   "MyClass",
@@ -112,8 +109,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                   "SuperClass",
@@ -137,8 +132,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                   "SuperClass",
@@ -163,8 +156,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                   "SuperClass",
@@ -183,8 +174,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                 ],
@@ -215,8 +204,6 @@ module Tapioca
 
               assert_equal(
                 [
-                  "ActionDispatch::IntegrationTest",
-                  "ActionView::Helpers",
                   "GeneratedPathHelpersModule",
                   "GeneratedUrlHelpersModule",
                 ],
@@ -304,40 +291,58 @@ module Tapioca
               assert_equal(expected, rbi_for(:GeneratedUrlHelpersModule))
             end
 
-            it "generates RBI for ActionDispatch::IntegrationTest" do
-              add_ruby_file("routes.rb", <<~RUBY)
-                class Application < Rails::Application
-                end
-              RUBY
+            describe "when Action Controller is loaded" do
+              sig { void }
+              def before_setup
+                require "rails"
+                require "action_controller"
+              end
 
-              expected = <<~RBI
-                # typed: strong
+              it "generates RBI for ActionDispatch::IntegrationTest" do
+                add_ruby_file("routes.rb", <<~RUBY)
+                  class Application < Rails::Application
+                  end
+                RUBY
 
-                class ActionDispatch::IntegrationTest
-                  include GeneratedUrlHelpersModule
-                  include GeneratedPathHelpersModule
-                end
-              RBI
+                expected = <<~RBI
+                  # typed: strong
 
-              assert_equal(expected, rbi_for("ActionDispatch::IntegrationTest"))
+                  class ActionDispatch::IntegrationTest
+                    include GeneratedUrlHelpersModule
+                    include GeneratedPathHelpersModule
+                  end
+                RBI
+
+                assert_equal(expected, rbi_for("ActionDispatch::IntegrationTest"))
+              end
             end
 
-            it "generates RBI for ActionView::Helpers" do
-              add_ruby_file("routes.rb", <<~RUBY)
-                class Application < Rails::Application
-                end
-              RUBY
+            describe "when Action View is loaded" do
+              sig { void }
+              def before_setup
+                require "rails"
+                require "action_view"
+              end
 
-              expected = <<~RBI
-                # typed: strong
+              it "generates RBI for ActionView::Helpers" do
+                add_ruby_file("routes.rb", <<~RUBY)
+                  require "action_view"
 
-                module ActionView::Helpers
-                  include GeneratedUrlHelpersModule
-                  include GeneratedPathHelpersModule
-                end
-              RBI
+                  class Application < Rails::Application
+                  end
+                RUBY
 
-              assert_equal(expected, rbi_for("ActionView::Helpers"))
+                expected = <<~RBI
+                  # typed: strong
+
+                  module ActionView::Helpers
+                    include GeneratedUrlHelpersModule
+                    include GeneratedPathHelpersModule
+                  end
+                RBI
+
+                assert_equal(expected, rbi_for("ActionView::Helpers"))
+              end
             end
 
             it "generates RBI for constant that includes url_helpers" do

@@ -11,6 +11,7 @@ module Tapioca
           sig { void }
           def before_setup
             require "rails/railtie"
+            require "identity_cache"
           end
 
           describe "initialize" do

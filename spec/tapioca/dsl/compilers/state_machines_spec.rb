@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class StateMachinesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::StateMachine" do
+          sig { void }
+          def before_setup
+            require "state_machines"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no StateMachines classes" do
               assert_empty(gathered_constants)

@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActiveModelValidationsConfirmationSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmationSpec" do
+          sig { void }
+          def before_setup
+            require "active_model"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no classes using ActiveModel::Validations" do
               assert_empty(gathered_constants)

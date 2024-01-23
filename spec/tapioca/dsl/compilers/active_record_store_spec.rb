@@ -11,6 +11,7 @@ module Tapioca
           sig { void }
           def before_setup
             require "tapioca/dsl/extensions/active_record"
+            require "active_record"
           end
 
           describe "initialize" do

@@ -1,12 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "rails/generators"
-  require "rails/generators/app_base"
-rescue LoadError
-  return
-end
+return unless defined?(Rails::Generators::Base)
 
 module Tapioca
   module Dsl

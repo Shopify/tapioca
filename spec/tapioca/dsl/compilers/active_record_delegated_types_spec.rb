@@ -11,6 +11,7 @@ module Tapioca
           sig { void }
           def before_setup
             require "tapioca/dsl/extensions/active_record"
+            require "active_record"
           end
 
           describe "initialize" do
@@ -49,8 +50,6 @@ module Tapioca
 
           describe "decorate" do
             before do
-              require "active_record"
-
               ::ActiveRecord::Base.establish_connection(
                 adapter: "sqlite3",
                 database: ":memory:",

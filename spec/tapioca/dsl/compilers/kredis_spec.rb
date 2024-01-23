@@ -8,8 +8,11 @@ module Tapioca
     module Compilers
       class KredisSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::Kredis" do
-          before do
+          sig { void }
+          def before_setup
             require "tapioca/dsl/extensions/kredis"
+            require "kredis"
+            ActiveSupport.run_load_hooks(:before_configuration)
           end
 
           describe "initialize" do

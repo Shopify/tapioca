@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_support/core_ext/class/attribute"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveSupport)
 
 module Tapioca
   module Dsl

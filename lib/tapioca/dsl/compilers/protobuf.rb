@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "google/protobuf"
-rescue LoadError
-  return
-end
+return unless defined?(Google::Protobuf)
 
 module Tapioca
   module Dsl

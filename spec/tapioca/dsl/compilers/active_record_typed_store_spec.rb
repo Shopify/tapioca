@@ -11,6 +11,7 @@ module Tapioca
           sig { void }
           def before_setup
             require "active_record"
+            require "activerecord-typedstore"
           end
 
           describe "initialize" do

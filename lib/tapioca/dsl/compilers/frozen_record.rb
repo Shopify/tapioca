@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "frozen_record"
-rescue LoadError
-  return
-end
+return unless defined?(FrozenRecord::Base)
 
 module Tapioca
   module Dsl

@@ -10,6 +10,7 @@ module Tapioca
         describe "Tapioca::Dsl::Compilers::Config" do
           sig { void }
           def before_setup
+            require "config"
             Object.send(:remove_const, :Rails)
           end
 

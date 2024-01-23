@@ -2,12 +2,18 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "active_support"
 
 module Tapioca
   module Dsl
     module Compilers
       class ActiveSupportCurrentAttributesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes" do
+          sig { void }
+          def before_setup
+            require "active_support"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no ActiveSupport::CurrentAttributes subclasses" do
               assert_empty(gathered_constants)

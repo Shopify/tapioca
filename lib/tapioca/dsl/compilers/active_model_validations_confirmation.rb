@@ -1,11 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "active_model"
-rescue LoadError
-  return
-end
+return unless defined?(ActiveModel::Validations)
 
 module Tapioca
   module Dsl

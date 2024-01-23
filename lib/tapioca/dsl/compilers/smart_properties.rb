@@ -1,13 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "smart_properties"
-rescue LoadError
-  # means SmartProperties is not installed,
-  # so let's not even define the compiler.
-  return
-end
+return unless defined?(SmartProperties)
 
 module Tapioca
   module Dsl

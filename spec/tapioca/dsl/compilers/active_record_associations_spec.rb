@@ -8,6 +8,11 @@ module Tapioca
     module Compilers
       class ActiveRecordAssociationsSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordAssociationsSpec" do
+          sig { void }
+          def before_setup
+            require "active_record"
+          end
+
           describe "initialize" do
             it "gathers no constants if there are no ActiveRecord subclasses" do
               assert_empty(gathered_constants)

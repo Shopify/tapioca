@@ -1,13 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "identity_cache"
-rescue LoadError
-  # means IdentityCache is not installed,
-  # so let's not even define the compiler.
-  return
-end
+return unless defined?(ActiveRecord::Base) && defined?(IdentityCache::WithoutPrimaryIndex)
 
 require "tapioca/dsl/helpers/active_record_column_type_helper"
 

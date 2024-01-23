@@ -1,13 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-begin
-  require "state_machines"
-rescue LoadError
-  # means StateMachines is not installed,
-  # so let's not even define the compiler.
-  return
-end
+return unless defined?(StateMachines)
 
 module Tapioca
   module Dsl
