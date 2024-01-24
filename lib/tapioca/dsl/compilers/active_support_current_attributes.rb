@@ -116,6 +116,8 @@ module Tapioca
 
         sig { params(klass: RBI::Scope, method: String, class_method: T::Boolean).void }
         def generate_method(klass, method, class_method:)
+          # require "debug"
+          # binding.b
           if method.end_with?("=")
             parameter = create_param("value", type: "T.untyped")
             klass.create_method(
@@ -126,6 +128,8 @@ module Tapioca
             )
           else
             # name = name.delete_prefix("&") maybe?
+            require "debug"
+            binding.b
             parameters = [create_param("&block", type: "T.untyped")]
             klass.create_method(
               method,

@@ -63,7 +63,7 @@ module Tapioca
                     sig { params(block: T.untyped).returns(T.untyped) }
                     def account(&block); end
 
-                    sig { returns(T.untyped) }
+                    sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
 
                     sig { params(block: T.untyped).returns(T.untyped) }
@@ -77,7 +77,7 @@ module Tapioca
                     sig { params(block: T.untyped).returns(T.untyped) }
                     def account(&block); end
 
-                    sig { returns(T.untyped) }
+                    sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
 
                     sig { params(block: T.untyped).returns(T.untyped) }
