@@ -125,7 +125,9 @@ module Tapioca
               return_type: "T.untyped",
             )
           else
-            klass.create_method(method, class_method: class_method, return_type: "T.untyped")
+            # name = name.delete_prefix("&") maybe?
+            parameters = [create_param("&block", type: "T.untyped")]
+            klass.create_method(method, parameters: parameters, class_method: class_method, return_type: "T.untyped")
           end
         end
       end
