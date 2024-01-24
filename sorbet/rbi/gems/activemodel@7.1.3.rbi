@@ -2257,7 +2257,7 @@ class ActiveModel::Errors
   #
   # @return [Errors] a new instance of Errors
   #
-  # source://activemodel//lib/active_model/errors.rb#91
+  # source://activemodel//lib/active_model/errors.rb#117
   def initialize(base); end
 
   # When passed a symbol or a name of a method, returns an array of errors
@@ -2266,7 +2266,7 @@ class ActiveModel::Errors
   #   person.errors[:name]  # => ["cannot be nil"]
   #   person.errors['name'] # => ["cannot be nil"]
   #
-  # source://activemodel//lib/active_model/errors.rb#203
+  # source://activemodel//lib/active_model/errors.rb#229
   def [](attribute); end
 
   # Adds a new error of +type+ on +attribute+.
@@ -2319,7 +2319,7 @@ class ActiveModel::Errors
   #   person.errors.details
   #   # => {:base=>[{error: :name_or_email_blank}]}
   #
-  # source://activemodel//lib/active_model/errors.rb#316
+  # source://activemodel//lib/active_model/errors.rb#342
   def add(attribute, type = T.unsafe(nil), **options); end
 
   # Returns +true+ if an error matches provided +attribute+ and +type+,
@@ -2341,7 +2341,7 @@ class ActiveModel::Errors
   #
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/errors.rb#346
+  # source://activemodel//lib/active_model/errors.rb#372
   def added?(attribute, type = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns a Hash that can be used as the JSON representation for this
@@ -2351,7 +2351,7 @@ class ActiveModel::Errors
   #   person.errors.as_json                      # => {:name=>["cannot be nil"]}
   #   person.errors.as_json(full_messages: true) # => {:name=>["name cannot be nil"]}
   #
-  # source://activemodel//lib/active_model/errors.rb#221
+  # source://activemodel//lib/active_model/errors.rb#247
   def as_json(options = T.unsafe(nil)); end
 
   # Returns all error attribute names
@@ -2359,7 +2359,7 @@ class ActiveModel::Errors
   #   person.errors.messages        # => {:name=>["cannot be nil", "must be specified"]}
   #   person.errors.attribute_names # => [:name]
   #
-  # source://activemodel//lib/active_model/errors.rb#211
+  # source://activemodel//lib/active_model/errors.rb#237
   def attribute_names; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -2376,7 +2376,7 @@ class ActiveModel::Errors
   #
   #   person.errors.copy!(other)
   #
-  # source://activemodel//lib/active_model/errors.rb#112
+  # source://activemodel//lib/active_model/errors.rb#138
   def copy!(other); end
 
   # Delete messages for +key+. Returns the deleted messages.
@@ -2385,12 +2385,12 @@ class ActiveModel::Errors
   #   person.errors.delete(:name) # => ["cannot be nil"]
   #   person.errors[:name]        # => []
   #
-  # source://activemodel//lib/active_model/errors.rb#189
+  # source://activemodel//lib/active_model/errors.rb#215
   def delete(attribute, type = T.unsafe(nil), **options); end
 
   # Returns a Hash of attributes with an array of their error details.
   #
-  # source://activemodel//lib/active_model/errors.rb#250
+  # source://activemodel//lib/active_model/errors.rb#276
   def details; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -2402,14 +2402,14 @@ class ActiveModel::Errors
   # The actual array of +Error+ objects
   # This method is aliased to <tt>objects</tt>.
   #
-  # source://activemodel//lib/active_model/errors.rb#81
+  # source://activemodel//lib/active_model/errors.rb#107
   def errors; end
 
   # Returns a full message for a given attribute.
   #
   #   person.errors.full_message(:name, 'is invalid') # => "Name is invalid"
   #
-  # source://activemodel//lib/active_model/errors.rb#425
+  # source://activemodel//lib/active_model/errors.rb#451
   def full_message(attribute, message); end
 
   # Returns all the full error messages in an array.
@@ -2423,7 +2423,7 @@ class ActiveModel::Errors
   #   person.errors.full_messages
   #   # => ["Name is too short (minimum is 5 characters)", "Name can't be blank", "Email can't be blank"]
   #
-  # source://activemodel//lib/active_model/errors.rb#389
+  # source://activemodel//lib/active_model/errors.rb#415
   def full_messages; end
 
   # Returns all the full error messages for a given attribute in an array.
@@ -2437,7 +2437,7 @@ class ActiveModel::Errors
   #   person.errors.full_messages_for(:name)
   #   # => ["Name is too short (minimum is 5 characters)", "Name can't be blank"]
   #
-  # source://activemodel//lib/active_model/errors.rb#404
+  # source://activemodel//lib/active_model/errors.rb#430
   def full_messages_for(attribute); end
 
   # Translates an error message in its default scope
@@ -2465,7 +2465,7 @@ class ActiveModel::Errors
   # * <tt>errors.attributes.title.blank</tt>
   # * <tt>errors.messages.blank</tt>
   #
-  # source://activemodel//lib/active_model/errors.rb#453
+  # source://activemodel//lib/active_model/errors.rb#479
   def generate_message(attribute, type = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns a Hash of attributes with an array of their Error objects.
@@ -2473,7 +2473,7 @@ class ActiveModel::Errors
   #   person.errors.group_by_attribute
   #   # => {:name=>[<#ActiveModel::Error>, <#ActiveModel::Error>]}
   #
-  # source://activemodel//lib/active_model/errors.rb#263
+  # source://activemodel//lib/active_model/errors.rb#289
   def group_by_attribute; end
 
   # Returns +true+ if the error messages include an error for the given key
@@ -2485,7 +2485,7 @@ class ActiveModel::Errors
   #
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/errors.rb#176
+  # source://activemodel//lib/active_model/errors.rb#202
   def has_key?(attribute); end
 
   # Imports one error.
@@ -2498,7 +2498,7 @@ class ActiveModel::Errors
   # * +:attribute+ - Override the attribute the error belongs to.
   # * +:type+ - Override type of the error.
   #
-  # source://activemodel//lib/active_model/errors.rb#128
+  # source://activemodel//lib/active_model/errors.rb#154
   def import(error, override_options = T.unsafe(nil)); end
 
   # Returns +true+ if the error messages include an error for the given key
@@ -2510,10 +2510,10 @@ class ActiveModel::Errors
   #
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/errors.rb#176
+  # source://activemodel//lib/active_model/errors.rb#202
   def include?(attribute); end
 
-  # source://activemodel//lib/active_model/errors.rb#457
+  # source://activemodel//lib/active_model/errors.rb#483
   def inspect; end
 
   # Returns +true+ if the error messages include an error for the given key
@@ -2525,7 +2525,7 @@ class ActiveModel::Errors
   #
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/errors.rb#176
+  # source://activemodel//lib/active_model/errors.rb#202
   def key?(attribute); end
 
   # Merges the errors from <tt>other</tt>,
@@ -2539,12 +2539,12 @@ class ActiveModel::Errors
   #
   #   person.errors.merge!(other)
   #
-  # source://activemodel//lib/active_model/errors.rb#148
+  # source://activemodel//lib/active_model/errors.rb#174
   def merge!(other); end
 
   # Returns a Hash of attributes with an array of their error messages.
   #
-  # source://activemodel//lib/active_model/errors.rb#242
+  # source://activemodel//lib/active_model/errors.rb#268
   def messages; end
 
   # Returns all the error messages for a given attribute in an array.
@@ -2558,13 +2558,13 @@ class ActiveModel::Errors
   #   person.errors.messages_for(:name)
   #   # => ["is too short (minimum is 5 characters)", "can't be blank"]
   #
-  # source://activemodel//lib/active_model/errors.rb#418
+  # source://activemodel//lib/active_model/errors.rb#444
   def messages_for(attribute); end
 
   # The actual array of +Error+ objects
   # This method is aliased to <tt>objects</tt>.
   #
-  # source://activemodel//lib/active_model/errors.rb#81
+  # source://activemodel//lib/active_model/errors.rb#107
   def objects; end
 
   # Returns +true+ if an error on the attribute with the given type is
@@ -2581,7 +2581,7 @@ class ActiveModel::Errors
   #
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/errors.rb#369
+  # source://activemodel//lib/active_model/errors.rb#395
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -2598,7 +2598,7 @@ class ActiveModel::Errors
   #   person.errors.full_messages
   #   # => ["Name is too short (minimum is 5 characters)", "Name can't be blank", "Email can't be blank"]
   #
-  # source://activemodel//lib/active_model/errors.rb#389
+  # source://activemodel//lib/active_model/errors.rb#415
   def to_a; end
 
   # Returns a Hash of attributes with their error messages. If +full_messages+
@@ -2607,7 +2607,7 @@ class ActiveModel::Errors
   #   person.errors.to_hash       # => {:name=>["cannot be nil"]}
   #   person.errors.to_hash(true) # => {:name=>["name cannot be nil"]}
   #
-  # source://activemodel//lib/active_model/errors.rb#230
+  # source://activemodel//lib/active_model/errors.rb#256
   def to_hash(full_messages = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -2621,19 +2621,19 @@ class ActiveModel::Errors
   #   person.errors.where(:name, :too_short) # => all name errors being too short
   #   person.errors.where(:name, :too_short, minimum: 2) # => all name errors being too short and minimum is 2
   #
-  # source://activemodel//lib/active_model/errors.rb#163
+  # source://activemodel//lib/active_model/errors.rb#189
   def where(attribute, type = T.unsafe(nil), **options); end
 
   private
 
-  # source://activemodel//lib/active_model/errors.rb#96
+  # source://activemodel//lib/active_model/errors.rb#122
   def initialize_dup(other); end
 
-  # source://activemodel//lib/active_model/errors.rb#464
+  # source://activemodel//lib/active_model/errors.rb#490
   def normalize_arguments(attribute, type, **options); end
 end
 
-# source://activemodel//lib/active_model/errors.rb#239
+# source://activemodel//lib/active_model/errors.rb#265
 ActiveModel::Errors::EMPTY_ARRAY = T.let(T.unsafe(nil), Array)
 
 # = Active \Model \ForbiddenAttributesError
@@ -3432,7 +3432,7 @@ class ActiveModel::Railtie < ::Rails::Railtie; end
 #
 # Raised when attribute values are out of range.
 #
-# source://activemodel//lib/active_model/errors.rb#497
+# source://activemodel//lib/active_model/errors.rb#523
 class ActiveModel::RangeError < ::RangeError; end
 
 # source://activemodel//lib/active_model/secure_password.rb#4
@@ -3882,7 +3882,7 @@ end
 #   person.valid?
 #   # => ActiveModel::StrictValidationFailed: Name can't be blank
 #
-# source://activemodel//lib/active_model/errors.rb#491
+# source://activemodel//lib/active_model/errors.rb#517
 class ActiveModel::StrictValidationFailed < ::StandardError; end
 
 # = Active \Model \Translation
@@ -4913,21 +4913,21 @@ end
 #   person.assign_attributes(name: 'Gorby')
 #   # => ActiveModel::UnknownAttributeError: unknown attribute 'name' for Person.
 #
-# source://activemodel//lib/active_model/errors.rb#512
+# source://activemodel//lib/active_model/errors.rb#538
 class ActiveModel::UnknownAttributeError < ::NoMethodError
   # @return [UnknownAttributeError] a new instance of UnknownAttributeError
   #
-  # source://activemodel//lib/active_model/errors.rb#515
+  # source://activemodel//lib/active_model/errors.rb#541
   def initialize(record, attribute); end
 
   # Returns the value of attribute attribute.
   #
-  # source://activemodel//lib/active_model/errors.rb#513
+  # source://activemodel//lib/active_model/errors.rb#539
   def attribute; end
 
   # Returns the value of attribute record.
   #
-  # source://activemodel//lib/active_model/errors.rb#513
+  # source://activemodel//lib/active_model/errors.rb#539
   def record; end
 end
 
@@ -5546,7 +5546,7 @@ module ActiveModel::Validations::ClassMethods
   # validators can be overridden inside specific classes by creating
   # custom validator classes in their place such as PresenceValidator.
   #
-  # Examples of using the default rails validators:
+  # Examples of using the default \Rails validators:
   #
   #   validates :username, absence: true
   #   validates :terms, acceptance: true

@@ -65,10 +65,10 @@ class AbstractController::Base
 
   # Returns the name of the action this controller is processing.
   #
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def action_name; end
 
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def action_name=(_arg0); end
 
   # Returns true if a method for the action is available and
@@ -94,10 +94,10 @@ class AbstractController::Base
 
   # Returns the formats that can be processed by the controller.
   #
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def formats; end
 
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def formats=(_arg0); end
 
   # source://actionpack//lib/abstract_controller/base.rb#203
@@ -126,10 +126,10 @@ class AbstractController::Base
 
   # Returns the body of the HTTP response sent by the controller.
   #
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def response_body; end
 
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def response_body=(_arg0); end
 
   # Actually call the method associated with the action. Override
@@ -1283,13 +1283,13 @@ class ActionController::API < ::ActionController::Metal
   extend ::ActionController::Instrumentation::ClassMethods
   extend ::ActionController::ParamsWrapper::ClassMethods
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _process_action_callbacks; end
 
   # source://actionpack//lib/action_controller/metal/renderers.rb#31
@@ -1301,7 +1301,7 @@ class ActionController::API < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/renderers.rb#31
   def _renderers?; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_process_action_callbacks(&block); end
 
   # source://actionpack//lib/action_controller/metal/params_wrapper.rb#187
@@ -1331,10 +1331,10 @@ class ActionController::API < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/conditional_get.rb#13
   def etaggers?; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def logger; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def logger=(value); end
 
   # source://actionpack//lib/abstract_controller/callbacks.rb#36
@@ -1349,29 +1349,29 @@ class ActionController::API < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/redirecting.rb#15
   def raise_on_open_redirects=(val); end
 
-  # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
   def rescue_handlers; end
 
-  # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
   def rescue_handlers?; end
 
   class << self
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _process_action_callbacks; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _process_action_callbacks=(value); end
 
     # source://actionpack//lib/action_controller/metal/renderers.rb#31
@@ -1410,10 +1410,10 @@ class ActionController::API < ::ActionController::Metal
     # source://actionpack//lib/action_controller/metal/conditional_get.rb#13
     def etaggers?; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def logger; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def logger=(value); end
 
     # source://actionpack//lib/action_controller/metal.rb#262
@@ -1431,13 +1431,13 @@ class ActionController::API < ::ActionController::Metal
     # source://actionpack//lib/action_controller/metal/redirecting.rb#15
     def raise_on_open_redirects=(val); end
 
-    # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
     def rescue_handlers; end
 
-    # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
     def rescue_handlers?; end
 
     # Shortcut helper that returns all the ActionController::API modules except
@@ -1727,10 +1727,10 @@ class ActionController::Base < ::ActionController::Metal
   extend ::ActionController::Instrumentation::ClassMethods
   extend ::ActionController::ParamsWrapper::ClassMethods
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
   # source://actionpack//lib/abstract_controller/helpers.rb#12
@@ -1742,10 +1742,10 @@ class ActionController::Base < ::ActionController::Metal
   # source://actionpack//lib/abstract_controller/helpers.rb#12
   def _helper_methods?; end
 
-  # source://actionview/7.1.2/lib/action_view/layouts.rb#216
+  # source://actionview/7.1.3/lib/action_view/layouts.rb#216
   def _layout_conditions(&block); end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _process_action_callbacks; end
 
   # source://actionpack//lib/action_controller/metal/renderers.rb#31
@@ -1757,7 +1757,7 @@ class ActionController::Base < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/renderers.rb#31
   def _renderers?; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_process_action_callbacks(&block); end
 
   # source://actionpack//lib/abstract_controller/caching.rb#42
@@ -1781,46 +1781,46 @@ class ActionController::Base < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/flash.rb#36
   def alert; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def allow_forgery_protection; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def allow_forgery_protection=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def asset_host; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def asset_host=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def assets_dir; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def assets_dir=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def csrf_token_storage_strategy; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def csrf_token_storage_strategy=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def default_asset_host_protocol; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def default_asset_host_protocol=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def default_protect_from_forgery; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def default_protect_from_forgery=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def default_static_extension; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def default_static_extension=(value); end
 
   # source://actionpack//lib/action_dispatch/routing/url_for.rb#97
@@ -1832,10 +1832,10 @@ class ActionController::Base < ::ActionController::Metal
   # source://actionpack//lib/action_dispatch/routing/url_for.rb#97
   def default_url_options?; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def enable_fragment_cache_logging; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def enable_fragment_cache_logging=(value); end
 
   # source://actionpack//lib/action_controller/metal/etag_with_template_digest.rb#29
@@ -1859,16 +1859,16 @@ class ActionController::Base < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/flash.rb#10
   def flash(*_arg0, **_arg1, &_arg2); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def forgery_protection_origin_check; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def forgery_protection_origin_check=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def forgery_protection_strategy; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def forgery_protection_strategy=(value); end
 
   # source://actionpack//lib/abstract_controller/caching/fragments.rb#25
@@ -1898,37 +1898,37 @@ class ActionController::Base < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/helpers.rb#66
   def include_all_helpers?; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def javascripts_dir; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def javascripts_dir=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def log_warning_on_csrf_failure; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def log_warning_on_csrf_failure=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def logger; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def logger=(value); end
 
   # source://actionpack//lib/action_controller/metal/flash.rb#36
   def notice; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def per_form_csrf_tokens; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def per_form_csrf_tokens=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def perform_caching; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def perform_caching=(value); end
 
   # source://actionpack//lib/abstract_controller/callbacks.rb#36
@@ -1943,49 +1943,49 @@ class ActionController::Base < ::ActionController::Metal
   # source://actionpack//lib/action_controller/metal/redirecting.rb#15
   def raise_on_open_redirects=(val); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def relative_url_root; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def relative_url_root=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def request_forgery_protection_token; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def request_forgery_protection_token=(value); end
 
-  # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
   def rescue_handlers; end
 
-  # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
   def rescue_handlers?; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
   def stylesheets_dir; end
 
-  # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+  # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
   def stylesheets_dir=(value); end
 
   private
 
-  # source://actionview/7.1.2/lib/action_view/layouts.rb#330
+  # source://actionview/7.1.3/lib/action_view/layouts.rb#330
   def _layout(lookup_context, formats); end
 
   # source://actionpack//lib/action_controller/base.rb#252
   def _protected_ivars; end
 
   class << self
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
     # source://actionpack//lib/action_controller/form_builder.rb#33
@@ -2018,28 +2018,28 @@ class ActionController::Base < ::ActionController::Metal
     # source://actionpack//lib/abstract_controller/helpers.rb#16
     def _helpers; end
 
-    # source://actionview/7.1.2/lib/action_view/layouts.rb#211
+    # source://actionview/7.1.3/lib/action_view/layouts.rb#211
     def _layout; end
 
-    # source://actionview/7.1.2/lib/action_view/layouts.rb#211
+    # source://actionview/7.1.3/lib/action_view/layouts.rb#211
     def _layout=(value); end
 
-    # source://actionview/7.1.2/lib/action_view/layouts.rb#211
+    # source://actionview/7.1.3/lib/action_view/layouts.rb#211
     def _layout?; end
 
-    # source://actionview/7.1.2/lib/action_view/layouts.rb#212
+    # source://actionview/7.1.3/lib/action_view/layouts.rb#212
     def _layout_conditions; end
 
-    # source://actionview/7.1.2/lib/action_view/layouts.rb#212
+    # source://actionview/7.1.3/lib/action_view/layouts.rb#212
     def _layout_conditions=(value); end
 
-    # source://actionview/7.1.2/lib/action_view/layouts.rb#212
+    # source://actionview/7.1.3/lib/action_view/layouts.rb#212
     def _layout_conditions?; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _process_action_callbacks; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _process_action_callbacks=(value); end
 
     # source://actionpack//lib/action_controller/metal/renderers.rb#31
@@ -2069,46 +2069,46 @@ class ActionController::Base < ::ActionController::Metal
     # source://actionpack//lib/action_controller/metal/params_wrapper.rb#187
     def _wrapper_options?; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def allow_forgery_protection; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def allow_forgery_protection=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def asset_host; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def asset_host=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def assets_dir; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def assets_dir=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def csrf_token_storage_strategy; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def csrf_token_storage_strategy=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def default_asset_host_protocol; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def default_asset_host_protocol=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def default_protect_from_forgery; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def default_protect_from_forgery=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def default_static_extension; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def default_static_extension=(value); end
 
     # source://actionpack//lib/action_dispatch/routing/url_for.rb#97
@@ -2120,10 +2120,10 @@ class ActionController::Base < ::ActionController::Metal
     # source://actionpack//lib/action_dispatch/routing/url_for.rb#97
     def default_url_options?; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def enable_fragment_cache_logging; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def enable_fragment_cache_logging=(value); end
 
     # source://actionpack//lib/action_controller/metal/etag_with_template_digest.rb#29
@@ -2144,16 +2144,16 @@ class ActionController::Base < ::ActionController::Metal
     # source://actionpack//lib/action_controller/metal/conditional_get.rb#13
     def etaggers?; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def forgery_protection_origin_check; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def forgery_protection_origin_check=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def forgery_protection_strategy; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def forgery_protection_strategy=(value); end
 
     # source://actionpack//lib/abstract_controller/caching/fragments.rb#25
@@ -2183,37 +2183,37 @@ class ActionController::Base < ::ActionController::Metal
     # source://actionpack//lib/action_controller/metal/helpers.rb#66
     def include_all_helpers?; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def javascripts_dir; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def javascripts_dir=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def log_warning_on_csrf_failure; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def log_warning_on_csrf_failure=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def logger; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def logger=(value); end
 
     # source://actionpack//lib/action_controller/metal.rb#262
     def middleware_stack; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def per_form_csrf_tokens; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def per_form_csrf_tokens=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def perform_caching; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def perform_caching=(value); end
 
     # source://actionpack//lib/abstract_controller/callbacks.rb#36
@@ -2228,31 +2228,31 @@ class ActionController::Base < ::ActionController::Metal
     # source://actionpack//lib/action_controller/metal/redirecting.rb#15
     def raise_on_open_redirects=(val); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def relative_url_root; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def relative_url_root=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def request_forgery_protection_token; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def request_forgery_protection_token=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
     def rescue_handlers; end
 
-    # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.3/lib/active_support/rescuable.rb#15
     def rescue_handlers?; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#115
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#115
     def stylesheets_dir; end
 
-    # source://activesupport/7.1.2/lib/active_support/configurable.rb#116
+    # source://activesupport/7.1.3/lib/active_support/configurable.rb#116
     def stylesheets_dir=(value); end
 
     # Shortcut helper that returns all the modules included in
@@ -4245,7 +4245,7 @@ class ActionController::LogSubscriber < ::ActiveSupport::LogSubscriber
   def write_fragment(event); end
 
   class << self
-    # source://activesupport/7.1.2/lib/active_support/log_subscriber.rb#87
+    # source://activesupport/7.1.3/lib/active_support/log_subscriber.rb#87
     def log_levels; end
   end
 end
@@ -4396,10 +4396,10 @@ class ActionController::Metal < ::AbstractController::Base
   #
   # The ActionDispatch::Request instance for the current request.
   #
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def request; end
 
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def request=(_arg0); end
 
   # source://actionpack//lib/action_controller/metal.rb#258
@@ -4409,7 +4409,7 @@ class ActionController::Metal < ::AbstractController::Base
   #
   # The ActionDispatch::Response instance for the current response.
   #
-  # source://activesupport/7.1.2/lib/active_support/core_ext/module/attr_internal.rb#33
+  # source://activesupport/7.1.3/lib/active_support/core_ext/module/attr_internal.rb#33
   def response; end
 
   # Assign the response and mark it as committed. No further processing will occur.
@@ -6059,7 +6059,7 @@ ActionController::Parameters::PERMITTED_SCALAR_TYPES = T.let(T.unsafe(nil), Arra
 #
 # will try to check if +Admin::User+ or +User+ model exists, and use it to
 # determine the wrapper key respectively. If both models don't exist,
-# it will then fallback to use +user+ as the key.
+# it will then fall back to use +user+ as the key.
 #
 # To disable this functionality for a controller:
 #
@@ -6187,10 +6187,10 @@ class ActionController::ParamsWrapper::Options < ::Struct
   # source://actionpack//lib/action_controller/metal/params_wrapper.rb#110
   def include; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
+  # source://mutex_m/0.2.0/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
+  # source://mutex_m/0.2.0/mutex_m.rb#81
   def locked?; end
 
   # Returns the value of attribute model
@@ -6207,13 +6207,13 @@ class ActionController::ParamsWrapper::Options < ::Struct
   # source://actionpack//lib/action_controller/metal/params_wrapper.rb#143
   def name; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
+  # source://mutex_m/0.2.0/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
+  # source://mutex_m/0.2.0/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
+  # source://mutex_m/0.2.0/mutex_m.rb#96
   def unlock; end
 
   private
@@ -6399,7 +6399,7 @@ module ActionController::Redirecting
   def redirect_to(options = T.unsafe(nil), response_options = T.unsafe(nil)); end
 
   # Verifies the passed +location+ is an internal URL that's safe to redirect to and returns it, or nil if not.
-  # Useful to wrap a params provided redirect URL and fallback to an alternate URL to redirect to:
+  # Useful to wrap a params provided redirect URL and fall back to an alternate URL to redirect to:
   #
   #   redirect_to url_from(params[:redirect_url]) || root_url
   #
@@ -8008,7 +8008,7 @@ class ActionController::TestCase < ::ActiveSupport::TestCase
   def _controller_class?; end
 
   class << self
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
     # source://actionpack//lib/action_controller/test_case.rb#571
@@ -8800,7 +8800,7 @@ end
 # = Action Dispatch \AssumeSSL
 #
 # When proxying through a load balancer that terminates SSL, the forwarded request will appear
-# as though its HTTP instead of HTTPS to the application. This makes redirects and cookie
+# as though it's HTTP instead of HTTPS to the application. This makes redirects and cookie
 # security target HTTP instead of HTTPS. This middleware makes the server assume that the
 # proxy already terminated SSL, and that the request really is HTTPS.
 #
@@ -8830,35 +8830,35 @@ class ActionDispatch::Callbacks
   # source://actionpack//lib/action_dispatch/middleware/callbacks.rb#22
   def initialize(app); end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _call_callbacks; end
 
-  # source://activesupport/7.1.2/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_call_callbacks(&block); end
 
   # source://actionpack//lib/action_dispatch/middleware/callbacks.rb#26
   def call(env); end
 
   class << self
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _call_callbacks; end
 
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _call_callbacks=(value); end
 
     # source://actionpack//lib/action_dispatch/middleware/callbacks.rb#17
@@ -9970,25 +9970,25 @@ class ActionDispatch::ExceptionWrapper
   # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#265
   def build_backtrace; end
 
-  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#283
+  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#288
   def causes_for(exception); end
 
-  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#293
+  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#298
   def clean_backtrace(*args); end
 
-  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#346
+  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#351
   def extract_file_and_line_number(trace); end
 
-  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#301
+  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#306
   def extract_source(trace); end
 
-  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#330
+  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#335
   def extract_source_fragment_lines(source_lines, line); end
 
-  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#336
+  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#341
   def source_fragment(path, line); end
 
-  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#289
+  # source://actionpack//lib/action_dispatch/middleware/exception_wrapper.rb#294
   def wrapped_causes_for(exception, backtrace_cleaner); end
 
   class << self
@@ -10945,7 +10945,7 @@ module ActionDispatch::Http::MimeNegotiation
   # Sets the \formats by string extensions. This differs from #format= by allowing you
   # to set multiple, ordered formats, which is useful when you want to have a fallback.
   #
-  # In this example, the +:iphone+ format will be used if it's available, otherwise it'll fallback
+  # In this example, the +:iphone+ format will be used if it's available, otherwise it'll fall back
   # to the +:html+ format.
   #
   #   class ApplicationController < ActionController::Base
@@ -13759,7 +13759,7 @@ class ActionDispatch::LogSubscriber < ::ActiveSupport::LogSubscriber
   def redirect(event); end
 
   class << self
-    # source://activesupport/7.1.2/lib/active_support/log_subscriber.rb#87
+    # source://activesupport/7.1.3/lib/active_support/log_subscriber.rb#87
     def log_levels; end
   end
 end
@@ -14057,7 +14057,7 @@ class ActionDispatch::PermissionsPolicy
 end
 
 # List of available permissions can be found at
-# https://github.com/w3c/webappsec-permissions-policy/blob/master/features.md#policy-controlled-features
+# https://github.com/w3c/webappsec-permissions-policy/blob/main/features.md#policy-controlled-features
 #
 # source://actionpack//lib/action_dispatch/http/permissions_policy.rb#89
 ActionDispatch::PermissionsPolicy::DIRECTIVES = T.let(T.unsafe(nil), Hash)
@@ -14476,7 +14476,7 @@ class ActionDispatch::Request
   # more information.
   #
   # For debugging purposes, when called with arguments this method will
-  # fallback to Object#method
+  # fall back to Object#method
   #
   # source://actionpack//lib/action_dispatch/http/request.rb#205
   def method(*args, **_arg1); end
@@ -15865,9 +15865,9 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 #   # In config/routes.rb
 #   controller :blog do
-#     get 'blog/show',    to: :list
-#     get 'blog/delete',  to: :delete
-#     get 'blog/edit',    to: :edit
+#     get 'blog/show'    => :list
+#     get 'blog/delete'  => :delete
+#     get 'blog/edit'    => :edit
 #   end
 #
 #   # provides named routes for show, delete, and edit
@@ -15986,7 +15986,7 @@ ActionDispatch::Response::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 # == View a list of all your routes
 #
-#   bin/rails routes
+#   $ bin/rails routes
 #
 # Target a specific controller with <tt>-c</tt>, or grep routes
 # using <tt>-g</tt>. Useful in conjunction with <tt>--expanded</tt>
@@ -16146,7 +16146,7 @@ class ActionDispatch::Routing::Mapper
 
   # @return [Mapper] a new instance of Mapper
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2314
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2313
   def initialize(set); end
 
   class << self
@@ -16156,14 +16156,14 @@ class ActionDispatch::Routing::Mapper
     # source://actionpack//lib/action_dispatch/routing/mapper.rb#16
     def backtrace_cleaner=(val); end
 
-    # source://actionpack//lib/action_dispatch/routing/mapper.rb#393
+    # source://actionpack//lib/action_dispatch/routing/mapper.rb#392
     def normalize_name(name); end
 
     # Invokes Journey::Router::Utils.normalize_path, then ensures that
     # /(:locale) becomes (/:locale). Except for root cases, where the
     # former is the correct one.
     #
-    # source://actionpack//lib/action_dispatch/routing/mapper.rb#376
+    # source://actionpack//lib/action_dispatch/routing/mapper.rb#375
     def normalize_path(path); end
 
     # source://actionpack//lib/action_dispatch/routing/mapper.rb#15
@@ -16174,19 +16174,19 @@ class ActionDispatch::Routing::Mapper
   end
 end
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#397
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#396
 module ActionDispatch::Routing::Mapper::Base
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#630
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#629
   def default_url_options(options); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#630
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#629
   def default_url_options=(options); end
 
   # Query if the following named route was already defined.
   #
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#642
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#641
   def has_named_route?(name); end
 
   # Matches a URL pattern to one or more routes.
@@ -16370,7 +16370,7 @@ module ActionDispatch::Routing::Mapper::Base
   #   Allows you to specify the default value for optional +format+
   #   segment or disable it by supplying +false+.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#578
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#577
   def match(path, options = T.unsafe(nil)); end
 
   # Mount a Rack-based application to be used within the application.
@@ -16395,23 +16395,23 @@ module ActionDispatch::Routing::Mapper::Base
   #
   # @raise [ArgumentError]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#600
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#599
   def mount(app, options = T.unsafe(nil)); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#635
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#634
   def with_default_scope(scope, &block); end
 
   private
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#651
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#650
   def app_name(app, rails_app); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#660
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#659
   def define_generate_prefix(app, name); end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#647
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#646
   def rails_app?(app); end
 end
 
@@ -16436,7 +16436,7 @@ end
 #     concerns :commentable
 #   end
 #
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#2026
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#2025
 module ActionDispatch::Routing::Mapper::Concerns
   # Define a routing concern using a name.
   #
@@ -16495,7 +16495,7 @@ module ActionDispatch::Routing::Mapper::Concerns
   # callable, they're accessible from the Mapper that's passed to
   # <tt>call</tt>.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2083
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2082
   def concern(name, callable = T.unsafe(nil), &block); end
 
   # Use the named concerns
@@ -16510,7 +16510,7 @@ module ActionDispatch::Routing::Mapper::Concerns
   #     concerns :commentable
   #   end
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2099
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2098
   def concerns(*args); end
 end
 
@@ -16556,7 +16556,7 @@ ActionDispatch::Routing::Mapper::Constraints::CALL = T.let(T.unsafe(nil), Proc)
 # source://actionpack//lib/action_dispatch/routing/mapper.rb#21
 ActionDispatch::Routing::Mapper::Constraints::SERVE = T.let(T.unsafe(nil), Proc)
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#2111
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#2110
 module ActionDispatch::Routing::Mapper::CustomUrls
   # Define custom URL helpers that will be added to the application's
   # routes. This allows you to override and/or replace the default behavior
@@ -16606,7 +16606,7 @@ module ActionDispatch::Routing::Mapper::CustomUrls
   # NOTE: The +direct+ method can't be used inside of a scope block such as
   # +namespace+ or +scope+ and will raise an error if it detects that it is.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2159
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2158
   def direct(name, options = T.unsafe(nil), &block); end
 
   # Define custom polymorphic mappings of models to URLs. This alters the
@@ -16654,18 +16654,18 @@ module ActionDispatch::Routing::Mapper::CustomUrls
   # NOTE: The +resolve+ method can't be used inside of a scope block such as
   # +namespace+ or +scope+ and will raise an error if it detects that it is.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2211
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2210
   def resolve(*args, &block); end
 end
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#694
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#693
 module ActionDispatch::Routing::Mapper::HttpHelpers
   # Define a route that only recognizes HTTP DELETE.
   # For supported arguments, see match[rdoc-ref:Base#match]
   #
   #   delete 'broccoli', to: 'food#broccoli'
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#731
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#730
   def delete(*args, &block); end
 
   # Define a route that only recognizes HTTP GET.
@@ -16673,7 +16673,7 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   #
   #   get 'bacon', to: 'food#bacon'
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#699
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#698
   def get(*args, &block); end
 
   # Define a route that only recognizes HTTP OPTIONS.
@@ -16681,7 +16681,7 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   #
   #   options 'carrots', to: 'food#carrots'
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#739
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#738
   def options(*args, &block); end
 
   # Define a route that only recognizes HTTP PATCH.
@@ -16689,7 +16689,7 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   #
   #   patch 'bacon', to: 'food#bacon'
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#715
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#714
   def patch(*args, &block); end
 
   # Define a route that only recognizes HTTP POST.
@@ -16697,7 +16697,7 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   #
   #   post 'bacon', to: 'food#bacon'
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#707
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#706
   def post(*args, &block); end
 
   # Define a route that only recognizes HTTP PUT.
@@ -16705,12 +16705,12 @@ module ActionDispatch::Routing::Mapper::HttpHelpers
   #
   #   put 'bacon', to: 'food#bacon'
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#723
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#722
   def put(*args, &block); end
 
   private
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#744
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#743
   def map_method(method, args, &block); end
 end
 
@@ -16777,37 +16777,37 @@ class ActionDispatch::Routing::Mapper::Mapping
 
   private
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#319
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#318
   def add_controller_module(controller, modyoule); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#272
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#279
   def app(blocks); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#338
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#337
   def blocks(callable_constraint); end
 
   # source://actionpack//lib/action_dispatch/routing/mapper.rb#187
   def build_conditions(current_conditions, request_class); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#284
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#291
   def check_controller_and_action(path_params, controller, action); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#299
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#306
   def check_part(name, part, path_params, hash); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#345
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#344
   def constraints(options, path_params); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#359
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#358
   def dispatcher(raise_on_name_error); end
 
   # source://actionpack//lib/action_dispatch/routing/mapper.rb#202
   def intern(object); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#268
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#275
   def normalize_defaults(options); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#236
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#243
   def normalize_format(formatted); end
 
   # source://actionpack//lib/action_dispatch/routing/mapper.rb#206
@@ -16816,19 +16816,16 @@ class ActionDispatch::Routing::Mapper::Mapping
   # source://actionpack//lib/action_dispatch/routing/mapper.rb#196
   def request_method; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#363
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#362
   def route_source_location; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#230
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#237
   def split_constraints(path_params, constraints); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#311
-  def split_to(to); end
-
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#331
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#330
   def translate_controller(controller); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#252
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#259
   def verify_regexp_requirements(requirements, wildcard_options); end
 
   class << self
@@ -16896,7 +16893,7 @@ ActionDispatch::Routing::Mapper::Mapping::OPTIONAL_FORMAT_REGEX = T.let(T.unsafe
 #
 # This allows any character other than a slash as part of your +:id+.
 #
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#1134
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#1133
 module ActionDispatch::Routing::Mapper::Resources
   # To add a route to the collection:
   #
@@ -16911,7 +16908,7 @@ module ActionDispatch::Routing::Mapper::Resources
   # create the <tt>search_photos_url</tt> and <tt>search_photos_path</tt>
   # route helpers.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1512
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1511
   def collection(&block); end
 
   # Loads another routes file with the given +name+ located inside the
@@ -16938,7 +16935,7 @@ module ActionDispatch::Routing::Mapper::Resources
   # applications — even those with a few hundred routes — it's easier for
   # developers to have a single routes file.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1622
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1621
   def draw(name); end
 
   # Matches a URL pattern to one or more routes.
@@ -16948,7 +16945,7 @@ module ActionDispatch::Routing::Mapper::Resources
   #   match 'path', to: 'controller#action', via: :post
   #   match 'path', 'otherpath', on: :member, via: :get
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1644
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1643
   def match(path, *rest, &block); end
 
   # To add a member route, add a member block into the resource block:
@@ -16963,18 +16960,18 @@ module ActionDispatch::Routing::Mapper::Resources
   # preview action of +PhotosController+. It will also create the
   # <tt>preview_photo_url</tt> and <tt>preview_photo_path</tt> helpers.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1533
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1532
   def member(&block); end
 
   # See ActionDispatch::Routing::Mapper::Scoping#namespace.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1580
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1579
   def namespace(path, options = T.unsafe(nil)); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1559
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1558
   def nested(&block); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1549
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1548
   def new(&block); end
 
   # Sometimes, you have a resource that clients always look up without
@@ -17009,7 +17006,7 @@ module ActionDispatch::Routing::Mapper::Resources
   # === Options
   # Takes same options as resources[rdoc-ref:#resources]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1304
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1303
   def resource(*resources, &block); end
 
   # In \Rails, a resourceful route provides a mapping between HTTP verbs
@@ -17150,10 +17147,10 @@ module ActionDispatch::Routing::Mapper::Resources
   #   # resource actions are at /admin/posts.
   #   resources :posts, path: "admin/posts"
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1470
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1469
   def resources(*resources, &block); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1269
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1268
   def resources_path_names(options); end
 
   # You can specify what \Rails should route "/" to with the root method:
@@ -17170,335 +17167,335 @@ module ActionDispatch::Routing::Mapper::Resources
   # because this means it will be matched first. As this is the most popular route
   # of most \Rails applications, this is beneficial.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1691
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1690
   def root(path, options = T.unsafe(nil)); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1588
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1587
   def shallow; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1595
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1594
   def shallow?; end
 
   private
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1755
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1754
   def action_options?(options); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1837
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1836
   def action_path(name); end
 
   # @raise [ArgumentError]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1973
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1972
   def add_route(action, controller, options, _path, to, via, formatted, anchor, options_constraints); end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1891
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1890
   def api_only?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1750
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1749
   def apply_action_options(options); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1716
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1715
   def apply_common_behavior_for(method, resources, options, &block); end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1813
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1812
   def canonical_action?(action); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1958
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1957
   def decomposed_match(path, controller, options, _path, to, via, formatted, anchor, options_constraints); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1943
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1942
   def get_to_from_path(path, to, action); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1902
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1901
   def map_match(paths, options); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2000
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1999
   def match_root_route(options); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1853
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1852
   def name_for_action(as, action); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1790
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1789
   def nested_options; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1771
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1770
   def nested_scope?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1809
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1808
   def param_constraint; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1805
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1804
   def param_constraint?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1712
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1711
   def parent_resource; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1827
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1826
   def path_for_action(action, path); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1895
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1894
   def path_scope(path); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1841
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1840
   def prefix_name_for_action(as, action); end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1767
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1766
   def resource_method_scope?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1782
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1781
   def resource_scope(resource, &block); end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1763
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1762
   def resource_scope?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1759
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1758
   def scope_action_options; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1879
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1878
   def set_member_mappings_for_resource; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1799
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1798
   def shallow_nesting_depth; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1817
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1816
   def shallow_scope; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1954
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1953
   def using_match_shorthand?(path); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1775
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1774
   def with_scope_level(kind); end
 end
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#1139
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#1138
 ActionDispatch::Routing::Mapper::Resources::CANONICAL_ACTIONS = T.let(T.unsafe(nil), Array)
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#1138
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#1137
 ActionDispatch::Routing::Mapper::Resources::RESOURCE_OPTIONS = T.let(T.unsafe(nil), Array)
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#1141
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#1140
 class ActionDispatch::Routing::Mapper::Resources::Resource
   # @return [Resource] a new instance of Resource
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1144
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1143
   def initialize(entities, api_only, shallow, options = T.unsafe(nil)); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1169
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1168
   def actions; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1177
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1176
   def available_actions; end
 
   # Checks for uncountable plurals, and appends "_index" if the plural
   # and singular form are the same.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1201
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1200
   def collection_name; end
 
   # Returns the value of attribute path.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1142
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1141
   def collection_scope; end
 
   # Returns the value of attribute controller.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1142
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1141
   def controller; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1161
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1160
   def default_actions; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1193
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1192
   def member_name; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1211
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1210
   def member_scope; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1185
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1184
   def name; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1221
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1220
   def nested_param; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1225
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1224
   def nested_scope; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1217
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1216
   def new_scope(new_path); end
 
   # Returns the value of attribute param.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1142
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1141
   def param; end
 
   # Returns the value of attribute path.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1142
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1141
   def path; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1189
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1188
   def plural; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1205
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1204
   def resource_scope; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1229
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1228
   def shallow?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1211
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1210
   def shallow_scope; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1233
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1232
   def singleton?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1193
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1192
   def singular; end
 end
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#1236
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#1235
 class ActionDispatch::Routing::Mapper::Resources::SingletonResource < ::ActionDispatch::Routing::Mapper::Resources::Resource
   # @return [SingletonResource] a new instance of SingletonResource
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1237
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1236
   def initialize(entities, api_only, shallow, options); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1256
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1255
   def collection_name; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1244
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1243
   def default_actions; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1256
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1255
   def member_name; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1142
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1141
   def member_scope; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1142
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1141
   def nested_scope; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1252
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1251
   def plural; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1266
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1265
   def singleton?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1256
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1255
   def singular; end
 end
 
 # CANONICAL_ACTIONS holds all actions that does not need a prefix or
 # a path appended since they fit properly in their scope level.
 #
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#1137
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#1136
 ActionDispatch::Routing::Mapper::Resources::VALID_ON_OPTIONS = T.let(T.unsafe(nil), Array)
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#2225
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#2224
 class ActionDispatch::Routing::Mapper::Scope
   include ::Enumerable
 
   # @return [Scope] a new instance of Scope
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2235
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2234
   def initialize(hash, parent = T.unsafe(nil), scope_level = T.unsafe(nil)); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2294
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2293
   def [](key); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2261
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2260
   def action_name(name_prefix, prefix, collection_name, member_name); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2301
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2300
   def each; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2309
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2308
   def frame; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2241
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2240
   def nested?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2286
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2285
   def new(hash); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2290
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2289
   def new_level(level); end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2245
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2244
   def null?; end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2282
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2281
   def options; end
 
   # Returns the value of attribute parent.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2233
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2232
   def parent; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2257
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2256
   def resource_method_scope?; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2278
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2277
   def resource_scope?; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2253
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2252
   def resources?; end
 
   # @return [Boolean]
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2249
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2248
   def root?; end
 
   # Returns the value of attribute scope_level.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2233
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#2232
   def scope_level; end
 end
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#2311
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#2310
 ActionDispatch::Routing::Mapper::Scope::NULL = T.let(T.unsafe(nil), ActionDispatch::Routing::Mapper::Scope)
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#2226
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#2225
 ActionDispatch::Routing::Mapper::Scope::OPTIONS = T.let(T.unsafe(nil), Array)
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#2231
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#2230
 ActionDispatch::Routing::Mapper::Scope::RESOURCE_METHOD_SCOPES = T.let(T.unsafe(nil), Array)
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#2230
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#2229
 ActionDispatch::Routing::Mapper::Scope::RESOURCE_SCOPES = T.let(T.unsafe(nil), Array)
 
 # You may wish to organize groups of controllers under a namespace.
@@ -17556,7 +17553,7 @@ ActionDispatch::Routing::Mapper::Scope::RESOURCE_SCOPES = T.let(T.unsafe(nil), A
 #   PATCH/PUT /admin/posts/1
 #   DELETE    /admin/posts/1
 #
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#806
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#805
 module ActionDispatch::Routing::Mapper::Scoping
   # === Parameter Restriction
   # Allows you to constrain the nested routes based on a set of rules.
@@ -17614,7 +17611,7 @@ module ActionDispatch::Routing::Mapper::Scoping
   #      resources :iphones
   #    end
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1011
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1010
   def constraints(constraints = T.unsafe(nil), &block); end
 
   # Scopes routes to a specific controller
@@ -17623,7 +17620,7 @@ module ActionDispatch::Routing::Mapper::Scoping
   #     match "bacon", action: :bacon, via: :get
   #   end
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#896
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#895
   def controller(controller); end
 
   # Allows you to set default parameters for a route, such as this:
@@ -17632,7 +17629,7 @@ module ActionDispatch::Routing::Mapper::Scoping
   #   end
   # Using this, the +:id+ parameter here will default to 'home'.
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1020
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1019
   def defaults(defaults = T.unsafe(nil)); end
 
   # Scopes routes to a specific namespace. For example:
@@ -17674,7 +17671,7 @@ module ActionDispatch::Routing::Mapper::Scoping
   #     resources :posts
   #   end
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#941
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#940
   def namespace(path, options = T.unsafe(nil), &block); end
 
   # Scopes a set of routes to the given default options.
@@ -17708,61 +17705,61 @@ module ActionDispatch::Routing::Mapper::Scoping
   #     resources :posts
   #   end
   #
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#837
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#836
   def scope(*args); end
 
   private
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1052
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1051
   def merge_action_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1036
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1035
   def merge_as_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1076
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1075
   def merge_blocks_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1068
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1067
   def merge_constraints_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1048
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1047
   def merge_controller_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1072
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1071
   def merge_defaults_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1060
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1059
   def merge_format_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1044
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1043
   def merge_module_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1082
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1081
   def merge_options_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1064
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1063
   def merge_path_names_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1028
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1027
   def merge_path_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1032
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1031
   def merge_shallow_path_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1040
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1039
   def merge_shallow_prefix_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1086
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1085
   def merge_shallow_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1090
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1089
   def merge_to_scope(parent, child); end
 
-  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1056
+  # source://actionpack//lib/action_dispatch/routing/mapper.rb#1055
   def merge_via_scope(parent, child); end
 end
 
-# source://actionpack//lib/action_dispatch/routing/mapper.rb#889
+# source://actionpack//lib/action_dispatch/routing/mapper.rb#888
 ActionDispatch::Routing::Mapper::Scoping::POISON = T.let(T.unsafe(nil), Object)
 
 # source://actionpack//lib/action_dispatch/routing/mapper.rb#13
@@ -18879,7 +18876,7 @@ class ActionDispatch::Routing::RoutesProxy
   # about since it depends on the specific request, but use our
   # script name resolver for the mount point dependent part.
   #
-  # source://actionpack//lib/action_dispatch/routing/routes_proxy.rb#58
+  # source://actionpack//lib/action_dispatch/routing/routes_proxy.rb#53
   def merge_script_names(previous_script_name, new_script_name); end
 
   # source://actionpack//lib/action_dispatch/routing/routes_proxy.rb#30
