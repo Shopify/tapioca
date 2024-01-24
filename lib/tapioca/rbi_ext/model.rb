@@ -100,7 +100,7 @@ module RBI
       )
       parameters.each do |param|
         method << param.param
-        sig << RBI::SigParam.new(param.param.name.delete_prefix("&"), param.type)
+        sig << RBI::SigParam.new(param.param.name, param.type)
       end
       self << method
     end

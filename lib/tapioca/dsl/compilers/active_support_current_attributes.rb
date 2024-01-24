@@ -127,10 +127,7 @@ module Tapioca
               return_type: "T.untyped",
             )
           else
-            # name = name.delete_prefix("&") maybe?
-            require "debug"
-            binding.b
-            parameters = [create_param("&block", type: "T.untyped")]
+            parameters = [create_block_param("block", type: "T.untyped")]
             klass.create_method(
               method,
               class_method: class_method,
