@@ -60,13 +60,13 @@ module Tapioca
                   include GeneratedAttributeMethods
 
                   class << self
-                    sig { params(&block: T.untyped).returns(T.untyped) }
+                    sig { params(block: T.untyped).returns(T.untyped) }
                     def account(&block); end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { returns(T.untyped) }
                     def account=(value); end
 
-                    sig { params(&block: T.untyped).returns(T.untyped) }
+                    sig { params(block: T.untyped).returns(T.untyped) }
                     def user(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
@@ -74,13 +74,13 @@ module Tapioca
                   end
 
                   module GeneratedAttributeMethods
-                    sig { params(&block: T.untyped).returns(T.untyped) }
+                    sig { params(block: T.untyped).returns(T.untyped) }
                     def account(&block); end
 
                     sig { returns(T.untyped) }
                     def account=(value); end
 
-                    sig { params(&block: T.untyped).returns(T.untyped) }
+                    sig { params(block: T.untyped).returns(T.untyped) }
                     def user(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
@@ -117,7 +117,7 @@ module Tapioca
                   include GeneratedAttributeMethods
 
                   class << self
-                    sig { params(&block: T.untyped).returns(T.untyped) }
+                    sig { params(block: T.untyped).returns(T.untyped) }
                     def account(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
