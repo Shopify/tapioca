@@ -1098,13 +1098,13 @@ ActiveSupport::Cache::FileStore::GITKEEP_FILES = T.let(T.unsafe(nil), Array)
 # a cleanup will occur which tries to prune the cache down to three quarters
 # of the maximum size by removing the least recently used entries.
 #
-# Unlike other Cache store implementations, MemoryStore does not compress
-# values by default. MemoryStore does not benefit from compression as much
+# Unlike other Cache store implementations, +MemoryStore+ does not compress
+# values by default. +MemoryStore+ does not benefit from compression as much
 # as other Store implementations, as it does not send data over a network.
 # However, when compression is enabled, it still pays the full cost of
 # compression in terms of cpu use.
 #
-# MemoryStore is thread-safe.
+# +MemoryStore+ is thread-safe.
 #
 # source://activesupport//lib/active_support/cache/memory_store.rb#28
 class ActiveSupport::Cache::MemoryStore < ::ActiveSupport::Cache::Store
@@ -1271,7 +1271,7 @@ class ActiveSupport::Cache::NullStore < ::ActiveSupport::Cache::Store
 
   private
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#159
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#162
   def delete_entry(key, **_arg1); end
 
   # source://activesupport//lib/active_support/cache/null_store.rb#42
@@ -1283,7 +1283,7 @@ class ActiveSupport::Cache::NullStore < ::ActiveSupport::Cache::Store
   # source://activesupport//lib/active_support/cache/null_store.rb#49
   def write_entry(key, entry, **_arg2); end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#150
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#153
   def write_serialized_entry(key, payload, **_arg2); end
 
   class << self
@@ -1303,29 +1303,33 @@ ActiveSupport::Cache::OPTION_ALIASES = T.let(T.unsafe(nil), Hash)
 
 # = Redis \Cache \Store
 #
-# Deployment note: Take care to use a *dedicated Redis cache* rather
-# than pointing this at your existing Redis server. It won't cope well
-# with mixed usage patterns and it won't expire cache entries by default.
+# Deployment note: Take care to use a <b>dedicated Redis cache</b> rather
+# than pointing this at a persistent Redis server (for example, one used as
+# an Active Job queue). Redis won't cope well with mixed usage patterns and it
+# won't expire cache entries by default.
 #
 # Redis cache server setup guide: https://redis.io/topics/lru-cache
 #
-# * Supports vanilla Redis, hiredis, and Redis::Distributed.
-# * Supports Memcached-like sharding across Redises with Redis::Distributed.
+# * Supports vanilla Redis, hiredis, and +Redis::Distributed+.
+# * Supports Memcached-like sharding across Redises with +Redis::Distributed+.
 # * Fault tolerant. If the Redis server is unavailable, no exceptions are
 #   raised. Cache fetches are all misses and writes are dropped.
 # * Local cache. Hot in-memory primary cache within block/middleware scope.
-# * +read_multi+ and +write_multi+ support for Redis mget/mset. Use Redis::Distributed
-#   4.0.1+ for distributed mget support.
+# * +read_multi+ and +write_multi+ support for Redis mget/mset. Use
+#   +Redis::Distributed+ 4.0.1+ for distributed mget support.
 # * +delete_matched+ support for Redis KEYS globs.
 #
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#36
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#37
 class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   include ::ActiveSupport::Cache::Strategy::LocalCache
 
   # Creates a new Redis cache store.
   #
-  # Handles four options: :redis block, :redis instance, single :url
-  # string, and multiple :url strings.
+  # There are four ways to provide the Redis client used by the cache: the
+  # +:redis+ param can be a Redis instance or a block that returns a Redis
+  # instance, or the +:url+ param can be a string or an array of strings
+  # which will be used to create a Redis instance or a +Redis::Distributed+
+  # instance.
   #
   #   Option  Class       Result
   #   :redis  Proc    ->  options[:redis].call
@@ -1348,7 +1352,7 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   #
   # Race condition TTL is not set by default. This can be used to avoid
   # "thundering herd" cache writes when hot cache entries are expired.
-  # See <tt>ActiveSupport::Cache::Store#fetch</tt> for more.
+  # See ActiveSupport::Cache::Store#fetch for more.
   #
   # Setting <tt>skip_nil: true</tt> will not cache nil results:
   #
@@ -1359,7 +1363,7 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   #
   # @return [RedisCacheStore] a new instance of RedisCacheStore
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#145
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#149
   def initialize(error_handler: T.unsafe(nil), **redis_options); end
 
   # Cache Store API implementation.
@@ -1381,7 +1385,7 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   # Decrement a cached integer value using the Redis decrby atomic operator.
   # Returns the updated value.
   #
-  # If the key is unset or has expired, it will be set to -amount:
+  # If the key is unset or has expired, it will be set to +-amount+:
   #
   #   cache.decrement("foo") # => -1
   #
@@ -1438,12 +1442,12 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#97
   def increment(name, amount = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#160
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#164
   def inspect; end
 
   # Returns the value of attribute max_key_bytesize.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#108
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#109
   def max_key_bytesize; end
 
   # Cache Store API implementation.
@@ -1451,87 +1455,87 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
   # Read multiple values at once. Returns a hash of requested keys ->
   # fetched values.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#168
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#172
   def read_multi(*names); end
 
   # Returns the value of attribute redis.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#109
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#110
   def redis; end
 
   # Get info from redis servers.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#291
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#295
   def stats; end
 
   private
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#440
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#444
   def change_counter(key, amount, options); end
 
   # Delete an entry from the cache.
   #
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#159
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#162
   def delete_entry(key, **_arg1); end
 
   # Deletes multiple entries in the cache. Returns the number of entries deleted.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#382
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#386
   def delete_multi_entries(entries, **_options); end
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#418
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#422
   def deserialize_entry(payload, raw: T.unsafe(nil), **_arg2); end
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#474
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#478
   def failsafe(method, returning: T.unsafe(nil)); end
 
   # Truncate keys that exceed 1kB.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#404
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#408
   def normalize_key(key, options); end
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#296
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#300
   def pipeline_entries(entries, &block); end
 
   # Store provider interface:
   # Read an entry from the cache.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#310
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#314
   def read_entry(key, **options); end
 
   # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#134
-  def read_multi_entries(keys, **options); end
+  def read_multi_entries(names, **options); end
 
   # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#120
   def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#434
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#438
   def serialize_entries(entries, **options); end
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#426
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#430
   def serialize_entry(entry, raw: T.unsafe(nil), **options); end
 
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#467
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#471
   def supports_expire_nx?; end
 
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#408
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#412
   def truncate_key(key); end
 
   # Write an entry to the cache.
   #
   # Requires Redis 2.6.12+ for extended SET options.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#347
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#351
   def write_entry(key, entry, raw: T.unsafe(nil), **options); end
 
   # Nonstandard store provider API to write multiple values at once.
   #
-  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#389
+  # source://activesupport//lib/active_support/cache/redis_cache_store.rb#393
   def write_multi_entries(entries, **options); end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#150
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#153
   def write_serialized_entry(key, payload, **_arg2); end
 
   class << self
@@ -1546,40 +1550,40 @@ class ActiveSupport::Cache::RedisCacheStore < ::ActiveSupport::Cache::Store
     #   :url    String  ->  Redis.new(url: …)
     #   :url    Array   ->  Redis::Distributed.new([{ url: … }, { url: … }, …])
     #
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#80
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#81
     def build_redis(redis: T.unsafe(nil), url: T.unsafe(nil), **redis_options); end
 
     # Advertise cache versioning support.
     #
     # @return [Boolean]
     #
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#62
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#63
     def supports_cache_versioning?; end
 
     private
 
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#103
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#104
     def build_redis_client(**redis_options); end
 
-    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#97
+    # source://activesupport//lib/active_support/cache/redis_cache_store.rb#98
     def build_redis_distributed_client(urls:, **redis_options); end
   end
 end
 
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#46
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#47
 ActiveSupport::Cache::RedisCacheStore::DEFAULT_ERROR_HANDLER = T.let(T.unsafe(nil), Proc)
 
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#40
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#41
 ActiveSupport::Cache::RedisCacheStore::DEFAULT_REDIS_OPTIONS = T.let(T.unsafe(nil), Hash)
 
-# Keys are truncated with the ActiveSupport digest if they exceed 1kB
+# Keys are truncated with the Active Support digest if they exceed 1kB
 #
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#38
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#39
 ActiveSupport::Cache::RedisCacheStore::MAX_KEY_BYTESIZE = T.let(T.unsafe(nil), Integer)
 
 # The maximum number of entries to receive per SCAN call.
 #
-# source://activesupport//lib/active_support/cache/redis_cache_store.rb#58
+# source://activesupport//lib/active_support/cache/redis_cache_store.rb#59
 ActiveSupport::Cache::RedisCacheStore::SCAN_BATCH_SIZE = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/cache/serializer_with_fallback.rb#8
@@ -1730,8 +1734,8 @@ ActiveSupport::Cache::SerializerWithFallback::SERIALIZERS = T.let(T.unsafe(nil),
 # Some implementations may not support all methods beyond the basic cache
 # methods of #fetch, #write, #read, #exist?, and #delete.
 #
-# ActiveSupport::Cache::Store can store any Ruby object that is supported by
-# its +coder+'s +dump+ and +load+ methods.
+# +ActiveSupport::Cache::Store+ can store any Ruby object that is supported
+# by its +coder+'s +dump+ and +load+ methods.
 #
 #   cache = ActiveSupport::Cache::MemoryStore.new
 #
@@ -1930,8 +1934,8 @@ class ActiveSupport::Cache::Store
   #
   # ==== Options
   #
-  # Internally, +fetch+ calls #read_entry, and calls #write_entry on a cache
-  # miss. Thus, +fetch+ supports the same options as #read and #write.
+  # Internally, +fetch+ calls +read_entry+, and calls +write_entry+ on a
+  # cache miss. Thus, +fetch+ supports the same options as #read and #write.
   # Additionally, +fetch+ supports the following options:
   #
   # * <tt>force: true</tt> - Forces a cache "miss," meaning we treat the
@@ -2193,7 +2197,7 @@ class ActiveSupport::Cache::Store
   def delete_multi_entries(entries, **options); end
 
   # source://activesupport//lib/active_support/cache.rb#821
-  def deserialize_entry(payload); end
+  def deserialize_entry(payload, **_arg1); end
 
   # Expands key to be a consistent string value. Invokes +cache_key+ if
   # object responds to +cache_key+. Otherwise, +to_param+ method will be
@@ -2359,31 +2363,31 @@ module ActiveSupport::Cache::Strategy::LocalCache
 
   private
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#182
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#185
   def bypass_local_cache(&block); end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#159
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#162
   def delete_entry(key, **_arg1); end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#178
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#181
   def local_cache; end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#174
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#177
   def local_cache_key; end
 
   # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#134
-  def read_multi_entries(keys, **options); end
+  def read_multi_entries(names, **options); end
 
   # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#120
   def read_serialized_entry(key, raw: T.unsafe(nil), **options); end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#186
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#189
   def use_temporary_local_cache(temporary_cache); end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#164
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#167
   def write_cache_value(name, value, **options); end
 
-  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#150
+  # source://activesupport//lib/active_support/cache/strategy/local_cache.rb#153
   def write_serialized_entry(key, payload, **_arg2); end
 end
 
@@ -2461,29 +2465,42 @@ end
 # source://activesupport//lib/active_support/cache.rb#26
 ActiveSupport::Cache::UNIVERSAL_OPTIONS = T.let(T.unsafe(nil), Array)
 
-# source://activesupport//lib/active_support/cache.rb#1067
+# Enables the dynamic configuration of Cache entry options while ensuring
+# that conflicting options are not both set. When a block is given to
+# ActiveSupport::Cache::Store#fetch, the second argument will be an
+# instance of +WriteOptions+.
+#
+# source://activesupport//lib/active_support/cache.rb#1071
 class ActiveSupport::Cache::WriteOptions
   # @return [WriteOptions] a new instance of WriteOptions
   #
-  # source://activesupport//lib/active_support/cache.rb#1068
+  # source://activesupport//lib/active_support/cache.rb#1072
   def initialize(options); end
 
-  # source://activesupport//lib/active_support/cache.rb#1089
+  # source://activesupport//lib/active_support/cache.rb#1096
   def expires_at; end
 
-  # source://activesupport//lib/active_support/cache.rb#1093
+  # Sets the Cache entry's +expires_at+ value. If an +expires_in+ option was
+  # previously set, this will unset it since +expires_at+ and +expires_in+
+  # cannot both be set.
+  #
+  # source://activesupport//lib/active_support/cache.rb#1103
   def expires_at=(expires_at); end
 
-  # source://activesupport//lib/active_support/cache.rb#1080
+  # source://activesupport//lib/active_support/cache.rb#1084
   def expires_in; end
 
-  # source://activesupport//lib/active_support/cache.rb#1084
+  # Sets the Cache entry's +expires_in+ value. If an +expires_at+ option was
+  # previously set, this will unset it since +expires_in+ and +expires_at+
+  # cannot both be set.
+  #
+  # source://activesupport//lib/active_support/cache.rb#1091
   def expires_in=(expires_in); end
 
-  # source://activesupport//lib/active_support/cache.rb#1072
+  # source://activesupport//lib/active_support/cache.rb#1076
   def version; end
 
-  # source://activesupport//lib/active_support/cache.rb#1076
+  # source://activesupport//lib/active_support/cache.rb#1080
   def version=(version); end
 end
 
@@ -4387,15 +4404,15 @@ end
 # You can create a custom behavior or set any from the +DEFAULT_BEHAVIORS+
 # constant. Available behaviors are:
 #
-# [+raise+]   Raise ActiveSupport::DeprecationException.
-# [+stderr+]  Log all deprecation warnings to <tt>$stderr</tt>.
-# [+log+]     Log all deprecation warnings to +Rails.logger+.
-# [+notify+]  Use ActiveSupport::Notifications to notify +deprecation.rails+.
-# [+report+]  Use ActiveSupport::ErrorReporter to report deprecations.
-# [+silence+] Do nothing. On \Rails, set <tt>config.active_support.report_deprecations = false</tt> to disable all behaviors.
+# [+:raise+]   Raise ActiveSupport::DeprecationException.
+# [+:stderr+]  Log all deprecation warnings to <tt>$stderr</tt>.
+# [+:log+]     Log all deprecation warnings to +Rails.logger+.
+# [+:notify+]  Use ActiveSupport::Notifications to notify +deprecation.rails+.
+# [+:report+]  Use ActiveSupport::ErrorReporter to report deprecations.
+# [+:silence+] Do nothing. On \Rails, set <tt>config.active_support.report_deprecations = false</tt> to disable all behaviors.
 #
 # Setting behaviors only affects deprecations that happen after boot time.
-# For more information you can read the documentation of the +behavior=+ method.
+# For more information you can read the documentation of the #behavior= method.
 #
 # source://activesupport//lib/active_support/deprecation/behaviors.rb#69
 module ActiveSupport::Deprecation::Behavior
@@ -4409,12 +4426,12 @@ module ActiveSupport::Deprecation::Behavior
   #
   # Available behaviors:
   #
-  # [+raise+]   Raise ActiveSupport::DeprecationException.
-  # [+stderr+]  Log all deprecation warnings to <tt>$stderr</tt>.
-  # [+log+]     Log all deprecation warnings to +Rails.logger+.
-  # [+notify+]  Use ActiveSupport::Notifications to notify +deprecation.rails+.
-  # [+report+]  Use ActiveSupport::ErrorReporter to report deprecations.
-  # [+silence+] Do nothing.
+  # [+:raise+]   Raise ActiveSupport::DeprecationException.
+  # [+:stderr+]  Log all deprecation warnings to <tt>$stderr</tt>.
+  # [+:log+]     Log all deprecation warnings to +Rails.logger+.
+  # [+:notify+]  Use ActiveSupport::Notifications to notify +deprecation.rails+.
+  # [+:report+]  Use ActiveSupport::ErrorReporter to report deprecations.
+  # [+:silence+] Do nothing.
   #
   # Setting behaviors only affects deprecations that happen after boot time.
   # Deprecation warnings raised by gems are not affected by this setting
@@ -4428,10 +4445,12 @@ module ActiveSupport::Deprecation::Behavior
   #     # custom stuff
   #   }
   #
-  # If you are using \Rails, you can set <tt>config.active_support.report_deprecations = false</tt> to disable
-  # all deprecation behaviors. This is similar to the +silence+ option but more performant.
+  # If you are using \Rails, you can set
+  # <tt>config.active_support.report_deprecations = false</tt> to disable
+  # all deprecation behaviors. This is similar to the +:silence+ option but
+  # more performant.
   #
-  # source://activesupport//lib/active_support/deprecation/behaviors.rb#109
+  # source://activesupport//lib/active_support/deprecation/behaviors.rb#111
   def behavior=(behavior); end
 
   # Whether to print a backtrace along with the warning.
@@ -4451,18 +4470,18 @@ module ActiveSupport::Deprecation::Behavior
 
   # Sets the behavior for disallowed deprecations (those configured by
   # ActiveSupport::Deprecation#disallowed_warnings=) to the specified
-  # value. As with +behavior=+, this can be a single value, array, or an
+  # value. As with #behavior=, this can be a single value, array, or an
   # object that responds to +call+.
   #
-  # source://activesupport//lib/active_support/deprecation/behaviors.rb#117
+  # source://activesupport//lib/active_support/deprecation/behaviors.rb#119
   def disallowed_behavior=(behavior); end
 
   private
 
-  # source://activesupport//lib/active_support/deprecation/behaviors.rb#122
+  # source://activesupport//lib/active_support/deprecation/behaviors.rb#124
   def arity_coerce(behavior); end
 
-  # source://activesupport//lib/active_support/deprecation/behaviors.rb#141
+  # source://activesupport//lib/active_support/deprecation/behaviors.rb#143
   def arity_of_callable(callable); end
 end
 
@@ -4962,7 +4981,7 @@ module ActiveSupport::Deprecation::Reporting
 
   private
 
-  # source://activesupport//lib/active_support/deprecation/reporting.rb#151
+  # source://activesupport//lib/active_support/deprecation/reporting.rb#153
   def _extract_callstack(callstack); end
 
   # Outputs a deprecation warning message
@@ -4986,11 +5005,16 @@ module ActiveSupport::Deprecation::Reporting
   # source://activesupport//lib/active_support/deprecation/reporting.rb#140
   def extract_callstack(callstack); end
 
-  # source://activesupport//lib/active_support/deprecation/reporting.rb#166
-  def ignored_callstack(path); end
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/deprecation/reporting.rb#169
+  def ignored_callstack?(path); end
 end
 
-# source://activesupport//lib/active_support/deprecation/reporting.rb#164
+# source://activesupport//lib/active_support/deprecation/reporting.rb#167
+ActiveSupport::Deprecation::Reporting::LIB_DIR = T.let(T.unsafe(nil), String)
+
+# source://activesupport//lib/active_support/deprecation/reporting.rb#166
 ActiveSupport::Deprecation::Reporting::RAILS_GEM_ROOT = T.let(T.unsafe(nil), String)
 
 # Raised when ActiveSupport::Deprecation::Behavior#behavior is set with <tt>:raise</tt>.
@@ -9870,10 +9894,10 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#314
   def listening?(name); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
+  # source://mutex_m/0.2.0/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
+  # source://mutex_m/0.2.0/mutex_m.rb#81
   def locked?; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#293
@@ -9888,13 +9912,13 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#68
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
+  # source://mutex_m/0.2.0/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
+  # source://mutex_m/0.2.0/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
+  # source://mutex_m/0.2.0/mutex_m.rb#96
   def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#85
@@ -10236,379 +10260,433 @@ module ActiveSupport::NumberHelper
   extend ::ActiveSupport::Autoload
   extend ::ActiveSupport::NumberHelper
 
-  # Formats a +number+ into a currency string (e.g., $13.65). You
-  # can customize the format in the +options+ hash.
+  # Formats a +number+ into a currency string.
+  #
+  #   number_to_currency(1234567890.50)  # => "$1,234,567,890.50"
+  #   number_to_currency(1234567890.506) # => "$1,234,567,890.51"
+  #   number_to_currency("12x34")        # => "$12x34"
+  #
+  #   number_to_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: "")
+  #   # => "&pound;1234567890,50"
   #
   # The currency unit and number formatting of the current locale will be used
-  # unless otherwise specified in the provided options. No currency conversion
-  # is performed. If the user is given a way to change their locale, they will
+  # unless otherwise specified via options. No currency conversion is
+  # performed. If the user is given a way to change their locale, they will
   # also be able to change the relative value of the currency displayed with
   # this helper. If your application will ever support multiple locales, you
-  # may want to specify a constant <tt>:locale</tt> option or consider
-  # using a library capable of currency conversion.
+  # may want to specify a constant +:locale+ option or consider using a
+  # library capable of currency conversion.
   #
   # ==== Options
   #
-  # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  #   (defaults to current locale).
-  # * <tt>:precision</tt> - Sets the level of precision (defaults
-  #   to 2).
-  # * <tt>:round_mode</tt> - Determine how rounding is performed
-  #   (defaults to :default. See BigDecimal::mode)
-  # * <tt>:unit</tt> - Sets the denomination of the currency
-  #   (defaults to "$").
-  # * <tt>:separator</tt> - Sets the separator between the units
-  #   (defaults to ".").
-  # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  #   to ",").
-  # * <tt>:format</tt> - Sets the format for non-negative numbers
-  #   (defaults to "%u%n").  Fields are <tt>%u</tt> for the
-  #   currency, and <tt>%n</tt> for the number.
-  # * <tt>:negative_format</tt> - Sets the format for negative
-  #   numbers (defaults to prepending a hyphen to the formatted
-  #   number given by <tt>:format</tt>).  Accepts the same fields
-  #   than <tt>:format</tt>, except <tt>%n</tt> is here the
-  #   absolute value of the number.
-  # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  #   insignificant zeros after the decimal separator (defaults to
-  #   +false+).
+  # [+:locale+]
+  #   The locale to use for formatting. Defaults to the current locale.
   #
-  # ==== Examples
+  #     number_to_currency(1234567890.506, locale: :fr)
+  #     # => "1 234 567 890,51 €"
   #
-  #   number_to_currency(1234567890.50)                # => "$1,234,567,890.50"
-  #   number_to_currency(1234567890.506)               # => "$1,234,567,890.51"
-  #   number_to_currency(1234567890.506, precision: 3) # => "$1,234,567,890.506"
-  #   number_to_currency(1234567890.506, locale: :fr)  # => "1 234 567 890,51 €"
-  #   number_to_currency('123a456')                    # => "$123a456"
+  # [+:precision+]
+  #   The level of precision. Defaults to 2.
   #
-  #   number_to_currency(-0.456789, precision: 0)
-  #   # => "$0"
-  #   number_to_currency(-1234567890.50, negative_format: '(%u%n)')
-  #   # => "($1,234,567,890.50)"
-  #   number_to_currency(1234567890.50, unit: '&pound;', separator: ',', delimiter: '')
-  #   # => "&pound;1234567890,50"
-  #   number_to_currency(1234567890.50, unit: '&pound;', separator: ',', delimiter: '', format: '%n %u')
-  #   # => "1234567890,50 &pound;"
-  #   number_to_currency(1234567890.50, strip_insignificant_zeros: true)
-  #   # => "$1,234,567,890.5"
-  #   number_to_currency(1234567890.50, precision: 0, round_mode: :up)
-  #   # => "$1,234,567,891"
+  #     number_to_currency(1234567890.123, precision: 3) # => "$1,234,567,890.123"
+  #     number_to_currency(0.456789, precision: 0)       # => "$0"
   #
-  # source://activesupport//lib/active_support/number_helper.rb#114
+  # [+:round_mode+]
+  #   Specifies how rounding is performed. See +BigDecimal.mode+. Defaults to
+  #   +:default+.
+  #
+  #     number_to_currency(1234567890.01, precision: 0, round_mode: :up)
+  #     # => "$1,234,567,891"
+  #
+  # [+:unit+]
+  #   The denomination of the currency. Defaults to <tt>"$"</tt>.
+  #
+  # [+:separator+]
+  #   The decimal separator. Defaults to <tt>"."</tt>.
+  #
+  # [+:delimiter+]
+  #   The thousands delimiter. Defaults to <tt>","</tt>.
+  #
+  # [+:format+]
+  #   The format for non-negative numbers. <tt>%u</tt> represents the currency,
+  #   and <tt>%n</tt> represents the number. Defaults to <tt>"%u%n"</tt>.
+  #
+  #     number_to_currency(1234567890.50, format: "%n %u")
+  #     # => "1,234,567,890.50 $"
+  #
+  # [+:negative_format+]
+  #   The format for negative numbers. <tt>%u</tt> and <tt>%n</tt> behave the
+  #   same as in +:format+, but <tt>%n</tt> represents the absolute value of
+  #   the number. Defaults to the value of +:format+ prepended with <tt>-</tt>.
+  #
+  #     number_to_currency(-1234567890.50, negative_format: "(%u%n)")
+  #     # => "($1,234,567,890.50)"
+  #
+  # [+:strip_insignificant_zeros+]
+  #   Whether to remove insignificant zeros after the decimal separator.
+  #   Defaults to false.
+  #
+  #     number_to_currency(1234567890.50, strip_insignificant_zeros: true)
+  #     # => "$1,234,567,890.5"
+  #
+  # source://activesupport//lib/active_support/number_helper.rb#139
   def number_to_currency(number, options = T.unsafe(nil)); end
 
-  # Formats a +number+ with grouped thousands using +delimiter+
-  # (e.g., 12,324). You can customize the format in the +options+
-  # hash.
+  # Formats +number+ by grouping thousands with a delimiter.
+  #
+  #   number_to_delimited(12345678)      # => "12,345,678"
+  #   number_to_delimited("123456")      # => "123,456"
+  #   number_to_delimited(12345678.9876) # => "12,345,678.9876"
+  #   number_to_delimited("12x34")       # => "12x34"
+  #
+  #   number_to_delimited(12345678.9876, delimiter: ".", separator: ",")
+  #   # => "12.345.678,9876"
   #
   # ==== Options
   #
-  # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  #   (defaults to current locale).
-  # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  #   to ",").
-  # * <tt>:separator</tt> - Sets the separator between the
-  #   fractional and integer digits (defaults to ".").
-  # * <tt>:delimiter_pattern</tt> - Sets a custom regular expression used for
-  #   deriving the placement of delimiter. Helpful when using currency formats
-  #   like INR.
+  # [+:locale+]
+  #   The locale to use for formatting. Defaults to the current locale.
   #
-  # ==== Examples
+  #     number_to_delimited(12345678.05, locale: :fr)
+  #     # => "12 345 678,05"
   #
-  #   number_to_delimited(12345678)                    # => "12,345,678"
-  #   number_to_delimited('123456')                    # => "123,456"
-  #   number_to_delimited(12345678.05)                 # => "12,345,678.05"
-  #   number_to_delimited(12345678, delimiter: '.')    # => "12.345.678"
-  #   number_to_delimited(12345678, delimiter: ',')    # => "12,345,678"
-  #   number_to_delimited(12345678.05, separator: ' ') # => "12,345,678 05"
-  #   number_to_delimited(12345678.05, locale: :fr)    # => "12 345 678,05"
-  #   number_to_delimited('112a')                      # => "112a"
-  #   number_to_delimited(98765432.98, delimiter: ' ', separator: ',')
-  #                                                    # => "98 765 432,98"
-  #   number_to_delimited("123456.78",
-  #     delimiter_pattern: /(\d+?)(?=(\d\d)+(\d)(?!\d))/)
-  #                                                    # => "1,23,456.78"
+  # [+:delimiter+]
+  #   The thousands delimiter. Defaults to <tt>","</tt>.
   #
-  # source://activesupport//lib/active_support/number_helper.rb#189
+  #     number_to_delimited(12345678, delimiter: ".")
+  #     # => "12.345.678"
+  #
+  # [+:separator+]
+  #   The decimal separator. Defaults to <tt>"."</tt>.
+  #
+  #     number_to_delimited(12345678.05, separator: " ")
+  #     # => "12,345,678 05"
+  #
+  # [+:delimiter_pattern+]
+  #   A regexp to determine the placement of delimiters. Helpful when using
+  #   currency formats like INR.
+  #
+  #     number_to_delimited("123456.78", delimiter_pattern: /(\d+?)(?=(\d\d)+(\d)(?!\d))/)
+  #     # => "1,23,456.78"
+  #
+  # source://activesupport//lib/active_support/number_helper.rb#242
   def number_to_delimited(number, options = T.unsafe(nil)); end
 
-  # Pretty prints (formats and approximates) a number in a way it
-  # is more readable by humans (e.g.: 1200000000 becomes "1.2
-  # Billion"). This is useful for numbers that can get very large
-  # (and too hard to read).
+  # Formats +number+ into a more human-friendly representation. Useful for
+  # numbers that can become very large and too hard to read.
   #
-  # See <tt>number_to_human_size</tt> if you want to print a file
-  # size.
+  #   number_to_human(123)                 # => "123"
+  #   number_to_human(1234)                # => "1.23 Thousand"
+  #   number_to_human(12345)               # => "12.3 Thousand"
+  #   number_to_human(1234567)             # => "1.23 Million"
+  #   number_to_human(1234567890)          # => "1.23 Billion"
+  #   number_to_human(1234567890123)       # => "1.23 Trillion"
+  #   number_to_human(1234567890123456)    # => "1.23 Quadrillion"
+  #   number_to_human(1234567890123456789) # => "1230 Quadrillion"
   #
-  # You can also define your own unit-quantifier names if you want
-  # to use other decimal units (e.g.: 1500 becomes "1.5
-  # kilometers", 0.150 becomes "150 milliliters", etc). You may
-  # define a wide range of unit quantifiers, even fractional ones
-  # (centi, deci, mili, etc).
+  # See #number_to_human_size if you want to pretty-print a file size.
   #
   # ==== Options
   #
-  # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  #   (defaults to current locale).
-  # * <tt>:precision</tt> - Sets the precision of the number
-  #   (defaults to 3).
-  # * <tt>:round_mode</tt> - Determine how rounding is performed
-  #   (defaults to :default. See BigDecimal::mode)
-  # * <tt>:significant</tt> - If +true+, precision will be the number
-  #   of significant_digits. If +false+, the number of fractional
-  #   digits (defaults to +true+)
-  # * <tt>:separator</tt> - Sets the separator between the
-  #   fractional and integer digits (defaults to ".").
-  # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  #   to "").
-  # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  #   insignificant zeros after the decimal separator (defaults to
-  #   +true+)
-  # * <tt>:units</tt> - A Hash of unit quantifier names. Or a
-  #   string containing an i18n scope where to find this hash. It
-  #   might have the following keys:
-  #   * *integers*: <tt>:unit</tt>, <tt>:ten</tt>,
-  #     <tt>:hundred</tt>, <tt>:thousand</tt>, <tt>:million</tt>,
-  #     <tt>:billion</tt>, <tt>:trillion</tt>,
-  #     <tt>:quadrillion</tt>
-  #   * *fractionals*: <tt>:deci</tt>, <tt>:centi</tt>,
-  #     <tt>:mili</tt>, <tt>:micro</tt>, <tt>:nano</tt>,
-  #     <tt>:pico</tt>, <tt>:femto</tt>
-  # * <tt>:format</tt> - Sets the format of the output string
-  #   (defaults to "%n %u"). The field types are:
-  #   * %u - The quantifier (ex.: 'thousand')
-  #   * %n - The number
+  # [+:locale+]
+  #   The locale to use for formatting. Defaults to the current locale.
   #
-  # ==== Examples
+  # [+:precision+]
+  #   The level of precision. Defaults to 3.
   #
-  #   number_to_human(123)                         # => "123"
-  #   number_to_human(1234)                        # => "1.23 Thousand"
-  #   number_to_human(12345)                       # => "12.3 Thousand"
-  #   number_to_human(1234567)                     # => "1.23 Million"
-  #   number_to_human(1234567890)                  # => "1.23 Billion"
-  #   number_to_human(1234567890123)               # => "1.23 Trillion"
-  #   number_to_human(1234567890123456)            # => "1.23 Quadrillion"
-  #   number_to_human(1234567890123456789)         # => "1230 Quadrillion"
-  #   number_to_human(489939, precision: 2)        # => "490 Thousand"
-  #   number_to_human(489939, precision: 4)        # => "489.9 Thousand"
-  #   number_to_human(489939, precision: 2
-  #                         , round_mode: :down)   # => "480 Thousand"
-  #   number_to_human(1234567, precision: 4,
-  #                            significant: false) # => "1.2346 Million"
-  #   number_to_human(1234567, precision: 1,
-  #                            separator: ',',
-  #                            significant: false) # => "1,2 Million"
+  #     number_to_human(123456, precision: 2) # => "120 Thousand"
+  #     number_to_human(123456, precision: 4) # => "123.5 Thousand"
   #
-  #   number_to_human(500000000, precision: 5)           # => "500 Million"
-  #   number_to_human(12345012345, significant: false)   # => "12.345 Billion"
+  # [+:round_mode+]
+  #   Specifies how rounding is performed. See +BigDecimal.mode+. Defaults to
+  #   +:default+.
   #
-  # Non-significant zeros after the decimal separator are stripped
-  # out by default (set <tt>:strip_insignificant_zeros</tt> to
-  # +false+ to change that):
+  #     number_to_human(123456, precision: 2, round_mode: :up)
+  #     # => "130 Thousand"
   #
-  #   number_to_human(12.00001)                                       # => "12"
-  #   number_to_human(12.00001, strip_insignificant_zeros: false)     # => "12.0"
+  # [+:significant+]
+  #   Whether +:precision+ should be applied to significant digits instead of
+  #   fractional digits. Defaults to true.
   #
-  # ==== Custom Unit Quantifiers
+  # [+:separator+]
+  #   The decimal separator. Defaults to <tt>"."</tt>.
   #
-  # You can also use your own custom unit quantifiers:
+  #     number_to_human(123456, precision: 4, separator: ",")
+  #     # => "123,5 Thousand"
   #
-  #   number_to_human(500000, units: { unit: 'ml', thousand: 'lt' })  # => "500 lt"
+  # [+:delimiter+]
+  #   The thousands delimiter. Defaults to <tt>","</tt>.
   #
-  # If in your I18n locale you have:
+  # [+:strip_insignificant_zeros+]
+  #   Whether to remove insignificant zeros after the decimal separator.
+  #   Defaults to true.
   #
-  #   distance:
-  #     centi:
-  #       one: "centimeter"
-  #       other: "centimeters"
-  #     unit:
-  #       one: "meter"
-  #       other: "meters"
-  #     thousand:
-  #       one: "kilometer"
-  #       other: "kilometers"
-  #     billion: "gazillion-distance"
+  #     number_to_human(1000000)                                   # => "1 Million"
+  #     number_to_human(1000000, strip_insignificant_zeros: false) # => "1.00 Million"
+  #     number_to_human(10.01)                                     # => "10"
+  #     number_to_human(10.01, strip_insignificant_zeros: false)   # => "10.0"
   #
-  # Then you could do:
+  # [+:format+]
+  #   The format of the output. <tt>%n</tt> represents the number, and
+  #   <tt>%u</tt> represents the quantifier (e.g., "Thousand"). Defaults to
+  #   <tt>"%n %u"</tt>.
   #
-  #   number_to_human(543934, units: :distance)            # => "544 kilometers"
-  #   number_to_human(54393498, units: :distance)          # => "54400 kilometers"
-  #   number_to_human(54393498000, units: :distance)       # => "54.4 gazillion-distance"
-  #   number_to_human(343, units: :distance, precision: 1) # => "300 meters"
-  #   number_to_human(1, units: :distance)                 # => "1 meter"
-  #   number_to_human(0.34, units: :distance)              # => "34 centimeters"
+  # [+:units+]
+  #   A Hash of custom unit quantifier names.
   #
-  # source://activesupport//lib/active_support/number_helper.rb#392
+  #     number_to_human(1, units: { unit: "m", thousand: "km" })        # => "1 m"
+  #     number_to_human(100, units: { unit: "m", thousand: "km" })      # => "100 m"
+  #     number_to_human(1000, units: { unit: "m", thousand: "km" })     # => "1 km"
+  #     number_to_human(100000, units: { unit: "m", thousand: "km" })   # => "100 km"
+  #     number_to_human(10000000, units: { unit: "m", thousand: "km" }) # => "10000 km"
+  #
+  #   The following keys are supported for integer units: +:unit+, +:ten+,
+  #   +:hundred+, +:thousand+, +:million+, +:billion+, +:trillion+,
+  #   +:quadrillion+. Additionally, the following keys are supported for
+  #   fractional units: +:deci+, +:centi+, +:mili+, +:micro+, +:nano+,
+  #   +:pico+, +:femto+.
+  #
+  #   The Hash can also be defined as a scope in an I18n locale. For example:
+  #
+  #     en:
+  #       distance:
+  #         centi:
+  #           one: "centimeter"
+  #           other: "centimeters"
+  #         unit:
+  #           one: "meter"
+  #           other: "meters"
+  #         thousand:
+  #           one: "kilometer"
+  #           other: "kilometers"
+  #
+  #   Then it can be specified by name:
+  #
+  #     number_to_human(1, units: :distance)        # => "1 meter"
+  #     number_to_human(100, units: :distance)      # => "100 meters"
+  #     number_to_human(1000, units: :distance)     # => "1 kilometer"
+  #     number_to_human(100000, units: :distance)   # => "100 kilometers"
+  #     number_to_human(10000000, units: :distance) # => "10000 kilometers"
+  #     number_to_human(0.1, units: :distance)      # => "10 centimeters"
+  #     number_to_human(0.01, units: :distance)     # => "1 centimeter"
+  #
+  # source://activesupport//lib/active_support/number_helper.rb#453
   def number_to_human(number, options = T.unsafe(nil)); end
 
-  # Formats the bytes in +number+ into a more understandable
-  # representation (e.g., giving it 1500 yields 1.46 KB). This
-  # method is useful for reporting file sizes to users. You can
-  # customize the format in the +options+ hash.
+  # Formats +number+ as bytes into a more human-friendly representation.
+  # Useful for reporting file sizes to users.
   #
-  # See <tt>number_to_human</tt> if you want to pretty-print a
-  # generic number.
+  #   number_to_human_size(123)                 # => "123 Bytes"
+  #   number_to_human_size(1234)                # => "1.21 KB"
+  #   number_to_human_size(12345)               # => "12.1 KB"
+  #   number_to_human_size(1234567)             # => "1.18 MB"
+  #   number_to_human_size(1234567890)          # => "1.15 GB"
+  #   number_to_human_size(1234567890123)       # => "1.12 TB"
+  #   number_to_human_size(1234567890123456)    # => "1.1 PB"
+  #   number_to_human_size(1234567890123456789) # => "1.07 EB"
+  #
+  # See #number_to_human if you want to pretty-print a generic number.
   #
   # ==== Options
   #
-  # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  #   (defaults to current locale).
-  # * <tt>:precision</tt> - Sets the precision of the number
-  #   (defaults to 3).
-  # * <tt>:round_mode</tt> - Determine how rounding is performed
-  #   (defaults to :default. See BigDecimal::mode)
-  # * <tt>:significant</tt> - If +true+, precision will be the number
-  #   of significant_digits. If +false+, the number of fractional
-  #   digits (defaults to +true+)
-  # * <tt>:separator</tt> - Sets the separator between the
-  #   fractional and integer digits (defaults to ".").
-  # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  #   to "").
-  # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  #   insignificant zeros after the decimal separator (defaults to
-  #   +true+)
+  # [+:locale+]
+  #   The locale to use for formatting. Defaults to the current locale.
   #
-  # ==== Examples
+  # [+:precision+]
+  #   The level of precision. Defaults to 3.
   #
-  #   number_to_human_size(123)                                    # => "123 Bytes"
-  #   number_to_human_size(1234)                                   # => "1.21 KB"
-  #   number_to_human_size(12345)                                  # => "12.1 KB"
-  #   number_to_human_size(1234567)                                # => "1.18 MB"
-  #   number_to_human_size(1234567890)                             # => "1.15 GB"
-  #   number_to_human_size(1234567890123)                          # => "1.12 TB"
-  #   number_to_human_size(1234567890123456)                       # => "1.1 PB"
-  #   number_to_human_size(1234567890123456789)                    # => "1.07 EB"
-  #   number_to_human_size(1234567, precision: 2)                  # => "1.2 MB"
-  #   number_to_human_size(483989, precision: 2)                   # => "470 KB"
-  #   number_to_human_size(483989, precision: 2, round_mode: :up)  # => "480 KB"
-  #   number_to_human_size(1234567, precision: 2, separator: ',')  # => "1,2 MB"
-  #   number_to_human_size(1234567890123, precision: 5)            # => "1.1228 TB"
-  #   number_to_human_size(524288000, precision: 5)                # => "500 MB"
+  #     number_to_human_size(123456, precision: 2)  # => "120 KB"
+  #     number_to_human_size(1234567, precision: 2) # => "1.2 MB"
   #
-  # source://activesupport//lib/active_support/number_helper.rb#283
+  # [+:round_mode+]
+  #   Specifies how rounding is performed. See +BigDecimal.mode+. Defaults to
+  #   +:default+.
+  #
+  #     number_to_human_size(123456, precision: 2, round_mode: :up)
+  #     # => "130 KB"
+  #
+  # [+:significant+]
+  #   Whether +:precision+ should be applied to significant digits instead of
+  #   fractional digits. Defaults to true.
+  #
+  # [+:separator+]
+  #   The decimal separator. Defaults to <tt>"."</tt>.
+  #
+  #     number_to_human_size(1234567, separator: ",")
+  #     # => "1,18 MB"
+  #
+  # [+:delimiter+]
+  #   The thousands delimiter. Defaults to <tt>","</tt>.
+  #
+  # [+:strip_insignificant_zeros+]
+  #   Whether to remove insignificant zeros after the decimal separator.
+  #   Defaults to true.
+  #
+  # source://activesupport//lib/active_support/number_helper.rb#351
   def number_to_human_size(number, options = T.unsafe(nil)); end
 
-  # Formats a +number+ as a percentage string (e.g., 65%). You can
-  # customize the format in the +options+ hash.
+  # Formats +number+ as a percentage string.
+  #
+  #   number_to_percentage(100)   # => "100.000%"
+  #   number_to_percentage("99")  # => "99.000%"
+  #   number_to_percentage("99x") # => "99x%"
+  #
+  #   number_to_percentage(12345.6789, delimiter: ".", separator: ",", precision: 2)
+  #   # => "12.345,68%"
   #
   # ==== Options
   #
-  # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  #   (defaults to current locale).
-  # * <tt>:precision</tt> - Sets the precision of the number
-  #   (defaults to 3). Keeps the number's precision if +nil+.
-  # * <tt>:round_mode</tt> - Determine how rounding is performed
-  #   (defaults to :default. See BigDecimal::mode)
-  # * <tt>:significant</tt> - If +true+, precision will be the number
-  #   of significant_digits. If +false+, the number of fractional
-  #   digits (defaults to +false+).
-  # * <tt>:separator</tt> - Sets the separator between the
-  #   fractional and integer digits (defaults to ".").
-  # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  #   to "").
-  # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  #   insignificant zeros after the decimal separator (defaults to
-  #   +false+).
-  # * <tt>:format</tt> - Specifies the format of the percentage
-  #   string The number field is <tt>%n</tt> (defaults to "%n%").
+  # [+:locale+]
+  #   The locale to use for formatting. Defaults to the current locale.
   #
-  # ==== Examples
+  #     number_to_percentage(1000, locale: :fr)
+  #     # => "1000,000%"
   #
-  #   number_to_percentage(100)                                              # => "100.000%"
-  #   number_to_percentage('98')                                             # => "98.000%"
-  #   number_to_percentage(100, precision: 0)                                # => "100%"
-  #   number_to_percentage(1000, delimiter: '.', separator: ',')             # => "1.000,000%"
-  #   number_to_percentage(302.24398923423, precision: 5)                    # => "302.24399%"
-  #   number_to_percentage(1000, locale: :fr)                                # => "1000,000%"
-  #   number_to_percentage(1000, precision: nil)                             # => "1000%"
-  #   number_to_percentage('98a')                                            # => "98a%"
-  #   number_to_percentage(100, format: '%n  %')                             # => "100.000  %"
-  #   number_to_percentage(302.24398923423, precision: 5, round_mode: :down) # => "302.24398%"
+  # [+:precision+]
+  #   The level of precision, or +nil+ to preserve +number+'s precision.
+  #   Defaults to 2.
   #
-  # source://activesupport//lib/active_support/number_helper.rb#154
+  #     number_to_percentage(12.3456789, precision: 4) # => "12.3457%"
+  #     number_to_percentage(99.999, precision: 0)     # => "100%"
+  #     number_to_percentage(99.999, precision: nil)   # => "99.999%"
+  #
+  # [+:round_mode+]
+  #   Specifies how rounding is performed. See +BigDecimal.mode+. Defaults to
+  #   +:default+.
+  #
+  #     number_to_percentage(12.3456789, precision: 4, round_mode: :down)
+  #     # => "12.3456%"
+  #
+  # [+:significant+]
+  #   Whether +:precision+ should be applied to significant digits instead of
+  #   fractional digits. Defaults to false.
+  #
+  #     number_to_percentage(12345.6789)                                  # => "12345.679%"
+  #     number_to_percentage(12345.6789, significant: true)               # => "12300%"
+  #     number_to_percentage(12345.6789, precision: 2)                    # => "12345.68%"
+  #     number_to_percentage(12345.6789, precision: 2, significant: true) # => "12000%"
+  #
+  # [+:separator+]
+  #   The decimal separator. Defaults to <tt>"."</tt>.
+  #
+  # [+:delimiter+]
+  #   The thousands delimiter. Defaults to <tt>","</tt>.
+  #
+  # [+:strip_insignificant_zeros+]
+  #   Whether to remove insignificant zeros after the decimal separator.
+  #   Defaults to false.
+  #
+  # [+:format+]
+  #   The format of the output. <tt>%n</tt> represents the number. Defaults to
+  #   <tt>"%n%"</tt>.
+  #
+  #     number_to_percentage(100, format: "%n  %")
+  #     # => "100.000  %"
+  #
+  # source://activesupport//lib/active_support/number_helper.rb#201
   def number_to_percentage(number, options = T.unsafe(nil)); end
 
-  # Formats a +number+ into a phone number (US by default e.g., (555)
-  # 123-9876). You can customize the format in the +options+ hash.
+  # Formats +number+ into a phone number.
   #
-  # ==== Options
+  #   number_to_phone(5551234)    # => "555-1234"
+  #   number_to_phone("5551234")  # => "555-1234"
+  #   number_to_phone(1235551234) # => "123-555-1234"
+  #   number_to_phone("12x34")    # => "12x34"
   #
-  # * <tt>:area_code</tt> - Adds parentheses around the area code.
-  # * <tt>:delimiter</tt> - Specifies the delimiter to use
-  #   (defaults to "-").
-  # * <tt>:extension</tt> - Specifies an extension to add to the
-  #   end of the generated number.
-  # * <tt>:country_code</tt> - Sets the country code for the phone
-  #   number.
-  # * <tt>:pattern</tt> - Specifies how the number is divided into three
-  #   groups with the custom regexp to override the default format.
-  # ==== Examples
-  #
-  #   number_to_phone(5551234)                                     # => "555-1234"
-  #   number_to_phone('5551234')                                   # => "555-1234"
-  #   number_to_phone(1235551234)                                  # => "123-555-1234"
-  #   number_to_phone(1235551234, area_code: true)                 # => "(123) 555-1234"
-  #   number_to_phone(1235551234, delimiter: ' ')                  # => "123 555 1234"
-  #   number_to_phone(1235551234, area_code: true, extension: 555) # => "(123) 555-1234 x 555"
-  #   number_to_phone(1235551234, country_code: 1)                 # => "+1-123-555-1234"
-  #   number_to_phone('123a456')                                   # => "123a456"
-  #
-  #   number_to_phone(1235551234, country_code: 1, extension: 1343, delimiter: '.')
+  #   number_to_phone(1235551234, delimiter: ".", country_code: 1, extension: 1343)
   #   # => "+1.123.555.1234 x 1343"
   #
-  #   number_to_phone(75561234567, pattern: /(\d{1,4})(\d{4})(\d{4})$/, area_code: true)
-  #   # => "(755) 6123-4567"
-  #   number_to_phone(13312345678, pattern: /(\d{3})(\d{4})(\d{4})$/)
-  #   # => "133-1234-5678"
+  # ==== Options
   #
-  # source://activesupport//lib/active_support/number_helper.rb#53
+  # [+:area_code+]
+  #   Whether to use parentheses for the area code. Defaults to false.
+  #
+  #     number_to_phone(1235551234, area_code: true)
+  #     # => "(123) 555-1234"
+  #
+  # [+:delimiter+]
+  #   The digit group delimiter to use. Defaults to <tt>"-"</tt>.
+  #
+  #     number_to_phone(1235551234, delimiter: " ")
+  #     # => "123 555 1234"
+  #
+  # [+:country_code+]
+  #   A country code to prepend.
+  #
+  #     number_to_phone(1235551234, country_code: 1)
+  #     # => "+1-123-555-1234"
+  #
+  # [+:extension+]
+  #   An extension to append.
+  #
+  #     number_to_phone(1235551234, extension: 555)
+  #     # => "123-555-1234 x 555"
+  #
+  # [+:pattern+]
+  #   A regexp that specifies how the digits should be grouped. The first
+  #   three captures from the regexp are treated as digit groups.
+  #
+  #     number_to_phone(13312345678, pattern: /(\d{3})(\d{4})(\d{4})$/)
+  #     # => "133-1234-5678"
+  #     number_to_phone(75561234567, pattern: /(\d{1,4})(\d{4})(\d{4})$/, area_code: true)
+  #     # => "(755) 6123-4567"
+  #
+  # source://activesupport//lib/active_support/number_helper.rb#66
   def number_to_phone(number, options = T.unsafe(nil)); end
 
-  # Formats a +number+ with the specified level of
-  # <tt>:precision</tt> (e.g., 112.32 has a precision of 2 if
-  # +:significant+ is +false+, and 5 if +:significant+ is +true+).
-  # You can customize the format in the +options+ hash.
+  # Formats +number+ to a specific level of precision.
+  #
+  #   number_to_rounded(12345.6789)                # => "12345.679"
+  #   number_to_rounded(12345.6789, precision: 2)  # => "12345.68"
+  #   number_to_rounded(12345.6789, precision: 0)  # => "12345"
+  #   number_to_rounded(12345, precision: 5)       # => "12345.00000"
   #
   # ==== Options
   #
-  # * <tt>:locale</tt> - Sets the locale to be used for formatting
-  #   (defaults to current locale).
-  # * <tt>:precision</tt> - Sets the precision of the number
-  #   (defaults to 3). Keeps the number's precision if +nil+.
-  # * <tt>:round_mode</tt> - Determine how rounding is performed
-  #   (defaults to :default. See BigDecimal::mode)
-  # * <tt>:significant</tt> - If +true+, precision will be the number
-  #   of significant_digits. If +false+, the number of fractional
-  #   digits (defaults to +false+).
-  # * <tt>:separator</tt> - Sets the separator between the
-  #   fractional and integer digits (defaults to ".").
-  # * <tt>:delimiter</tt> - Sets the thousands delimiter (defaults
-  #   to "").
-  # * <tt>:strip_insignificant_zeros</tt> - If +true+ removes
-  #   insignificant zeros after the decimal separator (defaults to
-  #   +false+).
+  # [+:locale+]
+  #   The locale to use for formatting. Defaults to the current locale.
   #
-  # ==== Examples
+  #     number_to_rounded(111.234, locale: :fr)
+  #     # => "111,234"
   #
-  #   number_to_rounded(111.2345)                                  # => "111.235"
-  #   number_to_rounded(111.2345, precision: 2)                    # => "111.23"
-  #   number_to_rounded(13, precision: 5)                          # => "13.00000"
-  #   number_to_rounded(389.32314, precision: 0)                   # => "389"
-  #   number_to_rounded(111.2345, significant: true)               # => "111"
-  #   number_to_rounded(111.2345, precision: 1, significant: true) # => "100"
-  #   number_to_rounded(13, precision: 5, significant: true)       # => "13.000"
-  #   number_to_rounded(13, precision: nil)                        # => "13"
-  #   number_to_rounded(389.32314, precision: 0, round_mode: :up)  # => "390"
-  #   number_to_rounded(111.234, locale: :fr)                      # => "111,234"
+  # [+:precision+]
+  #   The level of precision, or +nil+ to preserve +number+'s precision.
+  #   Defaults to 3.
   #
-  #   number_to_rounded(13, precision: 5, significant: true, strip_insignificant_zeros: true)
-  #   # => "13"
+  #     number_to_rounded(12345.6789, precision: nil)
+  #     # => "12345.6789"
   #
-  #   number_to_rounded(389.32314, precision: 4, significant: true) # => "389.3"
-  #   number_to_rounded(1111.2345, precision: 2, separator: ',', delimiter: '.')
-  #   # => "1.111,23"
+  # [+:round_mode+]
+  #   Specifies how rounding is performed. See +BigDecimal.mode+. Defaults to
+  #   +:default+.
   #
-  # source://activesupport//lib/active_support/number_helper.rb#236
+  #     number_to_rounded(12.34, precision: 0, round_mode: :up)
+  #     # => "13"
+  #
+  # [+:significant+]
+  #   Whether +:precision+ should be applied to significant digits instead of
+  #   fractional digits. Defaults to false.
+  #
+  #     number_to_rounded(12345.6789)                                  # => "12345.679"
+  #     number_to_rounded(12345.6789, significant: true)               # => "12300"
+  #     number_to_rounded(12345.6789, precision: 2)                    # => "12345.68"
+  #     number_to_rounded(12345.6789, precision: 2, significant: true) # => "12000"
+  #
+  # [+:separator+]
+  #   The decimal separator. Defaults to <tt>"."</tt>.
+  #
+  # [+:delimiter+]
+  #   The thousands delimiter. Defaults to <tt>","</tt>.
+  #
+  # [+:strip_insignificant_zeros+]
+  #   Whether to remove insignificant zeros after the decimal separator.
+  #   Defaults to false.
+  #
+  #     number_to_rounded(12.34, strip_insignificant_zeros: false)  # => "12.340"
+  #     number_to_rounded(12.34, strip_insignificant_zeros: true)   # => "12.34"
+  #     number_to_rounded(12.3456, strip_insignificant_zeros: true) # => "12.346"
+  #
+  # source://activesupport//lib/active_support/number_helper.rb#298
   def number_to_rounded(number, options = T.unsafe(nil)); end
 end
 
@@ -12155,8 +12233,15 @@ class ActiveSupport::SyntaxErrorProxy
 
   private
 
-  # source://activesupport//lib/active_support/syntax_error_proxy.rb#45
+  # source://activesupport//lib/active_support/syntax_error_proxy.rb#47
   def parse_message_for_trace; end
+
+  # 3.2 and older versions of Ruby
+  #
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/syntax_error_proxy.rb#61
+  def source_location_eval?; end
 end
 
 # source://activesupport//lib/active_support/syntax_error_proxy.rb#15
@@ -12334,43 +12419,43 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#963
   def _teardown_callbacks; end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#735
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#736
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#664
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#665
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#675
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#676
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#687
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#688
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#699
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#700
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#706
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#707
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#717
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#718
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#727
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#728
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#745
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#746
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#780
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#781
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#803
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#804
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#811
-  def assert_not_respond_to(obj, meth, msg = T.unsafe(nil)); end
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#813
+  def assert_not_respond_to(obj, meth, msg = T.unsafe(nil), include_all: T.unsafe(nil)); end
 
-  # source://minitest/5.20.0/lib/minitest/assertions.rb#820
+  # source://minitest/5.21.1/lib/minitest/assertions.rb#822
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -12382,7 +12467,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#298
   def inspect; end
 
-  # source://minitest/5.20.0/lib/minitest.rb#307
+  # source://minitest/5.21.1/lib/minitest.rb#311
   def method_name; end
 
   class << self
@@ -12616,7 +12701,7 @@ module ActiveSupport::Testing::Assertions
   #     post :create, params: { status: { ok: true } }
   #   end
   #
-  # Provide the optional keyword argument :from to specify the expected
+  # Provide the optional keyword argument +:from+ to specify the expected
   # initial value.
   #
   #   assert_no_changes -> { Status.all_good? }, from: true do
@@ -13405,7 +13490,7 @@ module ActiveSupport::Testing::TimeHelpers
   #   end
   #   Time.current # => Sun, 09 Jul 2017 15:34:50 EST -05:00
   #
-  # source://activesupport//lib/active_support/testing/time_helpers.rb#252
+  # source://activesupport//lib/active_support/testing/time_helpers.rb#256
   def freeze_time(with_usec: T.unsafe(nil), &block); end
 
   # Changes current time to the time in the future or in the past by a given time difference by
@@ -13459,7 +13544,7 @@ module ActiveSupport::Testing::TimeHelpers
   #
   #   Time.current # => Wed, 24 Nov 2004 01:04:44 EST -05:00
   #
-  # source://activesupport//lib/active_support/testing/time_helpers.rb#226
+  # source://activesupport//lib/active_support/testing/time_helpers.rb#230
   def travel_back; end
 
   # Changes current time to the given time by stubbing +Time.now+, +Time.new+,
@@ -13522,24 +13607,24 @@ module ActiveSupport::Testing::TimeHelpers
   #
   #   Time.current # => Wed, 24 Nov 2004 01:04:44 EST -05:00
   #
-  # source://activesupport//lib/active_support/testing/time_helpers.rb#226
+  # source://activesupport//lib/active_support/testing/time_helpers.rb#230
   def unfreeze_time; end
 
   private
 
   # Returns the value of attribute in_block.
   #
-  # source://activesupport//lib/active_support/testing/time_helpers.rb#261
+  # source://activesupport//lib/active_support/testing/time_helpers.rb#265
   def in_block; end
 
   # Sets the attribute in_block
   #
   # @param value the value to set the attribute in_block to.
   #
-  # source://activesupport//lib/active_support/testing/time_helpers.rb#261
+  # source://activesupport//lib/active_support/testing/time_helpers.rb#265
   def in_block=(_arg0); end
 
-  # source://activesupport//lib/active_support/testing/time_helpers.rb#257
+  # source://activesupport//lib/active_support/testing/time_helpers.rb#261
   def simple_stubs; end
 end
 
@@ -17734,7 +17819,7 @@ class IO::Buffer
   def get_string(*_arg0); end
   def get_value(_arg0, _arg1); end
   def get_values(_arg0, _arg1); end
-  def hexdump; end
+  def hexdump(*_arg0); end
   def inspect; end
   def internal?; end
   def locked; end
@@ -17744,6 +17829,7 @@ class IO::Buffer
   def null?; end
   def or!(_arg0); end
   def pread(*_arg0); end
+  def private?; end
   def pwrite(*_arg0); end
   def read(*_arg0); end
   def readonly?; end
@@ -17771,6 +17857,7 @@ class IO::Buffer
     def for(_arg0); end
     def map(*_arg0); end
     def size_of(_arg0); end
+    def string(_arg0); end
   end
 end
 
@@ -19762,7 +19849,7 @@ class Object < ::BasicObject
   # You can access these methods using the class name instead:
   #
   #   class Phone < ActiveRecord::Base
-  #     enum phone_number_type: { home: 0, office: 1, mobile: 2 }
+  #     enum :phone_number_type, { home: 0, office: 1, mobile: 2 }
   #
   #     with_options presence: true do
   #       validates :phone_number_type, inclusion: { in: Phone.phone_number_types.keys }
@@ -19858,18 +19945,6 @@ class Range
   # source://activesupport//lib/active_support/core_ext/range/compare_range.rb#41
   def include?(value); end
 
-  # @raise [TypeError]
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/core_ext/range/overlap.rb#8
-  def overlap?(other); end
-
-  # @raise [TypeError]
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/core_ext/range/overlap.rb#8
-  def overlaps?(other); end
-
   # source://activesupport//lib/active_support/core_ext/range/each.rb#12
   def step(n = T.unsafe(nil), &block); end
 
@@ -19878,13 +19953,6 @@ class Range
   #
   # source://activesupport//lib/active_support/core_ext/enumerable.rb#236
   def sum(initial_value = T.unsafe(nil)); end
-
-  private
-
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/core_ext/range/overlap.rb#31
-  def _empty_range?(b, e, excl); end
 end
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#141
@@ -19909,10 +19977,10 @@ end
 # source://activesupport//lib/active_support/core_ext/securerandom.rb#5
 module SecureRandom
   class << self
-    # source://activesupport//lib/active_support/core_ext/securerandom.rb#49
+    # source://activesupport//lib/active_support/core_ext/securerandom.rb#45
     def base36(n = T.unsafe(nil)); end
 
-    # source://activesupport//lib/active_support/core_ext/securerandom.rb#24
+    # source://activesupport//lib/active_support/core_ext/securerandom.rb#20
     def base58(n = T.unsafe(nil)); end
   end
 end
@@ -20213,7 +20281,7 @@ class String
   #
   # The second argument, +indent_string+, specifies which indent string to
   # use. The default is +nil+, which tells the method to make a guess by
-  # peeking at the first indented line, and fallback to a space if there is
+  # peeking at the first indented line, and fall back to a space if there is
   # none.
   #
   #   "  foo".indent(2)        # => "    foo"
