@@ -125,7 +125,12 @@ module Tapioca
               return_type: "T.untyped",
             )
           else
-            klass.create_method(method, class_method: class_method, return_type: "T.untyped")
+            klass.create_method(
+              method,
+              parameters: [create_block_param("block", type: "T.nilable(T.proc.void)")],
+              class_method: class_method,
+              return_type: "T.untyped",
+            )
           end
         end
       end

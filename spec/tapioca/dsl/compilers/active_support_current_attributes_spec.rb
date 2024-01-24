@@ -60,28 +60,28 @@ module Tapioca
                   include GeneratedAttributeMethods
 
                   class << self
-                    sig { returns(T.untyped) }
-                    def account; end
+                    sig { params(block: T.nilable(T.proc.void)).returns(T.untyped) }
+                    def account(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
 
-                    sig { returns(T.untyped) }
-                    def user; end
+                    sig { params(block: T.nilable(T.proc.void)).returns(T.untyped) }
+                    def user(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def user=(value); end
                   end
 
                   module GeneratedAttributeMethods
-                    sig { returns(T.untyped) }
-                    def account; end
+                    sig { params(block: T.nilable(T.proc.void)).returns(T.untyped) }
+                    def account(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
 
-                    sig { returns(T.untyped) }
-                    def user; end
+                    sig { params(block: T.nilable(T.proc.void)).returns(T.untyped) }
+                    def user(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def user=(value); end
@@ -117,8 +117,8 @@ module Tapioca
                   include GeneratedAttributeMethods
 
                   class << self
-                    sig { returns(T.untyped) }
-                    def account; end
+                    sig { params(block: T.nilable(T.proc.void)).returns(T.untyped) }
+                    def account(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
@@ -131,8 +131,8 @@ module Tapioca
                   end
 
                   module GeneratedAttributeMethods
-                    sig { returns(T.untyped) }
-                    def account; end
+                    sig { params(block: T.nilable(T.proc.void)).returns(T.untyped) }
+                    def account(&block); end
 
                     sig { params(value: T.untyped).returns(T.untyped) }
                     def account=(value); end
