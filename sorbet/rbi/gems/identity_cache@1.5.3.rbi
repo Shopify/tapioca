@@ -784,10 +784,10 @@ class IdentityCache::Cached::PrimaryIndex
   # source://identity_cache//lib/identity_cache/cached/primary_index.rb#8
   def initialize(model); end
 
-  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#73
+  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#77
   def cache_decode(cache_value); end
 
-  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#69
+  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#73
   def cache_encode(record); end
 
   # source://identity_cache//lib/identity_cache/cached/primary_index.rb#51
@@ -802,7 +802,7 @@ class IdentityCache::Cached::PrimaryIndex
   # source://identity_cache//lib/identity_cache/cached/primary_index.rb#34
   def fetch_multi(ids); end
 
-  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#61
+  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#64
   def load_multi_from_db(ids); end
 
   # source://identity_cache//lib/identity_cache/cached/primary_index.rb#55
@@ -815,16 +815,16 @@ class IdentityCache::Cached::PrimaryIndex
 
   private
 
-  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#87
+  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#91
   def build_query(id_or_ids); end
 
-  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#91
+  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#95
   def cache_key_prefix; end
 
-  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#79
+  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#83
   def cast_id(id); end
 
-  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#83
+  # source://identity_cache//lib/identity_cache/cached/primary_index.rb#87
   def id_column; end
 end
 
@@ -1548,6 +1548,16 @@ module IdentityCache::ShouldUseCache
   extend ::ActiveSupport::Concern
 
   mixes_in_class_methods ::IdentityCache::ShouldUseCache::ClassMethods
+
+  private
+
+  # @return [Boolean]
+  #
+  # source://identity_cache//lib/identity_cache/should_use_cache.rb#19
+  def loaded_by_idc?; end
+
+  # source://identity_cache//lib/identity_cache/should_use_cache.rb#15
+  def mark_as_loaded_by_idc; end
 end
 
 # source://identity_cache//lib/identity_cache/should_use_cache.rb#7

@@ -1070,7 +1070,7 @@ Sidekiq::NAME = T.let(T.unsafe(nil), String)
 # source://sidekiq//lib/sidekiq/rails.rb#7
 class Sidekiq::Rails < ::Rails::Engine
   class << self
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
     def __callbacks; end
   end
 end
@@ -1310,7 +1310,7 @@ module Sidekiq::RedisConnection
 
     private
 
-    # source://sidekiq//lib/sidekiq/redis_connection.rb#51
+    # source://sidekiq//lib/sidekiq/redis_connection.rb#50
     def determine_redis_provider; end
 
     # source://sidekiq//lib/sidekiq/redis_connection.rb#30
