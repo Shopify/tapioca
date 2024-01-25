@@ -7,7 +7,7 @@ module Tapioca
   module Dsl
     module Compilers
       module Extensions
-        module RuboCop
+        module Rubocop
           extend T::Sig
 
           MethodName = T.type_alias { T.any(String, Symbol) }

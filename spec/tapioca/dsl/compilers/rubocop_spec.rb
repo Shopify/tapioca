@@ -6,18 +6,8 @@ require "spec_helper"
 module Tapioca
   module Dsl
     module Compilers
-      class RuboCopSpec < ::DslSpec
-        class << self
-          extend T::Sig
-
-          sig { override.returns(String) }
-          def target_class_file
-            # Against convention, RuboCop uses "rubocop" in its file names, so we do too.
-            super.gsub("rubo_cop", "rubocop")
-          end
-        end
-
-        describe "Tapioca::Dsl::Compilers::RuboCop" do
+      class RubocopSpec < ::DslSpec
+        describe "Tapioca::Dsl::Compilers::Rubocop" do
           sig { void }
           def before_setup
             require "rubocop"

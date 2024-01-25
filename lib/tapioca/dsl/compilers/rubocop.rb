@@ -28,18 +28,18 @@ module Tapioca
       # - Parameter specification
       # - Default parameter specification, including generating sigs for
       #   `without_defaults_*` methods
-      class RuboCop < Compiler
+      class Rubocop < Compiler
         ConstantType = type_member do
-          { fixed: T.all(Module, Extensions::RuboCop) }
+          { fixed: T.all(Module, Extensions::Rubocop) }
         end
 
         class << self
           extend T::Sig
-          sig { override.returns(T::Array[T.all(Module, Extensions::RuboCop)]) }
+          sig { override.returns(T::Array[T.all(Module, Extensions::Rubocop)]) }
           def gather_constants
             T.cast(
               extenders_of(::RuboCop::AST::NodePattern::Macros).select { |constant| name_of(constant) },
-              T::Array[T.all(Module, Extensions::RuboCop)],
+              T::Array[T.all(Module, Extensions::Rubocop)],
             )
           end
         end
@@ -57,7 +57,7 @@ module Tapioca
 
         private
 
-        sig { returns(T::Array[Extensions::RuboCop::MethodName]) }
+        sig { returns(T::Array[Extensions::Rubocop::MethodName]) }
         def node_methods
           constant.__tapioca_node_methods
         end
