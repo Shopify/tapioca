@@ -1,7 +1,11 @@
 # typed: strict
 # frozen_string_literal: true
 
-return unless defined?(RuboCop::AST::NodePattern::Macros)
+begin
+  require "rubocop-ast"
+rescue LoadError
+  return
+end
 
 module Tapioca
   module Dsl
