@@ -160,16 +160,99 @@ module Tapioca
 
             it "generates method sigs for attribute with type set on attribute is a custom ActiveModel::Type::Value" do
               add_ruby_file("shop.rb", <<~RUBY)
-                class MyCustomType < ActiveModel::Type::Value
+                class CustomWithCastSig < ActiveModel::Type::Value
+                  extend T::Sig
+
                   def type
-                    :custom
+                    :custom_with_cast_sig
+                  end
+
+                  sig { params(value: T.untyped).returns(String) }
+                  def cast(value)
+                  end
+
+                  sig { params(value: T.untyped).returns(T.untyped) }
+                  def deserialize(value)
+                  end
+
+                  sig { params(value: Symbol).returns(T.untyped) }
+                  def serialize(value)
+                  end
+
+                  private
+
+                  sig { params(value: T.untyped).returns(Integer) }
+                  def cast_value(value)
+                  end
+                end
+
+                class CustomWithCastValueSig < ActiveModel::Type::Value
+                  extend T::Sig
+
+                  def type
+                    :custom_with_cast_value_sig
+                  end
+
+                  private
+
+                  sig { params(value: T.untyped).returns(Integer) }
+                  def cast_value(value)
+                  end
+                end
+
+                class CustomWithDeserializeSig < ActiveModel::Type::Value
+                  extend T::Sig
+
+                  def type
+                    :custom_with_deserialize_sig
+                  end
+
+                  sig { params(value: T.untyped).returns(T.nilable(Float)) }
+                  def deserialize(value)
+                  end
+                end
+
+                class CustomWithSerializeSig < ActiveModel::Type::Value
+                  extend T::Sig
+
+                  def type
+                    :custom_with_serialize_sig
+                  end
+
+                  sig { params(value: Symbol).returns(T.untyped) }
+                  def serialize(value)
+                  end
+                end
+
+                class CustomWithoutSig < ActiveModel::Type::Value
+                  def type
+                    :custom_without_sig
+                  end
+
+                  def cast(value)
+                  end
+
+                  def deserialize(value)
+                  end
+
+                  def serialize(value)
+                  end
+
+                  private
+
+                  def cast_value(value)
                   end
                 end
 
                 class Shop
                   include ActiveModel::Attributes
 
-                  attribute :custom_attr, MyCustomType.new
+                  attribute :custom_with_cast_sig_attr, CustomWithCastSig.new
+                  attribute :custom_with_cast_value_sig_attr, CustomWithCastValueSig.new
+                  attribute :custom_with_deserialize_sig_attr, CustomWithDeserializeSig.new
+                  attribute :custom_with_serialize_sig_attr, CustomWithSerializeSig.new
+                  attribute :custom_without_sig_attr, CustomWithoutSig.new
+                  attribute :type_value_attr, ActiveModel::Type::Value.new
                 end
               RUBY
 
@@ -177,11 +260,41 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.nilable(MyCustomType)) }
-                  def custom_attr; end
+                  sig { returns(T.nilable(::String)) }
+                  def custom_with_cast_sig_attr; end
 
-                  sig { params(value: T.nilable(MyCustomType)).returns(T.nilable(MyCustomType)) }
-                  def custom_attr=(value); end
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  def custom_with_cast_sig_attr=(value); end
+
+                  sig { returns(T.nilable(::Integer)) }
+                  def custom_with_cast_value_sig_attr; end
+
+                  sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                  def custom_with_cast_value_sig_attr=(value); end
+
+                  sig { returns(T.nilable(::Float)) }
+                  def custom_with_deserialize_sig_attr; end
+
+                  sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
+                  def custom_with_deserialize_sig_attr=(value); end
+
+                  sig { returns(T.nilable(::Symbol)) }
+                  def custom_with_serialize_sig_attr; end
+
+                  sig { params(value: T.nilable(::Symbol)).returns(T.nilable(::Symbol)) }
+                  def custom_with_serialize_sig_attr=(value); end
+
+                  sig { returns(T.untyped) }
+                  def custom_without_sig_attr; end
+
+                  sig { params(value: T.untyped).returns(T.untyped) }
+                  def custom_without_sig_attr=(value); end
+
+                  sig { returns(T.untyped) }
+                  def type_value_attr; end
+
+                  sig { params(value: T.untyped).returns(T.untyped) }
+                  def type_value_attr=(value); end
                 end
               RBI
 

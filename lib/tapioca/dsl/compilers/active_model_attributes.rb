@@ -99,11 +99,6 @@ module Tapioca
 
         sig { params(attribute_type_value: T.untyped).returns(::String) }
         def type_for(attribute_type_value)
-          # This guarantees that the type will remain as T.untyped for attributes in the following form:
-          # attribute :name
-          # This is because for a generic attribute with no specified type, ActiveModel::Type::Value.new is returned
-          return "T.untyped" if attribute_type_value.instance_of?(ActiveModel::Type::Value)
-
           type = case attribute_type_value
           when ActiveModel::Type::Boolean
             "T::Boolean"
@@ -119,6 +114,8 @@ module Tapioca
             "::Integer"
           when ActiveModel::Type::String
             "::String"
+          when ActiveModel::Type::Value
+            type_for_type_value(attribute_type_value)
           else
             attribute_type_value.class.name.to_s
           end
@@ -138,6 +135,40 @@ module Tapioca
           else
             klass.create_method(method, return_type: type)
           end
+        end
+
+        sig { params(type_value: ActiveModel::Type::Value).returns(String) }
+        def type_for_type_value(type_value)
+          lookup_meaningful_return_type(type_value, :deserialize) ||
+            lookup_meaningful_return_type(type_value, :cast) ||
+            lookup_meaningful_return_type(type_value, :cast_value) ||
+            lookup_meaningful_arg_type(type_value, :serialize) ||
+            "T.untyped"
+        end
+
+        sig { params(type_value: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
+        def lookup_meaningful_return_type(type_value, method)
+          signature = Runtime::Reflection.signature_of(type_value.method(method))
+          return unless signature
+
+          return_type = signature.return_type
+          return if return_type == T.untyped ||
+            return_type == T::Private::Types::Void ||
+            return_type == T::Private::Types::NotTyped
+
+          return_type.to_s
+        end
+
+        sig { params(type_value: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
+        def lookup_meaningful_arg_type(type_value, method)
+          signature = Runtime::Reflection.signature_of(type_value.method(method))
+          return unless signature
+
+          first_arg_type = signature.arg_types.dig(0, 1)
+          return unless first_arg_type
+          return if first_arg_type == T.untyped
+
+          first_arg_type.to_s
         end
       end
     end
