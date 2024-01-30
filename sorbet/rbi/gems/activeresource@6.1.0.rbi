@@ -614,10 +614,10 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#1318
   def ==(other); end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
   # source://activeresource//lib/active_resource/base.rb#331
@@ -629,10 +629,10 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#331
   def _collection_parser?; end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _create_callbacks; end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _destroy_callbacks; end
 
   # source://activeresource//lib/active_resource/base.rb#330
@@ -644,40 +644,40 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#330
   def _format?; end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_create_callbacks(&block); end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_destroy_callbacks(&block); end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_save_callbacks(&block); end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_update_callbacks(&block); end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_validate_callbacks(&block); end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#928
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#951
   def _run_validation_callbacks(&block); end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _save_callbacks; end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _update_callbacks; end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _validate_callbacks; end
 
-  # source://activesupport/7.0.8/lib/active_support/callbacks.rb#940
+  # source://activesupport/7.1.3/lib/active_support/callbacks.rb#963
   def _validation_callbacks; end
 
-  # source://activemodel/7.0.8/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators; end
 
-  # source://activemodel/7.0.8/lib/active_model/validations.rb#52
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#71
   def _validators?; end
 
   # source://activeresource//lib/active_resource/base.rb#1184
@@ -812,10 +812,10 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#332
   def include_format_in_path?; end
 
-  # source://activemodel/7.0.8/lib/active_model/serializers/json.rb#15
+  # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
   def include_root_in_json; end
 
-  # source://activemodel/7.0.8/lib/active_model/serializers/json.rb#15
+  # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
   def include_root_in_json?; end
 
   # This is a list of known attributes for this resource. Either
@@ -856,8 +856,8 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#323
   def logger; end
 
-  # source://activemodel/7.0.8/lib/active_model/naming.rb#244
-  def model_name(*_arg0, **_arg1, &_arg2); end
+  # source://activemodel/7.1.3/lib/active_model/naming.rb#255
+  def model_name(&block); end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
   #
@@ -892,6 +892,9 @@ class ActiveResource::Base
   #
   # source://activeresource//lib/active_resource/base.rb#1265
   def new_record?; end
+
+  # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+  def param_delimiter=(_arg0); end
 
   # Returns +true+ if this object has been saved, otherwise returns +false+.
   #
@@ -1025,7 +1028,7 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#1532
   def update_attributes(attributes); end
 
-  # source://activemodel/7.0.8/lib/active_model/validations.rb#48
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context; end
 
   protected
@@ -1113,17 +1116,17 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#1697
   def split_options(options = T.unsafe(nil)); end
 
-  # source://activemodel/7.0.8/lib/active_model/validations.rb#48
+  # source://activemodel/7.1.3/lib/active_model/validations.rb#67
   def validation_context=(_arg0); end
 
   class << self
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#68
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
     # source://activeresource//lib/active_resource/threadsafe_attributes.rb#15
@@ -1153,16 +1156,16 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/threadsafe_attributes.rb#23
     def _connection_defined?; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _create_callbacks; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _create_callbacks=(value); end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _destroy_callbacks; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _destroy_callbacks=(value); end
 
     # source://activeresource//lib/active_resource/base.rb#330
@@ -1201,10 +1204,10 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/threadsafe_attributes.rb#23
     def _proxy_defined?; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _save_callbacks; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _save_callbacks=(value); end
 
     # source://activeresource//lib/active_resource/threadsafe_attributes.rb#15
@@ -1216,10 +1219,10 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/threadsafe_attributes.rb#23
     def _site_defined?; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _update_callbacks; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _update_callbacks=(value); end
 
     # source://activeresource//lib/active_resource/threadsafe_attributes.rb#15
@@ -1231,37 +1234,37 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/threadsafe_attributes.rb#23
     def _user_defined?; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _validate_callbacks; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _validate_callbacks=(value); end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#932
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#955
     def _validation_callbacks; end
 
-    # source://activesupport/7.0.8/lib/active_support/callbacks.rb#936
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#959
     def _validation_callbacks=(value); end
 
-    # source://activemodel/7.0.8/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators; end
 
-    # source://activemodel/7.0.8/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators=(value); end
 
-    # source://activemodel/7.0.8/lib/active_model/validations.rb#52
+    # source://activemodel/7.1.3/lib/active_model/validations.rb#71
     def _validators?; end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_create(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_destroy(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_save(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#144
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#144
     def after_update(*args, **options, &block); end
 
     # This is an alias for find(:all). You can pass in all the same
@@ -1270,16 +1273,16 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#1039
     def all(*args); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_create(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_destroy(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_save(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#137
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#137
     def around_update(*args, **options, &block); end
 
     # source://activeresource//lib/active_resource/base.rb#562
@@ -1298,16 +1301,16 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#557
     def bearer_token=(bearer_token); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_create(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_destroy(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_save(*args, **options, &block); end
 
-    # source://activemodel/7.0.8/lib/active_model/callbacks.rb#130
+    # source://activemodel/7.1.3/lib/active_model/callbacks.rb#130
     def before_update(*args, **options, &block); end
 
     # Builds a new, unsaved record using the default values from the remote server so
@@ -1623,13 +1626,13 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#332
     def include_format_in_path?; end
 
-    # source://activemodel/7.0.8/lib/active_model/serializers/json.rb#15
+    # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
     def include_root_in_json; end
 
-    # source://activemodel/7.0.8/lib/active_model/serializers/json.rb#15
+    # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
     def include_root_in_json=(value); end
 
-    # source://activemodel/7.0.8/lib/active_model/serializers/json.rb#15
+    # source://activemodel/7.1.3/lib/active_model/serializers/json.rb#15
     def include_root_in_json?; end
 
     # Returns the list of known attributes for this resource, gathered
@@ -1688,6 +1691,15 @@ class ActiveResource::Base
 
     # source://activeresource//lib/active_resource/base.rb#1063
     def orig_delete(id, options = T.unsafe(nil)); end
+
+    # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+    def param_delimiter; end
+
+    # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+    def param_delimiter=(value); end
+
+    # source://activemodel/7.1.3/lib/active_model/conversion.rb#32
+    def param_delimiter?; end
 
     # Gets the \password for REST HTTP authentication.
     #
@@ -2753,13 +2765,13 @@ class ActiveResource::Connection
   # Creates new Net::HTTP instance for communication with the
   # remote service and resources.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#349
+  # source://activeresource//lib/active_resource/http_mock.rb#364
   def http; end
 
   # source://activeresource//lib/active_resource/connection.rb#287
   def http_format_header(http_method); end
 
-  # source://activeresource//lib/active_resource/http_mock.rb#358
+  # source://activeresource//lib/active_resource/http_mock.rb#373
   def http_stub; end
 
   # source://activeresource//lib/active_resource/connection.rb#291
@@ -2776,10 +2788,10 @@ class ActiveResource::Connection
   # source://activeresource//lib/active_resource/connection.rb#217
   def response_auth_header; end
 
-  # source://activeresource//lib/active_resource/http_mock.rb#366
+  # source://activeresource//lib/active_resource/http_mock.rb#381
   def stub_http?; end
 
-  # source://activeresource//lib/active_resource/http_mock.rb#362
+  # source://activeresource//lib/active_resource/http_mock.rb#377
   def unstub_http?; end
 
   # source://activeresource//lib/active_resource/connection.rb#221
@@ -3016,25 +3028,25 @@ class ActiveResource::HttpMock
   def initialize(site); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#257
-  def delete(path, headers); end
+  def delete(path, headers, options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#257
-  def get(path, headers); end
+  def get(path, headers, options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#257
-  def head(path, headers); end
+  def head(path, headers, options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#274
   def inspect_responses; end
 
   # source://activeresource//lib/active_resource/http_mock.rb#257
-  def patch(path, body, headers); end
+  def patch(path, body, headers, options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#257
-  def post(path, body, headers); end
+  def post(path, body, headers, options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#257
-  def put(path, body, headers); end
+  def put(path, body, headers, options = T.unsafe(nil)); end
 
   class << self
     # source://activeresource//lib/active_resource/http_mock.rb#205
@@ -3190,22 +3202,22 @@ class ActiveResource::HttpMock::Responder
   def initialize(responses); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#65
-  def delete(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil)); end
+  def delete(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#65
-  def get(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil)); end
+  def get(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#65
-  def head(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil)); end
+  def head(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#65
-  def patch(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil)); end
+  def patch(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#65
-  def post(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil)); end
+  def post(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#65
-  def put(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil)); end
+  def put(path, request_headers = T.unsafe(nil), body = T.unsafe(nil), status = T.unsafe(nil), response_headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   private
 
@@ -3222,6 +3234,23 @@ class ActiveResource::InheritingHash < ::Hash
 
   # source://activeresource//lib/active_resource/inheriting_hash.rb#11
   def [](key); end
+
+  # source://activeresource//lib/active_resource/inheriting_hash.rb#26
+  def inspect; end
+
+  # So we can see the merged object in IRB or the Rails console
+  #
+  # source://activeresource//lib/active_resource/inheriting_hash.rb#22
+  def pretty_print(pp); end
+
+  # Merges the flattened parent hash (if it's an InheritingHash)
+  # with ourself
+  #
+  # source://activeresource//lib/active_resource/inheriting_hash.rb#17
+  def to_hash; end
+
+  # source://activeresource//lib/active_resource/inheriting_hash.rb#30
+  def to_s; end
 end
 
 # source://activeresource//lib/active_resource/http_mock.rb#7
@@ -3357,7 +3386,7 @@ class ActiveResource::Request
   # @return [Request] a new instance of Request
   #
   # source://activeresource//lib/active_resource/http_mock.rb#282
-  def initialize(method, path, body = T.unsafe(nil), headers = T.unsafe(nil)); end
+  def initialize(method, path, body = T.unsafe(nil), headers = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#286
   def ==(req); end
@@ -3410,6 +3439,13 @@ class ActiveResource::Request
   # source://activeresource//lib/active_resource/http_mock.rb#280
   def path=(_arg0); end
 
+  # Removes query parameters from the path.
+  #
+  # @return [String] the path without query parameters
+  #
+  # source://activeresource//lib/active_resource/http_mock.rb#297
+  def remove_query_params_from_path; end
+
   # source://activeresource//lib/active_resource/http_mock.rb#290
   def to_s; end
 
@@ -3417,8 +3453,13 @@ class ActiveResource::Request
 
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#295
+  # source://activeresource//lib/active_resource/http_mock.rb#310
   def headers_match?(req); end
+
+  # @return [Boolean]
+  #
+  # source://activeresource//lib/active_resource/http_mock.rb#302
+  def same_path?(req); end
 end
 
 # 409 Conflict
@@ -3439,71 +3480,71 @@ class ActiveResource::ResourceInvalid < ::ActiveResource::ClientError; end
 # source://activeresource//lib/active_resource/exceptions.rb#65
 class ActiveResource::ResourceNotFound < ::ActiveResource::ClientError; end
 
-# source://activeresource//lib/active_resource/http_mock.rb#306
+# source://activeresource//lib/active_resource/http_mock.rb#321
 class ActiveResource::Response
   # @return [Response] a new instance of Response
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#309
+  # source://activeresource//lib/active_resource/http_mock.rb#324
   def initialize(body, message = T.unsafe(nil), headers = T.unsafe(nil)); end
 
   # Returns true if the other is a Response with an equal body, equal message
   # and equal headers. Otherwise it returns false.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#337
+  # source://activeresource//lib/active_resource/http_mock.rb#352
   def ==(other); end
 
-  # source://activeresource//lib/active_resource/http_mock.rb#327
+  # source://activeresource//lib/active_resource/http_mock.rb#342
   def [](key); end
 
-  # source://activeresource//lib/active_resource/http_mock.rb#331
+  # source://activeresource//lib/active_resource/http_mock.rb#346
   def []=(key, value); end
 
   # Returns the value of attribute body.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def body; end
 
   # Sets the attribute body
   #
   # @param value the value to set the attribute body to.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def body=(_arg0); end
 
   # Returns the value of attribute code.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def code; end
 
   # Sets the attribute code
   #
   # @param value the value to set the attribute code to.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def code=(_arg0); end
 
   # Returns the value of attribute headers.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def headers; end
 
   # Sets the attribute headers
   #
   # @param value the value to set the attribute headers to.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def headers=(_arg0); end
 
   # Returns the value of attribute message.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def message; end
 
   # Sets the attribute message
   #
   # @param value the value to set the attribute message to.
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#307
+  # source://activeresource//lib/active_resource/http_mock.rb#322
   def message=(_arg0); end
 
   # Returns true if code is 2xx,
@@ -3511,7 +3552,7 @@ class ActiveResource::Response
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/http_mock.rb#323
+  # source://activeresource//lib/active_resource/http_mock.rb#338
   def success?; end
 end
 
@@ -3824,7 +3865,7 @@ module ActiveResource::Validations
   # @return [Boolean]
   #
   # source://activeresource//lib/active_resource/validations.rb#163
-  def valid?; end
+  def valid?(context = T.unsafe(nil)); end
 
   module GeneratedClassMethods
     def __callbacks; end
