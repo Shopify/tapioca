@@ -3,7 +3,7 @@ name: tapioca
 type: ruby
 
 up:
-  - ruby: '3.3.0'
+  - ruby
   - bundler
 
 env:
