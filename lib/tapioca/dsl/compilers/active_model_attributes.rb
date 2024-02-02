@@ -114,10 +114,8 @@ module Tapioca
             "::Integer"
           when ActiveModel::Type::String
             "::String"
-          when ActiveModel::Type::Value
-            type_for_type_value(attribute_type_value)
           else
-            attribute_type_value.class.name.to_s
+            type_for_type_value(attribute_type_value)
           end
 
           as_nilable_type(type)
