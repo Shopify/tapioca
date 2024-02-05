@@ -304,8 +304,14 @@ module Tapioca
             it "generates method sigs for attribute with custom class not inheriting from ActiveModel::Type::Value" do
               add_ruby_file("shop.rb", <<~RUBY)
                 class MyCustomClass
+                  extend T::Sig
+
                   def type
                     :custom
+                  end
+
+                  sig { params(value: T.untyped).returns(String) }
+                  def cast(value)
                   end
                 end
 
@@ -320,10 +326,10 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.nilable(MyCustomClass)) }
+                  sig { returns(T.nilable(::String)) }
                   def custom_attr; end
 
-                  sig { params(value: T.nilable(MyCustomClass)).returns(T.nilable(MyCustomClass)) }
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
                   def custom_attr=(value); end
                 end
               RBI
