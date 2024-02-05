@@ -151,6 +151,7 @@ module Tapioca
 
           return_type = signature.return_type
           return if return_type == T.untyped ||
+            return_type == T.noreturn ||
             return_type == T::Private::Types::Void ||
             return_type == T::Private::Types::NotTyped
 

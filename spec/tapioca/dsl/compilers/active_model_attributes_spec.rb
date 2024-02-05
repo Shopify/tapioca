@@ -171,7 +171,7 @@ module Tapioca
                   def cast(value)
                   end
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
+                  sig { params(value: T.untyped).returns(T.noreturn) }
                   def deserialize(value)
                   end
 
