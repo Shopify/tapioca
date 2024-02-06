@@ -18,6 +18,8 @@ class Money
   # source://shopify-money//lib/money/money.rb#82
   def initialize(value, currency); end
 
+  # @raise [ArgumentError]
+  #
   # source://shopify-money//lib/money/money.rb#139
   def *(numeric); end
 
@@ -30,29 +32,29 @@ class Money
   # source://shopify-money//lib/money/money.rb#114
   def -@; end
 
-  # source://shopify-money//lib/money/money.rb#151
+  # source://shopify-money//lib/money/money.rb#146
   def /(numeric); end
 
   # source://shopify-money//lib/money/money.rb#118
   def <=>(other); end
 
-  # source://shopify-money//lib/money/money.rb#159
+  # source://shopify-money//lib/money/money.rb#154
   def ==(other); end
 
-  # source://shopify-money//lib/money/money.rb#262
+  # source://shopify-money//lib/money/money.rb#257
   def abs; end
 
   # @see Money::Allocator#allocate
   #
-  # source://shopify-money//lib/money/money.rb#288
+  # source://shopify-money//lib/money/money.rb#283
   def allocate(splits, strategy = T.unsafe(nil)); end
 
   # @see Money::Allocator#allocate_max_amounts
   #
-  # source://shopify-money//lib/money/money.rb#293
+  # source://shopify-money//lib/money/money.rb#288
   def allocate_max_amounts(maximums); end
 
-  # source://shopify-money//lib/money/money.rb#254
+  # source://shopify-money//lib/money/money.rb#249
   def as_json(options = T.unsafe(nil)); end
 
   # Calculate the splits evenly without losing pennies.
@@ -66,7 +68,7 @@ class Money
   # @raise [ArgumentError]
   # @return [Hash<Money, Integer>]
   #
-  # source://shopify-money//lib/money/money.rb#320
+  # source://shopify-money//lib/money/money.rb#315
   def calculate_splits(num); end
 
   # Clamps the value to be within the specified minimum and maximum. Returns
@@ -79,12 +81,12 @@ class Money
   #   Money.new(120, "CAD").clamp(0, 100) #=> Money.new(100, "CAD")
   # @raise [ArgumentError]
   #
-  # source://shopify-money//lib/money/money.rb#342
+  # source://shopify-money//lib/money/money.rb#337
   def clamp(min, max); end
 
   # @raise [TypeError]
   #
-  # source://shopify-money//lib/money/money.rb#194
+  # source://shopify-money//lib/money/money.rb#189
   def coerce(other); end
 
   # Returns the value of attribute currency.
@@ -99,15 +101,15 @@ class Money
   #
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/money.rb#164
+  # source://shopify-money//lib/money/money.rb#159
   def eql?(other); end
 
-  # source://shopify-money//lib/money/money.rb#268
+  # source://shopify-money//lib/money/money.rb#263
   def floor; end
 
   # @raise [ArgumentError]
   #
-  # source://shopify-money//lib/money/money.rb#280
+  # source://shopify-money//lib/money/money.rb#275
   def fraction(rate); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -116,7 +118,7 @@ class Money
   # source://shopify-money//lib/money/money.rb#89
   def init_with(coder); end
 
-  # source://shopify-money//lib/money/money.rb#155
+  # source://shopify-money//lib/money/money.rb#150
   def inspect; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -133,7 +135,7 @@ class Money
   # source://forwardable/1.3.3/forwardable.rb#231
   def positive?(*args, **_arg1, &block); end
 
-  # source://shopify-money//lib/money/money.rb#274
+  # source://shopify-money//lib/money/money.rb#269
   def round(ndigits = T.unsafe(nil)); end
 
   # Split money amongst parties evenly without losing pennies.
@@ -143,34 +145,34 @@ class Money
   # @param number [2] of parties.
   # @return [Array<Money, Money, Money>]
   #
-  # source://shopify-money//lib/money/money.rb#305
+  # source://shopify-money//lib/money/money.rb#300
   def split(num); end
 
   # source://shopify-money//lib/money/money.rb#98
   def subunits(format: T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#217
+  # source://shopify-money//lib/money/money.rb#212
   def to_d; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def to_f(*args, **_arg1, &block); end
 
-  # source://shopify-money//lib/money/money.rb#221
+  # source://shopify-money//lib/money/money.rb#216
   def to_formatted_s(style = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#221
+  # source://shopify-money//lib/money/money.rb#216
   def to_fs(style = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def to_i(*args, **_arg1, &block); end
 
-  # source://shopify-money//lib/money/money.rb#246
+  # source://shopify-money//lib/money/money.rb#241
   def to_json(options = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#199
+  # source://shopify-money//lib/money/money.rb#194
   def to_money(curr = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#221
+  # source://shopify-money//lib/money/money.rb#216
   def to_s(style = T.unsafe(nil)); end
 
   # Returns the value of attribute value.
@@ -186,10 +188,10 @@ class Money
   # @raise [TypeError]
   # @yield [other]
   #
-  # source://shopify-money//lib/money/money.rb#357
+  # source://shopify-money//lib/money/money.rb#352
   def arithmetic(money_or_numeric); end
 
-  # source://shopify-money//lib/money/money.rb#364
+  # source://shopify-money//lib/money/money.rb#359
   def calculated_currency(other); end
 
   class << self
@@ -485,14 +487,14 @@ class Money::Error < ::StandardError; end
 module Money::Helpers
   private
 
-  # source://shopify-money//lib/money/helpers.rb#44
+  # source://shopify-money//lib/money/helpers.rb#42
   def value_to_currency(currency); end
 
   # source://shopify-money//lib/money/helpers.rb#16
   def value_to_decimal(num); end
 
   class << self
-    # source://shopify-money//lib/money/helpers.rb#44
+    # source://shopify-money//lib/money/helpers.rb#42
     def value_to_currency(currency); end
 
     # source://shopify-money//lib/money/helpers.rb#16
@@ -765,25 +767,25 @@ Money::Parser::Simple::SIGNED_DECIMAL_MATCHER = T.let(T.unsafe(nil), Regexp)
 # source://shopify-money//lib/money/railtie.rb#4
 class Money::Railtie < ::Rails::Railtie; end
 
-# source://shopify-money//lib/money/money.rb#170
+# source://shopify-money//lib/money/money.rb#165
 class Money::ReverseOperationProxy
   include ::Comparable
 
   # @return [ReverseOperationProxy] a new instance of ReverseOperationProxy
   #
-  # source://shopify-money//lib/money/money.rb#173
+  # source://shopify-money//lib/money/money.rb#168
   def initialize(value); end
 
-  # source://shopify-money//lib/money/money.rb#189
+  # source://shopify-money//lib/money/money.rb#184
   def *(other); end
 
-  # source://shopify-money//lib/money/money.rb#181
+  # source://shopify-money//lib/money/money.rb#176
   def +(other); end
 
-  # source://shopify-money//lib/money/money.rb#185
+  # source://shopify-money//lib/money/money.rb#180
   def -(other); end
 
-  # source://shopify-money//lib/money/money.rb#177
+  # source://shopify-money//lib/money/money.rb#172
   def <=>(other); end
 end
 
