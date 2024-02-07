@@ -17,6 +17,7 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
           rubygems: 'latest'
+          bundler: 'latest'
       - name: Run type check
         run: bin/typecheck
       - name: Lint Ruby files
@@ -61,8 +62,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           rubygems: 'latest'
-      - name: Install latest Bundler version
-        run: gem install bundler
+          bundler: 'latest'
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
