@@ -4,7 +4,8 @@ source "https://rubygems.org"
 
 gemspec
 
-rails_version = ENV.fetch("RAILS_VERSION", "7.1")
+CURRENT_RAILS_VERSION = "7.1"
+rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
 gem "minitest"
 gem "minitest-hooks"
@@ -24,6 +25,7 @@ group :development, :test do
   if rails_version == "main"
     gem "rails", github: "rails/rails", branch: "main"
   else
+    rails_version = CURRENT_RAILS_VERSION if rails_version == "current"
     gem "rails", "~> #{rails_version}.0"
   end
 
