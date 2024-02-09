@@ -431,10 +431,11 @@ DEPENDENCIES
   minitest
   minitest-hooks
   minitest-reporters
+  mutex_m
   nokogiri
   pry
   pry-byebug
-  rails
+  rails (~> 7.1.0)
   rake
   rubocop-rspec
   rubocop-shopify

@@ -17,6 +17,7 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
           rubygems: 'latest'
+          bundler: 'latest'
       - name: Run type check
         run: bin/typecheck
       - name: Lint Ruby files
@@ -36,33 +37,31 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ["3.0", "3.1", "3.2", "3.3", "head"]
-        gemfile:
-          - Gemfile
-          - gemfiles/Gemfile-rails-7-0
-          - gemfiles/Gemfile-rails-main
+        rails: ["7.0", "current", "main"]
         include:
-          - gemfile: gemfiles/Gemfile-rails-main
+          - rails: "main"
             experimental: true
           - ruby: "head"
             experimental: true
         exclude:
           - ruby: "3.0"
-            gemfile: gemfiles/Gemfile-rails-main
-    name: Ruby ${{ matrix.ruby }} - ${{ matrix.gemfile }}
+            rails: "main"
+    name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }}
     env:
-      BUNDLE_GEMFILE: ${{ matrix.gemfile }}
+      RAILS_VERSION: ${{ matrix.rails }}
     steps:
       - uses: actions/checkout@v4
-      - if: ${{ matrix.ruby == 'head' }}
-        run: "rm -f ${{ matrix.gemfile }}.lock"
+      - name: Remove Gemfile.lock
+        # Remove Gemfile.lock for Ruby head builds and non-Rails current builds
+        if: ${{ matrix.ruby == 'head' || matrix.rails != 'current' }}
+        run: "rm -f Gemfile.lock"
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
           rubygems: 'latest'
-      - name: Install latest Bundler version
-        run: gem install bundler
+          bundler: 'latest'
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
