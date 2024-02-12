@@ -7,5 +7,7 @@ require "tapioca"
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
-require "pry"
-Pry.start
+require "irb"
+IRB.setup(__FILE__)
+IRB.conf[:IRB_NAME] = "tapioca"
+IRB::Irb.new.run

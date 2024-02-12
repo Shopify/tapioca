@@ -223,18 +223,18 @@ For gems that have a normal default `require` and that load all of their constan
 For example, suppose you are using the class `BetterHtml::Parser` exported from the `better_html` gem. Just doing a `require "better_html"` (which is the default require) does not load that type:
 
 ```shell
-$ bundle exec pry
+$ bundle exec irb
 
-[1] pry(main)> require 'better_html'
+irb(main):001> require 'better_html'
 => true
-[2] pry(main)> BetterHtml
+irb(main):002> BetterHtml
 => BetterHtml
-[3] pry(main)> BetterHtml::Parser
-NameError: uninitialized constant BetterHtml::Parser
-from (pry):3:in `__pry__`
-[4] pry(main)> require 'better_html/parser'
+irb(main):003> BetterHtml::Parser
+(irb):3:in '<main>': uninitialized constant BetterHtml::Parser (NameError)
+Did you mean?  BetterHtml::ParserError
+irb(main):004> require 'better_html/parser'
 => true
-[5] pry(main)> BetterHtml::Parser
+irb(main):005> BetterHtml::Parser
 => BetterHtml::Parser
 ```
 
