@@ -175,10 +175,11 @@ module Tapioca
 
         unless unprocessable_compilers.empty?
           message = unprocessable_compilers.map do |name, _|
-            set_color("Error: Cannot find compiler '#{name}'", :red)
+            set_color("Warning: Cannot find compiler '#{name}'", :yellow)
           end.join("\n")
 
-          raise Thor::Error, message
+          say(message)
+          say("")
         end
 
         T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])

@@ -1163,8 +1163,17 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "errors if there are no matching compilers" do
-          result = @project.tapioca("dsl --only NonexistentCompiler")
+        it "warns if there are no matching compilers but continues processing" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca("dsl --only SmartProperties NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
             Loading DSL extension classes... Done
@@ -1172,13 +1181,21 @@ module Tapioca
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
+            Warning: Cannot find compiler 'NonexistentCompiler'
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
           OUT
 
-          assert_equal(<<~ERROR, result.err)
-            Error: Cannot find compiler 'NonexistentCompiler'
-          ERROR
-
-          refute_success_status(result)
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
         it "must respect `exclude` option" do
@@ -1252,7 +1269,16 @@ module Tapioca
           assert_success_status(result)
         end
 
-        it "errors if there are no matching `exclude` compilers" do
+        it "warns if there are no matching `exclude` compilers but continues processing" do
+          @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
           result = @project.tapioca("dsl --exclude NonexistentCompiler")
 
           assert_equal(<<~OUT, result.out)
@@ -1261,13 +1287,21 @@ module Tapioca
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
 
+            Warning: Cannot find compiler 'NonexistentCompiler'
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
           OUT
 
-          assert_equal(<<~ERROR, result.err)
-            Error: Cannot find compiler 'NonexistentCompiler'
-          ERROR
-
-          refute_success_status(result)
+          assert_empty_stderr(result)
+          assert_success_status(result)
         end
 
         it "must warn about reloaded constants and process only the newest one" do
