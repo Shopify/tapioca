@@ -22,6 +22,7 @@ module Hashdiff
     # @param obj2 [Array, Hash]
     # @param options [Hash] the options to use when comparing
     #   * :strict (Boolean) [true] whether numeric values will be compared on type as well as value.  Set to false to allow comparing Integer, Float, BigDecimal to each other
+    #   * :ignore_keys (Symbol, String or Array) [[]] a list of keys to ignore. No comparison is made for the specified key(s)
     #   * :indifferent (Boolean) [false] whether to treat hash keys indifferently.  Set to true to ignore differences between symbol keys (ie. {a: 1} ~= {'a' => 1})
     #   * :delimiter (String) ['.'] the delimiter used when returning nested key references
     #   * :numeric_tolerance (Numeric) [0] should be a positive numeric value.  Value by which numeric differences must be greater than.  By default, numeric values are compared exactly; with the :tolerance option, the difference between numeric values must be greater than the given value.
@@ -33,7 +34,7 @@ module Hashdiff
     # @since 0.0.1
     # @yield [path, value1, value2] Optional block is used to compare each value, instead of default #==. If the block returns value other than true of false, then other specified comparison options will be used to do the comparison.
     #
-    # source://hashdiff//lib/hashdiff/diff.rb#31
+    # source://hashdiff//lib/hashdiff/diff.rb#32
     def best_diff(obj1, obj2, options = T.unsafe(nil), &block); end
 
     # check if objects are comparable
@@ -94,6 +95,7 @@ module Hashdiff
     # @param obj2 [Array, Hash]
     # @param options [Hash] the options to use when comparing
     #   * :strict (Boolean) [true] whether numeric values will be compared on type as well as value.  Set to false to allow comparing Integer, Float, BigDecimal to each other
+    #   * :ignore_keys (Symbol, String or Array) [[]] a list of keys to ignore. No comparison is made for the specified key(s)
     #   * :indifferent (Boolean) [false] whether to treat hash keys indifferently.  Set to true to ignore differences between symbol keys (ie. {a: 1} ~= {'a' => 1})
     #   * :similarity (Numeric) [0.8] should be between (0, 1]. Meaningful if there are similar hashes in arrays. See {best_diff}.
     #   * :delimiter (String) ['.'] the delimiter used when returning nested key references
@@ -106,7 +108,7 @@ module Hashdiff
     # @since 0.0.1
     # @yield [path, value1, value2] Optional block is used to compare each value, instead of default #==. If the block returns value other than true of false, then other specified comparison options will be used to do the comparison.
     #
-    # source://hashdiff//lib/hashdiff/diff.rb#78
+    # source://hashdiff//lib/hashdiff/diff.rb#80
     def diff(obj1, obj2, options = T.unsafe(nil), &block); end
 
     # diff array using LCS algorithm
@@ -114,7 +116,7 @@ module Hashdiff
     # @private
     # @yield [links]
     #
-    # source://hashdiff//lib/hashdiff/diff.rb#119
+    # source://hashdiff//lib/hashdiff/diff.rb#124
     def diff_array_lcs(arraya, arrayb, options = T.unsafe(nil)); end
 
     # caculate array difference using LCS algorithm

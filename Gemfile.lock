@@ -195,9 +195,7 @@ GEM
       activemodel
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.2-arm64-darwin)
-    google-protobuf (3.25.2-x86_64-darwin)
-    google-protobuf (3.25.2-x86_64-linux)
+    google-protobuf (3.25.2)
     graphql (2.2.8)
     hashdiff (1.1.0)
     i18n (1.14.1)
