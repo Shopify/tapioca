@@ -135,7 +135,7 @@ Sorbet does not read the code in your gem dependencies, so it does not know the 
 In order to generate the RBI files for the gems used in your application, run the following command:
 
 ```shell
-$ bin/tapioca gems [gems...]
+$ bin/tapioca gem [gem...]
 
 Removing RBI files of gems that have been removed:
 
