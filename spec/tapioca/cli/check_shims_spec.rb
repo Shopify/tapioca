@@ -377,6 +377,7 @@ module Tapioca
 
           Duplicated RBI for ::Object:
            * https://github.com/sorbet/sorbet/tree/master/rbi/core/object.rbi#L27
+           * https://github.com/sorbet/sorbet/tree/master/rbi/stdlib/json.rbi#L1060
            * sorbet/rbi/shims/core/object.rbi:1:0-1:17
 
           Duplicated RBI for ::String#capitalize:
