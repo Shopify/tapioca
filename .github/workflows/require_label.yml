@@ -14,7 +14,7 @@ jobs:
       - name: Check for Pull Request Labels
         shell: bash
         run: |
-          REQUIRED_LABELS=("documentation" "bugfix" "chore" "enhancement" "ignore-for-release" "security" "sorbet")
+          REQUIRED_LABELS=("documentation" "bugfix" "chore" "enhancement" "ignore-for-release" "security" "sorbet" "dependencies")
           LABELS=$(gh pr view --json labels --jq ".labels[] .name" ${{ github.event.pull_request.number }})
 
           errorMessage=""
