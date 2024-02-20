@@ -4096,51 +4096,51 @@ module Rack::Response::Helpers
 
   protected
 
-  # source://rack//lib/rack/response.rb#351
+  # source://rack//lib/rack/response.rb#353
   def append(chunk); end
 
   # source://rack//lib/rack/response.rb#323
   def buffered_body!; end
 end
 
-# source://rack//lib/rack/response.rb#365
+# source://rack//lib/rack/response.rb#367
 class Rack::Response::Raw
   include ::Rack::Response::Helpers
 
   # @return [Raw] a new instance of Raw
   #
-  # source://rack//lib/rack/response.rb#371
+  # source://rack//lib/rack/response.rb#373
   def initialize(status, headers); end
 
-  # source://rack//lib/rack/response.rb#388
+  # source://rack//lib/rack/response.rb#390
   def delete_header(key); end
 
-  # source://rack//lib/rack/response.rb#380
+  # source://rack//lib/rack/response.rb#382
   def get_header(key); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#376
+  # source://rack//lib/rack/response.rb#378
   def has_header?(key); end
 
   # Returns the value of attribute headers.
   #
-  # source://rack//lib/rack/response.rb#368
+  # source://rack//lib/rack/response.rb#370
   def headers; end
 
-  # source://rack//lib/rack/response.rb#384
+  # source://rack//lib/rack/response.rb#386
   def set_header(key, value); end
 
   # Returns the value of attribute status.
   #
-  # source://rack//lib/rack/response.rb#369
+  # source://rack//lib/rack/response.rb#371
   def status; end
 
   # Sets the attribute status
   #
   # @param value the value to set the attribute status to.
   #
-  # source://rack//lib/rack/response.rb#369
+  # source://rack//lib/rack/response.rb#371
   def status=(_arg0); end
 end
 

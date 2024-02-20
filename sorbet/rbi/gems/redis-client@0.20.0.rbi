@@ -351,22 +351,22 @@ class RedisClient::Config
 
   # @return [Config] a new instance of Config
   #
-  # source://redis-client//lib/redis_client/config.rb#162
+  # source://redis-client//lib/redis_client/config.rb#168
   def initialize(url: T.unsafe(nil), host: T.unsafe(nil), port: T.unsafe(nil), path: T.unsafe(nil), username: T.unsafe(nil), password: T.unsafe(nil), **kwargs); end
 
   # Returns the value of attribute host.
   #
-  # source://redis-client//lib/redis_client/config.rb#160
+  # source://redis-client//lib/redis_client/config.rb#166
   def host; end
 
   # Returns the value of attribute path.
   #
-  # source://redis-client//lib/redis_client/config.rb#160
+  # source://redis-client//lib/redis_client/config.rb#166
   def path; end
 
   # Returns the value of attribute port.
   #
-  # source://redis-client//lib/redis_client/config.rb#160
+  # source://redis-client//lib/redis_client/config.rb#166
   def port; end
 end
 
@@ -1260,45 +1260,42 @@ class RedisClient::TimeoutError < ::RedisClient::ConnectionError; end
 class RedisClient::URLConfig
   # @return [URLConfig] a new instance of URLConfig
   #
-  # source://redis-client//lib/redis_client/url_config.rb#12
+  # source://redis-client//lib/redis_client/url_config.rb#9
   def initialize(url); end
 
-  # source://redis-client//lib/redis_client/url_config.rb#24
+  # source://redis-client//lib/redis_client/url_config.rb#30
   def db; end
 
-  # source://redis-client//lib/redis_client/url_config.rb#41
+  # source://redis-client//lib/redis_client/url_config.rb#56
   def host; end
 
-  # source://redis-client//lib/redis_client/url_config.rb#33
+  # source://redis-client//lib/redis_client/url_config.rb#48
   def password; end
 
-  # source://redis-client//lib/redis_client/url_config.rb#47
+  # source://redis-client//lib/redis_client/url_config.rb#62
+  def path; end
+
+  # source://redis-client//lib/redis_client/url_config.rb#68
   def port; end
 
   # @return [Boolean]
   #
-  # source://redis-client//lib/redis_client/url_config.rb#20
+  # source://redis-client//lib/redis_client/url_config.rb#26
   def ssl?; end
 
   # Returns the value of attribute uri.
   #
-  # source://redis-client//lib/redis_client/url_config.rb#10
+  # source://redis-client//lib/redis_client/url_config.rb#7
   def uri; end
 
   # Returns the value of attribute url.
   #
-  # source://redis-client//lib/redis_client/url_config.rb#10
+  # source://redis-client//lib/redis_client/url_config.rb#7
   def url; end
 
-  # source://redis-client//lib/redis_client/url_config.rb#29
+  # source://redis-client//lib/redis_client/url_config.rb#44
   def username; end
 end
-
-# source://redis-client//lib/redis_client/url_config.rb#7
-RedisClient::URLConfig::DEFAULT_SCHEMA = T.let(T.unsafe(nil), String)
-
-# source://redis-client//lib/redis_client/url_config.rb#8
-RedisClient::URLConfig::SSL_SCHEMA = T.let(T.unsafe(nil), String)
 
 # source://redis-client//lib/redis_client.rb#83
 class RedisClient::UnsupportedServer < ::RedisClient::Error; end
