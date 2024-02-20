@@ -61,7 +61,7 @@ module Tapioca
           .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
 
         # It's OK if there are no constants to process if we received a valid file/path.
-        if constants_to_process.empty? && requested_paths.select { |p| File.exist?(p) }.empty?
+        if constants_to_process.empty? && requested_paths.none? { |p| File.exist?(p) }
           report_error(<<~ERROR)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.

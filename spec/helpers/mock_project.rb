@@ -106,12 +106,12 @@ module Tapioca
     end
     def tapioca(command, enforce_typechecking: true, exclude: tapioca_dependencies)
       exec_command = ["tapioca", command]
-      if command.start_with?(/gem/)
+      if command.start_with?("gem")
         exec_command << "--workers=1" unless command.match?("--workers")
         exec_command << "--no-doc" unless command.match?("--doc")
         exec_command << "--no-loc" unless command.match?("--loc")
         exec_command << "--exclude #{exclude.join(" ")}" unless command.match?("--exclude") || exclude.empty?
-      elsif command.start_with?(/dsl/)
+      elsif command.start_with?("dsl")
         exec_command << "--workers=1" unless command.match?("--workers")
       end
 
