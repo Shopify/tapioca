@@ -319,7 +319,7 @@ module Tapioca
           rbi.scan(/mixes_in_class_methods (.*)$/)
             .flatten
             .reverse
-            .map { |i| i.sub(/::/, "") }
+            .map { |i| i.sub("::", "") }
         end
       end
     end

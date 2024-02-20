@@ -86,7 +86,7 @@ module Sidekiq
     # source://sidekiq//lib/sidekiq.rb#76
     def strict_args!(mode = T.unsafe(nil)); end
 
-    # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#33
+    # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#40
     def transactional_push!; end
 
     # source://sidekiq//lib/sidekiq.rb#44
@@ -1070,7 +1070,7 @@ Sidekiq::NAME = T.let(T.unsafe(nil), String)
 # source://sidekiq//lib/sidekiq/rails.rb#7
 class Sidekiq::Rails < ::Rails::Engine
   class << self
-    # source://activesupport/7.1.2/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
     def __callbacks; end
   end
 end
@@ -1087,6 +1087,9 @@ class Sidekiq::Rails::Reloader
 
   # source://sidekiq//lib/sidekiq/rails.rb#20
   def inspect; end
+
+  # source://sidekiq//lib/sidekiq/rails.rb#24
+  def to_hash; end
 end
 
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#8
@@ -1362,14 +1365,19 @@ class Sidekiq::TransactionAwareClient
   # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#8
   def initialize(pool: T.unsafe(nil), config: T.unsafe(nil)); end
 
+  # @return [Boolean]
+  #
   # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#12
+  def batching?; end
+
+  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#16
   def push(item); end
 
   # We don't provide transactionality for push_bulk because we don't want
   # to hold potentially hundreds of thousands of job records in memory due to
   # a long running enqueue process.
   #
-  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#24
+  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#31
   def push_bulk(items); end
 end
 
