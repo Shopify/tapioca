@@ -58,16 +58,6 @@ module Tapioca
       # `Model::PrivateRelation` modules, so that, for example, `find_by` and `all` can be chained off of the
       # `Model` class.
       #
-      # **A note on find**: `find` is typed as `T.untyped` by default.
-      #
-      # While it is often used in the manner of `Model.find(id)`, Rails does support pasing in an array to find, which
-      # would then return a `T::Enumerable[Model]`. This would force a static cast everywhere find is used to avoid type
-      # errors. This is not ideal considering very few users of find use the array syntax over a where. With untyped,
-      # this cast is optional and so it was decided to avoid typing it. If you need runtime guarentees when using `find`
-      # the best method of doing so is by casting the return value to the model: `T.cast(Model.find(id), Model)`.
-      # `find_by` does guarentee a return value of `Model`, so find can can be refactored accordingly:
-      # `Model.find_by!(id: id)`. This will avoid the cast requirement at runtime.
-      #
       # **CAUTION**: The generated relation classes are named `PrivateXXX` intentionally to reflect the fact
       # that they represent private subconstants of the Active Record model. As such, these types do not
       # exist at runtime, and their counterparts that do exist at runtime are marked `private_constant` anyway.
@@ -560,12 +550,25 @@ module Tapioca
                 return_type: "T::Boolean",
               )
             when :find
-              create_common_method(
+              args_type = if constant.try(:composite_primary_key?)
+                "T::Array[T::Array[T.untyped]]"
+              else
+                "T::Array[T.untyped]"
+              end
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: [create_param("args", type: args_type)],
+                  return_type: "T::Enumerable[#{constant_name}]",
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: [create_param("args", type: "T.untyped")],
+                  return_type: constant_name,
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
                 "find",
-                parameters: [
-                  create_rest_param("args", type: "T.untyped"),
-                ],
-                return_type: "T.untyped",
+                sigs: sigs,
+                parameters: [RBI::ReqParam.new("args")],
               )
             when :find_by
               create_common_method(
@@ -599,12 +602,20 @@ module Tapioca
                 return_type: constant_name,
               )
             when :first, :last, :take
-              create_common_method(
-                method_name,
-                parameters: [
-                  create_opt_param("limit", type: "T.untyped", default: "nil"),
-                ],
-                return_type: "T.untyped",
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: [create_opt_param("limit", type: "NilClass", default: "nil")],
+                  return_type: as_nilable_type(constant_name),
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: [create_param("limit", type: "Integer")],
+                  return_type: "T::Array[#{constant_name}]",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
+                method_name.to_s,
+                sigs: sigs,
+                parameters: [RBI::OptParam.new("limit", "nil")],
               )
             when :raise_record_not_found_exception!
               # skip

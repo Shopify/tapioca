@@ -38,6 +38,15 @@ module Tapioca
           end
 
           describe "decorate" do
+            before do
+              require "active_record"
+
+              ::ActiveRecord::Base.establish_connection(
+                adapter: "sqlite3",
+                database: ":memory:",
+              )
+            end
+
             it "generates proper relation classes and modules" do
               add_ruby_file("post.rb", <<~RUBY)
                 class Post < ActiveRecord::Base
@@ -96,8 +105,9 @@ module Tapioca
                     sig { returns(::Post) }
                     def fifth!; end
 
-                    sig { params(args: T.untyped).returns(T.untyped) }
-                    def find(*args); end
+                    sig { params(args: T::Array[T.untyped]).returns(T::Enumerable[::Post]) }
+                    sig { params(args: T.untyped).returns(::Post) }
+                    def find(args); end
 
                     sig { params(args: T.untyped).returns(T.nilable(::Post)) }
                     def find_by(*args); end
@@ -131,7 +141,8 @@ module Tapioca
                     def find_sole_by(arg, *args); end
 
                 <% end %>
-                    sig { params(limit: T.untyped).returns(T.untyped) }
+                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def first(limit = nil); end
 
                     sig { returns(::Post) }
@@ -163,7 +174,8 @@ module Tapioca
                     sig { params(record: T.untyped).returns(T::Boolean) }
                     def include?(record); end
 
-                    sig { params(limit: T.untyped).returns(T.untyped) }
+                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def last(limit = nil); end
 
                     sig { returns(::Post) }
@@ -216,7 +228,8 @@ module Tapioca
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T.untyped) }
                     def sum(column_name = nil, &block); end
 
-                    sig { params(limit: T.untyped).returns(T.untyped) }
+                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def take(limit = nil); end
 
                     sig { returns(::Post) }
