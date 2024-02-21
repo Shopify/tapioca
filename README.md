@@ -331,7 +331,7 @@ This option can be used on CI to make sure the RBI files are always up-to-date a
 
 #### Importing hand written signatures from gem's `rbi/` folder
 
-Tapioca will import any signatures found in the `rbi/` folder of a given gem and combine them with the RBIs it generates. This is useful when a gem doesn't want to depend on `sorbet-runtime` but still wants to provide type safety to users during static checks. Note that the `rbi/` folder needs to be included in the gem release using the `.gemspec` file.
+Tapioca will import any signatures found in the `rbi/` folder of a given gem and combine them with the RBIs it generates. This is useful when a gem doesn't want to depend on `sorbet-runtime` but still wants to provide type safety to users during static checks. Note that the `rbi/` folder needs to be included in the gem release using the `.gemspec` file. Applications can choose not to import these signatures using the `--no-exported-gem-rbis` flag.
 
 ### Pulling RBI annotations from remote sources
 
