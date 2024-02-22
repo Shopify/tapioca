@@ -40,6 +40,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Excluding a gem from RBI generation](#excluding-a-gem-from-rbi-generation)
     * [Changing the strictness level of the RBI for a gem](#changing-the-strictness-level-of-the-rbi-for-a-gem)
     * [Keeping RBI files for gems up-to-date](#keeping-rbi-files-for-gems-up-to-date)
+    * [Importing hand written signatures from gem's `rbi/` folder](#importing-hand-written-signatures-from-gems-rbi-folder)
   * [Pulling RBI annotations from remote sources](#pulling-rbi-annotations-from-remote-sources)
     * [Basic authentication](#basic-authentication)
     * [Using a .netrc file](#using-a-netrc-file)
@@ -326,6 +327,11 @@ Nothing to do, all RBIs are up-to-date.
 ```
 
 This option can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking. **Warning**: doing so will break your normal Dependabot workflow as every pull-request opened to bump a gem version will fail CI since the RBI will be out-of-date and will require you to manually run `bin/tapioca gems` to update them.
+
+
+#### Importing hand written signatures from gem's `rbi/` folder
+
+Tapioca will import any signatures found in the `rbi/` folder of a given gem and combine them with the RBIs it generates. This is useful when a gem doesn't want to depend on `sorbet-runtime` but still wants to provide type safety to users during static checks. Note that the `rbi/` folder needs to be included in the gem release using the `.gemspec` file. Applications can choose not to import these signatures using the `--no-exported-gem-rbis` flag.
 
 ### Pulling RBI annotations from remote sources
 
