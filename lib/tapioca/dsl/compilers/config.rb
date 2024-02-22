@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-return unless defined?(Config)
+return unless defined?(Config) && defined?(Config::VERSION) && defined?(Config.const_name)
 
 module Tapioca
   module Dsl
