@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/dsl/helpers/active_model_type_helper"
+
 module Tapioca
   module Dsl
     module Helpers
@@ -98,7 +100,7 @@ module Tapioca
             ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array
             "T::Array[#{type_for_activerecord_value(column_type.subtype)}]"
           else
-            handle_unknown_type(column_type)
+            ActiveModelTypeHelper.type_for(column_type)
           end
         end
 
@@ -106,40 +108,6 @@ module Tapioca
         def do_not_generate_strong_types?(constant)
           Object.const_defined?(:StrongTypeGeneration) &&
             !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
-        end
-
-        sig { params(column_type: BasicObject).returns(String) }
-        def handle_unknown_type(column_type)
-          return "T.untyped" unless ActiveModel::Type::Value === column_type
-          return "T.untyped" if Runtime::GenericTypeRegistry.generic_type_instance?(column_type)
-
-          lookup_return_type_of_method(column_type, :deserialize) ||
-            lookup_return_type_of_method(column_type, :cast) ||
-            lookup_arg_type_of_method(column_type, :serialize) ||
-            "T.untyped"
-        end
-
-        sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
-        def lookup_return_type_of_method(column_type, method)
-          signature = Runtime::Reflection.signature_of(column_type.method(method))
-          return unless signature
-
-          return_type = signature.return_type
-          return if return_type == T::Private::Types::Void || return_type == T::Private::Types::NotTyped
-
-          return_type.to_s
-        end
-
-        sig { params(column_type: ActiveModel::Type::Value, method: Symbol).returns(T.nilable(String)) }
-        def lookup_arg_type_of_method(column_type, method)
-          signature = Runtime::Reflection.signature_of(column_type.method(method))
-          return unless signature
-
-          # Arg types is an array [name, type] entries, so we desctructure the type of
-          # first argument to get the first argument type
-          _, first_argument_type = signature.arg_types.first
-
-          first_argument_type.to_s
         end
 
         sig { params(column_type: ActiveRecord::Enum::EnumType).returns(String) }

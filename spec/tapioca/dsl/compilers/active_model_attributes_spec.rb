@@ -158,18 +158,20 @@ module Tapioca
               assert_equal(expected, rbi_for(:Shop))
             end
 
-            it "generates method sigs for attribute with type set on attribute is a custom ActiveModel::Type::Value" do
+            it "generates method sigs for attribute with custom type" do
               add_ruby_file("shop.rb", <<~RUBY)
-                class MyCustomType < ActiveModel::Type::Value
-                  def type
-                    :custom
+                class CustomWithCastSig < ActiveModel::Type::Value
+                  extend T::Sig
+
+                  sig { params(value: T.untyped).returns(String) }
+                  def cast(value)
                   end
                 end
 
                 class Shop
                   include ActiveModel::Attributes
 
-                  attribute :custom_attr, MyCustomType.new
+                  attribute :custom_with_cast_sig_attr, CustomWithCastSig.new
                 end
               RUBY
 
@@ -177,41 +179,11 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.nilable(MyCustomType)) }
-                  def custom_attr; end
+                  sig { returns(T.nilable(::String)) }
+                  def custom_with_cast_sig_attr; end
 
-                  sig { params(value: T.nilable(MyCustomType)).returns(T.nilable(MyCustomType)) }
-                  def custom_attr=(value); end
-                end
-              RBI
-
-              assert_equal(expected, rbi_for(:Shop))
-            end
-
-            it "generates method sigs for attribute with custom class not inheriting from ActiveModel::Type::Value" do
-              add_ruby_file("shop.rb", <<~RUBY)
-                class MyCustomClass
-                  def type
-                    :custom
-                  end
-                end
-
-                class Shop
-                  include ActiveModel::Attributes
-
-                  attribute :custom_attr, MyCustomClass.new
-                end
-              RUBY
-
-              expected = <<~RBI
-                # typed: strong
-
-                class Shop
-                  sig { returns(T.nilable(MyCustomClass)) }
-                  def custom_attr; end
-
-                  sig { params(value: T.nilable(MyCustomClass)).returns(T.nilable(MyCustomClass)) }
-                  def custom_attr=(value); end
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  def custom_with_cast_sig_attr=(value); end
                 end
               RBI
 

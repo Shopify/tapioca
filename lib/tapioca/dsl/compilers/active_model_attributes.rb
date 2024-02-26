@@ -3,6 +3,8 @@
 
 return unless defined?(ActiveModel::Attributes)
 
+require "tapioca/dsl/helpers/active_model_type_helper"
+
 module Tapioca
   module Dsl
     module Compilers
@@ -99,11 +101,6 @@ module Tapioca
 
         sig { params(attribute_type_value: T.untyped).returns(::String) }
         def type_for(attribute_type_value)
-          # This guarantees that the type will remain as T.untyped for attributes in the following form:
-          # attribute :name
-          # This is because for a generic attribute with no specified type, ActiveModel::Type::Value.new is returned
-          return "T.untyped" if attribute_type_value.instance_of?(ActiveModel::Type::Value)
-
           type = case attribute_type_value
           when ActiveModel::Type::Boolean
             "T::Boolean"
@@ -120,7 +117,7 @@ module Tapioca
           when ActiveModel::Type::String
             "::String"
           else
-            attribute_type_value.class.name.to_s
+            Helpers::ActiveModelTypeHelper.type_for(attribute_type_value)
           end
 
           as_nilable_type(type)
