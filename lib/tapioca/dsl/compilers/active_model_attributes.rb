@@ -3,6 +3,8 @@
 
 return unless defined?(ActiveModel::Attributes)
 
+require "tapioca/dsl/helpers/active_model_type_helper"
+
 module Tapioca
   module Dsl
     module Compilers
@@ -115,7 +117,7 @@ module Tapioca
           when ActiveModel::Type::String
             "::String"
           else
-            type_for_type_value(attribute_type_value)
+            Helpers::ActiveModelTypeHelper.type_for(attribute_type_value)
           end
 
           as_nilable_type(type)
@@ -133,48 +135,6 @@ module Tapioca
           else
             klass.create_method(method, return_type: type)
           end
-        end
-
-        sig { params(type_value: T.untyped).returns(String) }
-        def type_for_type_value(type_value)
-          lookup_meaningful_return_type(type_value, :deserialize) ||
-            lookup_meaningful_return_type(type_value, :cast) ||
-            lookup_meaningful_return_type(type_value, :cast_value) ||
-            lookup_meaningful_arg_type(type_value, :serialize) ||
-            "T.untyped"
-        end
-
-        sig { params(type_value: T.untyped, method: Symbol).returns(T.nilable(String)) }
-        def lookup_meaningful_return_type(type_value, method)
-          signature = lookup_signature(type_value, method)
-          return unless signature
-
-          return_type = signature.return_type
-          return if return_type == T.untyped ||
-            return_type == T.noreturn ||
-            return_type == T::Private::Types::Void ||
-            return_type == T::Private::Types::NotTyped
-
-          return_type.to_s
-        end
-
-        sig { params(type_value: T.untyped, method: Symbol).returns(T.nilable(String)) }
-        def lookup_meaningful_arg_type(type_value, method)
-          signature = lookup_signature(type_value, method)
-          return unless signature
-
-          first_arg_type = signature.arg_types.dig(0, 1)
-          return unless first_arg_type
-          return if first_arg_type == T.untyped
-
-          first_arg_type.to_s
-        end
-
-        sig { params(obj: Object, method: Symbol).returns(T.untyped) }
-        def lookup_signature(obj, method)
-          Runtime::Reflection.signature_of(obj.method(method))
-        rescue NameError
-          return nil
         end
       end
     end
