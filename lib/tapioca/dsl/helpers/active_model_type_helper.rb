@@ -24,12 +24,19 @@ module Tapioca
 
           private
 
+          MEANINGLESS_TYPES = T.let(
+            [
+              T.untyped,
+              T.noreturn,
+              T::Private::Types::Void,
+              T::Private::Types::NotTyped,
+            ].freeze,
+            T::Array[Object],
+          )
+
           sig { params(type: T.untyped).returns(T::Boolean) }
           def meaningful_type?(type)
-            type != T.untyped &&
-              type != T.noreturn &&
-              type != T::Private::Types::Void &&
-              type != T::Private::Types::NotTyped
+            !MEANINGLESS_TYPES.include?(type)
           end
 
           sig { params(obj: T.untyped, method: Symbol).returns(T.nilable(T::Types::Base)) }
@@ -42,6 +49,8 @@ module Tapioca
 
           sig { params(obj: T.untyped, method: Symbol).returns(T.nilable(T::Types::Base)) }
           def lookup_arg_type_of_method(obj, method)
+            # Arg types is an array of [name, type] entries, so we dig into first entry (index 0)
+            # and then into the type which is the last element (index 1)
             first_arg_type = lookup_signature_of_method(obj, method)&.arg_types&.dig(0, 1)
             return unless first_arg_type && meaningful_type?(first_arg_type)
 
