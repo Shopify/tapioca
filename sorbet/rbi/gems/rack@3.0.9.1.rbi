@@ -2010,7 +2010,7 @@ class Rack::MediaType
     # this method responds with the following Hash:
     #   { 'charset' => 'utf-8' }
     #
-    # source://rack//lib/rack/media_type.rb#26
+    # source://rack//lib/rack/media_type.rb#30
     def params(content_type); end
 
     # The media type (type/subtype) portion of the CONTENT_TYPE header
@@ -2025,7 +2025,7 @@ class Rack::MediaType
 
     private
 
-    # source://rack//lib/rack/media_type.rb#38
+    # source://rack//lib/rack/media_type.rb#43
     def strip_doublequotes(str); end
   end
 end
@@ -4613,10 +4613,10 @@ end
 module Rack::Utils
   private
 
-  # source://rack//lib/rack/utils.rb#254
+  # source://rack//lib/rack/utils.rb#255
   def add_cookie_to_header(header, key, value); end
 
-  # source://rack//lib/rack/utils.rb#389
+  # source://rack//lib/rack/utils.rb#390
   def add_remove_cookie_to_header(header, key, value = T.unsafe(nil)); end
 
   # Return best accept value to use, based on the algorithm
@@ -4624,7 +4624,7 @@ module Rack::Utils
   # matches (same specificity and quality), the value returned
   # is arbitrary.
   #
-  # source://rack//lib/rack/utils.rb#173
+  # source://rack//lib/rack/utils.rb#174
   def best_q_match(q_value_header, available_mimes); end
 
   # source://rack//lib/rack/utils.rb#127
@@ -4637,10 +4637,10 @@ module Rack::Utils
   # Returns nil if the header is missing or syntactically invalid.
   # Returns an empty array if none of the ranges are satisfiable.
   #
-  # source://rack//lib/rack/utils.rb#431
+  # source://rack//lib/rack/utils.rb#432
   def byte_ranges(env, size); end
 
-  # source://rack//lib/rack/utils.rb#632
+  # source://rack//lib/rack/utils.rb#636
   def clean_path_info(path_info); end
 
   # :nocov:
@@ -4648,7 +4648,7 @@ module Rack::Utils
   # source://rack//lib/rack/utils.rb#98
   def clock_time; end
 
-  # source://rack//lib/rack/utils.rb#383
+  # source://rack//lib/rack/utils.rb#384
   def delete_cookie_header!(headers, key, value = T.unsafe(nil)); end
 
   # :call-seq:
@@ -4665,7 +4665,7 @@ module Rack::Utils
   #   delete_set_cookie_header("myname")
   #   # => "myname=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT"
   #
-  # source://rack//lib/rack/utils.rb#373
+  # source://rack//lib/rack/utils.rb#374
   def delete_set_cookie_header(key, value = T.unsafe(nil)); end
 
   # :call-seq:
@@ -4686,7 +4686,7 @@ module Rack::Utils
   #   header
   #   # => ["mycookie=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT"]
   #
-  # source://rack//lib/rack/utils.rb#413
+  # source://rack//lib/rack/utils.rb#414
   def delete_set_cookie_header!(header, key, value = T.unsafe(nil)); end
 
   # URI escapes. (CGI style space to +)
@@ -4696,7 +4696,7 @@ module Rack::Utils
 
   # Escape ampersands, brackets and quotes to their HTML/XML entities.
   #
-  # source://rack//lib/rack/utils.rb#198
+  # source://rack//lib/rack/utils.rb#199
   def escape_html(string); end
 
   # Like URI escaping, but with %20 instead of +. Strictly speaking this is
@@ -4708,10 +4708,10 @@ module Rack::Utils
   # source://rack//lib/rack/utils.rb#156
   def forwarded_values(forwarded_header); end
 
-  # source://rack//lib/rack/utils.rb#435
+  # source://rack//lib/rack/utils.rb#436
   def get_byte_ranges(http_range, size); end
 
-  # source://rack//lib/rack/utils.rb#377
+  # source://rack//lib/rack/utils.rb#378
   def make_delete_cookie_header(header, key, value); end
 
   # :call-seq:
@@ -4723,7 +4723,7 @@ module Rack::Utils
   #   parse_cookies({'HTTP_COOKIE' => 'myname=myvalue'})
   #   # => {'myname' => 'myvalue'}
   #
-  # source://rack//lib/rack/utils.rb#278
+  # source://rack//lib/rack/utils.rb#279
   def parse_cookies(env); end
 
   # :call-seq:
@@ -4736,7 +4736,7 @@ module Rack::Utils
   #   parse_cookies_header('myname=myvalue; max-age=0')
   #   # => {"myname"=>"myvalue", "max-age"=>"0"}
   #
-  # source://rack//lib/rack/utils.rb#244
+  # source://rack//lib/rack/utils.rb#245
   def parse_cookies_header(value); end
 
   # source://rack//lib/rack/utils.rb#113
@@ -4748,15 +4748,15 @@ module Rack::Utils
   # source://rack//lib/rack/utils.rb#145
   def q_values(q_value_header); end
 
-  # source://rack//lib/rack/utils.rb#424
+  # source://rack//lib/rack/utils.rb#425
   def rfc2822(time); end
 
   # :nocov:
   #
-  # source://rack//lib/rack/utils.rb#472
+  # source://rack//lib/rack/utils.rb#476
   def secure_compare(a, b); end
 
-  # source://rack//lib/rack/utils.rb#202
+  # source://rack//lib/rack/utils.rb#203
   def select_best_encoding(available_encodings, accept_encoding); end
 
   # :call-seq:
@@ -4782,7 +4782,7 @@ module Rack::Utils
   #   set_cookie_header("myname", {value: "myvalue", max_age: 10})
   #   # => "myname=myvalue; max-age=10"
   #
-  # source://rack//lib/rack/utils.rb#305
+  # source://rack//lib/rack/utils.rb#306
   def set_cookie_header(key, value); end
 
   # :call-seq:
@@ -4794,10 +4794,10 @@ module Rack::Utils
   # If the headers already contains a +set-cookie+ key, it will be converted
   # to an +Array+ if not already, and appended to.
   #
-  # source://rack//lib/rack/utils.rb#347
+  # source://rack//lib/rack/utils.rb#348
   def set_cookie_header!(headers, key, value); end
 
-  # source://rack//lib/rack/utils.rb#622
+  # source://rack//lib/rack/utils.rb#626
   def status_code(status); end
 
   # Unescapes a URI escaped string with +encoding+. +encoding+ will be the
@@ -4812,14 +4812,14 @@ module Rack::Utils
   # source://rack//lib/rack/utils.rb#50
   def unescape_path(s); end
 
-  # source://rack//lib/rack/utils.rb#649
+  # source://rack//lib/rack/utils.rb#653
   def valid_path?(path); end
 
   class << self
-    # source://rack//lib/rack/utils.rb#254
+    # source://rack//lib/rack/utils.rb#255
     def add_cookie_to_header(header, key, value); end
 
-    # source://rack//lib/rack/utils.rb#389
+    # source://rack//lib/rack/utils.rb#390
     def add_remove_cookie_to_header(header, key, value = T.unsafe(nil)); end
 
     # Return best accept value to use, based on the algorithm
@@ -4827,7 +4827,7 @@ module Rack::Utils
     # matches (same specificity and quality), the value returned
     # is arbitrary.
     #
-    # source://rack//lib/rack/utils.rb#173
+    # source://rack//lib/rack/utils.rb#174
     def best_q_match(q_value_header, available_mimes); end
 
     # source://rack//lib/rack/utils.rb#127
@@ -4840,10 +4840,10 @@ module Rack::Utils
     # Returns nil if the header is missing or syntactically invalid.
     # Returns an empty array if none of the ranges are satisfiable.
     #
-    # source://rack//lib/rack/utils.rb#431
+    # source://rack//lib/rack/utils.rb#432
     def byte_ranges(env, size); end
 
-    # source://rack//lib/rack/utils.rb#632
+    # source://rack//lib/rack/utils.rb#636
     def clean_path_info(path_info); end
 
     # source://rack//lib/rack/utils.rb#98
@@ -4861,7 +4861,7 @@ module Rack::Utils
     # source://rack//lib/rack/utils.rb#28
     def default_query_parser=(_arg0); end
 
-    # source://rack//lib/rack/utils.rb#383
+    # source://rack//lib/rack/utils.rb#384
     def delete_cookie_header!(headers, key, value = T.unsafe(nil)); end
 
     # :call-seq:
@@ -4878,7 +4878,7 @@ module Rack::Utils
     #   delete_set_cookie_header("myname")
     #   # => "myname=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT"
     #
-    # source://rack//lib/rack/utils.rb#373
+    # source://rack//lib/rack/utils.rb#374
     def delete_set_cookie_header(key, value = T.unsafe(nil)); end
 
     # :call-seq:
@@ -4899,7 +4899,7 @@ module Rack::Utils
     #   header
     #   # => ["mycookie=; max-age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT"]
     #
-    # source://rack//lib/rack/utils.rb#413
+    # source://rack//lib/rack/utils.rb#414
     def delete_set_cookie_header!(header, key, value = T.unsafe(nil)); end
 
     # URI escapes. (CGI style space to +)
@@ -4909,7 +4909,7 @@ module Rack::Utils
 
     # Escape ampersands, brackets and quotes to their HTML/XML entities.
     #
-    # source://rack//lib/rack/utils.rb#198
+    # source://rack//lib/rack/utils.rb#199
     def escape_html(string); end
 
     # Like URI escaping, but with %20 instead of +. Strictly speaking this is
@@ -4921,7 +4921,7 @@ module Rack::Utils
     # source://rack//lib/rack/utils.rb#156
     def forwarded_values(forwarded_header); end
 
-    # source://rack//lib/rack/utils.rb#435
+    # source://rack//lib/rack/utils.rb#436
     def get_byte_ranges(http_range, size); end
 
     # source://rack//lib/rack/utils.rb#88
@@ -4930,7 +4930,7 @@ module Rack::Utils
     # source://rack//lib/rack/utils.rb#93
     def key_space_limit=(v); end
 
-    # source://rack//lib/rack/utils.rb#377
+    # source://rack//lib/rack/utils.rb#378
     def make_delete_cookie_header(header, key, value); end
 
     # Returns the value of attribute multipart_file_limit.
@@ -4986,7 +4986,7 @@ module Rack::Utils
     #   parse_cookies({'HTTP_COOKIE' => 'myname=myvalue'})
     #   # => {'myname' => 'myvalue'}
     #
-    # source://rack//lib/rack/utils.rb#278
+    # source://rack//lib/rack/utils.rb#279
     def parse_cookies(env); end
 
     # :call-seq:
@@ -4999,7 +4999,7 @@ module Rack::Utils
     #   parse_cookies_header('myname=myvalue; max-age=0')
     #   # => {"myname"=>"myvalue", "max-age"=>"0"}
     #
-    # source://rack//lib/rack/utils.rb#244
+    # source://rack//lib/rack/utils.rb#245
     def parse_cookies_header(value); end
 
     # source://rack//lib/rack/utils.rb#113
@@ -5011,13 +5011,13 @@ module Rack::Utils
     # source://rack//lib/rack/utils.rb#145
     def q_values(q_value_header); end
 
-    # source://rack//lib/rack/utils.rb#424
+    # source://rack//lib/rack/utils.rb#425
     def rfc2822(time); end
 
-    # source://rack//lib/rack/utils.rb#472
+    # source://rack//lib/rack/utils.rb#476
     def secure_compare(a, b); end
 
-    # source://rack//lib/rack/utils.rb#202
+    # source://rack//lib/rack/utils.rb#203
     def select_best_encoding(available_encodings, accept_encoding); end
 
     # :call-seq:
@@ -5043,7 +5043,7 @@ module Rack::Utils
     #   set_cookie_header("myname", {value: "myvalue", max_age: 10})
     #   # => "myname=myvalue; max-age=10"
     #
-    # source://rack//lib/rack/utils.rb#305
+    # source://rack//lib/rack/utils.rb#306
     def set_cookie_header(key, value); end
 
     # :call-seq:
@@ -5055,10 +5055,10 @@ module Rack::Utils
     # If the headers already contains a +set-cookie+ key, it will be converted
     # to an +Array+ if not already, and appended to.
     #
-    # source://rack//lib/rack/utils.rb#347
+    # source://rack//lib/rack/utils.rb#348
     def set_cookie_header!(headers, key, value); end
 
-    # source://rack//lib/rack/utils.rb#622
+    # source://rack//lib/rack/utils.rb#626
     def status_code(status); end
 
     # Unescapes a URI escaped string with +encoding+. +encoding+ will be the
@@ -5075,7 +5075,7 @@ module Rack::Utils
 
     # @return [Boolean]
     #
-    # source://rack//lib/rack/utils.rb#649
+    # source://rack//lib/rack/utils.rb#653
     def valid_path?(path); end
   end
 end
@@ -5089,40 +5089,40 @@ Rack::Utils::COMMON_SEP = T.let(T.unsafe(nil), Hash)
 # would be the request environment. The second of which would be the rack
 # application that the request would be forwarded to.
 #
-# source://rack//lib/rack/utils.rb#495
+# source://rack//lib/rack/utils.rb#499
 class Rack::Utils::Context
   # @return [Context] a new instance of Context
   #
-  # source://rack//lib/rack/utils.rb#498
+  # source://rack//lib/rack/utils.rb#502
   def initialize(app_f, app_r); end
 
   # Returns the value of attribute app.
   #
-  # source://rack//lib/rack/utils.rb#496
+  # source://rack//lib/rack/utils.rb#500
   def app; end
 
-  # source://rack//lib/rack/utils.rb#503
+  # source://rack//lib/rack/utils.rb#507
   def call(env); end
 
-  # source://rack//lib/rack/utils.rb#511
+  # source://rack//lib/rack/utils.rb#515
   def context(env, app = T.unsafe(nil)); end
 
   # Returns the value of attribute for.
   #
-  # source://rack//lib/rack/utils.rb#496
+  # source://rack//lib/rack/utils.rb#500
   def for; end
 
-  # source://rack//lib/rack/utils.rb#507
+  # source://rack//lib/rack/utils.rb#511
   def recontext(app); end
 end
 
 # source://rack//lib/rack/utils.rb#23
 Rack::Utils::DEFAULT_SEP = T.let(T.unsafe(nil), Regexp)
 
-# source://rack//lib/rack/utils.rb#186
+# source://rack//lib/rack/utils.rb#187
 Rack::Utils::ESCAPE_HTML = T.let(T.unsafe(nil), Hash)
 
-# source://rack//lib/rack/utils.rb#195
+# source://rack//lib/rack/utils.rb#196
 Rack::Utils::ESCAPE_HTML_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # Every standard HTTP code mapped to the appropriate message.
@@ -5131,7 +5131,7 @@ Rack::Utils::ESCAPE_HTML_PATTERN = T.let(T.unsafe(nil), Regexp)
 #     ruby -ne 'm = /^(\d{3}),(?!Unassigned|\(Unused\))([^,]+)/.match($_) and \
 #               puts "#{m[1]} => \x27#{m[2].strip}\x27,"'
 #
-# source://rack//lib/rack/utils.rb#549
+# source://rack//lib/rack/utils.rb#553
 Rack::Utils::HTTP_STATUS_CODES = T.let(T.unsafe(nil), Hash)
 
 # A wrapper around Headers
@@ -5139,23 +5139,23 @@ Rack::Utils::HTTP_STATUS_CODES = T.let(T.unsafe(nil), Hash)
 #
 # @api private
 #
-# source://rack//lib/rack/utils.rb#520
+# source://rack//lib/rack/utils.rb#524
 class Rack::Utils::HeaderHash < ::Hash
   class << self
     # @api private
     #
-    # source://rack//lib/rack/utils.rb#521
+    # source://rack//lib/rack/utils.rb#525
     def [](headers); end
 
     # @api private
     # @raise [TypeError]
     #
-    # source://rack//lib/rack/utils.rb#539
+    # source://rack//lib/rack/utils.rb#543
     def allocate; end
 
     # @api private
     #
-    # source://rack//lib/rack/utils.rb#532
+    # source://rack//lib/rack/utils.rb#536
     def new(hash = T.unsafe(nil)); end
   end
 end
@@ -5166,10 +5166,10 @@ Rack::Utils::InvalidParameterError = Rack::QueryParser::InvalidParameterError
 # source://rack//lib/rack/utils.rb#25
 Rack::Utils::KeySpaceConstrainedParams = Rack::QueryParser::Params
 
-# source://rack//lib/rack/utils.rb#647
+# source://rack//lib/rack/utils.rb#651
 Rack::Utils::NULL_BYTE = T.let(T.unsafe(nil), String)
 
-# source://rack//lib/rack/utils.rb#630
+# source://rack//lib/rack/utils.rb#634
 Rack::Utils::PATH_SEPS = T.let(T.unsafe(nil), Regexp)
 
 # source://rack//lib/rack/utils.rb#20
@@ -5180,10 +5180,10 @@ Rack::Utils::ParamsTooDeepError = Rack::QueryParser::ParamsTooDeepError
 
 # Responses with HTTP status codes that should not have an entity body
 #
-# source://rack//lib/rack/utils.rb#616
+# source://rack//lib/rack/utils.rb#620
 Rack::Utils::STATUS_WITH_NO_ENTITY_BODY = T.let(T.unsafe(nil), Hash)
 
-# source://rack//lib/rack/utils.rb#618
+# source://rack//lib/rack/utils.rb#622
 Rack::Utils::SYMBOL_TO_STATUS_CODE = T.let(T.unsafe(nil), Hash)
 
 # The Rack protocol version number implemented.

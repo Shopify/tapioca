@@ -6944,20 +6944,20 @@ module ActiveSupport::HtmlSafeTranslation
 
   private
 
-  # source://activesupport//lib/active_support/html_safe_translation.rb#22
+  # source://activesupport//lib/active_support/html_safe_translation.rb#32
   def html_escape_translation_options(options); end
 
-  # source://activesupport//lib/active_support/html_safe_translation.rb#35
+  # source://activesupport//lib/active_support/html_safe_translation.rb#45
   def html_safe_translation(translation); end
 
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/html_safe_translation.rb#18
+  # source://activesupport//lib/active_support/html_safe_translation.rb#28
   def html_safe_translation_key?(key); end
 
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/html_safe_translation.rb#30
+  # source://activesupport//lib/active_support/html_safe_translation.rb#40
   def i18n_option?(name); end
 end
 
@@ -9894,10 +9894,10 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#314
   def listening?(name); end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#91
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#81
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
   def locked?; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#293
@@ -9912,13 +9912,13 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#68
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#76
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#86
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#96
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
   def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#85
@@ -12419,43 +12419,43 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#963
   def _teardown_callbacks; end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#736
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#736
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#665
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#665
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#676
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#676
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#688
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#688
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#700
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#700
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#707
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#707
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#718
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#718
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#728
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#728
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#746
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#746
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#781
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#781
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#804
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#804
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#813
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#813
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil), include_all: T.unsafe(nil)); end
 
-  # source://minitest/5.21.1/lib/minitest/assertions.rb#822
+  # source://minitest/5.22.2/lib/minitest/assertions.rb#822
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -12467,7 +12467,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#298
   def inspect; end
 
-  # source://minitest/5.21.1/lib/minitest.rb#311
+  # source://minitest/5.22.2/lib/minitest.rb#332
   def method_name; end
 
   class << self
@@ -14700,7 +14700,7 @@ ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/gem_version.rb#13
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/gem_version.rb#15
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
@@ -14961,7 +14961,7 @@ end
 # source://activesupport//lib/active_support/xml_mini/rexml.rb#11
 ActiveSupport::XmlMini_REXML::CONTENT_KEY = T.let(T.unsafe(nil), String)
 
-# source://activesupport//lib/active_support/core_ext/object/blank.rb#83
+# source://activesupport//lib/active_support/core_ext/array/extract_options.rb#14
 class Array
   include ::Enumerable
 
@@ -17819,7 +17819,7 @@ class IO::Buffer
   def get_string(*_arg0); end
   def get_value(_arg0, _arg1); end
   def get_values(_arg0, _arg1); end
-  def hexdump(*_arg0); end
+  def hexdump; end
   def inspect; end
   def internal?; end
   def locked; end
@@ -17829,7 +17829,6 @@ class IO::Buffer
   def null?; end
   def or!(_arg0); end
   def pread(*_arg0); end
-  def private?; end
   def pwrite(*_arg0); end
   def read(*_arg0); end
   def readonly?; end
@@ -17857,7 +17856,6 @@ class IO::Buffer
     def for(_arg0); end
     def map(*_arg0); end
     def size_of(_arg0); end
-    def string(_arg0); end
   end
 end
 
@@ -19945,6 +19943,18 @@ class Range
   # source://activesupport//lib/active_support/core_ext/range/compare_range.rb#41
   def include?(value); end
 
+  # @raise [TypeError]
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/core_ext/range/overlap.rb#8
+  def overlap?(other); end
+
+  # @raise [TypeError]
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/core_ext/range/overlap.rb#8
+  def overlaps?(other); end
+
   # source://activesupport//lib/active_support/core_ext/range/each.rb#12
   def step(n = T.unsafe(nil), &block); end
 
@@ -19953,6 +19963,13 @@ class Range
   #
   # source://activesupport//lib/active_support/core_ext/enumerable.rb#236
   def sum(initial_value = T.unsafe(nil)); end
+
+  private
+
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/core_ext/range/overlap.rb#31
+  def _empty_range?(b, e, excl); end
 end
 
 # source://activesupport//lib/active_support/core_ext/object/json.rb#141
@@ -19977,10 +19994,10 @@ end
 # source://activesupport//lib/active_support/core_ext/securerandom.rb#5
 module SecureRandom
   class << self
-    # source://activesupport//lib/active_support/core_ext/securerandom.rb#45
+    # source://activesupport//lib/active_support/core_ext/securerandom.rb#49
     def base36(n = T.unsafe(nil)); end
 
-    # source://activesupport//lib/active_support/core_ext/securerandom.rb#20
+    # source://activesupport//lib/active_support/core_ext/securerandom.rb#24
     def base58(n = T.unsafe(nil)); end
   end
 end
@@ -20010,7 +20027,7 @@ end
 #
 #   'ScaleScore'.tableize # => "scale_scores"
 #
-# source://activesupport//lib/active_support/core_ext/string/multibyte.rb#5
+# source://activesupport//lib/active_support/core_ext/object/blank.rb#103
 class String
   include ::Comparable
 
