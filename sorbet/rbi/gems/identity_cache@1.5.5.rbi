@@ -719,12 +719,12 @@ class IdentityCache::Cached::BelongsTo < ::IdentityCache::Cached::Association
 
   # @return [Boolean]
   #
-  # source://identity_cache//lib/identity_cache/cached/belongs_to.rb#98
+  # source://identity_cache//lib/identity_cache/cached/belongs_to.rb#102
   def embedded_by_reference?; end
 
   # @return [Boolean]
   #
-  # source://identity_cache//lib/identity_cache/cached/belongs_to.rb#94
+  # source://identity_cache//lib/identity_cache/cached/belongs_to.rb#98
   def embedded_recursively?; end
 
   # source://identity_cache//lib/identity_cache/cached/belongs_to.rb#35
@@ -1699,7 +1699,7 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
 
   # Invalidates the primary cache index for the associated record. Will not invalidate cached attributes.
   #
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#160
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#162
   def expire_primary_key_cache_index(id); end
 
   # Fetch the record by its primary key from the cache or read from
@@ -1767,7 +1767,7 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
 
   private
 
-  # source://identity_cache//lib/identity_cache/with_primary_index.rb#166
+  # source://identity_cache//lib/identity_cache/with_primary_index.rb#168
   def inherited(subclass); end
 end
 
