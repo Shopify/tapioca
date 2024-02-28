@@ -111,27 +111,37 @@ module Tapioca
 
     sig { params(result: Spoom::ExecResult).void }
     def assert_empty_stdout(result)
-      assert_empty(result.out)
+      assert_empty(result.out, result.to_s)
     end
 
     sig { params(result: Spoom::ExecResult).void }
     def assert_empty_stderr(result)
-      assert_empty(result.err)
+      assert_empty(result.err, result.to_s)
     end
 
     sig { params(result: Spoom::ExecResult).void }
     def assert_success_status(result)
-      assert(result.status)
+      assert(result.status, result.to_s)
     end
 
     sig { params(result: Spoom::ExecResult).void }
     def refute_success_status(result)
-      refute(result.status)
+      refute(result.status, result.to_s)
+    end
+
+    sig { params(text: String, result: Spoom::ExecResult).void }
+    def assert_stdout_equals(text, result)
+      assert_equal(text, result.out, result.to_s)
     end
 
     sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stdout_includes(result, snippet)
       assert_includes(result.out, snippet, result.to_s)
+    end
+
+    sig { params(text: String, result: Spoom::ExecResult).void }
+    def assert_stderr_equals(text, result)
+      assert_equal(text, result.err, result.to_s)
     end
 
     sig { params(result: Spoom::ExecResult, snippet: String).void }

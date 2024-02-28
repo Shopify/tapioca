@@ -29,7 +29,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           No shim RBIs to check
         OUT
 
@@ -105,7 +105,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Bar#bar:
            * sorbet/rbi/shims/bar.rbi:2:2-2:14
@@ -187,7 +187,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/foo.rbi:3:2-3:20
@@ -217,7 +217,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/foo.rbi:2:2-2:24
@@ -271,7 +271,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Foo.include(Bar):
            * sorbet/rbi/shims/foo.rbi:2:2-2:13
@@ -320,7 +320,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/foo.rbi:2:2-2:24
@@ -373,7 +373,7 @@ module Tapioca
           Looking for duplicates...  Done
         OUT
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Object:
            * https://github.com/sorbet/sorbet/tree/master/rbi/core/object.rbi#L27
@@ -429,7 +429,7 @@ module Tapioca
             "--todo-rbi-file=rbi/todo.rbi --no-payload",
         )
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Baz#baz:
            * rbi/todo.rbi:2:2-2:14
@@ -468,7 +468,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Warning: unexpected end of file, assuming it is closing the parent top level context. expected an `end` to close the `class` statement. (sorbet/rbi/shims/foo.rbi:2:0)
 
@@ -517,7 +517,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Bar#bar:
            * sorbet/rbi/shims/bar.rbi:2:2-2:14
@@ -566,7 +566,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/todo.rbi:2:2-2:18
@@ -617,7 +617,7 @@ module Tapioca
 
         result = @project.tapioca("check-shims --no-payload")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/todo.rbi:2:2-2:18

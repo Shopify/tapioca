@@ -19,7 +19,7 @@ module Tapioca
 
         result = @project.tapioca("annotations --sources #{repo.absolute_path}")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           Retrieving index from central repository... Done
           Listing gems from Gemfile.lock... Done
           Removing annotations for gems that have been removed...  Nothing to do
