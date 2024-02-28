@@ -134,7 +134,7 @@ module Tapioca
         it "must show an error if --all is supplied with arguments" do
           result = @project.tapioca("gem --all foo")
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             Option '--all' must be provided without any other arguments
           ERR
 
@@ -145,7 +145,7 @@ module Tapioca
         it "must show an error if --verify is supplied with arguments" do
           result = @project.tapioca("gem --verify foo")
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             Option '--verify' must be provided without any other arguments
           ERR
 
@@ -156,7 +156,7 @@ module Tapioca
         it "must show an error if both --all and --verify are supplied" do
           result = @project.tapioca("gem --all --verify")
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             Options '--all' and '--verify' are mutually exclusive
           ERR
 
@@ -167,7 +167,7 @@ module Tapioca
         it "must show an error if --include-dependencies is supplied without gem" do
           result = @project.tapioca("gem --include-dependencies")
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             Option '--include-dependencies' must be provided with gems
           ERR
 
@@ -1514,7 +1514,7 @@ module Tapioca
 
           result = @project.tapioca("gem --verify")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Checking for out-of-date RBIs...
 
             Nothing to do, all RBIs are up-to-date.
@@ -1529,7 +1529,7 @@ module Tapioca
 
           result = @project.tapioca("gem --verify --exclude foo bar")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Checking for out-of-date RBIs...
 
             Nothing to do, all RBIs are up-to-date.
@@ -1552,7 +1552,7 @@ module Tapioca
 
           result = @project.tapioca("gem --verify")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Checking for out-of-date RBIs...
 
           OUT
@@ -1562,7 +1562,7 @@ module Tapioca
           assert_project_file_exist("sorbet/rbi/gems/outdated@5.0.0.rbi")
           assert_project_file_exist("sorbet/rbi/gems/bar@0.2.0.rbi")
 
-          assert_equal(<<~ERROR, result.err)
+          assert_stderr_equals(<<~ERROR, result)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca gem`
             Once it is complete, be sure to commit and push any changes
@@ -1859,7 +1859,7 @@ module Tapioca
 
           assert_success_status(result)
 
-          assert_equal(<<~OUT, result.err)
+          assert_stderr_equals(<<~OUT, result)
             RAILS ENVIRONMENT: development
             RACK ENVIRONMENT: development
           OUT
@@ -1870,7 +1870,7 @@ module Tapioca
 
           assert_success_status(result)
 
-          assert_equal(<<~OUT, result.err)
+          assert_stderr_equals(<<~OUT, result)
             RAILS ENVIRONMENT: staging
             RACK ENVIRONMENT: staging
           OUT

@@ -19,7 +19,7 @@ module Tapioca
       it "does nothing if all constant are already resolved" do
         result = @project.tapioca("todo")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUT
@@ -62,7 +62,7 @@ module Tapioca
 
         result = @project.tapioca("todo")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Done
 
@@ -97,7 +97,7 @@ module Tapioca
 
         result = @project.tapioca("todo --no-file-header")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Done
 
@@ -124,7 +124,7 @@ module Tapioca
 
         result = @project.tapioca("todo")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           #{Commands::Todo::DEPRECATION_MESSAGE}
           Finding all unresolved constants, this may take a few seconds... Nothing to do
         OUT

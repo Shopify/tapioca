@@ -20,7 +20,7 @@ module Tapioca
       it "does nothing if there is nothing to require" do
         result = @project.tapioca("require")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Nothing to do
         OUT
 
@@ -41,7 +41,7 @@ module Tapioca
 
         result = @project.tapioca("require")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
           Please review changes and commit them, then run `bin/tapioca gem`.
@@ -79,7 +79,7 @@ module Tapioca
 
         result = @project.tapioca("require")
 
-        assert_equal(<<~OUT, result.out)
+        assert_stdout_equals(<<~OUT, result)
           Compiling sorbet/tapioca/require.rb, this may take a few seconds... Done
           All requires from this application have been written to sorbet/tapioca/require.rb.
           Please review changes and commit them, then run `bin/tapioca gem`.

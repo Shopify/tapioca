@@ -129,9 +129,19 @@ module Tapioca
       refute(result.status)
     end
 
+    sig { params(text: String, result: Spoom::ExecResult).void }
+    def assert_stdout_equals(text, result)
+      assert_equal(text, result.out, result.to_s)
+    end
+
     sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stdout_includes(result, snippet)
       assert_includes(result.out, snippet, result.to_s)
+    end
+
+    sig { params(text: String, result: Spoom::ExecResult).void }
+    def assert_stderr_equals(text, result)
+      assert_equal(text, result.err, result.to_s)
     end
 
     sig { params(result: Spoom::ExecResult, snippet: String).void }

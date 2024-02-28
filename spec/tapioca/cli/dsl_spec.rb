@@ -45,7 +45,7 @@ module Tapioca
 
         assert_empty_stdout(result)
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
           Unknown switches "--unknown-option"
         ERR
 
@@ -97,7 +97,7 @@ module Tapioca
         it "must not generate a .gitattributes file if the output folder is not created" do
           result = @project.tapioca("dsl --outdir output")
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -120,7 +120,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -128,7 +128,7 @@ module Tapioca
 
           OUT
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -143,7 +143,7 @@ module Tapioca
 
           result = @project.tapioca("dsl User")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -151,7 +151,7 @@ module Tapioca
 
           OUT
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -173,7 +173,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -218,7 +218,7 @@ module Tapioca
         it "errors for unprocessable required constants" do
           result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -229,7 +229,7 @@ module Tapioca
             Error: Cannot find constant 'NonExistent::Baz'
           OUT
 
-          assert_equal("\n", result.err)
+          assert_stderr_equals("\n", result)
 
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/foo.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/bar.rbi")
@@ -244,7 +244,7 @@ module Tapioca
 
           result = @project.tapioca("dsl NonExistent::Foo NonExistent::Bar NonExistent::Baz")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -257,7 +257,7 @@ module Tapioca
                   remove  sorbet/rbi/dsl/non_existent/baz.rbi
           OUT
 
-          assert_equal("\n", result.err)
+          assert_stderr_equals("\n", result)
 
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/foo.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/non_existent/baz.rbi")
@@ -288,7 +288,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -374,7 +374,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -490,7 +490,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -535,7 +535,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --verbose --outdir rbis/")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -588,7 +588,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --verbose")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -628,7 +628,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --quiet")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -696,7 +696,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -814,7 +814,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post User")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -874,7 +874,7 @@ module Tapioca
 
           result = @project.tapioca("dsl lib/models")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -913,7 +913,7 @@ module Tapioca
 
           result = @project.tapioca("dsl path/to/nowhere.rb")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -921,7 +921,7 @@ module Tapioca
 
           OUT
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -942,7 +942,7 @@ module Tapioca
 
           result = @project.tapioca("dsl lib/models")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1023,7 +1023,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1116,7 +1116,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --only SidekiqWorker Foo::Compiler")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1175,7 +1175,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --only SmartProperties NonexistentCompiler")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1244,7 +1244,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Compiler")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1281,7 +1281,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --exclude NonexistentCompiler")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1326,7 +1326,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1343,7 +1343,7 @@ module Tapioca
             Please review changes and commit them.
           OUT
 
-          assert_equal(<<~OUT, result.err)
+          assert_stderr_equals(<<~OUT, result)
             WARNING: Multiple constants with the same name: `Post`
             Make sure some object is not holding onto these constants during an app reload.
           OUT
@@ -1418,7 +1418,7 @@ module Tapioca
             result = @project.tapioca("dsl Post")
 
             # FIXME: print the error to the correct stream
-            assert_equal(<<~OUT, result.out)
+            assert_stdout_equals(<<~OUT, result)
               Loading DSL extension classes... Done
               Loading Rails application... Done
               Loading DSL compiler classes... Done
@@ -1428,7 +1428,7 @@ module Tapioca
               202001010000_create_articles.rb
             OUT
 
-            assert_equal(<<~ERR, result.err)
+            assert_stderr_equals(<<~ERR, result)
               Run `bin/rails db:migrate` to update your database then try again.
             ERR
 
@@ -1444,7 +1444,7 @@ module Tapioca
             result = @project.tapioca("dsl")
 
             # FIXME: print the error to the correct stream
-            assert_equal(<<~OUT, result.out)
+            assert_stdout_equals(<<~OUT, result)
               Loading DSL extension classes... Done
               Loading Rails application... Done
               Loading DSL compiler classes... Done
@@ -1454,7 +1454,7 @@ module Tapioca
               202001010000_create_articles.rb
             OUT
 
-            assert_equal(<<~ERR, result.err)
+            assert_stderr_equals(<<~ERR, result)
               Run `bin/rails db:migrate` to update your database then try again.
             ERR
 
@@ -1473,7 +1473,7 @@ module Tapioca
 
             result = @project.tapioca("dsl Post")
 
-            assert_equal(<<~OUT, result.out)
+            assert_stdout_equals(<<~OUT, result)
               Loading DSL extension classes... Done
               Loading Rails application... Done
               Loading DSL compiler classes... Done
@@ -1514,7 +1514,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1601,7 +1601,7 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1635,7 +1635,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post --only=ActiveRecordTypedStore")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1745,7 +1745,7 @@ module Tapioca
           @project.tapioca("dsl")
           result = @project.tapioca("dsl --verify --exclude SmartProperties")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1754,7 +1754,7 @@ module Tapioca
 
           OUT
 
-          assert_equal(<<~ERROR, result.err)
+          assert_stderr_equals(<<~ERROR, result)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
@@ -1784,7 +1784,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --verify")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1793,7 +1793,7 @@ module Tapioca
 
           OUT
 
-          assert_equal(<<~ERROR, result.err)
+          assert_stderr_equals(<<~ERROR, result)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
@@ -1834,7 +1834,7 @@ module Tapioca
 
           result = @project.tapioca("dsl --verify")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -1843,7 +1843,7 @@ module Tapioca
 
           OUT
 
-          assert_equal(<<~ERROR, result.err)
+          assert_stderr_equals(<<~ERROR, result)
             RBI files are out-of-date. In your development environment, please run:
               `bin/tapioca dsl`
             Once it is complete, be sure to commit and push any changes
@@ -1948,7 +1948,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -2026,7 +2026,7 @@ module Tapioca
 
           result = @project.bundle_exec("ruby bin/generate")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             # typed: strong
 
             class Post
@@ -2157,7 +2157,7 @@ module Tapioca
 
           result = @project.tapioca("dsl CreditCard")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -2309,7 +2309,7 @@ module Tapioca
 
           result = @project.tapioca("dsl CreditCard")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -2365,7 +2365,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post")
 
-          assert_equal(<<~OUT, result.out)
+          assert_equal(<<~OUT, result.out, "#{result} was different")
             Loading DSL extension classes... Hi from test extension
           OUT
 
@@ -2411,7 +2411,7 @@ module Tapioca
 
           result = @project.tapioca("dsl Post")
 
-          assert_equal(<<~ERR, result.err)
+          assert_stderr_equals(<<~ERR, result)
             ##### INTERNAL ERROR #####
 
             There are parse errors in the generated RBI files.
@@ -2471,7 +2471,7 @@ module Tapioca
         it "must default to `development` as environment" do
           result = @project.tapioca("dsl")
 
-          assert_equal(<<~OUT, result.err)
+          assert_stderr_equals(<<~OUT, result)
             RAILS ENVIRONMENT: development
             RACK ENVIRONMENT: development
           OUT
@@ -2527,7 +2527,7 @@ module Tapioca
           refute_project_file_exist("sorbet/rbi/dsl/post/rack.rbi")
           refute_project_file_exist("sorbet/rbi/dsl/post/rails.rbi")
 
-          assert_equal(<<~OUT, result.err)
+          assert_stderr_equals(<<~OUT, result)
             RAILS ENVIRONMENT: staging
             RACK ENVIRONMENT: staging
           OUT
@@ -2553,7 +2553,7 @@ module Tapioca
         it "lists all Tapioca bundled compilers" do
           result = @project.tapioca("dsl --list-compilers")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -2588,7 +2588,7 @@ module Tapioca
         it "lists excluded compilers" do
           result = @project.tapioca("dsl --list-compilers --exclude SmartProperties ActiveRecordEnum")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
@@ -2623,7 +2623,7 @@ module Tapioca
         it "lists enabled compilers" do
           result = @project.tapioca("dsl --list-compilers --only SmartProperties ActiveRecordEnum")
 
-          assert_equal(<<~OUT, result.out)
+          assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done

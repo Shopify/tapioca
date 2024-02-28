@@ -29,7 +29,7 @@ module Tapioca
 
         result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -53,7 +53,7 @@ module Tapioca
 
         result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -79,7 +79,7 @@ module Tapioca
 
         result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -106,7 +106,7 @@ module Tapioca
 
         result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -134,7 +134,7 @@ module Tapioca
 
         result = @project.tapioca("gem")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
 
@@ -156,7 +156,7 @@ module Tapioca
 
         result = @project.tapioca("gem --config tapioca_custom_config.yml")
 
-        assert_equal(<<~ERR, result.err)
+        assert_stderr_equals(<<~ERR, result)
 
           Configuration file tapioca_custom_config.yml has the following errors:
 
