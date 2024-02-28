@@ -1130,31 +1130,34 @@ class WEBrick::HTTPRequest
 
   private
 
-  # source://webrick//lib/webrick/httprequest.rb#562
+  # source://webrick//lib/webrick/httprequest.rb#566
   def _read_data(io, method, *arg); end
 
-  # source://webrick//lib/webrick/httprequest.rb#582
+  # source://webrick//lib/webrick/httprequest.rb#506
+  def parse_host_request_line(host); end
+
+  # source://webrick//lib/webrick/httprequest.rb#586
   def parse_query; end
 
   # source://webrick//lib/webrick/httprequest.rb#484
   def parse_uri(str, scheme = T.unsafe(nil)); end
 
-  # source://webrick//lib/webrick/httprequest.rb#507
+  # source://webrick//lib/webrick/httprequest.rb#511
   def read_body(socket, block); end
 
-  # source://webrick//lib/webrick/httprequest.rb#531
+  # source://webrick//lib/webrick/httprequest.rb#535
   def read_chunk_size(socket); end
 
-  # source://webrick//lib/webrick/httprequest.rb#542
+  # source://webrick//lib/webrick/httprequest.rb#546
   def read_chunked(socket, block); end
 
-  # source://webrick//lib/webrick/httprequest.rb#578
+  # source://webrick//lib/webrick/httprequest.rb#582
   def read_data(io, size); end
 
   # source://webrick//lib/webrick/httprequest.rb#471
   def read_header(socket); end
 
-  # source://webrick//lib/webrick/httprequest.rb#574
+  # source://webrick//lib/webrick/httprequest.rb#578
   def read_line(io, size = T.unsafe(nil)); end
 
   # @raise [HTTPStatus::EOFError]
@@ -1168,7 +1171,7 @@ class WEBrick::HTTPRequest
   # the initial(first) value. (apr_table_mergen() adds new value after the
   # existing value with ", " prefix)
   #
-  # source://webrick//lib/webrick/httprequest.rb#610
+  # source://webrick//lib/webrick/httprequest.rb#614
   def setup_forwarded_info; end
 end
 
@@ -1187,20 +1190,20 @@ class WEBrick::HTTPResponse
   #
   # @return [HTTPResponse] a new instance of HTTPResponse
   #
-  # source://webrick//lib/webrick/httpresponse.rb#112
+  # source://webrick//lib/webrick/httpresponse.rb#117
   def initialize(config); end
 
   # Retrieves the response header +field+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#150
+  # source://webrick//lib/webrick/httpresponse.rb#155
   def [](field); end
 
   # Sets the response header +field+ to +value+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#157
+  # source://webrick//lib/webrick/httpresponse.rb#162
   def []=(field, value); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#240
+  # source://webrick//lib/webrick/httpresponse.rb#255
   def _rack_setup_header; end
 
   # Body may be:
@@ -1243,14 +1246,14 @@ class WEBrick::HTTPResponse
 
   # Enables chunked transfer encoding.
   #
-  # source://webrick//lib/webrick/httpresponse.rb#209
+  # source://webrick//lib/webrick/httpresponse.rb#214
   def chunked=(val); end
 
   # Will this response body be returned using chunked transfer-encoding?
   #
   # @return [Boolean]
   #
-  # source://webrick//lib/webrick/httpresponse.rb#202
+  # source://webrick//lib/webrick/httpresponse.rb#207
   def chunked?; end
 
   # Configuration for this response
@@ -1260,22 +1263,22 @@ class WEBrick::HTTPResponse
 
   # The content-length header
   #
-  # source://webrick//lib/webrick/httpresponse.rb#165
+  # source://webrick//lib/webrick/httpresponse.rb#170
   def content_length; end
 
   # Sets the content-length header to +len+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#174
+  # source://webrick//lib/webrick/httpresponse.rb#179
   def content_length=(len); end
 
   # The content-type header
   #
-  # source://webrick//lib/webrick/httpresponse.rb#181
+  # source://webrick//lib/webrick/httpresponse.rb#186
   def content_type; end
 
   # Sets the content-type header to +type+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#188
+  # source://webrick//lib/webrick/httpresponse.rb#193
   def content_type=(type); end
 
   # Response cookies
@@ -1285,7 +1288,7 @@ class WEBrick::HTTPResponse
 
   # Iterates over each header in the response
   #
-  # source://webrick//lib/webrick/httpresponse.rb#195
+  # source://webrick//lib/webrick/httpresponse.rb#200
   def each; end
 
   # Filename of the static file in this response.  Only used by the
@@ -1324,10 +1327,10 @@ class WEBrick::HTTPResponse
   #
   # @return [Boolean]
   #
-  # source://webrick//lib/webrick/httpresponse.rb#216
+  # source://webrick//lib/webrick/httpresponse.rb#221
   def keep_alive?; end
 
-  # source://webrick//lib/webrick/httpresponse.rb#303
+  # source://webrick//lib/webrick/httpresponse.rb#325
   def make_body_tempfile; end
 
   # Response reason phrase ("OK")
@@ -1340,7 +1343,7 @@ class WEBrick::HTTPResponse
   # source://webrick//lib/webrick/httpresponse.rb#51
   def reason_phrase=(_arg0); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#321
+  # source://webrick//lib/webrick/httpresponse.rb#343
   def remove_body_tempfile; end
 
   # Request HTTP version for this response
@@ -1375,17 +1378,17 @@ class WEBrick::HTTPResponse
 
   # Sends the body on +socket+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#356
+  # source://webrick//lib/webrick/httpresponse.rb#378
   def send_body(socket); end
 
   # Sends the headers on +socket+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#333
+  # source://webrick//lib/webrick/httpresponse.rb#355
   def send_header(socket); end
 
   # Sends the response on +socket+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#223
+  # source://webrick//lib/webrick/httpresponse.rb#238
   def send_response(socket); end
 
   # Bytes sent in this response
@@ -1395,7 +1398,7 @@ class WEBrick::HTTPResponse
 
   # Creates an error page for exception +ex+ with an optional +backtrace+
   #
-  # source://webrick//lib/webrick/httpresponse.rb#383
+  # source://webrick//lib/webrick/httpresponse.rb#405
   def set_error(ex, backtrace = T.unsafe(nil)); end
 
   # Redirects to +url+ with a WEBrick::HTTPStatus::Redirect +status+.
@@ -1404,7 +1407,7 @@ class WEBrick::HTTPResponse
   #
   #   res.set_redirect WEBrick::HTTPStatus::TemporaryRedirect
   #
-  # source://webrick//lib/webrick/httpresponse.rb#373
+  # source://webrick//lib/webrick/httpresponse.rb#395
   def set_redirect(status, url); end
 
   # Response status code (200)
@@ -1414,50 +1417,66 @@ class WEBrick::HTTPResponse
 
   # Sets the response's status to the +status+ code
   #
-  # source://webrick//lib/webrick/httpresponse.rb#142
+  # source://webrick//lib/webrick/httpresponse.rb#147
   def status=(status); end
 
   # The response's HTTP status line
   #
-  # source://webrick//lib/webrick/httpresponse.rb#135
+  # source://webrick//lib/webrick/httpresponse.rb#140
   def status_line; end
+
+  # Set the response body proc as an streaming/upgrade response.
+  #
+  # source://webrick//lib/webrick/httpresponse.rb#111
+  def upgrade; end
+
+  # Sets the response to be a streaming/upgrade response.
+  # This will disable keep-alive and chunked transfer encoding.
+  #
+  # source://webrick//lib/webrick/httpresponse.rb#229
+  def upgrade!(protocol); end
+
+  # Set the response body proc as an streaming/upgrade response.
+  #
+  # source://webrick//lib/webrick/httpresponse.rb#111
+  def upgrade=(_arg0); end
 
   private
 
   # preserved for compatibility with some 3rd-party handlers
   #
-  # source://webrick//lib/webrick/httpresponse.rb#557
+  # source://webrick//lib/webrick/httpresponse.rb#581
   def _write_data(socket, data); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#410
+  # source://webrick//lib/webrick/httpresponse.rb#432
   def check_header(header_value); end
 
   # :stopdoc:
   #
-  # source://webrick//lib/webrick/httpresponse.rb#421
+  # source://webrick//lib/webrick/httpresponse.rb#443
   def error_body(backtrace, ex, host, port); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#451
+  # source://webrick//lib/webrick/httpresponse.rb#473
   def send_body_io(socket); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#513
+  # source://webrick//lib/webrick/httpresponse.rb#535
   def send_body_proc(socket); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#491
+  # source://webrick//lib/webrick/httpresponse.rb#513
   def send_body_string(socket); end
 end
 
-# source://webrick//lib/webrick/httpresponse.rb#531
+# source://webrick//lib/webrick/httpresponse.rb#555
 class WEBrick::HTTPResponse::ChunkedWrapper
   # @return [ChunkedWrapper] a new instance of ChunkedWrapper
   #
-  # source://webrick//lib/webrick/httpresponse.rb#532
+  # source://webrick//lib/webrick/httpresponse.rb#556
   def initialize(socket, resp); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#550
+  # source://webrick//lib/webrick/httpresponse.rb#574
   def <<(*buf); end
 
-  # source://webrick//lib/webrick/httpresponse.rb#537
+  # source://webrick//lib/webrick/httpresponse.rb#561
   def write(buf); end
 end
 
@@ -1928,6 +1947,38 @@ class WEBrick::HTTPServlet::FileHandler < ::WEBrick::HTTPServlet::AbstractServle
   end
 end
 
+# Mounts a proc at a path that accepts a request and response.
+#
+# Instead of mounting this servlet with WEBrick::HTTPServer#mount use
+# WEBrick::HTTPServer#mount_proc:
+#
+#   server.mount_proc '/' do |req, res|
+#     res.body = 'it worked!'
+#     res.status = 200
+#   end
+#
+# source://webrick//lib/webrick/httpservlet/prochandler.rb#28
+class WEBrick::HTTPServlet::ProcHandler < ::WEBrick::HTTPServlet::AbstractServlet
+  # @return [ProcHandler] a new instance of ProcHandler
+  #
+  # source://webrick//lib/webrick/httpservlet/prochandler.rb#34
+  def initialize(proc); end
+
+  # source://webrick//lib/webrick/httpservlet/prochandler.rb#38
+  def do_GET(request, response); end
+
+  # source://webrick//lib/webrick/httpservlet/prochandler.rb#38
+  def do_POST(request, response); end
+
+  # source://webrick//lib/webrick/httpservlet/prochandler.rb#38
+  def do_PUT(request, response); end
+
+  # :stopdoc:
+  #
+  # source://webrick//lib/webrick/httpservlet/prochandler.rb#30
+  def get_instance(server, *options); end
+end
+
 # This module is used to manager HTTP status codes.
 #
 # See http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html for more
@@ -2084,54 +2135,54 @@ end
 module WEBrick::HTTPUtils
   private
 
-  # source://webrick//lib/webrick/httputils.rb#443
+  # source://webrick//lib/webrick/httputils.rb#454
   def _escape(str, regex); end
 
   # :stopdoc:
   #
-  # source://webrick//lib/webrick/httputils.rb#441
+  # source://webrick//lib/webrick/httputils.rb#452
   def _make_regex(str); end
 
-  # source://webrick//lib/webrick/httputils.rb#442
+  # source://webrick//lib/webrick/httputils.rb#453
   def _make_regex!(str); end
 
-  # source://webrick//lib/webrick/httputils.rb#449
+  # source://webrick//lib/webrick/httputils.rb#460
   def _unescape(str, regex); end
 
   # Removes quotes and escapes from +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#223
+  # source://webrick//lib/webrick/httputils.rb#234
   def dequote(str); end
 
   # Escapes HTTP reserved and unwise characters in +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#467
+  # source://webrick//lib/webrick/httputils.rb#478
   def escape(str); end
 
   # Escapes 8 bit characters in +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#508
+  # source://webrick//lib/webrick/httputils.rb#519
   def escape8bit(str); end
 
   # Escapes form reserved characters in +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#481
+  # source://webrick//lib/webrick/httputils.rb#492
   def escape_form(str); end
 
   # Escapes path +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#497
+  # source://webrick//lib/webrick/httputils.rb#508
   def escape_path(str); end
 
   # Loads Apache-compatible mime.types in +file+.
   #
-  # source://webrick//lib/webrick/httputils.rb#112
+  # source://webrick//lib/webrick/httputils.rb#123
   def load_mime_types(file); end
 
   # Returns the mime type of +filename+ from the list in +mime_tab+.  If no
   # mime type was found application/octet-stream is returned.
   #
-  # source://webrick//lib/webrick/httputils.rb#134
+  # source://webrick//lib/webrick/httputils.rb#145
   def mime_type(filename, mime_tab); end
 
   # Normalizes a request path.  Raises an exception if the path cannot be
@@ -2142,99 +2193,99 @@ module WEBrick::HTTPUtils
 
   # Parses form data in +io+ with the given +boundary+
   #
-  # source://webrick//lib/webrick/httputils.rb#395
+  # source://webrick//lib/webrick/httputils.rb#406
   def parse_form_data(io, boundary); end
 
   # Parses an HTTP header +raw+ into a hash of header fields with an Array
   # of values.
   #
-  # source://webrick//lib/webrick/httputils.rb#145
+  # source://webrick//lib/webrick/httputils.rb#156
   def parse_header(raw); end
 
   # Parses the query component of a URI in +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#371
+  # source://webrick//lib/webrick/httputils.rb#382
   def parse_query(str); end
 
   # Parses q values in +value+ as used in Accept headers.
   #
-  # source://webrick//lib/webrick/httputils.rb#202
+  # source://webrick//lib/webrick/httputils.rb#213
   def parse_qvalues(value); end
 
   # Parses a Range header value +ranges_specifier+
   #
-  # source://webrick//lib/webrick/httputils.rb#184
+  # source://webrick//lib/webrick/httputils.rb#195
   def parse_range_header(ranges_specifier); end
 
   # Quotes and escapes quotes in +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#233
+  # source://webrick//lib/webrick/httputils.rb#244
   def quote(str); end
 
   # Splits a header value +str+ according to HTTP specification.
   #
-  # source://webrick//lib/webrick/httputils.rb#175
+  # source://webrick//lib/webrick/httputils.rb#186
   def split_header_value(str); end
 
   # Unescapes HTTP reserved and unwise characters in +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#474
+  # source://webrick//lib/webrick/httputils.rb#485
   def unescape(str); end
 
   # Unescapes form reserved characters in +str+
   #
-  # source://webrick//lib/webrick/httputils.rb#490
+  # source://webrick//lib/webrick/httputils.rb#501
   def unescape_form(str); end
 
   class << self
-    # source://webrick//lib/webrick/httputils.rb#443
+    # source://webrick//lib/webrick/httputils.rb#454
     def _escape(str, regex); end
 
     # :stopdoc:
     #
-    # source://webrick//lib/webrick/httputils.rb#441
+    # source://webrick//lib/webrick/httputils.rb#452
     def _make_regex(str); end
 
-    # source://webrick//lib/webrick/httputils.rb#442
+    # source://webrick//lib/webrick/httputils.rb#453
     def _make_regex!(str); end
 
-    # source://webrick//lib/webrick/httputils.rb#449
+    # source://webrick//lib/webrick/httputils.rb#460
     def _unescape(str, regex); end
 
     # Removes quotes and escapes from +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#223
+    # source://webrick//lib/webrick/httputils.rb#234
     def dequote(str); end
 
     # Escapes HTTP reserved and unwise characters in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#467
+    # source://webrick//lib/webrick/httputils.rb#478
     def escape(str); end
 
     # Escapes 8 bit characters in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#508
+    # source://webrick//lib/webrick/httputils.rb#519
     def escape8bit(str); end
 
     # Escapes form reserved characters in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#481
+    # source://webrick//lib/webrick/httputils.rb#492
     def escape_form(str); end
 
     # Escapes path +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#497
+    # source://webrick//lib/webrick/httputils.rb#508
     def escape_path(str); end
 
     # Loads Apache-compatible mime.types in +file+.
     #
-    # source://webrick//lib/webrick/httputils.rb#112
+    # source://webrick//lib/webrick/httputils.rb#123
     def load_mime_types(file); end
 
     # Returns the mime type of +filename+ from the list in +mime_tab+.  If no
     # mime type was found application/octet-stream is returned.
     #
-    # source://webrick//lib/webrick/httputils.rb#134
+    # source://webrick//lib/webrick/httputils.rb#145
     def mime_type(filename, mime_tab); end
 
     # Normalizes a request path.  Raises an exception if the path cannot be
@@ -2245,48 +2296,48 @@ module WEBrick::HTTPUtils
 
     # Parses form data in +io+ with the given +boundary+
     #
-    # source://webrick//lib/webrick/httputils.rb#395
+    # source://webrick//lib/webrick/httputils.rb#406
     def parse_form_data(io, boundary); end
 
     # Parses an HTTP header +raw+ into a hash of header fields with an Array
     # of values.
     #
-    # source://webrick//lib/webrick/httputils.rb#145
+    # source://webrick//lib/webrick/httputils.rb#156
     def parse_header(raw); end
 
     # Parses the query component of a URI in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#371
+    # source://webrick//lib/webrick/httputils.rb#382
     def parse_query(str); end
 
     # Parses q values in +value+ as used in Accept headers.
     #
-    # source://webrick//lib/webrick/httputils.rb#202
+    # source://webrick//lib/webrick/httputils.rb#213
     def parse_qvalues(value); end
 
     # Parses a Range header value +ranges_specifier+
     #
-    # source://webrick//lib/webrick/httputils.rb#184
+    # source://webrick//lib/webrick/httputils.rb#195
     def parse_range_header(ranges_specifier); end
 
     # Quotes and escapes quotes in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#233
+    # source://webrick//lib/webrick/httputils.rb#244
     def quote(str); end
 
     # Splits a header value +str+ according to HTTP specification.
     #
-    # source://webrick//lib/webrick/httputils.rb#175
+    # source://webrick//lib/webrick/httputils.rb#186
     def split_header_value(str); end
 
     # Unescapes HTTP reserved and unwise characters in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#474
+    # source://webrick//lib/webrick/httputils.rb#485
     def unescape(str); end
 
     # Unescapes form reserved characters in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#490
+    # source://webrick//lib/webrick/httputils.rb#501
     def unescape_form(str); end
   end
 end
@@ -2294,7 +2345,7 @@ end
 # Stores multipart form data.  FormData objects are created when
 # WEBrick::HTTPUtils.parse_form_data is called.
 #
-# source://webrick//lib/webrick/httputils.rb#242
+# source://webrick//lib/webrick/httputils.rb#253
 class WEBrick::HTTPUtils::FormData < ::String
   # Creates a new FormData object.
   #
@@ -2305,7 +2356,7 @@ class WEBrick::HTTPUtils::FormData < ::String
   #
   # @return [FormData] a new instance of FormData
   #
-  # source://webrick//lib/webrick/httputils.rb#267
+  # source://webrick//lib/webrick/httputils.rb#278
   def initialize(*args); end
 
   # Adds +str+ to this FormData which may be the body, a header or a
@@ -2313,69 +2364,69 @@ class WEBrick::HTTPUtils::FormData < ::String
   #
   # This is called by WEBrick::HTTPUtils.parse_form_data for you
   #
-  # source://webrick//lib/webrick/httputils.rb#300
+  # source://webrick//lib/webrick/httputils.rb#311
   def <<(str); end
 
   # Retrieves the header at the first entry in +key+
   #
-  # source://webrick//lib/webrick/httputils.rb#286
+  # source://webrick//lib/webrick/httputils.rb#297
   def [](*key); end
 
   # Adds +data+ at the end of the chain of entries
   #
   # This is called by WEBrick::HTTPUtils.parse_form_data for you.
   #
-  # source://webrick//lib/webrick/httputils.rb#320
+  # source://webrick//lib/webrick/httputils.rb#331
   def append_data(data); end
 
   # Yields each entry in this FormData
   #
-  # source://webrick//lib/webrick/httputils.rb#335
+  # source://webrick//lib/webrick/httputils.rb#346
   def each_data; end
 
   # The filename of the form data part
   #
-  # source://webrick//lib/webrick/httputils.rb#254
+  # source://webrick//lib/webrick/httputils.rb#265
   def filename; end
 
   # The filename of the form data part
   #
-  # source://webrick//lib/webrick/httputils.rb#254
+  # source://webrick//lib/webrick/httputils.rb#265
   def filename=(_arg0); end
 
   # Returns all the FormData as an Array
   #
-  # source://webrick//lib/webrick/httputils.rb#347
+  # source://webrick//lib/webrick/httputils.rb#358
   def list; end
 
   # The name of the form data part
   #
-  # source://webrick//lib/webrick/httputils.rb#249
+  # source://webrick//lib/webrick/httputils.rb#260
   def name; end
 
   # The name of the form data part
   #
-  # source://webrick//lib/webrick/httputils.rb#249
+  # source://webrick//lib/webrick/httputils.rb#260
   def name=(_arg0); end
 
-  # source://webrick//lib/webrick/httputils.rb#256
+  # source://webrick//lib/webrick/httputils.rb#267
   def next_data=(_arg0); end
 
   # Returns all the FormData as an Array
   #
   # A FormData will behave like an Array
   #
-  # source://webrick//lib/webrick/httputils.rb#347
+  # source://webrick//lib/webrick/httputils.rb#358
   def to_ary; end
 
   # This FormData's body
   #
-  # source://webrick//lib/webrick/httputils.rb#363
+  # source://webrick//lib/webrick/httputils.rb#374
   def to_s; end
 
   protected
 
-  # source://webrick//lib/webrick/httputils.rb#256
+  # source://webrick//lib/webrick/httputils.rb#267
   def next_data; end
 end
 
