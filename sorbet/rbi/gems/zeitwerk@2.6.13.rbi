@@ -8,11 +8,11 @@
 module Kernel
   private
 
-  # source://zeitwerk//lib/zeitwerk/kernel.rb#27
+  # source://zeitwerk//lib/zeitwerk/kernel.rb#23
   def require(path); end
 
   class << self
-    # source://zeitwerk//lib/zeitwerk/kernel.rb#27
+    # source://zeitwerk//lib/zeitwerk/kernel.rb#23
     def require(path); end
   end
 end
@@ -22,7 +22,7 @@ module Zeitwerk
   class << self
     # This is a dangerous method.
     #
-    # source://zeitwerk//lib/zeitwerk.rb#20
+    # source://zeitwerk//lib/zeitwerk.rb#21
     def with_loader; end
   end
 end
@@ -846,6 +846,12 @@ Zeitwerk::Loader::MUTEX = T.let(T.unsafe(nil), Thread::Mutex)
 
 # source://zeitwerk//lib/zeitwerk/error.rb#13
 class Zeitwerk::NameError < ::NameError; end
+
+# source://zeitwerk//lib/zeitwerk/null_inflector.rb#1
+class Zeitwerk::NullInflector
+  # source://zeitwerk//lib/zeitwerk/null_inflector.rb#2
+  def camelize(basename, _abspath); end
+end
 
 # source://zeitwerk//lib/zeitwerk/real_mod_name.rb#3
 module Zeitwerk::RealModName
