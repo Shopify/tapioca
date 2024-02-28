@@ -12,5 +12,6 @@
   "[ruby]": {
     "editor.defaultFormatter": "Shopify.ruby-lsp",
     "editor.formatOnSave": true
-  }
+  },
+  "sorbet.highlightUntyped": "everywhere-but-tests"
 }
