@@ -178,7 +178,18 @@ module Tapioca
 
       sig { void }
       def parse_yard_docs
-        files.each { |path| YARD.parse(path.to_s, [], Logger::Severity::FATAL) }
+        files.each do |path|
+          YARD.parse(path.to_s, [], Logger::Severity::FATAL)
+        rescue RangeError
+          # In some circumstances, YARD will raise an error when parsing a file
+          # that is actually valid Ruby. We don't want tapioca to halt in these
+          # cases, so we'll rescue the error, pretend like there was no
+          # documentation, and move on.
+          #
+          # This can be removed when https://github.com/lsegal/yard/issues/1536
+          # is resolved and released.
+          []
+        end
       end
 
       sig { returns(T::Array[String]) }
