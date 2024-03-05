@@ -7715,7 +7715,7 @@ class YARD::Logger < ::Logger
   # source://yard//lib/yard/logging.rb#201
   def format_log(sev, _time, _prog, msg); end
 
-  # source://logger/1.5.3/logger.rb#682
+  # source://logger/1.6.0/logger.rb#684
   def print_no_newline(msg); end
 
   class << self
@@ -10052,7 +10052,7 @@ end
 
 # source://yard//lib/yard/parser/ruby/ast_node.rb#479
 class YARD::Parser::Ruby::MethodDefinitionNode < ::YARD::Parser::Ruby::AstNode
-  def block(*_arg0); end
+  def block(n = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
