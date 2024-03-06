@@ -550,19 +550,23 @@ module Tapioca
                 return_type: "T::Boolean",
               )
             when :find
-              args_type = if constant.try(:composite_primary_key?)
-                "T::Array[T::Array[T.untyped]]"
+              # From ActiveRecord::ConnectionAdapter::Quoting#quote, minus nil
+              id_types = "T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, " \
+                "::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, " \
+                "::ActiveSupport::Duration, T::Class[T.anything])"
+              array_type = if constant.try(:composite_primary_key?)
+                "T::Array[T::Array[#{id_types}]"
               else
-                "T::Array[T.untyped]"
+                "T::Array[#{id_types}]"
               end
               sigs = [
                 common_relation_methods_module.create_sig(
-                  parameters: [create_param("args", type: args_type)],
-                  return_type: "T::Enumerable[#{constant_name}]",
+                  parameters: [create_param("args", type: id_types)],
+                  return_type: constant_name,
                 ),
                 common_relation_methods_module.create_sig(
-                  parameters: [create_param("args", type: "T.untyped")],
-                  return_type: constant_name,
+                  parameters: [create_param("args", type: array_type)],
+                  return_type: "T::Enumerable[#{constant_name}]",
                 ),
               ]
               common_relation_methods_module.create_method_with_sigs(
