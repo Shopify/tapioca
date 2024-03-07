@@ -88,21 +88,53 @@ module RBI
     end
     def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new,
       comments: [])
-      return unless Tapioca::RBIHelper.valid_method_name?(name)
-
-      sig = RBI::Sig.new(return_type: return_type)
-      method = RBI::Method.new(
+      sig = create_sig(parameters: parameters, return_type: return_type)
+      create_method_with_sigs(
         name,
         sigs: [sig],
+        parameters: parameters.map(&:param),
+        class_method: class_method,
+        visibility: visibility,
+        comments: comments,
+      )
+    end
+
+    sig do
+      params(
+        name: String,
+        sigs: T::Array[RBI::Sig],
+        parameters: T::Array[RBI::Param],
+        class_method: T::Boolean,
+        visibility: RBI::Visibility,
+        comments: T::Array[RBI::Comment],
+      ).void
+    end
+    def create_method_with_sigs(name, sigs:, parameters: [], class_method: false, visibility: RBI::Public.new,
+      comments: [])
+      return unless Tapioca::RBIHelper.valid_method_name?(name)
+
+      method = RBI::Method.new(
+        name,
+        sigs: sigs,
+        params: parameters,
         is_singleton: class_method,
         visibility: visibility,
         comments: comments,
       )
-      parameters.each do |param|
-        method << param.param
-        sig << RBI::SigParam.new(param.param.name, param.type)
-      end
       self << method
+    end
+
+    sig do
+      params(
+        parameters: T::Array[RBI::TypedParam],
+        return_type: String,
+      ).returns(RBI::Sig)
+    end
+    def create_sig(parameters: [], return_type: "T.untyped")
+      params = parameters.map do |param|
+        RBI::SigParam.new(param.param.name, param.type)
+      end
+      RBI::Sig.new(params: params, return_type: return_type)
     end
 
     private

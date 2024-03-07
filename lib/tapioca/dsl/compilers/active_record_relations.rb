@@ -58,16 +58,6 @@ module Tapioca
       # `Model::PrivateRelation` modules, so that, for example, `find_by` and `all` can be chained off of the
       # `Model` class.
       #
-      # **A note on find**: `find` is typed as `T.untyped` by default.
-      #
-      # While it is often used in the manner of `Model.find(id)`, Rails does support pasing in an array to find, which
-      # would then return a `T::Enumerable[Model]`. This would force a static cast everywhere find is used to avoid type
-      # errors. This is not ideal considering very few users of find use the array syntax over a where. With untyped,
-      # this cast is optional and so it was decided to avoid typing it. If you need runtime guarentees when using `find`
-      # the best method of doing so is by casting the return value to the model: `T.cast(Model.find(id), Model)`.
-      # `find_by` does guarentee a return value of `Model`, so find can can be refactored accordingly:
-      # `Model.find_by!(id: id)`. This will avoid the cast requirement at runtime.
-      #
       # **CAUTION**: The generated relation classes are named `PrivateXXX` intentionally to reflect the fact
       # that they represent private subconstants of the Active Record model. As such, these types do not
       # exist at runtime, and their counterparts that do exist at runtime are marked `private_constant` anyway.
@@ -560,12 +550,29 @@ module Tapioca
                 return_type: "T::Boolean",
               )
             when :find
-              create_common_method(
+              # From ActiveRecord::ConnectionAdapter::Quoting#quote, minus nil
+              id_types = "T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, " \
+                "::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, " \
+                "::ActiveSupport::Duration, T::Class[T.anything])"
+              array_type = if constant.try(:composite_primary_key?)
+                "T::Array[T::Array[#{id_types}]"
+              else
+                "T::Array[#{id_types}]"
+              end
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: [create_param("args", type: id_types)],
+                  return_type: constant_name,
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: [create_param("args", type: array_type)],
+                  return_type: "T::Enumerable[#{constant_name}]",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
                 "find",
-                parameters: [
-                  create_rest_param("args", type: "T.untyped"),
-                ],
-                return_type: "T.untyped",
+                sigs: sigs,
+                parameters: [RBI::ReqParam.new("args")],
               )
             when :find_by
               create_common_method(
@@ -599,12 +606,20 @@ module Tapioca
                 return_type: constant_name,
               )
             when :first, :last, :take
-              create_common_method(
-                method_name,
-                parameters: [
-                  create_opt_param("limit", type: "T.untyped", default: "nil"),
-                ],
-                return_type: "T.untyped",
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: [create_opt_param("limit", type: "NilClass", default: "nil")],
+                  return_type: as_nilable_type(constant_name),
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: [create_param("limit", type: "Integer")],
+                  return_type: "T::Array[#{constant_name}]",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
+                method_name.to_s,
+                sigs: sigs,
+                parameters: [RBI::OptParam.new("limit", "nil")],
               )
             when :raise_record_not_found_exception!
               # skip
@@ -698,51 +713,121 @@ module Tapioca
             case method_name
             when :find_each
               order = ActiveRecord::Batches.instance_method(:find_each).parameters.include?([:key, :order])
-              create_common_method(
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: [
+                    create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
+                    create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                    *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                    create_block_param("block", type: "T.proc.params(object: #{constant_name}).void"),
+                  ],
+                  return_type: "void",
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: [
+                    create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
+                    create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                    *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                  ],
+                  return_type: "T::Enumerator[#{constant_name}]",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
                 "find_each",
+                sigs: sigs,
                 parameters: [
-                  create_kw_opt_param("start", type: "T.untyped", default: "nil"),
-                  create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
-                  create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
-                  create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
-                  *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
-                  create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
+                  RBI::KwOptParam.new("start", "nil"),
+                  RBI::KwOptParam.new("finish", "nil"),
+                  RBI::KwOptParam.new("batch_size", "1000"),
+                  RBI::KwOptParam.new("error_on_ignore", "nil"),
+                  *(RBI::KwOptParam.new("order", ":asc") if order),
+                  RBI::BlockParam.new("block"),
                 ],
-                return_type: "T.nilable(T::Enumerator[#{constant_name}])",
               )
             when :find_in_batches
               order = ActiveRecord::Batches.instance_method(:find_in_batches).parameters.include?([:key, :order])
-              create_common_method(
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: [
+                    create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
+                    create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                    *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                    create_block_param("block", type: "T.proc.params(object: T::Array[#{constant_name}]).void"),
+                  ],
+                  return_type: "void",
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: [
+                    create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
+                    create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                    *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                  ],
+                  return_type: "T::Enumerator[T::Enumerator[#{constant_name}]]",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
                 "find_in_batches",
+                sigs: sigs,
                 parameters: [
-                  create_kw_opt_param("start", type: "T.untyped", default: "nil"),
-                  create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
-                  create_kw_opt_param("batch_size", type: "Integer", default: "1000"),
-                  create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
-                  *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
-                  create_block_param(
-                    "block",
-                    type: "T.nilable(T.proc.params(object: T::Array[#{constant_name}]).void)",
-                  ),
+                  RBI::KwOptParam.new("start", "nil"),
+                  RBI::KwOptParam.new("finish", "nil"),
+                  RBI::KwOptParam.new("batch_size", "1000"),
+                  RBI::KwOptParam.new("error_on_ignore", "nil"),
+                  *(RBI::KwOptParam.new("order", ":asc") if order),
+                  RBI::BlockParam.new("block"),
                 ],
-                return_type: "T.nilable(T::Enumerator[T::Enumerator[#{constant_name}]])",
               )
             when :in_batches
               order = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :order])
               use_ranges = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :use_ranges])
-              create_common_method(
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: [
+                    create_kw_opt_param("of", type: "Integer", default: "1000"),
+                    create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("load", type: "T.untyped", default: "false"),
+                    create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                    *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                    *(create_kw_opt_param("use_ranges", type: "T.untyped", default: "nil") if use_ranges),
+                    create_block_param("block", type: "T.proc.params(object: #{RelationClassName}).void"),
+                  ],
+                  return_type: "void",
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: [
+                    create_kw_opt_param("of", type: "Integer", default: "1000"),
+                    create_kw_opt_param("start", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
+                    create_kw_opt_param("load", type: "T.untyped", default: "false"),
+                    create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
+                    *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
+                    *(create_kw_opt_param("use_ranges", type: "T.untyped", default: "nil") if use_ranges),
+                  ],
+                  return_type: "::ActiveRecord::Batches::BatchEnumerator",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
                 "in_batches",
+                sigs: sigs,
                 parameters: [
-                  create_kw_opt_param("of", type: "Integer", default: "1000"),
-                  create_kw_opt_param("start", type: "T.untyped", default: "nil"),
-                  create_kw_opt_param("finish", type: "T.untyped", default: "nil"),
-                  create_kw_opt_param("load", type: "T.untyped", default: "false"),
-                  create_kw_opt_param("error_on_ignore", type: "T.untyped", default: "nil"),
-                  *(create_kw_opt_param("order", type: "Symbol", default: ":asc") if order),
-                  *(create_kw_opt_param("use_ranges", type: "T.untyped", default: "nil") if use_ranges),
-                  create_block_param("block", type: "T.nilable(T.proc.params(object: #{RelationClassName}).void)"),
+                  RBI::KwOptParam.new("of", "1000"),
+                  RBI::KwOptParam.new("start", "nil"),
+                  RBI::KwOptParam.new("finish", "nil"),
+                  RBI::KwOptParam.new("load", "false"),
+                  RBI::KwOptParam.new("error_on_ignore", "nil"),
+                  *(RBI::KwOptParam.new("order", ":asc") if order),
+                  *(RBI::KwOptParam.new("use_ranges", "nil") if use_ranges),
+                  RBI::BlockParam.new("block"),
                 ],
-                return_type: "T.nilable(::ActiveRecord::Batches::BatchEnumerator)",
               )
             end
           end
