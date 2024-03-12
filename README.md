@@ -316,7 +316,7 @@ gem:
 
 #### Keeping RBI files for gems up-to-date
 
-To ensure all RBI files for gems are up-to-date with the latest changes in your `Gemfile.lock`, Tapioca provides a `--verify` option:
+To ensure all RBI files for gems are present and have the correct version based on your `Gemfile.lock`, Tapioca provides a `--verify` option:
 
 ```shell
 $ bin/tapioca gems --verify
@@ -326,7 +326,11 @@ Checking for out-of-date RBIs...
 Nothing to do, all RBIs are up-to-date.
 ```
 
-This option can be used on CI to make sure the RBI files are always up-to-date and ensure accurate type checking. **Warning**: doing so will break your normal Dependabot workflow as every pull-request opened to bump a gem version will fail CI since the RBI will be out-of-date and will require you to manually run `bin/tapioca gems` to update them.
+This option can be used in CI to make sure the RBI files are *up-to-date* and ensure accurate type checking.
+
+**Warning**: doing so will break your normal automated dependency update workflow as every pull request opened to bump a gem version will fail CI since the RBI will be out-of-date. You will need to either set up additional automation (eg [Dependabot](https://github.com/dependabot/dependabot-core/issues/5962#issuecomment-1303781931)), or manually run `bin/tapioca gems` and commit the results.
+
+**Warning**: Verification ONLY ensures the RBI files are present, used and have the correct version based on the gem version in your `Gemfile.lock`. It's possible for your RBIs to be out-of-date if RBIs were not regenerated following an update to tapioca itself or if a another gem that injects functionality (e.g. `turbo-rails`) was installed/updated/removed. To ensure RBIs are completely up-to-date, you must run `bin/tapioca gems --all` but it's not recommended to do this in CI as it's an expensive operation.
 
 
 #### Importing hand written signatures from gem's `rbi/` folder
