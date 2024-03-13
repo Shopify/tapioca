@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+
+REQUIRED_LABELS = [
+  "documentation",
+  "bugfix",
+  "chore",
+  "enhancement",
+  "ignore-for-release",
+  "security",
+  "sorbet",
+  "dependencies",
+].freeze
+
+arg = ARGV.first
+
+unless arg
+  warn("Missing argument for bin/check_pr_labels")
+  exit(1)
+end
+
+labels = JSON.parse(arg)["labels"].map { |label| label["name"] }
+
+matching_labels = labels & REQUIRED_LABELS
+
+if matching_labels.empty?
+  warn("PR is missing at least one of the following labels: #{REQUIRED_LABELS.join(", ")}")
+  exit(1)
+end
+
+warn("PR is correctly labelled: #{matching_labels.join(", ")}")
+exit(0)
