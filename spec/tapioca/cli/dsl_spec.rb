@@ -95,7 +95,7 @@ module Tapioca
         end
 
         it "must not generate a .gitattributes file if the output folder is not created" do
-          result = @project.tapioca("dsl --outdir output")
+          result = @project.tapioca("dsl --outdir output --exclude Ripper")
 
           assert_stderr_equals(<<~ERR, result)
             No classes/modules can be matched for RBI generation.
@@ -118,7 +118,7 @@ module Tapioca
 
           @project.require_mock_gem(gem, require: false)
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -286,7 +286,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -372,7 +372,7 @@ module Tapioca
           @project.require_mock_gem(gem)
           @project.bundle_install!
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -488,7 +488,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -533,7 +533,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --verbose --outdir rbis/")
+          result = @project.tapioca("dsl --verbose --outdir rbis/ --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -586,7 +586,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --verbose")
+          result = @project.tapioca("dsl --verbose --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -694,7 +694,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -1021,7 +1021,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -1242,7 +1242,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Compiler")
+          result = @project.tapioca("dsl --exclude SidekiqWorker Foo::Compiler Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -1279,7 +1279,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl --exclude NonexistentCompiler")
+          result = @project.tapioca("dsl --exclude NonexistentCompiler Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -1324,7 +1324,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -1512,7 +1512,7 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl")
+          result = @project.tapioca("dsl --exclude Ripper")
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
@@ -2409,7 +2409,7 @@ module Tapioca
             end
           RBI
 
-          result = @project.tapioca("dsl Post")
+          result = @project.tapioca("dsl Post --exclude Ripper")
 
           assert_stderr_equals(<<~ERR, result)
             ##### INTERNAL ERROR #####
@@ -2577,6 +2577,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
+              Tapioca::Dsl::Compilers::Ripper                              enabled
               Tapioca::Dsl::Compilers::SidekiqWorker                       enabled
               Tapioca::Dsl::Compilers::SmartProperties                     enabled
           OUT
@@ -2612,6 +2613,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
+              Tapioca::Dsl::Compilers::Ripper                              enabled
               Tapioca::Dsl::Compilers::SidekiqWorker                       enabled
               Tapioca::Dsl::Compilers::SmartProperties                     disabled
           OUT
@@ -2647,6 +2649,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveSupportConcern                disabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      disabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              disabled
+              Tapioca::Dsl::Compilers::Ripper                              disabled
               Tapioca::Dsl::Compilers::SidekiqWorker                       disabled
               Tapioca::Dsl::Compilers::SmartProperties                     enabled
           OUT

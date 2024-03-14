@@ -35,6 +35,7 @@ In the following section you will find all available DSL compilers:
 * [MixedInClassAttributes](compiler_mixedinclassattributes.md)
 * [Protobuf](compiler_protobuf.md)
 * [RailsGenerators](compiler_railsgenerators.md)
+* [Ripper](compiler_ripper.md)
 * [SidekiqWorker](compiler_sidekiqworker.md)
 * [SmartProperties](compiler_smartproperties.md)
 * [StateMachines](compiler_statemachines.md)
