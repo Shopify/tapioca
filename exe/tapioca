@@ -22,4 +22,7 @@ end
 
 require_relative "../lib/tapioca/internal"
 
-Tapioca::Cli.start(ARGV)
+puts "Tapioca is running..."
+puts ARGV.inspect
+exit(0)
+# Tapioca::Cli.start(ARGV)
