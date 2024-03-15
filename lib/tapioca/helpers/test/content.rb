@@ -44,6 +44,23 @@ module Tapioca
           File.write(file_name, content)
           file_name
         end
+
+        sig { params(name: String, content: String, require_file: T::Boolean).void }
+        def add_proto_file(name, content, require_file: true)
+          proto_path = tmp_path("proto/#{name}.proto")
+          raise ArgumentError, "a file named '#{name}' was already added; cannot overwrite." if File.exist?(proto_path)
+
+          proto_dir = File.dirname(proto_path)
+          FileUtils.mkdir_p(proto_dir)
+          File.write(proto_path, content)
+
+          lib_path = tmp_path("lib")
+          FileUtils.mkdir_p(lib_path)
+          _, stderr, status = Open3.capture3("protoc --proto_path=#{proto_dir} --ruby_out=#{lib_path} #{proto_path}")
+          raise "Error executing protoc: #{stderr}" unless status.success?
+
+          Tapioca.silence_warnings { require("#{lib_path}/#{name}_pb.rb") } if require_file
+        end
       end
     end
   end

@@ -161,9 +161,12 @@ GEM
       activemodel
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.3-arm64-darwin)
-    google-protobuf (3.25.3-x86_64-darwin)
-    google-protobuf (3.25.3-x86_64-linux)
+    google-protobuf (4.26.0-arm64-darwin)
+      rake (>= 13)
+    google-protobuf (4.26.0-x86_64-darwin)
+      rake (>= 13)
+    google-protobuf (4.26.0-x86_64-linux)
+      rake (>= 13)
     graphql (2.2.13)
       base64
     hashdiff (1.1.0)
