@@ -282,8 +282,8 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def extending(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
-                    def extract_associated(*args, &blk); end
+                    sig { params(association: Symbol).returns(T::Array[T.untyped]) }
+                    def extract_associated(association); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def from(*args, &blk); end
@@ -453,8 +453,8 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def extending(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
-                    def extract_associated(*args, &blk); end
+                    sig { params(association: Symbol).returns(T::Array[T.untyped]) }
+                    def extract_associated(association); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def from(*args, &blk); end

@@ -559,13 +559,29 @@ module Tapioca
           )
 
           QUERY_METHODS.each do |method_name|
-            create_relation_method(
-              method_name,
-              parameters: [
-                create_rest_param("args", type: "T.untyped"),
-                create_block_param("blk", type: "T.untyped"),
-              ],
-            )
+            case method_name
+            when :extract_associated
+              parameters = [create_param("association", type: "Symbol")]
+              return_type = "T::Array[T.untyped]"
+              relation_methods_module.create_method(
+                method_name.to_s,
+                parameters: parameters,
+                return_type: return_type,
+              )
+              association_relation_methods_module.create_method(
+                method_name.to_s,
+                parameters: parameters,
+                return_type: return_type,
+              )
+            else
+              create_relation_method(
+                method_name,
+                parameters: [
+                  create_rest_param("args", type: "T.untyped"),
+                  create_block_param("blk", type: "T.untyped"),
+                ],
+              )
+            end
           end
         end
 
