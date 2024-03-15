@@ -14,7 +14,7 @@ PATH
       parallel (>= 1.21.0)
       rbi (>= 0.1.4, < 0.2)
       sorbet-static-and-runtime (>= 0.5.11087)
-      spoom (~> 1.2.0, >= 1.2.0)
+      spoom (>= 1.2.0)
       thor (>= 1.2.0)
       yard-sorbet
 
