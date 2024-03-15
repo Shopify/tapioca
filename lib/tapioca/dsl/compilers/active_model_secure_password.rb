@@ -78,7 +78,15 @@ module Tapioca
 
           root.create_path(constant) do |klass|
             methods.each do |method|
-              create_method_from_def(klass, constant.instance_method(method))
+              if method == :authenticate || method.start_with?("authenticate_")
+                klass.create_method(
+                  method.to_s,
+                  parameters: [create_param("unencrypted_password", type: "T.untyped")],
+                  return_type: "T.any(#{constant}, FalseClass)",
+                )
+              else
+                create_method_from_def(klass, constant.instance_method(method))
+              end
             end
           end
         end
