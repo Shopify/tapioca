@@ -66,10 +66,10 @@ module Tapioca
                 # typed: strong
 
                 class User
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
                   def authenticate(unencrypted_password); end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
                   def authenticate_password(unencrypted_password); end
 
                   sig { returns(T.untyped) }
@@ -116,7 +116,7 @@ module Tapioca
                 # typed: strong
 
                 class User
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
                   def authenticate_token(unencrypted_password); end
 
                   sig { returns(T.untyped) }
@@ -164,13 +164,13 @@ module Tapioca
                 # typed: strong
 
                 class User
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
                   def authenticate(unencrypted_password); end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
                   def authenticate_password(unencrypted_password); end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
                   def authenticate_token(unencrypted_password); end
 
                   sig { returns(T.untyped) }
