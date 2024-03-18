@@ -200,6 +200,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.2)
+    method_source (1.0.0)
     mini_mime (1.1.5)
     minitest (5.22.2)
     minitest-hooks (1.5.1)
@@ -352,6 +353,10 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.5.0)
+    view_component (3.11.0)
+      activesupport (>= 5.2.0, < 8.0)
+      concurrent-ruby (~> 1.0)
+      method_source (~> 1.0)
     webmock (3.23.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -406,6 +411,7 @@ DEPENDENCIES
   sqlite3
   state_machines
   tapioca!
+  view_component
   webmock
   xpath
 

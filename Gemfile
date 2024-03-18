@@ -52,6 +52,7 @@ group :development, :test do
   gem "bcrypt"
   gem "xpath"
   gem "kredis"
+  gem "view_component"
 end
 
 group :test do
