@@ -18,10 +18,16 @@ module Tapioca
           sig { void }
           def eager_load_all!
             with_disabled_exits do
+              seen_constant_name = {}
               until @constant_names_registered_for_autoload.empty?
                 # Grab the next constant name
                 constant_name = T.must(@constant_names_registered_for_autoload.shift)
+
+                # Skip constants which have already been processed.
+                next if seen_constant_name.key?(constant_name)
+
                 # Trigger autoload by constantizing the registered name
+                seen_constant_name[constant_name] = true
                 Reflection.constantize(constant_name, inherit: true)
               end
             end
