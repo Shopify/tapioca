@@ -536,6 +536,20 @@ module Tapioca
             end
           end
         end
+
+        private
+
+        sig { params(name: String, content: String, require_file: T::Boolean).void }
+        def add_proto_file(name, content, require_file: true)
+          add_content_file("proto/#{name}.proto", content).tap do |proto_path|
+            lib_path = tmp_path("lib")
+            proto_dir = File.dirname(proto_path)
+            _, stderr, status = Open3.capture3("protoc --proto_path=#{proto_dir} --ruby_out=#{lib_path} #{proto_path}")
+            raise "Error executing protoc: #{stderr}" unless status.success?
+
+            Tapioca.silence_warnings { require("#{lib_path}/#{name}_pb.rb") } if require_file
+          end
+        end
       end
     end
   end
