@@ -466,7 +466,7 @@ module Tapioca
             ] + constant.column_names.map do |column_name|
               create_kw_opt_param(column_name, type: 'T.any(String, Integer, Symbol, T::Boolean, NilClass, T::Array[T.any(String, Integer, Symbol)], ActiveRecord::AssociationRelation, ActiveRecord::Relation)', default: 'nil')
             end + [
-              create_kw_rest_param('nested', type: 'T.any(ActiveSupport::TimeWithZone, Date, T::Hash[T.untyped, T.untyped])'),
+              create_kw_rest_param('nested', type: 'T.nilable(T.any(Integer, String, Symbol, Date, ActiveSupport::TimeWithZone, T::Array[T.any(Integer, String, Symbol)]))'),
             ],
             relation_return_type: RelationWhereChainClassName,
             association_return_type: AssociationRelationWhereChainClassName,
