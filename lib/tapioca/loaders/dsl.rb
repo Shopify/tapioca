@@ -63,14 +63,14 @@ module Tapioca
       def load_dsl_compilers
         say("Loading DSL compiler classes... ")
 
+        ::Gem.find_files("tapioca/dsl/compilers/*.rb").each do |compiler|
+          require File.expand_path(compiler)
+        end
+
         Dir.glob([
           "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later
           "#{@tapioca_path}/compilers/**/*.rb",
         ]).each do |compiler|
-          require File.expand_path(compiler)
-        end
-
-        ::Gem.find_files("tapioca/dsl/compilers/*.rb").each do |compiler|
           require File.expand_path(compiler)
         end
 
