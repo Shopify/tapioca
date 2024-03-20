@@ -11,28 +11,28 @@ module Config
   class << self
     # Loads and sets the settings constant!
     #
-    # source://config//lib/config.rb#55
+    # source://config//lib/config.rb#56
     def load_and_set_settings(*sources); end
 
     # Create a populated Options instance from a settings file. If a second file is given, then the sections of that
     # file will overwrite existing sections of the first file.
     #
-    # source://config//lib/config.rb#40
+    # source://config//lib/config.rb#41
     def load_files(*sources); end
 
-    # source://config//lib/config.rb#70
+    # source://config//lib/config.rb#71
     def local_setting_files(config_root, env); end
 
-    # source://config//lib/config.rb#78
+    # source://config//lib/config.rb#79
     def reload!; end
 
-    # source://config//lib/config.rb#61
+    # source://config//lib/config.rb#62
     def setting_files(config_root, env); end
 
     # @yield [_self]
     # @yieldparam _self [Config] the object that the method was called on
     #
-    # source://config//lib/config.rb#33
+    # source://config//lib/config.rb#34
     def setup; end
   end
 end
