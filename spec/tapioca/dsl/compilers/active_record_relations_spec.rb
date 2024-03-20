@@ -231,8 +231,9 @@ module Tapioca
                     def sole; end
 
                 <% end %>
-                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(Numeric) }
-                    def sum(column_name = nil, &block); end
+                    sig { params(initial_value_or_column: T.nilable(T.any(String, Symbol))).returns(Numeric) }
+                    sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+                    def sum(initial_value_or_column = 0, &block); end
 
                     sig { params(limit: NilClass).returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
