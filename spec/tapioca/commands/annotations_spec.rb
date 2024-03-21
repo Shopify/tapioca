@@ -58,7 +58,10 @@ module Tapioca
 
           gems = T.unsafe(command).stub(:say, ->(*_args) {}) do
             T.unsafe(command).stub(:create_file, ->(*_args) {}) do
-              command.send(:fetch_annotations, ["foo", "bar"])
+              command.send(
+                :fetch_annotations,
+                { "foo" => ::Gem::Version.new("0.1"), "bar" => ::Gem::Version.new("0.1") },
+              )
             end
           end
 
