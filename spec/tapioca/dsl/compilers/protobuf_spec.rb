@@ -73,6 +73,12 @@ module Tapioca
                   sig { params(value: Integer).void }
                   def customer_id=(value); end
 
+                  sig { returns(Object) }
+                  def has_customer_id?; end
+
+                  sig { returns(Object) }
+                  def has_shop_id?; end
+
                   sig { returns(Integer) }
                   def shop_id; end
 
@@ -111,6 +117,9 @@ module Tapioca
 
                   sig { params(value: String).void }
                   def events=(value); end
+
+                  sig { returns(Object) }
+                  def has_events?; end
                 end
               RBI
 
@@ -145,6 +154,9 @@ module Tapioca
 
                   sig { void }
                   def clear_cart_item_index; end
+
+                  sig { returns(Object) }
+                  def has_cart_item_index?; end
                 end
               RBI
 
@@ -178,6 +190,9 @@ module Tapioca
 
                   sig { void }
                   def clear_value_type; end
+
+                  sig { returns(Object) }
+                  def has_value_type?; end
 
                   sig { returns(T.any(Symbol, Integer)) }
                   def value_type; end
@@ -247,6 +262,36 @@ module Tapioca
 
                   sig { params(value: Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value]).void }
                   def indices=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Cart))
+            end
+
+            it "generates methods in RBI files for classes with Protobuf with non-optional integer field type" do
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
+
+                message Cart {
+                  int32 shop_id = 1;
+                }
+              PROTO
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Cart
+                  sig { params(shop_id: T.nilable(Integer)).void }
+                  def initialize(shop_id: nil); end
+
+                  sig { void }
+                  def clear_shop_id; end
+
+                  sig { returns(Integer) }
+                  def shop_id; end
+
+                  sig { params(value: Integer).void }
+                  def shop_id=(value); end
                 end
               RBI
 
@@ -400,6 +445,12 @@ module Tapioca
 
                   sig { void }
                   def clear_ShopName; end
+
+                  sig { returns(Object) }
+                  def has_ShopID?; end
+
+                  sig { returns(Object) }
+                  def has_ShopName?; end
                 end
               RBI
 
