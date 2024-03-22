@@ -2353,6 +2353,7 @@ module Tapioca
         end
 
         it "halts upon load errors when extension cannot be loaded" do
+          @project.bundle_install!
           @project.write!("lib/post.rb", <<~RB)
             class Post
             end
