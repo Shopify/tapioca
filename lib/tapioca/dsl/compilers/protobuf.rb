@@ -302,6 +302,13 @@ module Tapioca
             return_type: "void",
           )
 
+          if desc.has_presence?
+            klass.create_method(
+              "has_#{field.name}?",
+              return_type: "Object",
+            )
+          end
+
           field
         end
 
