@@ -232,7 +232,7 @@ module Tapioca
 
                 <% end %>
                     sig { params(initial_value_or_column: T.nilable(T.any(String, Symbol))).returns(Numeric) }
-                    sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+                    sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
                     def sum(initial_value_or_column = 0, &block); end
 
                     sig { params(limit: NilClass).returns(T.nilable(::Post)) }
