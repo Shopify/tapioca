@@ -674,11 +674,18 @@ module Tapioca
                   parameters: { args: array_type },
                   return_type: "T::Enumerable[#{constant_name}]",
                 ),
+                common_relation_methods_module.create_sig(
+                  parameters: {
+                    args: "NilClass",
+                    block: "T.proc.params(object: #{constant_name}).void)",
+                  },
+                  return_type: as_nilable_type(constant_name),
+                ),
               ]
               common_relation_methods_module.create_method_with_sigs(
                 "find",
                 sigs: sigs,
-                parameters: [RBI::ReqParam.new("args")],
+                parameters: [RBI::OptParam.new("args", "nil"), RBI::BlockParam.new("block")],
               )
             when :find_by
               create_common_method(
