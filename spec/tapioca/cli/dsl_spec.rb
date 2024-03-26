@@ -2715,6 +2715,44 @@ module Tapioca
           assert_success_status(res)
         end
       end
+
+      # These tests are in this file rather than in google_protobuf_spec.rb because they require
+      # a different version of the google-protobuf gem than the one that is used in the rest of the tests.
+      describe "google-protobuf" do
+        describe "version <= 3.25" do
+          before(:all) do
+            @project.require_real_gem("google-protobuf", "~>3.25")
+            @project.bundle_install!
+          end
+
+          it "generates has_{field.name}? methods in RBI files for classes with Protobuf" do
+            @project.exec("mkdir lib")
+            @project.write!("proto/cart.proto", <<~PROTO)
+              syntax = "proto3";
+
+              message Cart {
+                enum VALUE_TYPE {
+                  NULL = 0;
+                  FIXED_AMOUNT = 1;
+                  PERCENTAGE = 2;
+                }
+
+                optional VALUE_TYPE value_type = 1;
+              }
+            PROTO
+
+            result = @project.exec("protoc --proto_path=proto --ruby_out=lib proto/cart.proto")
+            raise "Error executing protoc: #{result.err}" unless result.status
+
+            result = @project.tapioca("dsl Cart")
+            assert_empty_stderr(result)
+            assert_success_status(result)
+
+            cart_rbi = @project.read("sorbet/rbi/dsl/cart.rbi")
+            assert_includes(cart_rbi, "def has_value_type?; end")
+          end
+        end
+      end
     end
   end
 end
