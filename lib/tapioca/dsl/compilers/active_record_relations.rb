@@ -661,7 +661,7 @@ module Tapioca
                 "::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, " \
                 "::ActiveSupport::Duration, T::Class[T.anything])"
               array_type = if constant.try(:composite_primary_key?)
-                "T::Array[T::Array[#{id_types}]"
+                "T::Array[T::Array[#{id_types}]]"
               else
                 "T::Array[#{id_types}]"
               end
