@@ -177,6 +177,18 @@ module Tapioca
 
         private
 
+        sig { params(desc: Google::Protobuf::FieldDescriptor).returns(T::Boolean) }
+        def has_presence?(desc)
+          if desc.respond_to?(:has_presence?)
+            # This method is only defined in google-protobuf 3.26.0 and later
+            desc.has_presence?
+          else
+            # In older versions of the gem, the only way we can get this information is
+            # by checking if an instance of the class responds to the expected method
+            T.unsafe(constant.allocate).respond_to?("has_#{desc.name}?")
+          end
+        end
+
         sig { params(klass: RBI::Scope, names: String).void }
         def create_type_members(klass, *names)
           klass.create_extend("T::Generic")
@@ -302,7 +314,7 @@ module Tapioca
             return_type: "void",
           )
 
-          if desc.has_presence?
+          if has_presence?(desc)
             klass.create_method(
               "has_#{field.name}?",
               return_type: "Object",
