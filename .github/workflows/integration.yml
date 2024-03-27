@@ -1,0 +1,23 @@
+name: Integration
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    name: Trigger slack webhook
+
+    steps:
+      - name: Trigger slack webhook
+        run: |
+          curl -X POST -H 'Content-type: application/json' --fail ${{ secrets.SLACK_WEBHOOK_URL }} --data \
+          '
+          {
+            "pull_request_url": "${{ github.event.repository.html_url }}/pull/${{ github.event.pull_request.number }}",
+            "pull_request_number": "${{ github.event.pull_request.number }}",
+            "pull_request_title": "${{ github.event.pull_request.title }}",
+            "pull_request_user": "${{ github.event.pull_request.user.login }}",
+            "buildkite_url": "${{ secrets.BUILDKITE_TRIGGER_URL }}?message=shopify/tapioca/${{ github.event.pull_request.number }}&branch=at-fix-tapioca-pipeline&env=TAPIOCA_REPO=${{ github.event.pull_request.head.repo.full_name }}%0ATAPIOCA_BRANCH=${{ github.event.pull_request.head.ref }}%0ATAPIOCA_PR=${{ github.event.pull_request.number }}#new",
+          }'
