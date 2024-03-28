@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install protobuf
         run: |
-          gh release -R google/protobuf download -p '*-linux-x86_64*' -O protoc.zip
+          gh release download --repo google/protobuf --pattern '*-linux-x86_64*' --output protoc.zip
           unzip protoc.zip bin/protoc -d $HOME/.local
           export PATH="$PATH:$HOME/.local/bin"
       - name: Remove Gemfile.lock
