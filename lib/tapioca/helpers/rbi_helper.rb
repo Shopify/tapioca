@@ -96,6 +96,15 @@ module Tapioca
       end
     end
 
+    sig { params(type: String).returns(String) }
+    def as_non_nilable_type(type)
+      if type.match(/\A(?:::)?T.nilable\((.+)\)\z/)
+        T.must(::Regexp.last_match(1))
+      else
+        type
+      end
+    end
+
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
       # try to parse a method definition with this name
