@@ -3,6 +3,7 @@
 
 return unless defined?(ActiveRecord::Base)
 
+require "tapioca/dsl/helpers/active_model_type_helper"
 require "tapioca/dsl/helpers/active_record_constants_helper"
 
 module Tapioca

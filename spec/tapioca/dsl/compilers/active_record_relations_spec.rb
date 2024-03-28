@@ -48,8 +48,33 @@ module Tapioca
             end
 
             it "generates proper relation classes and modules" do
+              add_ruby_file("schema.rb", <<~RUBY)
+                ActiveRecord::Migration.suppress_messages do
+                  ActiveRecord::Schema.define do
+                    create_table :posts do |t|
+                    end
+                  end
+                end
+              RUBY
+
+              add_ruby_file("custom_id.rb", <<~RUBY)
+                class CustomId < ActiveRecord::Type::Value
+                  extend T::Sig
+
+                  sig { params(value: T.untyped).returns(T.nilable(CustomId)) }
+                  def deserialize(value)
+                    CustomId.new(value) unless value.nil?
+                  end
+
+                  def serialize(value)
+                    value
+                  end
+                end
+              RUBY
+
               add_ruby_file("post.rb", <<~RUBY)
                 class Post < ActiveRecord::Base
+                  attribute :id, CustomId.new
                 end
               RUBY
 
@@ -105,8 +130,8 @@ module Tapioca
                     sig { returns(::Post) }
                     def fifth!; end
 
-                    sig { params(args: T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])).returns(::Post) }
-                    sig { params(args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]).returns(T::Enumerable[::Post]) }
+                    sig { params(args: T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything], T.nilable(::CustomId))).returns(::Post) }
+                    sig { params(args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything], T.nilable(::CustomId))]).returns(T::Enumerable[::Post]) }
                     def find(args); end
 
                     sig { params(args: T.untyped).returns(T.nilable(::Post)) }
@@ -799,7 +824,7 @@ module Tapioca
                 <% if rails_version(">= 7.1") %>
                     sig { params(args: T::Array[T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]]).returns(T::Enumerable[::Post]) }
                 <% else %>
-                    sig { params(args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]).returns(T::Enumerable[::Post]) }
+                    sig { params(args: T::Array[T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]]).returns(T::Enumerable[::Post]) }
                 <% end %>
                     def find(args); end
 
