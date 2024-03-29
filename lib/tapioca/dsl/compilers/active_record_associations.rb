@@ -196,6 +196,10 @@ module Tapioca
             "reload_#{association_name}",
             return_type: association_type,
           )
+          klass.create_method(
+            "reset_#{association_name}",
+            return_type: "void",
+          )
           unless reflection.polymorphic?
             klass.create_method(
               "build_#{association_name}",

@@ -156,6 +156,12 @@ module Tapioca
 
                         sig { returns(T.nilable(::Category)) }
                         def reload_category; end
+
+                        sig { void }
+                        def reset_author; end
+
+                        sig { void }
+                        def reset_category; end
                       end
                     end
                   RBI
@@ -195,6 +201,9 @@ module Tapioca
 
                         sig { returns(T.untyped) }
                         def reload_category; end
+
+                        sig { void }
+                        def reset_category; end
                       end
                     end
                   RBI
@@ -294,6 +303,9 @@ module Tapioca
 
                         sig { returns(T.nilable(::User)) }
                         def reload_author; end
+
+                        sig { void }
+                        def reset_author; end
                       end
                     end
                   RBI
@@ -557,6 +569,9 @@ module Tapioca
 
                         sig { returns(T.nilable(::Blog::Author)) }
                         def reload_author; end
+
+                        sig { void }
+                        def reset_author; end
                       end
                     end
                   RBI
@@ -627,6 +642,9 @@ module Tapioca
 
                         sig { returns(T.nilable(::Blog::Core::Post)) }
                         def reload_post; end
+
+                        sig { void }
+                        def reset_post; end
                       end
                     end
                   RBI
@@ -744,6 +762,9 @@ module Tapioca
 
                         sig { returns(T.nilable(::Shop)) }
                         def reload_shop; end
+
+                        sig { void }
+                        def reset_shop; end
 
                         sig { returns(T.nilable(::Shop)) }
                         def shop; end
@@ -858,6 +879,12 @@ module Tapioca
 
                         sig { returns(T.nilable(::Category)) }
                         def reload_category; end
+
+                        sig { void }
+                        def reset_author; end
+
+                        sig { void }
+                        def reset_category; end
                       end
                     end
                   RBI
@@ -897,6 +924,9 @@ module Tapioca
 
                         sig { returns(T.untyped) }
                         def reload_category; end
+
+                        sig { void }
+                        def reset_category; end
                       end
                     end
                   RBI
@@ -996,6 +1026,9 @@ module Tapioca
 
                         sig { returns(T.nilable(::User)) }
                         def reload_author; end
+
+                        sig { void }
+                        def reset_author; end
                       end
                     end
                   RBI
@@ -1259,6 +1292,9 @@ module Tapioca
 
                         sig { returns(T.nilable(::Blog::Author)) }
                         def reload_author; end
+
+                        sig { void }
+                        def reset_author; end
                       end
                     end
                   RBI
@@ -1329,6 +1365,9 @@ module Tapioca
 
                         sig { returns(T.nilable(::Blog::Core::Post)) }
                         def reload_post; end
+
+                        sig { void }
+                        def reset_post; end
                       end
                     end
                   RBI
@@ -1447,6 +1486,9 @@ module Tapioca
                         sig { returns(T.nilable(::Shop)) }
                         def reload_shop; end
 
+                        sig { void }
+                        def reset_shop; end
+
                         sig { returns(T.nilable(::Shop)) }
                         def shop; end
 
@@ -1524,6 +1566,12 @@ module Tapioca
 
                     sig { returns(T.untyped) }
                     def reload_photo_blob; end
+
+                    sig { void }
+                    def reset_photo_attachment; end
+
+                    sig { void }
+                    def reset_photo_blob; end
                   end
                 end
               RBI
