@@ -2858,9 +2858,15 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).returns(::RBI::Scope) }
   def create_path(constant, &block); end
 
-  # source://tapioca/0.13.1/lib/tapioca/rbi_ext/model.rb#134
-  sig { params(parameters: T::Hash[T.any(::String, ::Symbol), ::String], return_type: ::String).returns(::RBI::Sig) }
-  def create_sig(parameters:, return_type: T.unsafe(nil)); end
+  # source://tapioca/0.13.1/lib/tapioca/rbi_ext/model.rb#135
+  sig do
+    params(
+      parameters: T::Hash[T.any(::String, ::Symbol), ::String],
+      type_parameters: T::Array[::String],
+      return_type: ::String
+    ).returns(::RBI::Sig)
+  end
+  def create_sig(parameters:, type_parameters: T.unsafe(nil), return_type: T.unsafe(nil)); end
 
   # source://tapioca/0.13.1/lib/tapioca/rbi_ext/model.rb#74
   sig do
@@ -2928,11 +2934,11 @@ class RBI::Tree < ::RBI::NodeWithComments
 
   private
 
-  # source://tapioca/0.13.1/lib/tapioca/rbi_ext/model.rb#149
+  # source://tapioca/0.13.1/lib/tapioca/rbi_ext/model.rb#150
   sig { params(node: ::RBI::Node).returns(::RBI::Node) }
   def create_node(node); end
 
-  # source://tapioca/0.13.1/lib/tapioca/rbi_ext/model.rb#144
+  # source://tapioca/0.13.1/lib/tapioca/rbi_ext/model.rb#145
   sig { returns(T::Hash[::String, ::RBI::Node]) }
   def nodes_cache; end
 end

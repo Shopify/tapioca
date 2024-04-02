@@ -824,22 +824,16 @@ module Tapioca
             when :sum
               sigs = [
                 common_relation_methods_module.create_sig(
-                  parameters: [create_opt_param(
-                    "initial_value_or_column",
-                    type: "T.nilable(T.any(String, Symbol))",
-                    default: "0",
-                  )],
+                  parameters: { initial_value_or_column: "T.untyped" },
                   return_type: "Numeric",
                 ),
                 common_relation_methods_module.create_sig(
                   type_parameters: ["U"],
-                  parameters: [
-                    create_param("initial_value_or_column", type: "T.nilable(T.type_parameter(:U))"),
-                    create_block_param(
-                      "block",
-                      type: "T.proc.params(object: #{constant_name}).returns(T.type_parameter(:U))",
-                    ),
-                  ],
+                  parameters:
+                  {
+                    initial_value_or_column: "T.nilable(T.type_parameter(:U))",
+                    block: "T.proc.params(object: #{constant_name}).returns(T.type_parameter(:U))",
+                  },
                   return_type: "T.type_parameter(:U)",
                 ),
               ]
@@ -847,7 +841,7 @@ module Tapioca
                 method_name.to_s,
                 sigs: sigs,
                 parameters: [
-                  RBI::OptParam.new("initial_value_or_column", "0"),
+                  RBI::OptParam.new("initial_value_or_column", "nil"),
                   RBI::BlockParam.new("block"),
                 ],
               )
