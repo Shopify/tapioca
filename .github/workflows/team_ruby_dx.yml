@@ -1,0 +1,20 @@
+name: Team RubyDX notification
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    name: Trigger Team RubyDX notification
+
+    steps:
+      - name: Trigger Team RubyDX notification
+        run: |
+          curl -X POST -H 'Content-type: application/json' --fail ${{ secrets.SLACK_WEBHOOK_URL }} --data \
+          '
+          {
+            "text": ":pr-open: New pull request on Shopify/tapioca ${{ github.event.pull_request.html_url }}\n\n:buildkite: ${{ secrets.BUILDKITE_TRIGGER_URL }}?message=shopify/tapioca/${{ github.event.pull_request.number }}&env=TAPIOCA_REPO=${{ github.event.pull_request.head.repo.full_name }}%0ATAPIOCA_BRANCH=${{ github.event.pull_request.head.ref }}%0ATAPIOCA_PR=${{ github.event.pull_request.number }}#new"
+          }'
+
