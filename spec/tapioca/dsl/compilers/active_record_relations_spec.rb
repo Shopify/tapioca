@@ -78,8 +78,9 @@ module Tapioca
                     sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(Numeric) }
                     def calculate(operation, column_name); end
 
-                    sig { params(column_name: T.untyped).returns(Integer) }
-                    def count(column_name = nil); end
+                    sig { params(column_name: T.nilable(T.any(String, Symbol))).returns(Integer) }
+                    sig { params(column_name: NilClass, block: T.proc.params(object: ::Post).void).returns(Integer) }
+                    def count(column_name = nil, &block); end
 
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create(attributes = nil, &block); end
@@ -769,8 +770,9 @@ module Tapioca
                     sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(Numeric) }
                     def calculate(operation, column_name); end
 
-                    sig { params(column_name: T.untyped).returns(Integer) }
-                    def count(column_name = nil); end
+                    sig { params(column_name: T.nilable(T.any(String, Symbol))).returns(Integer) }
+                    sig { params(column_name: NilClass, block: T.proc.params(object: ::Post).void).returns(Integer) }
+                    def count(column_name = nil, &block); end
 
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create(attributes = nil, &block); end
