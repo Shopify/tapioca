@@ -88,7 +88,8 @@ module RBI
     end
     def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new,
       comments: [])
-      sig = create_sig(parameters: parameters, return_type: return_type)
+      sig_params = parameters.to_h { |param| [param.param.name, param.type] }
+      sig = create_sig(parameters: sig_params, return_type: return_type)
       create_method_with_sigs(
         name,
         sigs: [sig],
@@ -126,13 +127,13 @@ module RBI
 
     sig do
       params(
-        parameters: T::Array[RBI::TypedParam],
+        parameters: T::Hash[T.any(String, Symbol), String],
         return_type: String,
       ).returns(RBI::Sig)
     end
-    def create_sig(parameters: [], return_type: "T.untyped")
-      params = parameters.map do |param|
-        RBI::SigParam.new(param.param.name, param.type)
+    def create_sig(parameters:, return_type: "T.untyped")
+      params = parameters.map do |name, type|
+        RBI::SigParam.new(name.to_s, type)
       end
       RBI::Sig.new(params: params, return_type: return_type)
     end
