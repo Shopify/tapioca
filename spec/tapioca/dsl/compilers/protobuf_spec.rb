@@ -15,27 +15,20 @@ module Tapioca
 
           describe "gather_constants" do
             it "gathers no constants if there are no Google::Protobuf classes" do
-              add_ruby_file("content.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                end
-              RUBY
+              add_proto_file("content", "")
 
               assert(gathered_constants.all? { |constant| constant.start_with?("Google::Protobuf") })
             end
 
             it "gathers only classes with Protobuf Module" do
-              add_ruby_file("content.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :shop_id, :int32, 1
-                      optional :customer_id, :int32, 2
-                    end
-                  end
-                end
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
 
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  optional int32 shop_id = 1;
+                  optional int32 customer_id = 2;
+                }
+              PROTO
 
               assert_equal(["Cart"], gathered_constants.reject { |constant| constant.start_with?("Google::Protobuf") })
               assert_includes(gathered_constants, "Google::Protobuf::Map")
@@ -46,18 +39,14 @@ module Tapioca
 
           describe "decorate" do
             it "generates methods in RBI files for classes with Protobuf with integer field type" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :shop_id, :int32, 1
-                      optional :customer_id, :int32, 2
-                    end
-                  end
-                end
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
 
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  optional int32 shop_id = 1;
+                  optional int32 customer_id = 2;
+                }
+              PROTO
 
               expected = <<~RBI
                 # typed: strong
@@ -65,6 +54,12 @@ module Tapioca
                 class Cart
                   sig { params(customer_id: T.nilable(Integer), shop_id: T.nilable(Integer)).void }
                   def initialize(customer_id: nil, shop_id: nil); end
+
+                  sig { returns(T.nilable(Symbol)) }
+                  def _customer_id; end
+
+                  sig { returns(T.nilable(Symbol)) }
+                  def _shop_id; end
 
                   sig { void }
                   def clear_customer_id; end
@@ -78,6 +73,12 @@ module Tapioca
                   sig { params(value: Integer).void }
                   def customer_id=(value); end
 
+                  sig { returns(Object) }
+                  def has_customer_id?; end
+
+                  sig { returns(Object) }
+                  def has_shop_id?; end
+
                   sig { returns(Integer) }
                   def shop_id; end
 
@@ -90,17 +91,13 @@ module Tapioca
             end
 
             it "generates methods in RBI files for classes with Protobuf with string field type" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :events, :string, 1
-                    end
-                  end
-                end
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
 
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  optional string events = 1;
+                }
+              PROTO
 
               expected = <<~RBI
                 # typed: strong
@@ -108,6 +105,9 @@ module Tapioca
                 class Cart
                   sig { params(events: T.nilable(String)).void }
                   def initialize(events: nil); end
+
+                  sig { returns(T.nilable(Symbol)) }
+                  def _events; end
 
                   sig { void }
                   def clear_events; end
@@ -117,6 +117,9 @@ module Tapioca
 
                   sig { params(value: String).void }
                   def events=(value); end
+
+                  sig { returns(Object) }
+                  def has_events?; end
                 end
               RBI
 
@@ -124,20 +127,14 @@ module Tapioca
             end
 
             it "generates methods in RBI files for classes with Protobuf with message field type" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                require 'google/protobuf/timestamp_pb'
-                require 'google/protobuf/wrappers_pb'
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
+                import "google/protobuf/wrappers.proto";
 
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :cart_item_index, :message, 1, "google.protobuf.UInt64Value"
-                    end
-                  end
-                end
-
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  optional google.protobuf.UInt64Value cart_item_index = 1;
+                }
+              PROTO
 
               expected = <<~RBI
                 # typed: strong
@@ -145,6 +142,9 @@ module Tapioca
                 class Cart
                   sig { params(cart_item_index: T.nilable(Google::Protobuf::UInt64Value)).void }
                   def initialize(cart_item_index: nil); end
+
+                  sig { returns(T.nilable(Symbol)) }
+                  def _cart_item_index; end
 
                   sig { returns(T.nilable(Google::Protobuf::UInt64Value)) }
                   def cart_item_index; end
@@ -154,6 +154,9 @@ module Tapioca
 
                   sig { void }
                   def clear_cart_item_index; end
+
+                  sig { returns(Object) }
+                  def has_cart_item_index?; end
                 end
               RBI
 
@@ -161,26 +164,19 @@ module Tapioca
             end
 
             it "generates methods in RBI files for classes with Protobuf with enum field" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                require 'google/protobuf/timestamp_pb'
-                require 'google/protobuf/wrappers_pb'
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
 
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :value_type, :enum, 1, "VALUE_TYPE"
-                    end
-                    add_enum "VALUE_TYPE" do
-                      value :NULL, 0
-                      value :FIXED_AMOUNT, 1
-                      value :PERCENTAGE, 2
-                    end
-                  end
-                end
+                message Cart {
+                  enum VALUE_TYPE {
+                    NULL = 0;
+                    FIXED_AMOUNT = 1;
+                    PERCENTAGE = 2;
+                  }
 
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-                Cart::VALUE_TYPE = Google::Protobuf::DescriptorPool.generated_pool.lookup("VALUE_TYPE").enummodule
-              RUBY
+                  optional VALUE_TYPE value_type = 1;
+                }
+              PROTO
 
               expected = <<~RBI
                 # typed: strong
@@ -189,8 +185,14 @@ module Tapioca
                   sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
                   def initialize(value_type: nil); end
 
+                  sig { returns(T.nilable(Symbol)) }
+                  def _value_type; end
+
                   sig { void }
                   def clear_value_type; end
+
+                  sig { returns(Object) }
+                  def has_value_type?; end
 
                   sig { returns(T.any(Symbol, Integer)) }
                   def value_type; end
@@ -225,64 +227,16 @@ module Tapioca
               assert_equal(expected, rbi_for(:Cart))
             end
 
-            it "generates methods in RBI files for classes with Protobuf with enum field with defined type" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                require 'google/protobuf/timestamp_pb'
-                require 'google/protobuf/wrappers_pb'
-
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :value_type, :enum, 1, "MyCart.MYVALUETYPE"
-                    end
-                    add_enum "MyCart.MYVALUETYPE" do
-                      value :ACROSS, 0
-                      value :ONE, 1
-                      value :EACH, 2
-                    end
-                  end
-                end
-
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-                Cart::MYVALUETYPE = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart.MYVALUETYPE").enummodule
-              RUBY
-
-              expected = <<~RBI
-                # typed: strong
-
-                class Cart
-                  sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
-                  def initialize(value_type: nil); end
-
-                  sig { void }
-                  def clear_value_type; end
-
-                  sig { returns(T.any(Symbol, Integer)) }
-                  def value_type; end
-
-                  sig { params(value: T.any(Symbol, Integer)).void }
-                  def value_type=(value); end
-                end
-              RBI
-
-              assert_equal(expected, rbi_for(:Cart))
-            end
-
             it "generates methods in RBI files for repeated fields in Protobufs" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                require 'google/protobuf/wrappers_pb'
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
+                import "google/protobuf/wrappers.proto";
 
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      repeated :customer_ids, :int32, 1
-                      repeated :indices, :message, 2, "google.protobuf.UInt64Value"
-                    end
-                  end
-                end
-
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  repeated int32 customer_ids = 1;
+                  repeated google.protobuf.UInt64Value indices = 2;
+                }
+              PROTO
 
               expected = <<~RBI
                 # typed: strong
@@ -314,21 +268,46 @@ module Tapioca
               assert_equal(expected, rbi_for(:Cart))
             end
 
-            it "generates methods in RBI files for map fields in Protobufs" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                require 'google/protobuf/wrappers_pb'
+            it "generates methods in RBI files for classes with Protobuf with non-optional integer field type" do
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
 
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      map :customers, :string, :int32, 1
-                      map :stores, :string, :message, 2, "google.protobuf.UInt64Value"
-                    end
-                  end
+                message Cart {
+                  int32 shop_id = 1;
+                }
+              PROTO
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Cart
+                  sig { params(shop_id: T.nilable(Integer)).void }
+                  def initialize(shop_id: nil); end
+
+                  sig { void }
+                  def clear_shop_id; end
+
+                  sig { returns(Integer) }
+                  def shop_id; end
+
+                  sig { params(value: Integer).void }
+                  def shop_id=(value); end
                 end
+              RBI
 
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+              assert_equal(expected, rbi_for(:Cart))
+            end
+
+            it "generates methods in RBI files for map fields in Protobufs" do
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
+                import "google/protobuf/wrappers.proto";
+
+                message Cart {
+                  map<string, int32> customers = 1;
+                  map<string, google.protobuf.UInt64Value> stores = 2;
+                }
+              PROTO
 
               expected = <<~RBI
                 # typed: strong
@@ -361,28 +340,22 @@ module Tapioca
             end
 
             it "generates methods in RBI files for classes with Protobuf with all types" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                require 'google/protobuf/timestamp_pb'
-                require 'google/protobuf/wrappers_pb'
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
+                import "google/protobuf/wrappers.proto";
 
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :shop_id, :int32, 1
-                      optional :customer_id, :int64, 2
-                      optional :number_value, :double, 3
-                      optional :string_value, :string, 4
-                      optional :bool_value, :bool, 5
-                      optional :money_value, :float, 6
-                      optional :byte_value, :bytes, 7
-                      optional :id, :uint64, 8
-                      optional :item_id, :uint32, 9
-                    end
-                  end
-                end
-
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  optional int32 shop_id = 1;
+                  optional int64 customer_id = 2;
+                  optional double number_value = 3;
+                  optional string string_value = 4;
+                  optional bool bool_value = 5;
+                  optional float money_value = 6;
+                  optional bytes byte_value = 7;
+                  optional uint64 id = 8;
+                  optional uint32 item_id = 9;
+                }
+              PROTO
 
               rbi_output = rbi_for(:Cart)
 
@@ -433,18 +406,14 @@ module Tapioca
             end
 
             it "generates methods in RBI files with sanitized field names" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      optional :ShopID, :int32, 1
-                      optional :ShopName, :string, 2
-                    end
-                  end
-                end
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
 
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  optional int32 ShopID = 1;
+                  optional string ShopName = 2;
+                }
+              PROTO
 
               expected = <<~RBI
                 # typed: strong
@@ -465,11 +434,23 @@ module Tapioca
                   sig { params(value: String).void }
                   def ShopName=(value); end
 
+                  sig { returns(T.nilable(Symbol)) }
+                  def _ShopID; end
+
+                  sig { returns(T.nilable(Symbol)) }
+                  def _ShopName; end
+
                   sig { void }
                   def clear_ShopID; end
 
                   sig { void }
                   def clear_ShopName; end
+
+                  sig { returns(Object) }
+                  def has_ShopID?; end
+
+                  sig { returns(Object) }
+                  def has_ShopName?; end
                 end
               RBI
 
@@ -477,20 +458,16 @@ module Tapioca
             end
 
             it "generates methods in RBI files with oneof fields" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "MyCart" do
-                      oneof :contact_info do
-                        optional :phone_number, :int32, 1
-                        optional :email, :string, 2
-                      end
-                    end
-                  end
-                end
+              add_proto_file("cart", <<~PROTO)
+                syntax = "proto3";
 
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-              RUBY
+                message Cart {
+                  oneof contact_info {
+                    int32 phone_number = 1;
+                    string email = 2;
+                  }
+                }
+              PROTO
 
               rbi_output = rbi_for(:Cart)
 
@@ -547,60 +524,6 @@ module Tapioca
                 end
               RBI
               assert_equal(expected, rbi_for("Google::Protobuf::Struct"))
-            end
-
-            it "handles map and repeating types with anonymous subtype message classes by mapping them to T.untyped" do
-              add_ruby_file("protobuf.rb", <<~RUBY)
-                Google::Protobuf::DescriptorPool.generated_pool.build do
-                  add_file("cart.proto", :syntax => :proto3) do
-                    add_message "CartEntry" do
-                      optional :key, :string, 1
-                      optional :value, :string, 2
-                    end
-                    add_message "NonMapEntry" do
-                      optional :key, :string, 1
-                      optional :value, :string, 2
-                    end
-                    add_message "MyCart" do
-                      map :tables, :string, :message, 1, "CartEntry"
-                      repeated :items, :message, 2, "NonMapEntry"
-                    end
-                  end
-                end
-
-                Cart = Google::Protobuf::DescriptorPool.generated_pool.lookup("MyCart").msgclass
-                # we intentionally don't define `CartEntry` or `NonMapEntry` as constants, so that
-                # those message classes stay anonymous, which we expect to be mapped to `T.untyped`
-              RUBY
-
-              expected = <<~RBI
-                # typed: strong
-
-                class Cart
-                  sig { params(items: T.nilable(T.any(Google::Protobuf::RepeatedField[T.untyped], T::Array[T.untyped])), tables: T.nilable(T.any(Google::Protobuf::Map[String, T.untyped], T::Hash[String, T.untyped]))).void }
-                  def initialize(items: T.unsafe(nil), tables: T.unsafe(nil)); end
-
-                  sig { void }
-                  def clear_items; end
-
-                  sig { void }
-                  def clear_tables; end
-
-                  sig { returns(Google::Protobuf::RepeatedField[T.untyped]) }
-                  def items; end
-
-                  sig { params(value: Google::Protobuf::RepeatedField[T.untyped]).void }
-                  def items=(value); end
-
-                  sig { returns(Google::Protobuf::Map[String, T.untyped]) }
-                  def tables; end
-
-                  sig { params(value: Google::Protobuf::Map[String, T.untyped]).void }
-                  def tables=(value); end
-                end
-              RBI
-
-              assert_equal(expected, rbi_for(:Cart))
             end
 
             it "handles map types regardless of their name" do
@@ -662,6 +585,20 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:Cart))
             end
+          end
+        end
+
+        private
+
+        sig { params(name: String, content: String, require_file: T::Boolean).void }
+        def add_proto_file(name, content, require_file: true)
+          add_content_file("proto/#{name}.proto", content).tap do |proto_path|
+            lib_path = tmp_path("lib")
+            proto_dir = File.dirname(proto_path)
+            _, stderr, status = Open3.capture3("protoc --proto_path=#{proto_dir} --ruby_out=#{lib_path} #{proto_path}")
+            raise "Error executing protoc: #{stderr}" unless status.success?
+
+            Tapioca.silence_warnings { require("#{lib_path}/#{name}_pb.rb") } if require_file
           end
         end
       end

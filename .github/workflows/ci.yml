@@ -14,7 +14,6 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3"
           bundler-cache: true
           rubygems: 'latest'
           bundler: 'latest'
@@ -51,6 +50,11 @@ jobs:
       RAILS_VERSION: ${{ matrix.rails }}
     steps:
       - uses: actions/checkout@v4
+      - name: Install protobuf
+        run: |
+          curl -OL https://github.com/google/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip
+          unzip protoc-25.3-linux-x86_64.zip -d $HOME/.local
+          export PATH="$PATH:$HOME/.local/bin"
       - name: Remove Gemfile.lock
         # Remove Gemfile.lock for Ruby head builds and non-Rails current builds
         if: ${{ matrix.ruby == 'head' || matrix.rails != 'current' }}
