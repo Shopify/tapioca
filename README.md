@@ -834,6 +834,7 @@ As you migrate to newer versions of Sorbet or Tapioca, some shims may become use
 ```shell
 $ bin/tapioca check-shims
 
+
 Loading Sorbet payload...  Done
 Loading shim RBIs from sorbet/rbi/shims...  Done
 Loading gem RBIs from sorbet/rbi/gems...  Done
