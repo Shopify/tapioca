@@ -131,17 +131,80 @@ module Tapioca
 
     sig { params(text: String, result: Spoom::ExecResult).void }
     def assert_stdout_equals(text, result)
+      if ENV["TAPIOCA_ASSERTIONS_UPDATE"] && (text != result.out)
+        SpecWithProject.assertion_update(:assert_stdout_equals, result.out)
+      end
+
       assert_equal(text, result.out, result.to_s)
+    end
+
+    sig { params(text: String, result: Spoom::ExecResult).void }
+    def assert_stderr_equals(text, result)
+      if ENV["TAPIOCA_ASSERTIONS_UPDATE"] && (text != result.err)
+        SpecWithProject.assertion_update(:assert_stderr_equals, result.err || "")
+      end
+
+      assert_equal(text, result.err, result.to_s)
+    end
+
+    # There are many places where we assert directly against the output of
+    # stdout as a snapshot of what is correct. This is useful to ensure we get
+    # the exact output we want. However, this becomes a pain to update when
+    # there are a bunch of snapshots that need to change. As such, we provide
+    # this small helper to make it easier to update the snapshots. You can do
+    # this by running the test suite with TAPIOCA_ASSERTIONS_UPDATE=1.
+    #
+    # Note that this is not meant to be committed directly. This is meant as a
+    # helper for making development easier. The diff that this creates should be
+    # checked carefully.
+    if ENV["TAPIOCA_ASSERTIONS_UPDATE"]
+      @assertion_updates = T.let({}, T::Hash[String, T::Array[[Integer, Symbol, String]]])
+
+      class << self
+        extend T::Sig
+
+        sig { returns(T::Hash[String, T::Array[[Integer, Symbol, String]]]) }
+        attr_reader :assertion_updates
+
+        sig { params(type: Symbol, actual: String).void }
+        def assertion_update(type, actual)
+          location = caller_locations.find { |caller_location| caller_location.path&.end_with?("_spec.rb") }
+          absolute_path = location&.absolute_path
+          (assertion_updates[absolute_path] ||= []) << [location.lineno, type, actual] if absolute_path
+        end
+      end
+
+      # After the run, read each file that has assertions that need to be
+      # updated, go through the assertions in backward order (so that the line
+      # numbers don't change), and insert the correct value into the spot where
+      # the heredoc was.
+      Minitest.after_run do
+        ::Tapioca::SpecWithProject.assertion_updates.each do |absolute_path, assertions|
+          source = File.readlines(absolute_path)
+
+          assertions.sort_by { |assertion| -assertion[0] }.each do |start_lineno, type, actual|
+            next unless (name = (source.fetch(start_lineno - 1).scan(/#{type}\(<<~([A-Z]+)/)[0] || [])[0])
+
+            end_lineno =
+              T.must(source[start_lineno..]).find.with_index(start_lineno) do |line, lineno|
+                break lineno if line.match?(/^\s+#{name}\r?\n$/)
+              end
+
+            next unless end_lineno
+
+            indent = T.must(source.fetch(start_lineno)[/\A\s+/, 0]).length
+            source[start_lineno...end_lineno] =
+              actual.lines.map { |line| line.strip.empty? ? line : "#{" " * indent}#{line}" }
+          end
+
+          File.write(absolute_path, source.join)
+        end
+      end
     end
 
     sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stdout_includes(result, snippet)
       assert_includes(result.out, snippet, result.to_s)
-    end
-
-    sig { params(text: String, result: Spoom::ExecResult).void }
-    def assert_stderr_equals(text, result)
-      assert_equal(text, result.err, result.to_s)
     end
 
     sig { params(result: Spoom::ExecResult, snippet: String).void }
