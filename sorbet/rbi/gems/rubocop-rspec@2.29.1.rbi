@@ -1891,6 +1891,34 @@ end
 # source://rubocop-rspec//lib/rubocop/cop/rspec/empty_metadata.rb#20
 RuboCop::Cop::RSpec::EmptyMetadata::MSG = T.let(T.unsafe(nil), String)
 
+# Check that the `output` matcher is not called with an empty string.
+#
+# @example
+#   # bad
+#   expect { foo }.to output('').to_stdout
+#   expect { bar }.not_to output('').to_stderr
+#
+#   # good
+#   expect { foo }.not_to output.to_stdout
+#   expect { bar }.to output.to_stderr
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/empty_output.rb#17
+class RuboCop::Cop::RSpec::EmptyOutput < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/empty_output.rb#24
+  def matching_empty_output(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/empty_output.rb#34
+  def on_send(send_node); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/empty_output.rb#20
+RuboCop::Cop::RSpec::EmptyOutput::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/empty_output.rb#21
+RuboCop::Cop::RSpec::EmptyOutput::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Use `eq` instead of `be ==` to compare objects.
 #
 # @example
@@ -2266,7 +2294,7 @@ class RuboCop::Cop::RSpec::ExpectActual < ::RuboCop::Cop::RSpec::Base
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#93
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#98
   def complex_literal?(node); end
 
   # This is not implemented using a NodePattern because it seems
@@ -2274,16 +2302,13 @@ class RuboCop::Cop::RSpec::ExpectActual < ::RuboCop::Cop::RSpec::Base
   #
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#85
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#90
   def literal?(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#89
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#94
   def simple_literal?(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#98
-  def swap(corrector, actual, expected); end
 end
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_actual.rb#44
@@ -7186,6 +7211,66 @@ module RuboCop::Cop::RSpec::TopLevelGroup
   def top_level_nodes(node); end
 end
 
+# Description should be descriptive.
+#
+# If example group or example contains only `execute string`, numbers
+# and regular expressions, the description is not clear.
+#
+# @example
+#   # bad
+#   describe `time` do
+#   # ...
+#   end
+#
+#   # bad
+#   context /when foo/ do
+#   # ...
+#   end
+#
+#   # bad
+#   it 10000 do
+#   # ...
+#   end
+#
+#   # good
+#   describe Foo do
+#   # ...
+#   end
+#
+#   # good
+#   describe '#foo' do
+#   # ...
+#   end
+#
+#   # good
+#   context "when #{foo} is bar" do
+#   # ...
+#   end
+#
+#   # good
+#   it 'does something' do
+#   # ...
+#   end
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/undescriptive_literals_description.rb#47
+class RuboCop::Cop::RSpec::UndescriptiveLiteralsDescription < ::RuboCop::Cop::RSpec::Base
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/undescriptive_literals_description.rb#51
+  def example_groups_or_example?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/undescriptive_literals_description.rb#55
+  def on_block(node); end
+
+  private
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/undescriptive_literals_description.rb#63
+  def offense?(node); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/undescriptive_literals_description.rb#48
+RuboCop::Cop::RSpec::UndescriptiveLiteralsDescription::MSG = T.let(T.unsafe(nil), String)
+
 # Checks for a specified error in checking raised errors.
 #
 # Enforces one of an Exception type, a string, or a regular
@@ -7564,10 +7649,10 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RangeHelp
 
-  # source://rubocop/1.62.1/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
+  # source://rubocop/1.63.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_csend(node); end
 
-  # source://rubocop/1.62.1/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
+  # source://rubocop/1.63.0/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_send(node); end
 
   class << self
