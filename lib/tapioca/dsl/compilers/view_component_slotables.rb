@@ -1,5 +1,5 @@
-# frozen_string_literal: true
 # typed: strict
+# frozen_string_literal: true
 
 return unless defined?(ViewComponent)
 
@@ -73,7 +73,7 @@ module Tapioca
             return_type: "void",
           )
 
-          klass.create_method(name, return_type:)
+          klass.create_method(name, return_type: return_type)
 
           klass.create_method(
             "with_#{name}_content",
