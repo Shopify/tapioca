@@ -40,7 +40,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Excluding a gem from RBI generation](#excluding-a-gem-from-rbi-generation)
     * [Changing the strictness level of the RBI for a gem](#changing-the-strictness-level-of-the-rbi-for-a-gem)
     * [Keeping RBI files for gems up-to-date](#keeping-rbi-files-for-gems-up-to-date)
-    * [Importing hand written signatures from gem's `rbi/` folder](#importing-hand-written-signatures-from-gems-rbi-folder)
+    * [Importing handwritten signatures from gem's `rbi/` folder](#importing-hand-written-signatures-from-gems-rbi-folder)
   * [Pulling RBI annotations from remote sources](#pulling-rbi-annotations-from-remote-sources)
     * [Basic authentication](#basic-authentication)
     * [Using a .netrc file](#using-a-netrc-file)
