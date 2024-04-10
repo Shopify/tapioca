@@ -11,10 +11,16 @@ jobs:
 
     steps:
       - name: Trigger Team RubyDX notification
+        env:
+          PULL_URL: ${{ github.event.pull_request.html_url }}
+          PULL_NUMBER: ${{ github.event.pull_request.number }}
+          PULL_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          PULL_BRANCH: ${{ github.event.pull_request.head.ref }}
+
         run: |
           curl -X POST -H 'Content-type: application/json' --fail ${{ secrets.SLACK_WEBHOOK_URL }} --data \
-          '
+          "
           {
-            "text": ":pr-open: New pull request on Shopify/tapioca ${{ github.event.pull_request.html_url }}\n\n:buildkite: ${{ secrets.BUILDKITE_TRIGGER_URL }}?message=shopify/tapioca/${{ github.event.pull_request.number }}&env=TAPIOCA_REPO=${{ github.event.pull_request.head.repo.full_name }}%0ATAPIOCA_BRANCH=${{ github.event.pull_request.head.ref }}%0ATAPIOCA_PR=${{ github.event.pull_request.number }}#new"
-          }'
+            \"text\": \":pr-open: New pull request on Shopify/tapioca $PULL_URL\n\n:buildkite: ${{ secrets.BUILDKITE_TRIGGER_URL }}?message=shopify/tapioca/$PULL_NUMBER&env=TAPIOCA_REPO=$PULL_REPO%0ATAPIOCA_BRANCH=$PULL_BRANCH%0ATAPIOCA_PR=$PULL_NUMBER#new\"
+          }"
 
