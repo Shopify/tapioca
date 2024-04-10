@@ -40,8 +40,9 @@ module Tapioca
                 String,
               )
 
+              is_many = T.let(config[:collection], T::Boolean)
               return_type =
-                if T.let(config[:collection], T::Boolean)
+                if is_many
                   "T::Enumerable[#{renderable}]"
                 else
                   renderable
@@ -49,15 +50,16 @@ module Tapioca
 
               module_name = "ViewComponentSlotablesMethodsModule"
               klass.create_module(module_name) do |mod|
-                generate_instance_methods(mod, name.to_s, return_type)
+                generate_instance_methods(mod, name.to_s, return_type, is_many)
               end
               klass.create_include(module_name)
             end
           end
         end
 
-        sig { params(klass: RBI::Scope, name: String, return_type: String).void }
-        def generate_instance_methods(klass, name, return_type)
+        sig { params(klass: RBI::Scope, name: String, return_type: String, is_many: T::Boolean).void }
+        def generate_instance_methods(klass, name, return_type, is_many)
+          klass.create_method(name, return_type: return_type)
           klass.create_method("#{name}?", return_type: "T::Boolean")
 
           klass.create_method(
@@ -66,18 +68,39 @@ module Tapioca
               create_rest_param("args", type: "T.untyped"),
               create_block_param("block", type: "T.untyped"),
             ],
-            return_type: "void",
+            return_type: "T.untyped",
           )
 
-          klass.create_method(name, return_type: return_type)
+          if is_many
+            # For collection subcomponents, ViewComponent generates methods for the singular version
+            # of the name.
+            singular_name = ActiveSupport::Inflector.singularize(name)
 
-          klass.create_method(
-            "with_#{name}_content",
-            parameters: [
-              create_param("content", type: "T.untyped"),
-            ],
-            return_type: "void",
-          )
+            klass.create_method(
+              "with_#{singular_name}",
+              parameters: [
+                create_rest_param("args", type: "T.untyped"),
+                create_block_param("block", type: "T.untyped"),
+              ],
+              return_type: "T.untyped",
+            )
+            klass.create_method(
+              "with_#{singular_name}_content",
+              parameters: [
+                create_param("content", type: "T.untyped"),
+              ],
+              return_type: "T.untyped",
+            )
+
+          else
+            klass.create_method(
+              "with_#{name}_content",
+              parameters: [
+                create_param("content", type: "T.untyped"),
+              ],
+              return_type: "T.untyped",
+            )
+          end
         end
       end
     end

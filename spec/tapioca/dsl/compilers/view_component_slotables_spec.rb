@@ -82,16 +82,19 @@ module Tapioca
                     sig { returns(T::Boolean) }
                     def parent?; end
 
-                    sig { params(args: T.untyped, block: T.untyped).void }
+                    sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
+                    def with_child(*args, &block); end
+
+                    sig { params(content: T.untyped).returns(T.untyped) }
+                    def with_child_content(content); end
+
+                    sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
                     def with_children(*args, &block); end
 
-                    sig { params(content: T.untyped).void }
-                    def with_children_content(content); end
-
-                    sig { params(args: T.untyped, block: T.untyped).void }
+                    sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
                     def with_parent(*args, &block); end
 
-                    sig { params(content: T.untyped).void }
+                    sig { params(content: T.untyped).returns(T.untyped) }
                     def with_parent_content(content); end
                   end
                 end
@@ -124,10 +127,10 @@ module Tapioca
                     sig { returns(T::Boolean) }
                     def parent?; end
 
-                    sig { params(args: T.untyped, block: T.untyped).void }
+                    sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
                     def with_parent(*args, &block); end
 
-                    sig { params(content: T.untyped).void }
+                    sig { params(content: T.untyped).returns(T.untyped) }
                     def with_parent_content(content); end
                   end
                 end
@@ -162,10 +165,10 @@ module Tapioca
                     sig { returns(T::Boolean) }
                     def other_component?; end
 
-                    sig { params(args: T.untyped, block: T.untyped).void }
+                    sig { params(args: T.untyped, block: T.untyped).returns(T.untyped) }
                     def with_other_component(*args, &block); end
 
-                    sig { params(content: T.untyped).void }
+                    sig { params(content: T.untyped).returns(T.untyped) }
                     def with_other_component_content(content); end
                   end
                 end
