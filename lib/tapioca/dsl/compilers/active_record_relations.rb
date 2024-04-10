@@ -793,12 +793,23 @@ module Tapioca
                 return_type: "Numeric",
               )
             when :count
-              create_common_method(
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: { column_name: "T.nilable(T.any(String, Symbol))" },
+                  return_type: "Integer",
+                ),
+                common_relation_methods_module.create_sig(
+                  parameters: { column_name: "NilClass", block: "T.proc.params(object: #{constant_name}).void" },
+                  return_type: "Integer",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
                 "count",
+                sigs: sigs,
                 parameters: [
-                  create_opt_param("column_name", type: "T.untyped", default: "nil"),
+                  RBI::OptParam.new("column_name", "nil"),
+                  RBI::BlockParam.new("block"),
                 ],
-                return_type: "Integer",
               )
             when :ids
               create_common_method("ids", return_type: "Array")
