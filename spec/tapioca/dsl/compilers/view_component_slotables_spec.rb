@@ -135,6 +135,44 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:Shop))
             end
+
+            it "generates method sigs with param types when type is a proc" do
+              add_ruby_file("shop.rb", <<~RUBY)
+                class Shop
+                  include ViewComponent::Slotable
+
+                  class OtherComponent < ViewComponent::Base; end
+
+                  renders_one :other_component, ->(name:, scheme:, classes:, **options) do
+                    OtherComponent.new(name: name, scheme: scheme, classes: classes, **options)
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Shop
+                  include ViewComponentSlotablesMethodsModule
+
+                  module ViewComponentSlotablesMethodsModule
+                    sig { returns(T.untyped) }
+                    def other_component; end
+
+                    sig { returns(T::Boolean) }
+                    def other_component?; end
+
+                    sig { params(args: T.untyped, block: T.untyped).void }
+                    def with_other_component(*args, &block); end
+
+                    sig { params(content: T.untyped).void }
+                    def with_other_component_content(content); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Shop))
+            end
           end
         end
       end
