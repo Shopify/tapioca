@@ -54,10 +54,6 @@ module Tapioca
               klass.create_include(module_name)
             end
           end
-
-          # For some reason nodes are not sorted automatically on all platforms
-          # https://github.com/Shopify/tapioca/issues/1665
-          root.sort_nodes!
         end
 
         sig { params(klass: RBI::Scope, name: String, return_type: String).void }
