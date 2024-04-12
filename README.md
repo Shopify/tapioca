@@ -52,6 +52,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
   * [Configuration](#configuration)
 * [Contributing](#contributing)
+  * [DSL compilers](#dsl-compilers)
 * [License](#license)
 <!-- END_TOC -->
 
@@ -972,6 +973,10 @@ annotations:
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/Shopify/tapioca. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](https://github.com/Shopify/tapioca/blob/main/CODE_OF_CONDUCT.md) code of conduct.
+
+### DSL compilers
+
+Contributions to existing DSL compilers are welcome. However, new compilers that support DSLs for gems should live outside of Tapioca. Please refer to [writing custom dsl compilers](https://github.com/Shopify/tapioca?tab=readme-ov-file#writing-custom-dsl-compilers) for more information.
 
 ## License
 
