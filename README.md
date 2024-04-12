@@ -976,7 +976,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Shopif
 
 ### DSL compilers
 
-Contributions to existing DSL compilers are welcome. However, new compilers that support DSLs for gems should live outside of Tapioca. Please refer to [writing custom dsl compilers](https://github.com/Shopify/tapioca?tab=readme-ov-file#writing-custom-dsl-compilers) for more information.
+Contributions to existing DSL compilers are welcome. However, new compilers that support DSLs for gems other than Rails should live outside of Tapioca. Please refer to [writing custom dsl compilers](https://github.com/Shopify/tapioca?tab=readme-ov-file#writing-custom-dsl-compilers) for more information.
 
 ## License
 
