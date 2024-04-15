@@ -108,7 +108,7 @@ module Tapioca
 
                     sig { params(args: T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])).returns(::Post) }
                     sig { params(args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]).returns(T::Enumerable[::Post]) }
-                    sig { params(args: NilClass, block: T.proc.params(object: ::Post).void)).returns(T.nilable(::Post)) }
+                    sig { params(args: NilClass, block: T.proc.params(object: ::Post).void).returns(T.nilable(::Post)) }
                     def find(args = nil, &block); end
 
                     sig { params(args: T.untyped).returns(T.nilable(::Post)) }
@@ -804,7 +804,7 @@ module Tapioca
                 <% else %>
                     sig { params(args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]).returns(T::Enumerable[::Post]) }
                 <% end %>
-                    sig { params(args: NilClass, block: T.proc.params(object: ::Post).void)).returns(T.nilable(::Post)) }
+                    sig { params(args: NilClass, block: T.proc.params(object: ::Post).void).returns(T.nilable(::Post)) }
                     def find(args = nil, &block); end
 
                     sig { params(args: T.untyped).returns(T.nilable(::Post)) }
