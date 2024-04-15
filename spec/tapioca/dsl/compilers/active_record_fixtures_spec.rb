@@ -78,7 +78,7 @@ module Tapioca
             end
 
             it "generates methods for fixtures from multiple sources" do
-              add_content_file("test/fixtures/posts.yml", <<~YAML)
+              add_content_file("test/fixtures/blog/posts.yml", <<~YAML)
                 super_post:
                   title: An incredible Ruby post
                   author: Johnny Developer
@@ -100,7 +100,7 @@ module Tapioca
                 class ActiveSupport::TestCase
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
-                  def posts(fixture_name, *other_fixtures); end
+                  def blog_posts(fixture_name, *other_fixtures); end
 
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
                   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
