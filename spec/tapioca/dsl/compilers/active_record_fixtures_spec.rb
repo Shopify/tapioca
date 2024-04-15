@@ -68,8 +68,9 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
-                  def posts(*fixture_names); end
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
+                  def posts(fixture_name, *other_fixtures); end
                 end
               RBI
 
@@ -97,11 +98,13 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
-                  def posts(*fixture_names); end
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
+                  def posts(fixture_name, *other_fixtures); end
 
-                  sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
-                  def users(*fixture_names); end
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
+                  def users(fixture_name, *other_fixtures); end
                 end
               RBI
 

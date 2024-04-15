@@ -24,8 +24,9 @@ module Tapioca
       # # test_case.rbi
       # # typed: true
       # class ActiveSupport::TestCase
-      #   sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
-      #   def posts(*fixture_names); end
+      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass)).returns(T.untyped) }
+      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol))).returns(T::Array[T.untyped]) }
+      #   def posts(fixture_name, *other_fixtures); end
       # end
       # ~~~
       class ActiveRecordFixtures < Compiler
@@ -104,10 +105,28 @@ module Tapioca
 
         sig { params(mod: RBI::Scope, name: String).void }
         def create_fixture_method(mod, name)
-          mod.create_method(
+          mod.create_method_with_sigs(
             name,
-            parameters: [create_rest_param("fixture_names", type: "T.any(String, Symbol)")],
-            return_type: "T.untyped",
+            sigs: [
+              mod.create_sig(
+                parameters: {
+                  fixture_name: "T.any(String, Symbol)",
+                  other_fixtures: "NilClass",
+                },
+                return_type: "T.untyped",
+              ),
+              mod.create_sig(
+                parameters: {
+                  fixture_name: "T.any(String, Symbol)",
+                  other_fixtures: "T.any(String, Symbol)",
+                },
+                return_type: "T::Array[T.untyped]",
+              ),
+            ],
+            parameters: [
+              RBI::ReqParam.new("fixture_name"),
+              RBI::RestParam.new("other_fixtures"),
+            ],
           )
         end
       end
