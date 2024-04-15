@@ -137,6 +137,58 @@ module Tapioca
           assert_equal(expected, rbi_for(:Post))
         end
       end
+
+      describe "Tapioca::Dsl::Compiler with invalid syntax" do
+        before do
+          add_ruby_file("post_compiler.rb", <<~RUBY)
+            class PostCompiler < Tapioca::Dsl::Compiler
+              extend T::Sig
+
+              ConstantType = type_member { { fixed: T.class_of(Post) } }
+
+              sig { override.void }
+              def decorate
+                methods = constant.instance_methods(false)
+
+                root.create_class("Post") do |klass|
+                  methods.each do |method|
+                    klass.create_method(
+                      method.name.to_s,
+                      parameters: [],
+                      return_type: "void)",
+                      class_method: false,
+                    )
+                  end
+                end
+              end
+
+              class << self
+                extend T::Sig
+
+                sig { override.returns(T::Enumerable[Module]) }
+                def gather_constants
+                  [::Post]
+                end
+              end
+            end
+          RUBY
+
+          use_dsl_compiler(Object.const_get("PostCompiler"))
+        end
+
+        it "raises SyntaxError" do
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post
+              def bar(a, b = 42, *c); end
+              def foo(d:, e: 42, **f, &blk); end
+            end
+          RUBY
+
+          assert_raises(SyntaxError, /void\)/) do
+            rbi_for(:Post)
+          end
+        end
+      end
     end
   end
 end

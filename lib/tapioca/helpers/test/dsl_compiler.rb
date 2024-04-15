@@ -4,6 +4,7 @@
 require "tapioca/helpers/test/content"
 require "tapioca/helpers/test/isolation"
 require "tapioca/helpers/test/template"
+require "tapioca/helpers/sorbet_helper"
 
 module Tapioca
   module Helpers
@@ -53,6 +54,8 @@ module Tapioca
         class CompilerContext
           extend T::Sig
 
+          include SorbetHelper
+
           sig { returns(T.class_of(Tapioca::Dsl::Compiler)) }
           attr_reader :compiler_class
 
@@ -95,7 +98,26 @@ module Tapioca
             compiler = compiler_class.new(pipeline, file.root, constant)
             compiler.decorate
 
-            Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
+            rbi = Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
+            result = sorbet(
+              "--no-config",
+              "--stop-after",
+              "parser",
+              "-e",
+              "\"#{rbi}\"",
+            )
+
+            unless result.status
+              raise(SyntaxError, <<~MSG)
+                Expected generated RBI file for `#{constant_name}` to not have any parsing errors.
+
+                Got these parsing errors:
+
+                #{result.err}
+              MSG
+            end
+
+            rbi
           end
 
           sig { returns(T::Array[String]) }
