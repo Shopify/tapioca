@@ -124,6 +124,28 @@ module Tapioca
               assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
             end
 
+            it "generates methods for fixtures with a fallback to T.untyped if no matching model exists" do
+              add_content_file("test/fixtures/posts.yml", <<~YAML)
+                super_post:
+                  title: An incredible Ruby post
+                  author: Johnny Developer
+                  created_at: 2021-09-08 11:00:00
+                  updated_at: 2021-09-08 11:00:00
+              YAML
+
+              expected = <<~RBI
+                # typed: strong
+
+                class ActiveSupport::TestCase
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
+                  def posts(fixture_name, *other_fixtures); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+            end
+
             it "generates no methods for file fixtures" do
               add_content_file("test/fixtures/files/posts.yml", <<~YAML)
                 super_post:
