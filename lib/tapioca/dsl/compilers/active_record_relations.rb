@@ -677,7 +677,7 @@ module Tapioca
                 common_relation_methods_module.create_sig(
                   parameters: {
                     args: "NilClass",
-                    block: "T.proc.params(object: #{constant_name}).void)",
+                    block: "T.proc.params(object: #{constant_name}).void",
                   },
                   return_type: as_nilable_type(constant_name),
                 ),
