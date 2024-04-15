@@ -24,8 +24,9 @@ module Tapioca
       # # test_case.rbi
       # # typed: true
       # class ActiveSupport::TestCase
-      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass)).returns(T.untyped) }
-      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol))).returns(T::Array[T.untyped]) }
+      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
+      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol))
+      #           .returns(T::Array[Post]) }
       #   def posts(fixture_name, *other_fixtures); end
       # end
       # ~~~
@@ -105,29 +106,45 @@ module Tapioca
 
         sig { params(mod: RBI::Scope, name: String).void }
         def create_fixture_method(mod, name)
-          mod.create_method_with_sigs(
-            name,
-            sigs: [
-              mod.create_sig(
-                parameters: {
-                  fixture_name: "T.any(String, Symbol)",
-                  other_fixtures: "NilClass",
-                },
-                return_type: "T.untyped",
-              ),
-              mod.create_sig(
-                parameters: {
-                  fixture_name: "T.any(String, Symbol)",
-                  other_fixtures: "T.any(String, Symbol)",
-                },
-                return_type: "T::Array[T.untyped]",
-              ),
-            ],
-            parameters: [
-              RBI::ReqParam.new("fixture_name"),
-              RBI::RestParam.new("other_fixtures"),
-            ],
+          model_class = active_record_models[name] || "T.untyped"
+          mod << RBI::Method.new(name) do |node|
+            node.add_param("fixture_name")
+            node.add_rest_param("other_fixtures")
+
+            node.add_sig do |sig|
+              sig.add_param("fixture_name", "T.any(String, Symbol)")
+              sig.add_param("other_fixtures", "NilClass")
+              sig.return_type = model_class
+            end
+
+            node.add_sig do |sig|
+              sig.add_param("fixture_name", "T.any(String, Symbol)")
+              sig.add_param("other_fixtures", "T.any(String, Symbol)")
+              sig.return_type = "T::Array[#{model_class}]"
+            end
+          end
+        end
+
+        sig { returns(T::Hash[String, String]) }
+        def active_record_models
+          @active_record_models ||= T.let(
+            ActiveRecord::Base.descendants.map do |model|
+              [fixture_name(model.name), model.name]
+            end.to_h,
+            T.nilable(T::Hash[String, String]),
           )
+        end
+
+        sig { params(class_name: String).returns(String) }
+        def fixture_name(class_name)
+          singular = class_name.gsub("::", "/")
+            .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+            .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+            .tr("-", "_")
+            .downcase
+            .gsub("/", "_")
+
+          "#{singular}s"
         end
       end
     end

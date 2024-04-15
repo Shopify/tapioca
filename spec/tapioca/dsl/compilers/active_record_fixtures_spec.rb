@@ -64,12 +64,17 @@ module Tapioca
                   updated_at: 2021-09-08 11:00:00
               YAML
 
+              add_ruby_file("test_models.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                end
+              RUBY
+
               expected = <<~RBI
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
                   def posts(fixture_name, *other_fixtures); end
                 end
               RBI
@@ -78,6 +83,14 @@ module Tapioca
             end
 
             it "generates methods for fixtures from multiple sources" do
+              add_ruby_file("test_models.rb", <<~RUBY)
+                module Blog
+                  class Post < ActiveRecord::Base
+                  end
+                end
+                class User < ActiveRecord::Base
+                end
+              RUBY
               add_content_file("test/fixtures/blog/posts.yml", <<~YAML)
                 super_post:
                   title: An incredible Ruby post
@@ -98,12 +111,12 @@ module Tapioca
                 # typed: strong
 
                 class ActiveSupport::TestCase
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Blog::Post) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Blog::Post]) }
                   def blog_posts(fixture_name, *other_fixtures); end
 
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(T.untyped) }
-                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[T.untyped]) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(User) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[User]) }
                   def users(fixture_name, *other_fixtures); end
                 end
               RBI
