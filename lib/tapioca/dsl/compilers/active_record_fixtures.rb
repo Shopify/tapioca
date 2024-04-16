@@ -106,7 +106,7 @@ module Tapioca
 
         sig { params(mod: RBI::Scope, name: String).void }
         def create_fixture_method(mod, name)
-          model_class = active_record_models[name] || "T.untyped"
+          return_type = return_type_for_fixture(name)
           mod << RBI::Method.new(name) do |node|
             node.add_param("fixture_name")
             node.add_rest_param("other_fixtures")
@@ -114,37 +114,28 @@ module Tapioca
             node.add_sig do |sig|
               sig.add_param("fixture_name", "T.any(String, Symbol)")
               sig.add_param("other_fixtures", "NilClass")
-              sig.return_type = model_class
+              sig.return_type = return_type
             end
 
             node.add_sig do |sig|
               sig.add_param("fixture_name", "T.any(String, Symbol)")
               sig.add_param("other_fixtures", "T.any(String, Symbol)")
-              sig.return_type = "T::Array[#{model_class}]"
+              sig.return_type = "T::Array[#{return_type}]"
             end
           end
         end
 
-        sig { returns(T::Hash[String, String]) }
-        def active_record_models
-          @active_record_models ||= T.let(
-            ActiveRecord::Base.descendants.map do |model|
-              [fixture_name(model.name), model.name]
-            end.to_h,
-            T.nilable(T::Hash[String, String]),
-          )
-        end
+        sig { params(fixture_name: String).returns(String) }
+        def return_type_for_fixture(fixture_name)
+          model_name_from_fixture_sets = T.unsafe(fixture_loader).fixture_sets[fixture_name]
 
-        sig { params(class_name: String).returns(String) }
-        def fixture_name(class_name)
-          singular = class_name.gsub("::", "/")
-            .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-            .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-            .tr("-", "_")
-            .downcase
-            .gsub("/", "_")
+          if model_name_from_fixture_sets
+            model_name = T.unsafe(ActiveRecord::FixtureSet).default_fixture_model_name(model_name_from_fixture_sets)
 
-          "#{singular}s"
+            return model_name if Object.const_defined?(model_name)
+          end
+
+          "T.untyped"
         end
       end
     end
