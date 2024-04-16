@@ -17000,7 +17000,7 @@ class RuboCop::Cop::Lint::AssignmentInCondition < ::RuboCop::Cop::Base
   # source://rubocop//lib/rubocop/cop/lint/assignment_in_condition.rb#90
   def skip_children?(asgn_node); end
 
-  # source://rubocop//lib/rubocop/cop/lint/assignment_in_condition.rb#94
+  # source://rubocop//lib/rubocop/cop/lint/assignment_in_condition.rb#96
   def traverse_node(node, &block); end
 end
 
@@ -41808,7 +41808,7 @@ class RuboCop::Cop::Style::MutableConstant < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-sorbet/0.8.0/lib/rubocop/cop/sorbet/mutable_constant_sorbet_aware_behaviour.rb#18
+  # source://rubocop-sorbet/0.8.1/lib/rubocop/cop/sorbet/mutable_constant_sorbet_aware_behaviour.rb#18
   def on_assignment(value); end
 
   # source://rubocop//lib/rubocop/cop/style/mutable_constant.rb#127
@@ -41826,7 +41826,7 @@ class RuboCop::Cop::Style::MutableConstant < ::RuboCop::Cop::Base
   # source://rubocop//lib/rubocop/cop/style/mutable_constant.rb#217
   def splat_value(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-sorbet/0.8.0/lib/rubocop/cop/sorbet/mutable_constant_sorbet_aware_behaviour.rb#12
+  # source://rubocop-sorbet/0.8.1/lib/rubocop/cop/sorbet/mutable_constant_sorbet_aware_behaviour.rb#12
   def t_let(param0 = T.unsafe(nil)); end
 
   private
@@ -55866,13 +55866,13 @@ RuboCop::LSP::Severity::SEVERITIES = T.let(T.unsafe(nil), Hash)
 #
 # @api private
 #
-# source://rubocop//lib/rubocop/lockfile.rb#7
+# source://rubocop//lib/rubocop/lockfile.rb#13
 class RuboCop::Lockfile
   # @api private
   # @param lockfile_path [String, Pathname, nil]
   # @return [Lockfile] a new instance of Lockfile
   #
-  # source://rubocop//lib/rubocop/lockfile.rb#9
+  # source://rubocop//lib/rubocop/lockfile.rb#15
   def initialize(lockfile_path = T.unsafe(nil)); end
 
   # Gems that the bundle directly depends on.
@@ -55880,7 +55880,7 @@ class RuboCop::Lockfile
   # @api private
   # @return [Array<Bundler::Dependency>, nil]
   #
-  # source://rubocop//lib/rubocop/lockfile.rb#17
+  # source://rubocop//lib/rubocop/lockfile.rb#23
   def dependencies; end
 
   # Returns the locked versions of gems from this lockfile.
@@ -55889,7 +55889,7 @@ class RuboCop::Lockfile
   # @param include_transitive_dependencies: [Boolean] When false, only direct dependencies
   #   are returned, i.e. those listed explicitly in the `Gemfile`.
   #
-  # source://rubocop//lib/rubocop/lockfile.rb#37
+  # source://rubocop//lib/rubocop/lockfile.rb#43
   def gem_versions(include_transitive_dependencies: T.unsafe(nil)); end
 
   # All activated gems, including transitive dependencies.
@@ -55897,7 +55897,7 @@ class RuboCop::Lockfile
   # @api private
   # @return [Array<Bundler::Dependency>, nil]
   #
-  # source://rubocop//lib/rubocop/lockfile.rb#25
+  # source://rubocop//lib/rubocop/lockfile.rb#31
   def gems; end
 
   # Whether this lockfile includes the named gem, directly or indirectly.
@@ -55906,7 +55906,7 @@ class RuboCop::Lockfile
   # @param name [String]
   # @return [Boolean]
   #
-  # source://rubocop//lib/rubocop/lockfile.rb#53
+  # source://rubocop//lib/rubocop/lockfile.rb#59
   def includes_gem?(name); end
 
   private
@@ -55914,7 +55914,7 @@ class RuboCop::Lockfile
   # @api private
   # @return [Bundler::LockfileParser, nil]
   #
-  # source://rubocop//lib/rubocop/lockfile.rb#60
+  # source://rubocop//lib/rubocop/lockfile.rb#66
   def parser; end
 end
 
