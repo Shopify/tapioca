@@ -1,7 +1,10 @@
 # typed: strict
 # frozen_string_literal: true
 
-return unless defined?(Rails) && defined?(ActiveSupport::TestCase) && defined?(ActiveRecord::TestFixtures)
+return unless defined?(Rails) &&
+  defined?(ActiveSupport::TestCase) &&
+  defined?(ActiveRecord::TestFixtures) &&
+  defined?(ActiveRecord::FixtureSet)
 
 module Tapioca
   module Dsl
@@ -127,15 +130,43 @@ module Tapioca
 
         sig { params(fixture_name: String).returns(String) }
         def return_type_for_fixture(fixture_name)
+          model_name_from_fixture_files = fixture_file_class_mapping[fixture_name]
+          return model_name_from_fixture_files if model_name_from_fixture_files
+
           model_name_from_fixture_sets = T.unsafe(fixture_loader).fixture_sets[fixture_name]
-
           if model_name_from_fixture_sets
-            model_name = T.unsafe(ActiveRecord::FixtureSet).default_fixture_model_name(model_name_from_fixture_sets)
-
+            model_name = ActiveRecord::FixtureSet.default_fixture_model_name(model_name_from_fixture_sets)
             return model_name if Object.const_defined?(model_name)
           end
 
           "T.untyped"
+        end
+
+        sig { returns(T::Hash[String, String]) }
+        def fixture_file_class_mapping
+          @fixture_file_class_mapping ||= T.let(
+            begin
+              fixture_paths = if T.unsafe(fixture_loader).respond_to?(:fixture_paths)
+                T.unsafe(fixture_loader).fixture_paths
+              else
+                T.unsafe(fixture_loader).fixture_path
+              end
+
+              Array(fixture_paths).each_with_object({}) do |path, mapping|
+                Dir["#{path}{.yml,/{**,*}/*.yml}"].select do |file|
+                  next unless ::File.file?(file)
+
+                  ActiveRecord::FixtureSet::File.open(file) do |fh|
+                    next unless fh.model_class
+
+                    fixuture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
+                    mapping[fixuture_name] = fh.model_class
+                  end
+                end
+              end
+            end,
+            T.nilable(T::Hash[String, String]),
+          )
         end
       end
     end

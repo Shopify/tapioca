@@ -124,6 +124,35 @@ module Tapioca
               assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
             end
 
+            it "generates methods for fixtures with explicit class name" do
+              add_content_file("test/fixtures/posts_with_other_names.yml", <<~YAML)
+                _fixture:
+                  model_class: Post
+                super_post:
+                  title: An incredible Ruby post
+                  author: Johnny Developer
+                  created_at: 2021-09-08 11:00:00
+                  updated_at: 2021-09-08 11:00:00
+              YAML
+
+              add_ruby_file("test_models.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class ActiveSupport::TestCase
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
+                  sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol)).returns(T::Array[Post]) }
+                  def posts_with_other_names(fixture_name, *other_fixtures); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
+            end
+
             it "generates methods for fixtures with a fallback to T.untyped if no matching model exists" do
               add_content_file("test/fixtures/posts.yml", <<~YAML)
                 super_post:
