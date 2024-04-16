@@ -84,6 +84,12 @@ class Post
 
     sig { returns(T.nilable(::Category)) }
     def reload_category; end
+
+    sig { void }
+    def reset_author; end
+
+    sig { void }
+    def reset_category; end
   end
 end
 ~~~

@@ -92,6 +92,12 @@ module Tapioca
       #
       #     sig { returns(T.nilable(::Category)) }
       #     def reload_category; end
+      #
+      #     sig { void }
+      #     def reset_author; end
+      #
+      #     sig { void }
+      #     def reset_category; end
       #   end
       # end
       # ~~~
@@ -195,6 +201,10 @@ module Tapioca
           klass.create_method(
             "reload_#{association_name}",
             return_type: association_type,
+          )
+          klass.create_method(
+            "reset_#{association_name}",
+            return_type: "void",
           )
           unless reflection.polymorphic?
             klass.create_method(
