@@ -3,8 +3,7 @@
 
 return unless defined?(Rails) &&
   defined?(ActiveSupport::TestCase) &&
-  defined?(ActiveRecord::TestFixtures) &&
-  defined?(ActiveRecord::FixtureSet)
+  defined?(ActiveRecord::TestFixtures)
 
 module Tapioca
   module Dsl
@@ -130,25 +129,28 @@ module Tapioca
 
         sig { params(fixture_name: String).returns(String) }
         def return_type_for_fixture(fixture_name)
-          model_name_from_fixture_files = fixture_file_class_mapping[fixture_name]
-          return model_name_from_fixture_files if model_name_from_fixture_files
+          fixture_class_mapping_from_fixture_files[fixture_name] ||
+            fixture_class_from_fixture_set(fixture_name) ||
+            fixture_class_from_active_record_base_class_mapping[fixture_name] ||
+            "T.untyped"
+        end
 
-          if fixture_loader.respond_to?(:fixture_sets)
-            model_name_from_fixture_sets = T.unsafe(fixture_loader).fixture_sets[fixture_name]
-            if model_name_from_fixture_sets
-              model_name = ActiveRecord::FixtureSet.default_fixture_model_name(model_name_from_fixture_sets)
-              return model_name if Object.const_defined?(model_name)
-            end
-          end
+        sig { params(fixture_name: String).returns(T.nilable(String)) }
+        def fixture_class_from_fixture_set(fixture_name)
+          # only rails 7.1+ support fixture sets so this is conditional
+          return unless fixture_loader.respond_to?(:fixture_sets)
 
-          active_record_base_class = fixture_active_record_base_class_mapping[fixture_name]
-          return active_record_base_class if active_record_base_class
+          model_name_from_fixture_set = T.unsafe(fixture_loader).fixture_sets[fixture_name]
+          return unless model_name_from_fixture_set
 
-          "T.untyped"
+          model_name = ActiveRecord::FixtureSet.default_fixture_model_name(model_name_from_fixture_set)
+          return unless Object.const_defined?(model_name)
+
+          model_name
         end
 
         sig { returns(T::Hash[String, String]) }
-        def fixture_active_record_base_class_mapping
+        def fixture_class_from_active_record_base_class_mapping
           @fixture_class_mapping ||= T.let(
             begin
               ActiveRecord::Base.descendants.each_with_object({}) do |model_class, mapping|
@@ -167,7 +169,7 @@ module Tapioca
         end
 
         sig { returns(T::Hash[String, String]) }
-        def fixture_file_class_mapping
+        def fixture_class_mapping_from_fixture_files
           @fixture_file_class_mapping ||= T.let(
             begin
               fixture_paths = if T.unsafe(fixture_loader).respond_to?(:fixture_paths)
@@ -183,8 +185,8 @@ module Tapioca
                   ActiveRecord::FixtureSet::File.open(file) do |fh|
                     next unless fh.model_class
 
-                    fixuture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
-                    mapping[fixuture_name] = fh.model_class
+                    fixture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
+                    mapping[fixture_name] = fh.model_class
                   end
                 end
               end
