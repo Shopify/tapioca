@@ -133,13 +133,37 @@ module Tapioca
           model_name_from_fixture_files = fixture_file_class_mapping[fixture_name]
           return model_name_from_fixture_files if model_name_from_fixture_files
 
-          model_name_from_fixture_sets = T.unsafe(fixture_loader).fixture_sets[fixture_name]
-          if model_name_from_fixture_sets
-            model_name = ActiveRecord::FixtureSet.default_fixture_model_name(model_name_from_fixture_sets)
-            return model_name if Object.const_defined?(model_name)
+          if fixture_loader.respond_to?(:fixture_sets)
+            model_name_from_fixture_sets = T.unsafe(fixture_loader).fixture_sets[fixture_name]
+            if model_name_from_fixture_sets
+              model_name = ActiveRecord::FixtureSet.default_fixture_model_name(model_name_from_fixture_sets)
+              return model_name if Object.const_defined?(model_name)
+            end
           end
 
+          active_record_base_class = fixture_active_record_base_class_mapping[fixture_name]
+          return active_record_base_class if active_record_base_class
+
           "T.untyped"
+        end
+
+        sig { returns(T::Hash[String, String]) }
+        def fixture_active_record_base_class_mapping
+          @fixture_class_mapping ||= T.let(
+            begin
+              ActiveRecord::Base.descendants.each_with_object({}) do |model_class, mapping|
+                class_name = model_class.name
+
+                fixture_name = class_name.underscore.gsub("/", "_")
+                fixture_name = fixture_name.pluralize if ActiveRecord::Base.pluralize_table_names
+
+                mapping[fixture_name] = class_name
+
+                mapping
+              end
+            end,
+            T.nilable(T::Hash[String, String]),
+          )
         end
 
         sig { returns(T::Hash[String, String]) }
