@@ -1618,7 +1618,7 @@ module Tapioca
 
         it "generates RBIs for lower versions of activerecord-typedstore" do
           @project.require_real_gem("activerecord-typedstore", "1.4.0")
-          @project.require_real_gem("sqlite3")
+          @project.require_real_gem("sqlite3", "1.7.3")
           @project.bundle_install!
           @project.write!("lib/post.rb", <<~RB)
             require "active_record"

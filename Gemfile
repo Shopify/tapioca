@@ -35,7 +35,7 @@ group :development, :test do
   gem "sprockets"
   gem "state_machines"
   gem "activerecord-typedstore"
-  gem "sqlite3"
+  gem "sqlite3", "~>1.4"
   gem "identity_cache"
   gem "cityhash",
     git: "https://github.com/csfrancis/cityhash.git",
