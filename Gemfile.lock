@@ -406,7 +406,7 @@ DEPENDENCIES
   sidekiq
   smart_properties
   sprockets
-  sqlite3
+  sqlite3 (~> 1.4)
   state_machines
   tapioca!
   webmock
