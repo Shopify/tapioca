@@ -822,13 +822,28 @@ module Tapioca
                 return_type: "T.untyped",
               )
             when :sum
-              create_common_method(
-                "sum",
+              sigs = [
+                common_relation_methods_module.create_sig(
+                  parameters: { initial_value_or_column: "T.untyped" },
+                  return_type: "Numeric",
+                ),
+                common_relation_methods_module.create_sig(
+                  type_parameters: ["U"],
+                  parameters:
+                  {
+                    initial_value_or_column: "T.nilable(T.type_parameter(:U))",
+                    block: "T.proc.params(object: #{constant_name}).returns(T.type_parameter(:U))",
+                  },
+                  return_type: "T.type_parameter(:U)",
+                ),
+              ]
+              common_relation_methods_module.create_method_with_sigs(
+                method_name.to_s,
+                sigs: sigs,
                 parameters: [
-                  create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
-                  create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
+                  RBI::OptParam.new("initial_value_or_column", "nil"),
+                  RBI::BlockParam.new("block"),
                 ],
-                return_type: "Numeric",
               )
             end
           end

@@ -128,14 +128,15 @@ module RBI
     sig do
       params(
         parameters: T::Hash[T.any(String, Symbol), String],
+        type_parameters: T::Array[String],
         return_type: String,
       ).returns(RBI::Sig)
     end
-    def create_sig(parameters:, return_type: "T.untyped")
+    def create_sig(parameters:, type_parameters: [], return_type: "T.untyped")
       params = parameters.map do |name, type|
         RBI::SigParam.new(name.to_s, type)
       end
-      RBI::Sig.new(params: params, return_type: return_type)
+      RBI::Sig.new(type_params: type_parameters, params: params, return_type: return_type)
     end
 
     private
