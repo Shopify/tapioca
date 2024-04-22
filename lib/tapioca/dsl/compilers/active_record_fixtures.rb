@@ -1,7 +1,9 @@
 # typed: strict
 # frozen_string_literal: true
 
-return unless defined?(Rails) && defined?(ActiveSupport::TestCase) && defined?(ActiveRecord::TestFixtures)
+return unless defined?(Rails) &&
+  defined?(ActiveSupport::TestCase) &&
+  defined?(ActiveRecord::TestFixtures)
 
 module Tapioca
   module Dsl
@@ -24,8 +26,10 @@ module Tapioca
       # # test_case.rbi
       # # typed: true
       # class ActiveSupport::TestCase
-      #   sig { params(fixture_names: T.any(String, Symbol)).returns(T.untyped) }
-      #   def posts(*fixture_names); end
+      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
+      #   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol))
+      #           .returns(T::Array[Post]) }
+      #   def posts(fixture_name, *other_fixtures); end
       # end
       # ~~~
       class ActiveRecordFixtures < Compiler
@@ -104,10 +108,90 @@ module Tapioca
 
         sig { params(mod: RBI::Scope, name: String).void }
         def create_fixture_method(mod, name)
-          mod.create_method(
-            name,
-            parameters: [create_rest_param("fixture_names", type: "T.any(String, Symbol)")],
-            return_type: "T.untyped",
+          return_type = return_type_for_fixture(name)
+          mod << RBI::Method.new(name) do |node|
+            node.add_param("fixture_name")
+            node.add_rest_param("other_fixtures")
+
+            node.add_sig do |sig|
+              sig.add_param("fixture_name", "T.any(String, Symbol)")
+              sig.add_param("other_fixtures", "NilClass")
+              sig.return_type = return_type
+            end
+
+            node.add_sig do |sig|
+              sig.add_param("fixture_name", "T.any(String, Symbol)")
+              sig.add_param("other_fixtures", "T.any(String, Symbol)")
+              sig.return_type = "T::Array[#{return_type}]"
+            end
+          end
+        end
+
+        sig { params(fixture_name: String).returns(String) }
+        def return_type_for_fixture(fixture_name)
+          fixture_class_mapping_from_fixture_files[fixture_name] ||
+            fixture_class_from_fixture_set(fixture_name) ||
+            fixture_class_from_active_record_base_class_mapping[fixture_name] ||
+            "T.untyped"
+        end
+
+        sig { params(fixture_name: String).returns(T.nilable(String)) }
+        def fixture_class_from_fixture_set(fixture_name)
+          # only rails 7.1+ support fixture sets so this is conditional
+          return unless fixture_loader.respond_to?(:fixture_sets)
+
+          model_name_from_fixture_set = T.unsafe(fixture_loader).fixture_sets[fixture_name]
+          return unless model_name_from_fixture_set
+
+          model_name = ActiveRecord::FixtureSet.default_fixture_model_name(model_name_from_fixture_set)
+          return unless Object.const_defined?(model_name)
+
+          model_name
+        end
+
+        sig { returns(T::Hash[String, String]) }
+        def fixture_class_from_active_record_base_class_mapping
+          @fixture_class_mapping ||= T.let(
+            begin
+              ActiveRecord::Base.descendants.each_with_object({}) do |model_class, mapping|
+                class_name = model_class.name
+
+                fixture_name = class_name.underscore.gsub("/", "_")
+                fixture_name = fixture_name.pluralize if ActiveRecord::Base.pluralize_table_names
+
+                mapping[fixture_name] = class_name
+
+                mapping
+              end
+            end,
+            T.nilable(T::Hash[String, String]),
+          )
+        end
+
+        sig { returns(T::Hash[String, String]) }
+        def fixture_class_mapping_from_fixture_files
+          @fixture_file_class_mapping ||= T.let(
+            begin
+              fixture_paths = if T.unsafe(fixture_loader).respond_to?(:fixture_paths)
+                T.unsafe(fixture_loader).fixture_paths
+              else
+                T.unsafe(fixture_loader).fixture_path
+              end
+
+              Array(fixture_paths).each_with_object({}) do |path, mapping|
+                Dir["#{path}{.yml,/{**,*}/*.yml}"].select do |file|
+                  next unless ::File.file?(file)
+
+                  ActiveRecord::FixtureSet::File.open(file) do |fh|
+                    next unless fh.model_class
+
+                    fixture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
+                    mapping[fixture_name] = fh.model_class
+                  end
+                end
+              end
+            end,
+            T.nilable(T::Hash[String, String]),
           )
         end
       end
