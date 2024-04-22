@@ -345,9 +345,9 @@ GEM
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
-    sqlite3 (1.7.3-arm64-darwin)
-    sqlite3 (1.7.3-x86_64-darwin)
-    sqlite3 (1.7.3-x86_64-linux)
+    sqlite3 (2.0.1-arm64-darwin)
+    sqlite3 (2.0.1-x86_64-darwin)
+    sqlite3 (2.0.1-x86_64-linux-gnu)
     state_machines (0.6.0)
     stringio (3.1.0)
     thor (1.3.1)
@@ -406,7 +406,7 @@ DEPENDENCIES
   sidekiq
   smart_properties
   sprockets
-  sqlite3 (~> 1.4)
+  sqlite3 (~> 2.0)
   state_machines
   tapioca!
   webmock
