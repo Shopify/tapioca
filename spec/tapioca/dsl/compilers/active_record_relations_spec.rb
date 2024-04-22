@@ -69,13 +69,13 @@ module Tapioca
                     sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
                     def any?(&block); end
 
-                    sig { params(column_name: T.any(String, Symbol)).returns(Numeric) }
+                    sig { params(column_name: T.any(String, Symbol)).returns(T.any(Integer, Float, BigDecimal)) }
                     def average(column_name); end
 
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def build(attributes = nil, &block); end
 
-                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(Numeric) }
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.any(Integer, Float, BigDecimal)) }
                     def calculate(operation, column_name); end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol))).returns(Integer) }
@@ -231,7 +231,7 @@ module Tapioca
                     def sole; end
 
                 <% end %>
-                    sig { params(initial_value_or_column: T.untyped).returns(Numeric) }
+                    sig { params(initial_value_or_column: T.untyped).returns(T.any(Integer, Float, BigDecimal)) }
                     sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
                     def sum(initial_value_or_column = nil, &block); end
 
@@ -595,10 +595,10 @@ module Tapioca
                   class PrivateAssociationRelationGroupChain < PrivateAssociationRelation
                     Elem = type_member { { fixed: ::Post } }
 
-                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def average(column_name); end
 
-                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
                     sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
@@ -613,7 +613,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
                   end
 
@@ -697,10 +697,10 @@ module Tapioca
                   class PrivateRelationGroupChain < PrivateRelation
                     Elem = type_member { { fixed: ::Post } }
 
-                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def average(column_name); end
 
-                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
                     sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
@@ -715,7 +715,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
                   end
 
@@ -762,13 +762,13 @@ module Tapioca
                     sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
                     def any?(&block); end
 
-                    sig { params(column_name: T.any(String, Symbol)).returns(Numeric) }
+                    sig { params(column_name: T.any(String, Symbol)).returns(T.any(Integer, Float, BigDecimal)) }
                     def average(column_name); end
 
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def build(attributes = nil, &block); end
 
-                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(Numeric) }
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T.any(Integer, Float, BigDecimal)) }
                     def calculate(operation, column_name); end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol))).returns(Integer) }
@@ -928,7 +928,7 @@ module Tapioca
                     def sole; end
 
                 <% end %>
-                    sig { params(initial_value_or_column: T.untyped).returns(Numeric) }
+                    sig { params(initial_value_or_column: T.untyped).returns(T.any(Integer, Float, BigDecimal)) }
                     sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
                     def sum(initial_value_or_column = nil, &block); end
 
@@ -1292,10 +1292,10 @@ module Tapioca
                   class PrivateAssociationRelationGroupChain < PrivateAssociationRelation
                     Elem = type_member { { fixed: ::Post } }
 
-                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def average(column_name); end
 
-                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
                     sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
@@ -1310,7 +1310,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
                   end
 
@@ -1394,10 +1394,10 @@ module Tapioca
                   class PrivateRelationGroupChain < PrivateRelation
                     Elem = type_member { { fixed: ::Post } }
 
-                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def average(column_name); end
 
-                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
                     sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
@@ -1412,7 +1412,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Numeric]) }
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
                   end
 
