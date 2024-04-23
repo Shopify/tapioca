@@ -561,6 +561,11 @@ module Tapioca
 
           QUERY_METHODS.each do |method_name|
             case method_name
+            when :distinct
+              create_relation_method(
+                method_name.to_s,
+                parameters: [create_opt_param("value", type: "T::Boolean", default: "true")],
+              )
             when :extract_associated
               parameters = [create_param("association", type: "Symbol")]
               return_type = "T::Array[T.untyped]"
