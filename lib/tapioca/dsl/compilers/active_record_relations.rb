@@ -364,7 +364,8 @@ module Tapioca
                 parameters: [
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: "T::Hash[T.untyped, #{method_name == :average ? "Numeric" : "T.untyped"}]",
+                return_type: "T::Hash[T.untyped, " \
+                  "#{method_name == :average ? "T.any(Integer, Float, BigDecimal)" : "T.untyped"}]",
               )
             when :calculate
               klass.create_method(
@@ -373,7 +374,7 @@ module Tapioca
                   create_param("operation", type: "Symbol"),
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: "T::Hash[T.untyped, Numeric]",
+                return_type: "T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]",
               )
             when :count
               klass.create_method(
@@ -390,7 +391,7 @@ module Tapioca
                   create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
                   create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
                 ],
-                return_type: "T::Hash[T.untyped, Numeric]",
+                return_type: "T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]",
               )
             end
           end
@@ -781,7 +782,7 @@ module Tapioca
                 parameters: [
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: method_name == :average ? "Numeric" : "T.untyped",
+                return_type: method_name == :average ? "T.any(Integer, Float, BigDecimal)" : "T.untyped",
               )
             when :calculate
               create_common_method(
@@ -790,7 +791,7 @@ module Tapioca
                   create_param("operation", type: "Symbol"),
                   create_param("column_name", type: "T.any(String, Symbol)"),
                 ],
-                return_type: "Numeric",
+                return_type: "T.any(Integer, Float, BigDecimal)",
               )
             when :count
               sigs = [
@@ -825,7 +826,7 @@ module Tapioca
               sigs = [
                 common_relation_methods_module.create_sig(
                   parameters: { initial_value_or_column: "T.untyped" },
-                  return_type: "Numeric",
+                  return_type: "T.any(Integer, Float, BigDecimal)",
                 ),
                 common_relation_methods_module.create_sig(
                   type_parameters: ["U"],
