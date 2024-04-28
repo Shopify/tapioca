@@ -885,7 +885,7 @@ Check duplicated definitions in shim RBIs
 ```
 <!-- END_HELP_COMMAND_CHECK_SHIMS -->
 
-Depending on the amount of meta-programming used in your project this can mean an overwhelming amount of manual work. In this case, you should consider [writting a custom DSL compiler](#writing-custom-dsl-compilers).
+Depending on the amount of meta-programming used in your project this can mean an overwhelming amount of manual work. In this case, you should consider [writing a custom DSL compiler](#writing-custom-dsl-compilers).
 
 ### Configuration
 

@@ -24,15 +24,15 @@ module Tapioca
       # 1. A `Model::PrivateRelation` that subclasses `ActiveRecord::Relation`. This synthetic class represents
       # a relation on `Model` whose methods which return a relation always return a `Model::PrivateRelation` instance.
       #
-      # 2. `Model::PrivateAssocationRelation` that subclasses `ActiveRecord::AssociationRelation`. This synthetic
+      # 2. `Model::PrivateAssociationRelation` that subclasses `ActiveRecord::AssociationRelation`. This synthetic
       # class represents a relation on a singular association of type `Model` (e.g. `foo.model`) whose methods which
-      # return a relation will always return a `Model::PrivateAssocationRelation` instance. The difference between this
+      # return a relation will always return a `Model::PrivateAssociationRelation` instance. The difference between this
       # class and the previous one is mainly that an association relation also keeps track of the resource association
       # for this relation.
       #
       # 3. `Model::PrivateCollectionProxy` that subclasses from `ActiveRecord::Associations::CollectionProxy`.
       # This synthetic class represents a relation on a plural association of type `Model` (e.g. `foo.models`)
-      # whose methods which return a relation will always return a `Model::PrivateAssocationRelation` instance.
+      # whose methods which return a relation will always return a `Model::PrivateAssociationRelation` instance.
       # This class represents a collection of `Model` instances with some extra methods to `build`, `create`,
       # etc new `Model` instances in the collection.
       #

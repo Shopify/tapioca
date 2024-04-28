@@ -538,7 +538,7 @@ module Tapioca
                     money_column(:money_column, currency: "USD")
                   end
 
-                  # Make `MoneyColumn` disappear artifically
+                  # Make `MoneyColumn` disappear artificially
                   Object.send(:remove_const, :MoneyColumn)
                 RUBY
 

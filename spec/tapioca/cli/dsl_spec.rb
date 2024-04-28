@@ -474,7 +474,7 @@ module Tapioca
           end
         end
 
-        it "generates RBI file for constants that might have overriden the hash method" do
+        it "generates RBI file for constants that might have overridden the hash method" do
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
 

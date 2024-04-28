@@ -66,7 +66,7 @@ module Tapioca
           root.create_constant(config_constant_name, value: "T.let(T.unsafe(nil), #{option_class_name})")
 
           root.create_class(option_class_name, superclass_name: "::Config::Options") do |mod|
-            # We need this to be generic only becuase `Config::Options` is an
+            # We need this to be generic only because `Config::Options` is an
             # enumerable and, thus, needs to redeclare the `Elem` type member.
             #
             # We declare it as a fixed member of `T.untyped` so that if anyone

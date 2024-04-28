@@ -181,7 +181,7 @@ module Tapioca
               )
             end
 
-            it "gathers constants even when `hash` is overriden" do
+            it "gathers constants even when `hash` is overridden" do
               add_ruby_file("bad_module.rb", <<~RUBY)
                 class Application < Rails::Application
                 end

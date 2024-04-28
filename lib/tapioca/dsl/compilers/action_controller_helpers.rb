@@ -81,7 +81,7 @@ module Tapioca
             # Create helper method module
             controller.create_module(helper_methods_name) do |helper_methods|
               # If the controller has no helper defined, then it just inherits
-              # the Action Controlller base helper methods module, so we should
+              # the Action Controller base helper methods module, so we should
               # just add that as an include and stop doing more processing.
               if helpers_module.name == "ActionController::Base::HelperMethods"
                 next helper_methods.create_include(T.must(qualified_name_of(helpers_module)))
