@@ -239,7 +239,7 @@ module Tapioca
           return false unless descriptor.label == :repeated
 
           # Try to create a new instance with the field that maps to the descriptor name
-          # being assinged a hash value. If this goes through, then it's a map type.
+          # being assigned a hash value. If this goes through, then it's a map type.
           constant.new(**{ descriptor.name => {} })
           true
         rescue ArgumentError

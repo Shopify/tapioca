@@ -2315,7 +2315,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "doesn't output prepend for modules unrechable via constants" do
+    it "doesn't output prepend for modules unreachable via constants" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
         end
@@ -2337,7 +2337,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "doesn't output include for modules unrechable via constants" do
+    it "doesn't output include for modules unreachable via constants" do
       add_ruby_file("foo.rb", <<~RUBY)
         module Foo
         end
@@ -2504,7 +2504,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RUBY
 
       add_ruby_file("concern_that_performs_an_illegal_operation.rb", <<~RUBY)
-        module ConcernThatPerfomsAnIllegalOperation
+        module ConcernThatPerformsAnIllegalOperation
           def self.included(base)
             sum(2)
           end
@@ -2522,7 +2522,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
         end
 
-        module ConcernThatPerfomsAnIllegalOperation
+        module ConcernThatPerformsAnIllegalOperation
           class << self
             def included(base); end
             def sum(a, b); end
@@ -3628,7 +3628,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
 
           sig { returns(T::Array[Node[Elem]]) }
-          def non_abstract_but_overriden_children
+          def non_abstract_but_overridden_children
             []
           end
         end
@@ -3652,7 +3652,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
 
           sig { override.returns(T::Array[Node[Integer]]) }
-          def non_abstract_but_overriden_children
+          def non_abstract_but_overridden_children
             []
           end
         end
@@ -3675,7 +3675,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def children; end
 
           sig { override.returns(T::Array[Node[::Integer]]) }
-          def non_abstract_but_overriden_children; end
+          def non_abstract_but_overridden_children; end
         end
 
         module Root
@@ -3692,7 +3692,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def children; end
 
           sig { returns(T::Array[Node[Elem]]) }
-          def non_abstract_but_overriden_children; end
+          def non_abstract_but_overridden_children; end
 
           sig { returns(T::Array[Node[Elem]]) }
           def non_abstract_children; end

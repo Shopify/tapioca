@@ -66,7 +66,7 @@ module Tapioca
             # pre Rails 6.0, this used to be a single static module
             [ActiveModel::SecurePassword::InstanceMethodsOnActivation]
           else
-            # post Rails 6.0, this is now using a dynmaic module builder pattern
+            # post Rails 6.0, this is now using a dynamic module builder pattern
             # and we can have multiple different ones included into the model
             constant.ancestors.grep(ActiveModel::SecurePassword::InstanceMethodsOnActivation)
           end

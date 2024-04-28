@@ -504,7 +504,7 @@ module Tapioca
               assert_equal(expected, rbi_for(:Post))
             end
 
-            it "generates smart properties that have been overriden" do
+            it "generates smart properties that have been overridden" do
               add_ruby_file("post.rb", <<~RUBY)
                 class Post
                   include SmartProperties

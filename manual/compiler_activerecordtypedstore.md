@@ -49,7 +49,7 @@ class Post
     sig { returns(T.nilable([T.nilable(Date), T.nilable(Date)])) }
     def saved_change_to_review_date; end
 
-    sig { params(reviewd: T::Boolean).returns(T::Boolean) }
+    sig { params(reviewed: T::Boolean).returns(T::Boolean) }
     def reviewed=(reviewed); end
 
     sig { returns(T::Boolean) }

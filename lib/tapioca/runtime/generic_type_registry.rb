@@ -158,7 +158,7 @@ module Tapioca
           # and the module that defines it
           owner = inherited_method.owner
 
-          # If no one has overriden the inherited method yet, just subclass
+          # If no one has overridden the inherited method yet, just subclass
           return Class.new(constant) if Class == owner
 
           begin

@@ -60,7 +60,7 @@ module Tapioca
           #
           # Strings beginning with / match against the
           # prefix of these relative paths; others are
-          # substring matchs.
+          # substring matches.
 
           # Matches must be against whole folder and file
           # names, so `foo` matches `/foo/bar.rb` and
