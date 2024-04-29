@@ -240,7 +240,7 @@ GEM
       stringio
     public_suffix (5.0.4)
     racc (1.7.3)
-    rack (3.0.9.1)
+    rack (3.0.10)
     rack-session (2.0.0)
       rack (>= 3.0.0)
     rack-test (2.1.0)
@@ -286,7 +286,7 @@ GEM
       psych (>= 4.0.0)
     redis (5.0.8)
       redis-client (>= 0.17.0)
-    redis-client (0.20.0)
+    redis-client (0.22.1)
       connection_pool
     regexp_parser (2.9.0)
     reline (0.5.0)
@@ -323,7 +323,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     shopify-money (2.2.0)
-    sidekiq (7.2.2)
+    sidekiq (7.2.4)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
