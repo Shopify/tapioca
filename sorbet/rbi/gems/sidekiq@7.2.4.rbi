@@ -1070,7 +1070,7 @@ Sidekiq::NAME = T.let(T.unsafe(nil), String)
 # source://sidekiq//lib/sidekiq/rails.rb#7
 class Sidekiq::Rails < ::Rails::Engine
   class << self
-    # source://activesupport/7.1.3/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.3.2/lib/active_support/callbacks.rb#70
     def __callbacks; end
   end
 end
@@ -1130,154 +1130,154 @@ end
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#15
 module Sidekiq::RedisClientAdapter::CompatMethods
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def bitfield(*args); end
+  def bitfield(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def bitfield_ro(*args); end
+  def bitfield_ro(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def del(*args); end
+  def del(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#20
   def evalsha(sha, keys, argv); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def exists(*args); end
+  def exists(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def expire(*args); end
+  def expire(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def flushdb(*args); end
+  def flushdb(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def get(*args); end
+  def get(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hdel(*args); end
+  def hdel(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hget(*args); end
+  def hget(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hgetall(*args); end
+  def hgetall(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hincrby(*args); end
+  def hincrby(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hlen(*args); end
+  def hlen(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hmget(*args); end
+  def hmget(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hset(*args); end
+  def hset(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def hsetnx(*args); end
+  def hsetnx(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def incr(*args); end
+  def incr(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def incrby(*args); end
+  def incrby(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#16
   def info; end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lindex(*args); end
+  def lindex(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def llen(*args); end
+  def llen(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lmove(*args); end
+  def lmove(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lpop(*args); end
+  def lpop(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lpush(*args); end
+  def lpush(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lrange(*args); end
+  def lrange(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def lrem(*args); end
+  def lrem(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def mget(*args); end
+  def mget(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def mset(*args); end
+  def mset(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def ping(*args); end
+  def ping(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def pttl(*args); end
+  def pttl(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def publish(*args); end
+  def publish(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def rpop(*args); end
+  def rpop(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def rpush(*args); end
+  def rpush(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def sadd(*args); end
+  def sadd(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def scard(*args); end
+  def scard(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def script(*args); end
+  def script(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def set(*args); end
+  def set(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def sismember(*args); end
+  def sismember(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def smembers(*args); end
+  def smembers(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def srem(*args); end
+  def srem(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def ttl(*args); end
+  def ttl(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def type(*args); end
+  def type(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def unlink(*args); end
+  def unlink(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zadd(*args); end
+  def zadd(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zcard(*args); end
+  def zcard(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zincrby(*args); end
+  def zincrby(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zrange(*args); end
+  def zrange(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zrem(*args); end
+  def zrem(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zremrangebyrank(*args); end
+  def zremrangebyrank(*args, **kwargs); end
 
   # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#35
-  def zremrangebyscore(*args); end
+  def zremrangebyscore(*args, **kwargs); end
 
   private
 

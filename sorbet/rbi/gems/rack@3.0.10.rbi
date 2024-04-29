@@ -2442,10 +2442,10 @@ class Rack::Multipart::Parser
   # source://rack//lib/rack/multipart/parser.rb#205
   def initialize(boundary, tempfile, bufsize, query_parser); end
 
-  # source://rack//lib/rack/multipart/parser.rb#220
+  # source://rack//lib/rack/multipart/parser.rb#221
   def parse(io); end
 
-  # source://rack//lib/rack/multipart/parser.rb#243
+  # source://rack//lib/rack/multipart/parser.rb#244
   def result; end
 
   # Returns the value of attribute state.
@@ -2460,21 +2460,21 @@ class Rack::Multipart::Parser
   # end of the boundary.  If we don't find the start or end of the
   # boundary, clear the buffer and return nil.
   #
-  # source://rack//lib/rack/multipart/parser.rb#346
+  # source://rack//lib/rack/multipart/parser.rb#354
   def consume_boundary; end
 
   # From WEBrick::HTTPUtils
   #
-  # source://rack//lib/rack/multipart/parser.rb#255
+  # source://rack//lib/rack/multipart/parser.rb#256
   def dequote(str); end
 
-  # source://rack//lib/rack/multipart/parser.rb#355
+  # source://rack//lib/rack/multipart/parser.rb#363
   def get_filename(head); end
 
-  # source://rack//lib/rack/multipart/parser.rb#290
+  # source://rack//lib/rack/multipart/parser.rb#298
   def handle_consume_token; end
 
-  # source://rack//lib/rack/multipart/parser.rb#427
+  # source://rack//lib/rack/multipart/parser.rb#435
   def handle_empty_content!(content); end
 
   # This handles the initial parser state.  We read until we find the starting
@@ -2485,19 +2485,19 @@ class Rack::Multipart::Parser
   # boundary.  The client would have to deliberately craft a response
   # with the opening boundary beyond the buffer size for that to happen.
   #
-  # source://rack//lib/rack/multipart/parser.rb#274
+  # source://rack//lib/rack/multipart/parser.rb#275
   def handle_fast_forward; end
 
-  # source://rack//lib/rack/multipart/parser.rb#323
+  # source://rack//lib/rack/multipart/parser.rb#331
   def handle_mime_body; end
 
-  # source://rack//lib/rack/multipart/parser.rb#300
+  # source://rack//lib/rack/multipart/parser.rb#308
   def handle_mime_head; end
 
-  # source://rack//lib/rack/multipart/parser.rb#261
+  # source://rack//lib/rack/multipart/parser.rb#262
   def read_data(io, outbuf); end
 
-  # source://rack//lib/rack/multipart/parser.rb#393
+  # source://rack//lib/rack/multipart/parser.rb#401
   def tag_multipart_encoding(filename, content_type, name, body); end
 
   class << self
@@ -2523,7 +2523,7 @@ class Rack::Multipart::Parser::BoundedIO
   def read(size, outbuf = T.unsafe(nil)); end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#390
+# source://rack//lib/rack/multipart/parser.rb#398
 Rack::Multipart::Parser::CHARSET = T.let(T.unsafe(nil), String)
 
 # source://rack//lib/rack/multipart/parser.rb#112
@@ -3152,13 +3152,13 @@ class Rack::Request
   # source://rack//lib/rack/request.rb#71
   def update_param(k, v); end
 
-  # source://yard/0.9.28/lib/yard/server/rack_adapter.rb#86
+  # source://yard/0.9.36/lib/yard/server/rack_adapter.rb#94
   def version_supplied; end
 
-  # source://yard/0.9.28/lib/yard/server/rack_adapter.rb#86
+  # source://yard/0.9.36/lib/yard/server/rack_adapter.rb#94
   def version_supplied=(_arg0); end
 
-  # source://yard/0.9.28/lib/yard/server/rack_adapter.rb#88
+  # source://yard/0.9.36/lib/yard/server/rack_adapter.rb#96
   def xhr?; end
 
   class << self
