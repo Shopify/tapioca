@@ -3547,7 +3547,7 @@ end
 #
 #   document.to_query_string(printer: VariableScrubber.new)
 #
-# source://graphql//lib/graphql/language/nodes.rb#572
+# source://graphql//lib/graphql/language/nodes.rb#573
 class GraphQL::Language::Nodes::Document < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(definitions: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -3560,7 +3560,7 @@ class GraphQL::Language::Nodes::Document < ::GraphQL::Language::Nodes::AbstractN
   # source://graphql//lib/graphql/language/nodes.rb#190
   def definitions; end
 
-  # source://graphql//lib/graphql/language/nodes.rb#578
+  # source://graphql//lib/graphql/language/nodes.rb#579
   def slice_definition(name); end
 
   # source://graphql//lib/graphql/language/nodes.rb#149
@@ -3583,7 +3583,7 @@ end
 
 # An enum value. The string is available as {#name}.
 #
-# source://graphql//lib/graphql/language/nodes.rb#368
+# source://graphql//lib/graphql/language/nodes.rb#369
 class GraphQL::Language::Nodes::Enum < ::GraphQL::Language::Nodes::NameOnlyNode
   # source://graphql//lib/graphql/language/nodes.rb#149
   def visit_method; end
@@ -3600,7 +3600,7 @@ class GraphQL::Language::Nodes::Enum < ::GraphQL::Language::Nodes::NameOnlyNode
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#721
+# source://graphql//lib/graphql/language/nodes.rb#722
 class GraphQL::Language::Nodes::EnumTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), directives: T.unsafe(nil), values: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -3610,7 +3610,7 @@ class GraphQL::Language::Nodes::EnumTypeDefinition < ::GraphQL::Language::Nodes:
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#722
+  # source://graphql//lib/graphql/language/nodes.rb#723
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -3649,7 +3649,7 @@ class GraphQL::Language::Nodes::EnumTypeDefinition < ::GraphQL::Language::Nodes:
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#731
+# source://graphql//lib/graphql/language/nodes.rb#732
 class GraphQL::Language::Nodes::EnumTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), values: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -3693,7 +3693,7 @@ class GraphQL::Language::Nodes::EnumTypeExtension < ::GraphQL::Language::Nodes::
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#712
+# source://graphql//lib/graphql/language/nodes.rb#713
 class GraphQL::Language::Nodes::EnumValueDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -3703,7 +3703,7 @@ class GraphQL::Language::Nodes::EnumValueDefinition < ::GraphQL::Language::Nodes
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#713
+  # source://graphql//lib/graphql/language/nodes.rb#714
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -3738,11 +3738,11 @@ end
 
 # A single selection in a GraphQL query.
 #
-# source://graphql//lib/graphql/language/nodes.rb#376
+# source://graphql//lib/graphql/language/nodes.rb#377
 class GraphQL::Language::Nodes::Field < ::GraphQL::Language::Nodes::AbstractNode
   # @return [Field] a new instance of Field
   #
-  # source://graphql//lib/graphql/language/nodes.rb#387
+  # source://graphql//lib/graphql/language/nodes.rb#388
   def initialize(name: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), field_alias: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
 
   # source://graphql//lib/graphql/language/nodes.rb#255
@@ -3787,7 +3787,7 @@ class GraphQL::Language::Nodes::Field < ::GraphQL::Language::Nodes::AbstractNode
     # source://graphql//lib/graphql/language/nodes.rb#154
     def children_method_name=(_arg0); end
 
-    # source://graphql//lib/graphql/language/nodes.rb#401
+    # source://graphql//lib/graphql/language/nodes.rb#402
     def from_a(filename, line, col, field_alias, name, arguments, directives, selections); end
 
     # source://graphql//lib/graphql/language/nodes.rb#156
@@ -3795,7 +3795,7 @@ class GraphQL::Language::Nodes::Field < ::GraphQL::Language::Nodes::AbstractNode
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#634
+# source://graphql//lib/graphql/language/nodes.rb#635
 class GraphQL::Language::Nodes::FieldDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), description: T.unsafe(nil), arguments: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -3808,7 +3808,7 @@ class GraphQL::Language::Nodes::FieldDefinition < ::GraphQL::Language::Nodes::Ab
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#635
+  # source://graphql//lib/graphql/language/nodes.rb#636
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -3820,7 +3820,7 @@ class GraphQL::Language::Nodes::FieldDefinition < ::GraphQL::Language::Nodes::Ab
   # source://graphql//lib/graphql/language/nodes.rb#190
   def fields; end
 
-  # source://graphql//lib/graphql/language/nodes.rb#646
+  # source://graphql//lib/graphql/language/nodes.rb#647
   def merge(new_options); end
 
   # source://graphql//lib/graphql/language/nodes.rb#198
@@ -3858,11 +3858,11 @@ end
 
 # A reusable fragment, defined at document-level.
 #
-# source://graphql//lib/graphql/language/nodes.rb#410
+# source://graphql//lib/graphql/language/nodes.rb#411
 class GraphQL::Language::Nodes::FragmentDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # @return [FragmentDefinition] a new instance of FragmentDefinition
   #
-  # source://graphql//lib/graphql/language/nodes.rb#423
+  # source://graphql//lib/graphql/language/nodes.rb#424
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), filename: T.unsafe(nil), pos: T.unsafe(nil), source_string: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil)); end
 
   # source://graphql//lib/graphql/language/nodes.rb#211
@@ -3903,7 +3903,7 @@ class GraphQL::Language::Nodes::FragmentDefinition < ::GraphQL::Language::Nodes:
     # source://graphql//lib/graphql/language/nodes.rb#154
     def children_method_name=(_arg0); end
 
-    # source://graphql//lib/graphql/language/nodes.rb#435
+    # source://graphql//lib/graphql/language/nodes.rb#436
     def from_a(filename, line, col, name, type, directives, selections); end
 
     # source://graphql//lib/graphql/language/nodes.rb#156
@@ -3913,7 +3913,7 @@ end
 
 # Application of a named fragment in a selection
 #
-# source://graphql//lib/graphql/language/nodes.rb#441
+# source://graphql//lib/graphql/language/nodes.rb#442
 class GraphQL::Language::Nodes::FragmentSpread < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -3953,7 +3953,7 @@ end
 
 # An unnamed fragment, defined directly in the query with `... {  }`
 #
-# source://graphql//lib/graphql/language/nodes.rb#452
+# source://graphql//lib/graphql/language/nodes.rb#453
 class GraphQL::Language::Nodes::InlineFragment < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(type: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -3999,7 +3999,7 @@ end
 
 # A collection of key-value inputs which may be a field argument
 #
-# source://graphql//lib/graphql/language/nodes.rb#466
+# source://graphql//lib/graphql/language/nodes.rb#467
 class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(arguments: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -4017,7 +4017,7 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
 
   # @return [Hash<String, Any>] Recursively turn this input object into a Ruby Hash
   #
-  # source://graphql//lib/graphql/language/nodes.rb#474
+  # source://graphql//lib/graphql/language/nodes.rb#475
   def to_h(options = T.unsafe(nil)); end
 
   # source://graphql//lib/graphql/language/nodes.rb#149
@@ -4025,7 +4025,7 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
 
   private
 
-  # source://graphql//lib/graphql/language/nodes.rb#486
+  # source://graphql//lib/graphql/language/nodes.rb#487
   def serialize_value_for_hash(value); end
 
   class << self
@@ -4043,7 +4043,7 @@ class GraphQL::Language::Nodes::InputObject < ::GraphQL::Language::Nodes::Abstra
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#740
+# source://graphql//lib/graphql/language/nodes.rb#741
 class GraphQL::Language::Nodes::InputObjectTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4053,7 +4053,7 @@ class GraphQL::Language::Nodes::InputObjectTypeDefinition < ::GraphQL::Language:
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#741
+  # source://graphql//lib/graphql/language/nodes.rb#742
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -4092,7 +4092,7 @@ class GraphQL::Language::Nodes::InputObjectTypeDefinition < ::GraphQL::Language:
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#750
+# source://graphql//lib/graphql/language/nodes.rb#751
 class GraphQL::Language::Nodes::InputObjectTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -4136,7 +4136,7 @@ class GraphQL::Language::Nodes::InputObjectTypeExtension < ::GraphQL::Language::
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#625
+# source://graphql//lib/graphql/language/nodes.rb#626
 class GraphQL::Language::Nodes::InputValueDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), default_value: T.unsafe(nil), description: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4149,7 +4149,7 @@ class GraphQL::Language::Nodes::InputValueDefinition < ::GraphQL::Language::Node
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#626
+  # source://graphql//lib/graphql/language/nodes.rb#627
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -4185,7 +4185,7 @@ class GraphQL::Language::Nodes::InputValueDefinition < ::GraphQL::Language::Node
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#673
+# source://graphql//lib/graphql/language/nodes.rb#674
 class GraphQL::Language::Nodes::InterfaceTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), interfaces: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4195,7 +4195,7 @@ class GraphQL::Language::Nodes::InterfaceTypeDefinition < ::GraphQL::Language::N
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#674
+  # source://graphql//lib/graphql/language/nodes.rb#675
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -4240,7 +4240,7 @@ class GraphQL::Language::Nodes::InterfaceTypeDefinition < ::GraphQL::Language::N
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#684
+# source://graphql//lib/graphql/language/nodes.rb#685
 class GraphQL::Language::Nodes::InterfaceTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), interfaces: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -4292,7 +4292,7 @@ end
 
 # A list type definition, denoted with `[...]` (used for variable type definitions)
 #
-# source://graphql//lib/graphql/language/nodes.rb#505
+# source://graphql//lib/graphql/language/nodes.rb#506
 class GraphQL::Language::Nodes::ListType < ::GraphQL::Language::Nodes::WrapperType
   # source://graphql//lib/graphql/language/nodes.rb#149
   def visit_method; end
@@ -4345,7 +4345,7 @@ end
 
 # A non-null type definition, denoted with `...!` (used for variable type definitions)
 #
-# source://graphql//lib/graphql/language/nodes.rb#509
+# source://graphql//lib/graphql/language/nodes.rb#510
 class GraphQL::Language::Nodes::NonNullType < ::GraphQL::Language::Nodes::WrapperType
   # source://graphql//lib/graphql/language/nodes.rb#149
   def visit_method; end
@@ -4364,7 +4364,7 @@ end
 
 # A null value literal.
 #
-# source://graphql//lib/graphql/language/nodes.rb#372
+# source://graphql//lib/graphql/language/nodes.rb#373
 class GraphQL::Language::Nodes::NullValue < ::GraphQL::Language::Nodes::NameOnlyNode
   # source://graphql//lib/graphql/language/nodes.rb#149
   def visit_method; end
@@ -4381,7 +4381,7 @@ class GraphQL::Language::Nodes::NullValue < ::GraphQL::Language::Nodes::NameOnly
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#654
+# source://graphql//lib/graphql/language/nodes.rb#655
 class GraphQL::Language::Nodes::ObjectTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), interfaces: T.unsafe(nil), description: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4391,7 +4391,7 @@ class GraphQL::Language::Nodes::ObjectTypeDefinition < ::GraphQL::Language::Node
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#655
+  # source://graphql//lib/graphql/language/nodes.rb#656
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -4433,7 +4433,7 @@ class GraphQL::Language::Nodes::ObjectTypeDefinition < ::GraphQL::Language::Node
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#664
+# source://graphql//lib/graphql/language/nodes.rb#665
 class GraphQL::Language::Nodes::ObjectTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), interfaces: T.unsafe(nil), directives: T.unsafe(nil), fields: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -4484,7 +4484,7 @@ end
 # May be anonymous or named.
 # May be explicitly typed (eg `mutation { ... }`) or implicitly a query (eg `{ ... }`).
 #
-# source://graphql//lib/graphql/language/nodes.rb#531
+# source://graphql//lib/graphql/language/nodes.rb#532
 class GraphQL::Language::Nodes::OperationDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(operation_type: T.unsafe(nil), name: T.unsafe(nil), variables: T.unsafe(nil), directives: T.unsafe(nil), selections: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4543,7 +4543,7 @@ class GraphQL::Language::Nodes::OperationDefinition < ::GraphQL::Language::Nodes
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#608
+# source://graphql//lib/graphql/language/nodes.rb#609
 class GraphQL::Language::Nodes::ScalarTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), description: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4553,7 +4553,7 @@ class GraphQL::Language::Nodes::ScalarTypeDefinition < ::GraphQL::Language::Node
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#609
+  # source://graphql//lib/graphql/language/nodes.rb#610
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -4586,7 +4586,7 @@ class GraphQL::Language::Nodes::ScalarTypeDefinition < ::GraphQL::Language::Node
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#617
+# source://graphql//lib/graphql/language/nodes.rb#618
 class GraphQL::Language::Nodes::ScalarTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -4624,7 +4624,7 @@ class GraphQL::Language::Nodes::ScalarTypeExtension < ::GraphQL::Language::Nodes
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#592
+# source://graphql//lib/graphql/language/nodes.rb#593
 class GraphQL::Language::Nodes::SchemaDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(query: T.unsafe(nil), mutation: T.unsafe(nil), subscription: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4668,7 +4668,7 @@ class GraphQL::Language::Nodes::SchemaDefinition < ::GraphQL::Language::Nodes::A
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#600
+# source://graphql//lib/graphql/language/nodes.rb#601
 class GraphQL::Language::Nodes::SchemaExtension < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(query: T.unsafe(nil), mutation: T.unsafe(nil), subscription: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -4714,7 +4714,7 @@ end
 
 # A type name, used for variable definitions
 #
-# source://graphql//lib/graphql/language/nodes.rb#584
+# source://graphql//lib/graphql/language/nodes.rb#585
 class GraphQL::Language::Nodes::TypeName < ::GraphQL::Language::Nodes::NameOnlyNode
   # source://graphql//lib/graphql/language/nodes.rb#149
   def visit_method; end
@@ -4731,7 +4731,7 @@ class GraphQL::Language::Nodes::TypeName < ::GraphQL::Language::Nodes::NameOnlyN
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#694
+# source://graphql//lib/graphql/language/nodes.rb#695
 class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), types: T.unsafe(nil), description: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4741,7 +4741,7 @@ class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes
 
   # Returns the value of attribute description.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#695
+  # source://graphql//lib/graphql/language/nodes.rb#696
   def description; end
 
   # source://graphql//lib/graphql/language/nodes.rb#190
@@ -4758,7 +4758,7 @@ class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes
 
   # Returns the value of attribute types.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#695
+  # source://graphql//lib/graphql/language/nodes.rb#696
   def types; end
 
   # source://graphql//lib/graphql/language/nodes.rb#149
@@ -4779,7 +4779,7 @@ class GraphQL::Language::Nodes::UnionTypeDefinition < ::GraphQL::Language::Nodes
   end
 end
 
-# source://graphql//lib/graphql/language/nodes.rb#703
+# source://graphql//lib/graphql/language/nodes.rb#704
 class GraphQL::Language::Nodes::UnionTypeExtension < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), types: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil)); end
@@ -4801,7 +4801,7 @@ class GraphQL::Language::Nodes::UnionTypeExtension < ::GraphQL::Language::Nodes:
 
   # Returns the value of attribute types.
   #
-  # source://graphql//lib/graphql/language/nodes.rb#704
+  # source://graphql//lib/graphql/language/nodes.rb#705
   def types; end
 
   # source://graphql//lib/graphql/language/nodes.rb#149
@@ -4824,7 +4824,7 @@ end
 
 # An operation-level query variable
 #
-# source://graphql//lib/graphql/language/nodes.rb#513
+# source://graphql//lib/graphql/language/nodes.rb#514
 class GraphQL::Language::Nodes::VariableDefinition < ::GraphQL::Language::Nodes::AbstractNode
   # source://graphql//lib/graphql/language/nodes.rb#303
   def initialize(name: T.unsafe(nil), type: T.unsafe(nil), default_value: T.unsafe(nil), directives: T.unsafe(nil), line: T.unsafe(nil), col: T.unsafe(nil), pos: T.unsafe(nil), filename: T.unsafe(nil), source_string: T.unsafe(nil), definition_pos: T.unsafe(nil)); end
@@ -4874,7 +4874,7 @@ end
 
 # Usage of a variable in a query. Name does _not_ include `$`.
 #
-# source://graphql//lib/graphql/language/nodes.rb#588
+# source://graphql//lib/graphql/language/nodes.rb#589
 class GraphQL::Language::Nodes::VariableIdentifier < ::GraphQL::Language::Nodes::NameOnlyNode
   # source://graphql//lib/graphql/language/nodes.rb#149
   def visit_method; end
@@ -8431,10 +8431,13 @@ class GraphQL::Schema::Argument
 
   private
 
-  # source://graphql//lib/graphql/schema/argument.rb#388
+  # source://graphql//lib/graphql/schema/argument.rb#376
+  def recursively_prepare_input_object(value, type); end
+
+  # source://graphql//lib/graphql/schema/argument.rb#403
   def validate_deprecated_or_optional(null:, deprecation_reason:); end
 
-  # source://graphql//lib/graphql/schema/argument.rb#376
+  # source://graphql//lib/graphql/schema/argument.rb#391
   def validate_input_type(input_type); end
 end
 
