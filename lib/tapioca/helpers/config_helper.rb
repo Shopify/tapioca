@@ -132,7 +132,9 @@ module Tapioca
         when :hash
           error_msg = "invalid value for option `#{config_option_key}` for key `#{config_key}` - expected " \
             "`Hash[String, String]` but found `#{config_option_value}`"
-          all_strings = (config_option_value.keys + config_option_value.values).all? { |v| v.is_a?(String) }
+          values_to_validate = config_option_value.keys
+          values_to_validate += config_option_value.values unless config_option_key == "compiler_options"
+          all_strings = values_to_validate.all? { |v| v.is_a?(String) }
           next build_error(error_msg) unless all_strings
         end
       end
