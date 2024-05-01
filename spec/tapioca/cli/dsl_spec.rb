@@ -2897,6 +2897,74 @@ module Tapioca
           end
         end
       end
+
+      describe "options for built-in compilers" do
+        it "is able to pass 'untyped' to ActiveRecordColumns compiler" do
+          @project.write!("sorbet/tapioca/config.yml", <<~YAML)
+            dsl:
+              compiler_options:
+                ActiveRecordColumns:
+                  types: untyped
+          YAML
+
+          @project.require_real_gem("activerecord")
+          @project.require_real_gem("sqlite3", "1.7.3")
+          @project.bundle_install!
+          @project.write!("lib/post.rb", <<~RB)
+            require "active_record"
+
+            ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
+
+            ActiveRecord::Migration.suppress_messages do
+              ActiveRecord::Schema.define do
+                create_table :posts do |t|
+                end
+              end
+            end
+
+            class Post < ActiveRecord::Base
+            end
+          RB
+
+          result = @project.tapioca("dsl Post --only=ActiveRecordColumns")
+
+          assert_stdout_equals(<<~OUT, result)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_empty_stderr(result)
+
+          assert_project_file_includes("sorbet/rbi/dsl/post.rbi", <<~RBI)
+            class Post
+              include GeneratedAttributeMethods
+
+              module GeneratedAttributeMethods
+                sig { returns(T.untyped) }
+                def id; end
+
+                sig { params(value: T.untyped).returns(T.untyped) }
+                def id=(value); end
+
+                sig { returns(T::Boolean) }
+                def id?; end
+          RBI
+
+          assert_success_status(result)
+        end
+      end
     end
   end
 end
