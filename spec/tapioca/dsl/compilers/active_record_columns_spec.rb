@@ -57,7 +57,7 @@ module Tapioca
             end
 
             describe "by default" do
-              it "generates default columns with strong types" do
+              it "generates default columns with persisted types and respects db nullability" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
                     ActiveRecord::Schema.define do
@@ -208,7 +208,7 @@ module Tapioca
                 assert_equal(expected, rbi_for(:Post))
               end
 
-              it "generates attributes with strong types" do
+              it "generates attributes with persisted types and respects db nullability" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
                     ActiveRecord::Schema.define do
@@ -980,7 +980,6 @@ module Tapioca
 
                 add_ruby_file("post.rb", <<~RUBY)
                   class Post < ActiveRecord::Base
-                    # StrongTypeGeneration is not extended
                   end
                 RUBY
 
@@ -1011,7 +1010,6 @@ module Tapioca
 
                 add_ruby_file("post.rb", <<~RUBY)
                   class Post < ActiveRecord::Base
-                    # StrongTypeGeneration is not extended
                   end
                 RUBY
 
@@ -1149,6 +1147,192 @@ module Tapioca
                 RBI
 
                 assert_equal(expected, rbi_for(:Post, compiler_options: { types: "untyped" }))
+              end
+            end
+
+            describe "when compiled with 'nilable' column types" do
+              it "generates attributes with nilable" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        # explicitly setting null to false to test that we always generate
+                        # nilable column types despite this setting
+                        t.string :body, null: false
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                  end
+                RUBY
+
+                expected = indented(<<~RBI, 2)
+                  module GeneratedAttributeMethods
+                    sig { returns(T.nilable(::String)) }
+                    def body; end
+
+                    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                    def body=(value); end
+
+                    sig { returns(T::Boolean) }
+                    def body?; end
+                RBI
+
+                assert_includes(rbi_for(:Post, compiler_options: { types: "nilable" }), expected)
+              end
+
+              it "generates default columns with nilable" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                  end
+                RUBY
+
+                expected = template(<<~RBI, trim_mode: "-")
+                  # typed: strong
+
+                  class Post
+                    include GeneratedAttributeMethods
+
+                    module GeneratedAttributeMethods
+                      sig { returns(T.nilable(::Integer)) }
+                      def id; end
+
+                      sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                      def id=(value); end
+
+                      sig { returns(T::Boolean) }
+                      def id?; end
+
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_before_last_save; end
+
+                      sig { returns(T.untyped) }
+                      def id_before_type_cast; end
+
+                      sig { returns(T::Boolean) }
+                      def id_came_from_user?; end
+
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def id_change; end
+
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def id_change_to_be_saved; end
+
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_in_database; end
+
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def id_previous_change; end
+
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_previously_was; end
+
+                    <%- if rails_version(">= 7.1") -%>
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_value; end
+
+                      sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                      def id_value=(value); end
+
+                      sig { returns(T::Boolean) }
+                      def id_value?; end
+
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_value_before_last_save; end
+
+                      sig { returns(T.untyped) }
+                      def id_value_before_type_cast; end
+
+                      sig { returns(T::Boolean) }
+                      def id_value_came_from_user?; end
+
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def id_value_change; end
+
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def id_value_change_to_be_saved; end
+
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def id_value_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_value_in_database; end
+
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def id_value_previous_change; end
+
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def id_value_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_value_previously_was; end
+
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_value_was; end
+
+                      sig { void }
+                      def id_value_will_change!; end
+
+                    <%- end -%>
+                      sig { returns(T.nilable(::Integer)) }
+                      def id_was; end
+
+                      sig { void }
+                      def id_will_change!; end
+
+                      sig { void }
+                      def restore_id!; end
+
+                    <%- if rails_version(">= 7.1") -%>
+                      sig { void }
+                      def restore_id_value!; end
+
+                    <%- end -%>
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def saved_change_to_id; end
+
+                      sig { returns(T::Boolean) }
+                      def saved_change_to_id?; end
+
+                    <%- if rails_version(">= 7.1") -%>
+                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      def saved_change_to_id_value; end
+
+                      sig { returns(T::Boolean) }
+                      def saved_change_to_id_value?; end
+
+                      sig { returns(T::Boolean) }
+                      def will_save_change_to_id?; end
+
+                      sig { returns(T::Boolean) }
+                      def will_save_change_to_id_value?; end
+                    <%- else -%>
+                      sig { returns(T::Boolean) }
+                      def will_save_change_to_id?; end
+                    <%- end -%>
+                    end
+                  end
+                RBI
+
+                assert_equal(expected, rbi_for(:Post, compiler_options: { types: "nilable" }))
               end
             end
 
