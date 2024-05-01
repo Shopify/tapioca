@@ -200,7 +200,12 @@ module Tapioca
         active_compilers.each do |compiler_class|
           next unless compiler_class.handles?(constant)
 
-          compiler = compiler_class.new(self, file.root, constant)
+          compiler_key = T.must(compiler_class.name).dup
+          Tapioca::Dsl::Compilers::NAMESPACES.each do |namespace|
+            compiler_key.delete_prefix!(namespace)
+          end
+          options = @compiler_options.fetch(compiler_key, {})
+          compiler = compiler_class.new(self, file.root, constant, options)
           compiler.decorate
         rescue
           $stderr.puts("Error: `#{compiler_class.name}` failed to generate RBI for `#{constant}`")
