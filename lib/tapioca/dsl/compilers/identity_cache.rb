@@ -216,7 +216,10 @@ module Tapioca
           ).void
         end
         def create_aliased_fetch_by_methods(field, klass)
-          type, _ = Helpers::ActiveRecordColumnTypeHelper.new(constant).type_for(field.alias_name.to_s)
+          type, _ = Helpers::ActiveRecordColumnTypeHelper.new(
+            constant,
+            column_type_option: Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Nilable,
+          ).type_for(field.alias_name.to_s)
           multi_type = type.delete_prefix("T.nilable(").delete_suffix(")").delete_prefix("::")
           suffix = field.send(:fetch_method_suffix)
 
