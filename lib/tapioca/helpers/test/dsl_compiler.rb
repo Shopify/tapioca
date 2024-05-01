@@ -29,9 +29,14 @@ module Tapioca
           context.activate_other_dsl_compilers(compiler_classes)
         end
 
-        sig { params(constant_name: T.any(Symbol, String)).returns(String) }
-        def rbi_for(constant_name)
-          context.rbi_for(constant_name)
+        sig do
+          params(
+            constant_name: T.any(Symbol, String),
+            compiler_options: T::Hash[Symbol, T.untyped],
+          ).returns(String)
+        end
+        def rbi_for(constant_name, compiler_options: {})
+          context.rbi_for(constant_name, compiler_options: compiler_options)
         end
 
         sig { returns(T::Array[String]) }
@@ -85,8 +90,13 @@ module Tapioca
             compiler_class.processable_constants.filter_map(&:name).sort
           end
 
-          sig { params(constant_name: T.any(Symbol, String)).returns(String) }
-          def rbi_for(constant_name)
+          sig do
+            params(
+              constant_name: T.any(Symbol, String),
+              compiler_options: T::Hash[Symbol, T.untyped],
+            ).returns(String)
+          end
+          def rbi_for(constant_name, compiler_options: {})
             # Make sure this is a constant that we can handle.
             unless gathered_constants.include?(constant_name.to_s)
               raise "`#{constant_name}` is not processable by the `#{compiler_class}` compiler."
@@ -95,7 +105,7 @@ module Tapioca
             file = RBI::File.new(strictness: "strong")
             constant = Object.const_get(constant_name)
 
-            compiler = compiler_class.new(pipeline, file.root, constant)
+            compiler = compiler_class.new(pipeline, file.root, constant, compiler_options.transform_keys(&:to_s))
             compiler.decorate
 
             rbi = Tapioca::DEFAULT_RBI_FORMATTER.print_file(file)
