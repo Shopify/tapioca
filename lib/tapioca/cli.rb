@@ -140,6 +140,10 @@ module Tapioca
       banner: "constant [constant ...]",
       desc: "Do not generate RBI definitions for the given application constant(s)",
       default: []
+    option :compiler_options,
+      type: :hash,
+      desc: "Options to pass to the DSL compilers",
+      default: {}
     def dsl(*constant_or_paths)
       set_environment(options)
 
@@ -161,6 +165,7 @@ module Tapioca
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],
         halt_upon_load_error: options[:halt_upon_load_error],
+        compiler_options: options[:compiler_options],
       }
 
       command = if options[:verify]

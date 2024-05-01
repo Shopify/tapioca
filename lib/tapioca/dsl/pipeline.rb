@@ -33,6 +33,7 @@ module Tapioca
           error_handler: T.proc.params(error: String).void,
           skipped_constants: T::Array[Module],
           number_of_workers: T.nilable(Integer),
+          compiler_options: T::Hash[String, T::Hash[String, T.untyped]],
         ).void
       end
       def initialize(
@@ -42,7 +43,8 @@ module Tapioca
         excluded_compilers: [],
         error_handler: $stderr.method(:puts).to_proc,
         skipped_constants: [],
-        number_of_workers: nil
+        number_of_workers: nil,
+        compiler_options: {}
       )
         @active_compilers = T.let(
           gather_active_compilers(requested_compilers, excluded_compilers),
@@ -53,6 +55,7 @@ module Tapioca
         @error_handler = error_handler
         @skipped_constants = skipped_constants
         @number_of_workers = number_of_workers
+        @compiler_options = compiler_options
         @errors = T.let([], T::Array[String])
       end
 
