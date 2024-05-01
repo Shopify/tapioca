@@ -966,6 +966,192 @@ module Tapioca
               end
             end
 
+            describe "when compiled with 'untyped' column types" do
+              it "generates attributes with untyped" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        t.string :body
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    # StrongTypeGeneration is not extended
+                  end
+                RUBY
+
+                expected = indented(<<~RBI, 2)
+                  module GeneratedAttributeMethods
+                    sig { returns(T.untyped) }
+                    def body; end
+
+                    sig { params(value: T.untyped).returns(T.untyped) }
+                    def body=(value); end
+
+                    sig { returns(T::Boolean) }
+                    def body?; end
+                RBI
+
+                assert_includes(rbi_for(:Post, compiler_options: { types: "untyped" }), expected)
+              end
+
+              it "generates default columns with untyped" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    # StrongTypeGeneration is not extended
+                  end
+                RUBY
+
+                expected = template(<<~RBI, trim_mode: "-")
+                  # typed: strong
+
+                  class Post
+                    include GeneratedAttributeMethods
+
+                    module GeneratedAttributeMethods
+                      sig { returns(T.untyped) }
+                      def id; end
+
+                      sig { params(value: T.untyped).returns(T.untyped) }
+                      def id=(value); end
+
+                      sig { returns(T::Boolean) }
+                      def id?; end
+
+                      sig { returns(T.untyped) }
+                      def id_before_last_save; end
+
+                      sig { returns(T.untyped) }
+                      def id_before_type_cast; end
+
+                      sig { returns(T::Boolean) }
+                      def id_came_from_user?; end
+
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def id_change; end
+
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def id_change_to_be_saved; end
+
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.untyped) }
+                      def id_in_database; end
+
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def id_previous_change; end
+
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.untyped) }
+                      def id_previously_was; end
+
+                    <%- if rails_version(">= 7.1") -%>
+                      sig { returns(T.untyped) }
+                      def id_value; end
+
+                      sig { params(value: T.untyped).returns(T.untyped) }
+                      def id_value=(value); end
+
+                      sig { returns(T::Boolean) }
+                      def id_value?; end
+
+                      sig { returns(T.untyped) }
+                      def id_value_before_last_save; end
+
+                      sig { returns(T.untyped) }
+                      def id_value_before_type_cast; end
+
+                      sig { returns(T::Boolean) }
+                      def id_value_came_from_user?; end
+
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def id_value_change; end
+
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def id_value_change_to_be_saved; end
+
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def id_value_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.untyped) }
+                      def id_value_in_database; end
+
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def id_value_previous_change; end
+
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def id_value_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
+
+                      sig { returns(T.untyped) }
+                      def id_value_previously_was; end
+
+                      sig { returns(T.untyped) }
+                      def id_value_was; end
+
+                      sig { void }
+                      def id_value_will_change!; end
+
+                    <%- end -%>
+                      sig { returns(T.untyped) }
+                      def id_was; end
+
+                      sig { void }
+                      def id_will_change!; end
+
+                      sig { void }
+                      def restore_id!; end
+
+                    <%- if rails_version(">= 7.1") -%>
+                      sig { void }
+                      def restore_id_value!; end
+
+                    <%- end -%>
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def saved_change_to_id; end
+
+                      sig { returns(T::Boolean) }
+                      def saved_change_to_id?; end
+
+                    <%- if rails_version(">= 7.1") -%>
+                      sig { returns(T.nilable([T.untyped, T.untyped])) }
+                      def saved_change_to_id_value; end
+
+                      sig { returns(T::Boolean) }
+                      def saved_change_to_id_value?; end
+
+                      sig { returns(T::Boolean) }
+                      def will_save_change_to_id?; end
+
+                      sig { returns(T::Boolean) }
+                      def will_save_change_to_id_value?; end
+                    <%- else -%>
+                      sig { returns(T::Boolean) }
+                      def will_save_change_to_id?; end
+                    <%- end -%>
+                    end
+                  end
+                RBI
+
+                assert_equal(expected, rbi_for(:Post, compiler_options: { types: "untyped" }))
+              end
+            end
+
             describe "when StrongTypeGeneration is defined" do
               before do
                 add_ruby_file("strong_type_generation.rb", <<~RUBY)
@@ -1126,158 +1312,6 @@ module Tapioca
                 assert_equal(expected, rbi_for(:Post))
               end
 
-              it "generates default columns with weak types if model does not extend StrongTypeGeneration" do
-                add_ruby_file("schema.rb", <<~RUBY)
-                  ActiveRecord::Migration.suppress_messages do
-                    ActiveRecord::Schema.define do
-                      create_table :posts do |t|
-                      end
-                    end
-                  end
-                RUBY
-
-                add_ruby_file("post.rb", <<~RUBY)
-                  class Post < ActiveRecord::Base
-                    # StrongTypeGeneration is not extended
-                  end
-                RUBY
-
-                expected = template(<<~RBI, trim_mode: "-")
-                  # typed: strong
-
-                  class Post
-                    include GeneratedAttributeMethods
-
-                    module GeneratedAttributeMethods
-                      sig { returns(T.untyped) }
-                      def id; end
-
-                      sig { params(value: T.untyped).returns(T.untyped) }
-                      def id=(value); end
-
-                      sig { returns(T::Boolean) }
-                      def id?; end
-
-                      sig { returns(T.untyped) }
-                      def id_before_last_save; end
-
-                      sig { returns(T.untyped) }
-                      def id_before_type_cast; end
-
-                      sig { returns(T::Boolean) }
-                      def id_came_from_user?; end
-
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def id_change; end
-
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def id_change_to_be_saved; end
-
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-                      sig { returns(T.untyped) }
-                      def id_in_database; end
-
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def id_previous_change; end
-
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-                      sig { returns(T.untyped) }
-                      def id_previously_was; end
-
-                    <%- if rails_version(">= 7.1") -%>
-                      sig { returns(T.untyped) }
-                      def id_value; end
-
-                      sig { params(value: T.untyped).returns(T.untyped) }
-                      def id_value=(value); end
-
-                      sig { returns(T::Boolean) }
-                      def id_value?; end
-
-                      sig { returns(T.untyped) }
-                      def id_value_before_last_save; end
-
-                      sig { returns(T.untyped) }
-                      def id_value_before_type_cast; end
-
-                      sig { returns(T::Boolean) }
-                      def id_value_came_from_user?; end
-
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def id_value_change; end
-
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def id_value_change_to_be_saved; end
-
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-                      sig { returns(T.untyped) }
-                      def id_value_in_database; end
-
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def id_value_previous_change; end
-
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def id_value_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-
-                      sig { returns(T.untyped) }
-                      def id_value_previously_was; end
-
-                      sig { returns(T.untyped) }
-                      def id_value_was; end
-
-                      sig { void }
-                      def id_value_will_change!; end
-
-                    <%- end -%>
-                      sig { returns(T.untyped) }
-                      def id_was; end
-
-                      sig { void }
-                      def id_will_change!; end
-
-                      sig { void }
-                      def restore_id!; end
-
-                    <%- if rails_version(">= 7.1") -%>
-                      sig { void }
-                      def restore_id_value!; end
-
-                    <%- end -%>
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def saved_change_to_id; end
-
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id?; end
-
-                    <%- if rails_version(">= 7.1") -%>
-                      sig { returns(T.nilable([T.untyped, T.untyped])) }
-                      def saved_change_to_id_value; end
-
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id_value?; end
-
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id?; end
-
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id_value?; end
-                    <%- else -%>
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id?; end
-                    <%- end -%>
-                    end
-                  end
-                RBI
-
-                assert_equal(expected, rbi_for(:Post))
-              end
-
               it "generates attributes with strong types if model extends StrongTypeGeneration" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
@@ -1311,7 +1345,7 @@ module Tapioca
               end
 
               if rails_version(">= 7.1")
-                it "generates composite id type if models has composite primary keys" do
+                it "generates composite id type if model has composite primary keys and extends StrongTypeGeneration" do
                   T.bind(self, ActiveRecordColumnsSpec)
                   add_ruby_file("schema.rb", <<~RUBY)
                     ActiveRecord::Migration.suppress_messages do
@@ -1513,38 +1547,6 @@ module Tapioca
 
                   assert_equal(rbi_for(:Post), expected)
                 end
-              end
-
-              it "generates attributes with weak types if model does not extend StrongTypeGeneration" do
-                add_ruby_file("schema.rb", <<~RUBY)
-                  ActiveRecord::Migration.suppress_messages do
-                    ActiveRecord::Schema.define do
-                      create_table :posts do |t|
-                        t.string :body
-                      end
-                    end
-                  end
-                RUBY
-
-                add_ruby_file("post.rb", <<~RUBY)
-                  class Post < ActiveRecord::Base
-                    # StrongTypeGeneration is not extended
-                  end
-                RUBY
-
-                expected = indented(<<~RBI, 2)
-                  module GeneratedAttributeMethods
-                    sig { returns(T.untyped) }
-                    def body; end
-
-                    sig { params(value: T.untyped).returns(T.untyped) }
-                    def body=(value); end
-
-                    sig { returns(T::Boolean) }
-                    def body?; end
-                RBI
-
-                assert_includes(rbi_for(:Post), expected)
               end
             end
           end
