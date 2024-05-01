@@ -79,7 +79,7 @@ module Tapioca
                     include GeneratedAttributeMethods
 
                     module GeneratedAttributeMethods
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::Integer) }
                       def id; end
 
                       sig { params(value: ::Integer).returns(::Integer) }
@@ -97,10 +97,10 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def id_came_from_user?; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_change; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_change_to_be_saved; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -109,7 +109,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_in_database; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_previous_change; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -119,7 +119,7 @@ module Tapioca
                       def id_previously_was; end
 
                     <%- if rails_version(">= 7.1") -%>
-                      sig { returns(T.nilable(::Integer)) }
+                      sig { returns(::Integer) }
                       def id_value; end
 
                       sig { params(value: ::Integer).returns(::Integer) }
@@ -137,10 +137,10 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def id_value_came_from_user?; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_value_change; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_value_change_to_be_saved; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -149,7 +149,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_value_in_database; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_value_previous_change; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -179,14 +179,14 @@ module Tapioca
                       def restore_id_value!; end
 
                     <%- end -%>
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id; end
 
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
                     <%- if rails_version(">= 7.1") -%>
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id_value; end
 
                       sig { returns(T::Boolean) }
@@ -958,7 +958,7 @@ module Tapioca
                 RUBY
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T.nilable(::Integer)) }
+                  sig { returns(::Integer) }
                   def id; end
                 RBI
 
@@ -1015,10 +1015,10 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def id_came_from_user?; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_change; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_change_to_be_saved; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -1027,7 +1027,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_in_database; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_previous_change; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -1055,10 +1055,10 @@ module Tapioca
                       sig { returns(T::Boolean) }
                       def id_value_came_from_user?; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_value_change; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_value_change_to_be_saved; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -1067,7 +1067,7 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_value_in_database; end
 
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def id_value_previous_change; end
 
                       sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
@@ -1097,14 +1097,14 @@ module Tapioca
                       def restore_id_value!; end
 
                     <%- end -%>
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id; end
 
                       sig { returns(T::Boolean) }
                       def saved_change_to_id?; end
 
                     <%- if rails_version(">= 7.1") -%>
-                      sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                      sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id_value; end
 
                       sig { returns(T::Boolean) }
@@ -1355,10 +1355,10 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def blog_id_came_from_user?; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def blog_id_change; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def blog_id_change_to_be_saved; end
 
                         sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
@@ -1367,7 +1367,7 @@ module Tapioca
                         sig { returns(T.nilable(::Integer)) }
                         def blog_id_in_database; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def blog_id_previous_change; end
 
                         sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
@@ -1382,16 +1382,16 @@ module Tapioca
                         sig { void }
                         def blog_id_will_change!; end
 
-                        sig { returns([T.nilable(::Integer), T.nilable(::Integer)]) }
+                        sig { returns([::Integer, ::Integer]) }
                         def id; end
 
-                        sig { params(value: [T.nilable(::Integer), T.nilable(::Integer)]).returns([T.nilable(::Integer), T.nilable(::Integer)]) }
+                        sig { params(value: [::Integer, ::Integer]).returns([::Integer, ::Integer]) }
                         def id=(value); end
 
                         sig { returns(T::Boolean) }
                         def id?; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def id_before_last_save; end
 
                         sig { returns(T.untyped) }
@@ -1400,25 +1400,25 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def id_came_from_user?; end
 
-                        sig { returns(T.nilable([[T.nilable(::Integer), T.nilable(::Integer)], [T.nilable(::Integer), T.nilable(::Integer)]])) }
+                        sig { returns(T.nilable([[::Integer, ::Integer], [::Integer, ::Integer]])) }
                         def id_change; end
 
-                        sig { returns(T.nilable([[T.nilable(::Integer), T.nilable(::Integer)], [T.nilable(::Integer), T.nilable(::Integer)]])) }
+                        sig { returns(T.nilable([[::Integer, ::Integer], [::Integer, ::Integer]])) }
                         def id_change_to_be_saved; end
 
-                        sig { params(from: [T.nilable(::Integer), T.nilable(::Integer)], to: [T.nilable(::Integer), T.nilable(::Integer)]).returns(T::Boolean) }
+                        sig { params(from: [::Integer, ::Integer], to: [::Integer, ::Integer]).returns(T::Boolean) }
                         def id_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def id_in_database; end
 
-                        sig { returns(T.nilable([[T.nilable(::Integer), T.nilable(::Integer)], [T.nilable(::Integer), T.nilable(::Integer)]])) }
+                        sig { returns(T.nilable([[::Integer, ::Integer], [::Integer, ::Integer]])) }
                         def id_previous_change; end
 
-                        sig { params(from: [T.nilable(::Integer), T.nilable(::Integer)], to: [T.nilable(::Integer), T.nilable(::Integer)]).returns(T::Boolean) }
+                        sig { params(from: [::Integer, ::Integer], to: [::Integer, ::Integer]).returns(T::Boolean) }
                         def id_previously_changed?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def id_previously_was; end
 
                         sig { returns(T.nilable(::Integer)) }
@@ -1439,10 +1439,10 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def id_value_came_from_user?; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def id_value_change; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def id_value_change_to_be_saved; end
 
                         sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
@@ -1451,7 +1451,7 @@ module Tapioca
                         sig { returns(T.nilable(::Integer)) }
                         def id_value_in_database; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def id_value_previous_change; end
 
                         sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
@@ -1466,7 +1466,7 @@ module Tapioca
                         sig { void }
                         def id_value_will_change!; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def id_was; end
 
                         sig { void }
@@ -1481,19 +1481,19 @@ module Tapioca
                         sig { void }
                         def restore_id_value!; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def saved_change_to_blog_id; end
 
                         sig { returns(T::Boolean) }
                         def saved_change_to_blog_id?; end
 
-                        sig { returns(T.nilable([[T.nilable(::Integer), T.nilable(::Integer)], [T.nilable(::Integer), T.nilable(::Integer)]])) }
+                        sig { returns(T.nilable([[::Integer, ::Integer], [::Integer, ::Integer]])) }
                         def saved_change_to_id; end
 
                         sig { returns(T::Boolean) }
                         def saved_change_to_id?; end
 
-                        sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
+                        sig { returns(T.nilable([::Integer, ::Integer])) }
                         def saved_change_to_id_value; end
 
                         sig { returns(T::Boolean) }

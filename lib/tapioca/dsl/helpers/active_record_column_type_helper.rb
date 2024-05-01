@@ -10,12 +10,47 @@ module Tapioca
         extend T::Sig
         include RBIHelper
 
-        sig { params(constant: T.class_of(ActiveRecord::Base)).void }
-        def initialize(constant)
-          @constant = constant
+        class ColumnTypeOption < T::Enum
+          extend T::Sig
+          enums do
+            Untyped = new("untyped")
+            Nilable = new("nilable")
+            Persisted = new("persisted")
+          end
+
+          sig { returns(T::Boolean) }
+          def persisted?
+            self == ColumnTypeOption::Persisted
+          end
+
+          sig { returns(T::Boolean) }
+          def nilable?
+            self == ColumnTypeOption::Nilable
+          end
+
+          sig { returns(T::Boolean) }
+          def untyped?
+            self == ColumnTypeOption::Untyped
+          end
         end
 
-        sig { params(attribute_name: String, column_name: String).returns([String, String]) }
+        sig do
+          params(
+            constant: T.class_of(ActiveRecord::Base),
+            column_type_option: ColumnTypeOption,
+          ).void
+        end
+        def initialize(constant, column_type_option: ColumnTypeOption::Persisted)
+          @constant = constant
+          @column_type_option = column_type_option
+        end
+
+        sig do
+          params(
+            attribute_name: String,
+            column_name: String,
+          ).returns([String, String])
+        end
         def type_for(attribute_name, column_name = attribute_name)
           return id_type if attribute_name == "id"
 
@@ -27,7 +62,11 @@ module Tapioca
         sig { returns([String, String]) }
         def id_type
           if @constant.respond_to?(:composite_primary_key?) && T.unsafe(@constant).composite_primary_key?
-            @constant.primary_key.map(&method(:column_type_for)).map { |tuple| "[#{tuple.join(", ")}]" }
+            @constant.primary_key.map do |column|
+              column_type_for(column)
+            end.map do |tuple|
+              "[#{tuple.join(", ")}]"
+            end
           else
             column_type_for(@constant.primary_key)
           end
@@ -35,7 +74,7 @@ module Tapioca
 
         sig { params(column_name: String).returns([String, String]) }
         def column_type_for(column_name)
-          return ["T.untyped", "T.untyped"] if do_not_generate_strong_types?(@constant)
+          return ["T.untyped", "T.untyped"] if @column_type_option.untyped?
 
           column = @constant.columns_hash[column_name]
           column_type = @constant.attribute_types[column_name]
@@ -48,18 +87,12 @@ module Tapioca
               getter_type
             end
 
-          if column&.null
+          if @column_type_option.persisted? && !column&.null
+            [getter_type, setter_type]
+          else
             getter_type = as_nilable_type(getter_type) unless not_nilable_serialized_column?(column_type)
-            return [getter_type, as_nilable_type(setter_type)]
+            [getter_type, as_nilable_type(setter_type)]
           end
-
-          if Array(@constant.primary_key).include?(column_name) ||
-              column_name == "created_at" ||
-              column_name == "updated_at"
-            getter_type = as_nilable_type(getter_type)
-          end
-
-          [getter_type, setter_type]
         end
 
         sig { params(column_type: T.untyped).returns(String) }
@@ -102,12 +135,6 @@ module Tapioca
           else
             ActiveModelTypeHelper.type_for(column_type)
           end
-        end
-
-        sig { params(constant: Module).returns(T::Boolean) }
-        def do_not_generate_strong_types?(constant)
-          Object.const_defined?(:StrongTypeGeneration) &&
-            !(constant.singleton_class < Object.const_get(:StrongTypeGeneration))
         end
 
         sig { params(column_type: ActiveRecord::Enum::EnumType).returns(String) }
