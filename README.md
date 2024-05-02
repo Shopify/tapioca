@@ -501,7 +501,6 @@ Options:
              [--halt-upon-load-error], [--no-halt-upon-load-error], [--skip-halt-upon-load-error]  # Halt upon a load error while loading the Rails application
                                                                                                    # Default: true
              [--skip-constant=constant [constant ...]]                                             # Do not generate RBI definitions for the given application constant(s)
-             [--compiler-options=key:value]                                                        # Options to pass to the DSL compilers
   -c,        [--config=<config file path>]                                                         # Path to the Tapioca configuration file
                                                                                                    # Default: sorbet/tapioca/config.yml
   -V,        [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes

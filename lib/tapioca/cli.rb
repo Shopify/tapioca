@@ -143,12 +143,20 @@ module Tapioca
     option :compiler_options,
       type: :hash,
       desc: "Options to pass to the DSL compilers",
+      hide: true,
       default: {}
     def dsl(*constant_or_paths)
       set_environment(options)
 
       # Assume anything starting with a capital letter or colon is a class, otherwise a path
       constants, paths = constant_or_paths.partition { |c| c =~ /\A[A-Z:]/ }
+
+      # Make sure compiler options are received as a hash
+      compiler_options = options[:compiler_options]
+      unless compiler_options.values.all? { |v| Hash === v }
+        raise MalformattedArgumentError,
+          "Option '--compiler-options' should be supplied through the config, so that it is received as a hash."
+      end
 
       command_args = {
         requested_constants: constants,
@@ -165,7 +173,7 @@ module Tapioca
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],
         halt_upon_load_error: options[:halt_upon_load_error],
-        compiler_options: options[:compiler_options],
+        compiler_options: compiler_options,
       }
 
       command = if options[:verify]
