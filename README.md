@@ -500,6 +500,7 @@ Options:
                                                                                                    # Default: .
              [--halt-upon-load-error], [--no-halt-upon-load-error], [--skip-halt-upon-load-error]  # Halt upon a load error while loading the Rails application
                                                                                                    # Default: true
+             [--skip-constant=constant [constant ...]]                                             # Do not generate RBI definitions for the given application constant(s)
   -c,        [--config=<config file path>]                                                         # Path to the Tapioca configuration file
                                                                                                    # Default: sorbet/tapioca/config.yml
   -V,        [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes
@@ -933,6 +934,7 @@ dsl:
   list_compilers: false
   app_root: "."
   halt_upon_load_error: true
+  skip_constant: []
 gem:
   outdir: sorbet/rbi/gems
   file_header: true

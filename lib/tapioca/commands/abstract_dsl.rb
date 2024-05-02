@@ -18,6 +18,7 @@ module Tapioca
           exclude: T::Array[String],
           file_header: T::Boolean,
           tapioca_path: String,
+          skip_constant: T::Array[String],
           quiet: T::Boolean,
           verbose: T::Boolean,
           number_of_workers: T.nilable(Integer),
@@ -36,6 +37,7 @@ module Tapioca
         exclude:,
         file_header:,
         tapioca_path:,
+        skip_constant: [],
         quiet: false,
         verbose: false,
         number_of_workers: nil,
@@ -60,6 +62,7 @@ module Tapioca
         @rbi_formatter = rbi_formatter
         @app_root = app_root
         @halt_upon_load_error = halt_upon_load_error
+        @skip_constant = skip_constant
 
         super()
       end
@@ -124,6 +127,7 @@ module Tapioca
           error_handler: ->(error) {
             say_error(error, :bold, :red)
           },
+          skipped_constants: constantize(@skip_constant),
           number_of_workers: @number_of_workers,
         )
       end

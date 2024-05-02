@@ -1379,6 +1379,136 @@ module Tapioca
           RBI
         end
 
+        it "must respect `skip_constant` option" do
+          @project.write!("lib/post.rb", <<~RB)
+            class Post; end
+          RB
+
+          @project.write!("lib/job.rb", <<~RB)
+            class Job; end
+          RB
+
+          @project.write!("lib/user.rb", <<~RB)
+            class User; end
+          RB
+
+          @project.write!("lib/compilers/foo/compiler.rb", <<~RB)
+            require "job"
+            require "post"
+            require "user"
+
+            module Foo
+              class Compiler < Tapioca::Dsl::Compiler
+                extend T::Sig
+
+                ConstantType = type_member { { fixed: Module } }
+
+                sig { override.void }
+                def decorate
+                  root.create_path(constant) do |job|
+                    job.create_module("FooModule")
+                  end
+                end
+
+                sig { override.returns(T::Enumerable[Module]) }
+                def self.gather_constants
+                  [Job, Post, User]
+                end
+              end
+            end
+          RB
+
+          result = @project.tapioca("dsl --skip-constant Job User")
+
+          assert_stdout_equals(<<~OUT, result)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_empty_stderr(result)
+
+          refute_project_file_exist("sorbet/rbi/dsl/job.rbi")
+          refute_project_file_exist("sorbet/rbi/dsl/user.rbi")
+          assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+
+          assert_success_status(result)
+        end
+
+        it "warns when requested constants include skipped constants" do
+          @project.write!("lib/post.rb", <<~RB)
+            class Post; end
+          RB
+
+          @project.write!("lib/job.rb", <<~RB)
+            class Job; end
+          RB
+
+          @project.write!("lib/compilers/foo/compiler.rb", <<~RB)
+            require "job"
+            require "post"
+
+            module Foo
+              class Compiler < Tapioca::Dsl::Compiler
+                extend T::Sig
+
+                ConstantType = type_member { { fixed: Module } }
+
+                sig { override.void }
+                def decorate
+                  root.create_path(constant) do |job|
+                    job.create_module("FooModule")
+                  end
+                end
+
+                sig { override.returns(T::Enumerable[Module]) }
+                def self.gather_constants
+                  [Post, Job]
+                end
+              end
+            end
+          RB
+
+          result = @project.tapioca("dsl Job Post --skip-constant Job")
+
+          assert_stdout_equals(<<~OUT, result)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_stderr_equals(<<~ERR, result)
+            WARNING: Requested constants are being skipped due to configuration:[Job]. Check the supplied arguments and your `sorbet/tapioca/config.yml` file.
+          ERR
+
+          refute_project_file_exist("sorbet/rbi/dsl/job.rbi")
+          assert_project_file_exist("sorbet/rbi/dsl/post.rbi")
+
+          assert_success_status(result)
+        end
+
         describe "pending migrations" do
           before do
             @project.write!("db/migrate/202001010000_create_articles.rb", <<~RB)

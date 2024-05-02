@@ -15,6 +15,9 @@ module Tapioca
       sig { returns(T::Array[Pathname]) }
       attr_reader :requested_paths
 
+      sig { returns(T::Array[Module]) }
+      attr_reader :skipped_constants
+
       sig { returns(T.proc.params(error: String).void) }
       attr_reader :error_handler
 
@@ -28,6 +31,7 @@ module Tapioca
           requested_compilers: T::Array[T.class_of(Compiler)],
           excluded_compilers: T::Array[T.class_of(Compiler)],
           error_handler: T.proc.params(error: String).void,
+          skipped_constants: T::Array[Module],
           number_of_workers: T.nilable(Integer),
         ).void
       end
@@ -37,6 +41,7 @@ module Tapioca
         requested_compilers: [],
         excluded_compilers: [],
         error_handler: $stderr.method(:puts).to_proc,
+        skipped_constants: [],
         number_of_workers: nil
       )
         @active_compilers = T.let(
@@ -46,6 +51,7 @@ module Tapioca
         @requested_constants = requested_constants
         @requested_paths = requested_paths
         @error_handler = error_handler
+        @skipped_constants = skipped_constants
         @number_of_workers = number_of_workers
         @errors = T.let([], T::Array[String])
       end
@@ -56,7 +62,7 @@ module Tapioca
         ).returns(T::Array[T.type_parameter(:T)])
       end
       def run(&blk)
-        constants_to_process = gather_constants(requested_constants, requested_paths)
+        constants_to_process = gather_constants(requested_constants, requested_paths, skipped_constants)
           .select { |c| Module === c } # Filter value constants out
           .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
 
@@ -128,15 +134,30 @@ module Tapioca
         active_compilers
       end
 
-      sig { params(requested_constants: T::Array[Module], requested_paths: T::Array[Pathname]).returns(T::Set[Module]) }
-      def gather_constants(requested_constants, requested_paths)
+      sig do
+        params(
+          requested_constants: T::Array[Module],
+          requested_paths: T::Array[Pathname],
+          skipped_constants: T::Array[Module],
+        ).returns(T::Set[Module])
+      end
+      def gather_constants(requested_constants, requested_paths, skipped_constants)
         constants = Set.new.compare_by_identity
         active_compilers.each do |compiler|
           constants.merge(compiler.processable_constants)
         end
         constants = filter_anonymous_and_reloaded_constants(constants)
+        constants -= skipped_constants
 
-        constants &= requested_constants unless requested_constants.empty? && requested_paths.empty?
+        unless requested_constants.empty? && requested_paths.empty?
+          constants &= requested_constants
+
+          requested_and_skipped = requested_constants & skipped_constants
+          if requested_and_skipped.any?
+            $stderr.puts("WARNING: Requested constants are being skipped due to configuration:" \
+              "#{requested_and_skipped}. Check the supplied arguments and your `sorbet/tapioca/config.yml` file.")
+          end
+        end
         constants
       end
 
