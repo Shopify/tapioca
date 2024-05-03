@@ -32,5 +32,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency("thor", ">= 1.2.0")
   spec.add_dependency("yard-sorbet")
 
-  spec.required_ruby_version = ">= 3.0"
+  spec.required_ruby_version = ">= 3.1"
 end
