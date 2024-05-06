@@ -49,8 +49,6 @@ module Tapioca
       def load_rails_application(environment_load: false, eager_load: false, app_root: ".", halt_upon_load_error: true)
         return unless File.exist?("#{app_root}/config/application.rb")
 
-        silence_deprecations
-
         if environment_load
           require "./#{app_root}/config/environment"
         else
@@ -184,14 +182,6 @@ module Tapioca
         require path
       rescue LoadError
         nil
-      end
-
-      sig { void }
-      def silence_deprecations
-        # Stop any ActiveSupport Deprecations from being reported
-        if defined?(ActiveSupport::Deprecation)
-          ActiveSupport::Deprecation.silenced = true
-        end
       end
 
       sig { void }
