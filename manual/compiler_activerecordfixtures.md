@@ -18,9 +18,10 @@ The generated RBI by this compiler will produce the following
 # test_case.rbi
 # typed: true
 class ActiveSupport::TestCase
+  sig { params(fixture_name: NilClass, other_fixtures: NilClass).returns(T::Array[Post]) }
   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: NilClass).returns(Post) }
   sig { params(fixture_name: T.any(String, Symbol), other_fixtures: T.any(String, Symbol))
           .returns(T::Array[Post]) }
-  def posts(fixture_name, *other_fixtures); end
+  def posts(fixture_name = nil, *other_fixtures); end
 end
 ~~~
