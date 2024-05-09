@@ -19,32 +19,32 @@ module Tapioca
             super
           end
 
-          def kredis_string(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_string(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Scalar")
             super
           end
 
-          def kredis_integer(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_integer(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Scalar")
             super
           end
 
-          def kredis_decimal(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_decimal(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Scalar")
             super
           end
 
-          def kredis_datetime(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_datetime(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Scalar")
             super
           end
 
-          def kredis_flag(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_flag(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Flag")
             super
           end
 
-          def kredis_float(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_float(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Scalar")
             super
           end
@@ -54,22 +54,23 @@ module Tapioca
             super
           end
 
-          def kredis_json(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_json(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Scalar")
             super
           end
 
-          def kredis_list(name, key: nil, typed: :string, config: :shared, after_change: nil)
+          def kredis_list(name, key: nil, default: nil, typed: :string, config: :shared, after_change: nil)
             collect_kredis_type(name, "Kredis::Types::List")
             super
           end
 
-          def kredis_unique_list(name, limit: nil, key: nil, typed: :string, config: :shared, after_change: nil)
+          def kredis_unique_list(name, limit: nil, key: nil, default: nil, typed: :string, config: :shared,
+            after_change: nil)
             collect_kredis_type(name, "Kredis::Types::UniqueList")
             super
           end
 
-          def kredis_set(name, key: nil, typed: :string, config: :shared, after_change: nil)
+          def kredis_set(name, key: nil, default: nil, typed: :string, config: :shared, after_change: nil)
             collect_kredis_type(name, "Kredis::Types::Set")
             super
           end
@@ -84,17 +85,17 @@ module Tapioca
             super
           end
 
-          def kredis_counter(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_counter(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Counter")
             super
           end
 
-          def kredis_hash(name, key: nil, typed: :string, config: :shared, after_change: nil)
+          def kredis_hash(name, key: nil, default: nil, typed: :string, config: :shared, after_change: nil)
             collect_kredis_type(name, "Kredis::Types::Hash")
             super
           end
 
-          def kredis_boolean(name, key: nil, config: :shared, after_change: nil, expires_in: nil)
+          def kredis_boolean(name, key: nil, default: nil, config: :shared, after_change: nil, expires_in: nil)
             collect_kredis_type(name, "Kredis::Types::Scalar")
             super
           end
