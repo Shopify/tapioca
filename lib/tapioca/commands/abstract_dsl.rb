@@ -127,7 +127,7 @@ module Tapioca
           error_handler: ->(error) {
             say_error(error, :bold, :red)
           },
-          skipped_constants: constantize(@skip_constant),
+          skipped_constants: constantize(@skip_constant, ignore_missing: true),
           number_of_workers: @number_of_workers,
         )
       end
