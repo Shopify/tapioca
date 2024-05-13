@@ -102,6 +102,9 @@ module Tapioca
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
+            routes_reloader = Rails.application.routes_reloader
+            routes_reloader.execute_unless_loaded if routes_reloader&.respond_to?(:execute_unless_loaded)
+
             Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
             Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
 
