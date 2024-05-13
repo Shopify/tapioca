@@ -102,6 +102,7 @@ module Tapioca
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
+            # Load routes if they haven't been loaded yet (see https://github.com/rails/rails/pull/51614).
             routes_reloader = Rails.application.routes_reloader
             routes_reloader.execute_unless_loaded if routes_reloader&.respond_to?(:execute_unless_loaded)
 
