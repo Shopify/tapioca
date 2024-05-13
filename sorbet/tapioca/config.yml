@@ -5,3 +5,4 @@ gem:
     "net-protocol": "false"
     "net-smtp": "false"
     "timeout": "false"
+    "uri": "ignore"
