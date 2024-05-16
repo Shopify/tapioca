@@ -16,6 +16,7 @@ updates:
           - "patch"
         exclude-patterns:
           - "rails"
+    open-pull-requests-limit: 100
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
