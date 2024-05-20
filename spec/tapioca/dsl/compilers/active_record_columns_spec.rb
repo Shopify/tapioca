@@ -239,6 +239,49 @@ module Tapioca
                 assert_includes(rbi_for(:Post), expected)
               end
 
+              it "uses ActiveModel::Type::Value types when inheriting from EncryptedAttributeType" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        t.string :custom
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("custom_type.rb", <<~RUBY)
+                  class CustomType < ActiveRecord::Encryption::EncryptedAttributeType
+                    extend T::Sig
+
+                    sig { params(value: T.untyped).returns(T.nilable(CustomType)) }
+                    def deserialize(value)
+                      CustomType.new(value) unless value.nil?
+                    end
+
+                    def serialize(value)
+                      value
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    attribute :custom, CustomType.new(
+                      scheme: ActiveRecord::Encryption::Scheme.new,
+                    )
+                  end
+                RUBY
+
+                expected = indented(<<~RBI, 2)
+                  module GeneratedAttributeMethods
+                    sig { returns(T.nilable(::CustomType)) }
+                    def custom; end
+                RBI
+
+                assert_includes(rbi_for(:Post), expected)
+              end
+
               it "respects nullability of attributes" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
