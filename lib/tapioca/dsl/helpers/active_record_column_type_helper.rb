@@ -101,6 +101,9 @@ module Tapioca
           when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
             ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid
             "::String"
+          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr) &&
+            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr
+            "::IPAddr"
           when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore) &&
             ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore
             "T::Hash[::String, ::String]"
