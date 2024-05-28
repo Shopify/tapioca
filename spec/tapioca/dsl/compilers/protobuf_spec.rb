@@ -52,6 +52,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(customer_id: T.nilable(Integer), shop_id: T.nilable(Integer)).void }
                   def initialize(customer_id: nil, shop_id: nil); end
 
@@ -103,6 +105,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(events: T.nilable(String)).void }
                   def initialize(events: nil); end
 
@@ -140,6 +144,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(cart_item_index: T.nilable(Google::Protobuf::UInt64Value)).void }
                   def initialize(cart_item_index: nil); end
 
@@ -182,6 +188,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(value_type: T.nilable(T.any(Symbol, Integer))).void }
                   def initialize(value_type: nil); end
 
@@ -206,6 +214,8 @@ module Tapioca
                 # typed: strong
 
                 module Cart::VALUE_TYPE
+                  include Google::Protobuf::MessageExts
+
                   class << self
                     sig { returns(Google::Protobuf::EnumDescriptor) }
                     def descriptor; end
@@ -242,6 +252,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(customer_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer])), indices: T.nilable(T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value]))).void }
                   def initialize(customer_ids: T.unsafe(nil), indices: T.unsafe(nil)); end
 
@@ -281,6 +293,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(shop_id: T.nilable(Integer)).void }
                   def initialize(shop_id: nil); end
 
@@ -313,6 +327,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(customers: T.nilable(T.any(Google::Protobuf::Map[String, Integer], T::Hash[String, Integer])), stores: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::UInt64Value], T::Hash[String, Google::Protobuf::UInt64Value]))).void }
                   def initialize(customers: T.unsafe(nil), stores: T.unsafe(nil)); end
 
@@ -419,6 +435,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(fields: T.untyped).void }
                   def initialize(**fields); end
 
@@ -496,7 +514,9 @@ module Tapioca
               assert_equal(<<~RBI, rbi_output)
                 # typed: strong
 
-                class Cart; end
+                class Cart
+                  include Google::Protobuf::MessageExts
+                end
               RBI
               assert_equal(["Unexpected descriptor class `NilClass` for `Cart`"], generated_errors)
             end
@@ -510,6 +530,8 @@ module Tapioca
                 # typed: strong
 
                 class Google::Protobuf::Struct
+                  include Google::Protobuf::MessageExts
+
                   sig { params(fields: T.nilable(T.any(Google::Protobuf::Map[String, Google::Protobuf::Value], T::Hash[String, Google::Protobuf::Value]))).void }
                   def initialize(fields: T.unsafe(nil)); end
 
@@ -569,6 +591,8 @@ module Tapioca
                 # typed: strong
 
                 class Cart
+                  include Google::Protobuf::MessageExts
+
                   sig { params(progress: T.nilable(T.any(Google::Protobuf::Map[String, Cart::Progress], T::Hash[String, Cart::Progress]))).void }
                   def initialize(progress: T.unsafe(nil)); end
 

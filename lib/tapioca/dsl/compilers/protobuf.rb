@@ -30,6 +30,8 @@ module Tapioca
       # # cart.rbi
       # # typed: strong
       # class Cart
+      #   include Google::Protobuf::MessageExts
+      #
       #   sig { returns(Integer) }
       #   def customer_id; end
       #
@@ -86,6 +88,7 @@ module Tapioca
             elsif constant == Google::Protobuf::Map
               create_type_members(klass, "Key", "Value")
             else
+              klass.create_include("Google::Protobuf::MessageExts")
               descriptor = T.unsafe(constant).descriptor
 
               case descriptor
