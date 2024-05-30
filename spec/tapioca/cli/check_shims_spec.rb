@@ -295,6 +295,58 @@ module Tapioca
         refute_success_status(result)
       end
 
+      it "ignores duplicates that have a parent class" do
+        @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          class Foo
+          end
+          class Bar < Foo
+          end
+        RBI
+
+        @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          class Foo < Baz
+          end
+          class Bar < Baz
+          end
+        RBI
+
+        result = @project.tapioca("check-shims --no-payload")
+        assert_success_status(result)
+      end
+
+      it "detects duplicates that have a parent class" do
+        @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          class Foo
+          end
+          class Bar < Foo
+          end
+        RBI
+
+        @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          class Foo
+          end
+          class Bar < Foo
+          end
+        RBI
+
+        result = @project.tapioca("check-shims --no-payload")
+
+        assert_stderr_equals(<<~ERR, result)
+
+          Duplicated RBI for ::Foo:
+           * sorbet/rbi/shims/foo.rbi:1:0-2:3
+           * sorbet/rbi/gems/foo@1.0.0.rbi:1:0-2:3
+
+          Duplicated RBI for ::Bar:
+           * sorbet/rbi/shims/foo.rbi:3:0-4:3
+           * sorbet/rbi/gems/foo@1.0.0.rbi:3:0-4:3
+
+          Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
+        ERR
+
+        refute_success_status(result)
+      end
+
       it "detects duplicates from same shim file" do
         @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
           class Foo
