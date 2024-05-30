@@ -174,7 +174,21 @@ module Tapioca
       shims_or_todos = extract_shims_and_todos(nodes, shim_rbi_dir: shim_rbi_dir, todo_rbi_file: todo_rbi_file)
       return false if shims_or_todos.empty?
 
+      not_shims_or_todos = nodes - shims_or_todos
       shims_or_todos_empty_scopes = extract_empty_scopes(shims_or_todos)
+
+      # We need to discard classes that are redefining the parent of a class
+      shims_or_todos_empty_scopes.select! do |scope|
+        # Empty modules are always duplicates
+        next true unless scope.is_a?(RBI::Class)
+
+        # Empty classes without parents are also duplicates
+        parent_name = scope.superclass_name
+        next true unless parent_name
+
+        # Empty classes that are not redefining the parent are also duplicates
+        not_shims_or_todos.any? { |node| node.is_a?(RBI::Class) && node.superclass_name == parent_name }
+      end
       return true unless shims_or_todos_empty_scopes.empty?
 
       mixins = extract_mixins(shims_or_todos)
