@@ -2420,6 +2420,39 @@ end
 # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_in_hook.rb#25
 RuboCop::Cop::RSpec::ExpectInHook::MSG = T.let(T.unsafe(nil), String)
 
+# Do not use `expect` in let.
+#
+# @example
+#   # bad
+#   let(:foo) do
+#   expect(something).to eq 'foo'
+#   end
+#
+#   # good
+#   it do
+#   expect(something).to eq 'foo'
+#   end
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_in_let.rb#19
+class RuboCop::Cop::RSpec::ExpectInLet < ::RuboCop::Cop::RSpec::Base
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_in_let.rb#23
+  def expectation(param0); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_in_let.rb#25
+  def on_block(node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_in_let.rb#25
+  def on_numblock(node); end
+
+  private
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_in_let.rb#38
+  def message(expect); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_in_let.rb#20
+RuboCop::Cop::RSpec::ExpectInLet::MSG = T.let(T.unsafe(nil), String)
+
 # Checks for opportunities to use `expect { ... }.to output`.
 #
 # @example
@@ -7650,10 +7683,10 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RangeHelp
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
+  # source://rubocop/1.64.1/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_csend(node); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
+  # source://rubocop/1.64.1/lib/rubocop/cop/style/trailing_comma_in_arguments.rb#95
   def on_send(node); end
 
   class << self
