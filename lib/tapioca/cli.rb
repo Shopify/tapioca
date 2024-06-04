@@ -152,11 +152,7 @@ module Tapioca
       constants, paths = constant_or_paths.partition { |c| c =~ /\A[A-Z:]/ }
 
       # Make sure compiler options are received as a hash
-      compiler_options = options[:compiler_options]
-      unless compiler_options.values.all? { |v| Hash === v }
-        raise MalformattedArgumentError,
-          "Option '--compiler-options' should be supplied through the config, so that it is received as a hash."
-      end
+      compiler_options = process_compiler_options
 
       command_args = {
         requested_constants: constants,
@@ -384,6 +380,26 @@ module Tapioca
     end
 
     private
+
+    def process_compiler_options
+      compiler_options = options[:compiler_options]
+
+      # Parse all compiler option hash values as YAML if they are Strings
+      compiler_options.transform_values! do |value|
+        value = YAML.safe_load(value) if String === value
+        value
+      rescue YAML::Exception
+        raise MalformattedArgumentError,
+          "Option '--compiler-options' should have well-formatted YAML strings, but received: '#{value}'"
+      end
+
+      unless compiler_options.values.all? { |v| Hash === v }
+        raise MalformattedArgumentError,
+          "Option '--compiler-options' should be a hash of hashes, but received: '#{compiler_options}'"
+      end
+
+      compiler_options
+    end
 
     def print_init_next_steps
       say(<<~OUTPUT)

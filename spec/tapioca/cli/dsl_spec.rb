@@ -2900,13 +2900,6 @@ module Tapioca
 
       describe "options for built-in compilers" do
         it "is able to pass 'untyped' to ActiveRecordColumns compiler" do
-          @project.write!("sorbet/tapioca/config.yml", <<~YAML)
-            dsl:
-              compiler_options:
-                ActiveRecordColumns:
-                  types: untyped
-          YAML
-
           @project.require_real_gem("activerecord")
           @project.require_real_gem("sqlite3", "1.7.3")
           @project.bundle_install!
@@ -2926,7 +2919,9 @@ module Tapioca
             end
           RB
 
-          result = @project.tapioca("dsl Post --only=ActiveRecordColumns")
+          result = @project.tapioca(
+            "dsl Post --only=ActiveRecordColumns --compiler-options='ActiveRecordColumns:{types: untyped}'",
+          )
 
           assert_stdout_equals(<<~OUT, result)
             Loading DSL extension classes... Done
