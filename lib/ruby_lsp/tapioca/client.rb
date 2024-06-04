@@ -16,10 +16,10 @@ module RubyLsp
         $stderr.puts "Sync gems"
       end
 
-      sig { params(paths: T::Array[String]).void }
-      def dsl(paths)
+      sig { params(constants: T::Array[String]).void }
+      def dsl(constants)
         $stderr.puts "DSL"
-        $stderr.puts paths
+        $stderr.puts constants
       end
     end
   end
