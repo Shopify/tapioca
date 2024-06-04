@@ -88,7 +88,6 @@ module Tapioca
             elsif constant == Google::Protobuf::Map
               create_type_members(klass, "Key", "Value")
             else
-              # klass.create_include("Google::Protobuf::MessageExts")
               descriptor = T.unsafe(constant).descriptor
 
               case descriptor
