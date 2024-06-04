@@ -82,13 +82,13 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          root.create_path(constant) do |klass|
+          root.create_path(constant, "Google::Protobuf::AbstractMessage") do |klass|
             if constant == Google::Protobuf::RepeatedField
               create_type_members(klass, "Elem")
             elsif constant == Google::Protobuf::Map
               create_type_members(klass, "Key", "Value")
             else
-              klass.create_include("Google::Protobuf::MessageExts")
+              # klass.create_include("Google::Protobuf::MessageExts")
               descriptor = T.unsafe(constant).descriptor
 
               case descriptor
