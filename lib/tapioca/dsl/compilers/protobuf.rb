@@ -80,7 +80,10 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          root.create_path(constant, "Google::Protobuf::AbstractMessage") do |klass|
+          root.create_path(constant) do |klass|
+            raise unless klass.is_a?(RBI::Class)
+
+            klass.superclass_name = "Google::Protobuf::AbstractMessage"
             if constant == Google::Protobuf::RepeatedField
               create_type_members(klass, "Elem")
             elsif constant == Google::Protobuf::Map
