@@ -29,7 +29,7 @@ module Tapioca
       # ~~~rbi
       # # cart.rbi
       # # typed: strong
-      # class Cart
+      # class Cart < Google::Protobuf::AbstractMessage
       #   sig { returns(Integer) }
       #   def customer_id; end
       #
@@ -123,6 +123,9 @@ module Tapioca
                   class_method: true,
                 )
               when Google::Protobuf::Descriptor
+                raise "#{klass} is not a RBI::Class" unless klass.is_a?(RBI::Class)
+
+                klass.superclass_name = "Google::Protobuf::AbstractMessage"
                 descriptor.each_oneof { |oneof| create_oneof_method(klass, oneof) }
                 fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
                 fields.sort_by!(&:name)
