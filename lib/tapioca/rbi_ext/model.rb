@@ -5,21 +5,15 @@ module RBI
   class Tree
     extend T::Sig
 
-    sig do
-      params(
-        constant: ::Module,
-        superclass_name: T.nilable(String),
-        block: T.nilable(T.proc.params(scope: Scope).void),
-      ).returns(Scope)
-    end
-    def create_path(constant, superclass_name = nil, &block)
+    sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: Scope).void)).returns(Scope) }
+    def create_path(constant, &block)
       constant_name = Tapioca::Runtime::Reflection.name_of(constant)
       raise "given constant does not have a name" unless constant_name
 
       instance = ::Module.const_get(constant_name)
       case instance
       when ::Class
-        create_class(constant.to_s, superclass_name: superclass_name, &block)
+        create_class(constant.to_s, &block)
       when ::Module
         create_module(constant.to_s, &block)
       else
