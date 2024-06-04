@@ -2799,7 +2799,7 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(annotation: ::String, annotate_scopes: T::Boolean, annotate_properties: T::Boolean).void }
   def annotate!(annotation, annotate_scopes: T.unsafe(nil), annotate_properties: T.unsafe(nil)); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#44
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#38
   sig do
     params(
       name: ::String,
@@ -2809,19 +2809,19 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_class(name, superclass_name: T.unsafe(nil), &block); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#51
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#45
   sig { params(name: ::String, value: ::String).void }
   def create_constant(name, value:); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#61
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#55
   sig { params(name: ::String).void }
   def create_extend(name); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#56
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#50
   sig { params(name: ::String).void }
   def create_include(name); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#95
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#89
   sig do
     params(
       name: ::String,
@@ -2834,7 +2834,7 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_method(name, parameters: T.unsafe(nil), return_type: T.unsafe(nil), class_method: T.unsafe(nil), visibility: T.unsafe(nil), comments: T.unsafe(nil)); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#119
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#113
   sig do
     params(
       name: ::String,
@@ -2847,25 +2847,19 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_method_with_sigs(name, sigs:, parameters: T.unsafe(nil), class_method: T.unsafe(nil), visibility: T.unsafe(nil), comments: T.unsafe(nil)); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#66
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#60
   sig { params(name: ::String).void }
   def create_mixes_in_class_methods(name); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#31
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#25
   sig { params(name: ::String, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).returns(::RBI::Scope) }
   def create_module(name, &block); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#15
-  sig do
-    params(
-      constant: ::Module,
-      superclass_name: T.nilable(::String),
-      block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)
-    ).returns(::RBI::Scope)
-  end
-  def create_path(constant, superclass_name = T.unsafe(nil), &block); end
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#9
+  sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).returns(::RBI::Scope) }
+  def create_path(constant, &block); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#141
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#135
   sig do
     params(
       parameters: T::Hash[T.any(::String, ::Symbol), ::String],
@@ -2875,7 +2869,7 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_sig(parameters:, type_parameters: T.unsafe(nil), return_type: T.unsafe(nil)); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#80
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#74
   sig do
     params(
       name: ::String,
@@ -2941,11 +2935,11 @@ class RBI::Tree < ::RBI::NodeWithComments
 
   private
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#156
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#150
   sig { params(node: ::RBI::Node).returns(::RBI::Node) }
   def create_node(node); end
 
-  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#151
+  # source://tapioca/0.14.2/lib/tapioca/rbi_ext/model.rb#145
   sig { returns(T::Hash[::String, ::RBI::Node]) }
   def nodes_cache; end
 end
