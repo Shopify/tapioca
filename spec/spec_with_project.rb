@@ -92,6 +92,12 @@ module Tapioca
       assert_equal(expected, @project.read(path))
     end
 
+    # Assert that the contents of `path` inside `@project` includes `expected`
+    sig { params(path: String, expected: String).void }
+    def assert_project_file_includes(path, expected)
+      assert_includes(@project.read(path), expected)
+    end
+
     # Assert that `path` exists inside `@project`
     sig { params(path: String).void }
     def assert_project_file_exist(path)

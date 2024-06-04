@@ -935,6 +935,7 @@ dsl:
   app_root: "."
   halt_upon_load_error: true
   skip_constant: []
+  compiler_options: {}
 gem:
   outdir: sorbet/rbi/gems
   file_header: true

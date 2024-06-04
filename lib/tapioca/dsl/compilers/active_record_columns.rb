@@ -147,6 +147,19 @@ module Tapioca
 
         private
 
+        sig { returns(Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption) }
+        def column_type_option
+          @column_type_option ||= T.let(
+            Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption.from_serialized(
+              options.fetch(
+                "types",
+                Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Persisted.serialize,
+              ),
+            ),
+            T.nilable(Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption),
+          )
+        end
+
         sig do
           params(
             klass: RBI::Scope,
@@ -174,7 +187,7 @@ module Tapioca
         end
         def add_methods_for_attribute(klass, attribute_name, column_name = attribute_name, methods_to_add = nil)
           getter_type, setter_type = Helpers::ActiveRecordColumnTypeHelper
-            .new(constant)
+            .new(constant, column_type_option: column_type_option)
             .type_for(attribute_name, column_name)
 
           # Added by ActiveRecord::AttributeMethods::Read

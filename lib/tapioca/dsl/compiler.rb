@@ -22,6 +22,9 @@ module Tapioca
       sig { returns(RBI::Tree) }
       attr_reader :root
 
+      sig { returns(T::Hash[String, T.untyped]) }
+      attr_reader :options
+
       class << self
         extend T::Sig
 
@@ -60,11 +63,19 @@ module Tapioca
         end
       end
 
-      sig { params(pipeline: Tapioca::Dsl::Pipeline, root: RBI::Tree, constant: ConstantType).void }
-      def initialize(pipeline, root, constant)
+      sig do
+        params(
+          pipeline: Tapioca::Dsl::Pipeline,
+          root: RBI::Tree,
+          constant: ConstantType,
+          options: T::Hash[String, T.untyped],
+        ).void
+      end
+      def initialize(pipeline, root, constant, options = {})
         @pipeline = pipeline
         @root = root
         @constant = constant
+        @options = options
         @errors = T.let([], T::Array[String])
       end
 

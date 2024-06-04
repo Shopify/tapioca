@@ -27,6 +27,7 @@ module Tapioca
           rbi_formatter: RBIFormatter,
           app_root: String,
           halt_upon_load_error: T::Boolean,
+          compiler_options: T::Hash[String, T.untyped],
         ).void
       end
       def initialize(
@@ -45,7 +46,8 @@ module Tapioca
         gem_dir: DEFAULT_GEM_DIR,
         rbi_formatter: DEFAULT_RBI_FORMATTER,
         app_root: ".",
-        halt_upon_load_error: true
+        halt_upon_load_error: true,
+        compiler_options: {}
       )
         @requested_constants = requested_constants
         @requested_paths = requested_paths
@@ -63,6 +65,7 @@ module Tapioca
         @app_root = app_root
         @halt_upon_load_error = halt_upon_load_error
         @skip_constant = skip_constant
+        @compiler_options = compiler_options
 
         super()
       end
@@ -129,6 +132,7 @@ module Tapioca
           },
           skipped_constants: constantize(@skip_constant, ignore_missing: true),
           number_of_workers: @number_of_workers,
+          compiler_options: @compiler_options,
         )
       end
 
