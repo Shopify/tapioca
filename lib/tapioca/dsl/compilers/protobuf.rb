@@ -81,9 +81,6 @@ module Tapioca
         sig { override.void }
         def decorate
           root.create_path(constant) do |klass|
-            raise unless klass.is_a?(RBI::Class)
-
-            klass.superclass_name = "Google::Protobuf::AbstractMessage"
             if constant == Google::Protobuf::RepeatedField
               create_type_members(klass, "Elem")
             elsif constant == Google::Protobuf::Map
@@ -126,6 +123,9 @@ module Tapioca
                   class_method: true,
                 )
               when Google::Protobuf::Descriptor
+                raise "#{klass.name} is not a RBI::Class" unless klass.is_a?(RBI::Class)
+
+                klass.superclass_name = "Google::Protobuf::AbstractMessage"
                 descriptor.each_oneof { |oneof| create_oneof_method(klass, oneof) }
                 fields = descriptor.map { |desc| create_descriptor_method(klass, desc) }
                 fields.sort_by!(&:name)

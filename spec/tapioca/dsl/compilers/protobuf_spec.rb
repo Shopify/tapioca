@@ -496,7 +496,7 @@ module Tapioca
               assert_equal(<<~RBI, rbi_output)
                 # typed: strong
 
-                class Cart < Google::Protobuf::AbstractMessage; end
+                class Cart; end
               RBI
               assert_equal(["Unexpected descriptor class `NilClass` for `Cart`"], generated_errors)
             end
