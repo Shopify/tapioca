@@ -18,8 +18,8 @@ module URI
       T::Array[Symbol],
     )
 
-    alias_method(:gem_name, :host)
-    alias_method(:line_number, :fragment)
+    T.unsafe(self).alias_method(:gem_name, :host)
+    T.unsafe(self).alias_method(:line_number, :fragment)
 
     sig { returns(T.nilable(String)) }
     attr_reader :gem_version
