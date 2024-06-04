@@ -29,9 +29,7 @@ module Tapioca
       # ~~~rbi
       # # cart.rbi
       # # typed: strong
-      # class Cart
-      #   include Google::Protobuf::MessageExts
-      #
+      # class Cart < Google::Protobuf::AbstractMessage
       #   sig { returns(Integer) }
       #   def customer_id; end
       #

@@ -23,9 +23,7 @@ this compiler will produce the RBI file `cart.rbi` with the following content:
 ~~~rbi
 # cart.rbi
 # typed: strong
-class Cart
-  include Google::Protobuf::MessageExts
-
+class Cart < Google::Protobuf::AbstractMessage
   sig { returns(Integer) }
   def customer_id; end
 
