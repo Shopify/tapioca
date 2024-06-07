@@ -77,6 +77,7 @@ module Tapioca
           constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
 
           if @verbose && !@quiet
+            $stderr.puts("Processing #{constant_name}")
             say_status(:processing, constant_name, :yellow)
           end
 
