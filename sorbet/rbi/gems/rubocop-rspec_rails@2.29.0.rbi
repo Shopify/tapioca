@@ -768,133 +768,133 @@ RuboCop::Cop::RSpecRails::TravelAround::TRAVEL_METHOD_NAMES = T.let(T.unsafe(nil
 
 # source://rubocop-rspec_rails//lib/rubocop-rspec_rails.rb#24
 class RuboCop::Cop::Registry
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#51
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#51
   def initialize(cops = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#232
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#232
   def ==(other); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#97
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#97
   def contains_cop_matching?(names); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#179
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#179
   def cops; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#224
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#224
   def cops_for_department(department); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#93
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#93
   def department?(name); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#147
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#147
   def department_missing?(badge, name); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#72
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#72
   def departments; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#193
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#193
   def disabled(config); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#67
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#67
   def dismiss(cop); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#247
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#247
   def each(&block); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#189
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#189
   def enabled(config); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#197
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#197
   def enabled?(cop, config); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#213
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#213
   def enabled_pending_cop?(cop_cfg, config); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#63
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#63
   def enlist(cop); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#253
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#253
   def find_by_cop_name(cop_name); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#260
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#260
   def find_cops_by_directive(directive); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#265
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#265
   def freeze; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#184
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#184
   def length; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#220
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#220
   def names; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#228
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#228
   def names_for_department(department); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#49
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#49
   def options; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#151
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#151
   def print_warning(name, path); end
 
   # source://rubocop-rspec_rails//lib/rubocop-rspec_rails.rb#26
   def qualified_cop_name(name, path, warn: T.unsafe(nil)); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#166
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#166
   def qualify_badge(badge); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#243
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#243
   def select(&block); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#236
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#236
   def sort!; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#174
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#174
   def to_h; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#159
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#159
   def unqualified_cop_names; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#78
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#78
   def with_department(department); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#84
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#84
   def without_department(department); end
 
   private
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#283
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#283
   def clear_enrollment_queue; end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#279
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#279
   def initialize_copy(reg); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#309
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#309
   def registered?(badge); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#299
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#299
   def resolve_badge(given_badge, real_badge, source_path); end
 
-  # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#295
+  # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#295
   def with(cops); end
 
   class << self
-    # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#22
+    # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#22
     def all; end
 
-    # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#274
+    # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#274
     def global; end
 
-    # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#44
+    # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#44
     def qualified_cop?(name); end
 
-    # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#26
+    # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#26
     def qualified_cop_name(name, origin); end
 
-    # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#40
+    # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#40
     def reset!; end
 
-    # source://rubocop/1.63.4/lib/rubocop/cop/registry.rb#32
+    # source://rubocop/1.64.1/lib/rubocop/cop/registry.rb#32
     def with_temporary_global(temp_global = T.unsafe(nil)); end
   end
 end
