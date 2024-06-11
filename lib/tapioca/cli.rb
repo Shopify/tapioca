@@ -364,6 +364,168 @@ module Tapioca
       command.run
     end
 
+    GEM_RELATED_PATHS = [
+      "Gemfile",
+      "Gemfile.lock",
+      "*.gemspec",
+      "sorbet/tapioca/",
+    ].freeze
+
+    DSL_RELATED_PATHS = [
+      "app/**/*.*",
+    ].freeze
+
+    desc "watch", "Run Tapioca in watch mode"
+    option :outdir,
+    aliases: ["--out", "-o"],
+    banner: "directory",
+    desc: "The output directory for generated gem RBI files",
+    default: DEFAULT_GEM_DIR
+  option :file_header,
+    type: :boolean,
+    desc: FILE_HEADER_OPTION_DESC,
+    default: true
+  option :all,
+    type: :boolean,
+    desc: "Regenerate RBI files for all gems",
+    default: false
+  option :prerequire,
+    aliases: ["--pre", "-b"],
+    banner: "file",
+    desc: "A file to be required before Bundler.require is called",
+    default: nil
+  option :postrequire,
+    aliases: ["--post", "-a"],
+    banner: "file",
+    desc: "A file to be required after Bundler.require is called",
+    default: DEFAULT_POSTREQUIRE_FILE
+  option :exclude,
+    aliases: ["-x"],
+    type: :array,
+    banner: "gem [gem ...]",
+    desc: "Exclude the given gem(s) from RBI generation",
+    default: []
+  option :include_dependencies,
+    type: :boolean,
+    desc: "Generate RBI files for dependencies of the given gem(s)",
+    default: false
+  option :typed_overrides,
+    aliases: ["--typed", "-t"],
+    type: :hash,
+    banner: "gem:level [gem:level ...]",
+    desc: "Override for typed sigils for generated gem RBIs",
+    default: DEFAULT_OVERRIDES
+  option :verify,
+    type: :boolean,
+    desc: "Verify RBIs are up-to-date",
+    default: false
+  option :doc,
+    type: :boolean,
+    desc: "Include YARD documentation from sources when generating RBIs. Warning: this might be slow",
+    default: true
+  option :loc,
+    type: :boolean,
+    desc: "Include comments with source location when generating RBIs",
+    default: true
+  option :exported_gem_rbis,
+    type: :boolean,
+    desc: "Include RBIs found in the `rbi/` directory of the gem",
+    default: true
+  option :workers,
+    aliases: ["-w"],
+    type: :numeric,
+    desc: "Number of parallel workers to use when generating RBIs (default: auto)"
+  option :auto_strictness,
+    type: :boolean,
+    desc: "Autocorrect strictness in gem RBIs in case of conflict with the DSL RBIs",
+    default: true
+  option :dsl_dir,
+    aliases: ["--dsl-dir"],
+    banner: "directory",
+    desc: "The DSL directory used to correct gems strictnesses",
+    default: DEFAULT_DSL_DIR
+  option :rbi_max_line_length,
+    type: :numeric,
+    desc: "Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped",
+    default: DEFAULT_RBI_MAX_LINE_LENGTH
+  option :environment,
+    aliases: ["-e"],
+    type: :string,
+    desc: "The Rack/Rails environment to use when generating RBIs",
+    default: DEFAULT_ENVIRONMENT
+  option :halt_upon_load_error,
+    type: :boolean,
+    desc: "Halt upon a load error while loading the Rails application",
+    default: true
+    def watch
+      root_path = Pathname.new(Dir.pwd)
+
+      command_args = {
+        gem_names: [],
+        exclude: options[:exclude],
+        include_dependencies: options[:include_dependencies],
+        prerequire: options[:prerequire],
+        postrequire: options[:postrequire],
+        typed_overrides: options[:typed_overrides],
+        outpath: Pathname.new(options[:outdir]),
+        file_header: options[:file_header],
+        include_doc: options[:doc],
+        include_loc: options[:loc],
+        include_exported_rbis: options[:exported_gem_rbis],
+        number_of_workers: options[:workers],
+        auto_strictness: options[:auto_strictness],
+        dsl_dir: options[:dsl_dir],
+        rbi_formatter: rbi_formatter(options),
+        halt_upon_load_error: options[:halt_upon_load_error],
+      }
+
+      current_thread = T.let(nil, T.nilable(Thread))
+
+      puts "Loading Rails app..."
+
+      ::Tapioca::Commands::DslGenerate.new(
+        requested_constants: [],
+        tapioca_path: ::Tapioca::TAPIOCA_DIR,
+        requested_paths: [],
+        outpath: Pathname.new(::Tapioca::DEFAULT_DSL_DIR),
+        file_header: true,
+        exclude: [],
+        only: [],
+      ).run
+      puts $application
+      puts Runtime::Reflection.descendants_of(::ActiveJob::Base)
+
+      puts "Watching for changes in #{root_path}..."
+      watched_paths = (GEM_RELATED_PATHS + DSL_RELATED_PATHS).map do |path|
+        root_path.join(path)
+      end
+      puts watched_paths
+      Filewatcher.new(watched_paths).watch do |changes|
+        changes.each do |filename, _event|
+          rel_path = Pathname.new(filename).relative_path_from(root_path)
+          puts "File changed #{filename}"
+
+          if GEM_RELATED_PATHS.any? { |path| File.fnmatch?(path, rel_path.to_s) }
+            puts "Gem related file changed #{filename}"
+
+            # current_thread&.kill
+
+            # current_thread = Thread.new do
+            #   Commands::GemGenerate.new(**command_args).run
+            # end
+          else
+            puts "DSL related file changed #{filename}"
+
+            current_thread&.kill
+            current_thread = Thread.new do
+              $application.reloader.reload!
+              puts Runtime::Reflection.descendants_of(::ActiveJob::Base)
+            end
+          end
+        end
+      end
+    end
+
     map ["--version", "-v"] => :__print_version
 
     desc "--version, -v", "Show version"

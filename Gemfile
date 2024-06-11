@@ -59,5 +59,3 @@ group :test do
 end
 
 gem "kramdown", "~> 2.4"
-
-gem "filewatcher", "~> 2.1"

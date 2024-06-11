@@ -187,6 +187,7 @@ module Tapioca
       sig { void }
       def eager_load_rails_app
         application = Rails.application
+        $application = application
 
         if defined?(ActiveSupport)
           ActiveSupport.run_load_hooks(:before_eager_load, application)
