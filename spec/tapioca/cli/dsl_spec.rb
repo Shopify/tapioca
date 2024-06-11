@@ -1836,6 +1836,32 @@ module Tapioca
 
           assert_success_status(result)
         end
+
+        describe "with --benchmark" do
+          it "prints benchmark information to stderr" do
+            @project.write!("lib/post.rb", <<~RB)
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+            result = @project.tapioca("dsl --quiet --benchmark")
+
+            duration = '\d+\.\d+m?s'
+
+            assert_stderr_match(result, Regexp.new(<<~REGEX, Regexp::MULTILINE))
+              ℹ️ ########## Benchmark - load_application took #{duration}
+              ℹ️ ########## Benchmark - generate_dsl_rbi_files took #{duration}
+              ℹ️ ########## Benchmark - purge_stale_dsl_rbi_files took #{duration}
+              ℹ️ ########## Benchmark - validate_rbi_files took #{duration}
+            REGEX
+
+            assert_success_status(result)
+          end
+        end
       end
 
       describe "verify" do

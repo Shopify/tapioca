@@ -42,6 +42,7 @@ require "tapioca/helpers/cli_helper"
 require "tapioca/helpers/config_helper"
 require "tapioca/helpers/rbi_files_helper"
 require "tapioca/helpers/env_helper"
+require "tapioca/helpers/benchmarking"
 
 require "tapioca/repo_index"
 require "tapioca/gemfile"

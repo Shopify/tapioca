@@ -218,6 +218,16 @@ module Tapioca
       assert_includes(result.err, snippet, result.to_s)
     end
 
+    sig { params(result: Spoom::ExecResult, snippet: Regexp).void }
+    def assert_stdout_match(result, regex)
+      assert_match(result.err, regex, result.to_s)
+    end
+
+    sig { params(result: Spoom::ExecResult, regex: Regexp).void }
+    def assert_stderr_match(result, regex)
+      assert_match(regex, result.err, result.to_s)
+    end
+
     private
 
     sig { params(name: String).returns(String) }

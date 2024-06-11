@@ -6,6 +6,8 @@ module Tapioca
     class Pipeline
       extend T::Sig
 
+      include Benchmarking
+
       sig { returns(T::Enumerable[T.class_of(Compiler)]) }
       attr_reader :active_compilers
 
@@ -206,7 +208,10 @@ module Tapioca
           end
           options = @compiler_options.fetch(compiler_key, {})
           compiler = compiler_class.new(self, file.root, constant, options)
-          compiler.decorate
+
+          benchmark("Benchmark - #{compiler_key}.decorate") do
+            compiler.decorate
+          end
         rescue
           $stderr.puts("Error: `#{compiler_class.name}` failed to generate RBI for `#{constant}`")
           raise # This is an unexpected error, so re-raise it

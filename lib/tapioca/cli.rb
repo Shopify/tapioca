@@ -22,6 +22,10 @@ module Tapioca
       type: :boolean,
       desc: "Verbose output for debugging purposes",
       default: false
+    class_option :benchmark,
+      type: :boolean,
+      desc: "Measure how long various stages of RBI generation take",
+      default: false
 
     desc "init", "Get project ready for type checking"
     def init
@@ -165,6 +169,7 @@ module Tapioca
         skip_constant: options[:skip_constant],
         quiet: options[:quiet],
         verbose: options[:verbose],
+        benchmark: options[:benchmark],
         number_of_workers: options[:workers],
         rbi_formatter: rbi_formatter(options),
         app_root: options[:app_root],

@@ -6,6 +6,7 @@ module Tapioca
     class AbstractDsl < CommandWithoutTracker
       include SorbetHelper
       include RBIFilesHelper
+      include Benchmarking
 
       abstract!
 
@@ -21,6 +22,7 @@ module Tapioca
           skip_constant: T::Array[String],
           quiet: T::Boolean,
           verbose: T::Boolean,
+          benchmark: T::Boolean,
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
           gem_dir: String,
@@ -41,6 +43,7 @@ module Tapioca
         skip_constant: [],
         quiet: false,
         verbose: false,
+        benchmark: false,
         number_of_workers: nil,
         auto_strictness: true,
         gem_dir: DEFAULT_GEM_DIR,
@@ -58,6 +61,7 @@ module Tapioca
         @tapioca_path = tapioca_path
         @quiet = quiet
         @verbose = verbose
+        @benchmark = benchmark
         @number_of_workers = number_of_workers
         @auto_strictness = auto_strictness
         @gem_dir = gem_dir
@@ -352,7 +356,9 @@ module Tapioca
       sig { returns(T::Array[String]) }
       def constants_from_requested_paths
         @constants_from_requested_paths ||= T.let(
-          Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a,
+          benchmark("symbols_from_paths") do
+            Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a
+          end,
           T.nilable(T::Array[String]),
         )
       end
