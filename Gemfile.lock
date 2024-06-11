@@ -139,6 +139,8 @@ GEM
       zlib (~> 3.0)
     faraday-net_http (3.1.0)
       net-http
+    filewatcher (2.1.0)
+      module_methods (~> 0.1.0)
     frozen_record (0.27.1)
       activemodel
     globalid (1.2.1)
@@ -197,6 +199,7 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    module_methods (0.1.0)
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -373,6 +376,7 @@ DEPENDENCIES
   cityhash!
   config
   debug
+  filewatcher (~> 2.1)
   frozen_record
   google-protobuf
   graphql
