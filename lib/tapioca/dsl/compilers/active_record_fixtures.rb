@@ -37,6 +37,7 @@ module Tapioca
         extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(ActiveSupport::TestCase) } }
+        MISSING = Object.new
 
         sig { override.void }
         def decorate
@@ -46,6 +47,7 @@ module Tapioca
             method_names_from_eager_fixture_loader
           end
 
+          method_names.select! { |name| fixture_class_mapping_from_fixture_files[name] != MISSING }
           return if method_names.empty?
 
           root.create_path(constant) do |mod|
@@ -96,15 +98,14 @@ module Tapioca
           T.unsafe(fixture_loader).fixture_sets.keys
         end
 
-        sig { returns(T::Array[Symbol]) }
+        sig { returns(T::Array[String]) }
         def method_names_from_eager_fixture_loader
           fixture_loader.ancestors # get all ancestors from class that includes AR fixtures
             .drop(1) # drop the anonymous class itself from the array
             .reject(&:name) # only collect anonymous ancestors because fixture methods are always on an anonymous module
-            .map! do |mod|
-              [mod.private_instance_methods(false), mod.instance_methods(false)]
+            .flat_map do |mod|
+              mod.private_instance_methods(false).map(&:to_s) + mod.instance_methods(false).map(&:to_s)
             end
-            .flatten # merge methods into a single list
         end
 
         sig { params(mod: RBI::Scope, name: String).void }
@@ -190,10 +191,14 @@ module Tapioca
                   next unless ::File.file?(file)
 
                   ActiveRecord::FixtureSet::File.open(file) do |fh|
+                    fixture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
                     next unless fh.model_class
 
-                    fixture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
                     mapping[fixture_name] = fh.model_class
+                  rescue ActiveRecord::Fixture::FormatError
+                    # For fixtures that are not associated to any models and just contain raw data or fixtures that
+                    # contain invalid formatting, we want to skip them and avoid crashing
+                    mapping[fixture_name] = MISSING
                   end
                 end
               end
