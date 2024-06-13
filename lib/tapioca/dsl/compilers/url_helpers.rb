@@ -97,25 +97,31 @@ module Tapioca
         end
 
         class << self
+          include ::Tapioca::Benchmarking
+
           extend T::Sig
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
             # Load routes if they haven't been loaded yet (see https://github.com/rails/rails/pull/51614).
-            routes_reloader = Rails.application.routes_reloader
-            routes_reloader.execute_unless_loaded if routes_reloader&.respond_to?(:execute_unless_loaded)
+            benchmark("Compilers::UrlHelpers.load_routes") do
+              routes_reloader = Rails.application.routes_reloader
+              routes_reloader.execute_unless_loaded if routes_reloader&.respond_to?(:execute_unless_loaded)
+            end
 
             Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
             Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
 
-            constants = all_modules.select do |mod|
-              next unless name_of(mod)
+            constants = benchmark("Compilers::UrlHelpers.all_modules.select") do
+              all_modules.select do |mod|
+                next unless name_of(mod)
 
-              includes_helper?(mod, GeneratedUrlHelpersModule) ||
-                includes_helper?(mod, GeneratedPathHelpersModule) ||
-                includes_helper?(mod.singleton_class, GeneratedUrlHelpersModule) ||
-                includes_helper?(mod.singleton_class, GeneratedPathHelpersModule)
+                includes_helper?(mod, GeneratedUrlHelpersModule) ||
+                  includes_helper?(mod, GeneratedPathHelpersModule) ||
+                  includes_helper?(mod.singleton_class, GeneratedUrlHelpersModule) ||
+                  includes_helper?(mod.singleton_class, GeneratedPathHelpersModule)
+              end
             end
 
             constants.concat(NON_DISCOVERABLE_INCLUDERS)

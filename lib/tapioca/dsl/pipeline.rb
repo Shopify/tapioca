@@ -67,9 +67,19 @@ module Tapioca
         ).returns(T::Array[T.type_parameter(:T)])
       end
       def run(&blk)
-        constants_to_process = gather_constants(requested_constants, requested_paths, skipped_constants)
-          .select { |c| Module === c } # Filter value constants out
-          .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
+        constants_to_process = benchmark("gather_constants") do
+          all_gathered_constants = benchmark("gather_constants") do
+            gather_constants(requested_constants, requested_paths, skipped_constants)
+          end
+
+          all_module_constants = benchmark("gather_constants.filter_modules") do
+            all_gathered_constants.select { |c| Module === c } # Filter value constants out
+          end
+
+          benchmark("gather_constants.sort_by_name") do
+            all_module_constants.sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
+          end
+        end
 
         # It's OK if there are no constants to process if we received a valid file/path.
         if constants_to_process.empty? && requested_paths.none? { |p| File.exist?(p) }
@@ -83,14 +93,19 @@ module Tapioca
           abort_if_pending_migrations!
         end
 
-        result = Executor.new(
-          constants_to_process,
-          number_of_workers: @number_of_workers,
-        ).run_in_parallel do |constant|
-          rbi = rbi_for_constant(constant)
-          next if rbi.nil?
+        result = benchmark("process_constants") do
+          # result = Executor.new(
+          #   constants_to_process,
+          #   number_of_workers: @number_of_workers,
+          # ).run_in_parallel do |constant|
+          constants_to_process.map do |constant|
+            rbi = benchmark("rbi_for_constant", tags: { constant: constant.name || "nil" }) do
+              rbi_for_constant(constant)
+            end
+            next if rbi.nil?
 
-          blk.call(constant, rbi)
+            blk.call(constant, rbi)
+          end
         end
 
         errors.each do |msg|
@@ -148,10 +163,18 @@ module Tapioca
       end
       def gather_constants(requested_constants, requested_paths, skipped_constants)
         constants = Set.new.compare_by_identity
-        active_compilers.each do |compiler|
-          constants.merge(compiler.processable_constants)
+
+        benchmark("gather_compiler_processable_constants") do
+          active_compilers.each do |compiler|
+            benchmark("gather_compiler_processable_constants", tags: { compiler: compiler.name || "unknown" }) do
+              constants.merge(compiler.processable_constants)
+            end
+          end
         end
-        constants = filter_anonymous_and_reloaded_constants(constants)
+
+        constants = benchmark("filter_anonymous_and_reloaded_constants") do
+          filter_anonymous_and_reloaded_constants(constants)
+        end
         constants -= skipped_constants
 
         unless requested_constants.empty? && requested_paths.empty?
@@ -209,7 +232,7 @@ module Tapioca
           options = @compiler_options.fetch(compiler_key, {})
           compiler = compiler_class.new(self, file.root, constant, options)
 
-          benchmark("Benchmark - #{compiler_key}.decorate") do
+          benchmark("compiler.decorate", tags: { compiler: compiler_key }) do
             compiler.decorate
           end
         rescue

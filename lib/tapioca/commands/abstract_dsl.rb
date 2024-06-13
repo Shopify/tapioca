@@ -78,22 +78,29 @@ module Tapioca
 
       sig { params(outpath: Pathname, quiet: T::Boolean).returns(T::Set[Pathname]) }
       def generate_dsl_rbi_files(outpath, quiet:)
-        existing_rbi_files = existing_rbi_filenames(all_requested_constants)
+        all_requested_constants = benchmark("all_requested_constants") { self.all_requested_constants }
+        existing_rbi_files = benchmark("existing_rbi_filenames") { existing_rbi_filenames(all_requested_constants) }
 
-        generated_files = pipeline.run do |constant, contents|
-          constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
+        pipeline = self.pipeline
 
-          if @verbose && !@quiet
-            say_status(:processing, constant_name, :yellow)
-          end
+        generated_files = benchmark("generate_dsl_rbi_files.pipeline.run") do
+          pipeline.run do |constant, contents|
+            benchmark("generate_dsl_rbi_files.pipeline.run.body") do
+              constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
 
-          compile_dsl_rbi(
-            constant_name,
-            contents,
-            outpath: outpath,
-            quiet: quiet,
-          )
-        end.compact
+              if @verbose && !@quiet
+                say_status(:processing, constant_name, :yellow)
+              end
+
+              compile_dsl_rbi(
+                constant_name,
+                contents,
+                outpath: outpath,
+                quiet: quiet,
+              )
+            end
+          end.compact
+        end
 
         files_to_purge = existing_rbi_files - generated_files
 
@@ -125,19 +132,21 @@ module Tapioca
 
       sig { returns(Tapioca::Dsl::Pipeline) }
       def create_pipeline
-        Tapioca::Dsl::Pipeline.new(
-          requested_constants:
-            constantize(@requested_constants) + constantize(constants_from_requested_paths, ignore_missing: true),
-          requested_paths: @requested_paths,
-          requested_compilers: constantize_compilers(@only),
-          excluded_compilers: constantize_compilers(@exclude),
-          error_handler: ->(error) {
-            say_error(error, :bold, :red)
-          },
-          skipped_constants: constantize(@skip_constant, ignore_missing: true),
-          number_of_workers: @number_of_workers,
-          compiler_options: @compiler_options,
-        )
+        benchmark("create_pipeline") do
+          Tapioca::Dsl::Pipeline.new(
+            requested_constants:
+              constantize(@requested_constants) + constantize(constants_from_requested_paths, ignore_missing: true),
+            requested_paths: @requested_paths,
+            requested_compilers: constantize_compilers(@only),
+            excluded_compilers: constantize_compilers(@exclude),
+            error_handler: ->(error) {
+              say_error(error, :bold, :red)
+            },
+            skipped_constants: constantize(@skip_constant, ignore_missing: true),
+            number_of_workers: @number_of_workers,
+            compiler_options: @compiler_options,
+          )
+        end
       end
 
       sig { params(requested_constants: T::Array[String], path: Pathname).returns(T::Set[Pathname]) }
@@ -146,7 +155,9 @@ module Tapioca
           Pathname.glob(path / "**/*.rbi")
         else
           requested_constants.filter_map do |constant_name|
-            filename = dsl_rbi_filename(constant_name)
+            filename = benchmark("dsl_rbi_filename", tags: { constant: constant_name }) do
+              dsl_rbi_filename(constant_name)
+            end
             filename if File.exist?(filename)
           end
         end
@@ -156,45 +167,49 @@ module Tapioca
 
       sig { params(constant_names: T::Array[String], ignore_missing: T::Boolean).returns(T::Array[Module]) }
       def constantize(constant_names, ignore_missing: false)
-        constant_map = constant_names.to_h do |name|
-          [name, Object.const_get(name)]
-        rescue NameError
-          [name, nil]
-        end
-
-        processable_constants, unprocessable_constants = constant_map.partition { |_, v| !v.nil? }
-
-        unless unprocessable_constants.empty? || ignore_missing
-          unprocessable_constants.each do |name, _|
-            say("Error: Cannot find constant '#{name}'", :red)
-            filename = dsl_rbi_filename(name)
-            remove_file(filename) if File.file?(filename)
+        benchmark("constantize", tags: { constant_names: constant_names }) do
+          constant_map = constant_names.to_h do |name|
+            [name, Object.const_get(name)]
+          rescue NameError
+            [name, nil]
           end
 
-          raise Thor::Error, ""
-        end
+          processable_constants, unprocessable_constants = constant_map.partition { |_, v| !v.nil? }
 
-        processable_constants.map { |_, constant| constant }
+          unless unprocessable_constants.empty? || ignore_missing
+            unprocessable_constants.each do |name, _|
+              say("Error: Cannot find constant '#{name}'", :red)
+              filename = dsl_rbi_filename(name)
+              remove_file(filename) if File.file?(filename)
+            end
+
+            raise Thor::Error, ""
+          end
+
+          processable_constants.map { |_, constant| constant }
+        end
       end
 
       sig { params(compiler_names: T::Array[String]).returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
       def constantize_compilers(compiler_names)
-        compiler_map = compiler_names.to_h do |name|
-          [name, resolve(name)]
+        benchmark("constantize_compilers", tags: { compiler_names: compiler_names }) do
+          compiler_map = compiler_names.to_h do |name|
+            [name, resolve(name)]
+          end
+
+          unprocessable_compilers = compiler_map.select { |_, v| v.nil? }
+
+          unless unprocessable_compilers.empty?
+            message = unprocessable_compilers.map do |name, _|
+              set_color("Warning: Cannot find compiler '#{name}'", :yellow)
+            end.join("\n")
+
+            say(message)
+            say("")
+          end
+
+          T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])
         end
-
-        unprocessable_compilers = compiler_map.select { |_, v| v.nil? }
-
-        unless unprocessable_compilers.empty?
-          message = unprocessable_compilers.map do |name, _|
-            set_color("Warning: Cannot find compiler '#{name}'", :yellow)
-          end.join("\n")
-
-          say(message)
-          say("")
-        end
-
-        T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])
       end
 
       sig { params(name: String).returns(T.nilable(T.class_of(Tapioca::Dsl::Compiler))) }

@@ -27,8 +27,9 @@ module Tapioca
     end
     def run_in_parallel(&block)
       # To have the parallel gem run jobs in the parent process, you must pass 0 as the number of processes
-      number_of_processes = @number_of_workers == 1 ? 0 : @number_of_workers
-      Parallel.map(@queue, { in_processes: number_of_processes }, &block)
+      # number_of_processes = @number_of_workers == 1 ? 0 : @number_of_workers
+      # Parallel.map(@queue, { in_processes: number_of_processes }, &block)
+      @queue.map(&:block)
     end
 
     private

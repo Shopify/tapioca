@@ -104,6 +104,7 @@ module Tapioca
       class ActiveRecordAssociations < Compiler
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
+        include Benchmarking
 
         class SourceReflectionError < StandardError
         end
@@ -125,12 +126,14 @@ module Tapioca
 
         sig { override.void }
         def decorate
+          @benchmark = true # hack
+
           return if constant.reflections.empty?
 
           root.create_path(constant) do |model|
             model.create_module(AssociationMethodsModuleName) do |mod|
-              populate_nested_attribute_writers(mod)
-              populate_associations(mod)
+              benchmark("populate_nested_attribute_writers") { populate_nested_attribute_writers(mod) }
+              benchmark("populate_associations") { populate_associations(mod) }
             end
 
             model.create_include(AssociationMethodsModuleName)
@@ -162,19 +165,21 @@ module Tapioca
         sig { params(mod: RBI::Scope).void }
         def populate_associations(mod)
           constant.reflections.each do |association_name, reflection|
-            if reflection.collection?
-              populate_collection_assoc_getter_setter(mod, association_name, reflection)
-            else
-              populate_single_assoc_getter_setter(mod, association_name, reflection)
+            benchmark("ActiveRecordAssociations.populate_association", tags: { association: association_name }) do
+              if reflection.collection?
+                populate_collection_assoc_getter_setter(mod, association_name, reflection)
+              else
+                populate_single_assoc_getter_setter(mod, association_name, reflection)
+              end
+            rescue SourceReflectionError
+              add_error(<<~MSG.strip)
+                Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
+              MSG
+            rescue MissingConstantError => error
+              add_error(<<~MSG.strip)
+                Cannot generate association `#{declaration(reflection)}` on `#{constant}` since the constant `#{error.class_name}` does not exist.
+              MSG
             end
-          rescue SourceReflectionError
-            add_error(<<~MSG.strip)
-              Cannot generate association `#{reflection.name}` on `#{constant}` since the source of the through association is missing.
-            MSG
-          rescue MissingConstantError => error
-            add_error(<<~MSG.strip)
-              Cannot generate association `#{declaration(reflection)}` on `#{constant}` since the constant `#{error.class_name}` does not exist.
-            MSG
           end
         end
 
