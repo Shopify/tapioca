@@ -1274,8 +1274,11 @@ module Tapioca
         end
 
         it "does not crash while tracking `rbtrace` constants" do
-          @project.require_real_gem("rbtrace", "0.4.14")
-          @project.bundle_install!
+          @project.require_real_gem("rbtrace", "0.5.1")
+
+          install_result = @project.bundle_install!
+          assert_predicate(install_result, :status, "Failed to install rbtrace\n\n#{install_result.err}")
+
           result = @project.tapioca("gem rbtrace")
           assert_empty_stderr(result)
           assert_success_status(result)
