@@ -153,8 +153,10 @@ module Tapioca
       sig { params(constant_names: T::Array[String], ignore_missing: T::Boolean).returns(T::Array[Module]) }
       def constantize(constant_names, ignore_missing: false)
         constant_map = constant_names.to_h do |name|
+          puts "Constantize: #{name}"
           [name, Object.const_get(name)]
         rescue NameError
+          puts "NameError for #{name}"
           [name, nil]
         end
 
