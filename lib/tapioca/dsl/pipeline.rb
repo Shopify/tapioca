@@ -146,6 +146,7 @@ module Tapioca
       end
       def gather_constants(requested_constants, requested_paths, skipped_constants)
         constants = Set.new.compare_by_identity
+
         active_compilers.each do |compiler|
           constants.merge(compiler.processable_constants)
         end
