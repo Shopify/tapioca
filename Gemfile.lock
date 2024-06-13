@@ -221,7 +221,7 @@ GEM
     parser (3.3.2.0)
       ast (~> 2.4.1)
       racc
-    prism (0.28.0)
+    prism (0.30.0)
     psych (5.1.2)
       stringio
     public_suffix (5.0.5)
