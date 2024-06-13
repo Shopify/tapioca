@@ -21,6 +21,19 @@ module Tapioca
           )
           loader.load
         end
+
+        sig { void }
+        def load_subset
+          loader = new(
+            tapioca_path: Tapioca::TAPIOCA_DIR,
+            eager_load: false,
+            app_root: ".",
+            halt_upon_load_error: true,
+          )
+          puts "Loader instantiated"
+          loader.load_dsl_extensions
+          loader.load_dsl_compilers
+        end
       end
 
       sig { override.void }
@@ -29,8 +42,6 @@ module Tapioca
         load_application
         load_dsl_compilers
       end
-
-      protected
 
       sig do
         params(tapioca_path: String, eager_load: T::Boolean, app_root: String, halt_upon_load_error: T::Boolean).void
