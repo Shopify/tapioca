@@ -726,7 +726,8 @@ module Tapioca
             gem("faraday", git: "https://github.com/lostisland/faraday", ref: "23e249563613971ced8f851230c46b9eeeefe931")
           GEMFILE
 
-          @project.bundle_install!
+          install_result = @project.bundle_install!
+          assert_predicate(install_result, :status, "Bundle installing failed\n\n#{install_result.err}")
 
           result = @project.tapioca("gem faraday")
 
