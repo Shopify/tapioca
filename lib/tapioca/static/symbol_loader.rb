@@ -22,7 +22,7 @@ module Tapioca
         sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
         def engine_symbols(gem)
           gem_engine = engines.find do |engine|
-            gem.contains_path?(engine.config.root.to_s)
+            gem.full_gem_path == engine.config.root.to_s
           end
 
           return Set.new unless gem_engine
