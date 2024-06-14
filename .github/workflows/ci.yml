@@ -15,8 +15,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-          rubygems: 'latest'
-          bundler: 'latest'
+          rubygems: 3.5.11
+          bundler: 2.5.11
       - name: Run type check
         run: bin/typecheck
       - name: Lint Ruby files
@@ -61,8 +61,8 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-          rubygems: 'latest'
-          bundler: 'latest'
+          rubygems: 3.5.11
+          bundler: 2.5.11
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
