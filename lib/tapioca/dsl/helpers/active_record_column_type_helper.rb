@@ -102,7 +102,7 @@ module Tapioca
             "::Money"
           when ActiveRecord::Type::Integer
             "::Integer"
-          when ActiveRecord::Encryption::EncryptedAttributeType
+          when defined?(ActiveRecord::Encryption) && ActiveRecord::Encryption::EncryptedAttributeType
             # Reflect to see if `ActiveModel::Type::Value` is being used first.
             getter_type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(column_type)
             return getter_type unless getter_type == "T.untyped"
