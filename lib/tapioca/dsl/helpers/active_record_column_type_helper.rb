@@ -98,11 +98,13 @@ module Tapioca
         sig { params(column_type: T.untyped).returns(String) }
         def type_for_activerecord_value(column_type)
           case column_type
-          when defined?(MoneyColumn) && MoneyColumn::ActiveRecordType
+          when ->(type) { defined?(MoneyColumn) && MoneyColumn::ActiveRecordType === type }
             "::Money"
           when ActiveRecord::Type::Integer
             "::Integer"
-          when defined?(ActiveRecord::Encryption) && ActiveRecord::Encryption::EncryptedAttributeType
+          when ->(type) {
+                 defined?(ActiveRecord::Encryption) && ActiveRecord::Encryption::EncryptedAttributeType === type
+               }
             # Reflect to see if `ActiveModel::Type::Value` is being used first.
             getter_type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(column_type)
             return getter_type unless getter_type == "T.untyped"
@@ -128,20 +130,30 @@ module Tapioca
             "::String"
           when ActiveRecord::Type::Serialized
             serialized_column_type(column_type)
-          when defined?(ActiveRecord::Normalization::NormalizedValueType) &&
-            ActiveRecord::Normalization::NormalizedValueType
+          when ->(type) {
+                 defined?(ActiveRecord::Normalization::NormalizedValueType) &&
+                   ActiveRecord::Normalization::NormalizedValueType === type
+               }
             type_for_activerecord_value(column_type.cast_type)
-          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
-            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid === type
+               }
             "::String"
-          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr) &&
-            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr === type
+               }
             "::IPAddr"
-          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore) &&
-            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore === type
+               }
             "T::Hash[::String, ::String]"
-          when defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
-            ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array === type
+               }
             "T::Array[#{type_for_activerecord_value(column_type.subtype)}]"
           else
             ActiveModelTypeHelper.type_for(column_type)
