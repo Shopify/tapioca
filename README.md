@@ -47,6 +47,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Changing the typed strictness of annotations files](#changing-the-typed-strictness-of-annotations-files)
   * [Generating RBI files for Rails and other DSLs](#generating-rbi-files-for-rails-and-other-dsls)
     * [Keeping RBI files for DSLs up-to-date](#keeping-rbi-files-for-dsls-up-to-date)
+    * [Using DSL compiler options](#using-dsl-compiler-options)
     * [Writing custom DSL compilers](#writing-custom-dsl-compilers)
     * [Writing custom DSL extensions](#writing-custom-dsl-extensions)
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
@@ -544,6 +545,25 @@ if Rails.env.development?
       system("bundle exec tapioca dsl", exception: true)
     end
   end
+```
+
+#### Using DSL compiler options
+
+Some DSL compilers are able to change their behaviour based on the options passed to them. For example, the
+`ActiveRecordColumns` compiler can be configured to change how it generates types for method related to Active Record
+column attributes. To pass options during DSL RBI generation, use the `--compiler-options` flag:
+```shell
+$ bin/tapioca dsl --compiler-options=ActiveRecordColumnTypes:untyped
+```
+which will make the `ActiveRecordColumns` compiler generate untyped signatures for column attribute methods.
+
+Compiler options can be passed through the configuration file, as like any other option, and we expect most users to
+configure them this way. For example, to configure the `ActiveRecordColumns` compiler to generate untyped signatures,
+you need to add the following to your `sorbet/tapioca/config.yml` file:
+```yaml
+dsl:
+  compiler_options:
+    ActiveRecordColumnTypes: untyped
 ```
 
 #### Writing custom DSL compilers
