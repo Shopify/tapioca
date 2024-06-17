@@ -428,6 +428,60 @@ module Tapioca
               assert_includes(rbi_for(:Post), expected)
             end
 
+            it "generates methods with nilable Array type of nilable elements for attributes marked as array: true" do
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                  typed_store :metadata do |s|
+                    s.string(:comments, array: true, null: true)
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Post
+                  include StoreAccessors
+
+                  module StoreAccessors
+                    sig { returns(T.nilable(T::Array[T.nilable(String)])) }
+                    def comments; end
+
+                    sig { params(comments: T.nilable(T::Array[T.nilable(String)])).returns(T.nilable(T::Array[T.nilable(String)])) }
+                    def comments=(comments); end
+              RBI
+
+              rbi = rbi_for(:Post)
+              assert_includes(rbi, expected)
+            end
+
+            it "generates methods with non-nilable Array type for attributes marked as array: true and null: false" do
+              add_ruby_file("post.rb", <<~RUBY)
+                class Post < ActiveRecord::Base
+                  typed_store :metadata do |s|
+                    s.string(:comments, array: true, null: false)
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Post
+                  include StoreAccessors
+
+                  module StoreAccessors
+                    sig { returns(T::Array[T.nilable(String)]) }
+                    def comments; end
+
+                    sig { params(comments: T::Array[T.nilable(String)]).returns(T::Array[T.nilable(String)]) }
+                    def comments=(comments); end
+              RBI
+
+              rbi = rbi_for(:Post)
+              assert_includes(rbi, expected)
+            end
+
             it "generates methods with prefix and suffix" do
               add_ruby_file("post.rb", <<~RUBY)
                 class Post < ActiveRecord::Base

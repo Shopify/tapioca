@@ -98,8 +98,7 @@ module Tapioca
             stores.values.each do |store_data|
               store_data.accessors.each do |accessor, name|
                 field = store_data.fields.fetch(accessor)
-                type = type_for(field.type_sym)
-                type = as_nilable_type(type) if field.null
+                type = type_for(field)
                 name ||= field.name # support < 1.5.0
 
                 generate_methods(store_accessors_module, name.to_s, type)
@@ -136,9 +135,23 @@ module Tapioca
           T::Hash[Symbol, String],
         )
 
-        sig { params(attr_type: Symbol).returns(String) }
-        def type_for(attr_type)
-          TYPES.fetch(attr_type, "T.untyped")
+        sig { params(field: ActiveRecord::TypedStore::Field).returns(String) }
+        def type_for(field)
+          type = TYPES.fetch(field.type_sym, "T.untyped")
+
+          type = if field.array
+            # `null: false` applies to the array itself, not the elements, which are always nilable.
+            # https://github.com/byroot/activerecord-typedstore/blob/2f3fb98/spec/support/models.rb#L46C34-L46C45
+            # https://github.com/byroot/activerecord-typedstore/blob/2f3fb98/spec/active_record/typed_store_spec.rb#L854-L857
+            nilable_element_type = as_nilable_type(type)
+            "T::Array[#{nilable_element_type}]"
+          else
+            type
+          end
+
+          type = as_nilable_type(type) if field.null
+
+          type
         end
 
         sig do
