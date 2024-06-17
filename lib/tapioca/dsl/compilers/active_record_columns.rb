@@ -147,16 +147,18 @@ module Tapioca
 
         private
 
-        sig { returns(Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption) }
+        ColumnTypeOption = Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption
+
+        sig { returns(ColumnTypeOption) }
         def column_type_option
           @column_type_option ||= T.let(
-            Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption.from_serialized(
-              options.fetch(
-                "types",
-                Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Persisted.serialize,
-              ),
-            ),
-            T.nilable(Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption),
+            ColumnTypeOption.from_options(options) do |value, default_column_type_option|
+              add_error(<<~MSG.strip)
+                Unknown value for compiler option `ActiveRecordColumnTypes` given: `#{value}`.
+                Proceeding with the default value: `#{default_column_type_option.serialize}`.
+              MSG
+            end,
+            T.nilable(ColumnTypeOption),
           )
         end
 

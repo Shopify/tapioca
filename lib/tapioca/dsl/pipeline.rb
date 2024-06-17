@@ -33,7 +33,7 @@ module Tapioca
           error_handler: T.proc.params(error: String).void,
           skipped_constants: T::Array[Module],
           number_of_workers: T.nilable(Integer),
-          compiler_options: T::Hash[String, T::Hash[String, T.untyped]],
+          compiler_options: T::Hash[String, T.untyped],
         ).void
       end
       def initialize(
@@ -200,12 +200,7 @@ module Tapioca
         active_compilers.each do |compiler_class|
           next unless compiler_class.handles?(constant)
 
-          compiler_key = T.must(compiler_class.name).dup
-          Tapioca::Dsl::Compilers::NAMESPACES.each do |namespace|
-            compiler_key.delete_prefix!(namespace)
-          end
-          options = @compiler_options.fetch(compiler_key, {})
-          compiler = compiler_class.new(self, file.root, constant, options)
+          compiler = compiler_class.new(self, file.root, constant, @compiler_options)
           compiler.decorate
         rescue
           $stderr.puts("Error: `#{compiler_class.name}` failed to generate RBI for `#{constant}`")
