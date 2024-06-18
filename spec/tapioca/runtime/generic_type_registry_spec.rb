@@ -28,7 +28,7 @@ module Tapioca
         end
 
         describe ".register_type_variable" do
-          it " registers a type variable that can be looked up later" do
+          it "registers a type variable that can be looked up later" do
             not_actually_generic = Class.new
 
             fake_type_member1 = Tapioca::TypeVariableModule.new(

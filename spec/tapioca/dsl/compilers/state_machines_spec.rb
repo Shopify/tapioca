@@ -37,7 +37,7 @@ module Tapioca
           end
 
           describe "decorate" do
-            it " generates an RBI that includes state accessor methods" do
+            it "generates an RBI that includes state accessor methods" do
               add_ruby_file("vehicle.rb", <<~RUBY)
                 class Vehicle
                   state_machine :alarm_state, initial: :active, namespace: :'alarm' do

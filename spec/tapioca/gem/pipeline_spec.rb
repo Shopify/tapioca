@@ -74,7 +74,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       # it looks like `before(:all)` blocks run in the parent process, but we don't
       # want to mess with the object space of the parent process.
       if defined?(::ActiveSupport)
-        Object.send(:remove_const, :ActiveSupport)
+        Object.send(:remove_const, :ActiveSupport) # rubocop:disable RSpec/RemoveConst
         $LOADED_FEATURES.delete_if { |path| path.include?("active_support") }
       end
     end

@@ -28,6 +28,9 @@ RSpec/ExampleLength:
 RSpec/LeadingSubject:
   Enabled: false
 
+RSpec/NoExpectationExample:
+  Enabled: false
+
 Sorbet:
   Enabled: true
 
