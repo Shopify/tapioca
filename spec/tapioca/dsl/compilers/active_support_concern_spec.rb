@@ -299,6 +299,50 @@ module Tapioca
                 arguments_to_micm_in_effective_order(rbi_for(:Qux)),
               )
             end
+
+            it "only generates ClassMethods RBI when it's defined on a module" do
+              add_ruby_file("test_case.rb", <<~RUBY)
+                module Foo
+                  extend ActiveSupport::Concern
+
+                  module ClassMethods
+                  end
+                end
+
+                module Bar
+                  extend ActiveSupport::Concern
+                  include Foo
+                end
+
+                module Baz
+                  extend ActiveSupport::Concern
+                  include Bar
+
+                  module ClassMethods
+                  end
+                end
+                
+                class Qux
+                  include Baz
+                end
+              RUBY
+
+              # `mixes_in_class_methods ::Bar::ClassMethods` is not expected in this case because there is no
+              # `::Bar::ClassMethods` module.
+              expected = <<~RUBY
+                # typed: strong
+
+                module Baz
+                  mixes_in_class_methods ::Foo::ClassMethods
+                end
+              RUBY
+
+              assert_equal(expected, rbi_for(:Baz))
+              assert_equal(
+                class_method_ancestors_for(:Qux),
+                arguments_to_micm_in_effective_order(rbi_for(:Baz)),
+              )
+            end
           end
         end
 
