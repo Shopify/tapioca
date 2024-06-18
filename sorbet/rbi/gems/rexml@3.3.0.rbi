@@ -3454,47 +3454,47 @@ end
 # A Source that wraps an IO.  See the Source class for method
 # documentation
 #
-# source://rexml//lib/rexml/source.rb#156
+# source://rexml//lib/rexml/source.rb#176
 class REXML::IOSource < ::REXML::Source
   # block_size has been deprecated
   #
   # @return [IOSource] a new instance of IOSource
   #
-  # source://rexml//lib/rexml/source.rb#160
+  # source://rexml//lib/rexml/source.rb#180
   def initialize(arg, block_size = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   # @return the current line in the source
   #
-  # source://rexml//lib/rexml/source.rb#238
+  # source://rexml//lib/rexml/source.rb#258
   def current_line; end
 
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/source.rb#233
+  # source://rexml//lib/rexml/source.rb#253
   def empty?; end
 
-  # source://rexml//lib/rexml/source.rb#210
+  # source://rexml//lib/rexml/source.rb#230
   def ensure_buffer; end
 
   # Note: When specifying a string for 'pattern', it must not include '>' except in the following formats:
   # - ">"
   # - "XXX>" (X is any string excluding '>')
   #
-  # source://rexml//lib/rexml/source.rb#217
+  # source://rexml//lib/rexml/source.rb#237
   def match(pattern, cons = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#181
+  # source://rexml//lib/rexml/source.rb#201
   def read(term = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#192
+  # source://rexml//lib/rexml/source.rb#212
   def read_until(term); end
 
   private
 
-  # source://rexml//lib/rexml/source.rb#280
+  # source://rexml//lib/rexml/source.rb#300
   def encoding_updated; end
 
-  # source://rexml//lib/rexml/source.rb#260
+  # source://rexml//lib/rexml/source.rb#280
   def readline(term = T.unsafe(nil)); end
 end
 
@@ -4324,7 +4324,7 @@ end
 # A Source can be searched for patterns, and wraps buffers and other
 # objects and provides consumption of text
 #
-# source://rexml//lib/rexml/source.rb#31
+# source://rexml//lib/rexml/source.rb#51
 class REXML::Source
   include ::REXML::Encoding
   include ::REXML::Source::Private
@@ -4336,74 +4336,74 @@ class REXML::Source
   # @param encoding if non-null, sets the encoding of the source to this
   # @return [Source] a new instance of Source
   #
-  # source://rexml//lib/rexml/source.rb#51
+  # source://rexml//lib/rexml/source.rb#71
   def initialize(arg, encoding = T.unsafe(nil)); end
 
   # The current buffer (what we're going to read next)
   #
-  # source://rexml//lib/rexml/source.rb#63
+  # source://rexml//lib/rexml/source.rb#83
   def buffer; end
 
-  # source://rexml//lib/rexml/source.rb#67
+  # source://rexml//lib/rexml/source.rb#87
   def buffer_encoding=(encoding); end
 
   # @return the current line in the source
   #
-  # source://rexml//lib/rexml/source.rb#116
+  # source://rexml//lib/rexml/source.rb#136
   def current_line; end
 
   # @return [Boolean] true if the Source is exhausted
   #
-  # source://rexml//lib/rexml/source.rb#111
+  # source://rexml//lib/rexml/source.rb#131
   def empty?; end
 
   # Returns the value of attribute encoding.
   #
-  # source://rexml//lib/rexml/source.rb#35
+  # source://rexml//lib/rexml/source.rb#55
   def encoding; end
 
   # Inherited from Encoding
   # Overridden to support optimized en/decoding
   #
-  # source://rexml//lib/rexml/source.rb#73
+  # source://rexml//lib/rexml/source.rb#93
   def encoding=(enc); end
 
-  # source://rexml//lib/rexml/source.rb#91
+  # source://rexml//lib/rexml/source.rb#111
   def ensure_buffer; end
 
   # The line number of the last consumed text
   #
-  # source://rexml//lib/rexml/source.rb#34
+  # source://rexml//lib/rexml/source.rb#54
   def line; end
 
-  # source://rexml//lib/rexml/source.rb#94
+  # source://rexml//lib/rexml/source.rb#114
   def match(pattern, cons = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#102
+  # source://rexml//lib/rexml/source.rb#122
   def position; end
 
-  # source://rexml//lib/rexml/source.rb#106
+  # source://rexml//lib/rexml/source.rb#126
   def position=(pos); end
 
-  # source://rexml//lib/rexml/source.rb#78
+  # source://rexml//lib/rexml/source.rb#98
   def read(term = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#81
+  # source://rexml//lib/rexml/source.rb#101
   def read_until(term); end
 
   private
 
-  # source://rexml//lib/rexml/source.rb#125
+  # source://rexml//lib/rexml/source.rb#145
   def detect_encoding; end
 
-  # source://rexml//lib/rexml/source.rb#143
+  # source://rexml//lib/rexml/source.rb#163
   def encoding_updated; end
 end
 
-# source://rexml//lib/rexml/source.rb#37
+# source://rexml//lib/rexml/source.rb#57
 module REXML::Source::Private; end
 
-# source://rexml//lib/rexml/source.rb#38
+# source://rexml//lib/rexml/source.rb#58
 REXML::Source::Private::PRE_DEFINED_TERM_PATTERNS = T.let(T.unsafe(nil), Hash)
 
 # Represents text nodes in an XML document

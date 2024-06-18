@@ -11,7 +11,7 @@ module Tapioca
           sig { void }
           def before_setup
             require "config"
-            Object.send(:remove_const, :Rails)
+            Object.send(:remove_const, :Rails) # rubocop:disable RSpec/RemoveConst
           end
 
           describe "gather_constants" do

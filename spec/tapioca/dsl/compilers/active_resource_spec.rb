@@ -18,7 +18,7 @@ module Tapioca
               assert_empty(gathered_constants)
             end
 
-            it "gathers only ActiveResource constants " do
+            it "gathers only ActiveResource constants" do
               add_ruby_file("content.rb", <<~RUBY)
                 class Post < ActiveResource::Base
                 end
