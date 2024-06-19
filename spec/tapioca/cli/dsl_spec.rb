@@ -2920,7 +2920,7 @@ module Tapioca
           RB
 
           result = @project.tapioca(
-            "dsl Post --only=ActiveRecordColumns --compiler-options='ActiveRecordColumns:{types: untyped}'",
+            "dsl Post --only=ActiveRecordColumns --compiler-options='ActiveRecordColumnTypes:untyped'",
           )
 
           assert_stdout_equals(<<~OUT, result)
