@@ -300,7 +300,7 @@ module Tapioca
               )
             end
 
-            it "only generates ClassMethods RBI when it's defined on a module" do
+            it "only generates ClassMethods RBI when it's directly defined on a module" do
               add_ruby_file("test_case.rb", <<~RUBY)
                 module Foo
                   extend ActiveSupport::Concern
@@ -321,7 +321,7 @@ module Tapioca
                   module ClassMethods
                   end
                 end
-                
+
                 class Qux
                   include Baz
                 end
