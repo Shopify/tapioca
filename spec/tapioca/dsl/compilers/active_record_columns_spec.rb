@@ -1038,7 +1038,7 @@ module Tapioca
                     def body?; end
                 RBI
 
-                assert_includes(rbi_for(:Post, compiler_options: { types: "untyped" }), expected)
+                assert_includes(rbi_for(:Post, compiler_options: { ActiveRecordColumnTypes: "untyped" }), expected)
               end
 
               it "generates default columns with untyped" do
@@ -1189,7 +1189,7 @@ module Tapioca
                   end
                 RBI
 
-                assert_equal(expected, rbi_for(:Post, compiler_options: { types: "untyped" }))
+                assert_equal(expected, rbi_for(:Post, compiler_options: { ActiveRecordColumnTypes: "untyped" }))
               end
             end
 
@@ -1224,7 +1224,7 @@ module Tapioca
                     def body?; end
                 RBI
 
-                assert_includes(rbi_for(:Post, compiler_options: { types: "nilable" }), expected)
+                assert_includes(rbi_for(:Post, compiler_options: { ActiveRecordColumnTypes: "nilable" }), expected)
               end
 
               it "generates default columns with nilable" do
@@ -1375,7 +1375,53 @@ module Tapioca
                   end
                 RBI
 
-                assert_equal(expected, rbi_for(:Post, compiler_options: { types: "nilable" }))
+                assert_equal(expected, rbi_for(:Post, compiler_options: { ActiveRecordColumnTypes: "nilable" }))
+              end
+            end
+
+            describe "when compiled with invalid column types" do
+              it "shows an error but generates columns with 'persisted' column types" do
+                expect_dsl_compiler_errors!
+
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        # explicitly setting null to false to test that we always generate
+                        # nilable column types despite this setting
+                        t.string :body, null: false
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                  end
+                RUBY
+
+                expected = indented(<<~RBI, 2)
+                  module GeneratedAttributeMethods
+                    sig { returns(::String) }
+                    def body; end
+
+                    sig { params(value: ::String).returns(::String) }
+                    def body=(value); end
+
+                    sig { returns(T::Boolean) }
+                    def body?; end
+                RBI
+
+                assert_includes(
+                  rbi_for(:Post, compiler_options: { ActiveRecordColumnTypes: "non_existent_wrong_option_value" }),
+                  expected,
+                )
+
+                assert_equal(1, generated_errors.size)
+                assert_equal(<<~MSG.strip, generated_errors.first)
+                  Unknown value for compiler option `ActiveRecordColumnTypes` given: `non_existent_wrong_option_value`.
+                  Proceeding with the default value: `persisted`.
+                MSG
               end
             end
           end

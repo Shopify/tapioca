@@ -12,10 +12,36 @@ module Tapioca
 
         class ColumnTypeOption < T::Enum
           extend T::Sig
+
           enums do
             Untyped = new("untyped")
             Nilable = new("nilable")
             Persisted = new("persisted")
+          end
+
+          class << self
+            extend T::Sig
+
+            sig do
+              params(
+                options: T::Hash[String, T.untyped],
+                block: T.proc.params(value: String, default_column_type_option: ColumnTypeOption).void,
+              ).returns(ColumnTypeOption)
+            end
+            def from_options(options, &block)
+              column_type_option = Persisted
+              value = options["ActiveRecordColumnTypes"]
+
+              if value
+                if has_serialized?(value)
+                  column_type_option = from_serialized(value)
+                else
+                  block.call(value, column_type_option)
+                end
+              end
+
+              column_type_option
+            end
           end
 
           sig { returns(T::Boolean) }

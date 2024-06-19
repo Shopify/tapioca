@@ -15,6 +15,21 @@ module Tapioca
       # created for columns and virtual attributes that are defined in the Active Record
       # model.
       #
+      # This compiler accepts a `ActiveRecordColumnTypes` option that can be used to specify
+      # how the types of the column related methods should be generated. The option can be one of the following:
+      #  - `persisted` (_default_): The methods will be generated with the type that matches the actual database
+      #  column type as the return type. This means that if the column is a string, the method return type
+      #  will be `String`, but if the column is also nullable, then the return type will be `T.nilable(String)`. This
+      #  mode basically treats each model as if it was a valid and persisted model. Note that this makes typing
+      #  Active Record models easier, but does not match the behaviour of non-persisted or invalid models, which can
+      #  have all kinds of non-sensical values in their column attributes.
+      #  - `nilable`: All column methods will be generated with `T.nilable` return types. This is strictly the most
+      #  correct way to type the methods, but it can make working with the models more cumbersome, as you will have to
+      #  handle the `nil` cases explicitly using `T.must` or the safe navigation operator `&.`, even for valid
+      #  persisted models.
+      #  - `untyped`: The methods will be generated with `T.untyped` return types. This mode is practical if you are not
+      #  ready to start typing your models strictly yet, but still want to generate RBI files for them.
+      #
       # For example, with the following model class:
       # ~~~rb
       # class Post < ActiveRecord::Base
@@ -33,7 +48,7 @@ module Tapioca
       # end
       # ~~~
       #
-      # this compiler will produce the following methods in the RBI file
+      # this compiler will, by default, produce the following methods in the RBI file
       # `post.rbi`:
       #
       # ~~~rbi
@@ -94,6 +109,17 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #
+      # However, if `ActiveRecordColumnTypes` is set to `nilable`, the `title` method will be generated as:
+      # ~~~rbi
+      #     sig { returns(T.nilable(::String)) }
+      #     def title; end
+      # ~~~
+      # and if the option is set to `untyped`, the `title` method will be generated as:
+      # ~~~rbi
+      #     sig { returns(T.untyped) }
+      #     def title; end
+      # ~~~
       class ActiveRecordColumns < Compiler
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
@@ -147,16 +173,18 @@ module Tapioca
 
         private
 
-        sig { returns(Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption) }
+        ColumnTypeOption = Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption
+
+        sig { returns(ColumnTypeOption) }
         def column_type_option
           @column_type_option ||= T.let(
-            Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption.from_serialized(
-              options.fetch(
-                "types",
-                Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Persisted.serialize,
-              ),
-            ),
-            T.nilable(Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption),
+            ColumnTypeOption.from_options(options) do |value, default_column_type_option|
+              add_error(<<~MSG.strip)
+                Unknown value for compiler option `ActiveRecordColumnTypes` given: `#{value}`.
+                Proceeding with the default value: `#{default_column_type_option.serialize}`.
+              MSG
+            end,
+            T.nilable(ColumnTypeOption),
           )
         end
 
