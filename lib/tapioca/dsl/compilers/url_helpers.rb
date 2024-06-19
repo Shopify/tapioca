@@ -106,19 +106,28 @@ module Tapioca
             routes_reloader = Rails.application.routes_reloader
             routes_reloader.execute_unless_loaded if routes_reloader&.respond_to?(:execute_unless_loaded)
 
-            Object.const_set(:GeneratedUrlHelpersModule, Rails.application.routes.named_routes.url_helpers_module)
-            Object.const_set(:GeneratedPathHelpersModule, Rails.application.routes.named_routes.path_helpers_module)
+            url_helpers_module = Rails.application.routes.named_routes.url_helpers_module
+            path_helpers_module = Rails.application.routes.named_routes.path_helpers_module
+
+            Object.const_set(:GeneratedUrlHelpersModule, url_helpers_module)
+            Object.const_set(:GeneratedPathHelpersModule, path_helpers_module)
 
             constants = all_modules.select do |mod|
               next unless name_of(mod)
 
-              includes_helper?(mod, GeneratedUrlHelpersModule) ||
-                includes_helper?(mod, GeneratedPathHelpersModule) ||
-                includes_helper?(mod.singleton_class, GeneratedUrlHelpersModule) ||
-                includes_helper?(mod.singleton_class, GeneratedPathHelpersModule)
+              # Fast-path to quickly disqualify most classes
+              next false unless mod < url_helpers_module || # rubocop:disable Style/InvertibleUnlessCondition
+                mod < path_helpers_module ||
+                mod.singleton_class < url_helpers_module ||
+                mod.singleton_class < path_helpers_module
+
+              includes_helper?(mod, url_helpers_module) ||
+                includes_helper?(mod, path_helpers_module) ||
+                includes_helper?(mod.singleton_class, url_helpers_module) ||
+                includes_helper?(mod.singleton_class, path_helpers_module)
             end
 
-            constants.concat(NON_DISCOVERABLE_INCLUDERS)
+            constants.concat(NON_DISCOVERABLE_INCLUDERS).push(GeneratedUrlHelpersModule, GeneratedPathHelpersModule)
           end
 
           sig { returns(T::Array[Module]) }
@@ -134,17 +143,21 @@ module Tapioca
             end.freeze
           end
 
+          # Returns `true` if `mod` "directly" includes `helper`.
+          # For classes, this method will return false if the `helper` is included only by a superclass
           sig { params(mod: Module, helper: Module).returns(T::Boolean) }
           private def includes_helper?(mod, helper)
-            superclass_ancestors = []
+            ancestors = ancestors_of(mod)
 
-            if Class === mod
-              superclass = superclass_of(mod)
-              superclass_ancestors = ancestors_of(superclass) if superclass
+            own_ancestors = if Class === mod && (superclass = superclass_of(mod))
+              # These ancestors are unique to `mod`, and exclude those in common with `superclass`.
+              ancestors.take(ancestors.count - ancestors_of(superclass).size)
+            else
+              ancestors
             end
 
-            ancestors = Set.new.compare_by_identity.merge(ancestors_of(mod)).subtract(superclass_ancestors)
-            ancestors.any? { |ancestor| helper == ancestor }
+            # Can't use a simple `include?(helper)` because of edge cases like `XPath`, whose `#==` operator misbehaves.
+            own_ancestors.any? { |a| helper == a }
           end
         end
 
