@@ -114,7 +114,10 @@ module Tapioca
             end
 
           if @column_type_option.persisted? && !column&.null
-            [getter_type, setter_type]
+            # It's possible that when ActiveModel::Type::Value is used, the signature being reflected on in
+            # ActiveModelTypeHelper.type_for(type_value) may say the type can be nilable. However, if the type is
+            # persisted and the column is not nullable, we can assume it's not nilable.
+            [as_non_nilable_type(getter_type), as_non_nilable_type(setter_type)]
           else
             getter_type = as_nilable_type(getter_type) unless not_nilable_serialized_column?(column_type)
             [getter_type, as_nilable_type(setter_type)]

@@ -984,6 +984,53 @@ module Tapioca
                 assert_includes(rbi_for(:Post), expected)
               end
 
+              it "strips T.nilable from reflected signatures method for non-nilable columns in persisted mode" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        t.decimal :cost, null: false
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("custom_type.rb", <<~RUBY)
+                  class CustomType
+                    attr_accessor :value
+
+                    def initialize(number = 0.0)
+                      @value = number
+                    end
+
+                    class Type < ActiveRecord::Type::Value
+                      extend(T::Sig)
+
+                      sig { params(value: T.nilable(Numeric)).returns(T.nilable(::CustomType))}
+                      def deserialize(value)
+                        CustomType.new(value) if value
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    attribute :cost, CustomType::Type.new
+                  end
+                RUBY
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(::CustomType) }
+                  def cost; end
+
+                  sig { params(value: ::CustomType).returns(::CustomType) }
+                  def cost=(value); end
+                RBI
+
+                assert_includes(rbi_for(:Post), expected)
+              end
+
               it "generates id accessors when primary key isn't id" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
