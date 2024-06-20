@@ -49,7 +49,7 @@ module Tapioca
           mixed_in_class_methods = dependencies
             .uniq # Deduplicate
             .filter_map do |concern| # Map to class methods module name, if exists
-              "#{qualified_name_of(concern)}::ClassMethods" if concern.const_defined?(:ClassMethods)
+              "#{qualified_name_of(concern)}::ClassMethods" if concern.const_defined?(:ClassMethods, false)
             end
 
           return if mixed_in_class_methods.empty?
