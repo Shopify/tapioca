@@ -104,7 +104,7 @@ module Tapioca
 
           column = @constant.columns_hash[column_name]
           column_type = @constant.attribute_types[column_name]
-          getter_type = type_for_activerecord_value(column_type)
+          getter_type = type_for_activerecord_value(column_type, column_nullability: !!column&.null)
           setter_type =
             case column_type
             when ActiveRecord::Enum::EnumType
@@ -121,8 +121,8 @@ module Tapioca
           end
         end
 
-        sig { params(column_type: T.untyped).returns(String) }
-        def type_for_activerecord_value(column_type)
+        sig { params(column_type: T.untyped, column_nullability: T::Boolean).returns(String) }
+        def type_for_activerecord_value(column_type, column_nullability:)
           case column_type
           when ->(type) { defined?(MoneyColumn) && MoneyColumn::ActiveRecordType === type }
             "::Money"
@@ -133,11 +133,12 @@ module Tapioca
                }
             # Reflect to see if `ActiveModel::Type::Value` is being used first.
             getter_type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(column_type)
-            return getter_type unless getter_type == "T.untyped"
 
-            # Otherwise fallback to String as `ActiveRecord::Encryption::EncryptedAttributeType` inherits from
+            # Fallback to String as `ActiveRecord::Encryption::EncryptedAttributeType` inherits from
             # `ActiveRecord::Type::Text` which inherits from `ActiveModel::Type::String`.
-            "::String"
+            return "::String" if getter_type == "T.untyped"
+
+            as_non_nilable_if_persisted_and_not_nullable(getter_type, column_nullability:)
           when ActiveRecord::Type::String
             "::String"
           when ActiveRecord::Type::Date
@@ -160,7 +161,7 @@ module Tapioca
                  defined?(ActiveRecord::Normalization::NormalizedValueType) &&
                    ActiveRecord::Normalization::NormalizedValueType === type
                }
-            type_for_activerecord_value(column_type.cast_type)
+            type_for_activerecord_value(column_type.cast_type, column_nullability:)
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid === type
@@ -180,10 +181,23 @@ module Tapioca
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array === type
                }
-            "T::Array[#{type_for_activerecord_value(column_type.subtype)}]"
+            "T::Array[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
           else
-            ActiveModelTypeHelper.type_for(column_type)
+            as_non_nilable_if_persisted_and_not_nullable(
+              ActiveModelTypeHelper.type_for(column_type),
+              column_nullability: column_nullability,
+            )
           end
+        end
+
+        sig { params(base_type: String, column_nullability: T::Boolean).returns(String) }
+        def as_non_nilable_if_persisted_and_not_nullable(base_type, column_nullability:)
+          # It's possible that when ActiveModel::Type::Value is used, the signature being reflected on in
+          # ActiveModelTypeHelper.type_for(type_value) may say the type can be nilable. However, if the type is
+          # persisted and the column is not nullable, we can assume it's not nilable.
+          return as_non_nilable_type(base_type) if @column_type_option.persisted? && !column_nullability
+
+          base_type
         end
 
         sig { params(column_type: ActiveRecord::Enum::EnumType).returns(String) }
