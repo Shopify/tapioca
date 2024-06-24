@@ -195,6 +195,8 @@ module Tapioca
             query_methods -= [:group]
             # Remove "where" which needs a custom return type for WhereChains
             query_methods -= [:where]
+            # Remove "all" which has a custom signature
+            query_methods -= [:all]
             # Remove the methods that ...
             query_methods
               .grep_v(/_clause$/) # end with "_clause"
