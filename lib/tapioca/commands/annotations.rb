@@ -135,6 +135,7 @@ module Tapioca
       sig { params(repo_uris: T::Array[String], gem_info: GemInfo).void }
       def fetch_annotation(repo_uris, gem_info)
         gem_name = gem_info.name
+        gem_version = gem_info.version
 
         contents = repo_uris.map do |repo_uri|
           fetch_file(repo_uri, "#{CENTRAL_REPO_ANNOTATIONS_DIR}/#{gem_name}.rbi")
@@ -144,6 +145,7 @@ module Tapioca
         return unless content
 
         content = apply_typed_override(gem_name, content)
+        content = filter_versions(gem_version, content)
         content = add_header(gem_name, content)
 
         say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
@@ -221,6 +223,14 @@ module Tapioca
         end
 
         Spoom::Sorbet::Sigils.update_sigil(content, strictness)
+      end
+
+      sig { params(gem_version: ::Gem::Version, content: String).returns(String) }
+      def filter_versions(gem_version, content)
+        rbi = RBI::Parser.parse_string(content)
+        rbi.filter_versions!(gem_version)
+
+        rbi.string
       end
 
       sig { params(gem_name: String, contents: T::Array[String]).returns(T.nilable(String)) }
