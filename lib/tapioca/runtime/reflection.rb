@@ -172,6 +172,33 @@ module Tapioca
         T.unsafe(result)
       end
 
+      # Returns an array with all modules which extend the supplied module
+      # (i.e. all modules whose singleton class, or ancestor thereof, includes the supplied module).
+      #
+      #   module M; end
+      #   extenders_of(M) # => []
+      #
+      #   module E
+      #     extend M
+      #   end
+      #   extenders_of(M) # => [E]
+      #
+      #   class P
+      #     extend M
+      #   end
+      #   extenders_of(M) # => [E, P]
+      #
+      #   class C < P; end
+      #   extenders_of(M) # => [E, P, C]
+      sig { params(mod: Module).returns(T::Array[Module]) }
+      def extenders_of(mod)
+        result = ObjectSpace.each_object(Module).select do |m|
+          T.cast(m, Module).singleton_class.included_modules.include?(mod)
+        end
+
+        T.cast(result, T::Array[Module])
+      end
+
       # Examines the call stack to identify the closest location where a "require" is performed
       # by searching for the label "<top (required)>". If none is found, it returns the location
       # labeled "<main>", which is the original call site.
