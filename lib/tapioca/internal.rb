@@ -45,6 +45,7 @@ require "tapioca/helpers/env_helper"
 
 require "tapioca/repo_index"
 require "tapioca/gemfile"
+require "tapioca/gem_info"
 require "tapioca/executor"
 
 require "tapioca/static/symbol_table_parser"

@@ -46,22 +46,22 @@ module Tapioca
         GitAttributes.create_vendored_attribute_file(@outpath)
       end
 
-      sig { returns(T::Array[String]) }
+      sig { returns(T::Array[GemInfo]) }
       def list_gemfile_gems
         say("Listing gems from Gemfile.lock... ", [:blue, :bold])
         gemfile = Bundler.read_file("Gemfile.lock")
         parser = Bundler::LockfileParser.new(gemfile)
-        gem_names = parser.specs.map(&:name)
+        gem_info = parser.specs.map { |spec| GemInfo.from_spec(spec) }
         say("Done", :green)
-        gem_names
+        gem_info
       end
 
-      sig { params(project_gems: T::Array[String]).void }
+      sig { params(project_gems: T::Array[GemInfo]).void }
       def remove_expired_annotations(project_gems)
         say("Removing annotations for gems that have been removed... ", [:blue, :bold])
 
         annotations = Pathname.glob(@outpath.join("*.rbi")).map { |f| f.basename(".*").to_s }
-        expired = annotations - project_gems
+        expired = annotations - project_gems.map(&:name)
 
         if expired.empty?
           say(" Nothing to do")
@@ -109,14 +109,14 @@ module Tapioca
         index
       end
 
-      sig { params(gem_names: T::Array[String]).returns(T::Array[String]) }
-      def fetch_annotations(gem_names)
+      sig { params(project_gems: T::Array[GemInfo]).returns(T::Array[String]) }
+      def fetch_annotations(project_gems)
         say("Fetching gem annotations from central repository... ", [:blue, :bold])
-        fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[String, T::Array[String]])
+        fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[GemInfo, T::Array[String]])
 
-        gem_names.each_with_object(fetchable_gems) do |gem_name, hash|
+        project_gems.each_with_object(fetchable_gems) do |gem_info, hash|
           @indexes.each do |uri, index|
-            T.must(hash[gem_name]) << uri if index.has_gem?(gem_name)
+            T.must(hash[gem_info]) << uri if index.has_gem?(gem_info.name)
           end
         end
 
@@ -127,13 +127,16 @@ module Tapioca
         end
 
         say("\n")
-        fetched_gems = fetchable_gems.select { |gem_name, repo_uris| fetch_annotation(repo_uris, gem_name) }
+        fetched_gems = fetchable_gems.select { |gem_info, repo_uris| fetch_annotation(repo_uris, gem_info) }
         say("\nDone", :green)
-        fetched_gems.keys.sort
+        fetched_gems.keys.map(&:name).sort
       end
 
-      sig { params(repo_uris: T::Array[String], gem_name: String).void }
-      def fetch_annotation(repo_uris, gem_name)
+      sig { params(repo_uris: T::Array[String], gem_info: GemInfo).void }
+      def fetch_annotation(repo_uris, gem_info)
+        gem_name = gem_info.name
+        gem_version = gem_info.version
+
         contents = repo_uris.map do |repo_uri|
           fetch_file(repo_uri, "#{CENTRAL_REPO_ANNOTATIONS_DIR}/#{gem_name}.rbi")
         end
@@ -142,6 +145,7 @@ module Tapioca
         return unless content
 
         content = apply_typed_override(gem_name, content)
+        content = filter_versions(gem_version, content)
         content = add_header(gem_name, content)
 
         say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
@@ -219,6 +223,14 @@ module Tapioca
         end
 
         Spoom::Sorbet::Sigils.update_sigil(content, strictness)
+      end
+
+      sig { params(gem_version: ::Gem::Version, content: String).returns(String) }
+      def filter_versions(gem_version, content)
+        rbi = RBI::Parser.parse_string(content)
+        rbi.filter_versions!(gem_version)
+
+        rbi.string
       end
 
       sig { params(gem_name: String, contents: T::Array[String]).returns(T.nilable(String)) }
