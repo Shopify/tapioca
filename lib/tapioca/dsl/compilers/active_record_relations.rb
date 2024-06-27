@@ -190,7 +190,7 @@ module Tapioca
             # Grab all Spawn methods
             query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
             # Remove the ones we know are private API
-            query_methods -= [:arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
+            query_methods -= [:all, :arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
             # Remove "group" which needs a custom return type for GroupChains
             query_methods -= [:group]
             # Remove "where" which needs a custom return type for WhereChains
