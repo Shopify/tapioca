@@ -90,10 +90,10 @@ module Tapioca
                     sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
                     def fetch_by_title(title, includes: nil); end
 
-                    sig { params(blog_id: T.untyped).returns(T.nilable(::Integer)) }
+                    sig { params(blog_id: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_blog_id(blog_id); end
 
-                    sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
+                    sig { params(title: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_title(title); end
 
                     sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
@@ -148,7 +148,7 @@ module Tapioca
                     sig { params(title: T.untyped, includes: T.untyped).returns(::Post) }
                     def fetch_by_title!(title, includes: nil); end
 
-                    sig { params(blog_id: T.untyped).returns(T.nilable(::Integer)) }
+                    sig { params(blog_id: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_blog_id(blog_id); end
 
                     sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
@@ -199,7 +199,7 @@ module Tapioca
                     sig { params(blog_id: T.untyped, title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
                     def fetch_by_blog_id_and_title(blog_id, title, includes: nil); end
 
-                    sig { params(blog_id: T.untyped, title: T.untyped).returns(T.nilable(::Integer)) }
+                    sig { params(blog_id: T.untyped, title: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_blog_id_and_title(blog_id, title); end
 
                     sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
@@ -248,7 +248,7 @@ module Tapioca
                     sig { params(title: T.untyped, review_date: T.untyped, includes: T.untyped).returns(::Post) }
                     def fetch_by_title_and_review_date!(title, review_date, includes: nil); end
 
-                    sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
+                    sig { params(title: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_title(title); end
 
                     sig { params(title: T.untyped, review_date: T.untyped).returns(T.nilable(::Integer)) }

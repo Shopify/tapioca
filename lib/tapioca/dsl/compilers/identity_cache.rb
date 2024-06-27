@@ -231,7 +231,7 @@ module Tapioca
             "fetch_#{suffix}",
             class_method: true,
             parameters: parameters,
-            return_type: type,
+            return_type: field.unique ? type : COLLECTION_TYPE.call(type),
           )
 
           klass.create_method(
