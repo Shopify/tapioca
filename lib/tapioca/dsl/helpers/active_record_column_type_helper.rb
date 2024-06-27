@@ -104,7 +104,7 @@ module Tapioca
 
           column = @constant.columns_hash[column_name]
           column_type = @constant.attribute_types[column_name]
-          getter_type = type_for_activerecord_value(column_type)
+          getter_type = type_for_activerecord_value(column_type, null: !!column&.null)
           setter_type =
             case column_type
             when ActiveRecord::Enum::EnumType
@@ -121,8 +121,8 @@ module Tapioca
           end
         end
 
-        sig { params(column_type: T.untyped).returns(String) }
-        def type_for_activerecord_value(column_type)
+        sig { params(column_type: T.untyped, null: T::Boolean).returns(String) }
+        def type_for_activerecord_value(column_type, null:)
           case column_type
           when ->(type) { defined?(MoneyColumn) && MoneyColumn::ActiveRecordType === type }
             "::Money"
@@ -160,7 +160,7 @@ module Tapioca
                  defined?(ActiveRecord::Normalization::NormalizedValueType) &&
                    ActiveRecord::Normalization::NormalizedValueType === type
                }
-            type_for_activerecord_value(column_type.cast_type)
+            type_for_activerecord_value(column_type.cast_type, null:)
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid === type
@@ -180,9 +180,16 @@ module Tapioca
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array === type
                }
-            "T::Array[#{type_for_activerecord_value(column_type.subtype)}]"
+            "T::Array[#{type_for_activerecord_value(column_type.subtype, null:)}]"
           else
-            ActiveModelTypeHelper.type_for(column_type)
+            base_type = ActiveModelTypeHelper.type_for(column_type)
+
+            # It's possible that when ActiveModel::Type::Value is used, the signature being reflected on in
+            # ActiveModelTypeHelper.type_for(type_value) may say the type can be nilable. However, if the type is
+            # persisted and the column is not nullable, we can assume it's not nilable.
+            return as_non_nilable_type(base_type) if @column_type_option.persisted? && !null
+
+            base_type
           end
         end
 
