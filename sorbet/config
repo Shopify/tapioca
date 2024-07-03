@@ -3,3 +3,4 @@
 --ignore=/vendor
 --enable-experimental-requires-ancestor
 --suppress-payload-superclass-redefinition-for=Reline::ANSI
+--ignore=/.ruby-lsp/
