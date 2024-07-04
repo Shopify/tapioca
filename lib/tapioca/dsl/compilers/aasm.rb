@@ -147,7 +147,7 @@ module Tapioca
                 machine.create_method(
                   method,
                   parameters: [
-                    create_opt_param("symbol", type: "T.nilable(Symbol)", default: "nil"),
+                    create_rest_param("callbacks", type: "T.untyped"),
                     create_block_param("block", type: "T.nilable(T.proc.bind(#{constant_name}).void)"),
                   ],
                 )
