@@ -147,7 +147,7 @@ module Tapioca
                 machine.create_method(
                   method,
                   parameters: [
-                    create_rest_param("callbacks", type: "T.untyped"),
+                    create_rest_param("callbacks", type: "T.any(String, Symbol, T::Class[T.anything], Proc)"),
                     create_block_param("block", type: "T.nilable(T.proc.bind(#{constant_name}).void)"),
                   ],
                 )
