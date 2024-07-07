@@ -280,6 +280,7 @@ module Tapioca
           create_relation_class
           create_association_relation_class
           create_collection_proxy_class
+          create_class_methods_class
         end
 
         sig { void }
@@ -456,6 +457,27 @@ module Tapioca
               klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
             end
             create_collection_proxy_methods(klass)
+          end
+        end
+
+        sig { void }
+        def create_class_methods_class
+          class_methods = constant.methods(false) - ActiveRecord::Base.methods(false)
+          return unless class_methods.present?
+
+          model.create_class(ClassMethodsName) do |klass|
+            class_methods.each do |method_name|
+              signature = Runtime::Reflection.signature_of(constant.method(method_name))
+              binding.b
+
+              if signature
+                params = signature.arg_types.map do |(name, type)|
+                  create_param(name, type.to_s)
+                end
+              end
+
+              klass.create_method(method_name.to_s)
+            end
           end
         end
 

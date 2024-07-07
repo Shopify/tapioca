@@ -75,6 +75,17 @@ module Tapioca
               add_ruby_file("post.rb", <<~RUBY)
                 class Post < ActiveRecord::Base
                   attribute :id, CustomId.new
+
+                  class << self
+                    extend T::Sig
+
+                    sig { params(a: Integer, b: String).returns(String)}
+                    def some_method(a, b)
+                      b * a
+                    end
+
+                    def some_other_method(c, d); end
+                  end
                 end
               RUBY
 
