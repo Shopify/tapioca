@@ -5093,7 +5093,7 @@ class RuboCop::Cop::Corrector < ::Parser::Source::TreeRewriter
 
   # Legacy
   #
-  # source://parser/3.3.2.0/lib/parser/source/tree_rewriter.rb#252
+  # source://parser/3.3.3.0/lib/parser/source/tree_rewriter.rb#252
   def rewrite; end
 
   # Swaps sources at the given ranges.
@@ -29913,7 +29913,7 @@ class RuboCop::Cop::Registry
   # @raise [AmbiguousCopName] if a bare identifier with two possible namespaces is provided
   # @return [String] Qualified cop name
   #
-  # source://rubocop-rspec_rails/2.28.3/lib/rubocop-rspec_rails.rb#26
+  # source://rubocop//lib/rubocop/cop/registry.rb#133
   def qualified_cop_name(name, path, warn: T.unsafe(nil)); end
 
   # source://rubocop//lib/rubocop/cop/registry.rb#166
@@ -50796,7 +50796,7 @@ class RuboCop::Cop::Style::TrailingCommaInArguments < ::RuboCop::Cop::Base
   def on_send(node); end
 
   class << self
-    # source://rubocop-rspec/2.30.0/lib/rubocop-rspec.rb#63
+    # source://rubocop//lib/rubocop/cop/style/trailing_comma_in_arguments.rb#91
     def autocorrect_incompatible_with; end
   end
 end

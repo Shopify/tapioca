@@ -9895,10 +9895,10 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#314
   def listening?(name); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
+  # source://mutex_m/0.2.0/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
+  # source://mutex_m/0.2.0/mutex_m.rb#81
   def locked?; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#293
@@ -9913,13 +9913,13 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#68
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
+  # source://mutex_m/0.2.0/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
+  # source://mutex_m/0.2.0/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
+  # source://mutex_m/0.2.0/mutex_m.rb#96
   def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#85
@@ -12420,43 +12420,43 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#963
   def _teardown_callbacks; end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#736
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#736
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#665
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#665
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#676
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#676
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#688
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#688
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#700
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#700
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#707
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#707
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#718
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#718
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#728
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#728
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#746
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#746
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#781
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#781
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#804
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#804
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#813
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#813
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil), include_all: T.unsafe(nil)); end
 
-  # source://minitest/5.23.1/lib/minitest/assertions.rb#822
+  # source://minitest/5.24.1/lib/minitest/assertions.rb#822
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -12468,7 +12468,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#298
   def inspect; end
 
-  # source://minitest/5.23.1/lib/minitest.rb#346
+  # source://minitest/5.24.1/lib/minitest.rb#376
   def method_name; end
 
   class << self
@@ -21290,6 +21290,7 @@ end
 # source://activesupport//lib/active_support/core_ext/object/json.rb#224
 class URI::Generic
   include ::URI::RFC2396_REGEXP
+  include ::URI
 
   # source://activesupport//lib/active_support/core_ext/object/json.rb#225
   def as_json(options = T.unsafe(nil)); end

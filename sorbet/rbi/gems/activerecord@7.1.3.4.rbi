@@ -6792,19 +6792,19 @@ end
 class ActiveRecord::AttributeMethods::GeneratedAttributeMethods < ::Module
   include ::Mutex_m
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
+  # source://mutex_m/0.2.0/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
+  # source://mutex_m/0.2.0/mutex_m.rb#81
   def locked?; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
+  # source://mutex_m/0.2.0/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
+  # source://mutex_m/0.2.0/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
+  # source://mutex_m/0.2.0/mutex_m.rb#96
   def unlock; end
 end
 
@@ -13695,10 +13695,10 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
   # source://activerecord//lib/active_record/connection_adapters/pool_config.rb#47
   def disconnect!(automatic_reconnect: T.unsafe(nil)); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
+  # source://mutex_m/0.2.0/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
+  # source://mutex_m/0.2.0/mutex_m.rb#81
   def locked?; end
 
   # source://activerecord//lib/active_record/connection_adapters/pool_config.rb#62
@@ -13724,13 +13724,13 @@ class ActiveRecord::ConnectionAdapters::PoolConfig
   # source://activerecord//lib/active_record/connection_adapters/pool_config.rb#8
   def shard; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
+  # source://mutex_m/0.2.0/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
+  # source://mutex_m/0.2.0/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
+  # source://mutex_m/0.2.0/mutex_m.rb#96
   def unlock; end
 
   class << self
@@ -18851,19 +18851,19 @@ class ActiveRecord::Delegation::GeneratedRelationMethods < ::Module
   # source://activerecord//lib/active_record/relation/delegation.rb#72
   def generate_method(method); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
+  # source://mutex_m/0.2.0/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
+  # source://mutex_m/0.2.0/mutex_m.rb#81
   def locked?; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
+  # source://mutex_m/0.2.0/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
+  # source://mutex_m/0.2.0/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
+  # source://mutex_m/0.2.0/mutex_m.rb#96
   def unlock; end
 end
 
