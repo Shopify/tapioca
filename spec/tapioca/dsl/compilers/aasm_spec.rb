@@ -100,26 +100,26 @@ module Tapioca
                   end
 
                   class PrivateAASMMachine < AASM::Base
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_transactions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_transactions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_transitions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_transitions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def before_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def before_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def before_all_transactions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def before_all_transactions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def ensure_on_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def ensure_on_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def error_on_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def error_on_all_events(*callbacks, &block); end
 
                     sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
                     def event(name, options = nil, &block); end
@@ -224,26 +224,26 @@ module Tapioca
                   end
 
                   class PrivateAASMMachine < AASM::Base
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_transactions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_transactions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_transitions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_transitions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def before_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def before_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def before_all_transactions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def before_all_transactions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def ensure_on_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def ensure_on_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def error_on_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def error_on_all_events(*callbacks, &block); end
 
                     sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
                     def event(name, options = nil, &block); end
@@ -351,26 +351,26 @@ module Tapioca
                   end
 
                   class PrivateAASMMachine < AASM::Base
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_transactions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_transactions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def after_all_transitions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def after_all_transitions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def before_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def before_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def before_all_transactions(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def before_all_transactions(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def ensure_on_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def ensure_on_all_events(*callbacks, &block); end
 
-                    sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
-                    def error_on_all_events(symbol = nil, &block); end
+                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    def error_on_all_events(*callbacks, &block); end
 
                     sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
                     def event(name, options = nil, &block); end
