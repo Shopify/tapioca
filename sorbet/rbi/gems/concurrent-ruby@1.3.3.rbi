@@ -157,7 +157,7 @@ module Concurrent
     #
     # @return [nil, Float] number of available processors
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#157
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#172
     def available_processor_count; end
 
     # @raise [ArgumentError]
@@ -177,7 +177,7 @@ module Concurrent
     #
     # @return [nil, Float] Maximum number of available processors as set by a cgroup CPU quota, or nil if none set
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#172
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#187
     def cpu_quota; end
 
     # @return [Logger] Logger with provided level and output.
@@ -318,7 +318,7 @@ module Concurrent
     # @see http://www.unix.com/man-page/osx/1/HWPREFS/
     # @see http://linux.die.net/man/8/sysctl
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#145
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#160
     def physical_processor_count; end
 
     # Number of processors seen by the OS and used for process scheduling. For
@@ -337,10 +337,10 @@ module Concurrent
     # @return [Integer] number of processors seen by the OS or Java runtime
     # @see http://docs.oracle.com/javase/6/docs/api/java/lang/Runtime.html#availableProcessors()
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#124
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#139
     def processor_count; end
 
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#106
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#121
     def processor_counter; end
 
     # Use logger created by #create_simple_logger to log concurrent-ruby messages.
@@ -11613,7 +11613,7 @@ class Concurrent::Utility::ProcessorCounter
 
   private
 
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#84
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#99
   def compute_cpu_quota; end
 
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#54
@@ -11621,6 +11621,9 @@ class Concurrent::Utility::ProcessorCounter
 
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#46
   def compute_processor_count; end
+
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#94
+  def run(command); end
 end
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/version.rb#2

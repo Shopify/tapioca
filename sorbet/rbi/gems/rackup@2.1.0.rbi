@@ -5,23 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem rackup`.
 
 
-# source://rackup//lib/rack/handler.rb#8
-module Rack
-  class << self
-    # source://rack/3.0.11/lib/rack/version.rb#31
-    def release; end
-
-    # source://rack/3.0.11/lib/rack/version.rb#23
-    def version; end
-  end
-end
-
-# source://rackup//lib/rack/handler.rb#9
-Rack::Handler = Rackup::Handler
-
-# source://rackup//lib/rack/server.rb#9
-Rack::Server = Rackup::Server
-
 # source://rackup//lib/rackup/handler.rb#6
 module Rackup; end
 
