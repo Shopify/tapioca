@@ -3268,45 +3268,45 @@ module Rack::Request::Helpers
 
   private
 
-  # source://rack//lib/rack/request.rb#764
+  # source://rack//lib/rack/request.rb#776
   def allowed_scheme(header); end
 
   # source://rack//lib/rack/request.rb#628
   def default_session; end
 
-  # source://rack//lib/rack/request.rb#672
+  # source://rack//lib/rack/request.rb#684
   def expand_param_pairs(pairs, query_parser = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/request.rb#768
+  # source://rack//lib/rack/request.rb#780
   def forwarded_priority; end
 
-  # source://rack//lib/rack/request.rb#740
+  # source://rack//lib/rack/request.rb#752
   def forwarded_scheme; end
 
   # Get an array of values set in the RFC 7239 `Forwarded` request header.
   #
-  # source://rack//lib/rack/request.rb#656
+  # source://rack//lib/rack/request.rb#668
   def get_http_forwarded(token); end
 
   # source://rack//lib/rack/request.rb#644
   def parse_http_accept_header(header); end
 
-  # source://rack//lib/rack/request.rb#668
+  # source://rack//lib/rack/request.rb#680
   def parse_multipart; end
 
-  # source://rack//lib/rack/request.rb#664
+  # source://rack//lib/rack/request.rb#676
   def parse_query(qs, d = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/request.rb#660
+  # source://rack//lib/rack/request.rb#672
   def query_parser; end
 
-  # source://rack//lib/rack/request.rb#731
+  # source://rack//lib/rack/request.rb#743
   def reject_trusted_ip_addresses(ip_addresses); end
 
-  # source://rack//lib/rack/request.rb#725
+  # source://rack//lib/rack/request.rb#737
   def split_authority(authority); end
 
-  # source://rack//lib/rack/request.rb#682
+  # source://rack//lib/rack/request.rb#694
   def split_header(value); end
 
   # Assist with compatibility when processing `X-Forwarded-For`.
@@ -3314,11 +3314,11 @@ module Rack::Request::Helpers
   # source://rack//lib/rack/request.rb#631
   def wrap_ipv6(host); end
 
-  # source://rack//lib/rack/request.rb#772
+  # source://rack//lib/rack/request.rb#784
   def x_forwarded_proto_priority; end
 end
 
-# source://rack//lib/rack/request.rb#710
+# source://rack//lib/rack/request.rb#722
 Rack::Request::Helpers::AUTHORITY = T.let(T.unsafe(nil), Regexp)
 
 # Default ports depending on scheme. Used to decide whether or not
@@ -3334,7 +3334,7 @@ Rack::Request::Helpers::DEFAULT_PORTS = T.let(T.unsafe(nil), Hash)
 # source://rack//lib/rack/request.rb#153
 Rack::Request::Helpers::FORM_DATA_MEDIA_TYPES = T.let(T.unsafe(nil), Array)
 
-# source://rack//lib/rack/request.rb#735
+# source://rack//lib/rack/request.rb#747
 Rack::Request::Helpers::FORWARDED_SCHEME_HEADERS = T.let(T.unsafe(nil), Hash)
 
 # source://rack//lib/rack/request.rb#176
