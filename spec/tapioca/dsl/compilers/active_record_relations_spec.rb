@@ -97,6 +97,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T.any(Integer, Float, BigDecimal)) }
                     def average(column_name); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def build(attributes = nil, &block); end
 
@@ -107,15 +108,19 @@ module Tapioca
                     sig { params(column_name: NilClass, block: T.proc.params(object: ::Post).void).returns(Integer) }
                     def count(column_name = nil, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create(attributes = nil, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create!(attributes = nil, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create_or_find_by(attributes, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create_or_find_by!(attributes, &block); end
 
@@ -150,12 +155,15 @@ module Tapioca
                     sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol).returns(T::Enumerator[T::Enumerator[::Post]]) }
                     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_create_by(attributes, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_create_by!(attributes, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_initialize_by(attributes, &block); end
 
@@ -224,6 +232,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
                     def minimum(column_name); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def new(attributes = nil, &block); end
 
@@ -790,6 +799,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T.any(Integer, Float, BigDecimal)) }
                     def average(column_name); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def build(attributes = nil, &block); end
 
@@ -800,15 +810,19 @@ module Tapioca
                     sig { params(column_name: NilClass, block: T.proc.params(object: ::Post).void).returns(Integer) }
                     def count(column_name = nil, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create(attributes = nil, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create!(attributes = nil, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create_or_find_by(attributes, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create_or_find_by!(attributes, &block); end
 
@@ -847,12 +861,15 @@ module Tapioca
                     sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol).returns(T::Enumerator[T::Enumerator[::Post]]) }
                     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_create_by(attributes, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_create_by!(attributes, &block); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def find_or_initialize_by(attributes, &block); end
 
@@ -921,6 +938,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T.untyped) }
                     def minimum(column_name); end
 
+                    sig { params(attributes: T::Array[T.untyped], block: T.nilable(T.proc.params(objects: ::Post).void)).returns(T::Array[::Post]) }
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def new(attributes = nil, &block); end
 
