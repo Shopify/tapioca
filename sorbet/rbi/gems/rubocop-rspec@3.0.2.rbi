@@ -2272,7 +2272,7 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#182
   def predicate_matcher?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#191
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#195
   def predicate_matcher_block?(param0 = T.unsafe(nil)); end
 
   private
@@ -2283,7 +2283,7 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#139
   def check_explicit(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#215
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#219
   def corrector_explicit(corrector, to_node, actual, matcher, block_child); end
 
   # @return [Boolean]
@@ -2291,15 +2291,15 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#175
   def heredoc_argument?(matcher); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#209
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#213
   def message_explicit(matcher); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#222
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#226
   def move_predicate(corrector, actual, matcher, block_child); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#200
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#204
   def predicate_matcher_name?(name); end
 
   # @return [Boolean]
@@ -2307,10 +2307,10 @@ module RuboCop::Cop::RSpec::ExplicitHelper
   # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#162
   def replaceable_matcher?(matcher); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#251
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#255
   def replacement_matcher(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#233
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#237
   def to_predicate_method(matcher); end
 
   # @return [Boolean]
@@ -4889,21 +4889,21 @@ RuboCop::Cop::RSpec::PendingWithoutReason::MSG = T.let(T.unsafe(nil), String)
 #   # good - the above code is rewritten to it by this cop
 #   expect(foo.something?).to be_truthy
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#314
+# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#318
 class RuboCop::Cop::RSpec::PredicateMatcher < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   include ::RuboCop::Cop::RSpec::InflectedHelper
   include ::RuboCop::Cop::RSpec::ExplicitHelper
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#331
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#335
   def on_block(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#322
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#326
   def on_send(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#320
+# source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#324
 RuboCop::Cop::RSpec::PredicateMatcher::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Check for `once` and `twice` receive counts matchers usage.
@@ -5789,28 +5789,29 @@ RuboCop::Cop::RSpec::ScatteredLet::MSG = T.let(T.unsafe(nil), String)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#25
 class RuboCop::Cop::RSpec::ScatteredSetup < ::RuboCop::Cop::RSpec::Base
+  include ::RuboCop::Cop::RSpec::FinalEndLocation
   include ::RuboCop::Cop::RangeHelp
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#32
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#33
   def on_block(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#75
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#76
   def autocorrect(corrector, first_occurrence, occurrence); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#60
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#61
   def lines_msg(numbers); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#68
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#69
   def message(occurrences, occurrence); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#47
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#48
   def repeated_hooks(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#29
+# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#30
 RuboCop::Cop::RSpec::ScatteredSetup::MSG = T.let(T.unsafe(nil), String)
 
 # Checks for proper shared_context and shared_examples usage.

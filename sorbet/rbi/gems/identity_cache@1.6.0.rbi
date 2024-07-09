@@ -28,19 +28,19 @@ module IdentityCache
   mixes_in_class_methods ::IdentityCache::WithoutPrimaryIndex::ClassMethods
   mixes_in_class_methods ::IdentityCache::WithPrimaryIndex::ClassMethods
 
-  # source://identity_cache//lib/identity_cache.rb#71
+  # source://identity_cache//lib/identity_cache.rb#73
   def cache_namespace; end
 
-  # source://identity_cache//lib/identity_cache.rb#71
+  # source://identity_cache//lib/identity_cache.rb#73
   def cache_namespace=(val); end
 
   class << self
     # @raise [AlreadyIncludedError]
     #
-    # source://identity_cache//lib/identity_cache.rb#86
+    # source://identity_cache//lib/identity_cache.rb#88
     def append_features(base); end
 
-    # source://identity_cache//lib/identity_cache.rb#106
+    # source://identity_cache//lib/identity_cache.rb#108
     def cache; end
 
     # Sets the cache adaptor IdentityCache will be using
@@ -49,16 +49,16 @@ module IdentityCache
     #
     # +cache_adaptor+ - A ActiveSupport::Cache::Store
     #
-    # source://identity_cache//lib/identity_cache.rb#98
+    # source://identity_cache//lib/identity_cache.rb#100
     def cache_backend=(cache_adaptor); end
 
-    # source://identity_cache//lib/identity_cache.rb#71
+    # source://identity_cache//lib/identity_cache.rb#73
     def cache_namespace; end
 
-    # source://identity_cache//lib/identity_cache.rb#71
+    # source://identity_cache//lib/identity_cache.rb#73
     def cache_namespace=(val); end
 
-    # source://identity_cache//lib/identity_cache.rb#209
+    # source://identity_cache//lib/identity_cache.rb#249
     def eager_load!; end
 
     # Cache retrieval and miss resolver primitive; given a key it will try to
@@ -69,7 +69,7 @@ module IdentityCache
     # +key+ A cache key string
     # +cache_fetcher_options+ A hash of options to pass to the cache backend
     #
-    # source://identity_cache//lib/identity_cache.rb#150
+    # source://identity_cache//lib/identity_cache.rb#152
     def fetch(key, cache_fetcher_options = T.unsafe(nil)); end
 
     # Same as +fetch+, except that it will try a collection of keys, using the
@@ -78,63 +78,88 @@ module IdentityCache
     # == Parameters
     # +keys+ A collection or array of key strings
     #
-    # source://identity_cache//lib/identity_cache.rb#173
+    # source://identity_cache//lib/identity_cache.rb#175
     def fetch_multi(*keys); end
 
-    # source://identity_cache//lib/identity_cache.rb#202
+    # source://identity_cache//lib/identity_cache.rb#242
     def fetch_read_only_records; end
 
     # Sets the attribute fetch_read_only_records
     #
     # @param value the value to set the attribute fetch_read_only_records to.
     #
-    # source://identity_cache//lib/identity_cache.rb#82
+    # source://identity_cache//lib/identity_cache.rb#84
     def fetch_read_only_records=(_arg0); end
 
-    # source://identity_cache//lib/identity_cache.rb#110
+    # source://identity_cache//lib/identity_cache.rb#112
     def logger; end
 
     # Sets the attribute logger
     #
     # @param value the value to set the attribute logger to.
     #
-    # source://identity_cache//lib/identity_cache.rb#84
+    # source://identity_cache//lib/identity_cache.rb#86
     def logger=(_arg0); end
 
-    # source://identity_cache//lib/identity_cache.rb#160
+    # source://identity_cache//lib/identity_cache.rb#162
     def map_cached_nil_for(value); end
 
     # Returns the value of attribute readonly.
     #
-    # source://identity_cache//lib/identity_cache.rb#83
+    # source://identity_cache//lib/identity_cache.rb#85
     def readonly; end
 
     # Sets the attribute readonly
     #
     # @param value the value to set the attribute readonly to.
     #
-    # source://identity_cache//lib/identity_cache.rb#83
+    # source://identity_cache//lib/identity_cache.rb#85
     def readonly=(_arg0); end
 
     # @return [Boolean]
     #
-    # source://identity_cache//lib/identity_cache.rb#114
+    # source://identity_cache//lib/identity_cache.rb#116
     def should_fill_cache?; end
 
     # @return [Boolean]
     #
-    # source://identity_cache//lib/identity_cache.rb#118
+    # source://identity_cache//lib/identity_cache.rb#120
     def should_use_cache?; end
 
-    # source://identity_cache//lib/identity_cache.rb#164
+    # source://identity_cache//lib/identity_cache.rb#166
     def unmap_cached_nil_for(value); end
 
-    # source://identity_cache//lib/identity_cache.rb#194
+    # Executes a block with deferred parent expiration, ensuring that the parent
+    # records' cache expiration is deferred until the block completes. When the block
+    # completes, it triggers expiration of the primary index for the parent records.
+    # Raises a NestedDeferredParentBlockError if a deferred parent expiration block
+    # is already active on the current thread.
+    #
+    # == Parameters:
+    # No parameters.
+    #
+    # == Raises:
+    # NestedDeferredParentBlockError if a deferred parent expiration block is already active.
+    #
+    # == Yield:
+    # Runs the provided block with deferred parent expiration.
+    #
+    # == Returns:
+    # The result of executing the provided block.
+    #
+    # == Ensures:
+    # Cleans up thread-local variables related to deferred parent expiration regardless
+    # of whether the block raises an exception.
+    #
+    # source://identity_cache//lib/identity_cache.rb#217
+    def with_deferred_parent_expiration; end
+
+    # source://identity_cache//lib/identity_cache.rb#234
     def with_fetch_read_only_records(value = T.unsafe(nil)); end
 
     private
 
-    # source://identity_cache//lib/identity_cache.rb#215
+    # source://identity_cache//lib/identity_cache.rb#255
     def fetch_in_batches(keys, &block); end
   end
 
@@ -1140,7 +1165,7 @@ IdentityCache::DELETED = T.let(T.unsafe(nil), Symbol)
 # source://identity_cache//lib/identity_cache.rb#55
 IdentityCache::DELETED_TTL = T.let(T.unsafe(nil), Integer)
 
-# source://identity_cache//lib/identity_cache.rb#67
+# source://identity_cache//lib/identity_cache.rb#69
 class IdentityCache::DerivedModelError < ::StandardError; end
 
 # source://identity_cache//lib/identity_cache/encoder.rb#4
@@ -1330,7 +1355,7 @@ class IdentityCache::LoadStrategy::MultiLoadRequest
   def db_keys; end
 end
 
-# source://identity_cache//lib/identity_cache.rb#69
+# source://identity_cache//lib/identity_cache.rb#71
 class IdentityCache::LockWaitTimeout < ::StandardError; end
 
 # source://identity_cache//lib/identity_cache/memoized_cache_proxy.rb#7
@@ -1398,6 +1423,9 @@ end
 # source://identity_cache//lib/identity_cache/memoized_cache_proxy.rb#142
 IdentityCache::MemoizedCacheProxy::EMPTY_ARRAY = T.let(T.unsafe(nil), Array)
 
+# source://identity_cache//lib/identity_cache.rb#63
+class IdentityCache::NestedDeferredParentBlockError < ::StandardError; end
+
 # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#4
 module IdentityCache::ParentModelExpiration
   include ::ArTransactionChanges
@@ -1406,21 +1434,21 @@ module IdentityCache::ParentModelExpiration
 
   mixes_in_class_methods GeneratedClassMethods
 
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#54
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#58
   def add_parents_to_cache_expiry_set(parents_to_expire); end
 
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#61
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#65
   def add_record_to_cache_expiry_set(parents_to_expire, record); end
 
   # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#45
   def expire_parent_caches; end
 
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#67
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#71
   def parents_to_expire_on_changes(parents_to_expire, association_name, cached_associations); end
 
   # @return [Boolean]
   #
-  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#101
+  # source://identity_cache//lib/identity_cache/parent_model_expiration.rb#105
   def should_expire_identity_cache_parent?(foreign_key, only_on_foreign_key_change); end
 
   class << self
@@ -1569,10 +1597,10 @@ module IdentityCache::ShouldUseCache::ClassMethods
   def should_use_cache?; end
 end
 
-# source://identity_cache//lib/identity_cache.rb#65
+# source://identity_cache//lib/identity_cache.rb#67
 class IdentityCache::UnsupportedAssociationError < ::StandardError; end
 
-# source://identity_cache//lib/identity_cache.rb#63
+# source://identity_cache//lib/identity_cache.rb#65
 class IdentityCache::UnsupportedScopeError < ::StandardError; end
 
 # source://identity_cache//lib/identity_cache/version.rb#4
