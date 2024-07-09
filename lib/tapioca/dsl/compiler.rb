@@ -49,7 +49,7 @@ module Tapioca
         sig { returns(T::Enumerable[T::Class[T.anything]]) }
         def all_classes
           @all_classes ||= T.let(
-            T.cast(ObjectSpace.each_object(Class), T::Enumerable[T::Class[T.anything]]).each,
+            ObjectSpace.each_object(Class).each,
             T.nilable(T::Enumerable[T::Class[T.anything]]),
           )
         end
@@ -57,7 +57,7 @@ module Tapioca
         sig { returns(T::Enumerable[Module]) }
         def all_modules
           @all_modules ||= T.let(
-            T.cast(ObjectSpace.each_object(Module), T::Enumerable[Module]).each,
+            ObjectSpace.each_object(Module).each,
             T.nilable(T::Enumerable[Module]),
           )
         end
