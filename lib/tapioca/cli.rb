@@ -36,6 +36,7 @@ module Tapioca
       Commands::Todo.new(
         todo_file: DEFAULT_TODO_FILE,
         file_header: true,
+        default_command_override: nil,
       ).run
 
       print_init_next_steps
@@ -43,21 +44,25 @@ module Tapioca
 
     desc "configure", "Initialize folder structure and type checking configuration"
     option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
+    option :default_command_override, type: :string, desc: "Override the default command printed on failure"
     def configure
       command = Commands::Configure.new(
         sorbet_config: SORBET_CONFIG_FILE,
         tapioca_config: options[:config],
         default_postrequire: options[:postrequire],
+        default_command_override: options[:default_command_override],
       )
       command.run
     end
 
     desc "require", "Generate the list of files to be required by tapioca"
     option :postrequire, type: :string, default: DEFAULT_POSTREQUIRE_FILE
+    option :default_command_override, type: :string, desc: "Override the default command printed on failure"
     def require
       command = Commands::Require.new(
         requires_path: options[:postrequire],
         sorbet_config_path: SORBET_CONFIG_FILE,
+        default_command_override: options[:default_command_override],
       )
       command.run
     end
@@ -71,10 +76,12 @@ module Tapioca
       type: :boolean,
       desc: FILE_HEADER_OPTION_DESC,
       default: true
+    option :default_command_override, type: :string, desc: "Override the default command printed on failure"
     def todo
       command = Commands::Todo.new(
         todo_file: options[:todo_file],
         file_header: options[:file_header],
+        default_command_override: options[:default_command_override],
       )
       command.run_with_deprecation
     end
@@ -144,6 +151,7 @@ module Tapioca
       type: :hash,
       desc: "Options to pass to the DSL compilers",
       default: {}
+    option :default_command_override, type: :string, desc: "Override the default command printed on failure"
     def dsl(*constant_or_paths)
       set_environment(options)
 
@@ -166,6 +174,7 @@ module Tapioca
         app_root: options[:app_root],
         halt_upon_load_error: options[:halt_upon_load_error],
         compiler_options: options[:compiler_options],
+        default_command_override: options[:default_command_override],
       }
 
       command = if options[:verify]
@@ -261,6 +270,7 @@ module Tapioca
       type: :boolean,
       desc: "Halt upon a load error while loading the Rails application",
       default: true
+    option :default_command_override, type: :string, desc: "Override the default command printed on failure"
     def gem(*gems)
       set_environment(options)
 
@@ -295,6 +305,7 @@ module Tapioca
         dsl_dir: options[:dsl_dir],
         rbi_formatter: rbi_formatter(options),
         halt_upon_load_error: options[:halt_upon_load_error],
+        default_command_override: options[:default_command_override],
       }
 
       command = if verify
@@ -326,6 +337,7 @@ module Tapioca
         todo_rbi_file: options[:todo_rbi_file],
         payload: options[:payload],
         number_of_workers: options[:workers],
+        default_command_override: nil,
       )
 
       command.run
@@ -345,6 +357,7 @@ module Tapioca
       banner: "gem:level [gem:level ...]",
       desc: "Override for typed sigils for pulled annotations",
       default: {}
+    option :default_command_override, type: :string, desc: "Override the default command printed on failure"
     def annotations
       if !options[:netrc] && options[:netrc_file]
         raise Thor::Error, set_color("Options `--no-netrc` and `--netrc-file` can't be used together", :bold, :red)
@@ -355,6 +368,7 @@ module Tapioca
         auth: options[:auth],
         netrc_file: netrc_file(options),
         typed_overrides: options[:typed_overrides],
+        default_command_override: options[:default_command_override],
       )
 
       command.run

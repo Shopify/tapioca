@@ -18,6 +18,7 @@ module Tapioca
           exclude: T::Array[String],
           file_header: T::Boolean,
           tapioca_path: String,
+          default_command_override: T.nilable(String),
           skip_constant: T::Array[String],
           quiet: T::Boolean,
           verbose: T::Boolean,
@@ -38,6 +39,7 @@ module Tapioca
         exclude:,
         file_header:,
         tapioca_path:,
+        default_command_override: nil,
         skip_constant: [],
         quiet: false,
         verbose: false,
@@ -67,7 +69,7 @@ module Tapioca
         @skip_constant = skip_constant
         @compiler_options = compiler_options
 
-        super()
+        super(default_command_override: default_command_override)
       end
 
       private

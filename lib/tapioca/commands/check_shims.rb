@@ -17,6 +17,7 @@ module Tapioca
           todo_rbi_file: String,
           payload: T::Boolean,
           number_of_workers: T.nilable(Integer),
+          default_command_override: T.nilable(String),
         ).void
       end
       def initialize(
@@ -26,9 +27,10 @@ module Tapioca
         shim_rbi_dir:,
         todo_rbi_file:,
         payload:,
-        number_of_workers:
+        number_of_workers:,
+        default_command_override: nil
       )
-        super()
+        super(default_command_override: default_command_override)
         @gem_rbi_dir = gem_rbi_dir
         @dsl_rbi_dir = dsl_rbi_dir
         @annotations_rbi_dir = annotations_rbi_dir

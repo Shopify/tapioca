@@ -8,13 +8,14 @@ module Tapioca
         params(
           requires_path: String,
           sorbet_config_path: String,
+          default_command_override: T.nilable(String),
         ).void
       end
-      def initialize(requires_path:, sorbet_config_path:)
+      def initialize(requires_path:, sorbet_config_path:, default_command_override: nil)
         @requires_path = requires_path
         @sorbet_config_path = sorbet_config_path
 
-        super()
+        super(default_command_override: default_command_override)
       end
 
       private

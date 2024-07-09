@@ -1949,6 +1949,49 @@ module Tapioca
           @project.remove!("lib/image.rb")
         end
 
+        it "advises of changes with the overridden default_command_override in the output" do
+          @project.tapioca("dsl --default-command-override='ENV_VAR=something bin/my_command --with=options'")
+
+          @project.write!("lib/image.rb", <<~RB)
+            require "smart_properties"
+
+            class Image
+              include(SmartProperties)
+
+              property :title, accepts: String
+            end
+          RB
+
+          result = @project.tapioca(
+            "dsl --verify --default-command-override='ENV_VAR=something bin/my_command --with=options'",
+          )
+
+          assert_stdout_equals(<<~OUT, result)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Checking for out-of-date RBIs...
+
+
+          OUT
+
+          assert_stderr_equals(<<~ERROR, result)
+            RBI files are out-of-date. In your development environment, please run:
+              `ENV_VAR=something bin/my_command --with=options`
+            Once it is complete, be sure to commit and push any changes
+            If you don't observe any changes after running the command locally, ensure your database is in a good
+            state e.g. run `bin/rails db:reset`
+
+            Reason:
+              File(s) added:
+              - sorbet/rbi/dsl/image.rbi
+          ERROR
+
+          refute_success_status(result)
+
+          @project.remove!("lib/image.rb")
+        end
+
         it "advises of modified file(s) and returns exit status 1 with modified file" do
           @project.write!("lib/post.rb", <<~RB)
             require "smart_properties"
