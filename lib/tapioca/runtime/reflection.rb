@@ -166,7 +166,7 @@ module Tapioca
       end
       def descendants_of(klass)
         result = ObjectSpace.each_object(klass.singleton_class).reject do |k|
-          T.cast(k, Module).singleton_class? || T.unsafe(k) == klass
+          k.singleton_class? || k == klass
         end
 
         T.unsafe(result)

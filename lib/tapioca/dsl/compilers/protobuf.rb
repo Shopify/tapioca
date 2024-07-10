@@ -159,9 +159,7 @@ module Tapioca
           def gather_constants
             marker = Google::Protobuf::MessageExts::ClassMethods
 
-            enum_modules = ObjectSpace.each_object(Google::Protobuf::EnumDescriptor).map do |desc|
-              T.cast(desc, Google::Protobuf::EnumDescriptor).enummodule
-            end
+            enum_modules = ObjectSpace.each_object(Google::Protobuf::EnumDescriptor).map(&:enummodule)
 
             results = if Google::Protobuf.const_defined?(:AbstractMessage)
               abstract_message_const = ::Google::Protobuf.const_get(:AbstractMessage)
