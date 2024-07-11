@@ -206,6 +206,16 @@ module Tapioca
             "reset_#{association_name}",
             return_type: "void",
           )
+          if reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)
+            klass.create_method(
+              "#{association_name}_changed?",
+              return_type: "T::Boolean",
+            )
+            klass.create_method(
+              "#{association_name}_previously_changed?",
+              return_type: "T::Boolean",
+            )
+          end
           unless reflection.polymorphic?
             klass.create_method(
               "build_#{association_name}",
