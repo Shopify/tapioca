@@ -47,12 +47,23 @@ module Tapioca
         ).void
       end
       def load_rails_application(environment_load: false, eager_load: false, app_root: ".", halt_upon_load_error: true)
-        return unless File.exist?("#{app_root}/config/application.rb")
+        return unless File.exist?(File.expand_path("config/application.rb", app_root))
 
-        if environment_load
-          require "./#{app_root}/config/environment"
+        load_path = if environment_load
+          "config/environment"
         else
-          require "./#{app_root}/config/application"
+          "config/application"
+        end
+
+        require File.expand_path(load_path, app_root)
+
+        unless defined?(Rails)
+          say(
+            "\nTried to load the app from `#{load_path}` as a Rails application " \
+              "but the `Rails` constant wasn't defined after loading the file.",
+            :yellow,
+          )
+          return
         end
 
         eager_load_rails_app if eager_load

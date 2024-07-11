@@ -2801,6 +2801,56 @@ module Tapioca
         end
       end
 
+      describe "rails-like-applications" do
+        before(:all) do
+          @project.write!("config/environment.rb", <<~RB)
+            require_relative "application.rb"
+          RB
+
+          @project.write!("config/application.rb", <<~RB)
+            # Don't define any constant named `Rails`.
+            require "smart_properties"
+
+            class Post
+              include SmartProperties
+              property :title, accepts: String
+            end
+          RB
+
+          @project.require_real_gem("smart_properties", "1.15.0")
+          @project.bundle_install!
+        end
+
+        after(:all) do
+          @project.remove!("config/application.rb")
+        end
+
+        it "shows a warning about the Rails constant not having been loaded" do
+          res = @project.tapioca("dsl")
+
+          assert_stdout_equals(<<~OUT, res)
+            Loading DSL extension classes... Done
+            Loading Rails application...\u0020
+            Tried to load the app from `config/environment` as a Rails application but the `Rails` constant wasn't defined after loading the file.
+            Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+          assert_empty_stderr(res)
+          assert_success_status(res)
+        end
+      end
+
       describe "halt-upon-load-error" do
         before(:all) do
           @project.write!("config/environment.rb", <<~RB)
