@@ -206,7 +206,7 @@ module Tapioca
             "reset_#{association_name}",
             return_type: "void",
           )
-          if reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)
+          if include_changed_and_previously_changed_methods?(reflection)
             klass.create_method(
               "#{association_name}_changed?",
               return_type: "T::Boolean",
@@ -242,6 +242,17 @@ module Tapioca
               return_type: association_class,
             )
           end
+        end
+
+        sig do
+          params(reflection: T.any(
+            ActiveRecord::Reflection::ThroughReflection,
+            ActiveRecord::Reflection::AssociationReflection
+          )).returns(T::Boolean)
+        end
+        def include_changed_and_previously_changed_methods?(reflection)
+          reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection) &&
+            ::Gem::Requirement.new(">= 7.0").satisfied_by?(::ActiveModel.gem_version)
         end
 
         sig do
