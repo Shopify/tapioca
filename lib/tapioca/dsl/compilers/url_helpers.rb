@@ -157,7 +157,7 @@ module Tapioca
             end
 
             # Can't use a simple `include?(helper)` because of edge cases like `XPath`, whose `#==` operator misbehaves.
-            own_ancestors.any? { |a| helper == a }
+            Set.new.compare_by_identity.merge(own_ancestors).include?(helper)
           end
         end
 
