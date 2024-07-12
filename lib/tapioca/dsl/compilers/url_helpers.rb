@@ -115,11 +115,11 @@ module Tapioca
             constants = all_modules.select do |mod|
               next unless name_of(mod)
 
-              # Fast-path to quickly disqualify most classes
-              next false unless mod < url_helpers_module || # rubocop:disable Style/InvertibleUnlessCondition
-                mod < path_helpers_module ||
-                mod.singleton_class < url_helpers_module ||
-                mod.singleton_class < path_helpers_module
+              # Fast-path to quickly disqualify most cases
+              next false unless url_helpers_module > mod || # rubocop:disable Style/InvertibleUnlessCondition
+                path_helpers_module > mod ||
+                url_helpers_module > mod.singleton_class ||
+                path_helpers_module > mod.singleton_class
 
               includes_helper?(mod, url_helpers_module) ||
                 includes_helper?(mod, path_helpers_module) ||
@@ -156,8 +156,7 @@ module Tapioca
               ancestors
             end
 
-            # Can't use a simple `include?(helper)` because of edge cases like `XPath`, whose `#==` operator misbehaves.
-            own_ancestors.any? { |a| helper == a }
+            own_ancestors.include?(helper)
           end
         end
 
