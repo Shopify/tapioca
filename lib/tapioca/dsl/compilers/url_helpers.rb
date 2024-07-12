@@ -121,10 +121,15 @@ module Tapioca
                 mod.singleton_class < url_helpers_module ||
                 mod.singleton_class < path_helpers_module
 
-              includes_helper?(mod, url_helpers_module) ||
-                includes_helper?(mod, path_helpers_module) ||
-                includes_helper?(mod.singleton_class, url_helpers_module) ||
-                includes_helper?(mod.singleton_class, path_helpers_module)
+              mod_direct_ancestors = direct_ancestors_of(mod)
+
+              next true if mod_direct_ancestors.include?(url_helpers_module) ||
+                mod_direct_ancestors.include?(path_helpers_module)
+
+              mod_meta_direct_ancestors = direct_ancestors_of(mod.singleton_class)
+
+              mod_meta_direct_ancestors.include?(url_helpers_module) ||
+                mod_meta_direct_ancestors.include?(path_helpers_module)
             end
 
             constants.concat(NON_DISCOVERABLE_INCLUDERS).push(GeneratedUrlHelpersModule, GeneratedPathHelpersModule)
@@ -143,10 +148,8 @@ module Tapioca
             end.freeze
           end
 
-          # Returns `true` if `mod` "directly" includes `helper`.
-          # For classes, this method will return false if the `helper` is included only by a superclass
-          sig { params(mod: Module, helper: Module).returns(T::Boolean) }
-          private def includes_helper?(mod, helper)
+          sig { params(mod: Module).returns(T::Set[Module]) }
+          private def direct_ancestors_of(mod)
             ancestors = ancestors_of(mod)
 
             own_ancestors = if Class === mod && (superclass = superclass_of(mod))
@@ -157,7 +160,7 @@ module Tapioca
             end
 
             # Can't use a simple `include?(helper)` because of edge cases like `XPath`, whose `#==` operator misbehaves.
-            own_ancestors.any? { |a| helper == a }
+            Set.new.compare_by_identity.merge(own_ancestors)
           end
         end
 
