@@ -88,6 +88,7 @@ Commands:
 Options:
   -c, [--config=<config file path>]                  # Path to the Tapioca configuration file
                                                      # Default: sorbet/tapioca/config.yml
+      [--env=key:value]                              # Environment variables to set before running Tapioca
   -V, [--verbose], [--no-verbose], [--skip-verbose]  # Verbose output for debugging purposes
                                                      # Default: false
 
@@ -122,6 +123,7 @@ Usage:
 Options:
   -c, [--config=<config file path>]                  # Path to the Tapioca configuration file
                                                      # Default: sorbet/tapioca/config.yml
+      [--env=key:value]                              # Environment variables to set before running Tapioca
   -V, [--verbose], [--no-verbose], [--skip-verbose]  # Verbose output for debugging purposes
                                                      # Default: false
 
@@ -202,6 +204,7 @@ Options:
                                                                                                      # Default: true
   -c,          [--config=<config file path>]                                                         # Path to the Tapioca configuration file
                                                                                                      # Default: sorbet/tapioca/config.yml
+               [--env=key:value]                                                                     # Environment variables to set before running Tapioca
   -V,          [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes
                                                                                                      # Default: false
 
@@ -376,6 +379,7 @@ Options:
   --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Override for typed sigils for pulled annotations
   -c,          [--config=<config file path>]                  # Path to the Tapioca configuration file
                                                               # Default: sorbet/tapioca/config.yml
+               [--env=key:value]                              # Environment variables to set before running Tapioca
   -V,          [--verbose], [--no-verbose], [--skip-verbose]  # Verbose output for debugging purposes
                                                               # Default: false
 
@@ -505,6 +509,7 @@ Options:
              [--compiler-options=key:value]                                                        # Options to pass to the DSL compilers
   -c,        [--config=<config file path>]                                                         # Path to the Tapioca configuration file
                                                                                                    # Default: sorbet/tapioca/config.yml
+             [--env=key:value]                                                                     # Environment variables to set before running Tapioca
   -V,        [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes
                                                                                                    # Default: false
 
@@ -900,6 +905,7 @@ Options:
   -w, [--workers=N]                                  # Number of parallel workers (default: auto)
   -c, [--config=<config file path>]                  # Path to the Tapioca configuration file
                                                      # Default: sorbet/tapioca/config.yml
+      [--env=key:value]                              # Environment variables to set before running Tapioca
   -V, [--verbose], [--no-verbose], [--skip-verbose]  # Verbose output for debugging purposes
                                                      # Default: false
 
@@ -938,11 +944,17 @@ The full configuration file, with each option and its default value, would look 
 ```yaml
 ---
 require:
+  env: {}
+  verbose: false
   postrequire: sorbet/tapioca/require.rb
 todo:
+  env: {}
+  verbose: false
   todo_file: sorbet/rbi/todo.rbi
   file_header: true
 dsl:
+  env: {}
+  verbose: false
   outdir: sorbet/rbi/dsl
   file_header: true
   only: []
@@ -958,6 +970,8 @@ dsl:
   skip_constant: []
   compiler_options: {}
 gem:
+  env: {}
+  verbose: false
   outdir: sorbet/rbi/gems
   file_header: true
   all: false
@@ -978,6 +992,8 @@ gem:
   environment: development
   halt_upon_load_error: true
 check_shims:
+  env: {}
+  verbose: false
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
   shim_rbi_dir: sorbet/rbi/shims
@@ -986,6 +1002,8 @@ check_shims:
   payload: true
   workers: 1
 annotations:
+  env: {}
+  verbose: false
   sources:
   - https://raw.githubusercontent.com/Shopify/rbi-central/main
   netrc: true

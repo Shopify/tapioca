@@ -2677,6 +2677,17 @@ module Tapioca
             RACK ENVIRONMENT: staging
           OUT
         end
+
+        it "must accept and set custom environment variables" do
+          @project.write!("lib/post.rb", <<~RB)
+            $stderr.puts "ENVIRONMENT: \#{ENV.to_h.inspect}"
+          RB
+
+          result = @project.tapioca("dsl --env Foo:Bar --env Baz:1")
+
+          assert_stderr_includes(result, '"Foo"=>"Bar"')
+          assert_stderr_includes(result, '"Baz"=>"1"')
+        end
       end
 
       describe "list compilers" do

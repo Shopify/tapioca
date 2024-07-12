@@ -17,6 +17,10 @@ module Tapioca
       type: :string,
       desc: "Path to the Tapioca configuration file",
       default: TAPIOCA_CONFIG_FILE
+    class_option :env,
+      type: :hash,
+      desc: "Environment variables to set before running Tapioca",
+      repeatable: true
     class_option :verbose,
       aliases: ["-V"],
       type: :boolean,
