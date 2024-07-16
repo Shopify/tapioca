@@ -220,7 +220,7 @@ module Tapioca
           [:find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :create_or_find_by, :create_or_find_by!],
           T::Array[Symbol],
         )
-        BUILDER_METHODS = T.let([:new, :build, :create, :create!], T::Array[Symbol])
+        BUILDER_METHODS = T.let([:new, :create, :create!, :build], T::Array[Symbol])
         TO_ARRAY_METHODS = T.let([:to_ary, :to_a], T::Array[Symbol])
 
         private
@@ -991,25 +991,54 @@ module Tapioca
           end
 
           FIND_OR_CREATE_METHODS.each do |method_name|
-            block_type = "T.nilable(T.proc.params(object: #{constant_name}).void)"
-            create_common_method(
-              method_name,
-              parameters: [
-                create_param("attributes", type: "T.untyped"),
-                create_block_param("block", type: block_type),
-              ],
-              return_type: constant_name,
+            # `T.untyped` matches `T::Array[T.untyped]` so the array signature
+            # must be defined first for Sorbet to pick it, if valid.
+            sigs = [
+              common_relation_methods_module.create_sig(
+                parameters: {
+                  attributes: "T::Array[T.untyped]",
+                  block: "T.nilable(T.proc.params(objects: #{constant_name}).void)",
+                },
+                return_type: "T::Array[#{constant_name}]",
+              ),
+              common_relation_methods_module.create_sig(
+                parameters: {
+                  attributes: "T.untyped",
+                  block: "T.nilable(T.proc.params(object: #{constant_name}).void)",
+                },
+                return_type: constant_name,
+              ),
+            ]
+            common_relation_methods_module.create_method_with_sigs(
+              method_name.to_s,
+              sigs: sigs,
+              parameters: [RBI::ReqParam.new("attributes"), RBI::BlockParam.new("block")],
             )
           end
 
           BUILDER_METHODS.each do |method_name|
-            create_common_method(
-              method_name,
-              parameters: [
-                create_opt_param("attributes", type: "T.untyped", default: "nil"),
-                create_block_param("block", type: "T.nilable(T.proc.params(object: #{constant_name}).void)"),
-              ],
-              return_type: constant_name,
+            # `T.untyped` matches `T::Array[T.untyped]` so the array signature
+            # must be defined first for Sorbet to pick it, if valid.
+            sigs = [
+              common_relation_methods_module.create_sig(
+                parameters: {
+                  attributes: "T::Array[T.untyped]",
+                  block: "T.nilable(T.proc.params(objects: #{constant_name}).void)",
+                },
+                return_type: "T::Array[#{constant_name}]",
+              ),
+              common_relation_methods_module.create_sig(
+                parameters: {
+                  attributes: "T.untyped",
+                  block: "T.nilable(T.proc.params(object: #{constant_name}).void)",
+                },
+                return_type: constant_name,
+              ),
+            ]
+            common_relation_methods_module.create_method_with_sigs(
+              method_name.to_s,
+              sigs: sigs,
+              parameters: [RBI::OptParam.new("attributes", "nil"), RBI::BlockParam.new("block")],
             )
           end
         end
