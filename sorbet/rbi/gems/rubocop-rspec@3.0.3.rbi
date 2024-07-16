@@ -4001,8 +4001,6 @@ RuboCop::Cop::RSpec::MultipleDescribes::MSG = T.let(T.unsafe(nil), String)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#69
 class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base
-  include ::RuboCop::Cop::ConfigurableMax
-
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#78
   def aggregate_failures?(param0 = T.unsafe(nil), param1); end
 
@@ -4011,6 +4009,9 @@ class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#86
   def expect?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop/1.65.0/lib/rubocop/cop/exclude_limit.rb#11
+  def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#93
   def on_block(node); end
@@ -4035,13 +4036,13 @@ class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base
   def max_expectations; end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#74
+# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#72
 RuboCop::Cop::RSpec::MultipleExpectations::ANYTHING = T.let(T.unsafe(nil), Proc)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#72
+# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#70
 RuboCop::Cop::RSpec::MultipleExpectations::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#75
+# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#73
 RuboCop::Cop::RSpec::MultipleExpectations::TRUE_NODE = T.let(T.unsafe(nil), Proc)
 
 # Checks if example groups contain too many `let` and `subject` calls.
@@ -4122,41 +4123,43 @@ RuboCop::Cop::RSpec::MultipleExpectations::TRUE_NODE = T.let(T.unsafe(nil), Proc
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#84
 class RuboCop::Cop::RSpec::MultipleMemoizedHelpers < ::RuboCop::Cop::RSpec::Base
-  include ::RuboCop::Cop::ConfigurableMax
   include ::RuboCop::Cop::RSpec::Variable
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#90
+  # source://rubocop/1.65.0/lib/rubocop/cop/exclude_limit.rb#11
+  def max=(value); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#91
   def on_block(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#101
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#102
   def on_new_investigation; end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#110
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#111
   def all_helpers(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#140
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#141
   def allow_subject?; end
 
   # Returns the value of attribute example_group_memoized_helpers.
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#108
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#109
   def example_group_memoized_helpers; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#115
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#116
   def helpers(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#136
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#137
   def max; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#126
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#127
   def variable_nodes(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#88
+# source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#87
 RuboCop::Cop::RSpec::MultipleMemoizedHelpers::MSG = T.let(T.unsafe(nil), String)
 
 # Checks if an example group defines `subject` multiple times.
@@ -4462,44 +4465,46 @@ end
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#94
 class RuboCop::Cop::RSpec::NestedGroups < ::RuboCop::Cop::RSpec::Base
-  include ::RuboCop::Cop::ConfigurableMax
   include ::RuboCop::Cop::RSpec::TopLevelGroup
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#106
+  # source://rubocop/1.65.0/lib/rubocop/cop/exclude_limit.rb#11
+  def max=(value); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#107
   def on_top_level_group(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#156
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#157
   def allowed_groups; end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#133
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#134
   def count_up_nesting?(node, example_group); end
 
   # @yield [node, nesting]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#118
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#119
   def find_nested_example_groups(node, nesting: T.unsafe(nil), &block); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#143
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#144
   def max_nesting; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#147
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#148
   def max_nesting_config; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#139
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#140
   def message(nesting); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#100
+# source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#99
 RuboCop::Cop::RSpec::NestedGroups::DEPRECATED_MAX_KEY = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#102
+# source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#101
 RuboCop::Cop::RSpec::NestedGroups::DEPRECATION_WARNING = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#98
+# source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#97
 RuboCop::Cop::RSpec::NestedGroups::MSG = T.let(T.unsafe(nil), String)
 
 # Checks if an example contains any expectation.
