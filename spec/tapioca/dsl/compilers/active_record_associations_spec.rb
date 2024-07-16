@@ -108,7 +108,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Post
@@ -123,6 +123,14 @@ module Tapioca
 
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def author_attributes=(attributes); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def author_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def author_previously_changed?; end
+                    <% end %>
 
                         sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
                         def build_author(*args, &blk); end
@@ -138,6 +146,14 @@ module Tapioca
 
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def category_attributes=(attributes); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def category_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def category_previously_changed?; end
+                    <% end %>
 
                         sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
                         def create_author(*args, &blk); end
@@ -183,7 +199,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Post
@@ -198,6 +214,14 @@ module Tapioca
 
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def category_attributes=(attributes); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def category_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def category_previously_changed?; end
+                    <% end %>
 
                         sig { returns(T.untyped) }
                         def reload_category; end
@@ -545,7 +569,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Blog::Core::Post
@@ -557,6 +581,14 @@ module Tapioca
 
                         sig { params(value: T.nilable(::Blog::Author)).void }
                         def author=(value); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def author_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def author_previously_changed?; end
+                    <% end %>
 
                         sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
                         def build_author(*args, &blk); end
@@ -618,7 +650,7 @@ module Tapioca
 
                   assert_equal(expected, rbi_for("Blog::Author"))
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Comment
@@ -639,6 +671,14 @@ module Tapioca
 
                         sig { params(value: T.nilable(::Blog::Core::Post)).void }
                         def post=(value); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def post_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def post_previously_changed?; end
+                    <% end %>
 
                         sig { returns(T.nilable(::Blog::Core::Post)) }
                         def reload_post; end
@@ -744,7 +784,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Post
@@ -771,6 +811,14 @@ module Tapioca
 
                         sig { params(value: T.nilable(::Shop)).void }
                         def shop=(value); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def shop_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def shop_previously_changed?; end
+                    <% end %>
                       end
                     end
                   RBI
@@ -831,7 +879,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Post
@@ -846,6 +894,14 @@ module Tapioca
 
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def author_attributes=(attributes); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def author_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def author_previously_changed?; end
+                    <% end %>
 
                         sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
                         def build_author(*args, &blk); end
@@ -861,6 +917,14 @@ module Tapioca
 
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def category_attributes=(attributes); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def category_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def category_previously_changed?; end
+                    <% end %>
 
                         sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
                         def create_author(*args, &blk); end
@@ -906,7 +970,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Post
@@ -921,6 +985,14 @@ module Tapioca
 
                         sig { params(attributes: T.untyped).returns(T.untyped) }
                         def category_attributes=(attributes); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def category_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def category_previously_changed?; end
+                    <% end %>
 
                         sig { returns(T.untyped) }
                         def reload_category; end
@@ -1268,7 +1340,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Blog::Core::Post
@@ -1280,6 +1352,14 @@ module Tapioca
 
                         sig { params(value: T.nilable(::Blog::Author)).void }
                         def author=(value); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def author_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def author_previously_changed?; end
+                    <% end %>
 
                         sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
                         def build_author(*args, &blk); end
@@ -1341,7 +1421,7 @@ module Tapioca
 
                   assert_equal(expected, rbi_for("Blog::Author"))
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Comment
@@ -1362,6 +1442,14 @@ module Tapioca
 
                         sig { params(value: T.nilable(::Blog::Core::Post)).void }
                         def post=(value); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def post_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def post_previously_changed?; end
+                    <% end %>
 
                         sig { returns(T.nilable(::Blog::Core::Post)) }
                         def reload_post; end
@@ -1467,7 +1555,7 @@ module Tapioca
                     end
                   RUBY
 
-                  expected = <<~RBI
+                  expected = template(<<~RBI)
                     # typed: strong
 
                     class Post
@@ -1494,6 +1582,14 @@ module Tapioca
 
                         sig { params(value: T.nilable(::Shop)).void }
                         def shop=(value); end
+                    <% if rails_version(">= 7.0") %>
+
+                        sig { returns(T::Boolean) }
+                        def shop_changed?; end
+
+                        sig { returns(T::Boolean) }
+                        def shop_previously_changed?; end
+                    <% end %>
                       end
                     end
                   RBI
