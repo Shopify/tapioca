@@ -188,6 +188,7 @@ module Tapioca
         def populate_single_assoc_getter_setter(klass, association_name, reflection)
           association_class = type_for(reflection)
           association_type = as_nilable_type(association_class)
+          association_methods_module = constant.generated_association_methods
 
           klass.create_method(
             association_name.to_s,
@@ -206,11 +207,13 @@ module Tapioca
             "reset_#{association_name}",
             return_type: "void",
           )
-          if include_changed_and_previously_changed_methods?(reflection)
+          if association_methods_module.method_defined?("#{association_name}_changed?")
             klass.create_method(
               "#{association_name}_changed?",
               return_type: "T::Boolean",
             )
+          end
+          if association_methods_module.method_defined?("#{association_name}_previously_changed?")
             klass.create_method(
               "#{association_name}_previously_changed?",
               return_type: "T::Boolean",
@@ -242,17 +245,6 @@ module Tapioca
               return_type: association_class,
             )
           end
-        end
-
-        sig do
-          params(reflection: T.any(
-            ActiveRecord::Reflection::ThroughReflection,
-            ActiveRecord::Reflection::AssociationReflection
-          )).returns(T::Boolean)
-        end
-        def include_changed_and_previously_changed_methods?(reflection)
-          reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection) &&
-            ::Gem::Requirement.new(">= 7.0").satisfied_by?(::ActiveModel.gem_version)
         end
 
         sig do
