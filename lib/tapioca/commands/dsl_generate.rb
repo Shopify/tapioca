@@ -7,8 +7,11 @@ module Tapioca
       # LSP entrypoint
       sig { void }
       def generate_without_booting
-        Loaders::Dsl.load_subset
-        generate
+        profile = StackProf.run(mode: :wall, raw: true) do
+          Loaders::Dsl.load_subset
+          generate
+        end
+        File.write("tmp/stackprof-cached.json", JSON.generate(profile))
       end
 
       private

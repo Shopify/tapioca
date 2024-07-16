@@ -7,6 +7,7 @@ gemspec
 CURRENT_RAILS_VERSION = "7.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
+gem "stackprof"
 gem "minitest"
 gem "minitest-hooks"
 gem "minitest-reporters"

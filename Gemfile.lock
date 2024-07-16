@@ -327,6 +327,7 @@ GEM
     sqlite3 (1.7.3-arm64-darwin)
     sqlite3 (1.7.3-x86_64-darwin)
     sqlite3 (1.7.3-x86_64-linux)
+    stackprof (0.2.26)
     state_machines (0.6.0)
     stringio (3.1.1)
     strscan (3.1.0)
@@ -389,6 +390,7 @@ DEPENDENCIES
   smart_properties
   sprockets
   sqlite3 (~> 1.4)
+  stackprof
   state_machines
   tapioca!
   webmock
