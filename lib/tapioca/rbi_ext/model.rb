@@ -112,45 +112,6 @@ module RBI
       self << method
     end
 
-    sig do
-      params(
-        name: String,
-        sigs: T::Array[RBI::Sig],
-        parameters: T::Array[RBI::Param],
-        class_method: T::Boolean,
-        visibility: RBI::Visibility,
-        comments: T::Array[RBI::Comment],
-      ).void
-    end
-    def create_method_with_sigs(name, sigs:, parameters: [], class_method: false, visibility: RBI::Public.new,
-      comments: [])
-      return unless Tapioca::RBIHelper.valid_method_name?(name)
-
-      method = RBI::Method.new(
-        name,
-        sigs: sigs,
-        params: parameters,
-        is_singleton: class_method,
-        visibility: visibility,
-        comments: comments,
-      )
-      self << method
-    end
-
-    sig do
-      params(
-        parameters: T::Hash[T.any(String, Symbol), String],
-        type_parameters: T::Array[String],
-        return_type: String,
-      ).returns(RBI::Sig)
-    end
-    def create_sig(parameters:, type_parameters: [], return_type: "T.untyped")
-      params = parameters.map do |name, type|
-        RBI::SigParam.new(name.to_s, type)
-      end
-      RBI::Sig.new(type_params: type_parameters, params: params, return_type: return_type)
-    end
-
     private
 
     sig { returns(T::Hash[String, RBI::Node]) }
