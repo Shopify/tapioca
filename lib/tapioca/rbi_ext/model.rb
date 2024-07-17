@@ -80,24 +80,36 @@ module RBI
       params(
         name: String,
         parameters: T::Array[TypedParam],
-        return_type: String,
+        return_type: T.nilable(String),
         class_method: T::Boolean,
         visibility: RBI::Visibility,
         comments: T::Array[RBI::Comment],
+        block: T.nilable(T.proc.params(node: RBI::Method).void),
       ).void
     end
-    def create_method(name, parameters: [], return_type: "T.untyped", class_method: false, visibility: RBI::Public.new,
-      comments: [])
-      sig_params = parameters.to_h { |param| [param.param.name, param.type] }
-      sig = create_sig(parameters: sig_params, return_type: return_type)
-      create_method_with_sigs(
+    def create_method(name, parameters: [], return_type: nil, class_method: false, visibility: RBI::Public.new,
+      comments: [], &block)
+      return unless Tapioca::RBIHelper.valid_method_name?(name)
+
+      sigs = []
+
+      if !block || !parameters.empty? || return_type
+        # If there is no block, and the params and return type have not been supplied, then
+        # we create a single signature with the given parameters and return type
+        params = parameters.map { |param| RBI::SigParam.new(param.param.name.to_s, param.type) }
+        sigs << RBI::Sig.new(params: params, return_type: return_type || "T.untyped")
+      end
+
+      method = RBI::Method.new(
         name,
-        sigs: [sig],
-        parameters: parameters.map(&:param),
-        class_method: class_method,
+        sigs: sigs,
+        params: parameters.map(&:param),
+        is_singleton: class_method,
         visibility: visibility,
         comments: comments,
+        &block
       )
+      self << method
     end
 
     sig do
