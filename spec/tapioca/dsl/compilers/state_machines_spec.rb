@@ -312,6 +312,44 @@ module Tapioca
 
               assert_includes(rbi_for(:Vehicle), expected)
             end
+
+            it "generates an RBI with no machine state reader if reader defined on class" do
+              add_ruby_file("vehicle.rb", <<~RUBY)
+                class Vehicle
+                  attr_reader :state
+                  state_machine :state
+                end
+              RUBY
+
+              reader = indented(<<~RBI, 4)
+                def state; end
+              RBI
+              refute_includes(rbi_for(:Vehicle), reader)
+
+              writer = indented(<<~RBI, 4)
+                def state=(value); end
+              RBI
+              assert_includes(rbi_for(:Vehicle), writer)
+            end
+
+            it "generates an RBI with no machine state writer if writer defined on class" do
+              add_ruby_file("vehicle.rb", <<~RUBY)
+                class Vehicle
+                  attr_writer :state
+                  state_machine :state
+                end
+              RUBY
+
+              reader = indented(<<~RBI, 4)
+                def state; end
+              RBI
+              assert_includes(rbi_for(:Vehicle), reader)
+
+              writer = indented(<<~RBI, 4)
+                def state=(value); end
+              RBI
+              refute_includes(rbi_for(:Vehicle), writer)
+            end
           end
         end
       end
