@@ -1,6 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/dsl"
 require "tapioca/helpers/test/content"
 require "tapioca/helpers/test/isolation"
 require "tapioca/helpers/test/template"
