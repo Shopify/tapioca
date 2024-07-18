@@ -111,7 +111,7 @@ module Tapioca
         sig { params(mod: RBI::Scope, name: String).void }
         def create_fixture_method(mod, name)
           return_type = return_type_for_fixture(name)
-          mod << RBI::Method.new(name) do |node|
+          mod.create_method(name) do |node|
             node.add_opt_param("fixture_name", "nil")
             node.add_rest_param("other_fixtures")
 

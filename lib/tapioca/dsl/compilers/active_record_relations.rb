@@ -693,28 +693,27 @@ module Tapioca
               else
                 "T::Array[#{id_types}]"
               end
-              sigs = [
-                common_relation_methods_module.create_sig(
-                  parameters: { args: id_types },
-                  return_type: constant_name,
-                ),
-                common_relation_methods_module.create_sig(
-                  parameters: { args: array_type },
-                  return_type: "T::Enumerable[#{constant_name}]",
-                ),
-                common_relation_methods_module.create_sig(
-                  parameters: {
-                    args: "NilClass",
-                    block: "T.proc.params(object: #{constant_name}).void",
-                  },
-                  return_type: as_nilable_type(constant_name),
-                ),
-              ]
-              common_relation_methods_module.create_method_with_sigs(
-                "find",
-                sigs: sigs,
-                parameters: [RBI::OptParam.new("args", "nil"), RBI::BlockParam.new("block")],
-              )
+
+              common_relation_methods_module.create_method("find") do |method|
+                method.add_opt_param("args", "nil")
+                method.add_block_param("block")
+
+                method.add_sig do |sig|
+                  sig.add_param("args", id_types)
+                  sig.return_type = constant_name
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("args", array_type)
+                  sig.return_type = "T::Enumerable[#{constant_name}]"
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("args", "NilClass")
+                  sig.add_param("block", "T.proc.params(object: #{constant_name}).void")
+                  sig.return_type = as_nilable_type(constant_name)
+                end
+              end
             when :find_by
               create_common_method(
                 "find_by",
@@ -747,21 +746,19 @@ module Tapioca
                 return_type: constant_name,
               )
             when :first, :last, :take
-              sigs = [
-                common_relation_methods_module.create_sig(
-                  parameters: { limit: "NilClass" },
-                  return_type: as_nilable_type(constant_name),
-                ),
-                common_relation_methods_module.create_sig(
-                  parameters: { limit: "Integer" },
-                  return_type: "T::Array[#{constant_name}]",
-                ),
-              ]
-              common_relation_methods_module.create_method_with_sigs(
-                method_name.to_s,
-                sigs: sigs,
-                parameters: [RBI::OptParam.new("limit", "nil")],
-              )
+              common_relation_methods_module.create_method(method_name.to_s) do |method|
+                method.add_opt_param("limit", "nil")
+
+                method.add_sig do |sig|
+                  sig.add_param("limit", "NilClass")
+                  sig.return_type = as_nilable_type(constant_name)
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("limit", "Integer")
+                  sig.return_type = "T::Array[#{constant_name}]"
+                end
+              end
             when :raise_record_not_found_exception!
               # skip
             else
@@ -821,24 +818,21 @@ module Tapioca
                 return_type: "T.any(Integer, Float, BigDecimal)",
               )
             when :count
-              sigs = [
-                common_relation_methods_module.create_sig(
-                  parameters: { column_name: "T.nilable(T.any(String, Symbol))" },
-                  return_type: "Integer",
-                ),
-                common_relation_methods_module.create_sig(
-                  parameters: { column_name: "NilClass", block: "T.proc.params(object: #{constant_name}).void" },
-                  return_type: "Integer",
-                ),
-              ]
-              common_relation_methods_module.create_method_with_sigs(
-                "count",
-                sigs: sigs,
-                parameters: [
-                  RBI::OptParam.new("column_name", "nil"),
-                  RBI::BlockParam.new("block"),
-                ],
-              )
+              common_relation_methods_module.create_method(method_name.to_s) do |method|
+                method.add_opt_param("column_name", "nil")
+                method.add_block_param("block")
+
+                method.add_sig do |sig|
+                  sig.add_param("column_name", "T.nilable(T.any(String, Symbol))")
+                  sig.return_type = "Integer"
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("column_name", "NilClass")
+                  sig.add_param("block", "T.proc.params(object: #{constant_name}).void")
+                  sig.return_type = "Integer"
+                end
+              end
             when :ids
               create_common_method("ids", return_type: "Array")
             when :pick, :pluck
@@ -850,29 +844,21 @@ module Tapioca
                 return_type: "T.untyped",
               )
             when :sum
-              sigs = [
-                common_relation_methods_module.create_sig(
-                  parameters: { initial_value_or_column: "T.untyped" },
-                  return_type: "T.any(Integer, Float, BigDecimal)",
-                ),
-                common_relation_methods_module.create_sig(
-                  type_parameters: ["U"],
-                  parameters:
-                  {
-                    initial_value_or_column: "T.nilable(T.type_parameter(:U))",
-                    block: "T.proc.params(object: #{constant_name}).returns(T.type_parameter(:U))",
-                  },
-                  return_type: "T.type_parameter(:U)",
-                ),
-              ]
-              common_relation_methods_module.create_method_with_sigs(
-                method_name.to_s,
-                sigs: sigs,
-                parameters: [
-                  RBI::OptParam.new("initial_value_or_column", "nil"),
-                  RBI::BlockParam.new("block"),
-                ],
-              )
+              common_relation_methods_module.create_method(method_name.to_s) do |method|
+                method.add_opt_param("initial_value_or_column", "nil")
+                method.add_block_param("block")
+
+                method.add_sig do |sig|
+                  sig.add_param("initial_value_or_column", "T.untyped")
+                  sig.return_type = "T.any(Integer, Float, BigDecimal)"
+                end
+
+                method.add_sig(type_params: ["U"]) do |sig|
+                  sig.add_param("initial_value_or_column", "T.nilable(T.type_parameter(:U))")
+                  sig.add_param("block", "T.proc.params(object: #{constant_name}).returns(T.type_parameter(:U))")
+                  sig.return_type = "T.type_parameter(:U)"
+                end
+              end
             end
           end
 
@@ -880,102 +866,100 @@ module Tapioca
             case method_name
             when :find_each
               order = ActiveRecord::Batches.instance_method(:find_each).parameters.include?([:key, :order])
-              parameters = {
-                start: "T.untyped",
-                finish: "T.untyped",
-                batch_size: "Integer",
-                error_on_ignore: "T.untyped",
-                order: ("Symbol" if order),
-              }.compact
-              sigs = [
-                common_relation_methods_module.create_sig(
-                  parameters: parameters.merge(block: "T.proc.params(object: #{constant_name}).void"),
-                  return_type: "void",
-                ),
-                common_relation_methods_module.create_sig(
-                  parameters: parameters,
-                  return_type: "T::Enumerator[#{constant_name}]",
-                ),
-              ]
-              common_relation_methods_module.create_method_with_sigs(
-                "find_each",
-                sigs: sigs,
-                parameters: [
-                  RBI::KwOptParam.new("start", "nil"),
-                  RBI::KwOptParam.new("finish", "nil"),
-                  RBI::KwOptParam.new("batch_size", "1000"),
-                  RBI::KwOptParam.new("error_on_ignore", "nil"),
-                  *(RBI::KwOptParam.new("order", ":asc") if order),
-                  RBI::BlockParam.new("block"),
-                ],
-              )
+
+              common_relation_methods_module.create_method("find_each") do |method|
+                method.add_kw_opt_param("start", "nil")
+                method.add_kw_opt_param("finish", "nil")
+                method.add_kw_opt_param("batch_size", "1000")
+                method.add_kw_opt_param("error_on_ignore", "nil")
+                method.add_kw_opt_param("order", ":asc") if order
+                method.add_block_param("block")
+
+                method.add_sig do |sig|
+                  sig.add_param("start", "T.untyped")
+                  sig.add_param("finish", "T.untyped")
+                  sig.add_param("batch_size", "Integer")
+                  sig.add_param("error_on_ignore", "T.untyped")
+                  sig.add_param("order", "Symbol") if order
+                  sig.add_param("block", "T.proc.params(object: #{constant_name}).void")
+                  sig.return_type = "void"
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("start", "T.untyped")
+                  sig.add_param("finish", "T.untyped")
+                  sig.add_param("batch_size", "Integer")
+                  sig.add_param("error_on_ignore", "T.untyped")
+                  sig.add_param("order", "Symbol") if order
+                  sig.return_type = "T::Enumerator[#{constant_name}]"
+                end
+              end
             when :find_in_batches
               order = ActiveRecord::Batches.instance_method(:find_in_batches).parameters.include?([:key, :order])
-              parameters = {
-                start: "T.untyped",
-                finish: "T.untyped",
-                batch_size: "Integer",
-                error_on_ignore: "T.untyped",
-                order: ("Symbol" if order),
-              }.compact
-              sigs = [
-                common_relation_methods_module.create_sig(
-                  parameters: parameters.merge(block: "T.proc.params(object: T::Array[#{constant_name}]).void"),
-                  return_type: "void",
-                ),
-                common_relation_methods_module.create_sig(
-                  parameters: parameters,
-                  return_type: "T::Enumerator[T::Enumerator[#{constant_name}]]",
-                ),
-              ]
-              common_relation_methods_module.create_method_with_sigs(
-                "find_in_batches",
-                sigs: sigs,
-                parameters: [
-                  RBI::KwOptParam.new("start", "nil"),
-                  RBI::KwOptParam.new("finish", "nil"),
-                  RBI::KwOptParam.new("batch_size", "1000"),
-                  RBI::KwOptParam.new("error_on_ignore", "nil"),
-                  *(RBI::KwOptParam.new("order", ":asc") if order),
-                  RBI::BlockParam.new("block"),
-                ],
-              )
+              common_relation_methods_module.create_method("find_in_batches") do |method|
+                method.add_kw_opt_param("start", "nil")
+                method.add_kw_opt_param("finish", "nil")
+                method.add_kw_opt_param("batch_size", "1000")
+                method.add_kw_opt_param("error_on_ignore", "nil")
+                method.add_kw_opt_param("order", ":asc") if order
+                method.add_block_param("block")
+
+                method.add_sig do |sig|
+                  sig.add_param("start", "T.untyped")
+                  sig.add_param("finish", "T.untyped")
+                  sig.add_param("batch_size", "Integer")
+                  sig.add_param("error_on_ignore", "T.untyped")
+                  sig.add_param("order", "Symbol") if order
+                  sig.add_param("block", "T.proc.params(object: T::Array[#{constant_name}]).void")
+                  sig.return_type = "void"
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("start", "T.untyped")
+                  sig.add_param("finish", "T.untyped")
+                  sig.add_param("batch_size", "Integer")
+                  sig.add_param("error_on_ignore", "T.untyped")
+                  sig.add_param("order", "Symbol") if order
+                  sig.return_type = "T::Enumerator[T::Enumerator[#{constant_name}]]"
+                end
+              end
             when :in_batches
               order = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :order])
               use_ranges = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :use_ranges])
-              parameters = {
-                of: "Integer",
-                start: "T.untyped",
-                finish: "T.untyped",
-                load: "T.untyped",
-                error_on_ignore: "T.untyped",
-                order: ("Symbol" if order),
-                use_ranges: ("T.untyped" if use_ranges),
-              }.compact
-              sigs = [
-                common_relation_methods_module.create_sig(
-                  parameters: parameters.merge(block: "T.proc.params(object: #{RelationClassName}).void"),
-                  return_type: "void",
-                ),
-                common_relation_methods_module.create_sig(
-                  parameters: parameters,
-                  return_type: "::ActiveRecord::Batches::BatchEnumerator",
-                ),
-              ]
-              common_relation_methods_module.create_method_with_sigs(
-                "in_batches",
-                sigs: sigs,
-                parameters: [
-                  RBI::KwOptParam.new("of", "1000"),
-                  RBI::KwOptParam.new("start", "nil"),
-                  RBI::KwOptParam.new("finish", "nil"),
-                  RBI::KwOptParam.new("load", "false"),
-                  RBI::KwOptParam.new("error_on_ignore", "nil"),
-                  *(RBI::KwOptParam.new("order", ":asc") if order),
-                  *(RBI::KwOptParam.new("use_ranges", "nil") if use_ranges),
-                  RBI::BlockParam.new("block"),
-                ],
-              )
+
+              common_relation_methods_module.create_method("in_batches") do |method|
+                method.add_kw_opt_param("of", "1000")
+                method.add_kw_opt_param("start", "nil")
+                method.add_kw_opt_param("finish", "nil")
+                method.add_kw_opt_param("load", "false")
+                method.add_kw_opt_param("error_on_ignore", "nil")
+                method.add_kw_opt_param("order", ":asc") if order
+                method.add_kw_opt_param("use_ranges", "nil") if use_ranges
+                method.add_block_param("block")
+
+                method.add_sig do |sig|
+                  sig.add_param("of", "Integer")
+                  sig.add_param("start", "T.untyped")
+                  sig.add_param("finish", "T.untyped")
+                  sig.add_param("load", "T.untyped")
+                  sig.add_param("error_on_ignore", "T.untyped")
+                  sig.add_param("order", "Symbol") if order
+                  sig.add_param("use_ranges", "T.untyped") if use_ranges
+                  sig.add_param("block", "T.proc.params(object: #{RelationClassName}).void")
+                  sig.return_type = "void"
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("of", "Integer")
+                  sig.add_param("start", "T.untyped")
+                  sig.add_param("finish", "T.untyped")
+                  sig.add_param("load", "T.untyped")
+                  sig.add_param("error_on_ignore", "T.untyped")
+                  sig.add_param("order", "Symbol") if order
+                  sig.add_param("use_ranges", "T.untyped") if use_ranges
+                  sig.return_type = "::ActiveRecord::Batches::BatchEnumerator"
+                end
+              end
             end
           end
 
@@ -991,55 +975,45 @@ module Tapioca
           end
 
           FIND_OR_CREATE_METHODS.each do |method_name|
-            # `T.untyped` matches `T::Array[T.untyped]` so the array signature
-            # must be defined first for Sorbet to pick it, if valid.
-            sigs = [
-              common_relation_methods_module.create_sig(
-                parameters: {
-                  attributes: "T::Array[T.untyped]",
-                  block: "T.nilable(T.proc.params(objects: #{constant_name}).void)",
-                },
-                return_type: "T::Array[#{constant_name}]",
-              ),
-              common_relation_methods_module.create_sig(
-                parameters: {
-                  attributes: "T.untyped",
-                  block: "T.nilable(T.proc.params(object: #{constant_name}).void)",
-                },
-                return_type: constant_name,
-              ),
-            ]
-            common_relation_methods_module.create_method_with_sigs(
-              method_name.to_s,
-              sigs: sigs,
-              parameters: [RBI::ReqParam.new("attributes"), RBI::BlockParam.new("block")],
-            )
+            common_relation_methods_module.create_method(method_name.to_s) do |method|
+              method.add_param("attributes")
+              method.add_block_param("block")
+
+              # `T.untyped` matches `T::Array[T.untyped]` so the array signature
+              # must be defined first for Sorbet to pick it, if valid.
+              method.add_sig do |sig|
+                sig.add_param("attributes", "T::Array[T.untyped]")
+                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                sig.return_type = "T::Array[#{constant_name}]"
+              end
+
+              method.add_sig do |sig|
+                sig.add_param("attributes", "T.untyped")
+                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                sig.return_type = constant_name
+              end
+            end
           end
 
           BUILDER_METHODS.each do |method_name|
-            # `T.untyped` matches `T::Array[T.untyped]` so the array signature
-            # must be defined first for Sorbet to pick it, if valid.
-            sigs = [
-              common_relation_methods_module.create_sig(
-                parameters: {
-                  attributes: "T::Array[T.untyped]",
-                  block: "T.nilable(T.proc.params(objects: #{constant_name}).void)",
-                },
-                return_type: "T::Array[#{constant_name}]",
-              ),
-              common_relation_methods_module.create_sig(
-                parameters: {
-                  attributes: "T.untyped",
-                  block: "T.nilable(T.proc.params(object: #{constant_name}).void)",
-                },
-                return_type: constant_name,
-              ),
-            ]
-            common_relation_methods_module.create_method_with_sigs(
-              method_name.to_s,
-              sigs: sigs,
-              parameters: [RBI::OptParam.new("attributes", "nil"), RBI::BlockParam.new("block")],
-            )
+            common_relation_methods_module.create_method(method_name.to_s) do |method|
+              method.add_opt_param("attributes", "nil")
+              method.add_block_param("block")
+
+              # `T.untyped` matches `T::Array[T.untyped]` so the array signature
+              # must be defined first for Sorbet to pick it, if valid.
+              method.add_sig do |sig|
+                sig.add_param("attributes", "T::Array[T.untyped]")
+                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                sig.return_type = "T::Array[#{constant_name}]"
+              end
+
+              method.add_sig do |sig|
+                sig.add_param("attributes", "T.untyped")
+                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                sig.return_type = constant_name
+              end
+            end
           end
         end
 
