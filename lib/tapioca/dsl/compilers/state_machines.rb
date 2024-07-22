@@ -231,12 +231,12 @@ module Tapioca
           instance_module.create_method(
             attribute,
             return_type: state_type,
-          )
+          ) if ::StateMachines::HelperModule === machine.owner_class.instance_method(attribute).owner
           instance_module.create_method(
             "#{attribute}=",
             parameters: [create_param("value", type: state_type)],
             return_type: state_type,
-          )
+          ) if ::StateMachines::HelperModule === machine.owner_class.instance_method("#{attribute}=").owner
         end
 
         sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
