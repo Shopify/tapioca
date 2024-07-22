@@ -155,6 +155,25 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
+        # From ActiveRecord::ConnectionAdapter::Quoting#quote, minus nil
+        ID_TYPES = T.let(
+          [
+            "String",
+            "Symbol",
+            "::ActiveSupport::Multibyte::Chars",
+            "T::Boolean",
+            "BigDecimal",
+            "Numeric",
+            "::ActiveRecord::Type::Binary::Data",
+            "::ActiveRecord::Type::Time::Value",
+            "Date",
+            "Time",
+            "::ActiveSupport::Duration",
+            "T::Class[T.anything]",
+          ].to_set.freeze,
+          T::Set[String],
+        )
+
         sig { override.void }
         def decorate
           create_classes_and_includes
@@ -663,27 +682,14 @@ module Tapioca
                 return_type: "T::Boolean",
               )
             when :find
-              # From ActiveRecord::ConnectionAdapter::Quoting#quote, minus nil
-              id_types = [
-                "String",
-                "Symbol",
-                "::ActiveSupport::Multibyte::Chars",
-                "T::Boolean",
-                "BigDecimal",
-                "Numeric",
-                "::ActiveRecord::Type::Binary::Data",
-                "::ActiveRecord::Type::Time::Value",
-                "Date",
-                "Time",
-                "::ActiveSupport::Duration",
-                "T::Class[T.anything]",
-              ].to_set
+              id_types = ID_TYPES
 
               if constant.table_exists?
                 primary_key_type = constant.type_for_attribute(constant.primary_key)
                 type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(primary_key_type)
                 type = RBIHelper.as_non_nilable_type(type)
-                id_types << type if type != "T.untyped"
+
+                id_types = ID_TYPES.union([type]) if type != "T.untyped"
               end
 
               id_types = "T.any(#{id_types.to_a.join(", ")})"
