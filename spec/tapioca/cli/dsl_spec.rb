@@ -5,6 +5,8 @@ require "spec_helper"
 
 module Tapioca
   class DslSpec < SpecWithProject
+    include Tapioca::Helpers::Test::Template
+
     describe "cli::dsl" do
       before(:all) do
         @project.write!("config/application.rb", <<~RB)
@@ -2050,6 +2052,10 @@ module Tapioca
       end
 
       describe "custom compilers" do
+        after do
+          project.remove!("sorbet/rbi/dsl")
+        end
+
         it "must load custom compilers from gems" do
           @project.write!("lib/post.rb", <<~RB)
             class Post
@@ -2175,6 +2181,65 @@ module Tapioca
               module GeneratedBar; end
             end
           OUT
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must be able to modify behaviour of existing compilers" do
+          @project.write!("lib/post.rb", <<~RB)
+            ::ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
+
+            class Post < ActiveRecord::Base
+            end
+          RB
+
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/tapioca/dsl/compilers/active_record_relation_ext.rb", <<~RB)
+              class Tapioca::Dsl::Compilers::ActiveRecordRelations
+                ID_TYPES = ID_TYPES.union(["Foo"]).freeze
+              end
+            RB
+          end
+
+          @project.require_mock_gem(foo)
+          @project.require_real_gem("activerecord", require: "active_record")
+          @project.require_real_gem("sqlite3", "1.7.3")
+          @project.bundle_install!
+
+          result = @project.tapioca("dsl Post")
+
+          assert_stdout_equals(<<~OUT, result)
+            Loading DSL extension classes... Done
+            Loading Rails application... Done
+            Loading DSL compiler classes... Done
+            Compiling DSL RBI files...
+
+                  create  sorbet/rbi/dsl/post.rbi
+
+            Done
+
+            Checking generated RBI files...  Done
+              No errors found
+
+            All operations performed in working directory.
+            Please review changes and commit them.
+          OUT
+
+          assert_project_file_includes("sorbet/rbi/dsl/post.rbi", indented(<<~RBI, 4))
+            sig do
+              params(
+                args: T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything], Foo)
+              ).returns(::Post)
+            end
+            sig do
+              params(
+                args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything], Foo)]
+              ).returns(T::Enumerable[::Post])
+            end
+            sig { params(args: NilClass, block: T.proc.params(object: ::Post).void).returns(T.nilable(::Post)) }
+            def find(args = nil, &block); end
+          RBI
 
           assert_empty_stderr(result)
           assert_success_status(result)
