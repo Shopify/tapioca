@@ -693,12 +693,11 @@ module Tapioca
               end
 
               id_types = "T.any(#{id_types.to_a.join(", ")})"
-
-              array_type = if constant.try(:composite_primary_key?)
-                "T::Array[T::Array[#{id_types}]]"
-              else
-                "T::Array[#{id_types}]"
+              if constant.try(:composite_primary_key?)
+                id_types = "T::Array[#{id_types}]"
               end
+
+              array_type = "T::Array[#{id_types}]"
 
               common_relation_methods_module.create_method("find") do |method|
                 method.add_opt_param("args", "nil")
