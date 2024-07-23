@@ -5136,13 +5136,13 @@ class GraphQL::Language::Parser
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/language/parser.rb#782
+  # source://graphql//lib/graphql/language/parser.rb#790
   def at?(expected_token_name); end
 
   # token_value works for when the scanner matched something
   # which is usually fine and it's good for it to be fast at that.
   #
-  # source://graphql//lib/graphql/language/parser.rb#821
+  # source://graphql//lib/graphql/language/parser.rb#829
   def debug_token_value; end
 
   # source://graphql//lib/graphql/language/parser.rb#114
@@ -5151,15 +5151,15 @@ class GraphQL::Language::Parser
   # source://graphql//lib/graphql/language/parser.rb#99
   def document; end
 
-  # source://graphql//lib/graphql/language/parser.rb#793
+  # source://graphql//lib/graphql/language/parser.rb#801
   def expect_one_of(token_names); end
 
-  # source://graphql//lib/graphql/language/parser.rb#786
+  # source://graphql//lib/graphql/language/parser.rb#794
   def expect_token(expected_token_name); end
 
   # Only use when we care about the expected token's value
   #
-  # source://graphql//lib/graphql/language/parser.rb#810
+  # source://graphql//lib/graphql/language/parser.rb#818
   def expect_token_value(tok); end
 
   # @return [Array<Integer>] Positions of each line break in the original string
@@ -5167,46 +5167,46 @@ class GraphQL::Language::Parser
   # source://graphql//lib/graphql/language/parser.rb#74
   def lines_at; end
 
-  # source://graphql//lib/graphql/language/parser.rb#492
+  # source://graphql//lib/graphql/language/parser.rb#500
   def list_type; end
 
-  # source://graphql//lib/graphql/language/parser.rb#446
+  # source://graphql//lib/graphql/language/parser.rb#454
   def parse_argument_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#660
+  # source://graphql//lib/graphql/language/parser.rb#668
   def parse_arguments; end
 
-  # source://graphql//lib/graphql/language/parser.rb#643
+  # source://graphql//lib/graphql/language/parser.rb#651
   def parse_directives; end
 
-  # source://graphql//lib/graphql/language/parser.rb#374
+  # source://graphql//lib/graphql/language/parser.rb#379
   def parse_enum_value_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#427
+  # source://graphql//lib/graphql/language/parser.rb#435
   def parse_field_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#412
+  # source://graphql//lib/graphql/language/parser.rb#420
   def parse_implements; end
 
-  # source://graphql//lib/graphql/language/parser.rb#360
+  # source://graphql//lib/graphql/language/parser.rb#365
   def parse_input_object_field_definitions; end
 
-  # source://graphql//lib/graphql/language/parser.rb#460
+  # source://graphql//lib/graphql/language/parser.rb#468
   def parse_input_value_definition; end
 
-  # source://graphql//lib/graphql/language/parser.rb#565
+  # source://graphql//lib/graphql/language/parser.rb#573
   def parse_name; end
 
-  # source://graphql//lib/graphql/language/parser.rb#631
+  # source://graphql//lib/graphql/language/parser.rb#639
   def parse_name_without_on; end
 
-  # source://graphql//lib/graphql/language/parser.rb#500
+  # source://graphql//lib/graphql/language/parser.rb#508
   def parse_operation_type; end
 
-  # source://graphql//lib/graphql/language/parser.rb#639
+  # source://graphql//lib/graphql/language/parser.rb#647
   def parse_type_name; end
 
-  # source://graphql//lib/graphql/language/parser.rb#398
+  # source://graphql//lib/graphql/language/parser.rb#403
   def parse_union_members; end
 
   # source://graphql//lib/graphql/language/parser.rb#95
@@ -5214,13 +5214,13 @@ class GraphQL::Language::Parser
 
   # @raise [GraphQL::ParseError]
   #
-  # source://graphql//lib/graphql/language/parser.rb#797
+  # source://graphql//lib/graphql/language/parser.rb#805
   def raise_parse_error(message); end
 
-  # source://graphql//lib/graphql/language/parser.rb#514
+  # source://graphql//lib/graphql/language/parser.rb#522
   def selection_set; end
 
-  # source://graphql//lib/graphql/language/parser.rb#680
+  # source://graphql//lib/graphql/language/parser.rb#688
   def string_value; end
 
   # Returns the value of attribute token_name.
@@ -5228,10 +5228,10 @@ class GraphQL::Language::Parser
   # source://graphql//lib/graphql/language/parser.rb#89
   def token_name; end
 
-  # source://graphql//lib/graphql/language/parser.rb#477
+  # source://graphql//lib/graphql/language/parser.rb#485
   def type; end
 
-  # source://graphql//lib/graphql/language/parser.rb#686
+  # source://graphql//lib/graphql/language/parser.rb#694
   def value; end
 
   class << self
@@ -5255,11 +5255,11 @@ class GraphQL::Language::Parser
   end
 end
 
-# source://graphql//lib/graphql/language/parser.rb#824
+# source://graphql//lib/graphql/language/parser.rb#832
 class GraphQL::Language::Parser::SchemaParser < ::GraphQL::Language::Parser
   # @return [SchemaParser] a new instance of SchemaParser
   #
-  # source://graphql//lib/graphql/language/parser.rb#825
+  # source://graphql//lib/graphql/language/parser.rb#833
   def initialize(*args, **kwargs); end
 end
 
@@ -9281,7 +9281,7 @@ class GraphQL::Schema::Enum < ::GraphQL::Schema::Member
 
     private
 
-    # source://graphql//lib/graphql/schema/enum.rb#175
+    # source://graphql//lib/graphql/schema/enum.rb#179
     def own_values; end
   end
 end
