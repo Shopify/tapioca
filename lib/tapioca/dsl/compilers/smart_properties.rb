@@ -86,8 +86,9 @@ module Tapioca
           def gather_constants
             all_modules.select do |c|
               name_of(c) &&
+                ::SmartProperties > c &&
                 ::SmartProperties::Validations::Ancestor != c &&
-                ::SmartProperties > c && ::SmartProperties::ClassMethods === c
+                ::SmartProperties::ClassMethods === c
             end
           end
         end
