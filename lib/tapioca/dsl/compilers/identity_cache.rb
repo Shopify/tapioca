@@ -100,7 +100,7 @@ module Tapioca
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
             descendants_of(::ActiveRecord::Base).select do |klass|
-              klass < ::IdentityCache::WithoutPrimaryIndex
+              ::IdentityCache::WithoutPrimaryIndex > klass
             end
           end
         end

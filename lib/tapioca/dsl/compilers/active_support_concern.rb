@@ -73,7 +73,7 @@ module Tapioca
                 # not singleton classes
                 !mod.singleton_class? &&
                 # extend ActiveSupport::Concern, and
-                mod.singleton_class < ActiveSupport::Concern &&
+                ActiveSupport::Concern > mod.singleton_class &&
                 # have dependencies (i.e. include another concern)
                 !dependencies_of(mod).empty?
             end

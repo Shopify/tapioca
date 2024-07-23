@@ -58,7 +58,7 @@ module Tapioca
           def gather_constants
             # Collect all the classes that include ActiveModel::Validations
             all_classes.select do |c|
-              c < ActiveModel::Validations
+              ActiveModel::Validations > c
             end
           end
         end

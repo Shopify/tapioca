@@ -111,7 +111,7 @@ module Tapioca
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
             all_modules.select do |c|
-              name_of(c) && c < ::JsonApiClient::Resource
+              name_of(c) && ::JsonApiClient::Resource > c
             end
           end
         end
