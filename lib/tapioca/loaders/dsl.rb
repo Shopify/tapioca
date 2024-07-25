@@ -63,10 +63,17 @@ module Tapioca
       def load_dsl_compilers
         say("Loading DSL compiler classes... ")
 
+        # Load all built-in compilers
+        Dir.glob("#{Tapioca::LIB_ROOT_DIR}/tapioca/dsl/compilers/*.rb").each do |compiler|
+          require File.expand_path(compiler)
+        end
+
+        # Load all custom compilers exported from gems
         ::Gem.find_files("tapioca/dsl/compilers/*.rb").each do |compiler|
           require File.expand_path(compiler)
         end
 
+        # Load all custom compilers from the project
         Dir.glob([
           "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later
           "#{@tapioca_path}/compilers/**/*.rb",
