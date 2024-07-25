@@ -80,7 +80,7 @@ module Tapioca
 
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
-            all_classes.select { |c| c < GraphQL::Schema::Mutation && c != GraphQL::Schema::RelayClassicMutation }
+            all_classes.select { |c| GraphQL::Schema::Mutation > c && GraphQL::Schema::RelayClassicMutation != c }
           end
         end
       end

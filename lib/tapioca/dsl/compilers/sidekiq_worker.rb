@@ -73,7 +73,7 @@ module Tapioca
 
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
-            all_classes.select { |c| c < Sidekiq::Worker }
+            all_classes.select { |c| Sidekiq::Worker > c }
           end
         end
 

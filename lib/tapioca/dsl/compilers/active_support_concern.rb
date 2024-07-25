@@ -66,18 +66,17 @@ module Tapioca
 
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
-            # Find all Modules that are:
             all_modules.select do |mod|
-              # named (i.e. not anonymous)
-              name_of(mod) &&
-                # not singleton classes
+              name_of(mod) && # i.e. not anonymous
                 !mod.singleton_class? &&
-                # extend ActiveSupport::Concern, and
-                mod.singleton_class < ActiveSupport::Concern &&
-                # have dependencies (i.e. include another concern)
-                !dependencies_of(mod).empty?
+                ActiveSupport::Concern > mod.singleton_class &&
+                has_dependencies?(mod)
             end
           end
+
+          # Returns true when `mod` includes other concerns
+          sig { params(mod: Module).returns(T::Boolean) }
+          def has_dependencies?(mod) = dependencies_of(mod).any?
 
           sig { params(concern: Module).returns(T::Array[Module]) }
           def dependencies_of(concern)
