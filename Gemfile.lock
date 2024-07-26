@@ -6,6 +6,12 @@ GIT
     cityhash (0.6.0)
 
 PATH
+  remote: ../rubocop-sorbet
+  specs:
+    rubocop-sorbet (0.8.5)
+      rubocop (>= 1)
+
+PATH
   remote: .
   specs:
     tapioca (0.15.1)
@@ -297,8 +303,6 @@ GEM
       rubocop (~> 1.61)
     rubocop-shopify (2.15.1)
       rubocop (~> 1.51)
-    rubocop-sorbet (0.8.4)
-      rubocop (>= 1)
     ruby-progressbar (1.13.0)
     shopify-money (2.2.2)
     sidekiq (7.3.0)
@@ -383,7 +387,7 @@ DEPENDENCIES
   rake
   rubocop-rspec
   rubocop-shopify
-  rubocop-sorbet (>= 0.4.1)
+  rubocop-sorbet (>= 0.4.1)!
   shopify-money
   sidekiq
   smart_properties

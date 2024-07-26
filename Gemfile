@@ -13,7 +13,7 @@ gem "minitest-reporters"
 gem "debug"
 gem "irb"
 gem "rubocop-shopify"
-gem "rubocop-sorbet", ">= 0.4.1"
+gem "rubocop-sorbet", ">= 0.4.1", path: "../rubocop-sorbet"
 gem "rubocop-rspec"
 
 group :deployment, :development do
