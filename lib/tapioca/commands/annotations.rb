@@ -116,7 +116,7 @@ module Tapioca
 
         project_gems.each_with_object(fetchable_gems) do |gem_info, hash|
           @indexes.each do |uri, index|
-            T.must(hash[gem_info]) << uri if index.has_gem?(gem_info.name)
+            hash[gem_info].non_nil! << uri if index.has_gem?(gem_info.name)
           end
         end
 

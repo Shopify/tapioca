@@ -165,10 +165,7 @@ module Tapioca
               abstract_message_const = ::Google::Protobuf.const_get(:AbstractMessage)
               descendants_of(abstract_message_const) - [abstract_message_const]
             else
-              T.cast(
-                ObjectSpace.each_object(marker).to_a,
-                T::Array[Module],
-              )
+              ObjectSpace.each_object(marker).to_a.as!(T::Array[Module])
             end
 
             results = results.concat(enum_modules)

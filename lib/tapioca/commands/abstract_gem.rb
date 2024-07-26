@@ -195,7 +195,7 @@ module Tapioca
                 move(old_filename, filename) unless old_filename == filename
               end
 
-              gem = T.must(@bundle.gem(gem_name))
+              gem = @bundle.gem(gem_name).non_nil!
               compile_gem_rbi(gem)
               puts
             end
@@ -216,7 +216,7 @@ module Tapioca
 
       sig { params(gem_name: String).returns(Pathname) }
       def existing_rbi(gem_name)
-        gem_rbi_filename(gem_name, T.must(existing_rbis[gem_name]))
+        gem_rbi_filename(gem_name, existing_rbis[gem_name].non_nil!)
       end
 
       sig { returns(T::Array[String]) }
@@ -228,7 +228,7 @@ module Tapioca
 
       sig { params(gem_name: String).returns(Pathname) }
       def expected_rbi(gem_name)
-        gem_rbi_filename(gem_name, T.must(expected_rbis[gem_name]))
+        gem_rbi_filename(gem_name, expected_rbis[gem_name].non_nil!)
       end
 
       sig { params(gem_name: String).returns(T::Boolean) }
@@ -265,7 +265,7 @@ module Tapioca
       sig { returns(T::Hash[String, String]) }
       def existing_rbis
         @existing_rbis ||= Pathname.glob((@outpath / "*@*.rbi").to_s)
-          .to_h { |f| T.cast(f.basename(".*").to_s.split("@", 2), [String, String]) }
+          .to_h { |f| f.basename(".*").to_s.split("@", 2).as!([String, String]) }
       end
 
       sig { returns(T::Hash[String, String]) }

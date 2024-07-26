@@ -77,7 +77,7 @@ module Tapioca
         existing_rbi_files = existing_rbi_filenames(all_requested_constants)
 
         generated_files = pipeline.run do |constant, contents|
-          constant_name = T.must(Tapioca::Runtime::Reflection.name_of(constant))
+          constant_name = Tapioca::Runtime::Reflection.name_of(constant).non_nil!
 
           if @verbose && !@quiet
             say_status(:processing, constant_name, :yellow)
@@ -190,7 +190,7 @@ module Tapioca
           say("")
         end
 
-        T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])
+        compiler_map.values.as!(T::Array[T.class_of(Tapioca::Dsl::Compiler)])
       end
 
       sig { params(name: String).returns(T.nilable(T.class_of(Tapioca::Dsl::Compiler))) }

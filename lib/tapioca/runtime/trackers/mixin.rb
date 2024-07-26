@@ -46,7 +46,7 @@ module Tapioca
 
             if mixin_type == Type::Include || mixin_type == Type::Prepend
               location = mixin_location(mixin, mixin_type, constant)
-              register_with_location(constant, mixin, Type::Extend, T.must(location))
+              register_with_location(constant, mixin, Type::Extend, location.non_nil!)
             end
 
             attached_class

@@ -77,7 +77,7 @@ module Tapioca
           end
 
         out, err, status = Open3.capture3(cmd, opts)
-        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
+        Spoom::ExecResult.new(out: out, err: err, status: status.success?.non_nil!, exit_code: status.exitstatus.non_nil!)
       end
     end
 
@@ -92,7 +92,7 @@ module Tapioca
       opts[:chdir] = absolute_path
       Bundler.with_unbundled_env do
         out, err, status = Open3.capture3(env, ["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
-        Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
+        Spoom::ExecResult.new(out: out, err: err, status: status.success?.non_nil!, exit_code: status.exitstatus.non_nil!)
       end
     end
 

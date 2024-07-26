@@ -79,7 +79,7 @@ module Tapioca
         raise e if halt_upon_load_error
 
         if e.backtrace
-          backtrace = T.must(e.backtrace).join("\n")
+          backtrace = e.backtrace.non_nil!.join("\n")
           say(backtrace, :cyan) # TODO: Check verbose flag to print backtrace.
         end
         say("Continuing RBI generation without loading the Rails application.")

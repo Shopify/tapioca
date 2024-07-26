@@ -67,7 +67,7 @@ module Tapioca
       def run(&blk)
         constants_to_process = gather_constants(requested_constants, requested_paths, skipped_constants)
           .select { |c| Module === c } # Filter value constants out
-          .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
+          .sort_by! { |c| Runtime::Reflection.name_of(c).non_nil! }
 
         # It's OK if there are no constants to process if we received a valid file/path.
         if constants_to_process.empty? && requested_paths.none? { |p| File.exist?(p) }
@@ -116,7 +116,7 @@ module Tapioca
       def compilers
         @compilers ||= T.let(
           Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
-            T.must(compiler.name)
+            compiler.name.non_nil!
           end,
           T.nilable(T::Array[T.class_of(Compiler)]),
         )
@@ -171,7 +171,7 @@ module Tapioca
           .group_by { |c| Runtime::Reflection.name_of(c) }
           .select { |name, _| !name.nil? }
 
-        constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[Module]])
+        constants_by_name = constants_by_name.as!(T::Hash[String, T::Array[Module]])
 
         # Find the constants that have been reloaded
         reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
@@ -187,7 +187,7 @@ module Tapioca
         # set of constants that are actually in memory with those names.
         filtered_constants = constants_by_name
           .keys
-          .map { |name| T.cast(Runtime::Reflection.constantize(name), Module) }
+          .map { |name| Runtime::Reflection.constantize(name).as!(Module) }
           .select { |mod| Runtime::Reflection.constant_defined?(mod) }
 
         Set.new.compare_by_identity.merge(filtered_constants)

@@ -16,7 +16,7 @@ module Tapioca
             @payload_symbols = T.let(SymbolTableParser.parse_json(output), T.nilable(T::Set[String]))
           end
 
-          T.must(@payload_symbols)
+          @payload_symbols.non_nil!
         end
 
         sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }

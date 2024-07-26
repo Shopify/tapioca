@@ -73,7 +73,7 @@ module Tapioca
 
       @validating_config = T.let(true, T.nilable(T::Boolean))
 
-      commands = T.cast(self, Thor).class.commands
+      commands = self.as!(Thor).class.commands
 
       errors = config.flat_map do |config_key, config_options|
         command = commands[config_key.to_s]

@@ -45,7 +45,7 @@ module Tapioca
 
       sig { override.returns(Module) }
       def constant
-        T.cast(@constant, Module)
+        @constant.as!(Module)
       end
 
       sig { params(symbol: String, constant: Module).void }

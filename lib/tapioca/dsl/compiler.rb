@@ -150,7 +150,7 @@ module Tapioca
 
           name = name ? name.to_s : fallback_arg_name
           name = fallback_arg_name unless valid_parameter_name?(name)
-          method_type = T.must(method_types[index])
+          method_type = method_types[index].non_nil!
 
           case type
           when :req

@@ -166,7 +166,7 @@ module Tapioca
 
         sig { params(root: RBI::Tree, constant: Module).void }
         def generate_module_for(root, constant)
-          root.create_module(T.must(constant.name)) do |mod|
+          root.create_module(constant.name.non_nil!) do |mod|
             mod.create_include("::ActionDispatch::Routing::UrlFor")
             mod.create_include("::ActionDispatch::Routing::PolymorphicRoutes")
 
@@ -185,8 +185,8 @@ module Tapioca
           include_helper = constant.ancestors.include?(helper_module) || NON_DISCOVERABLE_INCLUDERS.include?(constant)
           extend_helper = constant.singleton_class.ancestors.include?(helper_module)
 
-          mod.create_include(T.must(helper_module.name)) if include_helper
-          mod.create_extend(T.must(helper_module.name)) if extend_helper
+          mod.create_include(helper_module.name.non_nil!) if include_helper
+          mod.create_extend(helper_module.name.non_nil!) if extend_helper
         end
       end
     end

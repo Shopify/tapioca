@@ -91,7 +91,7 @@ module Tapioca
             qualified_name_of(klass)&.match?(BUILT_IN_MATCHER)
           end
 
-          T.cast(ancestor, T.class_of(::Rails::Generators::Base))
+          ancestor.as!(T.class_of(::Rails::Generators::Base))
         end
 
         sig { params(arg: T.any(Thor::Argument, Thor::Option)).returns(String) }

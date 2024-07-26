@@ -39,7 +39,7 @@ module Tapioca
             read.binmode
             write.binmode
 
-            this = T.cast(self, Minitest::Test)
+            this = self.as!(Minitest::Test)
             pid = fork do
               read.close
               yield
@@ -67,8 +67,8 @@ module Tapioca
             result = read.read
             read.close
 
-            Process.wait2(T.must(pid))
-            T.must(result).unpack1("m")
+            Process.wait2(pid.non_nil!)
+            result.non_nil!.unpack1("m")
           end
         end
 
@@ -84,13 +84,13 @@ module Tapioca
           # no forking.
           sig { params(_blk: T.untyped).returns(String) }
           def run_in_isolation(&_blk)
-            this = T.cast(self, Minitest::Test)
+            this = self.as!(Minitest::Test)
             require "tempfile"
 
             if ENV["ISOLATION_TEST"]
               yield
               test_result = defined?(Minitest::Result) ? Minitest::Result.from(self) : this.dup
-              File.open(T.must(ENV["ISOLATION_OUTPUT"]), "w") do |file|
+              File.open(ENV["ISOLATION_OUTPUT"].non_nil!, "w") do |file|
                 file.puts [Marshal.dump(test_result)].pack("m")
               end
               exit!(false)
@@ -117,7 +117,7 @@ module Tapioca
                   nil
                 end
 
-                return T.must(tmpfile.read).unpack1("m")
+                return tmpfile.read.non_nil!.unpack1("m")
               end
             end
           end

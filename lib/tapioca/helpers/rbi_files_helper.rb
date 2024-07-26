@@ -221,27 +221,21 @@ module Tapioca
 
     sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[RBI::Scope]) }
     def extract_empty_scopes(nodes)
-      T.cast(nodes.select { |node| node.is_a?(RBI::Scope) && node.empty? }, T::Array[RBI::Scope])
+      nodes.select { |node| node.is_a?(RBI::Scope) && node.empty? }.as!(T::Array[RBI::Scope])
     end
 
     sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }
     def extract_methods_and_attrs(nodes)
-      T.cast(
-        nodes.select do |node|
+      nodes.select do |node|
           node.is_a?(RBI::Method) || node.is_a?(RBI::Attr)
-        end,
-        T::Array[T.any(RBI::Method, RBI::Attr)],
-      )
+        end.as!(T::Array[T.any(RBI::Method, RBI::Attr)])
     end
 
     sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Mixin, RBI::RequiresAncestor)]) }
     def extract_mixins(nodes)
-      T.cast(
-        nodes.select do |node|
+      nodes.select do |node|
           node.is_a?(RBI::Mixin) || node.is_a?(RBI::RequiresAncestor)
-        end,
-        T::Array[T.all(RBI::Mixin, RBI::RequiresAncestor)],
-      )
+        end.as!(T::Array[T.all(RBI::Mixin, RBI::RequiresAncestor)])
     end
 
     sig { params(nodes: T::Array[T.any(RBI::Method, RBI::Attr)]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }
@@ -278,7 +272,7 @@ module Tapioca
 
     sig { params(path: String).returns(String) }
     def gem_name_from_rbi_path(path)
-      T.must(File.basename(path, ".rbi").split("@").first)
+      File.basename(path, ".rbi").split("@").first.non_nil!
     end
   end
 end

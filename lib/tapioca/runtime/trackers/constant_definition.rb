@@ -30,7 +30,7 @@ module Tapioca
           if File.exist?(path)
             loc = build_constant_location(tp, caller_locations)
           else
-            caller_location = T.must(caller_locations)
+            caller_location = caller_locations.non_nil!
               .find { |loc| loc.path && File.exist?(loc.path) }
 
             next unless caller_location

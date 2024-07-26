@@ -176,7 +176,7 @@ module Tapioca
 
           sig { override.returns(T::Enumerable[Module]) }
           def gather_constants
-            T.cast(ObjectSpace.each_object(::AASM::ClassMethods), T::Enumerable[Module])
+            ObjectSpace.each_object(::AASM::ClassMethods).as!(T::Enumerable[Module])
           end
         end
       end

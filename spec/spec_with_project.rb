@@ -192,13 +192,13 @@ module Tapioca
             next unless (name = (source.fetch(start_lineno - 1).scan(/#{type}\(<<~([A-Z]+)/)[0] || [])[0])
 
             end_lineno =
-              T.must(source[start_lineno..]).find.with_index(start_lineno) do |line, lineno|
+              source[start_lineno..].non_nil!.find.with_index(start_lineno) do |line, lineno|
                 break lineno if line.match?(/^\s+#{name}\r?\n$/)
               end
 
             next unless end_lineno
 
-            indent = T.must(source.fetch(start_lineno)[/\A\s+/, 0]).length
+            indent = source.fetch(start_lineno)[/\A\s+/, 0].non_nil!.length
             source[start_lineno...end_lineno] =
               actual.lines.map { |line| line.strip.empty? ? line : "#{" " * indent}#{line}" }
           end

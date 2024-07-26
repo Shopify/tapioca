@@ -634,7 +634,7 @@ module Tapioca
             Compiled tapioca
           OUT
 
-          tapioca_rbi_file = T.must(Dir.glob("#{@project.absolute_path}/sorbet/rbi/gems/tapioca@*.rbi").first)
+          tapioca_rbi_file = Dir.glob("#{@project.absolute_path}/sorbet/rbi/gems/tapioca@*.rbi").first.non_nil!
           refute_includes(File.read(tapioca_rbi_file), "class RBI::Module")
 
           assert_empty_stderr(result)
@@ -1546,7 +1546,7 @@ module Tapioca
           assert_success_status(result)
 
           assert_stdout_includes(result, "Compiled rails")
-          rails_rbi = T.must(Dir.glob("#{@project.absolute_path}/sorbet/rbi/gems/rails@*.rbi").first)
+          rails_rbi = Dir.glob("#{@project.absolute_path}/sorbet/rbi/gems/rails@*.rbi").first.non_nil!
 
           expected_rbi = <<~RBI
             # typed: true

@@ -84,7 +84,7 @@ module Tapioca
               # the Action Controller base helper methods module, so we should
               # just add that as an include and stop doing more processing.
               if helpers_module.name == "ActionController::Base::HelperMethods"
-                next helper_methods.create_include(T.must(qualified_name_of(helpers_module)))
+                next helper_methods.create_include(qualified_name_of(helpers_module).non_nil!)
               end
 
               # Find all the included helper modules and generate an include
@@ -155,7 +155,7 @@ module Tapioca
         def gather_includes(mod)
           mod.ancestors
             .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || name_of(ancestor).nil? }
-            .map { |ancestor| T.must(qualified_name_of(ancestor)) }
+            .map { |ancestor| qualified_name_of(ancestor).non_nil! }
             .reverse
         end
       end

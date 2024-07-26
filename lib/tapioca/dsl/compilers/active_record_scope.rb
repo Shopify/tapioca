@@ -98,7 +98,7 @@ module Tapioca
             break unless superclass
 
             # we are guaranteed to have a superclass that is of type "ActiveRecord::Base"
-            constant = T.cast(superclass, T.class_of(ActiveRecord::Base))
+            constant = superclass.as!(T.class_of(ActiveRecord::Base))
           end
 
           scope_methods.uniq

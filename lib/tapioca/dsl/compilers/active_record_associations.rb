@@ -289,7 +289,7 @@ module Tapioca
 
           return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
 
-          T.must(qualified_name_of(reflection.klass))
+          qualified_name_of(reflection.klass).non_nil!
         end
 
         sig do
@@ -354,7 +354,7 @@ module Tapioca
           when ActiveRecord::Reflection::ThroughReflection
             delegate_reflection = reflection.send(:delegate_reflection)
             declaration = declaration(delegate_reflection)
-            if T.must(declaration).match?("has_one")
+            if declaration.non_nil!.match?("has_one")
               "the-has-one-through-association"
             else
               "the-has-many-through-association"

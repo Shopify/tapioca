@@ -170,7 +170,7 @@ module Tapioca
 
       sig { returns(Gem::Event) }
       def next_event
-        T.must(@events.shift)
+        @events.shift.non_nil!
       end
 
       sig { params(event: Gem::Event).void }
@@ -462,7 +462,7 @@ module Tapioca
 
       sig { params(constant: T.all(Module, T::Generic)).returns(String) }
       def generic_name_of(constant)
-        type_name = T.must(constant.name)
+        type_name = constant.name.non_nil!
         return type_name if type_name =~ /\[.*\]$/
 
         type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)

@@ -73,11 +73,11 @@ module Tapioca
           when GraphQL::Types::JSON.singleton_class
             "T::Hash[::String, T.untyped]"
           when GraphQL::Schema::Enum.singleton_class
-            enum_values = T.cast(unwrapped_type.enum_values, T::Array[GraphQL::Schema::EnumValue])
+            enum_values = unwrapped_type.enum_values.as!(T::Array[GraphQL::Schema::EnumValue])
             value_types = enum_values.map { |v| type_for_constant(v.value.class) }.uniq
 
             if value_types.size == 1
-              T.must(value_types.first)
+              value_types.first.non_nil!
             else
               "T.any(#{value_types.join(", ")})"
             end

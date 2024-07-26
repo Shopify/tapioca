@@ -23,7 +23,7 @@ module RBI
 
     sig { params(name: String, block: T.nilable(T.proc.params(scope: Scope).void)).returns(Scope) }
     def create_module(name, &block)
-      T.cast(create_node(RBI::Module.new(name)), RBI::Scope).tap do |node|
+      create_node(RBI::Module.new(name)).as!(RBI::Scope).tap do |node|
         block&.call(node)
       end
     end
@@ -36,7 +36,7 @@ module RBI
       ).returns(Scope)
     end
     def create_class(name, superclass_name: nil, &block)
-      T.cast(create_node(RBI::Class.new(name, superclass_name: superclass_name)), RBI::Scope).tap do |node|
+      create_node(RBI::Class.new(name, superclass_name: superclass_name)).as!(RBI::Scope).tap do |node|
         block&.call(node)
       end
     end

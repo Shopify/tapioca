@@ -58,9 +58,9 @@ module Tapioca
               # properly for method resolution, so we generate an
               # include statement instead
               when Runtime::Trackers::Mixin::Type::Include, Runtime::Trackers::Mixin::Type::Prepend
-                tree << RBI::Include.new(T.must(qname))
+                tree << RBI::Include.new(qname.non_nil!)
               when Runtime::Trackers::Mixin::Type::Extend
-                tree << RBI::Extend.new(T.must(qname))
+                tree << RBI::Extend.new(qname.non_nil!)
               end
             end
         end

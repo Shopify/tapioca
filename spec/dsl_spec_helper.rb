@@ -15,13 +15,13 @@ class DslSpec < Minitest::Spec
     sig { returns(T.class_of(DslSpec)) }
     def spec_test_class
       # It should be the one that directly inherits from DslSpec
-      class_ancestors = T.cast(ancestors.grep(Class), T::Array[T.class_of(DslSpec)])
+      class_ancestors = ancestors.grep(Class).as!(T::Array[T.class_of(DslSpec)])
 
       klass = class_ancestors
         .take_while { |ancestor| ancestor != DslSpec }
         .last
 
-      T.must(klass)
+      klass.non_nil!
     end
 
     sig { returns(String) }

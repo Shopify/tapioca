@@ -17,10 +17,10 @@ module Tapioca
       def attached_class_of(singleton_class)
         # https://stackoverflow.com/a/36622320/98634
         result = ObjectSpace.each_object(singleton_class).find do |klass|
-          singleton_class_of(T.cast(klass, Module)) == singleton_class
+          singleton_class_of(klass.as!(Module)) == singleton_class
         end
 
-        T.cast(result, T.nilable(Module))
+        result.as!(T.nilable(Module))
       end
     end
   end

@@ -48,7 +48,7 @@ module Tapioca
             GenericTypeRegistry.register_type_variable(not_actually_generic, fake_type_member1)
             GenericTypeRegistry.register_type_variable(not_actually_generic, fake_type_member2)
 
-            type_variables = T.must(GenericTypeRegistry.lookup_type_variables(not_actually_generic))
+            type_variables = GenericTypeRegistry.lookup_type_variables(not_actually_generic).non_nil!
 
             assert_equal([fake_type_member1, fake_type_member2], type_variables)
             # Let's double-check that they're not just equal, but identical:

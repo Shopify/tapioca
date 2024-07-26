@@ -20,7 +20,7 @@ module Tapioca
             with_disabled_exits do
               until @constant_names_registered_for_autoload.empty?
                 # Grab the next constant name
-                constant_name = T.must(@constant_names_registered_for_autoload.shift)
+                constant_name = @constant_names_registered_for_autoload.shift.non_nil!
                 # Trigger autoload by constantizing the registered name
                 Reflection.constantize(constant_name, inherit: true)
               end
