@@ -178,7 +178,7 @@ module Tapioca
                     def find_sole_by(arg, *args); end
 
                 <% end %>
-                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def first(limit = nil); end
 
@@ -213,7 +213,7 @@ module Tapioca
                     sig { params(record: T.untyped).returns(T::Boolean) }
                     def include?(record); end
 
-                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def last(limit = nil); end
 
@@ -269,7 +269,7 @@ module Tapioca
                     sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
                     def sum(initial_value_or_column = nil, &block); end
 
-                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def take(limit = nil); end
 
@@ -885,7 +885,7 @@ module Tapioca
                     def find_sole_by(arg, *args); end
 
                 <% end %>
-                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def first(limit = nil); end
 
@@ -920,7 +920,7 @@ module Tapioca
                     sig { params(record: T.untyped).returns(T::Boolean) }
                     def include?(record); end
 
-                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def last(limit = nil); end
 
@@ -976,7 +976,7 @@ module Tapioca
                     sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
                     def sum(initial_value_or_column = nil, &block); end
 
-                    sig { params(limit: NilClass).returns(T.nilable(::Post)) }
+                    sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def take(limit = nil); end
 

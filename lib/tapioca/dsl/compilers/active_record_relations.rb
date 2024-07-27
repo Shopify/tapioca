@@ -755,7 +755,6 @@ module Tapioca
                 method.add_opt_param("limit", "nil")
 
                 method.add_sig do |sig|
-                  sig.add_param("limit", "NilClass")
                   sig.return_type = as_nilable_type(constant_name)
                 end
 
