@@ -999,6 +999,25 @@ end
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_untyped_struct_props.rb#26
 RuboCop::Cop::Sorbet::ForbidUntypedStructProps::MSG = T.let(T.unsafe(nil), String)
 
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/gem_version_annotation_helper.rb#6
+module RuboCop::Cop::Sorbet::GemVersionAnnotationHelper
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/gem_version_annotation_helper.rb#9
+  def gem_version_annotations; end
+
+  private
+
+  # @return [Boolean]
+  #
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/gem_version_annotation_helper.rb#17
+  def gem_version_annotation?(comment); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/gem_version_annotation_helper.rb#21
+  def gem_versions(comment); end
+end
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/gem_version_annotation_helper.rb#7
+RuboCop::Cop::Sorbet::GemVersionAnnotationHelper::VERSION_PREFIX = T.let(T.unsafe(nil), String)
+
 # Makes the Sorbet typed sigil mandatory in all files.
 #
 # Options:
@@ -1447,6 +1466,42 @@ end
 
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/type_alias_name.rb#18
 RuboCop::Cop::Sorbet::TypeAliasName::MSG = T.let(T.unsafe(nil), String)
+
+# Checks that gem versions in RBI annotations are properly formatted per the Bundler gem specification.
+#
+# @example
+#   # bad
+#   # @version > not a version number
+#
+#   # good
+#   # @version = 1
+#
+#   # good
+#   # @version > 1.2.3
+#
+#   # good
+#   # @version <= 4.3-preview
+#
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/valid_gem_version_annotations.rb#21
+class RuboCop::Cop::Sorbet::ValidGemVersionAnnotations < ::RuboCop::Cop::Base
+  include ::RuboCop::Cop::Sorbet::GemVersionAnnotationHelper
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/valid_gem_version_annotations.rb#27
+  def on_new_investigation; end
+
+  private
+
+  # @return [Boolean]
+  #
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/valid_gem_version_annotations.rb#50
+  def valid_version?(version_string); end
+end
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/valid_gem_version_annotations.rb#24
+RuboCop::Cop::Sorbet::ValidGemVersionAnnotations::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi_versioning/valid_gem_version_annotations.rb#25
+RuboCop::Cop::Sorbet::ValidGemVersionAnnotations::VALID_OPERATORS = T.let(T.unsafe(nil), Array)
 
 # Checks that every Ruby file contains a valid Sorbet sigil.
 # Adapted from: https://gist.github.com/clarkdave/85aca4e16f33fd52aceb6a0a29936e52
