@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "objspace"
+
 module Tapioca
   module Dsl
     class Pipeline
@@ -166,15 +168,34 @@ module Tapioca
 
       sig { params(constants: T::Set[Module]).returns(T::Set[Module]) }
       def filter_anonymous_and_reloaded_constants(constants)
+        # There's no such thing as  "WeakSet", so we just use a `WeakMa[Module, true]` instead.
+        $previously_seen_constants ||= ObjectSpace::WeakMap.new
+
         # Group constants by their names
         constants_by_name = constants
           .group_by { |c| Runtime::Reflection.name_of(c) }
           .select { |name, _| !name.nil? }
 
+        # TODO: optimize
+        constants_by_name.each do |name, constant_versions|
+          constant_versions.each do
+            $previously_seen_constants[_1] = true
+          end
+        end
+
+        puts "Weak map count: #{$previously_seen_constants.size}, size: #{ObjectSpace.memsize_of($previously_seen_constants)} bytes"
+
         constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[Module]])
 
         # Find the constants that have been reloaded
-        reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
+        reloaded_constants = constants_by_name
+          .select do |name, constant_versions|
+            # If there are 2 versions of the same constant, discard all the ones we've seen before.
+            # FIXME: Doesn't work if there are 3 or more version of the same constant,
+            # e.g. if 2 reloads happen between Tapioca runs.
+            constant_versions.count { !$previously_seen_constants.key?(_1) } > 1
+          end
+          .keys
 
         unless reloaded_constants.empty?
           reloaded_constant_names = reloaded_constants.map { |name| "`#{name}`" }.join(", ")
