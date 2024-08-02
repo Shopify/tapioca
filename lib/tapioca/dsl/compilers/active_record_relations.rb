@@ -1004,6 +1004,11 @@ module Tapioca
               method.add_opt_param("attributes", "nil")
               method.add_block_param("block")
 
+              method.add_sig do |sig|
+                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                sig.return_type = constant_name
+              end
+
               # `T.untyped` matches `T::Array[T.untyped]` so the array signature
               # must be defined first for Sorbet to pick it, if valid.
               method.add_sig do |sig|
