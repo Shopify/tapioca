@@ -13,12 +13,28 @@ module Tapioca
       sig { returns(Gemfile::GemSpec) }
       attr_reader :gem
 
-      sig { params(gem: Gemfile::GemSpec, include_doc: T::Boolean, include_loc: T::Boolean).void }
-      def initialize(gem, include_doc: false, include_loc: false)
+      sig { returns(T.proc.params(error: String).void) }
+      attr_reader :error_handler
+
+      sig do
+        params(
+          gem: Gemfile::GemSpec,
+          error_handler: T.proc.params(error: String).void,
+          include_doc: T::Boolean,
+          include_loc: T::Boolean,
+        ).void
+      end
+      def initialize(
+        gem,
+        error_handler:,
+        include_doc: false,
+        include_loc: false
+      )
         @root = T.let(RBI::Tree.new, RBI::Tree)
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
+        @error_handler = error_handler
 
         @events = T.let([], T::Array[Gem::Event])
 

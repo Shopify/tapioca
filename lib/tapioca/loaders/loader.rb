@@ -230,7 +230,7 @@ module Tapioca
       # The `eager_load_paths` method still exists, but doesn't return all paths anymore and causes Tapioca to miss some
       # engine paths. The following commit is the change:
       # https://github.com/rails/rails/commit/ebfca905db14020589c22e6937382e6f8f687664
-      sig { params(engine: T.class_of(Rails::Engine)).returns(T::Array[String]) }
+      T::Sig::WithoutRuntime.sig { params(engine: T.class_of(Rails::Engine)).returns(T::Array[String]) }
       def eager_load_paths(engine)
         config = engine.config
 

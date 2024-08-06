@@ -119,7 +119,14 @@ module Tapioca
         ) if @file_header
 
         rbi.root = Runtime::Trackers::Autoload.with_disabled_exits do
-          Tapioca::Gem::Pipeline.new(gem, include_doc: @include_doc, include_loc: @include_loc).compile
+          Tapioca::Gem::Pipeline.new(
+            gem,
+            include_doc: @include_doc,
+            include_loc: @include_loc,
+            error_handler: ->(error) {
+              say_error(error, :bold, :red)
+            },
+          ).compile
         end
 
         merge_with_exported_rbi(gem, rbi) if @include_exported_rbis
