@@ -41,7 +41,7 @@ module Tapioca
           @underlying_type = T.let(underlying_type, Module)
         end
 
-        sig { params(obj: T.untyped).returns(T::Boolean) }
+        sig { override.params(obj: T.untyped).returns(T::Boolean) }
         def valid?(obj)
           obj.is_a?(@underlying_type)
         end

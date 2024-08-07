@@ -4010,7 +4010,7 @@ class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#86
   def expect?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop/1.65.0/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.65.1/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#93
@@ -4125,7 +4125,7 @@ RuboCop::Cop::RSpec::MultipleExpectations::TRUE_NODE = T.let(T.unsafe(nil), Proc
 class RuboCop::Cop::RSpec::MultipleMemoizedHelpers < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::Variable
 
-  # source://rubocop/1.65.0/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.65.1/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#91
@@ -4467,7 +4467,7 @@ end
 class RuboCop::Cop::RSpec::NestedGroups < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::TopLevelGroup
 
-  # source://rubocop/1.65.0/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.65.1/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#107
@@ -6660,29 +6660,27 @@ RuboCop::Cop::RSpec::UndescriptiveLiteralsDescription::MSG = T.let(T.unsafe(nil)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#33
 class RuboCop::Cop::RSpec::UnspecifiedException < ::RuboCop::Cop::RSpec::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#38
-  def empty_raise_error_or_exception(param0 = T.unsafe(nil)); end
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#42
+  def expect_to?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#47
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#46
   def on_send(node); end
 
   private
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#59
-  def block_with_args?(node); end
-
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#55
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#54
   def empty_exception_matcher?(node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#64
+  def find_expect_to(node); end
 end
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#34
 RuboCop::Cop::RSpec::UnspecifiedException::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#35
+# source://rubocop-rspec//lib/rubocop/cop/rspec/unspecified_exception.rb#36
 RuboCop::Cop::RSpec::UnspecifiedException::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Helps check offenses with variable definitions
