@@ -22,6 +22,7 @@ module Tapioca
           include_doc: T::Boolean,
           include_loc: T::Boolean,
           include_exported_rbis: T::Boolean,
+          default_command_override: T.nilable(String),
           number_of_workers: T.nilable(Integer),
           auto_strictness: T::Boolean,
           dsl_dir: String,
@@ -41,6 +42,7 @@ module Tapioca
         include_doc:,
         include_loc:,
         include_exported_rbis:,
+        default_command_override: nil,
         number_of_workers: nil,
         auto_strictness: true,
         dsl_dir: DEFAULT_DSL_DIR,
@@ -60,7 +62,7 @@ module Tapioca
         @dsl_dir = dsl_dir
         @rbi_formatter = rbi_formatter
 
-        super()
+        super(default_command_override: default_command_override)
 
         @bundle = T.let(Gemfile.new(exclude), Gemfile)
         @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))

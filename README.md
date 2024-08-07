@@ -200,6 +200,7 @@ Options:
                                                                                                      # Default: development
                [--halt-upon-load-error], [--no-halt-upon-load-error], [--skip-halt-upon-load-error]  # Halt upon a load error while loading the Rails application
                                                                                                      # Default: true
+               [--default-command-override=DEFAULT_COMMAND_OVERRIDE]                                 # Override the default command printed on failure
   -c,          [--config=<config file path>]                                                         # Path to the Tapioca configuration file
                                                                                                      # Default: sorbet/tapioca/config.yml
   -V,          [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes
@@ -367,17 +368,18 @@ Usage:
   tapioca annotations
 
 Options:
-               [--sources=one two three]                      # URIs of the sources to pull gem RBI annotations from
-                                                              # Default: "https://raw.githubusercontent.com/Shopify/rbi-central/main"
-               [--netrc], [--no-netrc], [--skip-netrc]        # Use .netrc to authenticate to private sources
-                                                              # Default: true
-               [--netrc-file=NETRC_FILE]                      # Path to .netrc file
-               [--auth=AUTH]                                  # HTTP authorization header for private sources
-  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]  # Override for typed sigils for pulled annotations
-  -c,          [--config=<config file path>]                  # Path to the Tapioca configuration file
-                                                              # Default: sorbet/tapioca/config.yml
-  -V,          [--verbose], [--no-verbose], [--skip-verbose]  # Verbose output for debugging purposes
-                                                              # Default: false
+               [--sources=one two three]                              # URIs of the sources to pull gem RBI annotations from
+                                                                      # Default: "https://raw.githubusercontent.com/Shopify/rbi-central/main"
+               [--netrc], [--no-netrc], [--skip-netrc]                # Use .netrc to authenticate to private sources
+                                                                      # Default: true
+               [--netrc-file=NETRC_FILE]                              # Path to .netrc file
+               [--auth=AUTH]                                          # HTTP authorization header for private sources
+  --typed, -t, [--typed-overrides=gem:level [gem:level ...]]          # Override for typed sigils for pulled annotations
+               [--default-command-override=DEFAULT_COMMAND_OVERRIDE]  # Override the default command printed on failure
+  -c,          [--config=<config file path>]                          # Path to the Tapioca configuration file
+                                                                      # Default: sorbet/tapioca/config.yml
+  -V,          [--verbose], [--no-verbose], [--skip-verbose]          # Verbose output for debugging purposes
+                                                                      # Default: false
 
 Pull gem RBI annotations from remote sources
 ```
@@ -503,6 +505,7 @@ Options:
                                                                                                    # Default: true
              [--skip-constant=constant [constant ...]]                                             # Do not generate RBI definitions for the given application constant(s)
              [--compiler-options=key:value]                                                        # Options to pass to the DSL compilers
+             [--default-command-override=DEFAULT_COMMAND_OVERRIDE]                                 # Override the default command printed on failure
   -c,        [--config=<config file path>]                                                         # Path to the Tapioca configuration file
                                                                                                    # Default: sorbet/tapioca/config.yml
   -V,        [--verbose], [--no-verbose], [--skip-verbose]                                         # Verbose output for debugging purposes
@@ -939,9 +942,11 @@ The full configuration file, with each option and its default value, would look 
 ---
 require:
   postrequire: sorbet/tapioca/require.rb
+  default_command_override: ''
 todo:
   todo_file: sorbet/rbi/todo.rbi
   file_header: true
+  default_command_override: ''
 dsl:
   outdir: sorbet/rbi/dsl
   file_header: true
@@ -957,6 +962,7 @@ dsl:
   halt_upon_load_error: true
   skip_constant: []
   compiler_options: {}
+  default_command_override: ''
 gem:
   outdir: sorbet/rbi/gems
   file_header: true
@@ -977,6 +983,7 @@ gem:
   rbi_max_line_length: 120
   environment: development
   halt_upon_load_error: true
+  default_command_override: ''
 check_shims:
   gem_rbi_dir: sorbet/rbi/gems
   dsl_rbi_dir: sorbet/rbi/dsl
@@ -991,6 +998,7 @@ annotations:
   netrc: true
   netrc_file: ''
   typed_overrides: {}
+  default_command_override: ''
 ```
 <!-- END_CONFIG_TEMPLATE -->
 

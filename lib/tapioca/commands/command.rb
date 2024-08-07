@@ -16,8 +16,9 @@ module Tapioca
 
       abstract!
 
-      sig { void }
-      def initialize
+      sig { params(default_command_override: T.nilable(String)).void }
+      def initialize(default_command_override: nil)
+        @default_command_override = default_command_override
         @file_writer = T.let(FileWriter.new, Thor::Actions)
       end
 
@@ -35,7 +36,7 @@ module Tapioca
 
       sig { params(command: Symbol, args: String).returns(String) }
       def default_command(command, *args)
-        [Tapioca::BINARY_FILE, command.to_s, *args].join(" ")
+        @default_command_override || [Tapioca::BINARY_FILE, command.to_s, *args].join(" ")
       end
 
       sig { returns(Thor::Actions) }

@@ -9,18 +9,20 @@ module Tapioca
           sorbet_config: String,
           tapioca_config: String,
           default_postrequire: String,
+          default_command_override: T.nilable(String),
         ).void
       end
       def initialize(
         sorbet_config:,
         tapioca_config:,
-        default_postrequire:
+        default_postrequire:,
+        default_command_override: nil
       )
         @sorbet_config = sorbet_config
         @tapioca_config = tapioca_config
         @default_postrequire = default_postrequire
 
-        super()
+        super(default_command_override: default_command_override)
 
         @installer = T.let(nil, T.nilable(Bundler::Installer))
         @spec = T.let(nil, T.nilable(Bundler::StubSpecification))

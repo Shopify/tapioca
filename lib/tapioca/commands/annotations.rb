@@ -9,6 +9,7 @@ module Tapioca
       sig do
         params(
           central_repo_root_uris: T::Array[String],
+          default_command_override: T.nilable(String),
           auth: T.nilable(String),
           netrc_file: T.nilable(String),
           central_repo_index_path: String,
@@ -17,12 +18,13 @@ module Tapioca
       end
       def initialize(
         central_repo_root_uris:,
+        default_command_override: nil,
         auth: nil,
         netrc_file: nil,
         central_repo_index_path: CENTRAL_REPO_INDEX_PATH,
         typed_overrides: {}
       )
-        super()
+        super(default_command_override: default_command_override)
         @outpath = T.let(Pathname.new(DEFAULT_ANNOTATIONS_DIR), Pathname)
         @central_repo_root_uris = central_repo_root_uris
         @auth = auth

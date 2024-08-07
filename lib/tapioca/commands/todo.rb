@@ -21,13 +21,14 @@ module Tapioca
         params(
           todo_file: String,
           file_header: T::Boolean,
+          default_command_override: T.nilable(String),
         ).void
       end
-      def initialize(todo_file:, file_header:)
+      def initialize(todo_file:, file_header:, default_command_override: nil)
         @todo_file = todo_file
         @file_header = file_header
 
-        super()
+        super(default_command_override: default_command_override)
       end
 
       sig { void }
