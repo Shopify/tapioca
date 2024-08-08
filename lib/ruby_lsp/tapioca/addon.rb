@@ -34,6 +34,7 @@ module RubyLsp
       end
 
       def self.dsl(params)
+        File.write("output.txt", "DSL called: #{params[:constants]}", mode: "a")
         command = ::Tapioca::Commands::DslGenerate.new(
           requested_constants: params[:constants],
           tapioca_path: ::Tapioca::TAPIOCA_DIR,
@@ -55,22 +56,22 @@ module RubyLsp
           entries = files_to_entries[path]
           return unless entries
           entries.map do |entry|
-            next unless RubyIndexer::Entry::Namespace === entry
+            next unless entry.class == RubyIndexer::Entry::Class ||
+              entry.class == RubyIndexer::Entry::Module
 
             entry.name
           end
         end.flatten.compact
 
-        $stderr.puts "Tapioca LSP: Sending message with #{constants}" if constants.any?
         send_message("tapioca_dsl", constants: constants) if constants.any?
       end
 
-      sig { params(request: String, params: T.nilable(T::Hash[Symbol, T.untyped])).void }
-      def send_message(request, params = nil)
-        message = { method: request }
-        message[:params] = params if params
+      sig { params(request: String, params: T::Hash[Symbol, T.untyped]).void }
+      def send_message(request, params)
+        message = { method: request, params: params }
         json = message.to_json
 
+        $stderr.puts "Tapioca LSP: Sending message with #{params}: #{json}"
         stdin = rails_runner_stdin
         stdin.write("Content-Length: #{json.length}\r\n\r\n", json)
       end
