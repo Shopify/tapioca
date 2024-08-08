@@ -148,14 +148,11 @@ module Tapioca
       end
       def gather_constants(requested_constants, requested_paths, skipped_constants)
         Compiler.requested_constants = requested_constants
-        puts "Requested constants: #{requested_constants}"
         constants = Set.new.compare_by_identity
 
-        puts "Active compilers: #{active_compilers}"
         active_compilers.each do |compiler|
           constants.merge(compiler.processable_constants)
         end
-        puts "Gathered constants 1 : #{constants}"
         constants = filter_anonymous_and_reloaded_constants(constants)
         constants -= skipped_constants
 
@@ -168,7 +165,6 @@ module Tapioca
               "#{requested_and_skipped}. Check the supplied arguments and your `sorbet/tapioca/config.yml` file.")
           end
         end
-        puts "Gathered constants 2: #{constants}"
         constants
       end
 
