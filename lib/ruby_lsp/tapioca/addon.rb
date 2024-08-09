@@ -34,7 +34,7 @@ module RubyLsp
       end
 
       def self.dsl(params)
-        File.write("output.txt", "DSL called: #{params[:constants]}", mode: "a")
+        File.write("output.txt", "#{Time.now} DSL called: #{params[:constants]}\n", mode: "a")
         command = ::Tapioca::Commands::DslGenerate.new(
           requested_constants: params[:constants],
           tapioca_path: ::Tapioca::TAPIOCA_DIR,
@@ -55,6 +55,7 @@ module RubyLsp
           path = change[:uri].gsub("file://", "")
           entries = files_to_entries[path]
           return unless entries
+
           entries.map do |entry|
             next unless entry.class == RubyIndexer::Entry::Class ||
               entry.class == RubyIndexer::Entry::Module
