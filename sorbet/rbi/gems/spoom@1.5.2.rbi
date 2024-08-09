@@ -26,8 +26,6 @@ class Spoom::Cli::Deadcode < ::Thor
   sig { params(paths: ::String).void }
   def deadcode(*paths); end
 
-  def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
-
   # source://spoom//lib/spoom/cli/deadcode.rb#154
   def remove(location_string); end
 end
@@ -175,8 +173,6 @@ class Spoom::Cli::Srb::Bump < ::Thor
   sig { params(directory: ::String).void }
   def bump(directory = T.unsafe(nil)); end
 
-  def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
-
   # source://spoom//lib/spoom/cli/srb/bump.rb#171
   def print_changes(files, command:, from: T.unsafe(nil), to: T.unsafe(nil), dry: T.unsafe(nil), path: T.unsafe(nil)); end
 
@@ -191,8 +187,6 @@ class Spoom::Cli::Srb::Coverage < ::Thor
 
   # source://spoom//lib/spoom/cli/srb/coverage.rb#199
   def bundle_install(path, sha); end
-
-  def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/coverage.rb#211
   def message_no_data(file); end
@@ -230,8 +224,6 @@ class Spoom::Cli::Srb::LSP < ::Thor
   #
   # source://spoom//lib/spoom/cli/srb/lsp.rb#55
   def find(query); end
-
-  def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # TODO: options, filter, limit, kind etc.. filter rbi
   #
@@ -326,8 +318,6 @@ class Spoom::Cli::Srb::Tc < ::Thor
 
   # source://spoom//lib/spoom/cli/srb/tc.rb#123
   def format_error(error, format); end
-
-  def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/tc.rb#27
   def tc(*paths_to_select); end
