@@ -6,12 +6,7 @@
 
 
 # source://rack-session//lib/rack/session/constants.rb#7
-module Rack
-  class << self
-    # source://rack/3.1.4/lib/rack/version.rb#18
-    def release; end
-  end
-end
+module Rack; end
 
 # source://rack-session//lib/rack/session/constants.rb#8
 module Rack::Session; end

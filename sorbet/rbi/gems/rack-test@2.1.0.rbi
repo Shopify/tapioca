@@ -6,12 +6,7 @@
 
 
 # source://rack-test//lib/rack/test/cookie_jar.rb#6
-module Rack
-  class << self
-    # source://rack/3.1.4/lib/rack/version.rb#18
-    def release; end
-  end
-end
+module Rack; end
 
 # For backwards compatibility with 1.1.0 and below
 #
@@ -275,64 +270,16 @@ module Rack::Test::Methods
   # source://rack-test//lib/rack/test/methods.rb#90
   def _rack_test_current_session=(_arg0); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def authorize(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def basic_authorize(*args, **_arg1, &block); end
-
   # Create a new Rack::Test::Session for #app.
   #
   # source://rack-test//lib/rack/test/methods.rb#40
   def build_rack_test_session(_name); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def clear_cookies(*args, **_arg1, &block); end
 
   # Return the currently actively session.  This is the session to
   # which the delegated methods are sent.
   #
   # source://rack-test//lib/rack/test/methods.rb#55
   def current_session; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def custom_request(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def delete(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def env(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def follow_redirect!(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def get(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def head(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def header(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def last_request(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def last_response(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def options(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def patch(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def post(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def put(*args, **_arg1, &block); end
 
   # Return the existing session with the given name, or a new
   # rack session.  Always use a new session if name is nil.
@@ -346,12 +293,6 @@ module Rack::Test::Methods
   #
   # source://rack-test//lib/rack/test/methods.rb#29
   def rack_test_session(name = T.unsafe(nil)); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def request(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def set_cookie(*args, **_arg1, &block); end
 
   # Create a new session (or reuse an existing session with the given name),
   # and make it the current session for the given block.

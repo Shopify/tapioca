@@ -129,15 +129,19 @@ module Tapioca
         end
       end
 
+      SignatureBlockError = Class.new(StandardError)
+
       sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
       def signature_of!(method)
         T::Utils.signature_for_method(method)
+      rescue LoadError, StandardError
+        Kernel.raise SignatureBlockError
       end
 
       sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
       def signature_of(method)
         signature_of!(method)
-      rescue LoadError, StandardError
+      rescue SignatureBlockError
         nil
       end
 

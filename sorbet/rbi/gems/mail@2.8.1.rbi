@@ -128,9 +128,6 @@ module Mail
     # source://mail//lib/mail/mail.rb#151
     def first(*args, &block); end
 
-    # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/from_source.rb#4
-    def from_source(source); end
-
     # source://mail//lib/mail/mail.rb#233
     def inform_interceptors(mail); end
 
@@ -277,9 +274,6 @@ class Mail::Address
   # source://mail//lib/mail/elements/address.rb#25
   def initialize(value = T.unsafe(nil)); end
 
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/address_equality.rb#5
-  def ==(other_address); end
-
   # Returns the address that is in the address itself.  That is, the
   # local@domain string, without any angle brackets or the like.
   #
@@ -424,11 +418,6 @@ class Mail::Address
 
   # source://mail//lib/mail/elements/address.rb#207
   def strip_domain_comments(value); end
-
-  class << self
-    # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/address_wrapping.rb#5
-    def wrap(address); end
-  end
 end
 
 # source://mail//lib/mail/fields/common_address_field.rb#6
@@ -849,13 +838,6 @@ module Mail::CheckDeliveryParams
 
     # source://mail//lib/mail/check_delivery_params.rb#38
     def _deprecated_validate_smtp_addr(addr); end
-
-    def check(*args, **_arg1, &block); end
-    def check_addr(*args, **_arg1, &block); end
-    def check_from(*args, **_arg1, &block); end
-    def check_message(*args, **_arg1, &block); end
-    def check_to(*args, **_arg1, &block); end
-    def validate_smtp_addr(*args, **_arg1, &block); end
   end
 end
 
@@ -3551,9 +3533,6 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#512
   def bcc=(val); end
 
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#21
-  def bcc_addresses; end
-
   # Returns an array of addresses (the encoded value) in the Bcc field,
   # if no Bcc field, returns an empty array
   #
@@ -3659,9 +3638,6 @@ class Mail::Message
   #
   # source://mail//lib/mail/message.rb#553
   def cc=(val); end
-
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#17
-  def cc_addresses; end
 
   # Returns an array of addresses (the encoded value) in the Cc field,
   # if no Cc field, returns an empty array
@@ -3978,9 +3954,6 @@ class Mail::Message
   #
   # source://mail//lib/mail/message.rb#670
   def from=(val); end
-
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#5
-  def from_address; end
 
   # Returns an array of addresses (the encoded value) in the From field,
   # if no From field, returns an empty array
@@ -4371,12 +4344,6 @@ class Mail::Message
 
   # source://mail//lib/mail/message.rb#751
   def received=(val); end
-
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/recipients.rb#5
-  def recipients; end
-
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#9
-  def recipients_addresses; end
 
   # source://mail//lib/mail/message.rb#755
   def references(val = T.unsafe(nil)); end
@@ -4846,9 +4813,6 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#1193
   def to=(val); end
 
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#13
-  def to_addresses; end
-
   # Returns an array of addresses (the encoded value) in the To field,
   # if no To field, returns an empty array
   #
@@ -4870,12 +4834,6 @@ class Mail::Message
   # source://mail//lib/mail/message.rb#1811
   def without_attachments!; end
 
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#29
-  def x_forwarded_to_addresses; end
-
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#25
-  def x_original_to_addresses; end
-
   private
 
   # source://mail//lib/mail/message.rb#2067
@@ -4895,9 +4853,6 @@ class Mail::Message
 
   # source://mail//lib/mail/message.rb#2056
   def add_required_message_fields; end
-
-  # source://actionmailbox/7.1.3.4/lib/action_mailbox/mail_ext/addresses.rb#34
-  def address_list(obj); end
 
   # source://mail//lib/mail/message.rb#2025
   def allowed_encodings; end

@@ -4010,9 +4010,6 @@ class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#86
   def expect?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop/1.65.1/lib/rubocop/cop/exclude_limit.rb#11
-  def max=(value); end
-
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#93
   def on_block(node); end
 
@@ -4124,9 +4121,6 @@ RuboCop::Cop::RSpec::MultipleExpectations::TRUE_NODE = T.let(T.unsafe(nil), Proc
 # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#84
 class RuboCop::Cop::RSpec::MultipleMemoizedHelpers < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::Variable
-
-  # source://rubocop/1.65.1/lib/rubocop/cop/exclude_limit.rb#11
-  def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#91
   def on_block(node); end
@@ -4466,9 +4460,6 @@ end
 # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#94
 class RuboCop::Cop::RSpec::NestedGroups < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::TopLevelGroup
-
-  # source://rubocop/1.65.1/lib/rubocop/cop/exclude_limit.rb#11
-  def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#107
   def on_top_level_group(node); end

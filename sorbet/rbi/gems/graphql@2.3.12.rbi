@@ -652,12 +652,6 @@ class GraphQL::Backtrace
   # source://graphql//lib/graphql/backtrace.rb#30
   def initialize(context, value: T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def [](*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def each(*args, **_arg1, &block); end
-
   # source://graphql//lib/graphql/backtrace.rb#34
   def inspect; end
 
@@ -1438,36 +1432,18 @@ class GraphQL::Execution::Interpreter::Arguments
   # source://graphql//lib/graphql/execution/interpreter/arguments.rb#24
   def initialize(argument_values:, keyword_arguments: T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def [](*args, **_arg1, &block); end
-
   # @return [Hash{Symbol => ArgumentValue}]
   #
   # source://graphql//lib/graphql/execution/interpreter/arguments.rb#56
   def argument_values; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def each(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def each_value(*args, **_arg1, &block); end
 
   # @return [Boolean]
   #
   # source://graphql//lib/graphql/execution/interpreter/arguments.rb#58
   def empty?; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def fetch(*args, **_arg1, &block); end
-
   # source://graphql//lib/graphql/execution/interpreter/arguments.rb#65
   def inspect; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def key?(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def keys(*args, **_arg1, &block); end
 
   # The Ruby-style arguments hash, ready for a resolver.
   # This hash is the one used at runtime.
@@ -1487,15 +1463,6 @@ class GraphQL::Execution::Interpreter::Arguments
   #
   # source://graphql//lib/graphql/execution/interpreter/arguments.rb#76
   def merge_extras(extra_args); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def size(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def to_h(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def values(*args, **_arg1, &block); end
 end
 
 # source://graphql//lib/graphql/execution/interpreter/arguments.rb#84
@@ -2120,12 +2087,6 @@ class GraphQL::Execution::Lazy::LazyMethodMap::ConcurrentishMap
   #
   # source://graphql//lib/graphql/execution/lazy/lazy_method_map.rb#76
   def compute_if_absent(key); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def each_pair(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def size(*args, **_arg1, &block); end
 
   protected
 
@@ -6672,9 +6633,6 @@ class GraphQL::Query
   # source://graphql//lib/graphql/query.rb#337
   def analysis_errors=(_arg0); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def analyzers(*args, **_arg1, &block); end
-
   # source://graphql//lib/graphql/query.rb#290
   def arguments_cache; end
 
@@ -6686,9 +6644,6 @@ class GraphQL::Query
   #
   # source://graphql//lib/graphql/query.rb#286
   def arguments_for(ast_node, definition, parent_object: T.unsafe(nil)); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def ast_analyzers(*args, **_arg1, &block); end
 
   # Returns the value of attribute context.
   #
@@ -6729,12 +6684,6 @@ class GraphQL::Query
   # source://graphql//lib/graphql/query.rb#231
   def fragments; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def get_field(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def get_type(*args, **_arg1, &block); end
-
   # @api private
   #
   # source://graphql//lib/graphql/query.rb#381
@@ -6754,12 +6703,6 @@ class GraphQL::Query
   #
   # source://graphql//lib/graphql/query.rb#203
   def lookahead; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def max_complexity(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def max_depth(*args, **_arg1, &block); end
 
   # Returns the value of attribute multiplex.
   #
@@ -6795,9 +6738,6 @@ class GraphQL::Query
 
   # source://graphql//lib/graphql/query.rb#235
   def operations; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def possible_types(*args, **_arg1, &block); end
 
   # Returns the value of attribute provided_variables.
   #
@@ -6845,9 +6785,6 @@ class GraphQL::Query
   #
   # source://graphql//lib/graphql/query.rb#219
   def result_values=(result_hash); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def root_type_for_operation(*args, **_arg1, &block); end
 
   # The value for root types
   #
@@ -6936,12 +6873,6 @@ class GraphQL::Query
   #
   # source://graphql//lib/graphql/query.rb#40
   def validate=(new_validate); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def validate_timeout_remaining(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def validation_errors(*args, **_arg1, &block); end
 
   # source://graphql//lib/graphql/query.rb#330
   def validation_pipeline; end
@@ -7129,9 +7060,6 @@ class GraphQL::Query::Context
   # source://graphql//lib/graphql/query/context.rb#205
   def to_hash; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def trace(*args, **_arg1, &block); end
-
   # source://graphql//lib/graphql/query/context.rb#87
   def types; end
 
@@ -7301,22 +7229,10 @@ class GraphQL::Query::NullContext < ::GraphQL::Query::Context
   # source://graphql//lib/graphql/query/null_context.rb#23
   def initialize; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def [](*args, **_arg1, &block); end
-
   # Returns the value of attribute dataloader.
   #
   # source://graphql//lib/graphql/query/null_context.rb#20
   def dataloader; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def dig(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def fetch(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def key?(*args, **_arg1, &block); end
 
   # Returns the value of attribute query.
   #
@@ -7388,50 +7304,23 @@ class GraphQL::Query::Result
   # source://graphql//lib/graphql/query/result.rb#51
   def ==(other); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def [](*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def as_json(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def context(*args, **_arg1, &block); end
-
   # source://graphql//lib/graphql/query/result.rb#39
   def inspect; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def keys(*args, **_arg1, &block); end
 
   # Delegate any hash-like method to the underlying hash.
   #
   # source://graphql//lib/graphql/query/result.rb#27
   def method_missing(method_name, *args, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def mutation?(*args, **_arg1, &block); end
-
   # @return [GraphQL::Query] The query that was executed
   #
   # source://graphql//lib/graphql/query/result.rb#17
   def query; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def query?(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def subscription?(*args, **_arg1, &block); end
-
   # @return [Hash] The resulting hash of "data" and/or "errors"
   #
   # source://graphql//lib/graphql/query/result.rb#20
   def to_h; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def to_json(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def values(*args, **_arg1, &block); end
 
   private
 
@@ -7570,9 +7459,6 @@ class GraphQL::Query::Variables
   # source://graphql//lib/graphql/query/variables.rb#13
   def initialize(ctx, ast_variables, provided_variables); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def [](*args, **_arg1, &block); end
-
   # Returns the value of attribute context.
   #
   # source://graphql//lib/graphql/query/variables.rb#11
@@ -7582,18 +7468,6 @@ class GraphQL::Query::Variables
   #
   # source://graphql//lib/graphql/query/variables.rb#9
   def errors; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def fetch(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def key?(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def length(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def to_h(*args, **_arg1, &block); end
 
   private
 
@@ -10099,9 +9973,6 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
   # source://graphql//lib/graphql/schema/input_object.rb#104
   def [](key); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def any?(*args, **_arg1, &block); end
-
   # @return [GraphQL::Execution::Interpereter::Arguments] The underlying arguments instance
   #
   # source://graphql//lib/graphql/schema/input_object.rb#16
@@ -10112,22 +9983,10 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
   # source://graphql//lib/graphql/schema/input_object.rb#14
   def context; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def each(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def empty?(*args, **_arg1, &block); end
-
   # @return [Boolean]
   #
   # source://graphql//lib/graphql/schema/input_object.rb#114
   def key?(key); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def keys(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def map(*args, **_arg1, &block); end
 
   # source://graphql//lib/graphql/schema/input_object.rb#48
   def prepare; end
@@ -10145,9 +10004,6 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
 
   # source://graphql//lib/graphql/schema/input_object.rb#86
   def unwrap_value(value); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def values(*args, **_arg1, &block); end
 
   private
 
@@ -13883,15 +13739,6 @@ class GraphQL::StaticValidation::DefinitionDependencies::NodeWithPath
   # source://graphql//lib/graphql/static_validation/definition_dependencies.rb#101
   def initialize(node, path); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def eql?(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def hash(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def name(*args, **_arg1, &block); end
-
   # Returns the value of attribute node.
   #
   # source://graphql//lib/graphql/static_validation/definition_dependencies.rb#100
@@ -15086,36 +14933,15 @@ class GraphQL::StaticValidation::ValidationContext
   # source://graphql//lib/graphql/static_validation/validation_context.rb#21
   def initialize(query, visitor_class, max_errors); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def argument_definition(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def dependencies(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def directive_definition(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def document(*args, **_arg1, &block); end
-
   # Returns the value of attribute errors.
   #
   # source://graphql//lib/graphql/static_validation/validation_context.rb#14
   def errors; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def field_definition(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def fragments(*args, **_arg1, &block); end
-
   # Returns the value of attribute max_errors.
   #
   # source://graphql//lib/graphql/static_validation/validation_context.rb#14
   def max_errors; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def object_types(*args, **_arg1, &block); end
 
   # source://graphql//lib/graphql/static_validation/validation_context.rb#36
   def on_dependency_resolve(&handler); end
@@ -15124,15 +14950,6 @@ class GraphQL::StaticValidation::ValidationContext
   #
   # source://graphql//lib/graphql/static_validation/validation_context.rb#14
   def on_dependency_resolve_handlers; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def operations(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def parent_type_definition(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def path(*args, **_arg1, &block); end
 
   # Returns the value of attribute query.
   #
@@ -15151,9 +14968,6 @@ class GraphQL::StaticValidation::ValidationContext
   #
   # source://graphql//lib/graphql/static_validation/validation_context.rb#44
   def too_many_errors?; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def type_definition(*args, **_arg1, &block); end
 
   # Returns the value of attribute types.
   #
@@ -18111,17 +17925,11 @@ module GraphQL::Types::Relay::ConnectionBehaviors
 
   mixes_in_class_methods ::GraphQL::Types::Relay::ConnectionBehaviors::ClassMethods
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def cursor_from_node(*args, **_arg1, &block); end
-
   # source://graphql//lib/graphql/types/relay/connection_behaviors.rb#196
   def edges; end
 
   # source://graphql//lib/graphql/types/relay/connection_behaviors.rb#205
   def nodes; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def parent(*args, **_arg1, &block); end
 
   class << self
     # source://graphql//lib/graphql/types/relay/connection_behaviors.rb#191

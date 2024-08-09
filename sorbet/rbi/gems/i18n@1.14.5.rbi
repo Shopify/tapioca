@@ -13,23 +13,8 @@ class GetText::PoParser < ::Racc::Parser
   # source://i18n//lib/i18n/gettext/po_parser.rb#19
   def _(x); end
 
-  def _reduce_10(val, _values, result); end
-  def _reduce_12(val, _values, result); end
-  def _reduce_13(val, _values, result); end
-  def _reduce_14(val, _values, result); end
-  def _reduce_15(val, _values, result); end
-  def _reduce_5(val, _values, result); end
-  def _reduce_8(val, _values, result); end
-  def _reduce_9(val, _values, result); end
-
   # source://i18n//lib/i18n/gettext/po_parser.rb#323
   def _reduce_none(val, _values, result); end
-
-  def next_token; end
-  def on_comment(comment); end
-  def on_message(msgid, msgstr); end
-  def parse(str, data, ignore_fuzzy = T.unsafe(nil)); end
-  def unescape(orig); end
 end
 
 # source://i18n//lib/i18n/gettext/po_parser.rb#184

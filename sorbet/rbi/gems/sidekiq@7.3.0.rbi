@@ -269,12 +269,6 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#51
   def initialize(options = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def [](*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def []=(*args, **_arg1, &block); end
-
   # How frequently Redis should be checked by a random Sidekiq process for
   # scheduled and retriable jobs. Each individual process will take turns by
   # waiting some multiple of this value.
@@ -325,9 +319,6 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#110
   def default_capsule(&block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def dig(*args, **_arg1, &block); end
-
   # Register a proc to handle any error which occurs within the Sidekiq process.
   #
   #   Sidekiq.configure_server do |config|
@@ -339,19 +330,10 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#227
   def error_handlers; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def fetch(*args, **_arg1, &block); end
-
   # INTERNAL USE ONLY
   #
   # source://sidekiq//lib/sidekiq/config.rb#271
   def handle_exception(ex, ctx = T.unsafe(nil)); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def has_key?(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def key?(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#245
   def logger; end
@@ -363,9 +345,6 @@ class Sidekiq::Config
   #
   # source://sidekiq//lib/sidekiq/config.rb#190
   def lookup(name, default_class = T.unsafe(nil)); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def merge!(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#140
   def new_redis_pool(size, name = T.unsafe(nil)); end
@@ -1407,12 +1386,7 @@ end
 Sidekiq::NAME = T.let(T.unsafe(nil), String)
 
 # source://sidekiq//lib/sidekiq/rails.rb#7
-class Sidekiq::Rails < ::Rails::Engine
-  class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
-    def __callbacks; end
-  end
-end
+class Sidekiq::Rails < ::Rails::Engine; end
 
 # source://sidekiq//lib/sidekiq/rails.rb#8
 class Sidekiq::Rails::Reloader

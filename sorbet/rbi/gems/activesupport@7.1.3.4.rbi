@@ -9895,12 +9895,6 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#314
   def listening?(name); end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#91
-  def lock; end
-
-  # source://mutex_m/0.2.0/mutex_m.rb#81
-  def locked?; end
-
   # source://activesupport//lib/active_support/notifications/fanout.rb#293
   def publish(name, *args); end
 
@@ -9912,15 +9906,6 @@ class ActiveSupport::Notifications::Fanout
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#68
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
-
-  # source://mutex_m/0.2.0/mutex_m.rb#76
-  def synchronize(&block); end
-
-  # source://mutex_m/0.2.0/mutex_m.rb#86
-  def try_lock; end
-
-  # source://mutex_m/0.2.0/mutex_m.rb#96
-  def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#85
   def unsubscribe(subscriber_or_name); end
@@ -12420,45 +12405,6 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#963
   def _teardown_callbacks; end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#736
-  def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#665
-  def assert_not_empty(obj, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#676
-  def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#688
-  def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#700
-  def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#707
-  def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#718
-  def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#728
-  def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#746
-  def assert_not_nil(obj, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#781
-  def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#804
-  def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#813
-  def assert_not_respond_to(obj, meth, msg = T.unsafe(nil), include_all: T.unsafe(nil)); end
-
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#822
-  def assert_not_same(exp, act, msg = T.unsafe(nil)); end
-
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
   def file_fixture_path; end
 
@@ -12467,9 +12413,6 @@ class ActiveSupport::TestCase < ::Minitest::Test
 
   # source://activesupport//lib/active_support/test_case.rb#298
   def inspect; end
-
-  # source://minitest/5.24.1/lib/minitest.rb#376
-  def method_name; end
 
   class << self
     # source://activesupport//lib/active_support/callbacks.rb#70
@@ -17721,51 +17664,7 @@ HashWithIndifferentAccess = ActiveSupport::HashWithIndifferentAccess
 # :enddoc:
 #
 # source://activesupport//lib/active_support/i18n_railtie.rb#8
-module I18n
-  class << self
-    # source://i18n/1.14.5/lib/i18n/backend/cache.rb#64
-    def cache_key_digest; end
-
-    # source://i18n/1.14.5/lib/i18n/backend/cache.rb#68
-    def cache_key_digest=(key_digest); end
-
-    # source://i18n/1.14.5/lib/i18n/backend/cache.rb#56
-    def cache_namespace; end
-
-    # source://i18n/1.14.5/lib/i18n/backend/cache.rb#60
-    def cache_namespace=(namespace); end
-
-    # source://i18n/1.14.5/lib/i18n/backend/cache.rb#48
-    def cache_store; end
-
-    # source://i18n/1.14.5/lib/i18n/backend/cache.rb#52
-    def cache_store=(store); end
-
-    # source://i18n/1.14.5/lib/i18n/backend/fallbacks.rb#17
-    def fallbacks; end
-
-    # source://i18n/1.14.5/lib/i18n/backend/fallbacks.rb#23
-    def fallbacks=(fallbacks); end
-
-    # source://i18n/1.14.5/lib/i18n/interpolate/ruby.rb#23
-    def interpolate(string, values); end
-
-    # source://i18n/1.14.5/lib/i18n/interpolate/ruby.rb#29
-    def interpolate_hash(string, values); end
-
-    # source://i18n/1.14.5/lib/i18n.rb#37
-    def new_double_nested_cache; end
-
-    # source://i18n/1.14.5/lib/i18n/backend/cache.rb#72
-    def perform_caching?; end
-
-    # source://i18n/1.14.5/lib/i18n.rb#45
-    def reserve_key(key); end
-
-    # source://i18n/1.14.5/lib/i18n.rb#50
-    def reserved_keys_pattern; end
-  end
-end
+module I18n; end
 
 # source://activesupport//lib/active_support/i18n_railtie.rb#9
 class I18n::Railtie < ::Rails::Railtie
@@ -21290,7 +21189,6 @@ end
 # source://activesupport//lib/active_support/core_ext/object/json.rb#224
 class URI::Generic
   include ::URI::RFC2396_REGEXP
-  include ::URI
 
   # source://activesupport//lib/active_support/core_ext/object/json.rb#225
   def as_json(options = T.unsafe(nil)); end
