@@ -1029,7 +1029,7 @@ module Tapioca
           # it doesn't allow for an array to be passed. If we kept it as a blanket it
           # would mean the passing any `T.untyped` value to the method would assume
           # the result is `T::Array` which is not the case majority of the time.
-          model.create_method("new") do |method|
+          model.create_method("new", class_method: true) do |method|
             method.add_opt_param("attributes", "nil")
             method.add_block_param("block")
 
