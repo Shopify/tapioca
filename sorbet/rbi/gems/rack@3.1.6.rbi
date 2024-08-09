@@ -1639,30 +1639,6 @@ class Rack::Lint::Wrapper::StreamWrapper
   #
   # source://rack//lib/rack/lint.rb#972
   def initialize(stream); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def <<(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def close(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def close_read(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def close_write(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def closed?(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def flush(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def read(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def write(*args, **_arg1, &block); end
 end
 
 # The semantics of these IO methods must be a best effort match to
@@ -2812,15 +2788,6 @@ class Rack::Request
 
   # source://rack//lib/rack/request.rb#71
   def update_param(k, v); end
-
-  # source://yard/0.9.36/lib/yard/server/rack_adapter.rb#94
-  def version_supplied; end
-
-  # source://yard/0.9.36/lib/yard/server/rack_adapter.rb#94
-  def version_supplied=(_arg0); end
-
-  # source://yard/0.9.36/lib/yard/server/rack_adapter.rb#96
-  def xhr?; end
 
   class << self
     # The priority when checking forwarded headers. The default

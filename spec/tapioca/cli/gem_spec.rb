@@ -1259,13 +1259,7 @@ module Tapioca
 
 
             module Foo; end
-
-            class Foo::Engine < ::Rails::Engine
-              class << self
-                def __callbacks; end
-              end
-            end
-
+            class Foo::Engine < ::Rails::Engine; end
             class Foo::Post; end
             class User; end
           RBI

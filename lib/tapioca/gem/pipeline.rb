@@ -136,25 +136,34 @@ module Tapioca
         return true unless Object.respond_to?(:const_source_location)
 
         source_file, _ = Object.const_source_location(name)
-        return true unless source_file
-        # If the source location of the constant is "(eval)", all bets are off.
-        return true if source_file == "(eval)"
-
         # Ruby 3.3 adds automatic definition of source location for evals if
         # `file` and `line` arguments are not provided. This results in the source
         # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
         # this string to get the actual source file.
-        source_file = source_file.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
+        source_file = source_file&.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
+
+        # If the source location of the constant isn't available or is "(eval)", all bets are off.
+        return true if source_file.nil? || source_file == "(eval)"
 
         gem.contains_path?(source_file)
       end
 
-      sig { params(method: UnboundMethod).returns(T::Boolean) }
+      sig { params(method: UnboundMethod).returns(T.nilable(T::Boolean)) }
       def method_in_gem?(method)
-        source_location = method.source_location&.first
-        return false if source_location.nil?
+        source_file, _ = method.source_location
+        # Ruby 3.3 adds automatic definition of source location for evals if
+        # `file` and `line` arguments are not provided. This results in the source
+        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
+        # this string to get the actual source file.
+        source_file = source_file&.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
 
-        @gem.contains_path?(source_location)
+        # If the source location of the method isn't available, signal that by returning nil.
+        return unless source_file # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
+
+        # If the source location of the method is "(eval)", err on the side of caution and include the method.
+        return true if source_file == "(eval)"
+
+        @gem.contains_path?(source_file)
       end
 
       # Helpers

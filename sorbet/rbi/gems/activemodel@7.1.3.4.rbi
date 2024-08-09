@@ -2363,9 +2363,6 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#237
   def attribute_names; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def clear(*args, **_arg1, &block); end
-
   # Copies the errors from <tt>other</tt>.
   # For copying errors but keep <tt>@base</tt> as is.
   #
@@ -2393,12 +2390,6 @@ class ActiveModel::Errors
   #
   # source://activemodel//lib/active_model/errors.rb#276
   def details; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def each(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def empty?(*args, **_arg1, &block); end
 
   # The actual array of +Error+ objects
   # This method is aliased to <tt>objects</tt>.
@@ -2585,9 +2576,6 @@ class ActiveModel::Errors
   # source://activemodel//lib/active_model/errors.rb#395
   def of_kind?(attribute, type = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def size(*args, **_arg1, &block); end
-
   # Returns all the full error messages in an array.
   #
   #   class Person
@@ -2610,9 +2598,6 @@ class ActiveModel::Errors
   #
   # source://activemodel//lib/active_model/errors.rb#256
   def to_hash(full_messages = T.unsafe(nil)); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def uniq!(*args, **_arg1, &block); end
 
   # Search for errors matching +attribute+, +type+, or +options+.
   #
@@ -3378,9 +3363,6 @@ class ActiveModel::NestedError < ::ActiveModel::Error
   #
   # source://activemodel//lib/active_model/nested_error.rb#17
   def inner_error; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def message(*args, **_arg1, &block); end
 end
 
 # source://activemodel//lib/active_model/attribute_mutation_tracker.rb#156

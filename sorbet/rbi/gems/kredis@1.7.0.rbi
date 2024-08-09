@@ -965,12 +965,6 @@ class Kredis::Types::Proxy
   # source://kredis//lib/kredis/types/proxy.rb#16
   def multi(*args, **kwargs, &block); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#74
-  def pipeline; end
-
-  # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#116
-  def pipeline=(obj); end
-
   # source://kredis//lib/kredis/types/proxy.rb#31
   def unwatch; end
 
@@ -984,14 +978,6 @@ class Kredis::Types::Proxy
 
   # source://kredis//lib/kredis/types/proxy.rb#44
   def redis; end
-
-  class << self
-    # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#49
-    def pipeline; end
-
-    # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#108
-    def pipeline=(obj); end
-  end
 end
 
 # source://kredis//lib/kredis/types/proxy/failsafe.rb#3

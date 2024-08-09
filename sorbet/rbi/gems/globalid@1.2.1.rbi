@@ -574,37 +574,8 @@ end
 # source://globalid//lib/global_id/signed_global_id.rb#5
 class SignedGlobalID::ExpiredMessage < ::StandardError; end
 
-# source://globalid//lib/global_id/uri/gid.rb#6
-module URI
-  include ::URI::RFC2396_REGEXP
-end
-
 # source://globalid//lib/global_id/uri/gid.rb#7
 class URI::GID < ::URI::Generic
-  # URI::GID encodes an app unique reference to a specific model as an URI.
-  # It has the components: app name, model class name, model id and params.
-  # All components except params are required.
-  #
-  # The URI format looks like "gid://app/model_name/model_id".
-  #
-  # Simple metadata can be stored in params. Useful if your app has multiple databases,
-  # for instance, and you need to find out which one to look up the model in.
-  #
-  # Params will be encoded as query parameters like so
-  # "gid://app/model_name/model_id?key=value&another_key=another_value".
-  #
-  # Params won't be typecast, they're always strings.
-  # For convenience params can be accessed using both strings and symbol keys.
-  #
-  # Multi value params aren't supported. Any params encoding multiple values under
-  # the same key will return only the last value. For example, when decoding
-  # params like "key=first_value&key=last_value" key will only be last_value.
-  #
-  # Read the documentation for +parse+, +create+ and +build+ for more.
-  #
-  # source://uri/0.13.0/uri/generic.rb#243
-  def app; end
-
   # source://globalid//lib/global_id/uri/gid.rb#107
   def deconstruct_keys(_keys); end
 
@@ -745,5 +716,3 @@ class URI::GID::InvalidModelIdError < ::URI::InvalidComponentError; end
 #
 # source://globalid//lib/global_id/uri/gid.rb#32
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
-
-class URI::WSS < ::URI::WS; end

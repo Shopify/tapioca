@@ -112,28 +112,16 @@ class Money
   # source://shopify-money//lib/money/money.rb#296
   def fraction(rate); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def hash(*args, **_arg1, &block); end
-
   # source://shopify-money//lib/money/money.rb#137
   def init_with(coder); end
 
   # source://shopify-money//lib/money/money.rb#198
   def inspect; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def negative?(*args, **_arg1, &block); end
-
   # @return [Boolean]
   #
   # source://shopify-money//lib/money/money.rb#158
   def no_currency?; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def nonzero?(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def positive?(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#290
   def round(ndigits = T.unsafe(nil)); end
@@ -154,17 +142,11 @@ class Money
   # source://shopify-money//lib/money/money.rb#233
   def to_d; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def to_f(*args, **_arg1, &block); end
-
   # source://shopify-money//lib/money/money.rb#237
   def to_formatted_s(style = T.unsafe(nil)); end
 
   # source://shopify-money//lib/money/money.rb#237
   def to_fs(style = T.unsafe(nil)); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def to_i(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#262
   def to_json(options = T.unsafe(nil)); end
@@ -179,9 +161,6 @@ class Money
   #
   # source://shopify-money//lib/money/money.rb#10
   def value; end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def zero?(*args, **_arg1, &block); end
 
   private
 
@@ -220,12 +199,6 @@ class Money
 
     # source://shopify-money//lib/money/money.rb#88
     def current_currency=(currency); end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def default_currency(*args, **_arg1, &block); end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def default_currency=(*args, **_arg1, &block); end
 
     # source://shopify-money//lib/money/deprecations.rb#12
     def deprecate(message); end

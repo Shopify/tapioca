@@ -1192,9 +1192,6 @@ class JsonApiClient::Query::Requestor
   # source://json_api_client//lib/json_api_client/query/requestor.rb#7
   def initialize(klass); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def connection(*args, **_arg1, &block); end
-
   # expects a record
   #
   # source://json_api_client//lib/json_api_client/query/requestor.rb#12
@@ -1394,29 +1391,11 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/helpers/associatable.rb#9
   def __cached_associations=(_arg0); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
-  def __callbacks; end
-
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
-  def __callbacks?; end
-
   # source://json_api_client//lib/json_api_client/resource.rb#44
   def _immutable; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#44
   def _immutable?; end
-
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
-  def _run_validate_callbacks(&block); end
-
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
-  def _validate_callbacks; end
-
-  # source://activemodel/7.1.3.4/lib/active_model/validations.rb#71
-  def _validators; end
-
-  # source://activemodel/7.1.3.4/lib/active_model/validations.rb#71
-  def _validators?; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#41
   def add_defaults_to_changes; end
@@ -1494,18 +1473,12 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#416
   def mark_as_persisted!; end
 
-  # source://activemodel/7.1.3.4/lib/active_model/naming.rb#255
-  def model_name(&block); end
-
   # Returns true if this is a new record (never persisted to the database)
   #
   # @return [Boolean]
   #
   # source://json_api_client//lib/json_api_client/resource.rb#442
   def new_record?; end
-
-  # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
-  def param_delimiter=(_arg0); end
 
   # source://json_api_client//lib/json_api_client/resource.rb#568
   def path_attributes; end
@@ -1596,9 +1569,6 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#481
   def valid?(context = T.unsafe(nil)); end
 
-  # source://activemodel/7.1.3.4/lib/active_model/validations.rb#67
-  def validation_context; end
-
   protected
 
   # source://json_api_client//lib/json_api_client/resource.rb#642
@@ -1655,19 +1625,7 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#622
   def respond_to_missing?(symbol, include_all = T.unsafe(nil)); end
 
-  # source://activemodel/7.1.3.4/lib/active_model/validations.rb#67
-  def validation_context=(_arg0); end
-
   class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
-    def __callbacks; end
-
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
-    def __callbacks=(value); end
-
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
-    def __callbacks?; end
-
     # source://json_api_client//lib/json_api_client/resource.rb#44
     def _immutable; end
 
@@ -1677,21 +1635,6 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#44
     def _immutable?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#955
-    def _validate_callbacks; end
-
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#959
-    def _validate_callbacks=(value); end
-
-    # source://activemodel/7.1.3.4/lib/active_model/validations.rb#71
-    def _validators; end
-
-    # source://activemodel/7.1.3.4/lib/active_model/validations.rb#71
-    def _validators=(value); end
-
-    # source://activemodel/7.1.3.4/lib/active_model/validations.rb#71
-    def _validators?; end
-
     # source://json_api_client//lib/json_api_client/resource.rb#41
     def add_defaults_to_changes; end
 
@@ -1700,9 +1643,6 @@ class JsonApiClient::Resource
 
     # source://json_api_client//lib/json_api_client/resource.rb#41
     def add_defaults_to_changes?; end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def all(*args, **_arg1, &block); end
 
     # source://json_api_client//lib/json_api_client/helpers/associatable.rb#7
     def associations; end
@@ -1783,12 +1723,6 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#214
     def default_attributes; end
 
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def find(*args, **_arg1, &block); end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def first(*args, **_arg1, &block); end
-
     # Indicates whether this resource is mutable or immutable;
     # by default, all resources are mutable.
     #
@@ -1796,9 +1730,6 @@ class JsonApiClient::Resource
     #
     # source://json_api_client//lib/json_api_client/resource.rb#106
     def immutable(flag = T.unsafe(nil)); end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def includes(*args, **_arg1, &block); end
 
     # @private
     #
@@ -1826,9 +1757,6 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#225
     def key_formatter; end
 
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def last(*args, **_arg1, &block); end
-
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def linker; end
 
@@ -1845,15 +1773,6 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#126
     def load(params); end
 
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def order(*args, **_arg1, &block); end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def page(*args, **_arg1, &block); end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def paginate(*args, **_arg1, &block); end
-
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def paginator; end
 
@@ -1862,15 +1781,6 @@ class JsonApiClient::Resource
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def paginator?; end
-
-    # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
-    def param_delimiter; end
-
-    # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
-    def param_delimiter=(value); end
-
-    # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
-    def param_delimiter?; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def parser; end
@@ -2010,9 +1920,6 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def search_included_in_result_set?; end
 
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def select(*args, **_arg1, &block); end
-
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def site; end
 
@@ -2037,9 +1944,6 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#98
     def type; end
 
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def where(*args, **_arg1, &block); end
-
     # Within the given block, add these headers to all requests made by
     # the resource class
     #
@@ -2048,9 +1952,6 @@ class JsonApiClient::Resource
     #
     # source://json_api_client//lib/json_api_client/resource.rb#186
     def with_headers(headers); end
-
-    # source://forwardable/1.3.3/forwardable.rb#231
-    def with_params(*args, **_arg1, &block); end
 
     protected
 
@@ -2133,9 +2034,6 @@ end
 class JsonApiClient::ResultSet < ::Array
   extend ::Forwardable
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def current_page(*args, **_arg1, &block); end
-
   # Returns the value of attribute errors.
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
@@ -2177,9 +2075,6 @@ class JsonApiClient::ResultSet < ::Array
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def included=(_arg0); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def limit_value(*args, **_arg1, &block); end
-
   # Returns the value of attribute links.
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
@@ -2204,15 +2099,6 @@ class JsonApiClient::ResultSet < ::Array
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def meta=(_arg0); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def next_page(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def offset(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def out_of_bounds?(*args, **_arg1, &block); end
-
   # Returns the value of attribute pages.
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
@@ -2224,12 +2110,6 @@ class JsonApiClient::ResultSet < ::Array
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def pages=(_arg0); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def per_page(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def previous_page(*args, **_arg1, &block); end
 
   # Returns the value of attribute record_class.
   #
@@ -2254,15 +2134,6 @@ class JsonApiClient::ResultSet < ::Array
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def relationships=(_arg0); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def total_count(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def total_entries(*args, **_arg1, &block); end
-
-  # source://forwardable/1.3.3/forwardable.rb#231
-  def total_pages(*args, **_arg1, &block); end
 
   # Returns the value of attribute uri.
   #
