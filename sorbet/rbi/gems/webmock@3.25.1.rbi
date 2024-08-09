@@ -92,14 +92,6 @@ module WebMock
   include ::WebMock::API
   extend ::WebMock::API
 
-  def after_request(*args, &block); end
-  def allow_net_connect!(*args, &block); end
-  def disable_net_connect!(*args, &block); end
-  def net_connect_allowed?(*args, &block); end
-  def registered_request?(*args, &block); end
-  def reset_callbacks(*args, &block); end
-  def reset_webmock(*args, &block); end
-
   class << self
     # source://webmock//lib/webmock/webmock.rb#143
     def after_request(options = T.unsafe(nil), &block); end

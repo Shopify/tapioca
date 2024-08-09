@@ -1988,9 +1988,7 @@ class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
   #
   # source://rbi//lib/rbi/parser.rb#744
   sig do
-    params(
-      node: T.any(::Prism::ConstantPathWriteNode, ::Prism::ConstantWriteNode)
-    ).returns(T.nilable(::RBI::Struct))
+    params(node: T.any(::Prism::ConstantPathWriteNode, ::Prism::ConstantWriteNode)).returns(T.nilable(::RBI::Struct))
   end
   def parse_struct(node); end
 
@@ -3846,12 +3844,7 @@ class RBI::Rewriters::Merge::TreeMerger < ::RBI::Visitor
   #
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#99
   sig do
-    params(
-      output: ::RBI::Tree,
-      left_name: ::String,
-      right_name: ::String,
-      keep: ::RBI::Rewriters::Merge::Keep
-    ).void
+    params(output: ::RBI::Tree, left_name: ::String, right_name: ::String, keep: ::RBI::Rewriters::Merge::Keep).void
   end
   def initialize(output, left_name: T.unsafe(nil), right_name: T.unsafe(nil), keep: T.unsafe(nil)); end
 

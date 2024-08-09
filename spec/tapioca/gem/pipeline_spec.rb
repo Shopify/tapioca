@@ -478,17 +478,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module SomeEngine; end
-
-        class SomeEngine::SomeController < ::ActionController::Base
-          private
-
-          def _layout(lookup_context, formats); end
-
-          class << self
-            def _helper_methods; end
-            def middleware_stack; end
-          end
-        end
+        class SomeEngine::SomeController < ::ActionController::Base; end
 
         module SomeEngine::SomeController::HelperMethods
           include ::ActionController::Base::HelperMethods
@@ -3257,10 +3247,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :quuz, ::Integer, default: T.unsafe(nil)
           prop :fuzz, T.proc.returns(::String), default: T.unsafe(nil)
           prop :buzz, T.proc.void, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
 
         class Baz
@@ -3584,10 +3570,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           Elem = type_member
 
           const :foo, Elem
-
-          class << self
-            def inherited(s); end
-          end
         end
       RBI
 
@@ -3801,10 +3783,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           prop :l, T::Array[::Foo], default: T.unsafe(nil)
           prop :m, T::Hash[::Foo, ::Foo], default: T.unsafe(nil)
           prop :n, ::Foo, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
       RBI
 
@@ -4457,8 +4435,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         NewClass = Class.new
       RB
 
-      sorbet_runtime_spec = ::Gem::Specification.find_by_name("sorbet-runtime")
-
       output = template(<<~RBI)
         # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#1
         module Bar
@@ -4511,12 +4487,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class NewClass; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
-        class Quux < ::T::Struct
-          class << self
-            # source://sorbet-runtime/#{sorbet_runtime_spec.version}/lib/types/struct.rb#13
-            def inherited(s); end
-          end
-        end
+        class Quux < ::T::Struct; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#19
         class String
