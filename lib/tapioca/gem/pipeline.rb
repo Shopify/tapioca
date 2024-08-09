@@ -148,8 +148,8 @@ module Tapioca
         gem.contains_path?(source_file)
       end
 
-      sig { params(method: UnboundMethod).returns(T.nilable(T::Boolean)) }
-      def method_in_gem?(method)
+      sig { params(constant: Module, method: UnboundMethod).returns(T.nilable(T::Boolean)) }
+      def method_in_gem?(constant, method)
         source_file, _ = method.source_location
         # Ruby 3.3 adds automatic definition of source location for evals if
         # `file` and `line` arguments are not provided. This results in the source
@@ -162,6 +162,20 @@ module Tapioca
 
         # If the source location of the method is "(eval)", err on the side of caution and include the method.
         return true if source_file == "(eval)"
+
+        return true if @gem.contains_path?(source_file)
+
+        method_definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(constant)
+
+        source_file = method_definitions[method.name]
+
+        # If the source location of the method isn't available, signal that by returning nil.
+        return unless source_file
+
+        # If the source location of the method is "(eval)", err on the side of caution and include the method.
+        return true if source_file == "(eval)"
+
+        source_file = source_file&.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
 
         @gem.contains_path?(source_file)
       end
