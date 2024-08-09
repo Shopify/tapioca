@@ -100,6 +100,7 @@ module Tapioca
       ).returns(T::Array[ConfigError])
     end
     def validate_config_options(command_options, config_key, config_options)
+      command_options = T.unsafe(self.class).class_options.merge(command_options)
       config_options.filter_map do |config_option_key, config_option_value|
         command_option = command_options[config_option_key.to_sym]
         error_msg = "unknown option `#{config_option_key}` for key `#{config_key}`"
