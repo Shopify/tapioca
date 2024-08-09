@@ -1301,16 +1301,7 @@ module Tapioca
 
 
             module Foo; end
-
-            class Foo::Engine < ::Rails::Engine
-              class << self
-                def __callbacks; end
-            <% if rails_version(">= 8.0") %>
-                def __callbacks=(new_value); end
-            <% end %>
-              end
-            end
-
+            class Foo::Engine < ::Rails::Engine; end
             class Foo::Post; end
             class User; end
           RBI
