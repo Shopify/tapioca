@@ -130,8 +130,13 @@ module Tapioca
       end
 
       sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
-      def signature_of(method)
+      def signature_of!(method)
         T::Utils.signature_for_method(method)
+      end
+
+      sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
+      def signature_of(method)
+        signature_of!(method)
       rescue LoadError, StandardError
         nil
       end

@@ -59,6 +59,29 @@ module Tapioca
       end
     end
 
+    class SignatureFoo
+      extend T::Sig
+
+      sig { returns(String) }
+      def good_method
+        "Thank you."
+      end
+
+      # NOTE: leveraging eval to avoid actual sorbet typechecking
+      eval <<~RUBY
+        sig do
+          raise ArgumentError
+        end
+        def bad_method
+          "oh no..."
+        end
+      RUBY
+
+      def unknown_method
+        ' ¯\_(ツ)_/¯ '
+      end
+    end
+
     class ReflectionSpec < Minitest::Spec
       describe Tapioca::Runtime::Reflection do
         it "might return the wrong results without Reflection helpers" do
@@ -110,6 +133,40 @@ module Tapioca
 
         it "returns top level anchored name for named class" do
           assert_equal("::Tapioca::Runtime::LyingFoo", Runtime::Reflection.qualified_name_of(LyingFoo))
+        end
+
+        describe "signature_for" do
+          it "returns a valid signature" do
+            method = SignatureFoo.instance_method(:good_method)
+            refute_nil(Runtime::Reflection.signature_of(method))
+          end
+
+          it "returns nil when a signature is not defined" do
+            method = SignatureFoo.instance_method(:unknown_method)
+            assert_nil(Runtime::Reflection.signature_of(method))
+          end
+
+          it "returns nil when a signature block raises an exception" do
+            method = SignatureFoo.instance_method(:bad_method)
+            assert_nil(Runtime::Reflection.signature_of(method))
+          end
+        end
+
+        describe "signature_for!" do
+          it "returns a valid signature" do
+            method = SignatureFoo.instance_method(:good_method)
+            refute_nil(Runtime::Reflection.signature_of!(method))
+          end
+
+          it "returns nil when a signature is not defined" do
+            method = SignatureFoo.instance_method(:unknown_method)
+            assert_nil(Runtime::Reflection.signature_of!(method))
+          end
+
+          it "returns nil when a signature block raises an exception" do
+            method = SignatureFoo.instance_method(:bad_method)
+            assert_raises(ArgumentError) { Runtime::Reflection.signature_of!(method) }
+          end
         end
       end
     end

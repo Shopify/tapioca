@@ -73,7 +73,7 @@ module Tapioca
           return unless method_owned_by_constant?(method, constant)
           return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
 
-          signature = signature_of(method)
+          signature = lookup_signature_of(method)
           method = T.let(signature.method, UnboundMethod) if signature
 
           method_name = method.name.to_s
@@ -210,6 +210,18 @@ module Tapioca
         sig { override.params(event: NodeAdded).returns(T::Boolean) }
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+        end
+
+        sig { params(method: UnboundMethod).returns(T.untyped) }
+        def lookup_signature_of(method)
+          signature_of!(method)
+        rescue LoadError, StandardError => error
+          @pipeline.error_handler.call(<<~MSG)
+            Unable to compile signature for method: #{method.owner}##{method.name}
+              Exception raised when loading signature: #{error.inspect}
+          MSG
+
+          nil
         end
       end
     end

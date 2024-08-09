@@ -13,11 +13,24 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::SorbetHelper
 
   DEFAULT_GEM_NAME = T.let("the-default-gem", String)
+  NO_UNHANDLED_PIPELINE_COMPILATION_ERRORS_MESSAGE = <<~MSG
+    Tapioca::Gem::Pipeline#compile should not have any unhandled errors reported.
+    Please either fix your changes to ensure no errors are reported, or explicity pass
+    in a custom `error_handler: ->(err) { ... }` to the `compile()` method to handle
+    expected errors.
+  MSG
 
   private
 
-  sig { params(gem_name: String, include_doc: T::Boolean, include_loc: T::Boolean).returns(String) }
-  def compile(gem_name = DEFAULT_GEM_NAME, include_doc: false, include_loc: false)
+  sig do
+    params(
+      gem_name: String,
+      include_doc: T::Boolean,
+      include_loc: T::Boolean,
+      reported_errors_expected: T::Boolean,
+    ).returns(String)
+  end
+  def compile(gem_name = DEFAULT_GEM_NAME, include_doc: false, include_loc: false, reported_errors_expected: false)
     mock_gem_path = mock_gems[gem_name]
 
     # If we are compiling for a mock gem, we need to create a fake gemspec
@@ -35,8 +48,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     # wrap it in our gemspec wrapper
     gem = Tapioca::Gemfile::GemSpec.new(Gem::Specification.stubs[gem_name].first)
 
+    # clear out previously reported errors
+    reported_errors.clear
+
     # push it through the pipeline
-    tree = Tapioca::Gem::Pipeline.new(gem, include_doc: include_doc, include_loc: include_loc).compile
+    tree = Tapioca::Gem::Pipeline.new(
+      gem,
+      include_doc: include_doc,
+      include_loc: include_loc,
+      error_handler: ->(error) { reported_errors << error },
+    ).compile
 
     # NOTE: This is not returning a `RBI::File`.
     # The following test suite is based on the string output of the `RBI::Tree` rather
@@ -44,6 +65,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     # We should eventually update these tests to be based on the `RBI::File`.
     Tapioca::DEFAULT_RBI_FORMATTER.format_tree(tree)
 
+    assert_empty(reported_errors, NO_UNHANDLED_PIPELINE_COMPILATION_ERRORS_MESSAGE) unless reported_errors_expected
     tree.string
   end
 
@@ -65,6 +87,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     @gems
   end
 
+  sig { returns(T::Array[String]) }
+  def reported_errors
+    @reported_errors ||= T.let([], T.nilable(T::Array[String]))
+  end
+
   describe Tapioca::Gem::Pipeline do
     before do
       # We need to undefine and unload `ActiveSupport` so that the test object
@@ -77,6 +104,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         Object.send(:remove_const, :ActiveSupport) # rubocop:disable RSpec/RemoveConst
         $LOADED_FEATURES.delete_if { |path| path.include?("active_support") }
       end
+    end
+
+    after do
+      # clean up any lingering reported errors
+      reported_errors.clear
     end
 
     it "compiles DelegateClass" do
@@ -3861,7 +3893,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "skips signatures if they raise" do
+    it "skips signatures and reports the errors if the sig block raises" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           extend(T::Sig)
@@ -3900,7 +3932,17 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RBI
 
-      assert_equal(output, compile)
+      assert_equal(output, compile(reported_errors_expected: true))
+      assert_equal(reported_errors, [
+        <<~ERROR,
+          Unable to compile signature for method: Foo#bar
+            Exception raised when loading signature: #<LoadError: LoadError>
+        ERROR
+        <<~ERROR,
+          Unable to compile signature for method: Foo#foo
+            Exception raised when loading signature: #<ArgumentError: ArgumentError>
+        ERROR
+      ])
     end
 
     it "handles signatures with attached classes" do
