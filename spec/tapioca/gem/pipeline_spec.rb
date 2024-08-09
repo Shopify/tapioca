@@ -581,6 +581,41 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile("foo"))
     end
 
+    it "properly attributes dynamically-generated methods" do
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RUBY)
+          module ModuleFromBar
+            def add_method_to_me(method_name)
+              define_method(method_name) { 42 }
+            end
+          end
+        RUBY
+      end
+
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RUBY)
+          class Foo
+            extend ModuleFromBar
+
+            def foo; end
+
+            add_method_to_me :bar
+          end
+        RUBY
+      end
+
+      output = <<~RBI
+        class Foo
+          extend ::ModuleFromBar
+
+          def bar; end
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile("foo"))
+    end
+
     it "must generate RBIs for foreign constants whose singleton class overrides #inspect" do
       mock_gem("bar") do
         add_ruby_file("lib/bar.rb", <<~RBI)
