@@ -85,6 +85,9 @@ module Tapioca
                   extend CommonRelationMethods
                   extend GeneratedRelationMethods
 
+                  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+                  def new(attributes = nil, &block); end
+
                   private
 
                   sig { returns(NilClass) }
@@ -790,6 +793,9 @@ module Tapioca
                 class Post
                   extend CommonRelationMethods
                   extend GeneratedRelationMethods
+
+                  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+                  def new(attributes = nil, &block); end
 
                   private
 

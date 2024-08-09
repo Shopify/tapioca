@@ -1024,6 +1024,21 @@ module Tapioca
               end
             end
           end
+
+          # We are creating `#new` on the class itself since when called as `Model.new`
+          # it doesn't allow for an array to be passed. If we kept it as a blanket it
+          # would mean the passing any `T.untyped` value to the method would assume
+          # the result is `T::Array` which is not the case majority of the time.
+          model.create_method("new") do |method|
+            method.add_opt_param("attributes", "nil")
+            method.add_block_param("block")
+
+            method.add_sig do |sig|
+              sig.add_param("attributes", "T.untyped")
+              sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+              sig.return_type = constant_name
+            end
+          end
         end
 
         sig do
