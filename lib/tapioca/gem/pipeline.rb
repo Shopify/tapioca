@@ -150,7 +150,7 @@ module Tapioca
 
       sig { params(method: UnboundMethod).returns(T.nilable(T::Boolean)) }
       def method_in_gem?(method)
-        source_file, _ = method.source_location
+        source_file = Tapioca::Runtime::Trackers::MethodDefinition.method_definition_for(method)
         # Ruby 3.3 adds automatic definition of source location for evals if
         # `file` and `line` arguments are not provided. This results in the source
         # file being something like `(eval at /path/to/file.rb:123)`. We try to parse

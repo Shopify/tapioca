@@ -485,7 +485,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         module SomeEngine; end
-        class SomeEngine::SomeController < ::ActionController::Base; end
+
+        class SomeEngine::SomeController < ::ActionController::Base
+          private
+
+          def _layout(lookup_context, formats); end
+        end
 
         module SomeEngine::SomeController::HelperMethods
           include ::ActionController::Base::HelperMethods
