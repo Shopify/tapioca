@@ -1,6 +1,12 @@
 # typed: true
 # frozen_string_literal: true
 
+begin
+  require "ruby-lsp-rails"
+rescue LoadError
+  return
+end
+
 require "tapioca/internal"
 
 module RubyLsp

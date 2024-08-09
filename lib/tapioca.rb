@@ -63,3 +63,4 @@ module Tapioca
 end
 
 require "tapioca/version"
+require "ruby_lsp/tapioca/addon"
