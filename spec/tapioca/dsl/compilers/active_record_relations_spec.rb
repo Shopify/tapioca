@@ -85,13 +85,15 @@ module Tapioca
                   extend CommonRelationMethods
                   extend GeneratedRelationMethods
 
-                  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
-                  def new(attributes = nil, &block); end
-
                   private
 
                   sig { returns(NilClass) }
                   def to_ary; end
+
+                  class << self
+                    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+                    def new(attributes = nil, &block); end
+                  end
 
                   module CommonRelationMethods
                     sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
@@ -794,13 +796,15 @@ module Tapioca
                   extend CommonRelationMethods
                   extend GeneratedRelationMethods
 
-                  sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
-                  def new(attributes = nil, &block); end
-
                   private
 
                   sig { returns(NilClass) }
                   def to_ary; end
+
+                  class << self
+                    sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
+                    def new(attributes = nil, &block); end
+                  end
 
                   module CommonRelationMethods
                     sig { params(block: T.nilable(T.proc.params(record: ::Post).returns(T.untyped))).returns(T::Boolean) }
