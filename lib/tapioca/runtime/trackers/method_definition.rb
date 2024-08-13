@@ -13,11 +13,12 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { params(method: UnboundMethod).void }
-          def register(method)
+          sig { params(method: UnboundMethod, locations: T::Array[Thread::Backtrace::Location]).void }
+          def register(method, locations)
             return unless enabled?
 
-            @method_definitions[method] = Reflection.resolve_loc(caller_locations)
+            loc = Reflection.resolve_loc(locations)
+            @method_definitions[method] = loc if loc
           end
 
           sig { params(method: UnboundMethod).returns(T.nilable([String, Integer])) }
@@ -33,7 +34,7 @@ end
 class Module
   prepend(Module.new do
     def method_added(method_name)
-      Tapioca::Runtime::Trackers::MethodDefinition.register(instance_method(method_name))
+      Tapioca::Runtime::Trackers::MethodDefinition.register(instance_method(method_name), caller_locations)
       super
     end
   end)

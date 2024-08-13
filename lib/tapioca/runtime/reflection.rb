@@ -177,9 +177,9 @@ module Tapioca
       # by searching for the label "<top (required)>" or "block in <class:...>" in the
       # case of an ActiveSupport.on_load hook. If none is found, it returns the location
       # labeled "<main>", which is the original call site.
-      #: (Array[Thread::Backtrace::Location]? locations) -> [String, Integer]
+      #: (Array[Thread::Backtrace::Location]? locations) -> [String, Integer]?
       def resolve_loc(locations)
-        return ["", 0] unless locations
+        return unless locations
 
         # Find the location of the closest file load, which should give us the location of the file that
         # triggered the definition.
@@ -189,11 +189,15 @@ module Tapioca
 
           REQUIRED_FROM_LABELS.include?(label) || label.start_with?("block in <class:")
         end
-        return ["", 0] unless resolved_loc
+        return unless resolved_loc
 
         # Find the location of the last frame in this file to get the most accurate line number.
         resolved_loc = locations.find { |loc| loc.absolute_path == resolved_loc.absolute_path }
-        return ["", 0] unless resolved_loc
+        return unless resolved_loc
+
+        # If the last operation was a `require`, and we have no more frames,
+        # we are probably dealing with a C-method.
+        return if locations.first&.label == "require"
 
         [resolved_loc.absolute_path || "", resolved_loc.lineno]
       end
