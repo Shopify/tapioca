@@ -8,7 +8,7 @@ module Tapioca
         extend Tracker
         extend T::Sig
 
-        @method_definitions = {}
+        @method_definitions = T.let({}, T::Hash[UnboundMethod, [String, Integer]])
 
         class << self
           extend T::Sig
@@ -20,9 +20,9 @@ module Tapioca
             @method_definitions[method] = Reflection.resolve_loc(caller_locations)
           end
 
-          sig { params(method: UnboundMethod).returns(T.nilable(String)) }
+          sig { params(method: UnboundMethod).returns(T.nilable([String, Integer])) }
           def method_definition_for(method)
-            @method_definitions[method] || method.source_location&.first
+            @method_definitions[method] || method.source_location
           end
         end
       end
