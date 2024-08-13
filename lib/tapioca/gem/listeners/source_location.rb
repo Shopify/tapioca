@@ -36,7 +36,7 @@ module Tapioca
         # @override
         #: (MethodNodeAdded event) -> void
         def on_method(event)
-          file, line = event.method.source_location
+          file, line = Tapioca::Runtime::Trackers::MethodDefinition.method_definition_for(event.method)
           add_source_location_comment(event.node, file, line)
         end
 
