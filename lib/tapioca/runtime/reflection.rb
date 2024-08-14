@@ -33,6 +33,10 @@ module Tapioca
       UNDEFINED_CONSTANT = T.let(Module.new.freeze, Module)
 
       REQUIRED_FROM_LABELS = T.let(["<top (required)>", "<main>"].freeze, T::Array[String])
+      # this looks something like:
+      # "(eval at /path/to/file.rb:123)"
+      # and we are just interested in the "/path/to/file.rb" part
+      EVAL_SOURCE_FILE_PATTERN = T.let(/\(eval at (.+):\d+\)/, Regexp)
 
       T::Sig::WithoutRuntime.sig { params(constant: BasicObject).returns(T::Boolean) }
       def constant_defined?(constant)
@@ -181,6 +185,21 @@ module Tapioca
         T.unsafe(result)
       end
 
+      sig { params(constant_name: T.any(String, Symbol)).returns(T.nilable([String, Integer])) }
+      def const_source_location(constant_name)
+        return unless Object.respond_to?(:const_source_location)
+
+        file, line = Object.const_source_location(constant_name)
+
+        # Ruby 3.3 adds automatic definition of source location for evals if
+        # `file` and `line` arguments are not provided. This results in the source
+        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
+        # this string to get the actual source file.
+        file = file&.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
+
+        [file, line] if file && line
+      end
+
       # Examines the call stack to identify the closest location where a "require" is performed
       # by searching for the label "<top (required)>" or "block in <class:...>" in the
       # case of an ActiveSupport.on_load hook. If none is found, it returns the location
@@ -207,7 +226,14 @@ module Tapioca
         # we are probably dealing with a C-method.
         return if locations.first&.label == "require"
 
-        [resolved_loc.absolute_path || "", resolved_loc.lineno]
+        file = resolved_loc.absolute_path || ""
+        # Ruby 3.3 adds automatic definition of source location for evals if
+        # `file` and `line` arguments are not provided. This results in the source
+        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
+        # this string to get the actual source file.
+        file = file.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
+
+        [file, resolved_loc.lineno]
       end
 
       sig { params(constant: Module).returns(T::Set[String]) }

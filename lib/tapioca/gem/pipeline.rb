@@ -126,21 +126,9 @@ module Tapioca
         @payload_symbols.include?(symbol_name)
       end
 
-      # this looks something like:
-      # "(eval at /path/to/file.rb:123)"
-      # and we are just interested in the "/path/to/file.rb" part
-      EVAL_SOURCE_FILE_PATTERN = T.let(/\(eval at (.+):\d+\)/, Regexp)
-
       sig { params(name: T.any(String, Symbol)).returns(T::Boolean) }
       def constant_in_gem?(name)
-        return true unless Object.respond_to?(:const_source_location)
-
-        source_file, _ = Object.const_source_location(name)
-        # Ruby 3.3 adds automatic definition of source location for evals if
-        # `file` and `line` arguments are not provided. This results in the source
-        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
-        # this string to get the actual source file.
-        source_file = source_file&.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
+        source_file, _ = const_source_location(name)
 
         # If the source location of the constant isn't available or is "(eval)", all bets are off.
         return true if source_file.nil? || source_file == "(eval)"
@@ -148,22 +136,28 @@ module Tapioca
         gem.contains_path?(source_file)
       end
 
-      sig { params(method: UnboundMethod).returns(T.nilable(T::Boolean)) }
-      def method_in_gem?(method)
-        source_file, _ = Tapioca::Runtime::Trackers::MethodDefinition.method_definition_for(method)
-        # Ruby 3.3 adds automatic definition of source location for evals if
-        # `file` and `line` arguments are not provided. This results in the source
-        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
-        # this string to get the actual source file.
-        source_file = source_file&.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
+      sig { params(method_name: Symbol, owner: Module).returns(T.any([String, Integer], NilClass, T::Boolean)) }
+      def method_definition_in_gem(method_name, owner)
+        definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(method_name, owner)
 
         # If the source location of the method isn't available, signal that by returning nil.
-        return unless source_file # rubocop:disable Style/ReturnNilInPredicateMethodDefinition
+        return if definitions.empty?
 
-        # If the source location of the method is "(eval)", err on the side of caution and include the method.
-        return true if source_file == "(eval)"
+        # Look up the first entry that matches a file in the gem.
+        found = definitions.find { |file, _line| @gem.contains_path?(file) }
 
-        @gem.contains_path?(source_file)
+        unless found
+          # If the source location of the method is "(eval)", err on the side of caution and include the method.
+          found = definitions.find { |file, _line| file == "(eval)" }
+          # However, we can just return true to signal that the method should be included.
+          # We can't provide a source location for it, but we want it to be included in the gem RBI.
+          return true if found
+        end
+
+        # If we searched but couldn't find a source location in the gem, return false to signal that.
+        return false unless found
+
+        found
       end
 
       # Helpers
