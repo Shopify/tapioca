@@ -14,6 +14,10 @@ module Tapioca
           #: (Symbol method_name, Module owner, Array[Thread::Backtrace::Location] locations) -> void
           def register(method_name, owner, locations)
             return unless enabled?
+            # If Sorbet runtime is redefining a method, it sets this to true.
+            # In those cases, we should skip the registration, as the method's original
+            # definition should already be registered.
+            return if T::Private::DeclState.current.skip_on_method_added
 
             loc = Reflection.resolve_loc(locations)
             return unless loc

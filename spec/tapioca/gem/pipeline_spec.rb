@@ -3292,10 +3292,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :quuz, ::Integer, default: T.unsafe(nil)
           prop :fuzz, T.proc.returns(::String), default: T.unsafe(nil)
           prop :buzz, T.proc.void, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
 
         class Baz
@@ -3836,10 +3832,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           prop :l, T::Array[::Foo], default: T.unsafe(nil)
           prop :m, T::Hash[::Foo, ::Foo], default: T.unsafe(nil)
           prop :n, ::Foo, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
       RBI
 
@@ -4501,6 +4493,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { void }
           def bar; end
 
+          # source://the-default-gem//lib/bar.rb#14
           def foo1; end
 
           # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#15
@@ -4544,12 +4537,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class NewClass; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
-        class Quux < ::T::Struct
-          class << self
-            # source://the-default-gem//lib/foo.rb#16
-            def inherited(s); end
-          end
-        end
+        class Quux < ::T::Struct; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#19
         class String
