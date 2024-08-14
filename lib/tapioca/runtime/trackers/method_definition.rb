@@ -19,6 +19,10 @@ module Tapioca
           sig { params(method: T.any(Method, UnboundMethod), locations: T::Array[Thread::Backtrace::Location]).void }
           def register(method, locations)
             return unless enabled?
+            # If Sorbet runtime is redefining a method, it sets this to true.
+            # In those cases, we should skip the registration, as the method's original
+            # definition should already be registered.
+            return if T::Private::DeclState.current.skip_on_method_added
 
             loc = Reflection.resolve_loc(locations)
             return unless loc
