@@ -8,22 +8,34 @@ module Tapioca
         extend Tracker
         extend T::Sig
 
-        @method_definitions = T.let({}, T::Hash[UnboundMethod, [String, Integer]])
+        @method_definitions = T.let(
+          {}.compare_by_identity,
+          T::Hash[Module, T::Hash[Symbol, T.nilable([String, Integer])]],
+        )
 
         class << self
           extend T::Sig
 
-          sig { params(method: UnboundMethod, locations: T::Array[Thread::Backtrace::Location]).void }
+          sig { params(method: T.any(Method, UnboundMethod), locations: T::Array[Thread::Backtrace::Location]).void }
           def register(method, locations)
             return unless enabled?
 
             loc = Reflection.resolve_loc(locations)
-            @method_definitions[method] = loc if loc
+            return unless loc
+
+            methods_for_owner(method.owner).store(method.name, loc)
           end
 
-          sig { params(method: UnboundMethod).returns(T.nilable([String, Integer])) }
+          sig { params(method: T.any(Method, UnboundMethod)).returns(T.nilable([String, Integer])) }
           def method_definition_for(method)
-            @method_definitions[method] || method.source_location
+            methods_for_owner(method.owner).fetch(method.name, method.source_location)
+          end
+
+          private
+
+          sig { params(owner: Module).returns(T::Hash[Symbol, T.nilable([String, Integer])]) }
+          def methods_for_owner(owner)
+            @method_definitions[owner] ||= {}
           end
         end
       end
