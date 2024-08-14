@@ -25,6 +25,8 @@ module Tapioca
       sig { returns(T::Hash[String, T.untyped]) }
       attr_reader :options
 
+      @@requested_constants = T.let([], T::Array[Module]) # rubocop:disable Style/ClassVars
+
       class << self
         extend T::Sig
 
@@ -44,12 +46,39 @@ module Tapioca
           )
         end
 
+        sig { params(constants: T::Array[Module]).void }
+        def requested_constants=(constants)
+          @@requested_constants = constants # rubocop:disable Style/ClassVars
+        end
+
         private
+
+        sig do
+          type_parameters(:U)
+            .params(klass: T.all(T::Class[T.anything], T.type_parameter(:U)))
+            .returns(T::Array[T.type_parameter(:U)])
+        end
+        def descendants_of(klass)
+          if @@requested_constants.any?
+            T.cast(
+              @@requested_constants.select do |k|
+                k < klass && !k.singleton_class?
+              end,
+              T::Array[T.type_parameter(:U)],
+            )
+          else
+            super
+          end
+        end
 
         sig { returns(T::Enumerable[T::Class[T.anything]]) }
         def all_classes
           @all_classes ||= T.let(
-            ObjectSpace.each_object(Class),
+            if @@requested_constants.any?
+              @@requested_constants.grep(Class)
+            else
+              ObjectSpace.each_object(Class)
+            end,
             T.nilable(T::Enumerable[T::Class[T.anything]]),
           )
         end
@@ -57,7 +86,11 @@ module Tapioca
         sig { returns(T::Enumerable[Module]) }
         def all_modules
           @all_modules ||= T.let(
-            ObjectSpace.each_object(Module),
+            if @@requested_constants.any?
+              @@requested_constants.select { |k| k.is_a?(Module) }
+            else
+              ObjectSpace.each_object(Module)
+            end,
             T.nilable(T::Enumerable[Module]),
           )
         end
