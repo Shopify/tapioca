@@ -33,8 +33,19 @@ end
 
 class Module
   prepend(Module.new do
+    def singleton_method_added(method_name)
+      Tapioca::Runtime::Trackers::MethodDefinition.register(
+        Tapioca::Runtime::Reflection.method_of(self, method_name),
+        caller_locations,
+      )
+      super
+    end
+
     def method_added(method_name)
-      Tapioca::Runtime::Trackers::MethodDefinition.register(instance_method(method_name), caller_locations)
+      Tapioca::Runtime::Trackers::MethodDefinition.register(
+        instance_method(method_name),
+        caller_locations,
+      )
       super
     end
   end)
