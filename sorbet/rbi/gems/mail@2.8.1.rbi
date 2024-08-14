@@ -821,23 +821,41 @@ Mail::CcField::NAME = T.let(T.unsafe(nil), String)
 # source://mail//lib/mail/check_delivery_params.rb#5
 module Mail::CheckDeliveryParams
   class << self
-    # source://mail//lib/mail/check_delivery_params.rb#10
+    # source://mail//lib/mail/check_delivery_params.rb#16
     def _deprecated_check(mail); end
 
-    # source://mail//lib/mail/check_delivery_params.rb#32
+    # source://mail//lib/mail/check_delivery_params.rb#36
     def _deprecated_check_addr(addr_name, addr); end
 
-    # source://mail//lib/mail/check_delivery_params.rb#18
+    # source://mail//lib/mail/check_delivery_params.rb#22
     def _deprecated_check_from(addr); end
 
-    # source://mail//lib/mail/check_delivery_params.rb#53
+    # source://mail//lib/mail/check_delivery_params.rb#62
     def _deprecated_check_message(message); end
 
-    # source://mail//lib/mail/check_delivery_params.rb#24
+    # source://mail//lib/mail/check_delivery_params.rb#30
     def _deprecated_check_to(addrs); end
 
-    # source://mail//lib/mail/check_delivery_params.rb#38
+    # source://mail//lib/mail/check_delivery_params.rb#51
     def _deprecated_validate_smtp_addr(addr); end
+
+    # source://mail//lib/mail/check_delivery_params.rb#16
+    def check(*args, **_arg1, &block); end
+
+    # source://mail//lib/mail/check_delivery_params.rb#36
+    def check_addr(*args, **_arg1, &block); end
+
+    # source://mail//lib/mail/check_delivery_params.rb#22
+    def check_from(*args, **_arg1, &block); end
+
+    # source://mail//lib/mail/check_delivery_params.rb#62
+    def check_message(*args, **_arg1, &block); end
+
+    # source://mail//lib/mail/check_delivery_params.rb#30
+    def check_to(*args, **_arg1, &block); end
+
+    # source://mail//lib/mail/check_delivery_params.rb#51
+    def validate_smtp_addr(*args, **_arg1, &block); end
   end
 end
 
@@ -1158,7 +1176,10 @@ class Mail::Configuration
   class << self
     private
 
+    # source://mail//lib/mail/configuration.rb#16
     def allocate; end
+
+    # source://mail//lib/mail/configuration.rb#16
     def new(*_arg0); end
   end
 end
@@ -1511,7 +1532,7 @@ class Mail::ContentTypeField < ::Mail::NamedStructuredField
   # source://mail//lib/mail/fields/content_type_field.rb#47
   def attempt_to_clean; end
 
-  # source://mail//lib/mail/fields/content_type_field.rb#63
+  # source://mail//lib/mail/fields/content_type_field.rb#66
   def content_type; end
 
   # source://mail//lib/mail/fields/content_type_field.rb#101
@@ -2310,7 +2331,7 @@ class Mail::Field::SyntaxError < ::Mail::Field::FieldError; end
 #
 # source://mail//lib/mail/field_list.rb#8
 class Mail::FieldList < ::Array
-  # source://mail//lib/mail/field_list.rb#22
+  # source://mail//lib/mail/field_list.rb#29
   def <<(field); end
 
   # source://mail//lib/mail/field_list.rb#22
@@ -2796,7 +2817,7 @@ class Mail::IndifferentHash < ::Hash
   #
   # @return [Boolean]
   #
-  # source://mail//lib/mail/indifferent_hash.rb#71
+  # source://mail//lib/mail/indifferent_hash.rb#76
   def has_key?(key); end
 
   # Checks the hash for a key matching the argument passed in:
@@ -2808,7 +2829,7 @@ class Mail::IndifferentHash < ::Hash
   #
   # @return [Boolean]
   #
-  # source://mail//lib/mail/indifferent_hash.rb#71
+  # source://mail//lib/mail/indifferent_hash.rb#75
   def include?(key); end
 
   # Checks the hash for a key matching the argument passed in:
@@ -2832,7 +2853,7 @@ class Mail::IndifferentHash < ::Hash
   #
   # @return [Boolean]
   #
-  # source://mail//lib/mail/indifferent_hash.rb#71
+  # source://mail//lib/mail/indifferent_hash.rb#77
   def member?(key); end
 
   # Merges the instantized and the specified hashes together, giving precedence to the values from the second hash
@@ -2851,7 +2872,7 @@ class Mail::IndifferentHash < ::Hash
   #
   #   hash_1.update(hash_2) # => {"key"=>"New Value!"}
   #
-  # source://mail//lib/mail/indifferent_hash.rb#57
+  # source://mail//lib/mail/indifferent_hash.rb#62
   def merge!(other_hash); end
 
   def regular_update(*_arg0); end
@@ -2871,7 +2892,7 @@ class Mail::IndifferentHash < ::Hash
   #   hash = HashWithIndifferentAccess.new
   #   hash[:key] = "value"
   #
-  # source://mail//lib/mail/indifferent_hash.rb#41
+  # source://mail//lib/mail/indifferent_hash.rb#45
   def store(key, value); end
 
   # source://mail//lib/mail/indifferent_hash.rb#122
@@ -5202,7 +5223,7 @@ class Mail::Multibyte::Chars
   # Example:
   #   Mail::Multibyte.mb_chars('こんにちは').slice(2..3).to_s # => "にち"
   #
-  # source://mail//lib/mail/multibyte/chars.rb#148
+  # source://mail//lib/mail/multibyte/chars.rb#169
   def [](*args); end
 
   # Like <tt>String#[]=</tt>, except instead of byte offsets you specify character offsets.
@@ -5359,7 +5380,7 @@ class Mail::Multibyte::Chars
   #   Mail::Multibyte.mb_chars("ÉL QUE SE ENTERÓ").titleize    # => "Él Que Se Enteró"
   #   Mail::Multibyte.mb_chars("日本語").titleize                 # => "日本語"
   #
-  # source://mail//lib/mail/multibyte/chars.rb#210
+  # source://mail//lib/mail/multibyte/chars.rb#213
   def titlecase; end
 
   # Capitalizes the first letter of every word, when possible.
@@ -5373,12 +5394,12 @@ class Mail::Multibyte::Chars
 
   # Returns the value of attribute wrapped_string.
   #
-  # source://mail//lib/mail/multibyte/chars.rb#37
+  # source://mail//lib/mail/multibyte/chars.rb#38
   def to_s; end
 
   # Returns the value of attribute wrapped_string.
   #
-  # source://mail//lib/mail/multibyte/chars.rb#37
+  # source://mail//lib/mail/multibyte/chars.rb#39
   def to_str; end
 
   # Convert characters in the string to uppercase.
@@ -5685,31 +5706,31 @@ class Mail::Multibyte::Unicode::UnicodeDatabase
   # source://mail//lib/mail/multibyte/unicode.rb#335
   def initialize; end
 
-  # source://mail//lib/mail/multibyte/unicode.rb#346
+  # source://mail//lib/mail/multibyte/unicode.rb#345
   def boundary; end
 
   # source://mail//lib/mail/multibyte/unicode.rb#333
   def boundary=(_arg0); end
 
-  # source://mail//lib/mail/multibyte/unicode.rb#346
+  # source://mail//lib/mail/multibyte/unicode.rb#345
   def codepoints; end
 
   # source://mail//lib/mail/multibyte/unicode.rb#333
   def codepoints=(_arg0); end
 
-  # source://mail//lib/mail/multibyte/unicode.rb#346
+  # source://mail//lib/mail/multibyte/unicode.rb#345
   def composition_exclusion; end
 
   # source://mail//lib/mail/multibyte/unicode.rb#333
   def composition_exclusion=(_arg0); end
 
-  # source://mail//lib/mail/multibyte/unicode.rb#346
+  # source://mail//lib/mail/multibyte/unicode.rb#345
   def composition_map; end
 
   # source://mail//lib/mail/multibyte/unicode.rb#333
   def composition_map=(_arg0); end
 
-  # source://mail//lib/mail/multibyte/unicode.rb#346
+  # source://mail//lib/mail/multibyte/unicode.rb#345
   def cp1252; end
 
   # source://mail//lib/mail/multibyte/unicode.rb#333
@@ -5981,46 +6002,106 @@ end
 
 # source://mail//lib/mail/parsers/address_lists_parser.rb#13
 class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def addresses; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def addresses=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def group_names; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#13
   def group_names=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#13
     def new(*_arg0); end
   end
 end
 
 # source://mail//lib/mail/parsers/address_lists_parser.rb#14
 class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def comments; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def comments=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def display_name; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def display_name=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def domain; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def domain=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def error; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def group; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def group=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def local; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def local=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def obs_domain_list; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def obs_domain_list=(_); end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def raw; end
+
+  # source://mail//lib/mail/parsers/address_lists_parser.rb#14
   def raw=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#14
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#14
     def inspect; end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#14
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#14
     def members; end
+
+    # source://mail//lib/mail/parsers/address_lists_parser.rb#14
     def new(*_arg0); end
   end
 end
@@ -6111,18 +6192,38 @@ end
 
 # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
 class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Struct
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def disposition_type; end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def disposition_type=(_); end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def parameters; end
+
+  # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
   def parameters=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/content_disposition_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6213,16 +6314,32 @@ end
 
 # source://mail//lib/mail/parsers/content_location_parser.rb#13
 class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
+  # source://mail//lib/mail/parsers/content_location_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/content_location_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/content_location_parser.rb#13
   def location; end
+
+  # source://mail//lib/mail/parsers/content_location_parser.rb#13
   def location=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/content_location_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/content_location_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/content_location_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/content_location_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/content_location_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6313,16 +6430,32 @@ end
 
 # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
 class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruct < ::Struct
+  # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
   def encoding; end
+
+  # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
   def encoding=(_); end
+
+  # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
   def error=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/content_transfer_encoding_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6413,20 +6546,44 @@ end
 
 # source://mail//lib/mail/parsers/content_type_parser.rb#13
 class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def main_type; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def main_type=(_); end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def parameters; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def parameters=(_); end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def sub_type; end
+
+  # source://mail//lib/mail/parsers/content_type_parser.rb#13
   def sub_type=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/content_type_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/content_type_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/content_type_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/content_type_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/content_type_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6517,18 +6674,38 @@ end
 
 # source://mail//lib/mail/parsers/date_time_parser.rb#13
 class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def date_string; end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def date_string=(_); end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def time_string; end
+
+  # source://mail//lib/mail/parsers/date_time_parser.rb#13
   def time_string=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/date_time_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/date_time_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/date_time_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/date_time_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/date_time_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6619,18 +6796,38 @@ end
 
 # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
 class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def address; end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def address=(_); end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def ctime_date; end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def ctime_date=(_); end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
   def error=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/envelope_from_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6721,16 +6918,32 @@ end
 
 # source://mail//lib/mail/parsers/message_ids_parser.rb#13
 class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
+  # source://mail//lib/mail/parsers/message_ids_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/message_ids_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/message_ids_parser.rb#13
   def message_ids; end
+
+  # source://mail//lib/mail/parsers/message_ids_parser.rb#13
   def message_ids=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/message_ids_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/message_ids_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/message_ids_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/message_ids_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/message_ids_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6821,18 +7034,38 @@ end
 
 # source://mail//lib/mail/parsers/mime_version_parser.rb#13
 class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def major; end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def major=(_); end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def minor; end
+
+  # source://mail//lib/mail/parsers/mime_version_parser.rb#13
   def minor=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/mime_version_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/mime_version_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/mime_version_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/mime_version_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/mime_version_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -6923,16 +7156,32 @@ end
 
 # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
 class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
+  # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
   def phrases; end
+
+  # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
   def phrases=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/phrase_lists_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -7023,20 +7272,44 @@ end
 
 # source://mail//lib/mail/parsers/received_parser.rb#13
 class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def date; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def date=(_); end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def error; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def error=(_); end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def info; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def info=(_); end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def time; end
+
+  # source://mail//lib/mail/parsers/received_parser.rb#13
   def time=(_); end
 
   class << self
+    # source://mail//lib/mail/parsers/received_parser.rb#13
     def [](*_arg0); end
+
+    # source://mail//lib/mail/parsers/received_parser.rb#13
     def inspect; end
+
+    # source://mail//lib/mail/parsers/received_parser.rb#13
     def keyword_init?; end
+
+    # source://mail//lib/mail/parsers/received_parser.rb#13
     def members; end
+
+    # source://mail//lib/mail/parsers/received_parser.rb#13
     def new(*_arg0); end
   end
 end
@@ -7159,7 +7432,7 @@ class Mail::PartsList
   # source://mail//lib/mail/parts_list.rb#47
   def inspect_structure(parent_id = T.unsafe(nil)); end
 
-  # source://mail//lib/mail/parts_list.rb#28
+  # source://mail//lib/mail/parts_list.rb#37
   def map; end
 
   # @raise [NoMethodError]

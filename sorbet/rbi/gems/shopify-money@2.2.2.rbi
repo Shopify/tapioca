@@ -112,16 +112,28 @@ class Money
   # source://shopify-money//lib/money/money.rb#296
   def fraction(rate); end
 
+  # source://shopify-money//lib/money/money.rb#11
+  def hash(*args, **_arg1, &block); end
+
   # source://shopify-money//lib/money/money.rb#137
   def init_with(coder); end
 
   # source://shopify-money//lib/money/money.rb#198
   def inspect; end
 
+  # source://shopify-money//lib/money/money.rb#11
+  def negative?(*args, **_arg1, &block); end
+
   # @return [Boolean]
   #
   # source://shopify-money//lib/money/money.rb#158
   def no_currency?; end
+
+  # source://shopify-money//lib/money/money.rb#11
+  def nonzero?(*args, **_arg1, &block); end
+
+  # source://shopify-money//lib/money/money.rb#11
+  def positive?(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#290
   def round(ndigits = T.unsafe(nil)); end
@@ -142,11 +154,17 @@ class Money
   # source://shopify-money//lib/money/money.rb#233
   def to_d; end
 
-  # source://shopify-money//lib/money/money.rb#237
+  # source://shopify-money//lib/money/money.rb#11
+  def to_f(*args, **_arg1, &block); end
+
+  # source://shopify-money//lib/money/money.rb#260
   def to_formatted_s(style = T.unsafe(nil)); end
 
   # source://shopify-money//lib/money/money.rb#237
   def to_fs(style = T.unsafe(nil)); end
+
+  # source://shopify-money//lib/money/money.rb#11
+  def to_i(*args, **_arg1, &block); end
 
   # source://shopify-money//lib/money/money.rb#262
   def to_json(options = T.unsafe(nil)); end
@@ -154,13 +172,16 @@ class Money
   # source://shopify-money//lib/money/money.rb#218
   def to_money(new_currency = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#237
+  # source://shopify-money//lib/money/money.rb#259
   def to_s(style = T.unsafe(nil)); end
 
   # Returns the value of attribute value.
   #
   # source://shopify-money//lib/money/money.rb#10
   def value; end
+
+  # source://shopify-money//lib/money/money.rb#11
+  def zero?(*args, **_arg1, &block); end
 
   private
 
@@ -200,10 +221,16 @@ class Money
     # source://shopify-money//lib/money/money.rb#88
     def current_currency=(currency); end
 
+    # source://shopify-money//lib/money/money.rb#40
+    def default_currency(*args, **_arg1, &block); end
+
+    # source://shopify-money//lib/money/money.rb#40
+    def default_currency=(*args, **_arg1, &block); end
+
     # source://shopify-money//lib/money/deprecations.rb#12
     def deprecate(message); end
 
-    # source://shopify-money//lib/money/money.rb#47
+    # source://shopify-money//lib/money/money.rb#60
     def from_amount(value = T.unsafe(nil), currency = T.unsafe(nil)); end
 
     # source://shopify-money//lib/money/money.rb#62
@@ -354,7 +381,7 @@ class Money::Currency
 
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/currency.rb#49
+  # source://shopify-money//lib/money/currency.rb#61
   def ==(other); end
 
   # @return [Boolean]
@@ -422,7 +449,7 @@ class Money::Currency
 
   # Returns the value of attribute iso_code.
   #
-  # source://shopify-money//lib/money/currency.rb#30
+  # source://shopify-money//lib/money/currency.rb#62
   def to_s; end
 
   class << self
@@ -434,7 +461,7 @@ class Money::Currency
 
     # @raise [UnknownCurrency]
     #
-    # source://shopify-money//lib/money/currency.rb#12
+    # source://shopify-money//lib/money/currency.rb#17
     def find!(currency_iso); end
 
     # @raise [UnknownCurrency]
@@ -536,7 +563,7 @@ class Money::NullCurrency
 
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/null_currency.rb#57
+  # source://shopify-money//lib/money/null_currency.rb#65
   def ==(other); end
 
   # @return [Boolean]
@@ -803,6 +830,7 @@ class Money::Splitter
   # source://shopify-money//lib/money/splitter.rb#16
   def split; end
 
+  # source://shopify-money//lib/money/splitter.rb#31
   def to_ary(*_arg0); end
 
   protected
@@ -918,7 +946,7 @@ class RuboCop::Cop::Money::MissingCurrency < ::RuboCop::Cop::Cop
   # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#22
   def money_new(param0 = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#34
+  # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#46
   def on_csend(node); end
 
   # source://shopify-money//lib/rubocop/cop/money/missing_currency.rb#34

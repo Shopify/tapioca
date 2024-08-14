@@ -81,7 +81,7 @@ class ActiveRecord::TypedStore::DSL
   # source://activerecord-typedstore//lib/active_record/typed_store/dsl.rb#65
   def date(name, **options); end
 
-  # source://activerecord-typedstore//lib/active_record/typed_store/dsl.rb#65
+  # source://activerecord-typedstore//lib/active_record/typed_store/dsl.rb#69
   def date_time(name, **options); end
 
   # source://activerecord-typedstore//lib/active_record/typed_store/dsl.rb#65
@@ -273,10 +273,10 @@ class ActiveRecord::TypedStore::TypedHash < ::ActiveSupport::HashWithIndifferent
   # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#21
   def slice(*_arg0, **_arg1, &_arg2); end
 
-  # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#29
+  # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#32
   def store(key, value); end
 
-  # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#34
+  # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#43
   def update(other_hash); end
 
   # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#20

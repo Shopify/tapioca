@@ -67,7 +67,7 @@ module Timeout
     # Timeout</tt> into your classes so they have a #timeout method, as well as
     # a module method, so you can call it directly as Timeout.timeout().
     #
-    # source://timeout//timeout.rb#169
+    # source://timeout//timeout.rb#198
     def timeout(sec, klass = T.unsafe(nil), message = T.unsafe(nil), &block); end
 
     private

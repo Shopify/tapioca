@@ -775,7 +775,7 @@ class JsonApiClient::Paginating::NestedParamPaginator
   # source://json_api_client//lib/json_api_client/paginating/nested_param_paginator.rb#75
   def last; end
 
-  # source://json_api_client//lib/json_api_client/paginating/nested_param_paginator.rb#99
+  # source://json_api_client//lib/json_api_client/paginating/nested_param_paginator.rb#129
   def limit_value; end
 
   # Returns the value of attribute links.
@@ -897,7 +897,7 @@ class JsonApiClient::Paginating::Paginator
   # source://json_api_client//lib/json_api_client/paginating/paginator.rb#30
   def last; end
 
-  # source://json_api_client//lib/json_api_client/paginating/paginator.rb#56
+  # source://json_api_client//lib/json_api_client/paginating/paginator.rb#78
   def limit_value; end
 
   # Returns the value of attribute links.
@@ -973,7 +973,7 @@ class JsonApiClient::Paginating::Paginator
   def params_for_uri(uri); end
 
   class << self
-    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
+    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#7
     def page_param; end
 
     # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
@@ -982,7 +982,7 @@ class JsonApiClient::Paginating::Paginator
     # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
     def page_param?; end
 
-    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
+    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#8
     def per_page_param; end
 
     # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
@@ -1073,7 +1073,7 @@ class JsonApiClient::Query::Builder
   # source://json_api_client//lib/json_api_client/query/builder.rb#119
   def ==(other); end
 
-  # source://json_api_client//lib/json_api_client/query/builder.rb#88
+  # source://json_api_client//lib/json_api_client/query/builder.rb#91
   def all; end
 
   # source://json_api_client//lib/json_api_client/query/builder.rb#69
@@ -1082,7 +1082,7 @@ class JsonApiClient::Query::Builder
   # source://json_api_client//lib/json_api_client/query/builder.rb#73
   def create(attrs = T.unsafe(nil)); end
 
-  # source://json_api_client//lib/json_api_client/query/builder.rb#119
+  # source://json_api_client//lib/json_api_client/query/builder.rb#124
   def eql?(other); end
 
   # source://json_api_client//lib/json_api_client/query/builder.rb#93
@@ -1191,6 +1191,9 @@ class JsonApiClient::Query::Requestor
   #
   # source://json_api_client//lib/json_api_client/query/requestor.rb#7
   def initialize(klass); end
+
+  # source://json_api_client//lib/json_api_client/query/requestor.rb#56
+  def connection(*args, **_arg1, &block); end
 
   # expects a record
   #
@@ -1379,23 +1382,41 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#369
   def initialize(params = T.unsafe(nil)); end
 
-  # source://json_api_client//lib/json_api_client/helpers/associatable.rb#10
+  # source://json_api_client//lib/json_api_client/resource.rb#15
   def __belongs_to_params; end
 
-  # source://json_api_client//lib/json_api_client/helpers/associatable.rb#10
+  # source://json_api_client//lib/json_api_client/resource.rb#15
   def __belongs_to_params=(_arg0); end
 
-  # source://json_api_client//lib/json_api_client/helpers/associatable.rb#9
+  # source://json_api_client//lib/json_api_client/resource.rb#15
   def __cached_associations; end
 
-  # source://json_api_client//lib/json_api_client/helpers/associatable.rb#9
+  # source://json_api_client//lib/json_api_client/resource.rb#15
   def __cached_associations=(_arg0); end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def __callbacks; end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def __callbacks?; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#44
   def _immutable; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#44
   def _immutable?; end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def _run_validate_callbacks(&block); end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def _validate_callbacks; end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def _validators; end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def _validators?; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#41
   def add_defaults_to_changes; end
@@ -1473,12 +1494,18 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#416
   def mark_as_persisted!; end
 
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def model_name(&block); end
+
   # Returns true if this is a new record (never persisted to the database)
   #
   # @return [Boolean]
   #
   # source://json_api_client//lib/json_api_client/resource.rb#442
   def new_record?; end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#10
+  def param_delimiter=(_arg0); end
 
   # source://json_api_client//lib/json_api_client/resource.rb#568
   def path_attributes; end
@@ -1569,6 +1596,9 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#481
   def valid?(context = T.unsafe(nil)); end
 
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def validation_context; end
+
   protected
 
   # source://json_api_client//lib/json_api_client/resource.rb#642
@@ -1625,7 +1655,19 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#622
   def respond_to_missing?(symbol, include_all = T.unsafe(nil)); end
 
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def validation_context=(_arg0); end
+
   class << self
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def __callbacks; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def __callbacks=(value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def __callbacks?; end
+
     # source://json_api_client//lib/json_api_client/resource.rb#44
     def _immutable; end
 
@@ -1635,7 +1677,22 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#44
     def _immutable?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#41
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def _validate_callbacks; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def _validate_callbacks=(value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def _validators; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def _validators=(value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def _validators?; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#60
     def add_defaults_to_changes; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#41
@@ -1644,13 +1701,16 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#41
     def add_defaults_to_changes?; end
 
-    # source://json_api_client//lib/json_api_client/helpers/associatable.rb#7
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def all(*args, **_arg1, &block); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#15
     def associations; end
 
-    # source://json_api_client//lib/json_api_client/helpers/associatable.rb#7
+    # source://json_api_client//lib/json_api_client/resource.rb#15
     def associations=(value); end
 
-    # source://json_api_client//lib/json_api_client/helpers/associatable.rb#7
+    # source://json_api_client//lib/json_api_client/resource.rb#15
     def associations?; end
 
     # Return/build a connection object
@@ -1660,7 +1720,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#137
     def connection(rebuild = T.unsafe(nil), &block); end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#51
     def connection_class; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1678,7 +1738,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def connection_object?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#52
     def connection_options; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1706,7 +1766,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#197
     def custom_headers; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#62
     def custom_type_to_class; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1723,6 +1783,12 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#214
     def default_attributes; end
 
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def find(*args, **_arg1, &block); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def first(*args, **_arg1, &block); end
+
     # Indicates whether this resource is mutable or immutable;
     # by default, all resources are mutable.
     #
@@ -1731,12 +1797,15 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#106
     def immutable(flag = T.unsafe(nil)); end
 
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def includes(*args, **_arg1, &block); end
+
     # @private
     #
     # source://json_api_client//lib/json_api_client/resource.rb#110
     def inherited(subclass); end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#66
     def json_key_format; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1745,7 +1814,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def json_key_format?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#59
     def keep_request_params; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1757,7 +1826,10 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#225
     def key_formatter; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def last(*args, **_arg1, &block); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#54
     def linker; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1773,7 +1845,16 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#126
     def load(params); end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def order(*args, **_arg1, &block); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def page(*args, **_arg1, &block); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def paginate(*args, **_arg1, &block); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#50
     def paginator; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1782,7 +1863,16 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def paginator?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#10
+    def param_delimiter; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#10
+    def param_delimiter=(value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#10
+    def param_delimiter?; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#49
     def parser; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1804,7 +1894,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#146
     def prefix_params; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#48
     def primary_key; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1813,7 +1903,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def primary_key?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#53
     def query_builder; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1822,7 +1912,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def query_builder?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#63
     def raise_on_blank_find_param; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1831,7 +1921,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def raise_on_blank_find_param?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#56
     def read_only_attributes; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1840,7 +1930,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def read_only_attributes?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#55
     def relationship_linker; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1849,7 +1939,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def relationship_linker?; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#58
     def request_params_class; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1865,7 +1955,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#206
     def requestor; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#57
     def requestor_class; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1892,7 +1982,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#119
     def resource_path; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#69
     def route_format; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1911,7 +2001,7 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#221
     def schema; end
 
-    # source://json_api_client//lib/json_api_client/resource.rb#21
+    # source://json_api_client//lib/json_api_client/resource.rb#61
     def search_included_in_result_set; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
@@ -1919,6 +2009,9 @@ class JsonApiClient::Resource
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def search_included_in_result_set?; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def select(*args, **_arg1, &block); end
 
     # source://json_api_client//lib/json_api_client/resource.rb#21
     def site; end
@@ -1944,6 +2037,9 @@ class JsonApiClient::Resource
     # source://json_api_client//lib/json_api_client/resource.rb#98
     def type; end
 
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def where(*args, **_arg1, &block); end
+
     # Within the given block, add these headers to all requests made by
     # the resource class
     #
@@ -1952,6 +2048,9 @@ class JsonApiClient::Resource
     #
     # source://json_api_client//lib/json_api_client/resource.rb#186
     def with_headers(headers); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#73
+    def with_params(*args, **_arg1, &block); end
 
     protected
 
@@ -2034,6 +2133,9 @@ end
 class JsonApiClient::ResultSet < ::Array
   extend ::Forwardable
 
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def current_page(*args, **_arg1, &block); end
+
   # Returns the value of attribute errors.
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
@@ -2075,6 +2177,9 @@ class JsonApiClient::ResultSet < ::Array
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def included=(_arg0); end
 
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def limit_value(*args, **_arg1, &block); end
+
   # Returns the value of attribute links.
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
@@ -2099,6 +2204,15 @@ class JsonApiClient::ResultSet < ::Array
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def meta=(_arg0); end
 
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def next_page(*args, **_arg1, &block); end
+
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def offset(*args, **_arg1, &block); end
+
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def out_of_bounds?(*args, **_arg1, &block); end
+
   # Returns the value of attribute pages.
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
@@ -2110,6 +2224,12 @@ class JsonApiClient::ResultSet < ::Array
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def pages=(_arg0); end
+
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def per_page(*args, **_arg1, &block); end
+
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def previous_page(*args, **_arg1, &block); end
 
   # Returns the value of attribute record_class.
   #
@@ -2134,6 +2254,15 @@ class JsonApiClient::ResultSet < ::Array
   #
   # source://json_api_client//lib/json_api_client/result_set.rb#7
   def relationships=(_arg0); end
+
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def total_count(*args, **_arg1, &block); end
+
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def total_entries(*args, **_arg1, &block); end
+
+  # source://json_api_client//lib/json_api_client/result_set.rb#18
+  def total_pages(*args, **_arg1, &block); end
 
   # Returns the value of attribute uri.
   #
@@ -2171,7 +2300,7 @@ class JsonApiClient::Schema
   # @param property_name [String] the name of the property
   # @return [Property, nil] the property definition for property_name or nil
   #
-  # source://json_api_client//lib/json_api_client/schema.rb#142
+  # source://json_api_client//lib/json_api_client/schema.rb#146
   def [](property_name); end
 
   # Add a property to the schema
@@ -2185,7 +2314,7 @@ class JsonApiClient::Schema
   # source://json_api_client//lib/json_api_client/schema.rb#119
   def add(name, options); end
 
-  # source://json_api_client//lib/json_api_client/schema.rb#132
+  # source://json_api_client//lib/json_api_client/schema.rb#136
   def each(&block); end
 
   # source://json_api_client//lib/json_api_client/schema.rb#132
@@ -2203,7 +2332,7 @@ class JsonApiClient::Schema
   #
   # @return [Fixnum] the number of defined properties
   #
-  # source://json_api_client//lib/json_api_client/schema.rb#126
+  # source://json_api_client//lib/json_api_client/schema.rb#130
   def length; end
 
   # How many properties are defined
@@ -2227,41 +2356,62 @@ class JsonApiClient::Schema::Property < ::Struct
   # Returns the value of attribute default
   #
   # @return [Object] the current value of default
+  #
+  # source://json_api_client//lib/json_api_client/schema.rb#98
   def default; end
 
   # Sets the attribute default
   #
   # @param value [Object] the value to set the attribute default to.
   # @return [Object] the newly set value
+  #
+  # source://json_api_client//lib/json_api_client/schema.rb#98
   def default=(_); end
 
   # Returns the value of attribute name
   #
   # @return [Object] the current value of name
+  #
+  # source://json_api_client//lib/json_api_client/schema.rb#98
   def name; end
 
   # Sets the attribute name
   #
   # @param value [Object] the value to set the attribute name to.
   # @return [Object] the newly set value
+  #
+  # source://json_api_client//lib/json_api_client/schema.rb#98
   def name=(_); end
 
   # Returns the value of attribute type
   #
   # @return [Object] the current value of type
+  #
+  # source://json_api_client//lib/json_api_client/schema.rb#98
   def type; end
 
   # Sets the attribute type
   #
   # @param value [Object] the value to set the attribute type to.
   # @return [Object] the newly set value
+  #
+  # source://json_api_client//lib/json_api_client/schema.rb#98
   def type=(_); end
 
   class << self
+    # source://json_api_client//lib/json_api_client/schema.rb#98
     def [](*_arg0); end
+
+    # source://json_api_client//lib/json_api_client/schema.rb#98
     def inspect; end
+
+    # source://json_api_client//lib/json_api_client/schema.rb#98
     def keyword_init?; end
+
+    # source://json_api_client//lib/json_api_client/schema.rb#98
     def members; end
+
+    # source://json_api_client//lib/json_api_client/schema.rb#98
     def new(*_arg0); end
   end
 end

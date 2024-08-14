@@ -26,7 +26,7 @@ class GlobalID
   # source://globalid//lib/global_id/global_id.rb#42
   def deconstruct_keys(*_arg0, **_arg1, &_arg2); end
 
-  # source://globalid//lib/global_id/global_id.rb#63
+  # source://globalid//lib/global_id/global_id.rb#66
   def eql?(other); end
 
   # source://globalid//lib/global_id/global_id.rb#48
@@ -126,7 +126,7 @@ module GlobalID::Identification
   #   global_id.modal_id # => "1"
   #   global_id.to_param # => "Z2lkOi8vYm9yZGZvbGlvL1BlcnNvbi8x"
   #
-  # source://globalid//lib/global_id/identification.rb#37
+  # source://globalid//lib/global_id/identification.rb#40
   def to_gid(options = T.unsafe(nil)); end
 
   # Returns the Global ID parameter of the model.
@@ -206,7 +206,7 @@ module GlobalID::Identification
   #   GlobalID::Locator.locate_signed(signup_person_sgid.to_s, for: 'signup_form')
   #   => #<Person:0x007fae94bf6298 @id="1">
   #
-  # source://globalid//lib/global_id/identification.rb#107
+  # source://globalid//lib/global_id/identification.rb#110
   def to_sgid(options = T.unsafe(nil)); end
 
   # Returns the Signed Global ID parameter.
@@ -502,7 +502,7 @@ class SignedGlobalID < ::GlobalID
   # source://globalid//lib/global_id/signed_global_id.rb#57
   def purpose; end
 
-  # source://globalid//lib/global_id/signed_global_id.rb#66
+  # source://globalid//lib/global_id/signed_global_id.rb#69
   def to_param; end
 
   # source://globalid//lib/global_id/signed_global_id.rb#66

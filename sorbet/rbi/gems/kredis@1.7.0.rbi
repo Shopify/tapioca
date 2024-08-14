@@ -62,7 +62,7 @@ module Kredis::Attributes
   def kredis_key_for_attribute(name); end
 end
 
-# source://kredis//lib/kredis/attributes.rb#0
+# source://kredis//lib/kredis/attributes.rb#6
 module Kredis::Attributes::ClassMethods
   # source://kredis//lib/kredis/attributes.rb#83
   def kredis_boolean(name, key: T.unsafe(nil), default: T.unsafe(nil), config: T.unsafe(nil), after_change: T.unsafe(nil), expires_in: T.unsafe(nil)); end
@@ -184,7 +184,7 @@ Kredis::Connections::DEFAULT_REDIS_URL = T.let(T.unsafe(nil), String)
 module Kredis::DefaultValues
   extend ::ActiveSupport::Concern
 
-  # source://kredis//lib/kredis/default_values.rb#25
+  # source://kredis//lib/kredis/types/enum.rb#14
   def initialize(*_arg0, **_arg1, &_arg2); end
 end
 
@@ -416,22 +416,22 @@ Kredis::Types::CallbacksProxy::AFTER_CHANGE_OPERATIONS = T.let(T.unsafe(nil), Ha
 class Kredis::Types::Counter < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#6
   def decrby(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/counter.rb#17
   def decrement(by: T.unsafe(nil)); end
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/counter.rb#4
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/counter.rb#4
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#6
   def del(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#6
   def exists?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute expires_in.
@@ -446,31 +446,31 @@ class Kredis::Types::Counter < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/counter.rb#8
   def expires_in=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#6
   def get(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#6
   def incrby(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/counter.rb#10
   def increment(by: T.unsafe(nil)); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#6
   def multi(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/counter.rb#28
   def reset; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#6
   def set(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#4
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/counter.rb#24
   def value; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/counter.rb#4
   def watch(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -509,34 +509,34 @@ class Kredis::Types::Enum < ::Kredis::Types::Proxying
 
   # @return [Enum] a new instance of Enum
   #
-  # source://kredis//lib/kredis/default_values.rb#25
+  # source://kredis//lib/kredis/types/enum.rb#14
   def initialize(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/enum.rb#6
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/enum.rb#6
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/enum.rb#10
   def del(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/enum.rb#10
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/enum.rb#10
   def get(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/enum.rb#10
   def multi(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/enum.rb#29
   def reset; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/enum.rb#10
   def set(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/enum.rb#6
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/enum.rb#25
@@ -557,7 +557,7 @@ class Kredis::Types::Enum < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/enum.rb#12
   def values=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/enum.rb#6
   def watch(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -576,16 +576,16 @@ class Kredis::Types::Enum::InvalidDefault < ::StandardError; end
 class Kredis::Types::Flag < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/flag.rb#4
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/flag.rb#4
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/flag.rb#6
   def del(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/flag.rb#6
   def exists?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute expires_in.
@@ -611,13 +611,13 @@ class Kredis::Types::Flag < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/flag.rb#18
   def remove; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/flag.rb#6
   def set(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/flag.rb#4
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/flag.rb#4
   def watch(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -636,16 +636,16 @@ class Kredis::Types::Hash < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/hash.rb#16
   def []=(key, value); end
 
-  # source://kredis//lib/kredis/types/hash.rb#32
+  # source://kredis//lib/kredis/types/hash.rb#35
   def clear; end
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/hash.rb#6
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/hash.rb#6
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def del(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/hash.rb#28
@@ -654,28 +654,28 @@ class Kredis::Types::Hash < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/hash.rb#37
   def entries; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def hdel(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def hget(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def hgetall(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def hkeys(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def hmget(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def hset(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#8
   def hvals(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/hash.rb#42
@@ -684,7 +684,7 @@ class Kredis::Types::Hash < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/hash.rb#32
   def remove; end
 
-  # source://kredis//lib/kredis/types/hash.rb#37
+  # source://kredis//lib/kredis/types/hash.rb#40
   def to_h; end
 
   # Returns the value of attribute typed.
@@ -699,7 +699,7 @@ class Kredis::Types::Hash < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/hash.rb#10
   def typed=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#6
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/hash.rb#20
@@ -711,7 +711,7 @@ class Kredis::Types::Hash < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/hash.rb#24
   def values_at(*keys); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/hash.rb#6
   def watch(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -756,7 +756,7 @@ class Kredis::Types::Limiter::LimitExceeded < ::StandardError; end
 class Kredis::Types::List < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # source://kredis//lib/kredis/types/list.rb#23
+  # source://kredis//lib/kredis/types/list.rb#26
   def <<(*elements); end
 
   # source://kredis//lib/kredis/types/list.rb#23
@@ -765,34 +765,34 @@ class Kredis::Types::List < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/list.rb#28
   def clear; end
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/list.rb#4
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/list.rb#4
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#6
   def del(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/list.rb#10
   def elements; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#6
   def exists?(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/list.rb#32
   def last(n = T.unsafe(nil)); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#6
   def lpush(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#6
   def lrange(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#6
   def lrem(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#6
   def ltrim(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/list.rb#19
@@ -801,10 +801,10 @@ class Kredis::Types::List < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/list.rb#15
   def remove(*elements); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#6
   def rpush(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/list.rb#10
+  # source://kredis//lib/kredis/types/list.rb#13
   def to_a; end
 
   # Returns the value of attribute typed.
@@ -819,10 +819,10 @@ class Kredis::Types::List < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/list.rb#8
   def typed=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#4
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/list.rb#4
   def watch(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -835,25 +835,25 @@ end
 class Kredis::Types::OrderedSet < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # source://kredis//lib/kredis/types/ordered_set.rb#28
+  # source://kredis//lib/kredis/types/ordered_set.rb#31
   def <<(elements); end
 
   # source://kredis//lib/kredis/types/ordered_set.rb#28
   def append(elements); end
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/ordered_set.rb#4
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/ordered_set.rb#4
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def del(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/ordered_set.rb#11
   def elements; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def exists?(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
@@ -869,7 +869,7 @@ class Kredis::Types::OrderedSet < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/ordered_set.rb#33
   def limit=(limit); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def multi(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/ordered_set.rb#24
@@ -878,7 +878,7 @@ class Kredis::Types::OrderedSet < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/ordered_set.rb#16
   def remove(*elements); end
 
-  # source://kredis//lib/kredis/types/ordered_set.rb#11
+  # source://kredis//lib/kredis/types/ordered_set.rb#14
   def to_a; end
 
   # Returns the value of attribute typed.
@@ -893,28 +893,28 @@ class Kredis::Types::OrderedSet < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/ordered_set.rb#8
   def typed=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#4
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#4
   def watch(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def zadd(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def zcard(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def zrange(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def zrem(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def zremrangebyrank(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/ordered_set.rb#6
   def zscore(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -965,6 +965,12 @@ class Kredis::Types::Proxy
   # source://kredis//lib/kredis/types/proxy.rb#16
   def multi(*args, **kwargs, &block); end
 
+  # source://kredis//lib/kredis/types/proxy.rb#9
+  def pipeline; end
+
+  # source://kredis//lib/kredis/types/proxy.rb#9
+  def pipeline=(obj); end
+
   # source://kredis//lib/kredis/types/proxy.rb#31
   def unwatch; end
 
@@ -978,6 +984,14 @@ class Kredis::Types::Proxy
 
   # source://kredis//lib/kredis/types/proxy.rb#44
   def redis; end
+
+  class << self
+    # source://kredis//lib/kredis/types/proxy.rb#9
+    def pipeline; end
+
+    # source://kredis//lib/kredis/types/proxy.rb#9
+    def pipeline=(obj); end
+  end
 end
 
 # source://kredis//lib/kredis/types/proxy/failsafe.rb#3
@@ -1066,19 +1080,19 @@ class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/scalar.rb#32
   def clear; end
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/scalar.rb#4
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/scalar.rb#4
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#6
   def del(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#6
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#6
   def expire(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/scalar.rb#40
@@ -1087,7 +1101,7 @@ class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/scalar.rb#36
   def expire_in(seconds); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#6
   def expireat(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute expires_in.
@@ -1102,10 +1116,10 @@ class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/scalar.rb#8
   def expires_in=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#6
   def get(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#6
   def set(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/scalar.rb#24
@@ -1123,7 +1137,7 @@ class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/scalar.rb#8
   def typed=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#4
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/scalar.rb#14
@@ -1132,7 +1146,7 @@ class Kredis::Types::Scalar < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/scalar.rb#10
   def value=(value); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/scalar.rb#4
   def watch(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -1145,7 +1159,7 @@ end
 class Kredis::Types::Set < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # source://kredis//lib/kredis/types/set.rb#15
+  # source://kredis//lib/kredis/types/set.rb#18
   def <<(*members); end
 
   # source://kredis//lib/kredis/types/set.rb#15
@@ -1154,16 +1168,16 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/set.rb#43
   def clear; end
 
-  # source://kredis//lib/kredis/default_values.rb#11
+  # source://kredis//lib/kredis/types/set.rb#4
   def default; end
 
-  # source://kredis//lib/kredis/default_values.rb#7
+  # source://kredis//lib/kredis/types/set.rb#4
   def default=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def del(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def exists?(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
@@ -1174,7 +1188,7 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/set.rb#10
   def members; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def multi(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/set.rb#20
@@ -1183,37 +1197,37 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/set.rb#24
   def replace(*members); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def sadd(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/set.rb#47
   def sample(count = T.unsafe(nil)); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def scard(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def sismember(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/set.rb#35
   def size; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def smembers(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def spop(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def srandmember(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#6
   def srem(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/set.rb#39
   def take; end
 
-  # source://kredis//lib/kredis/types/set.rb#10
+  # source://kredis//lib/kredis/types/set.rb#13
   def to_a; end
 
   # Returns the value of attribute typed.
@@ -1228,10 +1242,10 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/set.rb#8
   def typed=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#4
   def unwatch(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/set.rb#4
   def watch(*_arg0, **_arg1, &_arg2); end
 
   private
@@ -1259,19 +1273,19 @@ class Kredis::Types::Slots < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/slots.rb#43
   def available?; end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/slots.rb#6
   def decr(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/slots.rb#6
   def del(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/slots.rb#6
   def exists?(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/slots.rb#6
   def get(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/slots.rb#6
   def incr(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/slots.rb#34
@@ -1294,13 +1308,13 @@ class Kredis::Types::Slots::NotAvailable < ::StandardError; end
 #
 # source://kredis//lib/kredis/types/unique_list.rb#4
 class Kredis::Types::UniqueList < ::Kredis::Types::List
-  # source://kredis//lib/kredis/types/unique_list.rb#20
+  # source://kredis//lib/kredis/types/unique_list.rb#30
   def <<(elements); end
 
   # source://kredis//lib/kredis/types/unique_list.rb#20
   def append(elements); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/unique_list.rb#5
   def exists?(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute limit.
@@ -1315,10 +1329,10 @@ class Kredis::Types::UniqueList < ::Kredis::Types::List
   # source://kredis//lib/kredis/types/unique_list.rb#7
   def limit=(_arg0); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/unique_list.rb#5
   def ltrim(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/proxying.rb#9
+  # source://kredis//lib/kredis/types/unique_list.rb#5
   def multi(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/unique_list.rb#9

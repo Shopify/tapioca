@@ -32,7 +32,7 @@ class Net::HTTP < ::Net::Protocol
   #
   # @return [Boolean]
   #
-  # source://net-http//net/http.rb#1413
+  # source://net-http//net/http.rb#1417
   def active?; end
 
   # Returns the string host name or host IP given as argument +address+ in ::new.
@@ -227,7 +227,7 @@ class Net::HTTP < ::Net::Protocol
   #
   #   #<Net::HTTPOK 200 OK readbody=false>
   #
-  # source://net-http//net/http.rb#2176
+  # source://net-http//net/http.rb#2234
   def get2(path, initheader = T.unsafe(nil), &block); end
 
   # Sends a HEAD request to the server;
@@ -256,7 +256,7 @@ class Net::HTTP < ::Net::Protocol
   #   http = Net::HTTP.new(hostname)
   #   http.head('/todos/1') # => #<Net::HTTPOK 200 OK readbody=true>
   #
-  # source://net-http//net/http.rb#2189
+  # source://net-http//net/http.rb#2235
   def head2(path, initheader = T.unsafe(nil), &block); end
 
   # Sets or returns whether to ignore end-of-file when reading a response body
@@ -582,7 +582,7 @@ class Net::HTTP < ::Net::Protocol
   #
   #   "{\n  \"xyzzy\": \"\",\n  \"id\": 201\n}"
   #
-  # source://net-http//net/http.rb#2216
+  # source://net-http//net/http.rb#2236
   def post2(path, data, initheader = T.unsafe(nil), &block); end
 
   # Sends a PROPFIND request to the server;
@@ -691,13 +691,13 @@ class Net::HTTP < ::Net::Protocol
   # Returns the address of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
-  # source://net-http//net/http.rb#1807
+  # source://net-http//net/http.rb#1847
   def proxyaddr; end
 
   # Returns the port number of the proxy server, if defined, +nil+ otherwise;
   # see {Proxy Server}[rdoc-ref:Net::HTTP@Proxy+Server].
   #
-  # source://net-http//net/http.rb#1817
+  # source://net-http//net/http.rb#1848
   def proxyport; end
 
   # Sends a PUT request to the server;
@@ -723,7 +723,7 @@ class Net::HTTP < ::Net::Protocol
   #   http.put('/todos/1', 'xyzzy')
   #   # => #<Net::HTTPOK 200 OK readbody=true>
   #
-  # source://net-http//net/http.rb#2230
+  # source://net-http//net/http.rb#2237
   def put2(path, data, initheader = T.unsafe(nil), &block); end
 
   # Returns the numeric (\Integer or \Float) number of seconds
@@ -1149,7 +1149,7 @@ class Net::HTTP < ::Net::Protocol
 
   # Adds a message to debugging output
   #
-  # source://net-http//net/http.rb#2472
+  # source://net-http//net/http.rb#2478
   def D(msg); end
 
   # source://net-http//net/http.rb#2464
@@ -1304,14 +1304,14 @@ class Net::HTTP < ::Net::Protocol
     #
     # @return [Boolean]
     #
-    # source://net-http//net/http.rb#746
+    # source://net-http//net/http.rb#751
     def is_version_1_1?; end
 
     # Returns +true+; retained for compatibility.
     #
     # @return [Boolean]
     #
-    # source://net-http//net/http.rb#741
+    # source://net-http//net/http.rb#752
     def is_version_1_2?; end
 
     # Returns a new \Net::HTTP object +http+
@@ -2041,7 +2041,7 @@ module Net::HTTPHeader
   #
   # Net::HTTPHeader#canonical_each is an alias for Net::HTTPHeader#each_capitalized.
   #
-  # source://net-http//net/http/header.rb#484
+  # source://net-http//net/http/header.rb#491
   def canonical_each; end
 
   # Returns +true+ if field <tt>'Transfer-Encoding'</tt>
@@ -2135,7 +2135,7 @@ module Net::HTTPHeader
   #
   # Net::HTTPHeader#content_type= is an alias for Net::HTTPHeader#set_content_type.
   #
-  # source://net-http//net/http/header.rb#772
+  # source://net-http//net/http/header.rb#776
   def content_type=(type, params = T.unsafe(nil)); end
 
   # Removes the header for the given case-insensitive +key+
@@ -2168,7 +2168,7 @@ module Net::HTTPHeader
   #
   # Net::HTTPHeader#each is an alias for Net::HTTPHeader#each_header.
   #
-  # source://net-http//net/http/header.rb#364
+  # source://net-http//net/http/header.rb#371
   def each; end
 
   # Like #each_header, but the keys are returned in capitalized form.
@@ -2242,7 +2242,7 @@ module Net::HTTPHeader
   #
   # Net::HTTPHeader#each_name is an alias for Net::HTTPHeader#each_key.
   #
-  # source://net-http//net/http/header.rb#391
+  # source://net-http//net/http/header.rb#396
   def each_key(&block); end
 
   # Calls the block with each field key:
@@ -2352,7 +2352,7 @@ module Net::HTTPHeader
   #
   # Net::HTTPHeader#form_data= is an alias for Net::HTTPHeader#set_form_data.
   #
-  # source://net-http//net/http/header.rb#812
+  # source://net-http//net/http/header.rb#819
   def form_data=(params, sep = T.unsafe(nil)); end
 
   # Returns the array field value for the given +key+,
@@ -2380,7 +2380,7 @@ module Net::HTTPHeader
   # source://net-http//net/http/header.rb#463
   def key?(key); end
 
-  # source://net-http//net/http/header.rb#208
+  # source://net-http//net/http/header.rb#212
   def length; end
 
   # Returns the leading ('type') part of the
@@ -2446,7 +2446,7 @@ module Net::HTTPHeader
   #
   # Net::HTTPHeader#range= is an alias for Net::HTTPHeader#set_range.
   #
-  # source://net-http//net/http/header.rb#576
+  # source://net-http//net/http/header.rb#605
   def range=(r, e = T.unsafe(nil)); end
 
   # Returns the integer representing length of the value of field
@@ -3060,7 +3060,7 @@ class Net::HTTPResponse
   #   "{\n  \"userId\": 1,\n  \"id\": 1,\n  \"title\": \"delectus aut autem\",\n  \"completed\": false\n}"
   #   nil
   #
-  # source://net-http//net/http/response.rb#400
+  # source://net-http//net/http/response.rb#409
   def entity; end
 
   # @raise [error_type()]
@@ -3101,7 +3101,7 @@ class Net::HTTPResponse
 
   # The HTTP result message sent by the server. For example, 'Not Found'.
   #
-  # source://net-http//net/http/response.rb#216
+  # source://net-http//net/http/response.rb#217
   def msg; end
 
   # Gets the entity body returned by the remote HTTP server.

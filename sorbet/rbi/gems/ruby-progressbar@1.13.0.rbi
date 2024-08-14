@@ -22,6 +22,9 @@ class ProgressBar::Base
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#45
   def initialize(options = T.unsafe(nil)); end
 
+  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#36
+  def clear(*args, **_arg1, &block); end
+
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#137
   def decrement; end
 
@@ -33,7 +36,7 @@ class ProgressBar::Base
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#129
   def finished?; end
 
-  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#203
+  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#209
   def format(other); end
 
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#203
@@ -45,19 +48,28 @@ class ProgressBar::Base
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#199
   def inspect; end
 
+  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#36
+  def log(*args, **_arg1, &block); end
+
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#102
   def pause; end
 
   # @return [Boolean]
   #
-  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#123
+  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#127
   def paused?; end
+
+  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#41
+  def progress(*args, **_arg1, &block); end
 
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#145
   def progress=(new_progress); end
 
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#153
   def progress_mark=(mark); end
+
+  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#36
+  def refresh(*args, **_arg1, &block); end
 
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#157
   def remainder_mark=(mark); end
@@ -95,6 +107,9 @@ class ProgressBar::Base
 
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#169
   def to_s(new_format = T.unsafe(nil)); end
+
+  # source://ruby-progressbar//lib/ruby-progressbar/base.rb#41
+  def total(*args, **_arg1, &block); end
 
   # source://ruby-progressbar//lib/ruby-progressbar/base.rb#149
   def total=(new_total); end

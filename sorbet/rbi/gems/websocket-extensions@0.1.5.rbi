@@ -39,7 +39,7 @@ class WebSocket::Extensions
   # source://websocket-extensions//lib/websocket/extensions.rb#120
   def valid_frame_rsv(frame); end
 
-  # source://websocket-extensions//lib/websocket/extensions.rb#120
+  # source://websocket-extensions//lib/websocket/extensions.rb#135
   def valid_frame_rsv?(frame); end
 
   private

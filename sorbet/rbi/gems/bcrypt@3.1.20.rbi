@@ -218,7 +218,7 @@ class BCrypt::Password < ::String
   #    @password.to_s == @password      # => True
   #    @password.to_s == @password.to_s # => True
   #
-  # source://bcrypt//lib/bcrypt/password.rb#76
+  # source://bcrypt//lib/bcrypt/password.rb#79
   def is_password?(secret); end
 
   # The salt of the store password hash (including version and cost).

@@ -355,7 +355,7 @@ class Minitest::Reporters::DefaultReporter < ::Minitest::Reporters::BaseReporter
   # source://minitest-reporters//lib/minitest/reporters/default_reporter.rb#26
   def start; end
 
-  # source://minitest-reporters//lib/minitest/reporters/default_reporter.rb#89
+  # source://minitest-reporters//lib/minitest/reporters/default_reporter.rb#138
   def to_s; end
 
   private
@@ -450,7 +450,7 @@ class Minitest::Reporters::HtmlReporter < ::Minitest::Reporters::BaseReporter
   # The percentage of tests that were skipped
   # Keeping old method name with typo for backwards compatibility in custom templates (for now)
   #
-  # source://minitest-reporters//lib/minitest/reporters/html_reporter.rb#35
+  # source://minitest-reporters//lib/minitest/reporters/html_reporter.rb#40
   def percent_skipps; end
 
   # The percentage of tests that were skipped
