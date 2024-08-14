@@ -13,12 +13,7 @@ module Tapioca
         extend Reflection
         extend T::Sig
 
-        class ConstantLocation < T::Struct
-          const :lineno, Integer
-          const :path, String
-        end
-
-        @class_files = {}.compare_by_identity
+        @class_files = {}.compare_by_identity #: Hash[Module, Set[SourceLocation]]
 
         # Immediately activated upon load. Observes class/module definition.
         @class_tracepoint = TracePoint.trace(:class) do |tp|
@@ -68,10 +63,12 @@ module Tapioca
           # Returns the files in which this class or module was opened. Doesn't know
           # about situations where the class was opened prior to +require+ing,
           # or where metaprogramming was used via +eval+, etc.
+          #: (Module klass) -> Set[String]
           def files_for(klass)
             locations_for(klass).map(&:path).to_set
           end
 
+          #: (Module klass) -> Set[SourceLocation]
           def locations_for(klass)
             @class_files.fetch(klass, Set.new)
           end

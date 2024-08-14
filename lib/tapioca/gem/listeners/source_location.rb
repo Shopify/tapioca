@@ -36,8 +36,13 @@ module Tapioca
         # @override
         #: (MethodNodeAdded event) -> void
         def on_method(event)
-          file, line = Tapioca::Runtime::Trackers::MethodDefinition.method_definition_for(event.method)
-          add_source_location_comment(event.node, file, line)
+          definition = @pipeline.method_definition_in_gem(event.method.name, event.constant)
+
+          case definition
+          when NilClass, FalseClass, TrueClass
+          else
+            add_source_location_comment(event.node, definition.first, definition.last)
+          end
         end
 
         #: (RBI::NodeWithComments node, String? file, Integer? line) -> void

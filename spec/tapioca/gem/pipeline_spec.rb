@@ -483,6 +483,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           private
 
           def _layout(lookup_context, formats); end
+
+          class << self
+            def _helper_methods; end
+            def middleware_stack; end
+          end
         end
 
         module SomeEngine::SomeController::HelperMethods
@@ -3287,6 +3292,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :quuz, ::Integer, default: T.unsafe(nil)
           prop :fuzz, T.proc.returns(::String), default: T.unsafe(nil)
           prop :buzz, T.proc.void, default: T.unsafe(nil)
+
+          class << self
+            def inherited(s); end
+          end
         end
 
         class Baz
@@ -3610,6 +3619,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           Elem = type_member
 
           const :foo, Elem
+
+          class << self
+            def inherited(s); end
+          end
         end
       RBI
 
@@ -3823,6 +3836,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           prop :l, T::Array[::Foo], default: T.unsafe(nil)
           prop :m, T::Hash[::Foo, ::Foo], default: T.unsafe(nil)
           prop :n, ::Foo, default: T.unsafe(nil)
+
+          class << self
+            def inherited(s); end
+          end
         end
       RBI
 
@@ -4527,7 +4544,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class NewClass; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
-        class Quux < ::T::Struct; end
+        class Quux < ::T::Struct
+          class << self
+            # source://the-default-gem//lib/foo.rb#16
+            def inherited(s); end
+          end
+        end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#19
         class String

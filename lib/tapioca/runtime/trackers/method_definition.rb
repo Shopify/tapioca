@@ -8,22 +8,37 @@ module Tapioca
         extend Tracker
         extend T::Sig
 
-        @method_definitions = T.let({}, T::Hash[UnboundMethod, [String, Integer]])
+        @method_definitions = {}.compare_by_identity #: Hash[Module, Hash[Symbol, Array[SourceLocation]]]
 
         class << self
-          extend T::Sig
-
-          sig { params(method: UnboundMethod, locations: T::Array[Thread::Backtrace::Location]).void }
-          def register(method, locations)
+          #: (Symbol method_name, Module owner, Array[Thread::Backtrace::Location] locations) -> void
+          def register(method_name, owner, locations)
             return unless enabled?
 
             loc = Reflection.resolve_loc(locations)
-            @method_definitions[method] = loc if loc
+            return unless loc
+
+            registrations_for(method_name, owner) << loc
           end
 
-          sig { params(method: UnboundMethod).returns(T.nilable([String, Integer])) }
-          def method_definition_for(method)
-            @method_definitions[method] || method.source_location
+          #: (Symbol method_name, Module owner) -> Array[SourceLocation]
+          def method_definitions_for(method_name, owner)
+            definitions = registrations_for(method_name, owner)
+
+            if definitions.empty?
+              source_loc = owner.instance_method(method_name).source_location
+              definitions = [source_loc] if source_loc
+            end
+
+            definitions
+          end
+
+          private
+
+          #: (Symbol method_name, Module owner) -> Array[SourceLocation]
+          def registrations_for(method_name, owner)
+            owner_lookup = (@method_definitions[owner] ||= {})
+            owner_lookup[method_name] ||= []
           end
         end
       end
@@ -33,8 +48,13 @@ end
 
 class Module
   prepend(Module.new do
+    def singleton_method_added(method_name)
+      Tapioca::Runtime::Trackers::MethodDefinition.register(method_name, singleton_class, caller_locations)
+      super
+    end
+
     def method_added(method_name)
-      Tapioca::Runtime::Trackers::MethodDefinition.register(instance_method(method_name), caller_locations)
+      Tapioca::Runtime::Trackers::MethodDefinition.register(method_name, self, caller_locations)
       super
     end
   end)
