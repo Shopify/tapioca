@@ -451,7 +451,7 @@ class RubyIndexer::Entry
 
   # @return [RubyIndexer::Location]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/entry.rb#25
   def name_location(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/entry.rb#57
@@ -824,7 +824,7 @@ class RubyIndexer::Entry::Parameter
   #
   # @return [Symbol]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/entry.rb#248
   def decorated_name(*args, **_arg1, &blk); end
 
   # Name includes just the name of the parameter, excluding symbols like splats
@@ -5684,7 +5684,7 @@ class RubyLsp::ResponseBuilders::DocumentSymbol < ::RubyLsp::ResponseBuilders::R
   # @param symbol [Interface::DocumentSymbol]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://ruby-lsp//lib/ruby_lsp/response_builders/document_symbol.rb#37
   def <<(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_lsp/response_builders/document_symbol.rb#47
@@ -6123,7 +6123,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#505
   def text_document_code_lens(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_lsp/server.rb#905
@@ -6161,19 +6161,19 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#504
   def text_document_document_link(*args, **_arg1, &blk); end
 
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#503
   def text_document_document_symbol(*args, **_arg1, &blk); end
 
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#506
   def text_document_folding_range(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_lsp/server.rb#612
@@ -6450,10 +6450,40 @@ RubyLsp::VERSION = T.let(T.unsafe(nil), String)
 class URI::Generic
   include ::URI::RFC2396_REGEXP
 
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/uri.rb#49
+  sig { params(load_path_entry: ::String).void }
+  def add_require_path_from_load_entry(load_path_entry); end
+
+  # @return [String, nil]
+  #
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/uri.rb#72
+  def full_path(*args, **_arg1, &blk); end
+
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/uri.rb#46
+  sig { returns(T.nilable(::String)) }
+  def require_path; end
+
   # @return [String, nil]
   #
   # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/uri.rb#46
   def require_path=(_arg0); end
+
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/uri.rb#57
+  sig { returns(T.nilable(::String)) }
+  def to_standardized_path; end
+
+  class << self
+    # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/uri.rb#24
+    sig do
+      params(
+        path: ::String,
+        fragment: T.nilable(::String),
+        scheme: ::String,
+        load_path_entry: T.nilable(::String)
+      ).returns(::URI::Generic)
+    end
+    def from_path(path:, fragment: T.unsafe(nil), scheme: T.unsafe(nil), load_path_entry: T.unsafe(nil)); end
+  end
 end
 
 # Avoid a deprecation warning with Ruby 3.4 where the default parser was changed to RFC3986.
@@ -6471,14 +6501,14 @@ class URI::Source < ::URI::File
   sig { params(v: T.nilable(::String)).returns(T::Boolean) }
   def check_host(v); end
 
-  # source://uri/0.13.0/lib/uri/generic.rb#243
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#29
   def gem_name; end
 
   # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#33
   sig { returns(T.nilable(::String)) }
   def gem_version; end
 
-  # source://uri/0.13.0/lib/uri/generic.rb#283
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#30
   def line_number; end
 
   # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#59

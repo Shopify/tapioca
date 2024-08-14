@@ -447,7 +447,7 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   #     assert_dom ":match('name', ?)", /.+/  # Not empty
   #   end
   #
-  # source://rails-dom-testing//lib/rails/dom/testing/assertions/selector_assertions.rb#163
+  # source://rails-dom-testing//lib/rails/dom/testing/assertions/selector_assertions.rb#180
   def assert_select(*args, &block); end
 
   # Extracts the body of an email and runs nested assertions on it.
@@ -481,7 +481,7 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   #     assert_dom "h1", "Email alert"
   #   end
   #
-  # source://rails-dom-testing//lib/rails/dom/testing/assertions/selector_assertions.rb#285
+  # source://rails-dom-testing//lib/rails/dom/testing/assertions/selector_assertions.rb#298
   def assert_select_email(html_version: T.unsafe(nil), &block); end
 
   # Extracts the content of an element, treats it as encoded HTML and runs
@@ -534,7 +534,7 @@ module Rails::Dom::Testing::Assertions::SelectorAssertions
   #     end
   #   end
   #
-  # source://rails-dom-testing//lib/rails/dom/testing/assertions/selector_assertions.rb#232
+  # source://rails-dom-testing//lib/rails/dom/testing/assertions/selector_assertions.rb#252
   def assert_select_encoded(element = T.unsafe(nil), html_version: T.unsafe(nil), &block); end
 
   # Select and return all matching elements.

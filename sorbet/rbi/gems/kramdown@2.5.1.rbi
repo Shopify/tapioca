@@ -27,19 +27,19 @@ module Kramdown::Converter
   extend ::Kramdown::Utils::Configurable
 
   class << self
-    # source://kramdown//lib/kramdown/utils/configurable.rb#37
+    # source://kramdown//lib/kramdown/converter.rb#50
     def add_math_engine(data, *args, &block); end
 
-    # source://kramdown//lib/kramdown/utils/configurable.rb#37
+    # source://kramdown//lib/kramdown/converter.rb#34
     def add_syntax_highlighter(data, *args, &block); end
 
-    # source://kramdown//lib/kramdown/utils/configurable.rb#30
+    # source://kramdown//lib/kramdown/converter.rb#34
     def configurables; end
 
-    # source://kramdown//lib/kramdown/utils/configurable.rb#34
+    # source://kramdown//lib/kramdown/converter.rb#50
     def math_engine(data); end
 
-    # source://kramdown//lib/kramdown/utils/configurable.rb#34
+    # source://kramdown//lib/kramdown/converter.rb#34
     def syntax_highlighter(data); end
   end
 end
@@ -230,7 +230,10 @@ class Kramdown::Converter::Base
 
     private
 
+    # source://kramdown//lib/kramdown/converter/base.rb#61
     def allocate; end
+
+    # source://kramdown//lib/kramdown/converter/base.rb#61
     def new(*_arg0); end
   end
 end
@@ -310,7 +313,7 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/html.rb#271
   def convert_comment(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#189
+  # source://kramdown//lib/kramdown/converter/html.rb#199
   def convert_dd(el, indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#185
@@ -346,7 +349,7 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/html.rb#363
   def convert_math(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#173
+  # source://kramdown//lib/kramdown/converter/html.rb#183
   def convert_ol(el, indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#86
@@ -367,13 +370,13 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/html.rb#99
   def convert_standalone_image(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#331
+  # source://kramdown//lib/kramdown/converter/html.rb#334
   def convert_strong(el, indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#249
   def convert_table(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#249
+  # source://kramdown//lib/kramdown/converter/html.rb#253
   def convert_tbody(el, indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#259
@@ -382,13 +385,13 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/html.rb#81
   def convert_text(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#249
+  # source://kramdown//lib/kramdown/converter/html.rb#254
   def convert_tfoot(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#249
+  # source://kramdown//lib/kramdown/converter/html.rb#252
   def convert_thead(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#249
+  # source://kramdown//lib/kramdown/converter/html.rb#255
   def convert_tr(el, indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#351
@@ -400,7 +403,7 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/html.rb#239
   def convert_xml_comment(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#239
+  # source://kramdown//lib/kramdown/converter/html.rb#247
   def convert_xml_pi(el, indent); end
 
   # Fixes the elements for use in a TOC entry.
@@ -522,7 +525,7 @@ class Kramdown::Converter::Kramdown < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/kramdown.rb#163
   def convert_dd(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#129
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#133
   def convert_dl(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/kramdown.rb#187
@@ -555,7 +558,7 @@ class Kramdown::Converter::Kramdown < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/kramdown.rb#378
   def convert_math(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#129
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#132
   def convert_ol(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/kramdown.rb#92
@@ -603,7 +606,7 @@ class Kramdown::Converter::Kramdown < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/kramdown.rb#234
   def convert_xml_comment(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#234
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#242
   def convert_xml_pi(el, _opts); end
 
   # source://kramdown//lib/kramdown/converter/kramdown.rb#413
@@ -734,7 +737,7 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/latex.rb#557
   def convert_math(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#129
+  # source://kramdown//lib/kramdown/converter/latex.rb#137
   def convert_ol(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#69
@@ -873,13 +876,13 @@ class Kramdown::Converter::Man < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/man.rb#221
   def convert_codespan(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/man.rb#186
+  # source://kramdown//lib/kramdown/converter/man.rb#189
   def convert_comment(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/man.rb#127
   def convert_dd(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/man.rb#101
+  # source://kramdown//lib/kramdown/converter/man.rb#107
   def convert_dl(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/man.rb#121
@@ -897,7 +900,7 @@ class Kramdown::Converter::Man < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/man.rb#61
   def convert_header(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/man.rb#47
+  # source://kramdown//lib/kramdown/converter/man.rb#49
   def convert_hr(*_arg0); end
 
   # source://kramdown//lib/kramdown/converter/man.rb#182
@@ -912,7 +915,7 @@ class Kramdown::Converter::Man < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/man.rb#233
   def convert_math(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/man.rb#101
+  # source://kramdown//lib/kramdown/converter/man.rb#108
   def convert_ol(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/man.rb#52
@@ -960,7 +963,7 @@ class Kramdown::Converter::Man < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/man.rb#186
   def convert_xml_comment(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/man.rb#47
+  # source://kramdown//lib/kramdown/converter/man.rb#50
   def convert_xml_pi(*_arg0); end
 
   # source://kramdown//lib/kramdown/converter/man.rb#285
@@ -1786,63 +1789,92 @@ class Kramdown::Options::Definition < ::Struct
   # Returns the value of attribute default
   #
   # @return [Object] the current value of default
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def default; end
 
   # Sets the attribute default
   #
   # @param value [Object] the value to set the attribute default to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def default=(_); end
 
   # Returns the value of attribute desc
   #
   # @return [Object] the current value of desc
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def desc; end
 
   # Sets the attribute desc
   #
   # @param value [Object] the value to set the attribute desc to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def desc=(_); end
 
   # Returns the value of attribute name
   #
   # @return [Object] the current value of name
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def name; end
 
   # Sets the attribute name
   #
   # @param value [Object] the value to set the attribute name to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def name=(_); end
 
   # Returns the value of attribute type
   #
   # @return [Object] the current value of type
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def type; end
 
   # Sets the attribute type
   #
   # @param value [Object] the value to set the attribute type to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def type=(_); end
 
   # Returns the value of attribute validator
   #
   # @return [Object] the current value of validator
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def validator; end
 
   # Sets the attribute validator
   #
   # @param value [Object] the value to set the attribute validator to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/options.rb#36
   def validator=(_); end
 
   class << self
+    # source://kramdown//lib/kramdown/options.rb#36
     def [](*_arg0); end
+
+    # source://kramdown//lib/kramdown/options.rb#36
     def inspect; end
+
+    # source://kramdown//lib/kramdown/options.rb#36
     def keyword_init?; end
+
+    # source://kramdown//lib/kramdown/options.rb#36
     def members; end
+
+    # source://kramdown//lib/kramdown/options.rb#36
     def new(*_arg0); end
   end
 end
@@ -1965,7 +1997,10 @@ class Kramdown::Parser::Base
 
     private
 
+    # source://kramdown//lib/kramdown/parser/base.rb#66
     def allocate; end
+
+    # source://kramdown//lib/kramdown/parser/base.rb#66
     def new(*_arg0); end
   end
 end
@@ -2063,7 +2098,7 @@ class Kramdown::Parser::Html::ElementConverter
   # source://kramdown//lib/kramdown/parser/html.rb#388
   def convert_a(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#398
+  # source://kramdown//lib/kramdown/parser/html.rb#409
   def convert_b(el); end
 
   # source://kramdown//lib/kramdown/parser/html.rb#421
@@ -2075,31 +2110,31 @@ class Kramdown::Parser::Html::ElementConverter
   # source://kramdown//lib/kramdown/parser/html.rb#412
   def convert_h1(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#412
+  # source://kramdown//lib/kramdown/parser/html.rb#418
   def convert_h2(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#412
+  # source://kramdown//lib/kramdown/parser/html.rb#418
   def convert_h3(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#412
+  # source://kramdown//lib/kramdown/parser/html.rb#418
   def convert_h4(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#412
+  # source://kramdown//lib/kramdown/parser/html.rb#418
   def convert_h5(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#412
+  # source://kramdown//lib/kramdown/parser/html.rb#418
   def convert_h6(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#398
+  # source://kramdown//lib/kramdown/parser/html.rb#409
   def convert_i(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#421
+  # source://kramdown//lib/kramdown/parser/html.rb#463
   def convert_pre(el); end
 
   # source://kramdown//lib/kramdown/parser/html.rb#570
   def convert_script(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#398
+  # source://kramdown//lib/kramdown/parser/html.rb#409
   def convert_strong(el); end
 
   # source://kramdown//lib/kramdown/parser/html.rb#465
@@ -2723,52 +2758,77 @@ class Kramdown::Parser::Kramdown::Data < ::Struct
   # Returns the value of attribute method
   #
   # @return [Object] the current value of method
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def method; end
 
   # Sets the attribute method
   #
   # @param value [Object] the value to set the attribute method to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def method=(_); end
 
   # Returns the value of attribute name
   #
   # @return [Object] the current value of name
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def name; end
 
   # Sets the attribute name
   #
   # @param value [Object] the value to set the attribute name to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def name=(_); end
 
   # Returns the value of attribute span_start
   #
   # @return [Object] the current value of span_start
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def span_start; end
 
   # Sets the attribute span_start
   #
   # @param value [Object] the value to set the attribute span_start to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def span_start=(_); end
 
   # Returns the value of attribute start_re
   #
   # @return [Object] the current value of start_re
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def start_re; end
 
   # Sets the attribute start_re
   #
   # @param value [Object] the value to set the attribute start_re to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#318
   def start_re=(_); end
 
   class << self
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#318
     def [](*_arg0); end
+
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#318
     def inspect; end
+
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#318
     def keyword_init?; end
+
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#318
     def members; end
+
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#318
     def new(*_arg0); end
   end
 end
@@ -3079,7 +3139,7 @@ module Kramdown::Utils::Entities
   class << self
     # Return the entity for the given code point or name +point_or_name+.
     #
-    # source://kramdown//lib/kramdown/utils/entities.rb#990
+    # source://kramdown//lib/kramdown/utils/entities.rb#994
     def entity(point_or_name); end
   end
 end
@@ -3109,30 +3169,47 @@ class Kramdown::Utils::Entities::Entity < ::Struct
   # Returns the value of attribute code_point
   #
   # @return [Object] the current value of code_point
+  #
+  # source://kramdown//lib/kramdown/utils/entities.rb#18
   def code_point; end
 
   # Sets the attribute code_point
   #
   # @param value [Object] the value to set the attribute code_point to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/utils/entities.rb#18
   def code_point=(_); end
 
   # Returns the value of attribute name
   #
   # @return [Object] the current value of name
+  #
+  # source://kramdown//lib/kramdown/utils/entities.rb#18
   def name; end
 
   # Sets the attribute name
   #
   # @param value [Object] the value to set the attribute name to.
   # @return [Object] the newly set value
+  #
+  # source://kramdown//lib/kramdown/utils/entities.rb#18
   def name=(_); end
 
   class << self
+    # source://kramdown//lib/kramdown/utils/entities.rb#18
     def [](*_arg0); end
+
+    # source://kramdown//lib/kramdown/utils/entities.rb#18
     def inspect; end
+
+    # source://kramdown//lib/kramdown/utils/entities.rb#18
     def keyword_init?; end
+
+    # source://kramdown//lib/kramdown/utils/entities.rb#18
     def members; end
+
+    # source://kramdown//lib/kramdown/utils/entities.rb#18
     def new(*_arg0); end
   end
 end
