@@ -33,7 +33,7 @@ class RuboCop::Cop::Sorbet::AllowIncompatibleOverride < ::RuboCop::Cop::Base
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/signatures/allow_incompatible_override.rb#55
   def on_block(node); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/signatures/allow_incompatible_override.rb#55
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/signatures/allow_incompatible_override.rb#72
   def on_numblock(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/signatures/allow_incompatible_override.rb#49
@@ -276,7 +276,7 @@ RuboCop::Cop::Sorbet::CheckedTrueInSignature::MESSAGE = T.let(T.unsafe(nil), Str
 #
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/constants_from_strings.rb#36
 class RuboCop::Cop::Sorbet::ConstantsFromStrings < ::RuboCop::Cop::Base
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/constants_from_strings.rb#47
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/constants_from_strings.rb#50
   def on_csend(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/constants_from_strings.rb#47
@@ -1011,7 +1011,7 @@ end
 #
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#17
 class RuboCop::Cop::Sorbet::ForbidTUnsafe < ::RuboCop::Cop::Base
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#24
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#27
   def on_csend(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#24
@@ -1076,7 +1076,7 @@ class RuboCop::Cop::Sorbet::ForbidTypeAliasedShapes < ::RuboCop::Cop::Base
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_type_aliased_shapes.rb#36
   def on_block(node); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_type_aliased_shapes.rb#36
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_type_aliased_shapes.rb#40
   def on_numblock(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_type_aliased_shapes.rb#28
@@ -1205,7 +1205,7 @@ class RuboCop::Cop::Sorbet::ImplicitConversionMethod < ::RuboCop::Cop::Base
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/implicit_conversion_method.rb#42
   def on_def(node); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/implicit_conversion_method.rb#42
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/implicit_conversion_method.rb#48
   def on_defs(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/implicit_conversion_method.rb#50
@@ -1481,7 +1481,7 @@ module RuboCop::Cop::Sorbet::SignatureHelp
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/mixin/signature_help.rb#42
   def on_block(node); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/mixin/signature_help.rb#42
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/mixin/signature_help.rb#46
   def on_numblock(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/mixin/signature_help.rb#48
@@ -1513,7 +1513,7 @@ end
 class RuboCop::Cop::Sorbet::SingleLineRbiClassModuleDefinitions < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi/single_line_rbi_class_module_definitions.rb#22
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi/single_line_rbi_class_module_definitions.rb#30
   def on_class(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/rbi/single_line_rbi_class_module_definitions.rb#22

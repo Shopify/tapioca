@@ -1988,7 +1988,9 @@ class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
   #
   # source://rbi//lib/rbi/parser.rb#744
   sig do
-    params(node: T.any(::Prism::ConstantPathWriteNode, ::Prism::ConstantWriteNode)).returns(T.nilable(::RBI::Struct))
+    params(
+      node: T.any(::Prism::ConstantPathWriteNode, ::Prism::ConstantWriteNode)
+    ).returns(T.nilable(::RBI::Struct))
   end
   def parse_struct(node); end
 
@@ -3755,7 +3757,6 @@ class RBI::Rewriters::Merge::Conflict < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3844,7 +3845,12 @@ class RBI::Rewriters::Merge::TreeMerger < ::RBI::Visitor
   #
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#99
   sig do
-    params(output: ::RBI::Tree, left_name: ::String, right_name: ::String, keep: ::RBI::Rewriters::Merge::Keep).void
+    params(
+      output: ::RBI::Tree,
+      left_name: ::String,
+      right_name: ::String,
+      keep: ::RBI::Rewriters::Merge::Keep
+    ).void
   end
   def initialize(output, left_name: T.unsafe(nil), right_name: T.unsafe(nil), keep: T.unsafe(nil)); end
 
@@ -4095,7 +4101,6 @@ class RBI::Rewriters::RemoveKnownDefinitions::Operation < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -4938,7 +4943,6 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { params(annotation: ::String, annotate_scopes: T::Boolean, annotate_properties: T::Boolean).void }
   def annotate!(annotation, annotate_scopes: T.unsafe(nil), annotate_properties: T.unsafe(nil)); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#32
   sig do
     params(
       name: ::String,
@@ -4948,19 +4952,15 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_class(name, superclass_name: T.unsafe(nil), &block); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#39
   sig { params(name: ::String, value: ::String).void }
   def create_constant(name, value:); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#49
   sig { params(name: ::String).void }
   def create_extend(name); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#44
   sig { params(name: ::String).void }
   def create_include(name); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#65
   sig do
     params(
       name: ::String,
@@ -4974,19 +4974,18 @@ class RBI::Tree < ::RBI::NodeWithComments
   end
   def create_method(name, parameters: T.unsafe(nil), return_type: T.unsafe(nil), class_method: T.unsafe(nil), visibility: T.unsafe(nil), comments: T.unsafe(nil), &block); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#54
   sig { params(name: ::String).void }
   def create_mixes_in_class_methods(name); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#25
   sig { params(name: ::String, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).returns(::RBI::Scope) }
   def create_module(name, &block); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#9
+  sig { params(node: ::RBI::Node).returns(::RBI::Node) }
+  def create_node(node); end
+
   sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: ::RBI::Scope).void)).returns(::RBI::Scope) }
   def create_path(constant, &block); end
 
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#59
   sig do
     params(
       name: ::String,
@@ -5080,6 +5079,9 @@ class RBI::Tree < ::RBI::NodeWithComments
   sig { returns(T::Array[::RBI::Node]) }
   def nodes; end
 
+  sig { returns(T::Hash[::String, ::RBI::Node]) }
+  def nodes_cache; end
+
   # : -> void
   #
   # source://rbi//lib/rbi/rewriters/attr_to_methods.rb#50
@@ -5097,16 +5099,6 @@ class RBI::Tree < ::RBI::NodeWithComments
   # source://rbi//lib/rbi/rewriters/translate_rbs_sigs.rb#82
   sig { void }
   def translate_rbs_sigs!; end
-
-  private
-
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#98
-  sig { params(node: ::RBI::Node).returns(::RBI::Node) }
-  def create_node(node); end
-
-  # source://tapioca/0.17.1/lib/tapioca/rbi_ext/model.rb#93
-  sig { returns(T::Hash[::String, ::RBI::Node]) }
-  def nodes_cache; end
 end
 
 # The base class for all RBI types.

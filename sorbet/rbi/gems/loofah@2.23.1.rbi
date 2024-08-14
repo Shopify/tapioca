@@ -39,14 +39,14 @@ module Loofah
     #
     # This method accepts the same parameters as Nokogiri::HTML4::Document.parse
     #
-    # source://loofah//lib/loofah.rb#76
+    # source://loofah//lib/loofah.rb#139
     def document(*args, &block); end
 
     # Shortcut for Loofah::HTML4::DocumentFragment.parse(*args, &block)
     #
     # This method accepts the same parameters as Nokogiri::HTML4::DocumentFragment.parse
     #
-    # source://loofah//lib/loofah.rb#83
+    # source://loofah//lib/loofah.rb#140
     def fragment(*args, &block); end
 
     # Shortcut for Loofah::HTML4::Document.parse(*args, &block)
@@ -81,12 +81,12 @@ module Loofah
 
     # Shortcut for Loofah::HTML4::Document.parse(string_or_io).scrub!(method)
     #
-    # source://loofah//lib/loofah.rb#88
+    # source://loofah//lib/loofah.rb#141
     def scrub_document(string_or_io, method); end
 
     # Shortcut for Loofah::HTML4::DocumentFragment.parse(string_or_io).scrub!(method)
     #
-    # source://loofah//lib/loofah.rb#93
+    # source://loofah//lib/loofah.rb#142
     def scrub_fragment(string_or_io, method); end
 
     # Shortcut for Loofah::HTML4::Document.parse(string_or_io).scrub!(method)
@@ -446,7 +446,7 @@ end
 module Loofah::HtmlFragmentBehavior
   mixes_in_class_methods ::Loofah::HtmlFragmentBehavior::ClassMethods
 
-  # source://loofah//lib/loofah/concerns.rb#197
+  # source://loofah//lib/loofah/concerns.rb#201
   def serialize; end
 
   # source://loofah//lib/loofah/concerns.rb#203
@@ -990,7 +990,7 @@ module Loofah::TextBehavior
   #    # decidedly not ok for browser:
   #    frag.text(:encode_special_chars => false) # => "<script>alert('EVIL');</script>"
   #
-  # source://loofah//lib/loofah/concerns.rb#94
+  # source://loofah//lib/loofah/concerns.rb#107
   def inner_text(options = T.unsafe(nil)); end
 
   # Returns a plain-text version of the markup contained by the document, with HTML entities
@@ -1034,7 +1034,7 @@ module Loofah::TextBehavior
   #    # decidedly not ok for browser:
   #    frag.text(:encode_special_chars => false) # => "<script>alert('EVIL');</script>"
   #
-  # source://loofah//lib/loofah/concerns.rb#94
+  # source://loofah//lib/loofah/concerns.rb#108
   def to_str(options = T.unsafe(nil)); end
 
   # Returns a plain-text version of the markup contained by the fragment, with HTML entities

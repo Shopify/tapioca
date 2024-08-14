@@ -161,6 +161,30 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#318
   def []=(name, value); end
 
+  # source://ostruct//lib/ostruct.rb#478
+  def __id__!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def __send__!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def as_json!(options = T.unsafe(nil)); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def class!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def clone!(freeze: T.unsafe(nil)); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def debugger!(*a, up_level: T.unsafe(nil), **kw); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def deep_dup!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def define_singleton_method!(*_arg0); end
+
   # Removes the named field from the object and returns the value the field
   # contained if it was defined. You may optionally provide a block.
   # If the field is not defined, the result of the block is returned,
@@ -185,7 +209,7 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#371
   def delete_field(name, &block); end
 
-  # source://ostruct//lib/ostruct.rb#371
+  # source://ostruct//lib/ostruct.rb#478
   def delete_field!(name, &block); end
 
   # :call-seq:
@@ -206,8 +230,14 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#340
   def dig(name, *names); end
 
-  # source://ostruct//lib/ostruct.rb#340
+  # source://ostruct//lib/ostruct.rb#478
   def dig!(name, *names); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def display!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def dup!; end
 
   # :call-seq:
   #   ostruct.each_pair {|name, value| block }  -> ostruct
@@ -223,7 +253,7 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#211
   def each_pair; end
 
-  # source://ostruct//lib/ostruct.rb#211
+  # source://ostruct//lib/ostruct.rb#478
   def each_pair!; end
 
   # Provides marshalling support for use by the YAML library.
@@ -231,8 +261,11 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#446
   def encode_with(coder); end
 
-  # source://ostruct//lib/ostruct.rb#446
+  # source://ostruct//lib/ostruct.rb#478
   def encode_with!(coder); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def enum_for!(*_arg0); end
 
   # Compares this object and +other+ for equality.  An OpenStruct is eql? to
   # +other+ when +other+ is an OpenStruct and the two objects' Hash tables are
@@ -243,18 +276,24 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#433
   def eql?(other); end
 
+  # source://ostruct//lib/ostruct.rb#478
+  def extend!(*_arg0); end
+
   # source://ostruct//lib/ostruct.rb#269
   def freeze; end
 
-  # source://ostruct//lib/ostruct.rb#269
+  # source://ostruct//lib/ostruct.rb#478
   def freeze!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def gem!(dep, *reqs); end
 
   # Computes a hash code for this OpenStruct.
   #
   # source://ostruct//lib/ostruct.rb#439
   def hash; end
 
-  # source://ostruct//lib/ostruct.rb#439
+  # source://ostruct//lib/ostruct.rb#478
   def hash!; end
 
   # Provides marshalling support for use by the YAML library.
@@ -262,7 +301,7 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#459
   def init_with(coder); end
 
-  # source://ostruct//lib/ostruct.rb#459
+  # source://ostruct//lib/ostruct.rb#478
   def init_with!(coder); end
 
   # Returns a string containing a detailed summary of the keys and values.
@@ -270,40 +309,262 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#388
   def inspect; end
 
-  # source://ostruct//lib/ostruct.rb#388
+  # source://ostruct//lib/ostruct.rb#478
   def inspect!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def instance_eval!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def instance_exec!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def instance_values!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def instance_variable_get!(_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def instance_variable_names!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def instance_variable_set!(_arg0, _arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def instance_variables!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def itself!; end
 
   # Provides marshalling support for use by the Marshal library.
   #
   # source://ostruct//lib/ostruct.rb#220
   def marshal_dump; end
 
-  # source://ostruct//lib/ostruct.rb#220
+  # source://ostruct//lib/ostruct.rb#478
   def marshal_dump!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def method!(_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def methods!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_close_to!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_empty!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_instance_of!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_kind_of!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_nil!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_same_as!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_silent!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_within_delta!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_be_within_epsilon!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_equal!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_include!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_match!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_output!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_pattern_match!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_raise!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_respond_to!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def must_throw!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def object_id!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def path_must_exist!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def path_wont_exist!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def presence!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def presence_in!(another_object); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def pretty_inspect!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def pretty_print!(q); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def pretty_print_cycle!(q); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def pretty_print_inspect!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def pretty_print_instance_variables!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def private_methods!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def protected_methods!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def public_method!(_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def public_methods!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def public_send!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def remove_instance_variable!(_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def send!(*_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def singleton_class!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def singleton_method!(_arg0); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def singleton_methods!(*_arg0); end
 
   # source://ostruct//lib/ostruct.rb#406
   def table; end
 
+  # source://ostruct//lib/ostruct.rb#478
+  def tap!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def then!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def to_enum!(*_arg0); end
+
   # source://ostruct//lib/ostruct.rb#182
   def to_h(&block); end
 
-  # source://ostruct//lib/ostruct.rb#182
+  # source://ostruct//lib/ostruct.rb#478
   def to_h!(&block); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def to_json!(options = T.unsafe(nil)); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def to_param!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def to_query!(key); end
 
   # Returns a string containing a detailed summary of the keys and values.
   #
-  # source://ostruct//lib/ostruct.rb#388
+  # source://ostruct//lib/ostruct.rb#404
   def to_s; end
 
-  # source://ostruct//lib/ostruct.rb#388
+  # source://ostruct//lib/ostruct.rb#478
   def to_s!; end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def to_yaml!(options = T.unsafe(nil)); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def try!(*args, **_arg1, &block); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def with!(**attributes); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def with_options!(options, &block); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_close_to!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_empty!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_instance_of!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_kind_of!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_nil!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_same_as!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_within_delta!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_be_within_epsilon!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_equal!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_include!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_match!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_pattern_match!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def wont_respond_to!(*args, **_arg1); end
+
+  # source://ostruct//lib/ostruct.rb#478
+  def yield_self!; end
 
   protected
 
-  # source://ostruct//lib/ostruct.rb#406
+  # source://ostruct//lib/ostruct.rb#407
   def table!; end
 
   private
+
+  # source://ostruct//lib/ostruct.rb#486
+  def block_given!; end
 
   # source://ostruct//lib/ostruct.rb#147
   def initialize_clone(orig); end
@@ -317,7 +578,7 @@ class OpenStruct
   #
   # Provides marshalling support for use by the Marshal library.
   #
-  # source://ostruct//lib/ostruct.rb#157
+  # source://ostruct//lib/ostruct.rb#227
   def marshal_load(hash); end
 
   # source://ostruct//lib/ostruct.rb#274
@@ -330,6 +591,11 @@ class OpenStruct
   # source://ostruct//lib/ostruct.rb#234
   def new_ostruct_member!(name); end
 
+  # Other builtin private methods we use:
+  #
+  # source://ostruct//lib/ostruct.rb#481
+  def raise!(*_arg0); end
+
   # :call-seq:
   #   ostruct[name] = obj  -> obj
   #
@@ -340,7 +606,7 @@ class OpenStruct
   #   person[:age] = 42   # equivalent to person.age = 42
   #   person.age          # => 42
   #
-  # source://ostruct//lib/ostruct.rb#318
+  # source://ostruct//lib/ostruct.rb#323
   def set_ostruct_member_value!(name, value); end
 
   # source://ostruct//lib/ostruct.rb#157

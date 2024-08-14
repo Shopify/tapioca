@@ -74,7 +74,7 @@ module Timeout
     #
     # @raise [ArgumentError]
     #
-    # source://timeout//lib/timeout.rb#167
+    # source://timeout//lib/timeout.rb#197
     def timeout(sec, klass = T.unsafe(nil), message = T.unsafe(nil), &block); end
 
     private

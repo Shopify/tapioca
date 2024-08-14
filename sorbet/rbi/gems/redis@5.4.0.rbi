@@ -68,7 +68,7 @@ class Redis
 
   # Disconnect the client as quickly and silently as possible.
   #
-  # source://redis//lib/redis.rb#88
+  # source://redis//lib/redis.rb#92
   def disconnect!; end
 
   # source://redis//lib/redis.rb#118
