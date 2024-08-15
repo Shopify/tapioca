@@ -314,7 +314,10 @@ class SQLite3::Database
 
   def authorizer=(_arg0); end
   def busy_handler(*_arg0); end
+
+  # source://sqlite3//lib/sqlite3/database.rb#392
   def busy_timeout(_arg0); end
+
   def busy_timeout=(_arg0); end
   def changes; end
   def close; end

@@ -54,6 +54,12 @@ module T::Private
       def finalized=(finalized); end
     end
   end
+
+  module DeclState
+    class << self
+      def current; end
+    end
+  end
 end
 
 class T::Enum

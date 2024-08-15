@@ -654,7 +654,7 @@ module JSON
   # :stopdoc:
   # I want to deprecate these later, so I'll first be silent about them, and later delete them.
   #
-  # source://json//lib/json/common.rb#329
+  # source://json//lib/json/common.rb#340
   def fast_unparse(obj, opts = T.unsafe(nil)); end
 
   # :call-seq:
@@ -954,7 +954,7 @@ module JSON
   # :stopdoc:
   # I want to deprecate these later, so I'll first be silent about them, and later delete them.
   #
-  # source://json//lib/json/common.rb#374
+  # source://json//lib/json/common.rb#395
   def pretty_unparse(obj, opts = T.unsafe(nil)); end
 
   # Recursively calls passed _Proc_ if the parsed data structure is an _Array_ or _Hash_
@@ -962,14 +962,14 @@ module JSON
   # source://json//lib/json/common.rb#559
   def recurse_proc(result, &proc); end
 
-  # source://json//lib/json/common.rb#541
+  # source://json//lib/json/common.rb#572
   def restore(source, proc = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # :stopdoc:
   # I want to deprecate these later, so I'll first be silent about them, and
   # later delete them.
   #
-  # source://json//lib/json/common.rb#300
+  # source://json//lib/json/common.rb#312
   def unparse(obj, opts = T.unsafe(nil)); end
 
   class << self
@@ -1082,7 +1082,7 @@ module JSON
     # :stopdoc:
     # I want to deprecate these later, so I'll first be silent about them, and later delete them.
     #
-    # source://json//lib/json/common.rb#329
+    # source://json//lib/json/common.rb#341
     def fast_unparse(obj, opts = T.unsafe(nil)); end
 
     # :call-seq:
@@ -1424,7 +1424,7 @@ module JSON
     # :stopdoc:
     # I want to deprecate these later, so I'll first be silent about them, and later delete them.
     #
-    # source://json//lib/json/common.rb#374
+    # source://json//lib/json/common.rb#396
     def pretty_unparse(obj, opts = T.unsafe(nil)); end
 
     # Recursively calls passed _Proc_ if the parsed data structure is an _Array_ or _Hash_
@@ -1432,7 +1432,7 @@ module JSON
     # source://json//lib/json/common.rb#559
     def recurse_proc(result, &proc); end
 
-    # source://json//lib/json/common.rb#541
+    # source://json//lib/json/common.rb#573
     def restore(source, proc = T.unsafe(nil), options = T.unsafe(nil)); end
 
     # Sets or Returns the JSON generator state class that is used by JSON. This is
@@ -1453,7 +1453,7 @@ module JSON
     # I want to deprecate these later, so I'll first be silent about them, and
     # later delete them.
     #
-    # source://json//lib/json/common.rb#300
+    # source://json//lib/json/common.rb#313
     def unparse(obj, opts = T.unsafe(nil)); end
 
     private

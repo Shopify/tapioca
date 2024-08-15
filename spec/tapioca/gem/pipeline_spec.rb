@@ -591,6 +591,41 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile("foo"))
     end
 
+    it "properly attributes dynamically-generated methods" do
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RUBY)
+          module ModuleFromBar
+            def add_method_to_me(method_name)
+              define_method(method_name) { 42 }
+            end
+          end
+        RUBY
+      end
+
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RUBY)
+          class Foo
+            extend ModuleFromBar
+
+            def foo; end
+
+            add_method_to_me :bar
+          end
+        RUBY
+      end
+
+      output = <<~RBI
+        class Foo
+          extend ::ModuleFromBar
+
+          def bar; end
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile("foo"))
+    end
+
     it "must generate RBIs for foreign constants whose singleton class overrides #inspect" do
       mock_gem("bar") do
         add_ruby_file("lib/bar.rb", <<~RBI)
@@ -3272,10 +3307,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :quuz, ::Integer, default: T.unsafe(nil)
           prop :fuzz, T.proc.returns(::String), default: T.unsafe(nil)
           prop :buzz, T.proc.void, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
 
         class Baz
@@ -3816,10 +3847,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           prop :l, T::Array[::Foo], default: T.unsafe(nil)
           prop :m, T::Hash[::Foo, ::Foo], default: T.unsafe(nil)
           prop :n, ::Foo, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
       RBI
 
@@ -4470,8 +4497,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         NewClass = Class.new
       RB
 
-      sorbet_runtime_spec = ::Gem::Specification.find_by_name("sorbet-runtime")
-
       output = template(<<~RBI)
         # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#1
         module Bar
@@ -4481,6 +4506,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { void }
           def bar; end
 
+          # source://the-default-gem//lib/bar.rb#14
           def foo1; end
 
           # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#15
@@ -4524,12 +4550,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class NewClass; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
-        class Quux < ::T::Struct
-          class << self
-            # source://sorbet-runtime/#{sorbet_runtime_spec.version}/lib/types/struct.rb#13
-            def inherited(s); end
-          end
-        end
+        class Quux < ::T::Struct; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#19
         class String

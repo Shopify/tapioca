@@ -670,7 +670,7 @@ class Logger
   # - #fatal.
   # - #unknown.
   #
-  # source://logger//logger.rb#651
+  # source://logger//logger.rb#671
   def log(severity, message = T.unsafe(nil), progname = T.unsafe(nil)); end
 
   # Program name to include in log messages.
@@ -711,7 +711,7 @@ class Logger
 
   # Logging severity threshold (e.g. <tt>Logger::INFO</tt>).
   #
-  # source://logger//logger.rb#383
+  # source://logger//logger.rb#475
   def sev_threshold; end
 
   # Sets the log level; returns +severity+.
@@ -726,7 +726,7 @@ class Logger
   #
   # Logger#sev_threshold= is an alias for Logger#level=.
   #
-  # source://logger//logger.rb#399
+  # source://logger//logger.rb#476
   def sev_threshold=(severity); end
 
   # Equivalent to calling #add with severity <tt>Logger::UNKNOWN</tt>.

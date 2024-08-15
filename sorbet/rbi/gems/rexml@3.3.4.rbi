@@ -271,7 +271,7 @@ class REXML::Attributes < ::Hash
   #   attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
   #   attrs.include?('baz') # => true
   #
-  # source://rexml//lib/rexml/element.rb#2524
+  # source://rexml//lib/rexml/element.rb#2528
   def <<(attribute); end
 
   # :call-seq:
@@ -546,7 +546,7 @@ class REXML::Attributes < ::Hash
   #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
   #   ele.attributes.length # => 3
   #
-  # source://rexml//lib/rexml/element.rb#2212
+  # source://rexml//lib/rexml/element.rb#2217
   def size; end
 
   # :call-seq:
@@ -657,7 +657,7 @@ class REXML::Child
   # source://rexml//lib/rexml/child.rb#85
   def document; end
 
-  # source://rexml//lib/rexml/node.rb#11
+  # source://rexml//lib/rexml/child.rb#58
   def next_sibling; end
 
   # Sets the next sibling of this child.  This can be used to insert a child
@@ -688,7 +688,7 @@ class REXML::Child
   # source://rexml//lib/rexml/child.rb#52
   def parent=(other); end
 
-  # source://rexml//lib/rexml/node.rb#17
+  # source://rexml//lib/rexml/child.rb#59
   def previous_sibling; end
 
   # Sets the previous sibling of this child.  This can be used to insert a
@@ -767,7 +767,7 @@ class REXML::Comment < ::REXML::Child
 
   # The content text
   #
-  # source://rexml//lib/rexml/comment.rb#14
+  # source://rexml//lib/rexml/comment.rb#58
   def to_s; end
 
   # == DEPRECATED
@@ -1038,7 +1038,7 @@ class REXML::Document < ::REXML::Element
   #   d.add(REXML::Element.new('foo'))
   #   d.to_s # => "<foo/>"
   #
-  # source://rexml//lib/rexml/document.rb#170
+  # source://rexml//lib/rexml/document.rb#201
   def <<(child); end
 
   # :call-seq:
@@ -1146,7 +1146,7 @@ class REXML::Document < ::REXML::Element
   # d = doc_type
   # d ? d.name : "UNDEFINED"
   #
-  # source://rexml//lib/rexml/document.rb#129
+  # source://rexml//lib/rexml/document.rb#134
   def name; end
 
   # :call-seq:
@@ -2746,7 +2746,7 @@ class REXML::Elements
   #   element.parent                # => <bookstore> ... </>
   #   element.context               # => {:raw=>:all}
   #
-  # source://rexml//lib/rexml/element.rb#1912
+  # source://rexml//lib/rexml/element.rb#1924
   def <<(element = T.unsafe(nil)); end
 
   # :call-seq:
@@ -3692,6 +3692,11 @@ module REXML::Namespace
 
   # The name of the object, valid if set
   #
+  # source://rexml//lib/rexml/namespace.rb#53
+  def local_name; end
+
+  # The name of the object, valid if set
+  #
   # source://rexml//lib/rexml/namespace.rb#9
   def name; end
 
@@ -3796,7 +3801,7 @@ class REXML::Parent < ::REXML::Child
   # source://rexml//lib/rexml/parent.rb#13
   def initialize(parent = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/parent.rb#18
+  # source://rexml//lib/rexml/parent.rb#25
   def <<(object); end
 
   # Fetches a child at a given index
@@ -3819,7 +3824,7 @@ class REXML::Parent < ::REXML::Child
   # source://rexml//lib/rexml/parent.rb#18
   def add(object); end
 
-  # source://rexml//lib/rexml/parent.rb#115
+  # source://rexml//lib/rexml/parent.rb#160
   def children; end
 
   # Deeply clones this object.  This creates a complete duplicate of this
@@ -3840,7 +3845,7 @@ class REXML::Parent < ::REXML::Child
   # source://rexml//lib/rexml/parent.rb#39
   def each(&block); end
 
-  # source://rexml//lib/rexml/parent.rb#39
+  # source://rexml//lib/rexml/parent.rb#61
   def each_child(&block); end
 
   # source://rexml//lib/rexml/parent.rb#51
@@ -3881,7 +3886,7 @@ class REXML::Parent < ::REXML::Child
 
   # @return the number of children of this parent
   #
-  # source://rexml//lib/rexml/parent.rb#130
+  # source://rexml//lib/rexml/parent.rb#134
   def length; end
 
   # @return [Boolean]
@@ -3889,7 +3894,7 @@ class REXML::Parent < ::REXML::Child
   # source://rexml//lib/rexml/parent.rb#162
   def parent?; end
 
-  # source://rexml//lib/rexml/parent.rb#18
+  # source://rexml//lib/rexml/parent.rb#24
   def push(object); end
 
   # Replaces one child with another, making sure the nodelist is correct
@@ -4191,7 +4196,7 @@ class REXML::Parsers::XPathParser
 
   # For backward compatibility
   #
-  # source://rexml//lib/rexml/parsers/xpathparser.rb#174
+  # source://rexml//lib/rexml/parsers/xpathparser.rb#221
   def preciate_to_string(parsed, &block); end
 
   # source://rexml//lib/rexml/parsers/xpathparser.rb#36
@@ -4672,12 +4677,12 @@ class REXML::XMLDecl < ::REXML::Child
   # source://rexml//lib/rexml/xmldecl.rb#98
   def nowrite; end
 
-  # source://rexml//lib/rexml/encoding.rb#7
+  # source://rexml//lib/rexml/xmldecl.rb#74
   def old_enc=(encoding); end
 
   # Returns the value of attribute standalone.
   #
-  # source://rexml//lib/rexml/xmldecl.rb#17
+  # source://rexml//lib/rexml/xmldecl.rb#73
   def stand_alone?; end
 
   # Returns the value of attribute standalone.

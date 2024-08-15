@@ -580,7 +580,7 @@ class IdentityCache::Cached::Attribute
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#21
   def attribute; end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#103
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#106
   def cache_decode(db_value); end
 
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#103
@@ -624,7 +624,7 @@ class IdentityCache::Cached::Attribute
   # @abstract
   # @raise [NotImplementedError]
   #
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#131
+  # source://identity_cache//lib/identity_cache/cached/attribute_by_multi.rb#53
   def cache_key_from_key_values(_key_values); end
 
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#139

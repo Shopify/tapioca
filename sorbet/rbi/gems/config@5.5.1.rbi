@@ -138,7 +138,7 @@ class Config::Options < ::OpenStruct
 
   # look through all our sources and rebuild the configuration
   #
-  # source://config//lib/config/options.rb#35
+  # source://config//lib/config/options.rb#63
   def load!; end
 
   # source://config//lib/config/options.rb#133
@@ -179,7 +179,7 @@ class Config::Options < ::OpenStruct
   # source://config//lib/config/options.rb#133
   def test; end
 
-  # source://config//lib/config/options.rb#70
+  # source://config//lib/config/options.rb#84
   def to_h; end
 
   # source://config//lib/config/options.rb#70

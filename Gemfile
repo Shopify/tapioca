@@ -7,7 +7,7 @@ gemspec
 CURRENT_RAILS_VERSION = "7.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
-gem "minitest"
+gem "minitest", "< 5.25.0" # minitest 5.25.0+ is incompatible with minitest-hooks
 gem "minitest-hooks"
 gem "minitest-reporters"
 gem "debug"

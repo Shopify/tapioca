@@ -59,10 +59,10 @@ module Tapioca
           end
 
           def build_constant_location(tp, locations)
-            file = resolve_loc(locations)
-            lineno = File.identical?(file, tp.path) ? tp.lineno : 0
+            file, line = resolve_loc(locations)
+            lineno = file && File.identical?(file, tp.path) ? tp.lineno : (line || 0)
 
-            ConstantLocation.new(path: file, lineno: lineno)
+            ConstantLocation.new(path: file || "", lineno: lineno)
           end
 
           # Returns the files in which this class or module was opened. Doesn't know

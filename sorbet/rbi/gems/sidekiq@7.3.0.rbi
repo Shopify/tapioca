@@ -269,10 +269,10 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#51
   def initialize(options = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://sidekiq//lib/sidekiq/config.rb#59
   def [](*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://sidekiq//lib/sidekiq/config.rb#59
   def []=(*args, **_arg1, &block); end
 
   # How frequently Redis should be checked by a random Sidekiq process for
@@ -325,7 +325,7 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#110
   def default_capsule(&block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://sidekiq//lib/sidekiq/config.rb#59
   def dig(*args, **_arg1, &block); end
 
   # Register a proc to handle any error which occurs within the Sidekiq process.
@@ -339,7 +339,7 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#227
   def error_handlers; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://sidekiq//lib/sidekiq/config.rb#59
   def fetch(*args, **_arg1, &block); end
 
   # INTERNAL USE ONLY
@@ -347,10 +347,10 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#271
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://sidekiq//lib/sidekiq/config.rb#59
   def has_key?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://sidekiq//lib/sidekiq/config.rb#59
   def key?(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#245
@@ -364,7 +364,7 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#190
   def lookup(name, default_class = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://sidekiq//lib/sidekiq/config.rb#59
   def merge!(*args, **_arg1, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#140
@@ -632,7 +632,7 @@ module Sidekiq::Job::ClassMethods
   # +interval+ must be a timestamp, numeric or something that acts
   #   numeric (like an activesupport time interval).
   #
-  # source://sidekiq//lib/sidekiq/job.rb#332
+  # source://sidekiq//lib/sidekiq/job.rb#344
   def perform_at(interval, *args); end
 
   # Push a large number of jobs to Redis, while limiting the batch of
@@ -670,7 +670,7 @@ module Sidekiq::Job::ClassMethods
 
   # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
   #
-  # source://sidekiq//lib/sidekiq/job.rb#301
+  # source://sidekiq//lib/sidekiq/job.rb#304
   def perform_sync(*args); end
 
   # source://sidekiq//lib/sidekiq/job.rb#288
@@ -1065,7 +1065,7 @@ class Sidekiq::Job::Setter
   # +interval+ must be a timestamp, numeric or something that acts
   #   numeric (like an activesupport time interval).
   #
-  # source://sidekiq//lib/sidekiq/job.rb#258
+  # source://sidekiq//lib/sidekiq/job.rb#261
   def perform_at(interval, *args); end
 
   # source://sidekiq//lib/sidekiq/job.rb#251
@@ -1086,7 +1086,7 @@ class Sidekiq::Job::Setter
   # Explicit inline execution of a job. Returns nil if the job did not
   # execute, true otherwise.
   #
-  # source://sidekiq//lib/sidekiq/job.rb#215
+  # source://sidekiq//lib/sidekiq/job.rb#249
   def perform_sync(*args); end
 
   # source://sidekiq//lib/sidekiq/job.rb#197
@@ -1337,7 +1337,7 @@ class Sidekiq::Middleware::Chain
 
   # @return [Boolean] if the given class is already in the chain
   #
-  # source://sidekiq//lib/sidekiq/middleware/chain.rb#149
+  # source://sidekiq//lib/sidekiq/middleware/chain.rb#152
   def include?(klass); end
 
   # Inserts +newklass+ after +oldklass+ in the chain.
@@ -1407,12 +1407,7 @@ end
 Sidekiq::NAME = T.let(T.unsafe(nil), String)
 
 # source://sidekiq//lib/sidekiq/rails.rb#7
-class Sidekiq::Rails < ::Rails::Engine
-  class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
-    def __callbacks; end
-  end
-end
+class Sidekiq::Rails < ::Rails::Engine; end
 
 # source://sidekiq//lib/sidekiq/rails.rb#8
 class Sidekiq::Rails::Reloader
@@ -1453,7 +1448,7 @@ Sidekiq::RedisClientAdapter::BaseError = RedisClient::Error
 # source://sidekiq//lib/sidekiq/redis_client_adapter.rb#10
 Sidekiq::RedisClientAdapter::CommandError = RedisClient::CommandError
 
-# source://sidekiq//lib/sidekiq/redis_client_adapter.rb#0
+# source://sidekiq//lib/sidekiq/redis_client_adapter.rb#55
 class Sidekiq::RedisClientAdapter::CompatClient < ::RedisClient::Decorator::Client
   include ::Sidekiq::RedisClientAdapter::CompatMethods
 
@@ -1461,7 +1456,7 @@ class Sidekiq::RedisClientAdapter::CompatClient < ::RedisClient::Decorator::Clie
   def config; end
 end
 
-# source://sidekiq//lib/sidekiq/redis_client_adapter.rb#0
+# source://sidekiq//lib/sidekiq/redis_client_adapter.rb#55
 class Sidekiq::RedisClientAdapter::CompatClient::Pipeline < ::RedisClient::Decorator::Pipeline
   include ::Sidekiq::RedisClientAdapter::CompatMethods
 end

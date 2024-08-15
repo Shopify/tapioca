@@ -633,46 +633,46 @@ class Psych::ClassLoader
   # source://psych//psych/class_loader.rb#21
   def initialize; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def big_decimal; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def complex; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def date; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def date_time; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def exception; end
 
   # source://psych//psych/class_loader.rb#25
   def load(klassname); end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def object; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def psych_omap; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def psych_set; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def range; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def rational; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def regexp; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def struct; end
 
-  # source://psych//psych/class_loader.rb#39
+  # source://psych//psych/class_loader.rb#38
   def symbol; end
 
   # source://psych//psych/class_loader.rb#31
@@ -719,7 +719,7 @@ class Psych::Coder
   # source://psych//psych/coder.rb#78
   def []=(k, v); end
 
-  # source://psych//psych/coder.rb#78
+  # source://psych//psych/coder.rb#82
   def add(k, v); end
 
   # Returns the value of attribute implicit.
@@ -1331,10 +1331,10 @@ class Psych::TreeBuilder < ::Psych::Handler
   # source://psych//psych/tree_builder.rb#77
   def end_document(implicit_end = T.unsafe(nil)); end
 
-  # source://psych//psych/tree_builder.rb#52
+  # source://psych//psych/tree_builder.rb#44
   def end_mapping; end
 
-  # source://psych//psych/tree_builder.rb#52
+  # source://psych//psych/tree_builder.rb#44
   def end_sequence; end
 
   # source://psych//psych/tree_builder.rb#90
@@ -1359,10 +1359,10 @@ class Psych::TreeBuilder < ::Psych::Handler
   # source://psych//psych/tree_builder.rb#65
   def start_document(version, tag_directives, implicit); end
 
-  # source://psych//psych/tree_builder.rb#45
+  # source://psych//psych/tree_builder.rb#44
   def start_mapping(anchor, tag, implicit, style); end
 
-  # source://psych//psych/tree_builder.rb#45
+  # source://psych//psych/tree_builder.rb#44
   def start_sequence(anchor, tag, implicit, style); end
 
   # source://psych//psych/tree_builder.rb#84
@@ -1405,22 +1405,22 @@ class Psych::Visitors::DepthFirst < ::Psych::Visitors::Visitor
   # source://psych//psych/visitors/depth_first.rb#20
   def terminal(o); end
 
-  # source://psych//psych/visitors/depth_first.rb#20
+  # source://psych//psych/visitors/depth_first.rb#24
   def visit_Psych_Nodes_Alias(o); end
 
-  # source://psych//psych/visitors/depth_first.rb#11
+  # source://psych//psych/visitors/depth_first.rb#16
   def visit_Psych_Nodes_Document(o); end
 
-  # source://psych//psych/visitors/depth_first.rb#11
+  # source://psych//psych/visitors/depth_first.rb#18
   def visit_Psych_Nodes_Mapping(o); end
 
-  # source://psych//psych/visitors/depth_first.rb#20
+  # source://psych//psych/visitors/depth_first.rb#23
   def visit_Psych_Nodes_Scalar(o); end
 
-  # source://psych//psych/visitors/depth_first.rb#11
+  # source://psych//psych/visitors/depth_first.rb#17
   def visit_Psych_Nodes_Sequence(o); end
 
-  # source://psych//psych/visitors/depth_first.rb#11
+  # source://psych//psych/visitors/depth_first.rb#15
   def visit_Psych_Nodes_Stream(o); end
 end
 
@@ -1541,7 +1541,7 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # source://psych//psych/visitors/yaml_tree.rb#55
   def initialize(emitter, ss, options); end
 
-  # source://psych//psych/visitors/yaml_tree.rb#102
+  # source://psych//psych/visitors/yaml_tree.rb#120
   def <<(object); end
 
   # source://psych//psych/visitors/yaml_tree.rb#122
@@ -1557,7 +1557,7 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
 
   # Returns the value of attribute finished.
   #
-  # source://psych//psych/visitors/yaml_tree.rb#44
+  # source://psych//psych/visitors/yaml_tree.rb#45
   def finished?; end
 
   # source://psych//psych/visitors/yaml_tree.rb#102
@@ -1573,7 +1573,7 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
 
   # Returns the value of attribute started.
   #
-  # source://psych//psych/visitors/yaml_tree.rb#44
+  # source://psych//psych/visitors/yaml_tree.rb#46
   def started?; end
 
   # source://psych//psych/visitors/yaml_tree.rb#97
@@ -1602,7 +1602,7 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # source://psych//psych/visitors/yaml_tree.rb#198
   def visit_DateTime(o); end
 
-  # source://psych//psych/visitors/yaml_tree.rb#152
+  # source://psych//psych/visitors/yaml_tree.rb#166
   def visit_Delegator(o); end
 
   # source://psych//psych/visitors/yaml_tree.rb#147
@@ -1614,7 +1614,7 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # source://psych//psych/visitors/yaml_tree.rb#182
   def visit_Exception(o); end
 
-  # source://psych//psych/visitors/yaml_tree.rb#233
+  # source://psych//psych/visitors/yaml_tree.rb#237
   def visit_FalseClass(o); end
 
   # source://psych//psych/visitors/yaml_tree.rb#239
@@ -1667,7 +1667,7 @@ class Psych::Visitors::YAMLTree < ::Psych::Visitors::Visitor
   # source://psych//psych/visitors/yaml_tree.rb#205
   def visit_Time(o); end
 
-  # source://psych//psych/visitors/yaml_tree.rb#233
+  # source://psych//psych/visitors/yaml_tree.rb#236
   def visit_TrueClass(o); end
 
   private

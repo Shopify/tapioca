@@ -114,7 +114,7 @@ class AASM::Base
 
   # make sure to create a (named) scope for each state
   #
-  # source://aasm//lib/aasm/persistence/base.rb#60
+  # source://aasm//lib/aasm/persistence/base.rb#67
   def state(*args); end
 
   # Returns the value of attribute state_machine.
@@ -135,7 +135,7 @@ class AASM::Base
   # [0] state
   # [1..] state
   #
-  # source://aasm//lib/aasm/base.rb#90
+  # source://aasm//lib/aasm/persistence/base.rb#66
   def state_without_scope(*args); end
 
   # source://aasm//lib/aasm/base.rb#173
@@ -788,7 +788,7 @@ class AASM::Core::State
   # source://aasm//lib/aasm/core/state.rb#72
   def for_select; end
 
-  # source://aasm//lib/aasm/core/state.rb#67
+  # source://aasm//lib/aasm/core/state.rb#70
   def human_name; end
 
   # source://aasm//lib/aasm/core/state.rb#67
@@ -871,7 +871,7 @@ class AASM::Core::Transition
 
   # Returns the value of attribute opts.
   #
-  # source://aasm//lib/aasm/core/transition.rb#7
+  # source://aasm//lib/aasm/core/transition.rb#8
   def options; end
 
   # Returns the value of attribute opts.
@@ -1288,13 +1288,13 @@ class AASM::StateMachineStore
   # source://aasm//lib/aasm/state_machine_store.rb#43
   def initialize; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#55
+  # source://aasm//lib/aasm/state_machine_store.rb#58
   def [](name); end
 
   # source://aasm//lib/aasm/state_machine_store.rb#47
   def clone; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#60
+  # source://aasm//lib/aasm/state_machine_store.rb#63
   def keys; end
 
   # source://aasm//lib/aasm/state_machine_store.rb#55
@@ -1307,13 +1307,13 @@ class AASM::StateMachineStore
   def register(name, machine, force = T.unsafe(nil)); end
 
   class << self
-    # source://aasm//lib/aasm/state_machine_store.rb#27
+    # source://aasm//lib/aasm/state_machine_store.rb#36
     def [](klass, fallback = T.unsafe(nil)); end
 
     # do not overwrite existing state machines, which could have been created by
     # inheritance, see AASM::ClassMethods method inherited
     #
-    # source://aasm//lib/aasm/state_machine_store.rb#13
+    # source://aasm//lib/aasm/state_machine_store.rb#25
     def []=(klass, overwrite = T.unsafe(nil), state_machine = T.unsafe(nil)); end
 
     # source://aasm//lib/aasm/state_machine_store.rb#27

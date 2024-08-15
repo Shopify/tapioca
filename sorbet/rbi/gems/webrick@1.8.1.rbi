@@ -360,7 +360,7 @@ module WEBrick::HTMLUtils
   class << self
     # Escapes &, ", > and < in +string+
     #
-    # source://webrick//lib/webrick/htmlutils.rb#18
+    # source://webrick//lib/webrick/htmlutils.rb#27
     def escape(string); end
   end
 end
@@ -659,6 +659,73 @@ class WEBrick::HTTPAuth::DigestAuth
     #
     # source://webrick//lib/webrick/httpauth/digestauth.rb#69
     def make_passwd(realm, user, pass); end
+  end
+end
+
+# Struct containing the opaque portion of the digest authentication
+#
+# source://webrick//lib/webrick/httpauth/digestauth.rb#54
+class WEBrick::HTTPAuth::DigestAuth::OpaqueInfo < ::Struct
+  # Returns the value of attribute nc
+  #
+  # @return [Object] the current value of nc
+  #
+  # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+  def nc; end
+
+  # Sets the attribute nc
+  #
+  # @param value [Object] the value to set the attribute nc to.
+  # @return [Object] the newly set value
+  #
+  # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+  def nc=(_); end
+
+  # Returns the value of attribute nonce
+  #
+  # @return [Object] the current value of nonce
+  #
+  # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+  def nonce; end
+
+  # Sets the attribute nonce
+  #
+  # @param value [Object] the value to set the attribute nonce to.
+  # @return [Object] the newly set value
+  #
+  # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+  def nonce=(_); end
+
+  # Returns the value of attribute time
+  #
+  # @return [Object] the current value of time
+  #
+  # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+  def time; end
+
+  # Sets the attribute time
+  #
+  # @param value [Object] the value to set the attribute time to.
+  # @return [Object] the newly set value
+  #
+  # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+  def time=(_); end
+
+  class << self
+    # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+    def [](*_arg0); end
+
+    # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+    def inspect; end
+
+    # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+    def keyword_init?; end
+
+    # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+    def members; end
+
+    # source://webrick//lib/webrick/httpauth/digestauth.rb#54
+    def new(*_arg0); end
   end
 end
 
@@ -1571,7 +1638,7 @@ class WEBrick::HTTPServer < ::WEBrick::GenericServer
 
   # Unmounts +dir+
   #
-  # source://webrick//lib/webrick/httpserver.rb#173
+  # source://webrick//lib/webrick/httpserver.rb#177
   def umount(dir); end
 
   # Unmounts +dir+
@@ -1751,7 +1818,7 @@ class WEBrick::HTTPServlet::CGIHandler < ::WEBrick::HTTPServlet::AbstractServlet
   #
   # @raise [HTTPStatus::InternalServerError]
   #
-  # source://webrick//lib/webrick/httpservlet/cgihandler.rb#50
+  # source://webrick//lib/webrick/httpservlet/cgihandler.rb#120
   def do_POST(req, res); end
 end
 
@@ -1834,7 +1901,7 @@ class WEBrick::HTTPServlet::ERBHandler < ::WEBrick::HTTPServlet::AbstractServlet
   #
   # Handles POST requests
   #
-  # source://webrick//lib/webrick/httpservlet/erbhandler.rb#50
+  # source://webrick//lib/webrick/httpservlet/erbhandler.rb#71
   def do_POST(req, res); end
 
   private
@@ -1970,10 +2037,10 @@ class WEBrick::HTTPServlet::ProcHandler < ::WEBrick::HTTPServlet::AbstractServle
   # source://webrick//lib/webrick/httpservlet/prochandler.rb#38
   def do_GET(request, response); end
 
-  # source://webrick//lib/webrick/httpservlet/prochandler.rb#38
+  # source://webrick//lib/webrick/httpservlet/prochandler.rb#42
   def do_POST(request, response); end
 
-  # source://webrick//lib/webrick/httpservlet/prochandler.rb#38
+  # source://webrick//lib/webrick/httpservlet/prochandler.rb#43
   def do_PUT(request, response); end
 
   # :stopdoc:
@@ -2054,21 +2121,21 @@ module WEBrick::HTTPStatus
     #
     # @return [Boolean]
     #
-    # source://webrick//lib/webrick/httpstatus.rb#170
+    # source://webrick//lib/webrick/httpstatus.rb#192
     def client_error?(code); end
 
     # Is +code+ an error status?
     #
     # @return [Boolean]
     #
-    # source://webrick//lib/webrick/httpstatus.rb#164
+    # source://webrick//lib/webrick/httpstatus.rb#191
     def error?(code); end
 
     # Is +code+ an informational status?
     #
     # @return [Boolean]
     #
-    # source://webrick//lib/webrick/httpstatus.rb#146
+    # source://webrick//lib/webrick/httpstatus.rb#191
     def info?(code); end
 
     # Returns the description corresponding to the HTTP status +code+
@@ -2076,28 +2143,28 @@ module WEBrick::HTTPStatus
     #   WEBrick::HTTPStatus.reason_phrase 404
     #   => "Not Found"
     #
-    # source://webrick//lib/webrick/httpstatus.rb#140
+    # source://webrick//lib/webrick/httpstatus.rb#190
     def reason_phrase(code); end
 
     # Is +code+ a redirection status?
     #
     # @return [Boolean]
     #
-    # source://webrick//lib/webrick/httpstatus.rb#158
+    # source://webrick//lib/webrick/httpstatus.rb#191
     def redirect?(code); end
 
     # Is +code+ a server error status?
     #
     # @return [Boolean]
     #
-    # source://webrick//lib/webrick/httpstatus.rb#176
+    # source://webrick//lib/webrick/httpstatus.rb#192
     def server_error?(code); end
 
     # Is +code+ a successful status?
     #
     # @return [Boolean]
     #
-    # source://webrick//lib/webrick/httpstatus.rb#152
+    # source://webrick//lib/webrick/httpstatus.rb#191
     def success?(code); end
   end
 end
@@ -2118,7 +2185,7 @@ class WEBrick::HTTPStatus::Status < ::StandardError
 
   # Returns the HTTP status code
   #
-  # source://webrick//lib/webrick/httpstatus.rb#31
+  # source://webrick//lib/webrick/httpstatus.rb#36
   def to_i; end
 
   class << self
@@ -2257,7 +2324,7 @@ module WEBrick::HTTPUtils
 
     # Removes quotes and escapes from +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#234
+    # source://webrick//lib/webrick/httputils.rb#239
     def dequote(str); end
 
     # Escapes HTTP reserved and unwise characters in +str+
@@ -2282,55 +2349,55 @@ module WEBrick::HTTPUtils
 
     # Loads Apache-compatible mime.types in +file+.
     #
-    # source://webrick//lib/webrick/httputils.rb#123
+    # source://webrick//lib/webrick/httputils.rb#139
     def load_mime_types(file); end
 
     # Returns the mime type of +filename+ from the list in +mime_tab+.  If no
     # mime type was found application/octet-stream is returned.
     #
-    # source://webrick//lib/webrick/httputils.rb#145
+    # source://webrick//lib/webrick/httputils.rb#150
     def mime_type(filename, mime_tab); end
 
     # Normalizes a request path.  Raises an exception if the path cannot be
     # normalized.
     #
-    # source://webrick//lib/webrick/httputils.rb#31
+    # source://webrick//lib/webrick/httputils.rb#42
     def normalize_path(path); end
 
     # Parses form data in +io+ with the given +boundary+
     #
-    # source://webrick//lib/webrick/httputils.rb#406
+    # source://webrick//lib/webrick/httputils.rb#432
     def parse_form_data(io, boundary); end
 
     # Parses an HTTP header +raw+ into a hash of header fields with an Array
     # of values.
     #
-    # source://webrick//lib/webrick/httputils.rb#156
+    # source://webrick//lib/webrick/httputils.rb#181
     def parse_header(raw); end
 
     # Parses the query component of a URI in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#382
+    # source://webrick//lib/webrick/httputils.rb#401
     def parse_query(str); end
 
     # Parses q values in +value+ as used in Accept headers.
     #
-    # source://webrick//lib/webrick/httputils.rb#213
+    # source://webrick//lib/webrick/httputils.rb#229
     def parse_qvalues(value); end
 
     # Parses a Range header value +ranges_specifier+
     #
-    # source://webrick//lib/webrick/httputils.rb#195
+    # source://webrick//lib/webrick/httputils.rb#208
     def parse_range_header(ranges_specifier); end
 
     # Quotes and escapes quotes in +str+
     #
-    # source://webrick//lib/webrick/httputils.rb#244
+    # source://webrick//lib/webrick/httputils.rb#247
     def quote(str); end
 
     # Splits a header value +str+ according to HTTP specification.
     #
-    # source://webrick//lib/webrick/httputils.rb#186
+    # source://webrick//lib/webrick/httputils.rb#190
     def split_header_value(str); end
 
     # Unescapes HTTP reserved and unwise characters in +str+
@@ -2419,7 +2486,7 @@ class WEBrick::HTTPUtils::FormData < ::String
   #
   # A FormData will behave like an Array
   #
-  # source://webrick//lib/webrick/httputils.rb#358
+  # source://webrick//lib/webrick/httputils.rb#369
   def to_ary; end
 
   # This FormData's body
@@ -2482,32 +2549,32 @@ module WEBrick::Utils
     #
     # It will create IPV4 and IPV6 sockets on all interfaces.
     #
-    # source://webrick//lib/webrick/utils.rb#56
+    # source://webrick//lib/webrick/utils.rb#69
     def create_listeners(address, port); end
 
     # The server hostname
     #
-    # source://webrick//lib/webrick/utils.rb#47
+    # source://webrick//lib/webrick/utils.rb#50
     def getservername; end
 
     # Generates a random string of length +len+
     #
-    # source://webrick//lib/webrick/utils.rb#79
+    # source://webrick//lib/webrick/utils.rb#85
     def random_string(len); end
 
     # Sets the close on exec flag for +io+
     #
-    # source://webrick//lib/webrick/utils.rb#27
+    # source://webrick//lib/webrick/utils.rb#30
     def set_close_on_exec(io); end
 
     # Sets IO operations on +io+ to be non-blocking
     #
-    # source://webrick//lib/webrick/utils.rb#20
+    # source://webrick//lib/webrick/utils.rb#23
     def set_non_blocking(io); end
 
     # Changes the process's uid and gid to the ones of +user+
     #
-    # source://webrick//lib/webrick/utils.rb#34
+    # source://webrick//lib/webrick/utils.rb#43
     def su(user); end
 
     # Executes the passed block and raises +exception+ if execution takes more
@@ -2515,7 +2582,7 @@ module WEBrick::Utils
     #
     # If +seconds+ is zero or nil, simply executes the block
     #
-    # source://webrick//lib/webrick/utils.rb#253
+    # source://webrick//lib/webrick/utils.rb#263
     def timeout(seconds, exception = T.unsafe(nil)); end
   end
 end
@@ -2603,5 +2670,13 @@ class WEBrick::Utils::TimeoutHandler
 
     # source://webrick//lib/webrick/utils.rb#141
     def terminate; end
+
+    private
+
+    # source://webrick//lib/webrick/utils.rb#119
+    def allocate; end
+
+    # source://webrick//lib/webrick/utils.rb#119
+    def new(*_arg0); end
   end
 end

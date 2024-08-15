@@ -33,7 +33,7 @@ module Kernel
     #   URI(uri)
     #   # => #<URI::HTTP http://github.com/ruby/ruby>
     #
-    # source://uri//uri/common.rb#842
+    # source://uri//uri/common.rb#852
     def URI(uri); end
   end
 end
@@ -693,75 +693,6 @@ URI::File::DEFAULT_PORT = T.let(T.unsafe(nil), T.untyped)
 class URI::GID < ::URI::Generic
   # source://uri//uri/generic.rb#243
   def app; end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#107
-  def deconstruct_keys(_keys); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#29
-  def model_id; end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#29
-  def model_name; end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#29
-  def params; end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#102
-  def to_s; end
-
-  protected
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#118
-  def query=(query); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#129
-  def set_params(params); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#112
-  def set_path(path); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#124
-  def set_query(query); end
-
-  private
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#136
-  def check_host(host); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#141
-  def check_path(path); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#146
-  def check_scheme(scheme); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#195
-  def parse_query_params(query); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#154
-  def set_model_components(path, validate = T.unsafe(nil)); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#174
-  def validate_component(component); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#188
-  def validate_model_id(model_id_part); end
-
-  # source://globalid/1.2.1/lib/global_id/uri/gid.rb#181
-  def validate_model_id_section(model_id, model_name); end
-
-  class << self
-    # source://globalid/1.2.1/lib/global_id/uri/gid.rb#88
-    def build(args); end
-
-    # source://globalid/1.2.1/lib/global_id/uri/gid.rb#72
-    def create(app, model, params = T.unsafe(nil)); end
-
-    # source://globalid/1.2.1/lib/global_id/uri/gid.rb#64
-    def parse(uri); end
-
-    # source://globalid/1.2.1/lib/global_id/uri/gid.rb#48
-    def validate_app(app); end
-  end
 end
 
 # Base class for all URI classes.
@@ -822,7 +753,7 @@ class URI::Generic
   #   # => "http://my.example.com/main.rbx?page=1"
   # merge
   #
-  # source://uri//uri/generic.rb#1109
+  # source://uri//uri/generic.rb#1152
   def +(oth); end
 
   # == Args
@@ -842,7 +773,7 @@ class URI::Generic
   #   uri.route_from('http://my.example.com')
   #   #=> #<URI::Generic /main.rbx?page=1>
   #
-  # source://uri//uri/generic.rb#1262
+  # source://uri//uri/generic.rb#1282
   def -(oth); end
 
   # Compares two URIs.
@@ -854,7 +785,7 @@ class URI::Generic
   #
   # @return [Boolean]
   #
-  # source://uri//uri/generic.rb#972
+  # source://uri//uri/generic.rb#979
   def absolute; end
 
   # Returns true if URI has a scheme (e.g. http:// or https://) specified.
@@ -1388,7 +1319,7 @@ class URI::Generic
 
   # Constructs String from URI.
   #
-  # source://uri//uri/generic.rb#1343
+  # source://uri//uri/generic.rb#1379
   def to_str; end
 
   # Returns the user component (without URI decoding).
@@ -1961,7 +1892,7 @@ class URI::MailTo < ::URI::Generic
   #   uri.to_mailtext
   #   # => "To: ruby-list@ruby-lang.org\nSubject: subscribe\nCc: myaddr\n\n\n"
   #
-  # source://uri//uri/mailto.rb#268
+  # source://uri//uri/mailto.rb#289
   def to_rfc822text; end
 
   # Constructs String from URI.
@@ -2294,40 +2225,11 @@ URI::Schemes::WS = URI::WS
 URI::Schemes::WSS = URI::WSS
 
 class URI::Source < ::URI::File
-  # source://tapioca/0.15.0/lib/tapioca/helpers/source_uri.rb#58
-  sig { params(v: T.nilable(::String)).returns(T::Boolean) }
-  def check_host(v); end
-
   # source://uri//uri/generic.rb#243
   def gem_name; end
 
-  # source://tapioca/0.15.0/lib/tapioca/helpers/source_uri.rb#25
-  sig { returns(T.nilable(::String)) }
-  def gem_version; end
-
   # source://uri//uri/generic.rb#283
   def line_number; end
-
-  # source://tapioca/0.15.0/lib/tapioca/helpers/source_uri.rb#51
-  sig { params(v: T.nilable(::String)).void }
-  def set_path(v); end
-
-  # source://tapioca/0.15.0/lib/tapioca/helpers/source_uri.rb#70
-  sig { returns(::String) }
-  def to_s; end
-
-  class << self
-    # source://tapioca/0.15.0/lib/tapioca/helpers/source_uri.rb#38
-    sig do
-      params(
-        gem_name: ::String,
-        gem_version: T.nilable(::String),
-        path: ::String,
-        line_number: T.nilable(::String)
-      ).returns(::URI::Source)
-    end
-    def build(gem_name:, gem_version:, path:, line_number:); end
-  end
 end
 
 # source://uri//uri/common.rb#285
@@ -2340,7 +2242,7 @@ module URI::Util
   def make_components_hash(klass, array_hash); end
 
   class << self
-    # source://uri//uri/common.rb#36
+    # source://uri//uri/common.rb#64
     def make_components_hash(klass, array_hash); end
   end
 end

@@ -106,19 +106,19 @@ class FrozenRecord::Base
   # source://frozen_record//lib/frozen_record/base.rb#298
   def [](attr); end
 
-  # source://frozen_record//lib/frozen_record/base.rb#298
+  # source://frozen_record//lib/frozen_record/base.rb#301
   def attribute(attr); end
 
-  # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#72
+  # source://frozen_record//lib/frozen_record/base.rb#26
   def attribute_aliases; end
 
-  # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#72
+  # source://frozen_record//lib/frozen_record/base.rb#26
   def attribute_aliases?; end
 
-  # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#73
+  # source://frozen_record//lib/frozen_record/base.rb#26
   def attribute_method_patterns; end
 
-  # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#73
+  # source://frozen_record//lib/frozen_record/base.rb#26
   def attribute_method_patterns?; end
 
   # source://frozen_record//lib/frozen_record/base.rb#290
@@ -127,16 +127,16 @@ class FrozenRecord::Base
   # source://frozen_record//lib/frozen_record/base.rb#294
   def id; end
 
-  # source://activemodel/7.1.3.4/lib/active_model/serializers/json.rb#15
+  # source://frozen_record//lib/frozen_record/serialization.rb#7
   def include_root_in_json; end
 
-  # source://activemodel/7.1.3.4/lib/active_model/serializers/json.rb#15
+  # source://frozen_record//lib/frozen_record/serialization.rb#7
   def include_root_in_json?; end
 
-  # source://activemodel/7.1.3.4/lib/active_model/naming.rb#255
+  # source://frozen_record//lib/frozen_record/serialization.rb#7
   def model_name(&block); end
 
-  # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
+  # source://frozen_record//lib/frozen_record/base.rb#25
   def param_delimiter=(_arg0); end
 
   # @return [Boolean]
@@ -180,22 +180,22 @@ class FrozenRecord::Base
     # source://frozen_record//lib/frozen_record/base.rb#154
     def add_index(attribute, unique: T.unsafe(nil)); end
 
-    # source://frozen_record//lib/frozen_record/base.rb#103
+    # source://frozen_record//lib/frozen_record/base.rb#106
     def all; end
 
     # source://frozen_record//lib/frozen_record/base.rb#159
     def attribute(attribute, klass); end
 
-    # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#72
+    # source://frozen_record//lib/frozen_record/base.rb#26
     def attribute_aliases; end
 
-    # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#72
+    # source://frozen_record//lib/frozen_record/base.rb#26
     def attribute_aliases=(value); end
 
-    # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#72
+    # source://frozen_record//lib/frozen_record/base.rb#26
     def attribute_aliases?; end
 
-    # source://frozen_record//lib/frozen_record/base.rb#33
+    # source://frozen_record//lib/frozen_record/base.rb#36
     def attribute_deserializers; end
 
     # source://frozen_record//lib/frozen_record/base.rb#33
@@ -204,13 +204,13 @@ class FrozenRecord::Base
     # source://frozen_record//lib/frozen_record/base.rb#33
     def attribute_deserializers?; end
 
-    # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#73
+    # source://frozen_record//lib/frozen_record/base.rb#42
     def attribute_method_patterns; end
 
-    # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#73
+    # source://frozen_record//lib/frozen_record/base.rb#26
     def attribute_method_patterns=(value); end
 
-    # source://activemodel/7.1.3.4/lib/active_model/attribute_methods.rb#73
+    # source://frozen_record//lib/frozen_record/base.rb#26
     def attribute_method_patterns?; end
 
     # source://frozen_record//lib/frozen_record/base.rb#92
@@ -228,7 +228,7 @@ class FrozenRecord::Base
     # source://frozen_record//lib/frozen_record/base.rb#112
     def average(*_arg0, **_arg1, &_arg2); end
 
-    # source://frozen_record//lib/frozen_record/base.rb#31
+    # source://frozen_record//lib/frozen_record/base.rb#40
     def backend; end
 
     # source://frozen_record//lib/frozen_record/base.rb#31
@@ -301,16 +301,16 @@ class FrozenRecord::Base
     # source://frozen_record//lib/frozen_record/base.rb#112
     def ids(*_arg0, **_arg1, &_arg2); end
 
-    # source://activemodel/7.1.3.4/lib/active_model/serializers/json.rb#15
+    # source://frozen_record//lib/frozen_record/serialization.rb#7
     def include_root_in_json; end
 
-    # source://activemodel/7.1.3.4/lib/active_model/serializers/json.rb#15
+    # source://frozen_record//lib/frozen_record/serialization.rb#7
     def include_root_in_json=(value); end
 
-    # source://activemodel/7.1.3.4/lib/active_model/serializers/json.rb#15
+    # source://frozen_record//lib/frozen_record/serialization.rb#7
     def include_root_in_json?; end
 
-    # source://frozen_record//lib/frozen_record/base.rb#32
+    # source://frozen_record//lib/frozen_record/base.rb#35
     def index_definitions; end
 
     # source://frozen_record//lib/frozen_record/base.rb#32
@@ -358,19 +358,19 @@ class FrozenRecord::Base
     # source://frozen_record//lib/frozen_record/base.rb#112
     def order(*_arg0, **_arg1, &_arg2); end
 
-    # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
+    # source://frozen_record//lib/frozen_record/base.rb#25
     def param_delimiter; end
 
-    # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
+    # source://frozen_record//lib/frozen_record/base.rb#25
     def param_delimiter=(value); end
 
-    # source://activemodel/7.1.3.4/lib/active_model/conversion.rb#32
+    # source://frozen_record//lib/frozen_record/base.rb#25
     def param_delimiter?; end
 
     # source://frozen_record//lib/frozen_record/base.rb#112
     def pluck(*_arg0, **_arg1, &_arg2); end
 
-    # source://frozen_record//lib/frozen_record/base.rb#31
+    # source://frozen_record//lib/frozen_record/base.rb#38
     def primary_key; end
 
     # source://frozen_record//lib/frozen_record/base.rb#79
@@ -423,13 +423,13 @@ class FrozenRecord::Base
     # source://frozen_record//lib/frozen_record/base.rb#262
     def method_missing(name, *args); end
 
-    # source://frozen_record//lib/frozen_record/base.rb#31
+    # source://frozen_record//lib/frozen_record/base.rb#83
     def set_base_path(value); end
 
-    # source://frozen_record//lib/frozen_record/base.rb#31
+    # source://frozen_record//lib/frozen_record/base.rb#71
     def set_default_attributes(value); end
 
-    # source://frozen_record//lib/frozen_record/base.rb#31
+    # source://frozen_record//lib/frozen_record/base.rb#77
     def set_primary_key(value); end
 
     # source://frozen_record//lib/frozen_record/base.rb#234
@@ -599,7 +599,7 @@ class FrozenRecord::Scope
   # source://frozen_record//lib/frozen_record/scope.rb#36
   def find_by_id(id); end
 
-  # source://frozen_record//lib/frozen_record/scope.rb#11
+  # source://frozen_record//lib/frozen_record/scope.rb#12
   def find_each(*_arg0, **_arg1, &_arg2); end
 
   # source://frozen_record//lib/frozen_record/scope.rb#11
@@ -770,7 +770,7 @@ class FrozenRecord::Scope::Matcher
   # source://frozen_record//lib/frozen_record/scope.rb#322
   def ==(other); end
 
-  # source://frozen_record//lib/frozen_record/scope.rb#322
+  # source://frozen_record//lib/frozen_record/scope.rb#325
   def eql?(other); end
 
   # source://frozen_record//lib/frozen_record/scope.rb#306
