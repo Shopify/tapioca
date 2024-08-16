@@ -47,9 +47,10 @@ module Parallel
     # source://parallel//lib/parallel.rb#312
     def physical_processor_count; end
 
-    # Number of processors seen by the OS, used for process scheduling
+    # Number of processors seen by the OS or value considering CPU quota if the process is inside a cgroup,
+    # used for process scheduling
     #
-    # source://parallel//lib/parallel.rb#341
+    # source://parallel//lib/parallel.rb#342
     def processor_count; end
 
     # source://parallel//lib/parallel.rb#346
@@ -64,6 +65,9 @@ module Parallel
 
     # source://parallel//lib/parallel.rb#384
     def add_progress_bar!(job_factory, options); end
+
+    # source://parallel//lib/parallel.rb#699
+    def available_processor_count; end
 
     # source://parallel//lib/parallel.rb#647
     def call_with_index(item, index, options, &block); end

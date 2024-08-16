@@ -574,11 +574,6 @@ end
 # source://globalid//lib/global_id/signed_global_id.rb#5
 class SignedGlobalID::ExpiredMessage < ::StandardError; end
 
-# source://globalid//lib/global_id/uri/gid.rb#6
-module URI
-  include ::URI::RFC2396_REGEXP
-end
-
 # source://globalid//lib/global_id/uri/gid.rb#7
 class URI::GID < ::URI::Generic
   # URI::GID encodes an app unique reference to a specific model as an URI.
@@ -745,5 +740,3 @@ class URI::GID::InvalidModelIdError < ::URI::InvalidComponentError; end
 #
 # source://globalid//lib/global_id/uri/gid.rb#32
 class URI::GID::MissingModelIdError < ::URI::InvalidComponentError; end
-
-class URI::WSS < ::URI::WS; end

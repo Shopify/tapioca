@@ -12420,43 +12420,43 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#963
   def _teardown_callbacks; end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#736
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#731
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#665
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#660
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#676
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#671
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#688
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#683
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#700
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#695
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#707
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#702
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#718
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#713
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#728
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#723
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#746
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#741
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#781
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#776
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#804
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#799
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#813
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#808
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil), include_all: T.unsafe(nil)); end
 
-  # source://minitest/5.24.1/lib/minitest/assertions.rb#822
+  # source://minitest/5.25.0/lib/minitest/assertions.rb#817
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -12468,7 +12468,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#298
   def inspect; end
 
-  # source://minitest/5.24.1/lib/minitest.rb#376
+  # source://minitest/5.25.0/lib/minitest.rb#375
   def method_name; end
 
   class << self
@@ -17990,6 +17990,8 @@ class Integer < ::Numeric
   def years; end
 end
 
+Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
+
 # source://activesupport//lib/active_support/core_ext/kernel/reporting.rb#3
 module Kernel
   # class_eval on an object acts like +singleton_class.class_eval+.
@@ -21290,7 +21292,6 @@ end
 # source://activesupport//lib/active_support/core_ext/object/json.rb#224
 class URI::Generic
   include ::URI::RFC2396_REGEXP
-  include ::URI
 
   # source://activesupport//lib/active_support/core_ext/object/json.rb#225
   def as_json(options = T.unsafe(nil)); end
