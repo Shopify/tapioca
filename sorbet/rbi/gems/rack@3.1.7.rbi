@@ -1377,17 +1377,17 @@ class Rack::Lint::Wrapper
   #
   # @raise [LintError]
   #
-  # source://rack//lib/rack/lint.rb#937
+  # source://rack//lib/rack/lint.rb#939
   def call(stream); end
 
   # ==== The +content-length+ Header
   #
-  # source://rack//lib/rack/lint.rb#755
+  # source://rack//lib/rack/lint.rb#757
   def check_content_length_header(status, headers); end
 
   # ==== The +content-type+ Header
   #
-  # source://rack//lib/rack/lint.rb#739
+  # source://rack//lib/rack/lint.rb#741
   def check_content_type_header(status, headers); end
 
   # === Early Hints
@@ -1395,7 +1395,7 @@ class Rack::Lint::Wrapper
   # The application or any middleware may call the <tt>rack.early_hints</tt>
   # with an object which would be valid as the headers of a Rack response.
   #
-  # source://rack//lib/rack/lint.rb#655
+  # source://rack//lib/rack/lint.rb#657
   def check_early_hints(env); end
 
   # == The Environment
@@ -1407,15 +1407,15 @@ class Rack::Lint::Wrapper
 
   # === The Error Stream
   #
-  # source://rack//lib/rack/lint.rb#529
+  # source://rack//lib/rack/lint.rb#531
   def check_error_stream(error); end
 
-  # source://rack//lib/rack/lint.rb#729
+  # source://rack//lib/rack/lint.rb#731
   def check_header_value(key, value); end
 
   # === The Headers
   #
-  # source://rack//lib/rack/lint.rb#689
+  # source://rack//lib/rack/lint.rb#691
   def check_headers(headers); end
 
   # === Hijacking
@@ -1440,7 +1440,7 @@ class Rack::Lint::Wrapper
   # It is intended to be used when applications need access to raw HTTP/1
   # connection.
   #
-  # source://rack//lib/rack/lint.rb#589
+  # source://rack//lib/rack/lint.rb#591
   def check_hijack(env); end
 
   # ==== Partial Hijack
@@ -1452,7 +1452,7 @@ class Rack::Lint::Wrapper
   # It is intended to be used when applications need bi-directional
   # streaming.
   #
-  # source://rack//lib/rack/lint.rb#617
+  # source://rack//lib/rack/lint.rb#619
   def check_hijack_response(headers, env); end
 
   # === The Input Stream
@@ -1460,19 +1460,19 @@ class Rack::Lint::Wrapper
   # The input stream is an IO-like object which contains the raw HTTP
   # POST data.
   #
-  # source://rack//lib/rack/lint.rb#425
+  # source://rack//lib/rack/lint.rb#427
   def check_input_stream(input); end
 
   # ==== The +rack.protocol+ Header
   #
-  # source://rack//lib/rack/lint.rb#783
+  # source://rack//lib/rack/lint.rb#785
   def check_rack_protocol_header(status, headers); end
 
   # == The Response
   #
   # === The Status
   #
-  # source://rack//lib/rack/lint.rb#678
+  # source://rack//lib/rack/lint.rb#680
   def check_status(status); end
 
   # Setting this value informs the server that it should perform a
@@ -1504,19 +1504,19 @@ class Rack::Lint::Wrapper
   # cases where the Rack application makes internal/virtual requests and
   # discards the response.
   #
-  # source://rack//lib/rack/lint.rb#829
+  # source://rack//lib/rack/lint.rb#831
   def close; end
 
   # ==== Enumerable Body
   #
   # @raise [LintError]
   #
-  # source://rack//lib/rack/lint.rb#863
+  # source://rack//lib/rack/lint.rb#865
   def each; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/lint.rb#908
+  # source://rack//lib/rack/lint.rb#910
   def respond_to?(name, *_arg1); end
 
   # @raise [LintError]
@@ -1532,73 +1532,73 @@ class Rack::Lint::Wrapper
   # +to_ary+ and +close+, its implementation of +to_ary+ must call
   # +close+.
   #
-  # source://rack//lib/rack/lint.rb#924
+  # source://rack//lib/rack/lint.rb#926
   def to_ary; end
 
-  # source://rack//lib/rack/lint.rb#904
+  # source://rack//lib/rack/lint.rb#906
   def to_path; end
 
-  # source://rack//lib/rack/lint.rb#768
+  # source://rack//lib/rack/lint.rb#770
   def verify_content_length(size); end
 
-  # source://rack//lib/rack/lint.rb#845
+  # source://rack//lib/rack/lint.rb#847
   def verify_to_path; end
 end
 
-# source://rack//lib/rack/lint.rb#902
+# source://rack//lib/rack/lint.rb#904
 Rack::Lint::Wrapper::BODY_METHODS = T.let(T.unsafe(nil), Hash)
 
-# source://rack//lib/rack/lint.rb#538
+# source://rack//lib/rack/lint.rb#540
 class Rack::Lint::Wrapper::ErrorWrapper
   # @return [ErrorWrapper] a new instance of ErrorWrapper
   #
-  # source://rack//lib/rack/lint.rb#539
+  # source://rack//lib/rack/lint.rb#541
   def initialize(error); end
 
   # * +close+ must never be called on the error stream.
   #
   # @raise [LintError]
   #
-  # source://rack//lib/rack/lint.rb#561
+  # source://rack//lib/rack/lint.rb#563
   def close(*args); end
 
   # * +flush+ must be called without arguments and must be called
   #   in order to make the error appear for sure.
   #
-  # source://rack//lib/rack/lint.rb#556
+  # source://rack//lib/rack/lint.rb#558
   def flush; end
 
   # * +puts+ must be called with a single argument that responds to +to_s+.
   #
-  # source://rack//lib/rack/lint.rb#544
+  # source://rack//lib/rack/lint.rb#546
   def puts(str); end
 
   # * +write+ must be called with a single argument that is a String.
   #
   # @raise [LintError]
   #
-  # source://rack//lib/rack/lint.rb#549
+  # source://rack//lib/rack/lint.rb#551
   def write(str); end
 end
 
-# source://rack//lib/rack/lint.rb#443
+# source://rack//lib/rack/lint.rb#445
 class Rack::Lint::Wrapper::InputWrapper
   # @return [InputWrapper] a new instance of InputWrapper
   #
-  # source://rack//lib/rack/lint.rb#444
+  # source://rack//lib/rack/lint.rb#446
   def initialize(input); end
 
   # * +close+ can be called on the input stream to indicate that
   #   any remaining input is not needed.
   #
-  # source://rack//lib/rack/lint.rb#521
+  # source://rack//lib/rack/lint.rb#523
   def close(*args); end
 
   # * +each+ must be called without arguments and only yield Strings.
   #
   # @raise [LintError]
   #
-  # source://rack//lib/rack/lint.rb#509
+  # source://rack//lib/rack/lint.rb#511
   def each(*args); end
 
   # * +gets+ must be called without arguments and return a string,
@@ -1606,7 +1606,7 @@ class Rack::Lint::Wrapper::InputWrapper
   #
   # @raise [LintError]
   #
-  # source://rack//lib/rack/lint.rb#450
+  # source://rack//lib/rack/lint.rb#452
   def gets(*args); end
 
   # * +read+ behaves like <tt>IO#read</tt>.
@@ -1627,17 +1627,17 @@ class Rack::Lint::Wrapper::InputWrapper
   #   If +buffer+ is given, then the read data will be placed
   #   into +buffer+ instead of a newly created String object.
   #
-  # source://rack//lib/rack/lint.rb#476
+  # source://rack//lib/rack/lint.rb#478
   def read(*args); end
 end
 
-# source://rack//lib/rack/lint.rb#957
+# source://rack//lib/rack/lint.rb#959
 class Rack::Lint::Wrapper::StreamWrapper
   extend ::Forwardable
 
   # @return [StreamWrapper] a new instance of StreamWrapper
   #
-  # source://rack//lib/rack/lint.rb#972
+  # source://rack//lib/rack/lint.rb#974
   def initialize(stream); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -1671,7 +1671,7 @@ end
 # pass on real IO objects, although it is recognized that this approach
 # is not directly compatible with HTTP/2.
 #
-# source://rack//lib/rack/lint.rb#965
+# source://rack//lib/rack/lint.rb#967
 Rack::Lint::Wrapper::StreamWrapper::REQUIRED_METHODS = T.let(T.unsafe(nil), Array)
 
 # Rack::Lock locks every request inside a mutex, so that every request
@@ -2170,7 +2170,7 @@ class Rack::Multipart::Parser
   # end of the boundary.  If we don't find the start or end of the
   # boundary, clear the buffer and return nil.
   #
-  # source://rack//lib/rack/multipart/parser.rb#435
+  # source://rack//lib/rack/multipart/parser.rb#434
   def consume_boundary; end
 
   # From WEBrick::HTTPUtils
@@ -2182,13 +2182,13 @@ class Rack::Multipart::Parser
   # enc is submitted by the user, it may be invalid, so
   # use a binary encoding in that case.
   #
-  # source://rack//lib/rack/multipart/parser.rb#490
+  # source://rack//lib/rack/multipart/parser.rb#489
   def find_encoding(enc); end
 
   # source://rack//lib/rack/multipart/parser.rb#294
   def handle_consume_token; end
 
-  # source://rack//lib/rack/multipart/parser.rb#496
+  # source://rack//lib/rack/multipart/parser.rb#495
   def handle_empty_content!(content); end
 
   # This handles the initial parser state.  We read until we find the starting
@@ -2202,19 +2202,19 @@ class Rack::Multipart::Parser
   # source://rack//lib/rack/multipart/parser.rb#271
   def handle_fast_forward; end
 
-  # source://rack//lib/rack/multipart/parser.rb#412
+  # source://rack//lib/rack/multipart/parser.rb#411
   def handle_mime_body; end
 
   # source://rack//lib/rack/multipart/parser.rb#306
   def handle_mime_head; end
 
-  # source://rack//lib/rack/multipart/parser.rb#444
+  # source://rack//lib/rack/multipart/parser.rb#443
   def normalize_filename(filename); end
 
   # source://rack//lib/rack/multipart/parser.rb#258
   def read_data(io, outbuf); end
 
-  # source://rack//lib/rack/multipart/parser.rb#457
+  # source://rack//lib/rack/multipart/parser.rb#456
   def tag_multipart_encoding(filename, content_type, name, body); end
 
   class << self
@@ -2240,7 +2240,7 @@ class Rack::Multipart::Parser::BoundedIO
   def read(size, outbuf = T.unsafe(nil)); end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#454
+# source://rack//lib/rack/multipart/parser.rb#453
 Rack::Multipart::Parser::CHARSET = T.let(T.unsafe(nil), String)
 
 # source://rack//lib/rack/multipart/parser.rb#305
@@ -3424,12 +3424,12 @@ class Rack::Response
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#160
+  # source://rack//lib/rack/response.rb#164
   def [](key); end
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#164
+  # source://rack//lib/rack/response.rb#168
   def []=(key, value); end
 
   # Returns the value of attribute body.
@@ -3446,23 +3446,23 @@ class Rack::Response
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#94
+  # source://rack//lib/rack/response.rb#95
   def chunked?; end
 
-  # source://rack//lib/rack/response.rb#148
+  # source://rack//lib/rack/response.rb#152
   def close; end
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#168
+  # source://rack//lib/rack/response.rb#172
   def delete_header(key); end
 
-  # source://rack//lib/rack/response.rb#128
+  # source://rack//lib/rack/response.rb#130
   def each(&callback); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#152
+  # source://rack//lib/rack/response.rb#156
   def empty?; end
 
   # Generate a response array consistent with the requirements of the SPEC.
@@ -3470,18 +3470,18 @@ class Rack::Response
   #
   # @return [Array] a 3-tuple suitable of `[status, headers, body]`
   #
-  # source://rack//lib/rack/response.rb#106
+  # source://rack//lib/rack/response.rb#107
   def finish(&block); end
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#160
+  # source://rack//lib/rack/response.rb#164
   def get_header(key); end
 
   # @raise [ArgumentError]
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#156
+  # source://rack//lib/rack/response.rb#160
   def has_header?(key); end
 
   # Returns the value of attribute headers.
@@ -3503,15 +3503,15 @@ class Rack::Response
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#98
+  # source://rack//lib/rack/response.rb#99
   def no_entity_body?; end
 
-  # source://rack//lib/rack/response.rb#89
+  # source://rack//lib/rack/response.rb#90
   def redirect(target, status = T.unsafe(nil)); end
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#164
+  # source://rack//lib/rack/response.rb#168
   def set_header(key, value); end
 
   # Returns the value of attribute status.
@@ -3532,14 +3532,16 @@ class Rack::Response
   #
   # @return [Array] a 3-tuple suitable of `[status, headers, body]`
   #
-  # source://rack//lib/rack/response.rb#106
+  # source://rack//lib/rack/response.rb#107
   def to_a(&block); end
 
-  # Append to body and update content-length.
+  # Append a chunk to the response body.
+  #
+  # Converts the response into a buffered response if it wasn't already.
   #
   # NOTE: Do not mix #write and direct #body access!
   #
-  # source://rack//lib/rack/response.rb#142
+  # source://rack//lib/rack/response.rb#146
   def write(chunk); end
 
   class << self
@@ -3551,11 +3553,11 @@ end
 # source://rack//lib/rack/response.rb#28
 Rack::Response::CHUNKED = T.let(T.unsafe(nil), String)
 
-# source://rack//lib/rack/response.rb#176
+# source://rack//lib/rack/response.rb#180
 module Rack::Response::Helpers
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#187
+  # source://rack//lib/rack/response.rb#191
   def accepted?; end
 
   # Add a header that may have multiple values.
@@ -3570,12 +3572,12 @@ module Rack::Response::Helpers
   #
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#215
+  # source://rack//lib/rack/response.rb#219
   def add_header(key, value); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#190
+  # source://rack//lib/rack/response.rb#194
   def bad_request?; end
 
   # Specify that the content should be cached.
@@ -3584,166 +3586,166 @@ module Rack::Response::Helpers
   # @param duration [Integer] The number of seconds until the cache expires.
   # @param directive [Hash] a customizable set of options
   #
-  # source://rack//lib/rack/response.rb#303
+  # source://rack//lib/rack/response.rb#307
   def cache!(duration = T.unsafe(nil), directive: T.unsafe(nil)); end
 
-  # source://rack//lib/rack/response.rb#286
+  # source://rack//lib/rack/response.rb#290
   def cache_control; end
 
-  # source://rack//lib/rack/response.rb#290
+  # source://rack//lib/rack/response.rb#294
   def cache_control=(value); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#182
+  # source://rack//lib/rack/response.rb#186
   def client_error?; end
 
-  # source://rack//lib/rack/response.rb#253
+  # source://rack//lib/rack/response.rb#257
   def content_length; end
 
   # Get the content type of the response.
   #
-  # source://rack//lib/rack/response.rb#236
+  # source://rack//lib/rack/response.rb#240
   def content_type; end
 
   # Set the content type of the response.
   #
-  # source://rack//lib/rack/response.rb#241
+  # source://rack//lib/rack/response.rb#245
   def content_type=(content_type); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#186
+  # source://rack//lib/rack/response.rb#190
   def created?; end
 
-  # source://rack//lib/rack/response.rb#270
+  # source://rack//lib/rack/response.rb#274
   def delete_cookie(key, value = T.unsafe(nil)); end
 
   # Specifies that the content shouldn't be cached. Overrides `cache!` if already called.
   #
-  # source://rack//lib/rack/response.rb#295
+  # source://rack//lib/rack/response.rb#299
   def do_not_cache!; end
 
-  # source://rack//lib/rack/response.rb#310
+  # source://rack//lib/rack/response.rb#314
   def etag; end
 
-  # source://rack//lib/rack/response.rb#314
+  # source://rack//lib/rack/response.rb#318
   def etag=(value); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#192
+  # source://rack//lib/rack/response.rb#196
   def forbidden?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#202
+  # source://rack//lib/rack/response.rb#206
   def include?(header); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#179
+  # source://rack//lib/rack/response.rb#183
   def informational?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#177
+  # source://rack//lib/rack/response.rb#181
   def invalid?; end
 
-  # source://rack//lib/rack/response.rb#258
+  # source://rack//lib/rack/response.rb#262
   def location; end
 
-  # source://rack//lib/rack/response.rb#262
+  # source://rack//lib/rack/response.rb#266
   def location=(location); end
 
-  # source://rack//lib/rack/response.rb#245
+  # source://rack//lib/rack/response.rb#249
   def media_type; end
 
-  # source://rack//lib/rack/response.rb#249
+  # source://rack//lib/rack/response.rb#253
   def media_type_params; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#194
+  # source://rack//lib/rack/response.rb#198
   def method_not_allowed?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#189
+  # source://rack//lib/rack/response.rb#193
   def moved_permanently?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#188
+  # source://rack//lib/rack/response.rb#192
   def no_content?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#195
+  # source://rack//lib/rack/response.rb#199
   def not_acceptable?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#193
+  # source://rack//lib/rack/response.rb#197
   def not_found?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#185
+  # source://rack//lib/rack/response.rb#189
   def ok?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#197
+  # source://rack//lib/rack/response.rb#201
   def precondition_failed?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#200
+  # source://rack//lib/rack/response.rb#204
   def redirect?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#181
+  # source://rack//lib/rack/response.rb#185
   def redirection?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#196
+  # source://rack//lib/rack/response.rb#200
   def request_timeout?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#183
+  # source://rack//lib/rack/response.rb#187
   def server_error?; end
 
-  # source://rack//lib/rack/response.rb#266
+  # source://rack//lib/rack/response.rb#270
   def set_cookie(key, value); end
 
-  # source://rack//lib/rack/response.rb#278
+  # source://rack//lib/rack/response.rb#282
   def set_cookie_header; end
 
-  # source://rack//lib/rack/response.rb#282
+  # source://rack//lib/rack/response.rb#286
   def set_cookie_header=(value); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#180
+  # source://rack//lib/rack/response.rb#184
   def successful?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#191
+  # source://rack//lib/rack/response.rb#195
   def unauthorized?; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#198
+  # source://rack//lib/rack/response.rb#202
   def unprocessable?; end
 
   protected
 
-  # source://rack//lib/rack/response.rb#358
+  # source://rack//lib/rack/response.rb#359
   def append(chunk); end
 
   # Convert the body of this response into an internally buffered Array if possible.
@@ -3755,48 +3757,48 @@ module Rack::Response::Helpers
   #
   # @return [Boolean] whether the body is buffered as an Array instance.
   #
-  # source://rack//lib/rack/response.rb#328
+  # source://rack//lib/rack/response.rb#332
   def buffered_body!; end
 end
 
-# source://rack//lib/rack/response.rb#370
+# source://rack//lib/rack/response.rb#375
 class Rack::Response::Raw
   include ::Rack::Response::Helpers
 
   # @return [Raw] a new instance of Raw
   #
-  # source://rack//lib/rack/response.rb#376
+  # source://rack//lib/rack/response.rb#381
   def initialize(status, headers); end
 
-  # source://rack//lib/rack/response.rb#393
+  # source://rack//lib/rack/response.rb#398
   def delete_header(key); end
 
-  # source://rack//lib/rack/response.rb#385
+  # source://rack//lib/rack/response.rb#390
   def get_header(key); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/response.rb#381
+  # source://rack//lib/rack/response.rb#386
   def has_header?(key); end
 
   # Returns the value of attribute headers.
   #
-  # source://rack//lib/rack/response.rb#373
+  # source://rack//lib/rack/response.rb#378
   def headers; end
 
-  # source://rack//lib/rack/response.rb#389
+  # source://rack//lib/rack/response.rb#394
   def set_header(key, value); end
 
   # Returns the value of attribute status.
   #
-  # source://rack//lib/rack/response.rb#374
+  # source://rack//lib/rack/response.rb#379
   def status; end
 
   # Sets the attribute status
   #
   # @param value the value to set the attribute status to.
   #
-  # source://rack//lib/rack/response.rb#374
+  # source://rack//lib/rack/response.rb#379
   def status=(_arg0); end
 end
 
