@@ -10,14 +10,14 @@ module Tapioca
 
         @method_definitions = T.let(
           {}.compare_by_identity,
-          T::Hash[Module, T::Hash[Symbol, T.nilable([String, Integer])]],
+          T::Hash[Module, T::Hash[Symbol, T::Array[[String, Integer]]]],
         )
 
         class << self
           extend T::Sig
 
-          sig { params(method: T.any(Method, UnboundMethod), locations: T::Array[Thread::Backtrace::Location]).void }
-          def register(method, locations)
+          sig { params(method_name: Symbol, owner: Module, locations: T::Array[Thread::Backtrace::Location]).void }
+          def register(method_name, owner, locations)
             return unless enabled?
             # If Sorbet runtime is redefining a method, it sets this to true.
             # In those cases, we should skip the registration, as the method's original
@@ -27,19 +27,27 @@ module Tapioca
             loc = Reflection.resolve_loc(locations)
             return unless loc
 
-            methods_for_owner(method.owner).store(method.name, loc)
+            registrations_for(method_name, owner) << loc
           end
 
-          sig { params(method: T.any(Method, UnboundMethod)).returns(T.nilable([String, Integer])) }
-          def method_definition_for(method)
-            methods_for_owner(method.owner).fetch(method.name, method.source_location)
+          sig { params(method_name: Symbol, owner: Module).returns(T::Array[[String, Integer]]) }
+          def method_definitions_for(method_name, owner)
+            definitions = registrations_for(method_name, owner)
+
+            if definitions.empty?
+              source_loc = owner.instance_method(method_name).source_location
+              definitions = [source_loc] if source_loc
+            end
+
+            definitions
           end
 
           private
 
-          sig { params(owner: Module).returns(T::Hash[Symbol, T.nilable([String, Integer])]) }
-          def methods_for_owner(owner)
-            @method_definitions[owner] ||= {}
+          sig { params(method_name: Symbol, owner: Module).returns(T::Array[[String, Integer]]) }
+          def registrations_for(method_name, owner)
+            owner_lookup = (@method_definitions[owner] ||= {})
+            owner_lookup[method_name] ||= []
           end
         end
       end
@@ -50,18 +58,12 @@ end
 class Module
   prepend(Module.new do
     def singleton_method_added(method_name)
-      Tapioca::Runtime::Trackers::MethodDefinition.register(
-        Tapioca::Runtime::Reflection.method_of(self, method_name),
-        caller_locations,
-      )
+      Tapioca::Runtime::Trackers::MethodDefinition.register(method_name, singleton_class, caller_locations)
       super
     end
 
     def method_added(method_name)
-      Tapioca::Runtime::Trackers::MethodDefinition.register(
-        instance_method(method_name),
-        caller_locations,
-      )
+      Tapioca::Runtime::Trackers::MethodDefinition.register(method_name, self, caller_locations)
       super
     end
   end)

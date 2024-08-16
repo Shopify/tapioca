@@ -76,7 +76,7 @@ module Tapioca
             signature = signature_of!(method)
             method = T.let(signature.method, UnboundMethod) if signature
 
-            case @pipeline.method_in_gem?(method)
+            case @pipeline.method_definition_in_gem(method.name, constant)
             when nil
               # This means that this is a C-method. Thus, we want to
               # skip it only if the constant is an ignored one, since
