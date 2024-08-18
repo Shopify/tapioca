@@ -148,6 +148,20 @@ module Tapioca
 
         private
 
+        ColumnTypeOption = Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption
+
+        def column_type_option
+          @column_type_option ||= T.let(
+            ColumnTypeOption.from_options(options) do |value, default_column_type_option|
+              add_error(<<~MSG.strip)
+                Unknown value for compiler option `ActiveRecordColumnTypes` given: `#{value}`.
+                Proceeding with the default value: `#{default_column_type_option.serialize}`.
+              MSG
+            end,
+            T.nilable(ColumnTypeOption),
+          )
+        end
+
         sig { params(mod: RBI::Scope).void }
         def populate_nested_attribute_writers(mod)
           constant.nested_attributes_options.keys.each do |association_name|
@@ -187,7 +201,7 @@ module Tapioca
         end
         def populate_single_assoc_getter_setter(klass, association_name, reflection)
           association_class = type_for(reflection)
-          association_type = as_nilable_type(association_class)
+          association_type = single_association_type_for(reflection)
           association_methods_module = constant.generated_association_methods
 
           klass.create_method(
@@ -290,6 +304,29 @@ module Tapioca
           return "T.untyped" if !constant.table_exists? || polymorphic_association?(reflection)
 
           T.must(qualified_name_of(reflection.klass))
+        end
+
+        sig do
+          params(
+            reflection: ReflectionType,
+          ).returns(String)
+        end
+        def single_association_type_for(reflection)
+          return "T.untyped" if column_type_option.untyped?
+
+          association_class = type_for(reflection)
+          return as_nilable_type(association_class) unless column_type_option.persisted?
+
+          case reflection
+          when ActiveRecord::Reflection::BelongsToReflection
+            return association_class if reflection.options[:optional].nil? || !reflection.options[:optional]
+          when ActiveRecord::Reflection::HasOneReflection, ActiveRecord::Reflection::ThroughReflection
+            return association_class if reflection.options[:required].present? && reflection.options[:required]
+          end
+
+          # one could do more here - if the foreign key is not nullable at the DB level, then the association can likely
+          # be assumed to be non-nullable as well. However, it would be odd to encounter this case, so skip for now.
+          as_nilable_type(association_class)
         end
 
         sig do
