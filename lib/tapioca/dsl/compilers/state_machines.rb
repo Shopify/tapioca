@@ -3,6 +3,8 @@
 
 return unless defined?(StateMachines)
 
+require "tapioca/dsl/helpers/active_record_constants_helper"
+
 module Tapioca
   module Dsl
     module Compilers
@@ -114,23 +116,26 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.all(Module, ::StateMachines::ClassMethods) } }
 
-        ACTIVE_RECORD_RELATION_MODULE_NAMES = [
-          "GeneratedRelationMethods",
-          "GeneratedAssociationRelationMethods",
-        ].freeze
+        InstanceMethodModuleName = T.let("StateMachineInstanceHelperModule", String)
+        ClassMethodModuleName = T.let("StateMachineClassHelperModule", String)
+
+        ACTIVE_RECORD_RELATION_MODULE_NAMES = T.let(
+          [
+            Tapioca::Dsl::Helpers::ActiveRecordConstantsHelper::RelationMethodsModuleName,
+            Tapioca::Dsl::Helpers::ActiveRecordConstantsHelper::AssociationRelationMethodsModuleName,
+          ].freeze,
+          T::Array[String],
+        )
 
         sig { override.void }
         def decorate
           return if constant.state_machines.empty?
 
           root.create_path(T.unsafe(constant)) do |klass|
-            instance_module_name = "StateMachineInstanceHelperModule"
-            class_module_name = "StateMachineClassHelperModule"
-
-            instance_module = RBI::Module.new(instance_module_name)
+            instance_module = RBI::Module.new(InstanceMethodModuleName)
             klass << instance_module
 
-            class_module = RBI::Module.new(class_module_name)
+            class_module = RBI::Module.new(ClassMethodModuleName)
             klass << class_module
 
             constant.state_machines.each_value do |machine|
@@ -147,19 +152,16 @@ module Tapioca
               define_event_methods(instance_module, machine)
             end
 
-            matching_integration_name = ::StateMachines::Integrations.match(constant)&.integration_name
-
-            case matching_integration_name
-            when :active_record
+            if uses_active_record_integration?(constant)
               define_activerecord_methods(instance_module)
 
               ACTIVE_RECORD_RELATION_MODULE_NAMES.each do |module_name|
-                klass.create_module(module_name).create_include(class_module_name)
+                klass.create_module(module_name).create_include(ClassMethodModuleName)
               end
             end
 
-            klass.create_include(instance_module_name)
-            klass.create_extend(class_module_name)
+            klass.create_include(InstanceMethodModuleName)
+            klass.create_extend(ClassMethodModuleName)
           end
         end
 
@@ -173,6 +175,11 @@ module Tapioca
         end
 
         private
+
+        sig { params(constant: Module).returns(T::Boolean) }
+        def uses_active_record_integration?(constant)
+          ::StateMachines::Integrations.match(constant)&.integration_name == :active_record
+        end
 
         sig { params(machine: ::StateMachines::Machine).returns(String) }
         def state_type_for(machine)

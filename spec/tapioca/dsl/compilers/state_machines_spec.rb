@@ -350,6 +350,70 @@ module Tapioca
               RBI
               refute_includes(rbi_for(:Vehicle), writer)
             end
+
+            it "includes class methods module in relation modules if integrated with active record" do
+              add_ruby_file("active_record_integration.rb", <<~RUBY)
+                module ActiveRecordIntegration
+                  include StateMachines::Integrations::Base
+
+                  def self.integration_name
+                    :active_record
+                  end
+
+                  def self.matching_ancestors
+                    [Vehicle]
+                  end
+                end
+
+                StateMachines::Integrations.register(ActiveRecordIntegration)
+              RUBY
+
+              add_ruby_file("vehicle.rb", <<~RUBY)
+                class Vehicle
+                  state_machine :state
+                end
+              RUBY
+
+              ["GeneratedRelationMethods", "GeneratedAssociationRelationMethods"].each do |module_name|
+                expected = indented(<<~RBI, 2)
+                  module #{module_name}
+                    include StateMachineClassHelperModule
+                  end
+                RBI
+
+                assert_includes(rbi_for(:Vehicle), expected)
+              end
+            end
+
+            it "generates active record methods if integrated with active record" do
+              add_ruby_file("active_record_integration.rb", <<~RUBY)
+                module ActiveRecordIntegration
+                  include StateMachines::Integrations::Base
+
+                  def self.integration_name
+                    :active_record
+                  end
+
+                  def self.matching_ancestors
+                    [Vehicle]
+                  end
+                end
+
+                StateMachines::Integrations.register(ActiveRecordIntegration)
+              RUBY
+
+              add_ruby_file("vehicle.rb", <<~RUBY)
+                class Vehicle
+                  state_machine :state
+                end
+              RUBY
+
+              expected = indented(<<~RBI, 4)
+                sig { returns(T::Boolean) }
+                def changed_for_autosave?; end
+              RBI
+              assert_includes(rbi_for(:Vehicle), expected)
+            end
           end
         end
       end
