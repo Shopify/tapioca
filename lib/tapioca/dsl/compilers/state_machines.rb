@@ -114,6 +114,11 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.all(Module, ::StateMachines::ClassMethods) } }
 
+        ACTIVE_RECORD_RELATION_MODULE_NAMES = [
+          "GeneratedRelationMethods",
+          "GeneratedAssociationRelationMethods",
+        ].freeze
+
         sig { override.void }
         def decorate
           return if constant.state_machines.empty?
@@ -147,6 +152,10 @@ module Tapioca
             case matching_integration_name
             when :active_record
               define_activerecord_methods(instance_module)
+
+              ACTIVE_RECORD_RELATION_MODULE_NAMES.each do |module_name|
+                klass.create_module(module_name).create_include(class_module_name)
+              end
             end
 
             klass.create_include(instance_module_name)
