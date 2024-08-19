@@ -102,9 +102,11 @@ module Tapioca
         def column_type_for(column_name)
           return ["T.untyped", "T.untyped"] if @column_type_option.untyped?
 
-          column = @constant.columns_hash[column_name]
+          nilable_column = !has_non_null_database_constraint?(column_name) &&
+            !has_unconditional_presence_validator?(column_name)
+
           column_type = @constant.attribute_types[column_name]
-          getter_type = type_for_activerecord_value(column_type, column_nullability: !!column&.null)
+          getter_type = type_for_activerecord_value(column_type, column_nullability: nilable_column)
           setter_type =
             case column_type
             when ActiveRecord::Enum::EnumType
@@ -113,7 +115,7 @@ module Tapioca
               getter_type
             end
 
-          if @column_type_option.persisted? && !column&.null
+          if @column_type_option.persisted? && (virtual_attribute?(column_name) || !nilable_column)
             [getter_type, setter_type]
           else
             getter_type = as_nilable_type(getter_type) unless not_nilable_serialized_column?(column_type)
@@ -129,8 +131,8 @@ module Tapioca
           when ActiveRecord::Type::Integer
             "::Integer"
           when ->(type) {
-                 defined?(ActiveRecord::Encryption) && ActiveRecord::Encryption::EncryptedAttributeType === type
-               }
+            defined?(ActiveRecord::Encryption) && ActiveRecord::Encryption::EncryptedAttributeType === type
+          }
             # Reflect to see if `ActiveModel::Type::Value` is being used first.
             getter_type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(column_type)
 
@@ -236,6 +238,30 @@ module Tapioca
           return false unless column_type.coder.is_a?(ActiveRecord::Coders::YAMLColumn)
 
           [Array.singleton_class, Hash.singleton_class].include?(column_type.coder.object_class.singleton_class)
+        end
+
+        sig { params(column_name: String).returns(T::Boolean) }
+        def virtual_attribute?(column_name)
+          @constant.columns_hash[column_name].nil?
+        end
+
+        sig { params(column_name: String).returns(T::Boolean) }
+        def has_non_null_database_constraint?(column_name)
+          column = @constant.columns_hash[column_name]
+          return false if column.nil?
+
+          !column.null
+        end
+
+        sig { params(column_name: String).returns(T::Boolean) }
+        def has_unconditional_presence_validator?(column_name)
+          return false unless @constant.respond_to?(:validators_on)
+
+          @constant.validators_on(column_name).any? do |validator|
+            next false unless validator.is_a?(ActiveRecord::Validations::PresenceValidator)
+
+            !validator.options.key?(:if) && !validator.options.key?(:unless) && !validator.options.key?(:on)
+          end
         end
       end
     end

@@ -1110,6 +1110,59 @@ module Tapioca
 
                 assert_includes(rbi_for(:Post), expected)
               end
+
+              it "generates non-nilable types when there are unconditional presence validations" do
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts do |t|
+                        t.string :title, null: false
+                        t.string :subject, null: true
+                        t.string :body, null: true
+                      end
+                    end
+                  end
+                RUBY
+
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    validates :subject, presence: true
+                    validates :body, presence: true, if: -> { true }
+                  end
+                RUBY
+
+                output = rbi_for(:Post)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(::String) }
+                  def title; end
+
+                  sig { params(value: ::String).returns(::String) }
+                  def title=(value); end
+                RBI
+
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(::String) }
+                  def subject; end
+
+                  sig { params(value: ::String).returns(::String) }
+                  def subject=(value); end
+                RBI
+
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable(::String)) }
+                  def body; end
+
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  def body=(value); end
+                RBI
+
+                assert_includes(output, expected)
+              end
             end
 
             describe "when compiled with 'untyped' column types" do
