@@ -155,6 +155,8 @@ module Tapioca
             "::ActiveSupport::TimeWithZone"
           when ActiveRecord::Enum::EnumType
             "::String"
+          when ActiveRecord::Type::Binary
+            "::String"
           when ActiveRecord::Type::Serialized
             serialized_column_type(column_type)
           when ->(type) {
