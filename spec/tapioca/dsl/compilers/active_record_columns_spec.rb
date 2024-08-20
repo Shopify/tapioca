@@ -416,6 +416,7 @@ module Tapioca
                         # Ideally this would also test t.enum but that is not supported by sqlite
                         t.integer :integer_enum_column
                         t.string :string_enum_column
+                        t.binary :binary_column
                       end
                     end
                   end
@@ -511,6 +512,18 @@ module Tapioca
                 expected = indented(<<~RBI, 4)
                   sig { params(value: T.nilable(T.any(::String, ::Symbol))).returns(T.nilable(T.any(::String, ::Symbol))) }
                   def string_enum_column=(value); end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { returns(T.nilable(::String)) }
+                  def binary_column; end
+                RBI
+                assert_includes(output, expected)
+
+                expected = indented(<<~RBI, 4)
+                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                  def binary_column=(value); end
                 RBI
                 assert_includes(output, expected)
               end
