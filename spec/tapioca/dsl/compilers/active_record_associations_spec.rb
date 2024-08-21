@@ -1603,6 +1603,249 @@ module Tapioca
                 end
               end
             end
+
+            describe "with association type option :persisted" do
+              describe "has one relations" do
+                it "generates nilable types if :required is not an option" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :posts do |t|
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("user.rb", <<~RUBY)
+                    class User < ActiveRecord::Base
+                    end
+                  RUBY
+
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      has_one :author, class_name: "User"
+                    end
+                  RUBY
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns(T.nilable(::User)) }
+                    def author; end
+
+                    sig { params(value: T.nilable(::User)).void }
+                    def author=(value); end
+                  RBI
+                  assert_includes(
+                    rbi_for(:Post, compiler_options: { ActiveRecordAssociationTypes: "persisted" }),
+                    expected,
+                  )
+                end
+
+                it "generates nilable types if :required is false" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :posts do |t|
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("user.rb", <<~RUBY)
+                    class User < ActiveRecord::Base
+                    end
+                  RUBY
+
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      has_one :author, class_name: "User", required: false
+                    end
+                  RUBY
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns(T.nilable(::User)) }
+                    def author; end
+
+                    sig { params(value: T.nilable(::User)).void }
+                    def author=(value); end
+                  RBI
+                  assert_includes(
+                    rbi_for(:Post, compiler_options: { ActiveRecordAssociationTypes: "persisted" }),
+                    expected,
+                  )
+                end
+
+                it "generates non-nilable types if :required is true" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :posts do |t|
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("user.rb", <<~RUBY)
+                    class User < ActiveRecord::Base
+                    end
+                  RUBY
+
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      has_one :author, class_name: "User", required: true
+                    end
+                  RUBY
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns(::User) }
+                    def author; end
+
+                    sig { params(value: ::User).void }
+                    def author=(value); end
+                  RBI
+                  assert_includes(
+                    rbi_for(:Post, compiler_options: { ActiveRecordAssociationTypes: "persisted" }),
+                    expected,
+                  )
+                end
+              end
+
+              describe "belongs to relations" do
+                it "falls back to the default if :optional is not an option" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :default_required_posts do |t|
+                          t.references(:author, null: true)
+                        end
+
+                        create_table :default_optional_posts do |t|
+                          t.references(:author, null: true)
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("user.rb", <<~RUBY)
+                    class User < ActiveRecord::Base
+                    end
+                  RUBY
+
+                  add_ruby_file("default_required_post.rb", <<~RUBY)
+                    class DefaultRequiredPost < ActiveRecord::Base
+                      def self.belongs_to_required_by_default
+                        true
+                      end
+
+                      belongs_to :author, class_name: "User"
+                    end
+                  RUBY
+
+                  add_ruby_file("default_optional_post.rb", <<~RUBY)
+                    class DefaultOptionalPost < ActiveRecord::Base
+                      def self.belongs_to_required_by_default
+                        false
+                      end
+
+                      belongs_to :author, class_name: "User"
+                    end
+                  RUBY
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns(::User) }
+                    def author; end
+
+                    sig { params(value: ::User).void }
+                    def author=(value); end
+                  RBI
+                  assert_includes(
+                    rbi_for(:DefaultRequiredPost, compiler_options: { ActiveRecordAssociationTypes: "persisted" }),
+                    expected,
+                  )
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns(T.nilable(::User)) }
+                    def author; end
+
+                    sig { params(value: T.nilable(::User)).void }
+                    def author=(value); end
+                  RBI
+                  assert_includes(
+                    rbi_for(:DefaultOptionalPost, compiler_options: { ActiveRecordAssociationTypes: "persisted" }),
+                    expected,
+                  )
+                end
+
+                it "generates nilable types if :optional is true" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :posts do |t|
+                          t.references(:author, null: true)
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("user.rb", <<~RUBY)
+                    class User < ActiveRecord::Base
+                    end
+                  RUBY
+
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      belongs_to :author, class_name: "User", optional: true
+                    end
+                  RUBY
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns(T.nilable(::User)) }
+                    def author; end
+
+                    sig { params(value: T.nilable(::User)).void }
+                    def author=(value); end
+                  RBI
+                  assert_includes(
+                    rbi_for(:Post, compiler_options: { ActiveRecordAssociationTypes: "persisted" }),
+                    expected,
+                  )
+                end
+
+                it "generates non-nilable types if :optional is false" do
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :posts do |t|
+                          t.references(:author, null: true)
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("user.rb", <<~RUBY)
+                    class User < ActiveRecord::Base
+                    end
+                  RUBY
+
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                      belongs_to :author, class_name: "User", optional: false
+                    end
+                  RUBY
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns(::User) }
+                    def author; end
+
+                    sig { params(value: ::User).void }
+                    def author=(value); end
+                  RBI
+                  assert_includes(
+                    rbi_for(:Post, compiler_options: { ActiveRecordAssociationTypes: "persisted" }),
+                    expected,
+                  )
+                end
+              end
+            end
           end
 
           describe "decorate_active_storage" do

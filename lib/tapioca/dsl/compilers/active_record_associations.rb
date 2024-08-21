@@ -121,6 +121,50 @@ module Tapioca
           end
         end
 
+        class AssociationTypeOption < T::Enum
+          extend T::Sig
+
+          enums do
+            Nilable = new("nilable")
+            Persisted = new("persisted")
+          end
+
+          class << self
+            extend T::Sig
+
+            sig do
+              params(
+                options: T::Hash[String, T.untyped],
+                block: T.proc.params(value: String, default_association_type_option: AssociationTypeOption).void,
+              ).returns(AssociationTypeOption)
+            end
+            def from_options(options, &block)
+              column_type_option = Nilable
+              value = options["ActiveRecordAssociationTypes"]
+
+              if value
+                if has_serialized?(value)
+                  column_type_option = from_serialized(value)
+                else
+                  block.call(value, column_type_option)
+                end
+              end
+
+              column_type_option
+            end
+          end
+
+          sig { returns(T::Boolean) }
+          def persisted?
+            self == AssociationTypeOption::Persisted
+          end
+
+          sig { returns(T::Boolean) }
+          def nilable?
+            self == AssociationTypeOption::Nilable
+          end
+        end
+
         ConstantType = type_member { { fixed: T.class_of(ActiveRecord::Base) } }
 
         sig { override.void }
@@ -148,17 +192,16 @@ module Tapioca
 
         private
 
-        ColumnTypeOption = Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption
-
-        def column_type_option
-          @column_type_option ||= T.let(
-            ColumnTypeOption.from_options(options) do |value, default_column_type_option|
+        sig { returns(AssociationTypeOption) }
+        def association_type_option
+          @association_type_option ||= T.let(
+            AssociationTypeOption.from_options(options) do |value, default_association_type_option|
               add_error(<<~MSG.strip)
                 Unknown value for compiler option `ActiveRecordColumnTypes` given: `#{value}`.
-                Proceeding with the default value: `#{default_column_type_option.serialize}`.
+                Proceeding with the default value: `#{default_association_type_option.serialize}`.
               MSG
             end,
-            T.nilable(ColumnTypeOption),
+            T.nilable(AssociationTypeOption),
           )
         end
 
@@ -312,21 +355,37 @@ module Tapioca
           ).returns(String)
         end
         def single_association_type_for(reflection)
-          return "T.untyped" if column_type_option.untyped?
-
           association_class = type_for(reflection)
-          return as_nilable_type(association_class) unless column_type_option.persisted?
+          return as_nilable_type(association_class) unless association_type_option.persisted?
 
-          case reflection
-          when ActiveRecord::Reflection::BelongsToReflection
-            return association_class if reflection.options[:optional].nil? || !reflection.options[:optional]
-          when ActiveRecord::Reflection::HasOneReflection, ActiveRecord::Reflection::ThroughReflection
-            return association_class if reflection.options[:required].present? && reflection.options[:required]
+          if has_one_and_required_reflection?(reflection) || belongs_to_and_non_optional_reflection?(reflection)
+            association_class
+          else
+            as_nilable_type(association_class)
           end
+        end
 
-          # one could do more here - if the foreign key is not nullable at the DB level, then the association can likely
-          # be assumed to be non-nullable as well. However, it would be odd to encounter this case, so skip for now.
-          as_nilable_type(association_class)
+        # Note - one can do more here. If the association's attribute has an unconditional presence validation, it
+        # should also be considered required.
+        sig { params(reflection: ReflectionType).returns(T::Boolean) }
+        def has_one_and_required_reflection?(reflection)
+          return false unless reflection.has_one?
+          return false if reflection.options[:required].nil?
+
+          reflection.options[:required]
+        end
+
+        # Note - one can do more here. If the FK defining the belongs_to association is non-nullable at the DB level, or
+        # if the association's attribute has an unconditional presence validation, it should also be considered
+        # non-optional.
+        sig { params(reflection: ReflectionType).returns(T::Boolean) }
+        def belongs_to_and_non_optional_reflection?(reflection)
+          return false unless reflection.belongs_to?
+
+          required_by_default = !!reflection.active_record.belongs_to_required_by_default
+          return required_by_default if reflection.options[:optional].nil?
+
+          !reflection.options[:optional]
         end
 
         sig do
