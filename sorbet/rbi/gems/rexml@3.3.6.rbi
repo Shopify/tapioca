@@ -227,7 +227,7 @@ end
 # A class that defines the set of Attributes of an Element and provides
 # operations for accessing elements in that set.
 #
-# source://rexml//lib/rexml/element.rb#2128
+# source://rexml//lib/rexml/element.rb#2137
 class REXML::Attributes < ::Hash
   # :call-seq:
   #   new(element)
@@ -248,7 +248,7 @@ class REXML::Attributes < ::Hash
   #
   # @return [Attributes] a new instance of Attributes
   #
-  # source://rexml//lib/rexml/element.rb#2147
+  # source://rexml//lib/rexml/element.rb#2156
   def initialize(element); end
 
   # :call-seq:
@@ -271,7 +271,7 @@ class REXML::Attributes < ::Hash
   #   attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
   #   attrs.include?('baz') # => true
   #
-  # source://rexml//lib/rexml/element.rb#2524
+  # source://rexml//lib/rexml/element.rb#2522
   def <<(attribute); end
 
   # :call-seq:
@@ -295,7 +295,7 @@ class REXML::Attributes < ::Hash
   #
   # Related: get_attribute (returns an \Attribute object).
   #
-  # source://rexml//lib/rexml/element.rb#2172
+  # source://rexml//lib/rexml/element.rb#2181
   def [](name); end
 
   # :call-seq:
@@ -321,7 +321,7 @@ class REXML::Attributes < ::Hash
   #   attrs['baz:att'] = nil
   #   attrs.include?('baz:att') # => false
   #
-  # source://rexml//lib/rexml/element.rb#2356
+  # source://rexml//lib/rexml/element.rb#2365
   def []=(name, value); end
 
   # :call-seq:
@@ -344,7 +344,7 @@ class REXML::Attributes < ::Hash
   #   attrs.add(REXML::Attribute.new('baz', '3')) # => baz='3'
   #   attrs.include?('baz') # => true
   #
-  # source://rexml//lib/rexml/element.rb#2524
+  # source://rexml//lib/rexml/element.rb#2522
   def add(attribute); end
 
   # :call-seq:
@@ -375,7 +375,7 @@ class REXML::Attributes < ::Hash
   #   attrs.delete(attr) # => <ele att='&lt;'/> # => <ele att='&lt;'/>
   #   attrs.delete(attr) # => <ele att='&lt;'/> # => <ele/>
   #
-  # source://rexml//lib/rexml/element.rb#2477
+  # source://rexml//lib/rexml/element.rb#2475
   def delete(attribute); end
 
   # :call-seq:
@@ -394,7 +394,7 @@ class REXML::Attributes < ::Hash
   #   attrs = ele.attributes
   #   attrs.delete_all('att') # => [att='&lt;']
   #
-  # source://rexml//lib/rexml/element.rb#2546
+  # source://rexml//lib/rexml/element.rb#2544
   def delete_all(name); end
 
   # :call-seq:
@@ -419,7 +419,7 @@ class REXML::Attributes < ::Hash
   #   ["bar:att", "2"]
   #   ["att", "<"]
   #
-  # source://rexml//lib/rexml/element.rb#2274
+  # source://rexml//lib/rexml/element.rb#2283
   def each; end
 
   # :call-seq:
@@ -444,7 +444,7 @@ class REXML::Attributes < ::Hash
   #   [REXML::Attribute, bar:att='2']
   #   [REXML::Attribute, att='&lt;']
   #
-  # source://rexml//lib/rexml/element.rb#2241
+  # source://rexml//lib/rexml/element.rb#2250
   def each_attribute; end
 
   # :call-seq:
@@ -466,7 +466,7 @@ class REXML::Attributes < ::Hash
   #   attrs.get_attribute('att')           # => att='&lt;'
   #   attrs.get_attribute('nosuch')        # => nil
   #
-  # source://rexml//lib/rexml/element.rb#2300
+  # source://rexml//lib/rexml/element.rb#2309
   def get_attribute(name); end
 
   # :call-seq:
@@ -486,7 +486,7 @@ class REXML::Attributes < ::Hash
   #   attrs.get_attribute_ns('http://foo', 'att')    # => foo:att='1'
   #   attrs.get_attribute_ns('http://foo', 'nosuch') # => nil
   #
-  # source://rexml//lib/rexml/element.rb#2572
+  # source://rexml//lib/rexml/element.rb#2570
   def get_attribute_ns(namespace, name); end
 
   # :call-seq:
@@ -503,7 +503,7 @@ class REXML::Attributes < ::Hash
   #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
   #   ele.attributes.length # => 3
   #
-  # source://rexml//lib/rexml/element.rb#2212
+  # source://rexml//lib/rexml/element.rb#2221
   def length; end
 
   # :call-seq:
@@ -515,7 +515,7 @@ class REXML::Attributes < ::Hash
   #   d = REXML::Document.new(xml_string)
   #   d.root.attributes.namespaces # => {"xmlns"=>"foo", "x"=>"bar", "y"=>"twee"}
   #
-  # source://rexml//lib/rexml/element.rb#2433
+  # source://rexml//lib/rexml/element.rb#2431
   def namespaces; end
 
   # :call-seq:
@@ -529,7 +529,7 @@ class REXML::Attributes < ::Hash
   #   d = REXML::Document.new(xml_string)
   #   d.root.attributes.prefixes # => ["x", "y"]
   #
-  # source://rexml//lib/rexml/element.rb#2408
+  # source://rexml//lib/rexml/element.rb#2406
   def prefixes; end
 
   # :call-seq:
@@ -546,7 +546,7 @@ class REXML::Attributes < ::Hash
   #   ele = d.root.elements['//ele']   # => <a foo:att='1' bar:att='2' att='&lt;'/>
   #   ele.attributes.length # => 3
   #
-  # source://rexml//lib/rexml/element.rb#2212
+  # source://rexml//lib/rexml/element.rb#2221
   def size; end
 
   # :call-seq:
@@ -565,7 +565,7 @@ class REXML::Attributes < ::Hash
   #   attrs = ele.attributes.to_a      # => [foo:att='1', bar:att='2', att='&lt;']
   #   attrs.first.class                # => REXML::Attribute
   #
-  # source://rexml//lib/rexml/element.rb#2194
+  # source://rexml//lib/rexml/element.rb#2203
   def to_a; end
 end
 
@@ -1663,7 +1663,7 @@ class REXML::Element < ::REXML::Parent
   #   root[:attr]   # => "value"
   #   root[:nosuch] # => nil
   #
-  # source://rexml//lib/rexml/element.rb#1237
+  # source://rexml//lib/rexml/element.rb#1246
   def [](name_or_index); end
 
   # :call-seq:
@@ -1692,7 +1692,7 @@ class REXML::Element < ::REXML::Parent
   #   e.add_attribute(a) # => attr='VALUE'
   #   e['attr'] # => "VALUE"
   #
-  # source://rexml//lib/rexml/element.rb#1336
+  # source://rexml//lib/rexml/element.rb#1345
   def add_attribute(key, value = T.unsafe(nil)); end
 
   # :call-seq:
@@ -1718,7 +1718,7 @@ class REXML::Element < ::REXML::Parent
   #   a = [['foo' => 'bar'], ['baz' => 'bat']]
   #   e.add_attributes(a)
   #
-  # source://rexml//lib/rexml/element.rb#1367
+  # source://rexml//lib/rexml/element.rb#1376
   def add_attributes(hash); end
 
   # :call-seq:
@@ -1755,7 +1755,7 @@ class REXML::Element < ::REXML::Parent
   #   e0.add_element(e1, {'bat' => '0', 'bam' => '1'})
   #   e0[1] # => <bar bat='0' bam='1'/>
   #
-  # source://rexml//lib/rexml/element.rb#723
+  # source://rexml//lib/rexml/element.rb#732
   def add_element(element, attrs = T.unsafe(nil)); end
 
   # :call-seq:
@@ -1776,7 +1776,7 @@ class REXML::Element < ::REXML::Parent
   #   e.add_namespace('baz', 'bat')
   #   e.namespaces # => {"xmlns"=>"bar", "baz"=>"bat"}
   #
-  # source://rexml//lib/rexml/element.rb#646
+  # source://rexml//lib/rexml/element.rb#655
   def add_namespace(prefix, uri = T.unsafe(nil)); end
 
   # :call-seq:
@@ -1818,7 +1818,7 @@ class REXML::Element < ::REXML::Parent
   #   a.add_text(REXML::Text.new('baz'))
   #   a.to_a # => ["foo", <b/>, "bar", "baz", "baz"]
   #
-  # source://rexml//lib/rexml/element.rb#1138
+  # source://rexml//lib/rexml/element.rb#1147
   def add_text(text); end
 
   # :call-seq:
@@ -1850,7 +1850,7 @@ class REXML::Element < ::REXML::Parent
   #   document.root.attribute("x")      # => x='x'
   #   document.root.attribute("x", "a") # => a:x='a:x'
   #
-  # source://rexml//lib/rexml/element.rb#1278
+  # source://rexml//lib/rexml/element.rb#1287
   def attribute(name, namespace = T.unsafe(nil)); end
 
   # Mechanisms for accessing attributes and child elements of this
@@ -1875,7 +1875,7 @@ class REXML::Element < ::REXML::Parent
   #   cds.frozen?              # => true
   #   cds.map {|cd| cd.class } # => [REXML::CData, REXML::CData]
   #
-  # source://rexml//lib/rexml/element.rb#1411
+  # source://rexml//lib/rexml/element.rb#1420
   def cdatas; end
 
   # :call-seq:
@@ -1908,7 +1908,7 @@ class REXML::Element < ::REXML::Parent
   #   cs.map {|c| c.class } # => [REXML::Comment, REXML::Comment]
   #   cs.map {|c| c.to_s }  # => ["foo", "bar"]
   #
-  # source://rexml//lib/rexml/element.rb#1432
+  # source://rexml//lib/rexml/element.rb#1441
   def comments; end
 
   # The context holds information about the processing environment, such as
@@ -1934,7 +1934,7 @@ class REXML::Element < ::REXML::Parent
   #   e.delete_attribute('bar') # => <bar/>
   #   e.delete_attribute('bar') # => nil
   #
-  # source://rexml//lib/rexml/element.rb#1386
+  # source://rexml//lib/rexml/element.rb#1395
   def delete_attribute(key); end
 
   # :call-seq:
@@ -1974,7 +1974,7 @@ class REXML::Element < ::REXML::Parent
   #   a.delete_element('//c') # => <c/>
   #   a.delete_element('//c') # => nil
   #
-  # source://rexml//lib/rexml/element.rb#769
+  # source://rexml//lib/rexml/element.rb#778
   def delete_element(element); end
 
   # :call-seq:
@@ -1999,7 +1999,7 @@ class REXML::Element < ::REXML::Parent
   #   d.root.delete_namespace('nosuch')
   #   d.to_s # => "<a/>"
   #
-  # source://rexml//lib/rexml/element.rb#678
+  # source://rexml//lib/rexml/element.rb#687
   def delete_namespace(namespace = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2023,7 +2023,7 @@ class REXML::Element < ::REXML::Parent
   #
   # Related: #root, #root_node.
   #
-  # source://rexml//lib/rexml/element.rb#470
+  # source://rexml//lib/rexml/element.rb#475
   def document; end
 
   # :call-seq:
@@ -2042,7 +2042,7 @@ class REXML::Element < ::REXML::Parent
   #   <d> ... </>
   #   <e/>
   #
-  # source://rexml//lib/rexml/element.rb#921
+  # source://rexml//lib/rexml/element.rb#930
   def each_element(xpath = T.unsafe(nil), &block); end
 
   # :call-seq:
@@ -2094,7 +2094,7 @@ class REXML::Element < ::REXML::Parent
   #
   #   <d id='1'/>
   #
-  # source://rexml//lib/rexml/element.rb#838
+  # source://rexml//lib/rexml/element.rb#847
   def each_element_with_attribute(key, value = T.unsafe(nil), max = T.unsafe(nil), name = T.unsafe(nil), &block); end
 
   # :call-seq:
@@ -2144,7 +2144,7 @@ class REXML::Element < ::REXML::Parent
   #
   #   <c> ... </>
   #
-  # source://rexml//lib/rexml/element.rb#895
+  # source://rexml//lib/rexml/element.rb#904
   def each_element_with_text(text = T.unsafe(nil), max = T.unsafe(nil), name = T.unsafe(nil), &block); end
 
   # Mechanisms for accessing attributes and child elements of this
@@ -2168,7 +2168,7 @@ class REXML::Element < ::REXML::Parent
   #   d = REXML::Document.new(xml_string)
   #   d.root.get_elements('//a') # => [<a level='1'> ... </>, <a level='2'/>]
   #
-  # source://rexml//lib/rexml/element.rb#940
+  # source://rexml//lib/rexml/element.rb#949
   def get_elements(xpath); end
 
   # :call-seq:
@@ -2188,7 +2188,7 @@ class REXML::Element < ::REXML::Parent
   #
   #   d.root.get_text(1) # => "this is bold!"
   #
-  # source://rexml//lib/rexml/element.rb#1044
+  # source://rexml//lib/rexml/element.rb#1053
   def get_text(path = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2203,7 +2203,7 @@ class REXML::Element < ::REXML::Parent
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/element.rb#1306
+  # source://rexml//lib/rexml/element.rb#1315
   def has_attributes?; end
 
   # :call-seq:
@@ -2220,7 +2220,7 @@ class REXML::Element < ::REXML::Parent
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/element.rb#785
+  # source://rexml//lib/rexml/element.rb#794
   def has_elements?; end
 
   # :call-seq:
@@ -2237,7 +2237,7 @@ class REXML::Element < ::REXML::Parent
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/element.rb#993
+  # source://rexml//lib/rexml/element.rb#1002
   def has_text?; end
 
   # :call-seq:
@@ -2247,7 +2247,7 @@ class REXML::Element < ::REXML::Parent
   #
   # See {Element Context}[../doc/rexml/context_rdoc.html].
   #
-  # source://rexml//lib/rexml/element.rb#508
+  # source://rexml//lib/rexml/element.rb#513
   def ignore_whitespace_nodes; end
 
   # :call-seq:
@@ -2291,7 +2291,7 @@ class REXML::Element < ::REXML::Parent
   #   is.map {|i| i.class } # => [REXML::Instruction, REXML::Instruction]
   #   is.map {|i| i.to_s }  # => ["<?target0 foo?>", "<?target1 bar?>"]
   #
-  # source://rexml//lib/rexml/element.rb#1453
+  # source://rexml//lib/rexml/element.rb#1462
   def instructions; end
 
   # :call-seq:
@@ -2314,7 +2314,7 @@ class REXML::Element < ::REXML::Parent
   #   b.namespace('y') # => "2"
   #   b.namespace('nosuch') # => nil
   #
-  # source://rexml//lib/rexml/element.rb#613
+  # source://rexml//lib/rexml/element.rb#618
   def namespace(prefix = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2336,7 +2336,7 @@ class REXML::Element < ::REXML::Parent
   #   d.elements['//b'].namespaces # => {"x"=>"1", "y"=>"2"}
   #   d.elements['//c'].namespaces # => {"x"=>"1", "y"=>"2", "z"=>"3"}
   #
-  # source://rexml//lib/rexml/element.rb#586
+  # source://rexml//lib/rexml/element.rb#591
   def namespaces; end
 
   # :call-seq:
@@ -2349,7 +2349,7 @@ class REXML::Element < ::REXML::Parent
   #   d.root.elements['b'].next_element #-> <c/>
   #   d.root.elements['c'].next_element #-> nil
   #
-  # source://rexml//lib/rexml/element.rb#954
+  # source://rexml//lib/rexml/element.rb#963
   def next_element; end
 
   # :call-seq:
@@ -2361,7 +2361,7 @@ class REXML::Element < ::REXML::Parent
   #   a = d.root  # => <a/>
   #   a.node_type # => :element
   #
-  # source://rexml//lib/rexml/element.rb#1159
+  # source://rexml//lib/rexml/element.rb#1168
   def node_type; end
 
   # :call-seq:
@@ -2383,7 +2383,7 @@ class REXML::Element < ::REXML::Parent
   #   d.elements['//b'].prefixes # => ["x", "y"]
   #   d.elements['//c'].prefixes # => ["x", "y", "z"]
   #
-  # source://rexml//lib/rexml/element.rb#560
+  # source://rexml//lib/rexml/element.rb#565
   def prefixes; end
 
   # :call-seq:
@@ -2396,7 +2396,7 @@ class REXML::Element < ::REXML::Parent
   #   d.root.elements['c'].previous_element #-> <b/>
   #   d.root.elements['b'].previous_element #-> nil
   #
-  # source://rexml//lib/rexml/element.rb#970
+  # source://rexml//lib/rexml/element.rb#979
   def previous_element; end
 
   # :call-seq:
@@ -2409,7 +2409,7 @@ class REXML::Element < ::REXML::Parent
   # The evaluation is tested against +expanded_name+, and so is namespace
   # sensitive.
   #
-  # source://rexml//lib/rexml/element.rb#528
+  # source://rexml//lib/rexml/element.rb#533
   def raw; end
 
   # :call-seq:
@@ -2494,7 +2494,7 @@ class REXML::Element < ::REXML::Parent
   # Note also that the text note is retrieved by method get_text,
   # and so is always normalized text.
   #
-  # source://rexml//lib/rexml/element.rb#1021
+  # source://rexml//lib/rexml/element.rb#1030
   def text(path = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2522,7 +2522,7 @@ class REXML::Element < ::REXML::Parent
   #
   #   d.root.text = nil   #-> '<a><b/><c/></a>'
   #
-  # source://rexml//lib/rexml/element.rb#1080
+  # source://rexml//lib/rexml/element.rb#1089
   def text=(text); end
 
   # :call-seq:
@@ -2537,7 +2537,7 @@ class REXML::Element < ::REXML::Parent
   #   ts.map {|t| t.class } # => [REXML::Text, REXML::Text]
   #   ts.map {|t| t.to_s }  # => ["text", "more"]
   #
-  # source://rexml//lib/rexml/element.rb#1469
+  # source://rexml//lib/rexml/element.rb#1478
   def texts; end
 
   # :call-seq:
@@ -2551,7 +2551,7 @@ class REXML::Element < ::REXML::Parent
   # The evaluation is tested against the element's +expanded_name+,
   # and so is namespace-sensitive.
   #
-  # source://rexml//lib/rexml/element.rb#485
+  # source://rexml//lib/rexml/element.rb#490
   def whitespace; end
 
   # == DEPRECATED
@@ -2577,7 +2577,7 @@ class REXML::Element < ::REXML::Parent
   #  doc.write( out )     #-> doc is written to the string 'out'
   #  doc.write( $stdout ) #-> doc written to the console
   #
-  # source://rexml//lib/rexml/element.rb#1495
+  # source://rexml//lib/rexml/element.rb#1504
   def write(output = T.unsafe(nil), indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2600,17 +2600,17 @@ class REXML::Element < ::REXML::Parent
   #   e = REXML::Element.new('foo')
   #   e.xpath    # => "foo"
   #
-  # source://rexml//lib/rexml/element.rb#1183
+  # source://rexml//lib/rexml/element.rb#1192
   def xpath; end
 
   private
 
-  # source://rexml//lib/rexml/element.rb#1512
+  # source://rexml//lib/rexml/element.rb#1521
   def __to_xpath_helper(node); end
 
   # A private helper method
   #
-  # source://rexml//lib/rexml/element.rb#1527
+  # source://rexml//lib/rexml/element.rb#1536
   def each_with_something(test, max = T.unsafe(nil), name = T.unsafe(nil)); end
 end
 
@@ -2664,7 +2664,7 @@ end
 #   elements = d.root.elements
 #   elements # => #<REXML::Elements @element=<bookstore> ... </>>
 #
-# source://rexml//lib/rexml/element.rb#1582
+# source://rexml//lib/rexml/element.rb#1591
 class REXML::Elements
   include ::Enumerable
 
@@ -2681,7 +2681,7 @@ class REXML::Elements
   #
   # @return [Elements] a new instance of Elements
   #
-  # source://rexml//lib/rexml/element.rb#1595
+  # source://rexml//lib/rexml/element.rb#1604
   def initialize(parent); end
 
   # :call-seq:
@@ -2746,7 +2746,7 @@ class REXML::Elements
   #   element.parent                # => <bookstore> ... </>
   #   element.context               # => {:raw=>:all}
   #
-  # source://rexml//lib/rexml/element.rb#1912
+  # source://rexml//lib/rexml/element.rb#1921
   def <<(element = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2802,7 +2802,7 @@ class REXML::Elements
   #   eles[4, 'book'] # => <book category='web' cover='paperback'> ... </>
   #   eles[5, 'book'] # => nil
   #
-  # source://rexml//lib/rexml/element.rb#1667
+  # source://rexml//lib/rexml/element.rb#1676
   def [](index, name = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2841,7 +2841,7 @@ class REXML::Elements
   #   eles[50] = REXML::Text.new('bar') # => "bar"
   #   eles.size # => 5
   #
-  # source://rexml//lib/rexml/element.rb#1722
+  # source://rexml//lib/rexml/element.rb#1731
   def []=(index, element); end
 
   # :call-seq:
@@ -2906,7 +2906,7 @@ class REXML::Elements
   #   element.parent                # => <bookstore> ... </>
   #   element.context               # => {:raw=>:all}
   #
-  # source://rexml//lib/rexml/element.rb#1912
+  # source://rexml//lib/rexml/element.rb#1921
   def add(element = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2926,7 +2926,7 @@ class REXML::Elements
   #   xpath = '//book [@category="web"]'
   #   elements.collect(xpath) {|element| element.size } # => [17, 9]
   #
-  # source://rexml//lib/rexml/element.rb#1975
+  # source://rexml//lib/rexml/element.rb#1984
   def collect(xpath = T.unsafe(nil)); end
 
   # :call-seq:
@@ -2970,7 +2970,7 @@ class REXML::Elements
   #   elements.delete('//book [@category="children"]') # => <book category='children'> ... </>
   #   elements.delete('//nosuch') # => nil
   #
-  # source://rexml//lib/rexml/element.rb#1812
+  # source://rexml//lib/rexml/element.rb#1821
   def delete(element); end
 
   # :call-seq:
@@ -2990,7 +2990,7 @@ class REXML::Elements
   #   elements.size # => 0
   #   elements.delete_all('//book') # => []
   #
-  # source://rexml//lib/rexml/element.rb#1838
+  # source://rexml//lib/rexml/element.rb#1847
   def delete_all(xpath); end
 
   # :call-seq:
@@ -3021,7 +3021,7 @@ class REXML::Elements
   #   <book category='web'> ... </>
   #   <book category='web' cover='paperback'> ... </>
   #
-  # source://rexml//lib/rexml/element.rb#1954
+  # source://rexml//lib/rexml/element.rb#1963
   def each(xpath = T.unsafe(nil)); end
 
   # :call-seq:
@@ -3036,7 +3036,7 @@ class REXML::Elements
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/element.rb#1742
+  # source://rexml//lib/rexml/element.rb#1751
   def empty?; end
 
   # :call-seq:
@@ -3053,7 +3053,7 @@ class REXML::Elements
   #   elements.index(ele_4) # => 3
   #   elements.index(ele_3) # => -1
   #
-  # source://rexml//lib/rexml/element.rb#1760
+  # source://rexml//lib/rexml/element.rb#1769
   def index(element); end
 
   # :call-seq:
@@ -3133,7 +3133,7 @@ class REXML::Elements
   #     total += element.size
   #   end # => 26
   #
-  # source://rexml//lib/rexml/element.rb#2060
+  # source://rexml//lib/rexml/element.rb#2069
   def inject(xpath = T.unsafe(nil), initial = T.unsafe(nil)); end
 
   # :call-seq:
@@ -3147,7 +3147,7 @@ class REXML::Elements
   #   elements = REXML::Elements.new(d.root)
   #   elements.parent == d.root # => true
   #
-  # source://rexml//lib/rexml/element.rb#1610
+  # source://rexml//lib/rexml/element.rb#1619
   def parent; end
 
   # :call-seq:
@@ -3159,7 +3159,7 @@ class REXML::Elements
   #   d.root.elements.size # => 3 # Three elements.
   #   d.root.size          # => 6 # Three elements plus three text nodes..
   #
-  # source://rexml//lib/rexml/element.rb#2084
+  # source://rexml//lib/rexml/element.rb#2093
   def size; end
 
   # :call-seq:
@@ -3180,14 +3180,14 @@ class REXML::Elements
   #
   #   elements.to_a('//c') # => [<c/>]
   #
-  # source://rexml//lib/rexml/element.rb#2108
+  # source://rexml//lib/rexml/element.rb#2117
   def to_a(xpath = T.unsafe(nil)); end
 
   private
 
   # Private helper class.  Removes quotes from quoted strings
   #
-  # source://rexml//lib/rexml/element.rb#2116
+  # source://rexml//lib/rexml/element.rb#2125
   def literalize(name); end
 end
 
@@ -3229,65 +3229,54 @@ class REXML::Entity < ::REXML::Child
   #
   # @return [Entity] a new instance of Entity
   #
-  # source://rexml//lib/rexml/entity.rb#33
+  # source://rexml//lib/rexml/entity.rb#34
   def initialize(stream, value = T.unsafe(nil), parent = T.unsafe(nil), reference = T.unsafe(nil)); end
 
   # Returns the value of attribute external.
   #
-  # source://rexml//lib/rexml/entity.rb#22
+  # source://rexml//lib/rexml/entity.rb#23
   def external; end
 
   # Returns the value of attribute name.
   #
-  # source://rexml//lib/rexml/entity.rb#22
+  # source://rexml//lib/rexml/entity.rb#23
   def name; end
 
   # Returns the value of attribute ndata.
   #
-  # source://rexml//lib/rexml/entity.rb#22
+  # source://rexml//lib/rexml/entity.rb#23
   def ndata; end
 
   # Returns the value of this entity unprocessed -- raw.  This is the
   # normalized value; that is, with all %ent; and &ent; entities intact
   #
-  # source://rexml//lib/rexml/entity.rb#85
+  # source://rexml//lib/rexml/entity.rb#83
   def normalized; end
-
-  # source://rexml//lib/rexml/entity.rb#138
-  def parent=(other); end
 
   # Returns the value of attribute pubid.
   #
-  # source://rexml//lib/rexml/entity.rb#22
+  # source://rexml//lib/rexml/entity.rb#23
   def pubid; end
 
   # Returns the value of attribute ref.
   #
-  # source://rexml//lib/rexml/entity.rb#22
+  # source://rexml//lib/rexml/entity.rb#23
   def ref; end
 
   # Returns this entity as a string.  See write().
   #
-  # source://rexml//lib/rexml/entity.rb#119
+  # source://rexml//lib/rexml/entity.rb#117
   def to_s; end
 
   # Evaluates to the unnormalized value of this entity; that is, replacing
-  # all entities -- both %ent; and &ent; entities.  This differs from
-  # +value()+ in that +value+ only replaces %ent; entities.
+  # &ent; entities.
   #
   # source://rexml//lib/rexml/entity.rb#73
   def unnormalized; end
 
-  # Returns the value of this entity.  At the moment, only internal entities
-  # are processed.  If the value contains internal references (IE,
-  # %blah;), those are replaced with their values.  IE, if the doctype
-  # contains:
-  #  <!ENTITY % foo "bar">
-  #  <!ENTITY yada "nanoo %foo; nanoo>
-  # then:
-  #  doctype.entity('yada').value   #-> "nanoo bar nanoo"
+  # Returns the value of attribute value.
   #
-  # source://rexml//lib/rexml/entity.rb#134
+  # source://rexml//lib/rexml/entity.rb#23
   def value; end
 
   # Write out a fully formed, correct entity definition (assuming the Entity
@@ -3299,13 +3288,8 @@ class REXML::Entity < ::REXML::Child
   # indent::
   #   *DEPRECATED* and ignored
   #
-  # source://rexml//lib/rexml/entity.rb#97
+  # source://rexml//lib/rexml/entity.rb#95
   def write(out, indent = T.unsafe(nil)); end
-
-  private
-
-  # source://rexml//lib/rexml/entity.rb#144
-  def resolve_value; end
 
   class << self
     # Evaluates whether the given string matches an entity definition,
@@ -3313,7 +3297,7 @@ class REXML::Entity < ::REXML::Child
     #
     # @return [Boolean]
     #
-    # source://rexml//lib/rexml/entity.rb#66
+    # source://rexml//lib/rexml/entity.rb#67
     def matches?(string); end
   end
 end
@@ -3989,41 +3973,41 @@ end
 #
 # Nat Price gave me some good ideas for the API.
 #
-# source://rexml//lib/rexml/parsers/baseparser.rb#41
+# source://rexml//lib/rexml/parsers/baseparser.rb#57
 class REXML::Parsers::BaseParser
   # @return [BaseParser] a new instance of BaseParser
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#145
+  # source://rexml//lib/rexml/parsers/baseparser.rb#162
   def initialize(source); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#152
+  # source://rexml//lib/rexml/parsers/baseparser.rb#169
   def add_listener(listener); end
 
   # Returns true if there are no more events
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#180
+  # source://rexml//lib/rexml/parsers/baseparser.rb#198
   def empty?; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#507
+  # source://rexml//lib/rexml/parsers/baseparser.rb#530
   def entity(reference, entities); end
 
   # Returns the value of attribute entity_expansion_count.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#157
+  # source://rexml//lib/rexml/parsers/baseparser.rb#174
   def entity_expansion_count; end
 
   # Returns true if there are more events.  Synonymous with !empty?
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#185
+  # source://rexml//lib/rexml/parsers/baseparser.rb#203
   def has_next?; end
 
   # Escapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#520
+  # source://rexml//lib/rexml/parsers/baseparser.rb#541
   def normalize(input, entities = T.unsafe(nil), entity_filter = T.unsafe(nil)); end
 
   # Peek at the +depth+ event in the stack.  The first element on the stack
@@ -4033,111 +4017,123 @@ class REXML::Parsers::BaseParser
   # event, so you can effectively pre-parse the entire document (pull the
   # entire thing into memory) using this method.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#201
+  # source://rexml//lib/rexml/parsers/baseparser.rb#219
   def peek(depth = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#170
+  # source://rexml//lib/rexml/parsers/baseparser.rb#188
   def position; end
 
   # Returns the next event.  This is a +PullEvent+ object.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#216
+  # source://rexml//lib/rexml/parsers/baseparser.rb#234
   def pull; end
 
   # Returns the value of attribute source.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#156
+  # source://rexml//lib/rexml/parsers/baseparser.rb#173
   def source; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#159
+  # source://rexml//lib/rexml/parsers/baseparser.rb#176
   def stream=(source); end
 
   # Unescapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#536
+  # source://rexml//lib/rexml/parsers/baseparser.rb#557
   def unnormalize(string, entities = T.unsafe(nil), filter = T.unsafe(nil)); end
 
   # Push an event back on the head of the stream.  This method
   # has (theoretically) infinite depth.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#191
+  # source://rexml//lib/rexml/parsers/baseparser.rb#209
   def unshift(token); end
 
   private
 
+  # source://rexml//lib/rexml/parsers/baseparser.rb#602
+  def add_namespace(prefix, uri); end
+
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#582
+  # source://rexml//lib/rexml/parsers/baseparser.rb#635
   def need_source_encoding_update?(xml_declaration_encoding); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#702
-  def parse_attributes(prefixes, curr_ns); end
+  # source://rexml//lib/rexml/parsers/baseparser.rb#755
+  def parse_attributes(prefixes); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#601
+  # source://rexml//lib/rexml/parsers/baseparser.rb#654
   def parse_id(base_error_message, accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#629
+  # source://rexml//lib/rexml/parsers/baseparser.rb#682
   def parse_id_invalid_details(accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#588
+  # source://rexml//lib/rexml/parsers/baseparser.rb#641
   def parse_name(base_error_message); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#667
+  # source://rexml//lib/rexml/parsers/baseparser.rb#617
+  def pop_namespaces_restore; end
+
+  # source://rexml//lib/rexml/parsers/baseparser.rb#720
   def process_instruction; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#226
+  # source://rexml//lib/rexml/parsers/baseparser.rb#244
   def pull_event; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#575
-  def record_entity_expansion; end
+  # source://rexml//lib/rexml/parsers/baseparser.rb#611
+  def push_namespaces_restore; end
+
+  # source://rexml//lib/rexml/parsers/baseparser.rb#628
+  def record_entity_expansion(delta = T.unsafe(nil)); end
 end
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#114
+# source://rexml//lib/rexml/parsers/baseparser.rb#130
 REXML::Parsers::BaseParser::EXTERNAL_ID_PUBLIC = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#115
+# source://rexml//lib/rexml/parsers/baseparser.rb#131
 REXML::Parsers::BaseParser::EXTERNAL_ID_SYSTEM = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#116
+# source://rexml//lib/rexml/parsers/baseparser.rb#132
 REXML::Parsers::BaseParser::PUBLIC_ID = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#127
+# source://rexml//lib/rexml/parsers/baseparser.rb#143
 module REXML::Parsers::BaseParser::Private; end
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#130
+# source://rexml//lib/rexml/parsers/baseparser.rb#147
 REXML::Parsers::BaseParser::Private::ATTLISTDECL_END = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#135
+# source://rexml//lib/rexml/parsers/baseparser.rb#152
 REXML::Parsers::BaseParser::Private::CARRIAGE_RETURN_NEWLINE_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#136
+# source://rexml//lib/rexml/parsers/baseparser.rb#153
 REXML::Parsers::BaseParser::Private::CHARACTER_REFERENCES = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#129
+# source://rexml//lib/rexml/parsers/baseparser.rb#146
 REXML::Parsers::BaseParser::Private::CLOSE_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#137
+# source://rexml//lib/rexml/parsers/baseparser.rb#154
 REXML::Parsers::BaseParser::Private::DEFAULT_ENTITIES_PATTERNS = T.let(T.unsafe(nil), Hash)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#134
+# source://rexml//lib/rexml/parsers/baseparser.rb#151
 REXML::Parsers::BaseParser::Private::ENTITYDECL_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#132
+# source://rexml//lib/rexml/parsers/baseparser.rb#149
 REXML::Parsers::BaseParser::Private::GEDECL_PATTERN = T.let(T.unsafe(nil), String)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#131
+# source://rexml//lib/rexml/parsers/baseparser.rb#148
 REXML::Parsers::BaseParser::Private::NAME_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#133
+# source://rexml//lib/rexml/parsers/baseparser.rb#150
 REXML::Parsers::BaseParser::Private::PEDECL_PATTERN = T.let(T.unsafe(nil), String)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#128
+# source://rexml//lib/rexml/parsers/baseparser.rb#144
+REXML::Parsers::BaseParser::Private::PEREFERENCE_PATTERN = T.let(T.unsafe(nil), Regexp)
+
+# source://rexml//lib/rexml/parsers/baseparser.rb#145
 REXML::Parsers::BaseParser::Private::TAG_PATTERN = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#50
+# source://rexml//lib/rexml/parsers/baseparser.rb#66
 REXML::Parsers::BaseParser::QNAME = T.let(T.unsafe(nil), Regexp)
 
-# source://rexml//lib/rexml/parsers/baseparser.rb#49
+# source://rexml//lib/rexml/parsers/baseparser.rb#65
 REXML::Parsers::BaseParser::QNAME_STR = T.let(T.unsafe(nil), String)
 
 # source://rexml//lib/rexml/parsers/streamparser.rb#6
@@ -4151,6 +4147,9 @@ class REXML::Parsers::StreamParser
   def add_listener(listener); end
 
   # source://rexml//lib/rexml/parsers/streamparser.rb#17
+  def entity_expansion_count; end
+
+  # source://rexml//lib/rexml/parsers/streamparser.rb#21
   def parse; end
 end
 
