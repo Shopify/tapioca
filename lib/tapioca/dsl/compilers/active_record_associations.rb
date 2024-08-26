@@ -197,7 +197,7 @@ module Tapioca
           @association_type_option ||= T.let(
             AssociationTypeOption.from_options(options) do |value, default_association_type_option|
               add_error(<<~MSG.strip)
-                Unknown value for compiler option `ActiveRecordColumnTypes` given: `#{value}`.
+                Unknown value for compiler option `ActiveRecordAssociationTypes` given: `#{value}`.
                 Proceeding with the default value: `#{default_association_type_option.serialize}`.
               MSG
             end,
