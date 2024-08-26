@@ -9,6 +9,8 @@ end
 
 require "tapioca/internal"
 
+# bug? saving file before rails boots causes crash
+
 module RubyLsp
   module Tapioca
     class Addon < ::RubyLsp::Addon
