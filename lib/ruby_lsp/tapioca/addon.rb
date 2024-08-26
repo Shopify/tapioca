@@ -52,6 +52,7 @@ module RubyLsp
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
+        # TODO: avoid direct access
         files_to_entries = @index.instance_variable_get("@files_to_entries")
         constants = changes.map do |change|
           path = change[:uri].gsub("file://", "")
