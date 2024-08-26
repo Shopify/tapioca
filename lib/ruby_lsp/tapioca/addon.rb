@@ -72,9 +72,8 @@ module RubyLsp
         message = { method: request, params: params }
         json = message.to_json
 
-        $stderr.puts "Tapioca LSP: Sending message with #{params}: #{json}"
-        stdin = rails_runner_stdin
-        stdin.write("Content-Length: #{json.length}\r\n\r\n", json)
+        $stderr.puts "Tapioca LSP: Sending request '#{request}' with params #{params}"
+        @global_state.rails_runner_stdin.write("Content-Length: #{json.length}\r\n\r\n", json)
       end
     end
   end
