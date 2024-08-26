@@ -21,11 +21,6 @@ module RubyLsp
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
       end
 
-      def rails_runner_stdin
-        stdin = @global_state.instance_variable_get(:@rails_runner_stdin)
-        @rails_runner_stdin ||= stdin
-      end
-
       def activate(global_state, outgoing_queue)
         $stderr.puts("Activating Tapioca LSP addon v#{VERSION}")
         @index = global_state.index
