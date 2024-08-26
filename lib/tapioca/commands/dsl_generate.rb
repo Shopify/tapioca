@@ -4,19 +4,17 @@
 module Tapioca
   module Commands
     class DslGenerate < AbstractDsl
-      # LSP entrypoint
-      sig { void }
-      def generate_without_booting
-        Loaders::Dsl.load_subset
-        generate
-      end
-
       private
 
-      # CLI entrypoint
       sig { override.void }
       def execute
-        load_application
+        if @lsp_addon
+          Loaders::Dsl.load_subset
+        else
+          load_application
+        end
+
+        File.write("output.txt", "Generating DSL RBIs", mode: "a")
         generate
       end
 

@@ -37,18 +37,9 @@ module RubyLsp
       end
 
       def self.dsl(params)
-        File.write("output.txt", "DSL called: #{params[:constants]}", mode: "a")
-        command = ::Tapioca::Commands::DslGenerate.new(
-          requested_constants: params[:constants],
-          tapioca_path: ::Tapioca::TAPIOCA_DIR,
-          requested_paths: [],
-          outpath: Pathname.new(::Tapioca::DEFAULT_DSL_DIR),
-          file_header: true,
-          exclude: [],
-          only: [],
-        )
-
-        command.generate_without_booting
+        File.write("output.txt", "DSL called: #{params[:constants]}\n", mode: "a")
+        $stdout.reopen("out.txt", "w")
+        ::Tapioca::Cli.start(["dsl", "generate", "--lsp_addon"] + params[:constants])
       end
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
