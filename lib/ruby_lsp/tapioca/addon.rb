@@ -58,12 +58,10 @@ module RubyLsp
           entries = files_to_entries[path]
           return unless entries
 
-          entries.map do |entry|
-            next unless entry.class == RubyIndexer::Entry::Class ||
+          entries.select do |entry|
+            entry.class == RubyIndexer::Entry::Class ||
               entry.class == RubyIndexer::Entry::Module
-
-            entry.name
-          end
+          end.map(&:name)
         end.flatten.compact
 
         send_message("tapioca.dsl", constants: constants) if constants.any?
