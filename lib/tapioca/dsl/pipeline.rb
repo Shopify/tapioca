@@ -120,7 +120,6 @@ module Tapioca
           end,
           T.nilable(T::Array[T.class_of(Compiler)]),
         )
-        puts "Compilers: #{@compilers}"
         @compilers
       end
 
