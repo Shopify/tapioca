@@ -1,6 +1,9 @@
 # typed: true
 # frozen_string_literal: true
 
+return unless defined?(RubyLsp)
+
+require "ruby_lsp/internal"
 require "tapioca/internal"
 
 module RubyLsp
@@ -54,7 +57,8 @@ module RubyLsp
         constants = changes.map do |change|
           path = change[:uri].gsub("file://", "")
           entries = files_to_entries[path]
-          return unless entries
+          next unless entries
+
           entries.map do |entry|
             next unless entry.class == RubyIndexer::Entry::Class ||
               entry.class == RubyIndexer::Entry::Module
