@@ -36,8 +36,7 @@ module RubyLsp
         "Tapioca"
       end
 
-      def self.dsl(params)
-        File.write("output.txt", "#{Time.now} DSL called: #{params[:constants]}\n", mode: "a")
+      def dsl(params)
         command = ::Tapioca::Commands::DslGenerate.new(
           requested_constants: params[:constants],
           tapioca_path: ::Tapioca::TAPIOCA_DIR,
@@ -67,7 +66,7 @@ module RubyLsp
           end
         end.flatten.compact
 
-        send_message("tapioca_dsl", constants: constants) if constants.any?
+        send_message("tapioca.dsl", constants: constants) if constants.any?
       end
 
       sig { params(request: String, params: T::Hash[Symbol, T.untyped]).void }
