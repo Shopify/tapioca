@@ -57,7 +57,7 @@ module RubyLsp
         constants = changes.map do |change|
           path = change[:uri].gsub("file://", "")
           entries = files_to_entries[path]
-          return unless entries
+          return unless entries # rubocop:disable Lint/NonLocalExitFromIterator
 
           entries.select do |entry|
             entry.class == RubyIndexer::Entry::Class ||
