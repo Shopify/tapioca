@@ -58,7 +58,7 @@ module IdentityCache
     # source://identity_cache//lib/identity_cache.rb#73
     def cache_namespace=(val); end
 
-    # source://identity_cache//lib/identity_cache.rb#249
+    # source://identity_cache//lib/identity_cache.rb#258
     def eager_load!; end
 
     # Cache retrieval and miss resolver primitive; given a key it will try to
@@ -69,7 +69,7 @@ module IdentityCache
     # +key+ A cache key string
     # +cache_fetcher_options+ A hash of options to pass to the cache backend
     #
-    # source://identity_cache//lib/identity_cache.rb#152
+    # source://identity_cache//lib/identity_cache.rb#161
     def fetch(key, cache_fetcher_options = T.unsafe(nil)); end
 
     # Same as +fetch+, except that it will try a collection of keys, using the
@@ -78,10 +78,10 @@ module IdentityCache
     # == Parameters
     # +keys+ A collection or array of key strings
     #
-    # source://identity_cache//lib/identity_cache.rb#175
+    # source://identity_cache//lib/identity_cache.rb#184
     def fetch_multi(*keys); end
 
-    # source://identity_cache//lib/identity_cache.rb#242
+    # source://identity_cache//lib/identity_cache.rb#251
     def fetch_read_only_records; end
 
     # Sets the attribute fetch_read_only_records
@@ -101,7 +101,7 @@ module IdentityCache
     # source://identity_cache//lib/identity_cache.rb#86
     def logger=(_arg0); end
 
-    # source://identity_cache//lib/identity_cache.rb#162
+    # source://identity_cache//lib/identity_cache.rb#171
     def map_cached_nil_for(value); end
 
     # Returns the value of attribute readonly.
@@ -121,12 +121,10 @@ module IdentityCache
     # source://identity_cache//lib/identity_cache.rb#116
     def should_fill_cache?; end
 
-    # @return [Boolean]
-    #
-    # source://identity_cache//lib/identity_cache.rb#120
+    # source://identity_cache//lib/identity_cache.rb#145
     def should_use_cache?; end
 
-    # source://identity_cache//lib/identity_cache.rb#166
+    # source://identity_cache//lib/identity_cache.rb#175
     def unmap_cached_nil_for(value); end
 
     # Executes a block with deferred parent expiration, ensuring that the parent
@@ -151,15 +149,15 @@ module IdentityCache
     # Cleans up thread-local variables related to deferred parent expiration regardless
     # of whether the block raises an exception.
     #
-    # source://identity_cache//lib/identity_cache.rb#217
+    # source://identity_cache//lib/identity_cache.rb#226
     def with_deferred_parent_expiration; end
 
-    # source://identity_cache//lib/identity_cache.rb#234
+    # source://identity_cache//lib/identity_cache.rb#243
     def with_fetch_read_only_records(value = T.unsafe(nil)); end
 
     private
 
-    # source://identity_cache//lib/identity_cache.rb#255
+    # source://identity_cache//lib/identity_cache.rb#264
     def fetch_in_batches(keys, &block); end
   end
 
