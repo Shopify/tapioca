@@ -25,6 +25,7 @@ module RubyLsp
         $stderr.puts("Activating Tapioca LSP addon v#{VERSION}")
         @index = global_state.index
         @global_state = global_state
+        @addon = RubyLsp::Addon.get("Ruby LSP Rails")
       end
 
       sig { override.void }
@@ -52,29 +53,27 @@ module RubyLsp
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
-        # TODO: avoid direct access
+        # TODO: avoid direct access?
         files_to_entries = @index.instance_variable_get("@files_to_entries")
         constants = changes.map do |change|
           path = change[:uri].gsub("file://", "")
           entries = files_to_entries[path]
+
+          # entries = @index.entries_for(path, RubyIndexer::Entry::Namespace)
           return unless entries # rubocop:disable Lint/NonLocalExitFromIterator
 
           entries.select do |entry|
+            # TODO: RubyIndexer::Entry::Namespace
             entry.class == RubyIndexer::Entry::Class ||
               entry.class == RubyIndexer::Entry::Module
           end.map(&:name)
         end.flatten.compact
 
-        send_message("tapioca.dsl", constants: constants) if constants.any?
-      end
+        # TODO: confirm with kaan if we expect a response here? (i.e. should it be a notificatio or a request)
 
-      sig { params(request: String, params: T::Hash[Symbol, T.untyped]).void }
-      def send_message(request, params)
-        message = { method: request, params: params }
-        json = message.to_json
-
-        $stderr.puts "Tapioca LSP: Sending request '#{request}' with params #{params}"
-        @global_state.rails_runner_stdin.write("Content-Length: #{json.length}\r\n\r\n", json)
+        # TODO: `tapioca/dsl` instead?
+        $stderr.puts "Tapioca LSP: Sending request 'tapioca.dsl' with constants #{constants}"
+        @addon.client.send_notification("tapioca.dsl", constants: constants) if constants.any?
       end
     end
   end
