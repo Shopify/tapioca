@@ -6,7 +6,7 @@
 
 
 # :markup: markdown
-# :include: activejob/README.md
+# :include: ../README.md
 #
 # source://activejob//lib/active_job/gem_version.rb#3
 module ActiveJob
@@ -28,19 +28,19 @@ module ActiveJob
     # Queue adapters may communicate the enqueue status of each job by setting
     # successfully_enqueued and/or enqueue_error on the passed-in job instances.
     #
-    # source://activejob//lib/active_job/enqueuing.rb#16
+    # source://activejob//lib/active_job/enqueuing.rb#14
     def perform_all_later(*jobs); end
 
-    # source://activejob//lib/active_job.rb#53
+    # source://activejob//lib/active_job.rb#56
     def use_big_decimal_serializer; end
 
-    # source://activejob//lib/active_job.rb#53
+    # source://activejob//lib/active_job.rb#56
     def use_big_decimal_serializer=(_arg0); end
 
-    # source://activejob//lib/active_job.rb#61
+    # source://activejob//lib/active_job.rb#64
     def verbose_enqueue_logs; end
 
-    # source://activejob//lib/active_job.rb#61
+    # source://activejob//lib/active_job.rb#64
     def verbose_enqueue_logs=(_arg0); end
 
     # Returns the currently loaded version of Active Job as a +Gem::Version+.
@@ -211,22 +211,22 @@ class ActiveJob::Base
   extend ::Sidekiq::Job::Options::ClassMethods
   extend ::ActiveJob::TestHelper::TestQueueAdapter::ClassMethods
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#963
   def _enqueue_callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#963
   def _perform_callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#951
   def _run_enqueue_callbacks(&block); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#951
   def _run_perform_callbacks(&block); end
 
   # source://activejob//lib/active_job/exceptions.rb#12
@@ -256,13 +256,13 @@ class ActiveJob::Base
   # source://activejob//lib/active_job/queue_name.rb#57
   def queue_name_prefix?; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers?; end
 
   # source://sidekiq/7.3.1/lib/sidekiq/job.rb#141
@@ -284,25 +284,25 @@ class ActiveJob::Base
   def sidekiq_retry_in_block=(_arg0); end
 
   class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#955
     def _enqueue_callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#959
     def _enqueue_callbacks=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#955
     def _perform_callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#959
     def _perform_callbacks=(value); end
 
     # source://activejob//lib/active_job/queue_adapter.rb#24
@@ -383,13 +383,13 @@ class ActiveJob::Base
     # source://activejob//lib/active_job/queue_name.rb#57
     def queue_name_prefix?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers?; end
 
     # source://activejob//lib/active_job/exceptions.rb#11
@@ -456,16 +456,16 @@ module ActiveJob::Callbacks
   mixes_in_class_methods ::ActiveJob::Callbacks::ClassMethods
 
   class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#963
     def _execute_callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#951
     def _run_execute_callbacks(&block); end
   end
 
@@ -889,10 +889,10 @@ end
 # Can be raised by adapters if they wish to communicate to the caller a reason
 # why the adapter was unexpectedly unable to enqueue a job.
 #
-# source://activejob//lib/active_job/enqueuing.rb#10
+# source://activejob//lib/active_job/enqueuing.rb#8
 class ActiveJob::EnqueueError < ::StandardError; end
 
-# source://activejob//lib/active_job/enqueuing.rb#42
+# source://activejob//lib/active_job/enqueuing.rb#40
 module ActiveJob::Enqueuing
   extend ::ActiveSupport::Concern
 
@@ -914,13 +914,13 @@ module ActiveJob::Enqueuing
   #    my_job_instance.enqueue wait_until: Date.tomorrow.midnight
   #    my_job_instance.enqueue priority: 10
   #
-  # source://activejob//lib/active_job/enqueuing.rb#89
+  # source://activejob//lib/active_job/enqueuing.rb#87
   def enqueue(options = T.unsafe(nil)); end
 end
 
 # Includes the +perform_later+ method for job initialization.
 #
-# source://activejob//lib/active_job/enqueuing.rb#46
+# source://activejob//lib/active_job/enqueuing.rb#44
 module ActiveJob::Enqueuing::ClassMethods
   # Push a job onto the queue. By default the arguments must be either String,
   # Integer, Float, NilClass, TrueClass, FalseClass, BigDecimal, Symbol, Date,
@@ -936,12 +936,12 @@ module ActiveJob::Enqueuing::ClassMethods
   #
   # @yield [job]
   #
-  # source://activejob//lib/active_job/enqueuing.rb#58
+  # source://activejob//lib/active_job/enqueuing.rb#56
   def perform_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
-  # source://activejob//lib/active_job/enqueuing.rb#68
+  # source://activejob//lib/active_job/enqueuing.rb#66
   def job_or_instantiate(*args, **_arg1); end
 end
 
@@ -1114,7 +1114,7 @@ ActiveJob::Exceptions::JITTER_DEFAULT = T.let(T.unsafe(nil), Object)
 # {rescue_from}[rdoc-ref:ActiveSupport::Rescuable::ClassMethods#rescue_from]
 # are handled.
 #
-# source://activejob//lib/active_job/execution.rb#13
+# source://activejob//lib/active_job/execution.rb#12
 module ActiveJob::Execution
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -1124,7 +1124,7 @@ module ActiveJob::Execution
   mixes_in_class_methods ::ActiveSupport::Rescuable::ClassMethods
   mixes_in_class_methods ::ActiveJob::Execution::ClassMethods
 
-  # source://activejob//lib/active_job/execution.rb#61
+  # source://activejob//lib/active_job/execution.rb#60
   def perform(*_arg0); end
 
   # Performs the job immediately. The job is not sent to the queuing adapter
@@ -1139,12 +1139,12 @@ module ActiveJob::Execution
   #
   #   puts MyJob.new(*args).perform_now # => "Hello World!"
   #
-  # source://activejob//lib/active_job/execution.rb#46
+  # source://activejob//lib/active_job/execution.rb#45
   def perform_now; end
 
   private
 
-  # source://activejob//lib/active_job/execution.rb#66
+  # source://activejob//lib/active_job/execution.rb#65
   def _perform_job; end
 
   module GeneratedClassMethods
@@ -1162,16 +1162,16 @@ end
 
 # Includes methods for executing and performing jobs instantly.
 #
-# source://activejob//lib/active_job/execution.rb#18
+# source://activejob//lib/active_job/execution.rb#17
 module ActiveJob::Execution::ClassMethods
-  # source://activejob//lib/active_job/execution.rb#27
+  # source://activejob//lib/active_job/execution.rb#26
   def execute(job_data); end
 
   # Performs the job immediately.
   #
   #   MyJob.perform_now("mike")
   #
-  # source://activejob//lib/active_job/execution.rb#23
+  # source://activejob//lib/active_job/execution.rb#22
   def perform_now(*_arg0, **_arg1, &_arg2); end
 end
 
@@ -1271,7 +1271,7 @@ class ActiveJob::LogSubscriber < ::ActiveSupport::LogSubscriber
     # source://activejob//lib/active_job/log_subscriber.rb#7
     def backtrace_cleaner?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/log_subscriber.rb#87
+    # source://activesupport/7.1.4/lib/active_support/log_subscriber.rb#88
     def log_levels; end
   end
 end
@@ -2857,7 +2857,7 @@ ActiveJob::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveJob::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activejob//lib/active_job/gem_version.rb#13
-ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveJob::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # source://activejob//lib/active_job/gem_version.rb#15
 ActiveJob::VERSION::STRING = T.let(T.unsafe(nil), String)

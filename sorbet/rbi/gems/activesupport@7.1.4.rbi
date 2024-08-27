@@ -5,7 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem activesupport`.
 
 
-# :include: activesupport/README.rdoc
+# :include: ../README.rdoc
 #
 # source://activesupport//lib/active_support/deep_mergeable.rb#3
 module ActiveSupport
@@ -303,7 +303,7 @@ class ActiveSupport::BacktraceCleaner
   #   # Will turn "/my/rails/root/app/models/person.rb" into "/app/models/person.rb"
   #   backtrace_cleaner.add_filter { |line| line.gsub(Rails.root.to_s, '') }
   #
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#80
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#81
   def add_filter(&block); end
 
   # Adds a silencer from the block provided. If the silencer returns +true+
@@ -312,63 +312,66 @@ class ActiveSupport::BacktraceCleaner
   #   # Will reject all lines that include the word "puma", like "/gems/puma/server.rb" or "/app/my_puma_server/rb"
   #   backtrace_cleaner.add_silencer { |line| /puma/.match?(line) }
   #
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#89
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#90
   def add_silencer(&block); end
 
   # Returns the backtrace after all filters and silencers have been run
   # against it. Filters run first, then silencers.
   #
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#43
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#44
   def clean(backtrace, kind = T.unsafe(nil)); end
 
   # Returns the frame with all filters applied.
   # returns +nil+ if the frame was silenced.
   #
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#59
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#60
   def clean_frame(frame, kind = T.unsafe(nil)); end
 
   # Returns the backtrace after all filters and silencers have been run
   # against it. Filters run first, then silencers.
   #
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#43
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#44
   def filter(backtrace, kind = T.unsafe(nil)); end
 
   # Removes all filters, but leaves in the silencers. Useful if you suddenly
   # need to see entire filepaths in the backtrace that you had already
   # filtered out.
   #
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#103
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#104
   def remove_filters!; end
 
   # Removes all silencers, but leaves in the filters. Useful if your
   # context of debugging suddenly expands as you suspect a bug in one of
   # the libraries you use.
   #
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#96
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#97
   def remove_silencers!; end
 
   private
 
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#110
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#120
+  def add_core_silencer; end
+
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#111
   def add_gem_filter; end
 
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#119
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#124
   def add_gem_silencer; end
 
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#123
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#128
   def add_stdlib_silencer; end
 
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#127
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#132
   def filter_backtrace(backtrace); end
 
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#143
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#148
   def noise(backtrace); end
 
-  # source://activesupport//lib/active_support/backtrace_cleaner.rb#135
+  # source://activesupport//lib/active_support/backtrace_cleaner.rb#140
   def silence(backtrace); end
 end
 
-# source://activesupport//lib/active_support/backtrace_cleaner.rb#108
+# source://activesupport//lib/active_support/backtrace_cleaner.rb#109
 ActiveSupport::BacktraceCleaner::FORMATTED_GEMS_PATTERN = T.let(T.unsafe(nil), Regexp)
 
 # = \Benchmarkable
@@ -661,12 +664,12 @@ class ActiveSupport::BroadcastLogger
   # source://activesupport//lib/active_support/broadcast_logger.rb#221
   def initialize_copy(other); end
 
-  # source://activesupport//lib/active_support/broadcast_logger.rb#234
+  # source://activesupport//lib/active_support/broadcast_logger.rb#235
   def method_missing(name, *args, **kwargs, &block); end
 
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/broadcast_logger.rb#246
+  # source://activesupport//lib/active_support/broadcast_logger.rb#247
   def respond_to_missing?(method, include_all); end
 
   class << self
@@ -2210,7 +2213,7 @@ class ActiveSupport::Cache::Store
   # source://activesupport//lib/active_support/cache.rb#997
   def expanded_version(key); end
 
-  # source://activesupport//lib/active_support/cache.rb#1050
+  # source://activesupport//lib/active_support/cache.rb#1051
   def get_entry_value(entry, name, options); end
 
   # source://activesupport//lib/active_support/cache.rb#1034
@@ -2282,7 +2285,7 @@ class ActiveSupport::Cache::Store
   # source://activesupport//lib/active_support/cache.rb#829
   def read_multi_entries(names, **options); end
 
-  # source://activesupport//lib/active_support/cache.rb#1055
+  # source://activesupport//lib/active_support/cache.rb#1056
   def save_block_result_to_cache(name, options); end
 
   # source://activesupport//lib/active_support/cache.rb#812
@@ -2471,37 +2474,37 @@ ActiveSupport::Cache::UNIVERSAL_OPTIONS = T.let(T.unsafe(nil), Array)
 # ActiveSupport::Cache::Store#fetch, the second argument will be an
 # instance of +WriteOptions+.
 #
-# source://activesupport//lib/active_support/cache.rb#1071
+# source://activesupport//lib/active_support/cache.rb#1072
 class ActiveSupport::Cache::WriteOptions
   # @return [WriteOptions] a new instance of WriteOptions
   #
-  # source://activesupport//lib/active_support/cache.rb#1072
+  # source://activesupport//lib/active_support/cache.rb#1073
   def initialize(options); end
 
-  # source://activesupport//lib/active_support/cache.rb#1096
+  # source://activesupport//lib/active_support/cache.rb#1097
   def expires_at; end
 
   # Sets the Cache entry's +expires_at+ value. If an +expires_in+ option was
   # previously set, this will unset it since +expires_at+ and +expires_in+
   # cannot both be set.
   #
-  # source://activesupport//lib/active_support/cache.rb#1103
+  # source://activesupport//lib/active_support/cache.rb#1104
   def expires_at=(expires_at); end
 
-  # source://activesupport//lib/active_support/cache.rb#1084
+  # source://activesupport//lib/active_support/cache.rb#1085
   def expires_in; end
 
   # Sets the Cache entry's +expires_in+ value. If an +expires_at+ option was
   # previously set, this will unset it since +expires_in+ and +expires_at+
   # cannot both be set.
   #
-  # source://activesupport//lib/active_support/cache.rb#1091
+  # source://activesupport//lib/active_support/cache.rb#1092
   def expires_in=(expires_in); end
 
-  # source://activesupport//lib/active_support/cache.rb#1076
+  # source://activesupport//lib/active_support/cache.rb#1077
   def version; end
 
-  # source://activesupport//lib/active_support/cache.rb#1080
+  # source://activesupport//lib/active_support/cache.rb#1081
   def version=(version); end
 end
 
@@ -3269,17 +3272,17 @@ end
 class ActiveSupport::CodeGenerator
   # @return [CodeGenerator] a new instance of CodeGenerator
   #
-  # source://activesupport//lib/active_support/code_generator.rb#48
+  # source://activesupport//lib/active_support/code_generator.rb#53
   def initialize(owner, path, line); end
 
-  # source://activesupport//lib/active_support/code_generator.rb#55
-  def define_cached_method(name, namespace:, as: T.unsafe(nil), &block); end
+  # source://activesupport//lib/active_support/code_generator.rb#60
+  def define_cached_method(canonical_name, namespace:, as: T.unsafe(nil), &block); end
 
-  # source://activesupport//lib/active_support/code_generator.rb#59
+  # source://activesupport//lib/active_support/code_generator.rb#64
   def execute; end
 
   class << self
-    # source://activesupport//lib/active_support/code_generator.rb#36
+    # source://activesupport//lib/active_support/code_generator.rb#41
     def batch(owner, path, line); end
   end
 end
@@ -3291,11 +3294,11 @@ class ActiveSupport::CodeGenerator::MethodSet
   # source://activesupport//lib/active_support/code_generator.rb#8
   def initialize(namespace); end
 
-  # source://activesupport//lib/active_support/code_generator.rb#25
+  # source://activesupport//lib/active_support/code_generator.rb#28
   def apply(owner, path, line); end
 
-  # source://activesupport//lib/active_support/code_generator.rb#14
-  def define_cached_method(name, as: T.unsafe(nil)); end
+  # source://activesupport//lib/active_support/code_generator.rb#15
+  def define_cached_method(canonical_name, as: T.unsafe(nil)); end
 end
 
 # source://activesupport//lib/active_support/code_generator.rb#6
@@ -5726,7 +5729,7 @@ class ActiveSupport::EncryptedConfiguration < ::ActiveSupport::EncryptedFile
   # source://activesupport//lib/active_support/encrypted_configuration.rb#79
   def inspect; end
 
-  # source://activesupport//lib/active_support/core_ext/module/delegation.rb#331
+  # source://activesupport//lib/active_support/core_ext/module/delegation.rb#354
   def method_missing(method, *args, **_arg2, &block); end
 
   # Reads the file and returns the decrypted content. See EncryptedFile#read.
@@ -5748,7 +5751,7 @@ class ActiveSupport::EncryptedConfiguration < ::ActiveSupport::EncryptedFile
   # source://activesupport//lib/active_support/encrypted_configuration.rb#94
   def options; end
 
-  # source://activesupport//lib/active_support/core_ext/module/delegation.rb#323
+  # source://activesupport//lib/active_support/core_ext/module/delegation.rb#346
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -6940,6 +6943,11 @@ ActiveSupport::HashWithIndifferentAccess::NOT_GIVEN = T.let(T.unsafe(nil), Objec
 module ActiveSupport::HtmlSafeTranslation
   extend ::ActiveSupport::HtmlSafeTranslation
 
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/html_safe_translation.rb#27
+  def html_safe_translation_key?(key); end
+
   # source://activesupport//lib/active_support/html_safe_translation.rb#7
   def translate(key, **options); end
 
@@ -6950,11 +6958,6 @@ module ActiveSupport::HtmlSafeTranslation
 
   # source://activesupport//lib/active_support/html_safe_translation.rb#45
   def html_safe_translation(translation); end
-
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/html_safe_translation.rb#28
-  def html_safe_translation_key?(key); end
 
   # @return [Boolean]
   #
@@ -7992,52 +7995,52 @@ end
 # that all logs are flushed, and it is called in Rails::Rack::Logger after a
 # request finishes.
 #
-# source://activesupport//lib/active_support/log_subscriber.rb#63
+# source://activesupport//lib/active_support/log_subscriber.rb#64
 class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   # @return [LogSubscriber] a new instance of LogSubscriber
   #
-  # source://activesupport//lib/active_support/log_subscriber.rb#136
+  # source://activesupport//lib/active_support/log_subscriber.rb#137
   def initialize; end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#149
+  # source://activesupport//lib/active_support/log_subscriber.rb#150
   def call(event); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#86
+  # source://activesupport//lib/active_support/log_subscriber.rb#87
   def colorize_logging; end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#86
+  # source://activesupport//lib/active_support/log_subscriber.rb#87
   def colorize_logging=(val); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#166
+  # source://activesupport//lib/active_support/log_subscriber.rb#167
   def debug(progname = T.unsafe(nil), &block); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#166
+  # source://activesupport//lib/active_support/log_subscriber.rb#167
   def error(progname = T.unsafe(nil), &block); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#161
+  # source://activesupport//lib/active_support/log_subscriber.rb#162
   def event_levels=(_arg0); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#166
+  # source://activesupport//lib/active_support/log_subscriber.rb#167
   def fatal(progname = T.unsafe(nil), &block); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#166
+  # source://activesupport//lib/active_support/log_subscriber.rb#167
   def info(progname = T.unsafe(nil), &block); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#141
+  # source://activesupport//lib/active_support/log_subscriber.rb#142
   def logger; end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#155
+  # source://activesupport//lib/active_support/log_subscriber.rb#156
   def publish_event(event); end
 
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/log_subscriber.rb#145
+  # source://activesupport//lib/active_support/log_subscriber.rb#146
   def silenced?(event); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#166
+  # source://activesupport//lib/active_support/log_subscriber.rb#167
   def unknown(progname = T.unsafe(nil), &block); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#166
+  # source://activesupport//lib/active_support/log_subscriber.rb#167
   def warn(progname = T.unsafe(nil), &block); end
 
   private
@@ -8046,105 +8049,105 @@ class ActiveSupport::LogSubscriber < ::ActiveSupport::Subscriber
   # by specifying bold, italic, or underline options. Inspired by Highline,
   # this method will automatically clear formatting at the end of the returned String.
   #
-  # source://activesupport//lib/active_support/log_subscriber.rb#175
+  # source://activesupport//lib/active_support/log_subscriber.rb#176
   def color(text, color, mode_options = T.unsafe(nil)); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#197
+  # source://activesupport//lib/active_support/log_subscriber.rb#198
   def log_exception(name, e); end
 
-  # source://activesupport//lib/active_support/log_subscriber.rb#183
+  # source://activesupport//lib/active_support/log_subscriber.rb#184
   def mode_from(options); end
 
   class << self
-    # source://activesupport//lib/active_support/log_subscriber.rb#102
+    # source://activesupport//lib/active_support/log_subscriber.rb#103
     def attach_to(*_arg0, **_arg1, &_arg2); end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#86
+    # source://activesupport//lib/active_support/log_subscriber.rb#87
     def colorize_logging; end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#86
+    # source://activesupport//lib/active_support/log_subscriber.rb#87
     def colorize_logging=(val); end
 
     # Flush all log_subscribers' logger.
     #
-    # source://activesupport//lib/active_support/log_subscriber.rb#115
+    # source://activesupport//lib/active_support/log_subscriber.rb#116
     def flush_all!; end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#87
+    # source://activesupport//lib/active_support/log_subscriber.rb#88
     def log_levels; end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#87
+    # source://activesupport//lib/active_support/log_subscriber.rb#88
     def log_levels=(value); end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#87
+    # source://activesupport//lib/active_support/log_subscriber.rb#88
     def log_levels?; end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#110
+    # source://activesupport//lib/active_support/log_subscriber.rb#111
     def log_subscribers; end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#96
+    # source://activesupport//lib/active_support/log_subscriber.rb#97
     def logger; end
 
     # Sets the attribute logger
     #
     # @param value the value to set the attribute logger to.
     #
-    # source://activesupport//lib/active_support/log_subscriber.rb#108
+    # source://activesupport//lib/active_support/log_subscriber.rb#109
     def logger=(_arg0); end
 
     private
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#120
+    # source://activesupport//lib/active_support/log_subscriber.rb#121
     def fetch_public_methods(subscriber, inherit_all); end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#124
+    # source://activesupport//lib/active_support/log_subscriber.rb#125
     def set_event_levels; end
 
-    # source://activesupport//lib/active_support/log_subscriber.rb#130
+    # source://activesupport//lib/active_support/log_subscriber.rb#131
     def subscribe_log_level(method, level); end
   end
 end
 
 # ANSI sequence colors
 #
-# source://activesupport//lib/active_support/log_subscriber.rb#77
+# source://activesupport//lib/active_support/log_subscriber.rb#78
 ActiveSupport::LogSubscriber::BLACK = T.let(T.unsafe(nil), String)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#81
+# source://activesupport//lib/active_support/log_subscriber.rb#82
 ActiveSupport::LogSubscriber::BLUE = T.let(T.unsafe(nil), String)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#66
+# source://activesupport//lib/active_support/log_subscriber.rb#67
 ActiveSupport::LogSubscriber::BOLD = T.let(T.unsafe(nil), ActiveSupport::Deprecation::DeprecatedObjectProxy)
 
 # Embed in a String to clear all previous ANSI sequences.
 #
-# source://activesupport//lib/active_support/log_subscriber.rb#65
+# source://activesupport//lib/active_support/log_subscriber.rb#66
 ActiveSupport::LogSubscriber::CLEAR = T.let(T.unsafe(nil), ActiveSupport::Deprecation::DeprecatedObjectProxy)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#83
+# source://activesupport//lib/active_support/log_subscriber.rb#84
 ActiveSupport::LogSubscriber::CYAN = T.let(T.unsafe(nil), String)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#79
+# source://activesupport//lib/active_support/log_subscriber.rb#80
 ActiveSupport::LogSubscriber::GREEN = T.let(T.unsafe(nil), String)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#89
+# source://activesupport//lib/active_support/log_subscriber.rb#90
 ActiveSupport::LogSubscriber::LEVEL_CHECKS = T.let(T.unsafe(nil), Hash)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#82
+# source://activesupport//lib/active_support/log_subscriber.rb#83
 ActiveSupport::LogSubscriber::MAGENTA = T.let(T.unsafe(nil), String)
 
 # ANSI sequence modes
 #
-# source://activesupport//lib/active_support/log_subscriber.rb#69
+# source://activesupport//lib/active_support/log_subscriber.rb#70
 ActiveSupport::LogSubscriber::MODES = T.let(T.unsafe(nil), Hash)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#78
+# source://activesupport//lib/active_support/log_subscriber.rb#79
 ActiveSupport::LogSubscriber::RED = T.let(T.unsafe(nil), String)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#84
+# source://activesupport//lib/active_support/log_subscriber.rb#85
 ActiveSupport::LogSubscriber::WHITE = T.let(T.unsafe(nil), String)
 
-# source://activesupport//lib/active_support/log_subscriber.rb#80
+# source://activesupport//lib/active_support/log_subscriber.rb#81
 ActiveSupport::LogSubscriber::YELLOW = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/logger.rb#8
@@ -9756,16 +9759,16 @@ class ActiveSupport::Notifications::Event
   # Returns the number of allocations made between the call to #start! and
   # the call to #finish!.
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#164
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#172
   def allocations; end
 
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#168
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#176
   def children; end
 
   # Returns the CPU time (in milliseconds) passed between the call to
   # #start! and the call to #finish!.
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#151
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#159
   def cpu_time; end
 
   # Returns the difference in milliseconds between when the execution of the
@@ -9781,23 +9784,21 @@ class ActiveSupport::Notifications::Event
   #
   #   @event.duration # => 1000.138
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#197
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#205
   def duration; end
 
-  # Returns the value of attribute end.
-  #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#107
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#126
   def end; end
 
   # Record information at the time this event finishes
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#143
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#151
   def finish!; end
 
   # Returns the idle time time (in milliseconds) passed between the call to
   # #start! and the call to #finish!.
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#157
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#165
   def idle_time; end
 
   # Returns the value of attribute name.
@@ -9807,7 +9808,7 @@ class ActiveSupport::Notifications::Event
 
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#176
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#184
   def parent_of?(event); end
 
   # Returns the value of attribute payload.
@@ -9822,17 +9823,15 @@ class ActiveSupport::Notifications::Event
   # source://activesupport//lib/active_support/notifications/instrumenter.rb#108
   def payload=(_arg0); end
 
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#122
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#130
   def record; end
 
   # Record information at the time this event starts
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#136
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#144
   def start!; end
 
-  # Returns the value of attribute time.
-  #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#107
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#122
   def time; end
 
   # Returns the value of attribute transaction_id.
@@ -9842,15 +9841,15 @@ class ActiveSupport::Notifications::Event
 
   private
 
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#202
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#210
   def now; end
 
   # Likely on JRuby, TruffleRuby
   #
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#219
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#227
   def now_allocations; end
 
-  # source://activesupport//lib/active_support/notifications/instrumenter.rb#209
+  # source://activesupport//lib/active_support/notifications/instrumenter.rb#217
   def now_cpu; end
 end
 
@@ -9895,10 +9894,10 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#314
   def listening?(name); end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#91
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#91
   def lock; end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#81
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#81
   def locked?; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#293
@@ -9913,13 +9912,13 @@ class ActiveSupport::Notifications::Fanout
   # source://activesupport//lib/active_support/notifications/fanout.rb#68
   def subscribe(pattern = T.unsafe(nil), callable = T.unsafe(nil), monotonic: T.unsafe(nil), &block); end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#76
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#76
   def synchronize(&block); end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#86
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#86
   def try_lock; end
 
-  # source://mutex_m/0.2.0/mutex_m.rb#96
+  # source://mutex_m/0.2.0/lib/mutex_m.rb#96
   def unlock; end
 
   # source://activesupport//lib/active_support/notifications/fanout.rb#85
@@ -12236,13 +12235,6 @@ class ActiveSupport::SyntaxErrorProxy
 
   # source://activesupport//lib/active_support/syntax_error_proxy.rb#47
   def parse_message_for_trace; end
-
-  # 3.2 and older versions of Ruby
-  #
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/syntax_error_proxy.rb#61
-  def source_location_eval?; end
 end
 
 # source://activesupport//lib/active_support/syntax_error_proxy.rb#15
@@ -12289,19 +12281,19 @@ end
 #
 # source://activesupport//lib/active_support/tagged_logging.rb#30
 module ActiveSupport::TaggedLogging
-  # source://activesupport//lib/active_support/tagged_logging.rb#131
+  # source://activesupport//lib/active_support/tagged_logging.rb#135
   def clear_tags!(*_arg0, **_arg1, &_arg2); end
 
-  # source://activesupport//lib/active_support/tagged_logging.rb#144
+  # source://activesupport//lib/active_support/tagged_logging.rb#148
   def flush; end
 
-  # source://activesupport//lib/active_support/tagged_logging.rb#131
+  # source://activesupport//lib/active_support/tagged_logging.rb#135
   def pop_tags(*_arg0, **_arg1, &_arg2); end
 
-  # source://activesupport//lib/active_support/tagged_logging.rb#131
+  # source://activesupport//lib/active_support/tagged_logging.rb#135
   def push_tags(*_arg0, **_arg1, &_arg2); end
 
-  # source://activesupport//lib/active_support/tagged_logging.rb#133
+  # source://activesupport//lib/active_support/tagged_logging.rb#137
   def tagged(*tags); end
 
   class << self
@@ -12420,43 +12412,43 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/callbacks.rb#963
   def _teardown_callbacks; end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#731
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#731
   def assert_no_match(matcher, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#660
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#660
   def assert_not_empty(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#671
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#671
   def assert_not_equal(exp, act, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#683
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#683
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#695
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#695
   def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#702
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#702
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#713
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#713
   def assert_not_instance_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#723
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#723
   def assert_not_kind_of(cls, obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#741
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#741
   def assert_not_nil(obj, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#776
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#776
   def assert_not_operator(o1, op, o2 = T.unsafe(nil), msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#799
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#799
   def assert_not_predicate(o1, op, msg = T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#808
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#808
   def assert_not_respond_to(obj, meth, msg = T.unsafe(nil), include_all: T.unsafe(nil)); end
 
-  # source://minitest/5.25.0/lib/minitest/assertions.rb#817
+  # source://minitest/5.25.1/lib/minitest/assertions.rb#817
   def assert_not_same(exp, act, msg = T.unsafe(nil)); end
 
   # source://activesupport//lib/active_support/testing/file_fixtures.rb#20
@@ -12468,7 +12460,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   # source://activesupport//lib/active_support/test_case.rb#298
   def inspect; end
 
-  # source://minitest/5.25.0/lib/minitest.rb#375
+  # source://minitest/5.25.1/lib/minitest.rb#375
   def method_name; end
 
   class << self
@@ -14366,26 +14358,23 @@ ActiveSupport::TimeWithZone::SECONDS_PER_DAY = T.let(T.unsafe(nil), Integer)
 class ActiveSupport::TimeZone
   include ::Comparable
 
-  # Create a new TimeZone object with the given name and offset. The
-  # offset is the number of seconds that this time zone is offset from UTC
-  # (GMT). Seconds were chosen as the offset unit because that is the unit
-  # that Ruby uses to represent time zone offsets (see Time#utc_offset).
+  # :stopdoc:
   #
   # @return [TimeZone] a new instance of TimeZone
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#303
+  # source://activesupport//lib/active_support/values/time_zone.rb#311
   def initialize(name, utc_offset = T.unsafe(nil), tzinfo = T.unsafe(nil)); end
 
   # Compare this time zone to the parameter. The two are compared first on
   # their offsets, and then by name.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#326
+  # source://activesupport//lib/active_support/values/time_zone.rb#335
   def <=>(zone); end
 
   # Compare #name and TZInfo identifier to a supplied regexp, returning +true+
   # if a match is found.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#335
+  # source://activesupport//lib/active_support/values/time_zone.rb#344
   def =~(re); end
 
   # Method for creating new ActiveSupport::TimeWithZone instance in time zone
@@ -14400,10 +14389,10 @@ class ActiveSupport::TimeZone
   #   Time.zone = 'Hawaii'                # => "Hawaii"
   #   Time.at(946684800, 123456.789).nsec # => 123456789
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#372
+  # source://activesupport//lib/active_support/values/time_zone.rb#381
   def at(*args); end
 
-  # source://activesupport//lib/active_support/values/time_zone.rb#568
+  # source://activesupport//lib/active_support/values/time_zone.rb#577
   def encode_with(coder); end
 
   # Returns a formatted string of the offset from UTC, or an alternative
@@ -14413,10 +14402,10 @@ class ActiveSupport::TimeZone
   #   zone.formatted_offset        # => "-06:00"
   #   zone.formatted_offset(false) # => "-0600"
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#320
+  # source://activesupport//lib/active_support/values/time_zone.rb#329
   def formatted_offset(colon = T.unsafe(nil), alternate_utc_string = T.unsafe(nil)); end
 
-  # source://activesupport//lib/active_support/values/time_zone.rb#564
+  # source://activesupport//lib/active_support/values/time_zone.rb#573
   def init_with(coder); end
 
   # Method for creating new ActiveSupport::TimeWithZone instance in time zone
@@ -14433,7 +14422,7 @@ class ActiveSupport::TimeZone
   # If the string is invalid then an +ArgumentError+ will be raised unlike +parse+
   # which usually returns +nil+ when given an invalid date string.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#389
+  # source://activesupport//lib/active_support/values/time_zone.rb#398
   def iso8601(str); end
 
   # Method for creating new ActiveSupport::TimeWithZone instance in time zone
@@ -14442,13 +14431,13 @@ class ActiveSupport::TimeZone
   #   Time.zone = 'Hawaii'                    # => "Hawaii"
   #   Time.zone.local(2007, 2, 1, 15, 30, 45) # => Thu, 01 Feb 2007 15:30:45 HST -10:00
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#356
+  # source://activesupport//lib/active_support/values/time_zone.rb#365
   def local(*args); end
 
   # Adjust the given time to the simultaneous time in UTC. Returns a
   # Time.utc() instance.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#544
+  # source://activesupport//lib/active_support/values/time_zone.rb#553
   def local_to_utc(time, dst = T.unsafe(nil)); end
 
   # Compare #name and TZInfo identifier to a supplied regexp, returning +true+
@@ -14456,12 +14445,12 @@ class ActiveSupport::TimeZone
   #
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#341
+  # source://activesupport//lib/active_support/values/time_zone.rb#350
   def match?(re); end
 
   # Returns the value of attribute name.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#296
+  # source://activesupport//lib/active_support/values/time_zone.rb#298
   def name; end
 
   # Returns an ActiveSupport::TimeWithZone instance representing the current
@@ -14470,7 +14459,7 @@ class ActiveSupport::TimeZone
   #   Time.zone = 'Hawaii'  # => "Hawaii"
   #   Time.zone.now         # => Wed, 23 Jan 2008 20:24:27 HST -10:00
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#509
+  # source://activesupport//lib/active_support/values/time_zone.rb#518
   def now; end
 
   # Method for creating new ActiveSupport::TimeWithZone instance in time zone
@@ -14492,22 +14481,22 @@ class ActiveSupport::TimeZone
   #
   # If the string is invalid then an +ArgumentError+ could be raised.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#446
+  # source://activesupport//lib/active_support/values/time_zone.rb#455
   def parse(str, now = T.unsafe(nil)); end
 
   # Available so that TimeZone instances respond like +TZInfo::Timezone+
   # instances.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#556
+  # source://activesupport//lib/active_support/values/time_zone.rb#565
   def period_for_local(time, dst = T.unsafe(nil)); end
 
   # Available so that TimeZone instances respond like +TZInfo::Timezone+
   # instances.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#550
+  # source://activesupport//lib/active_support/values/time_zone.rb#559
   def period_for_utc(time); end
 
-  # source://activesupport//lib/active_support/values/time_zone.rb#560
+  # source://activesupport//lib/active_support/values/time_zone.rb#569
   def periods_for_local(time); end
 
   # Method for creating new ActiveSupport::TimeWithZone instance in time zone
@@ -14525,7 +14514,7 @@ class ActiveSupport::TimeZone
   #
   # @raise [ArgumentError]
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#462
+  # source://activesupport//lib/active_support/values/time_zone.rb#471
   def rfc3339(str); end
 
   # Parses +str+ according to +format+ and returns an ActiveSupport::TimeWithZone.
@@ -14549,32 +14538,32 @@ class ActiveSupport::TimeZone
   #
   #   Time.zone.strptime('Mar 2000', '%b %Y') # => Wed, 01 Mar 2000 00:00:00 HST -10:00
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#500
+  # source://activesupport//lib/active_support/values/time_zone.rb#509
   def strptime(str, format, now = T.unsafe(nil)); end
 
   # Returns a textual representation of this time zone.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#347
+  # source://activesupport//lib/active_support/values/time_zone.rb#356
   def to_s; end
 
   # Returns the current date in this time zone.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#514
+  # source://activesupport//lib/active_support/values/time_zone.rb#523
   def today; end
 
   # Returns the next date in this time zone.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#519
+  # source://activesupport//lib/active_support/values/time_zone.rb#528
   def tomorrow; end
 
   # Returns the value of attribute tzinfo.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#297
+  # source://activesupport//lib/active_support/values/time_zone.rb#299
   def tzinfo; end
 
   # Returns the offset of this time zone from UTC in seconds.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#310
+  # source://activesupport//lib/active_support/values/time_zone.rb#319
   def utc_offset; end
 
   # Adjust the given time to the simultaneous time in the time zone
@@ -14585,22 +14574,22 @@ class ActiveSupport::TimeZone
   # As of tzinfo 2, utc_to_local returns a Time with a non-zero utc_offset.
   # See the +utc_to_local_returns_utc_offset_times+ config for more info.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#535
+  # source://activesupport//lib/active_support/values/time_zone.rb#544
   def utc_to_local(time); end
 
   # Returns the previous date in this time zone.
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#524
+  # source://activesupport//lib/active_support/values/time_zone.rb#533
   def yesterday; end
 
   private
 
   # @raise [ArgumentError]
   #
-  # source://activesupport//lib/active_support/values/time_zone.rb#574
+  # source://activesupport//lib/active_support/values/time_zone.rb#583
   def parts_to_time(parts, now); end
 
-  # source://activesupport//lib/active_support/values/time_zone.rb#599
+  # source://activesupport//lib/active_support/values/time_zone.rb#608
   def time_now; end
 
   class << self
@@ -14610,25 +14599,26 @@ class ActiveSupport::TimeZone
     # timezone to find. (The first one with that offset will be returned.)
     # Returns +nil+ if no such time zone is known to the system.
     #
-    # source://activesupport//lib/active_support/values/time_zone.rb#232
+    # source://activesupport//lib/active_support/values/time_zone.rb#234
     def [](arg); end
 
     # Returns an array of all TimeZone objects. There are multiple
     # TimeZone objects per time zone, in many cases, to make it easier
     # for users to find their own time zone.
     #
-    # source://activesupport//lib/active_support/values/time_zone.rb#223
+    # source://activesupport//lib/active_support/values/time_zone.rb#225
     def all; end
 
-    # source://activesupport//lib/active_support/values/time_zone.rb#265
+    # source://activesupport//lib/active_support/values/time_zone.rb#267
     def clear; end
 
     # A convenience method for returning a collection of TimeZone objects
     # for time zones in the country specified by its ISO 3166-1 Alpha2 code.
     #
-    # source://activesupport//lib/active_support/values/time_zone.rb#260
+    # source://activesupport//lib/active_support/values/time_zone.rb#262
     def country_zones(country_code); end
 
+    # :stopdoc:
     def create(*_arg0); end
 
     # source://activesupport//lib/active_support/values/time_zone.rb#207
@@ -14638,7 +14628,7 @@ class ActiveSupport::TimeZone
     # such TimeZone instance exists. (This exists to support the use of
     # this class with the +composed_of+ macro.)
     #
-    # source://activesupport//lib/active_support/values/time_zone.rb#216
+    # source://activesupport//lib/active_support/values/time_zone.rb#218
     def new(name); end
 
     # Assumes self represents an offset from UTC in seconds (as returned from
@@ -14652,15 +14642,15 @@ class ActiveSupport::TimeZone
     # A convenience method for returning a collection of TimeZone objects
     # for time zones in the USA.
     #
-    # source://activesupport//lib/active_support/values/time_zone.rb#254
+    # source://activesupport//lib/active_support/values/time_zone.rb#256
     def us_zones; end
 
     private
 
-    # source://activesupport//lib/active_support/values/time_zone.rb#273
+    # source://activesupport//lib/active_support/values/time_zone.rb#275
     def load_country_zones(code); end
 
-    # source://activesupport//lib/active_support/values/time_zone.rb#287
+    # source://activesupport//lib/active_support/values/time_zone.rb#289
     def zones_map; end
   end
 end
@@ -14701,7 +14691,7 @@ ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/gem_version.rb#13
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # source://activesupport//lib/active_support/gem_version.rb#15
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
@@ -17990,8 +17980,6 @@ class Integer < ::Numeric
   def years; end
 end
 
-Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
-
 # source://activesupport//lib/active_support/core_ext/kernel/reporting.rb#3
 module Kernel
   # class_eval on an object acts like +singleton_class.class_eval+.
@@ -18103,7 +18091,7 @@ class LoadError < ::ScriptError
   def is_missing?(location); end
 end
 
-# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#31
+# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#39
 class Method
   # Methods are not duplicable:
   #
@@ -18112,7 +18100,7 @@ class Method
   #
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#36
+  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#44
   def duplicable?; end
 end
 
@@ -19994,7 +19982,7 @@ SecureRandom::BASE36_ALPHABET = T.let(T.unsafe(nil), Array)
 # source://activesupport//lib/active_support/core_ext/securerandom.rb#6
 SecureRandom::BASE58_ALPHABET = T.let(T.unsafe(nil), Array)
 
-# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#53
+# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#62
 module Singleton
   mixes_in_class_methods ::Singleton::SingletonClassMethods
 
@@ -20004,7 +19992,7 @@ module Singleton
   #
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#57
+  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#66
   def duplicable?; end
 end
 
@@ -21297,7 +21285,7 @@ class URI::Generic
   def as_json(options = T.unsafe(nil)); end
 end
 
-# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#41
+# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#49
 class UnboundMethod
   # Unbound methods are not duplicable:
   #
@@ -21306,6 +21294,6 @@ class UnboundMethod
   #
   # @return [Boolean]
   #
-  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#46
+  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#54
   def duplicable?; end
 end

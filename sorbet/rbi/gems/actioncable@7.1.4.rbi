@@ -6,7 +6,7 @@
 
 
 # :markup: markdown
-# :include: actioncable/README.md
+# :include: ../README.md
 #
 # source://actioncable//lib/action_cable.rb#48
 module ActionCable
@@ -155,22 +155,22 @@ class ActionCable::Channel::Base
   # source://actioncable//lib/action_cable/channel/base.rb#147
   def initialize(connection, identifier, params = T.unsafe(nil)); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#951
   def _run_subscribe_callbacks(&block); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#951
   def _run_unsubscribe_callbacks(&block); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#963
   def _subscribe_callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#963
   def _unsubscribe_callbacks; end
 
   # source://actioncable//lib/action_cable/channel/broadcasting.rb#11
@@ -210,13 +210,13 @@ class ActionCable::Channel::Base
   # source://actioncable//lib/action_cable/channel/periodic_timers.rb#9
   def periodic_timers=(_arg0); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers?; end
 
   # This method is called after subscription has been added to the connection
@@ -305,25 +305,25 @@ class ActionCable::Channel::Base
   def unsubscribed; end
 
   class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#955
     def _subscribe_callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#959
     def _subscribe_callbacks=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#955
     def _unsubscribe_callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#959
     def _unsubscribe_callbacks=(value); end
 
     # A list of method names that should be considered actions. This
@@ -347,13 +347,13 @@ class ActionCable::Channel::Base
     # source://actioncable//lib/action_cable/channel/periodic_timers.rb#9
     def periodic_timers?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers?; end
 
     private
@@ -867,11 +867,11 @@ end
 # ActionCable::Channel::TestCase will also automatically provide the following instance
 # methods for use in the tests:
 #
-# <b>connection</b>::
+# connection::
 #      An ActionCable::Channel::ConnectionStub, representing the current HTTP connection.
-# <b>subscription</b>::
+# subscription::
 #      An instance of the current channel, created when you call +subscribe+.
-# <b>transmissions</b>::
+# transmissions::
 #      A list of all messages that have been transmitted into the channel.
 #
 #
@@ -1154,16 +1154,16 @@ class ActionCable::Connection::Base
   # source://actioncable//lib/action_cable/connection/base.rb#58
   def initialize(server, env, coder: T.unsafe(nil)); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#963
   def _command_callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#951
   def _run_command_callbacks(&block); end
 
   # source://actioncable//lib/action_cable/connection/base.rb#134
@@ -1240,13 +1240,13 @@ class ActionCable::Connection::Base
   # source://actioncable//lib/action_cable/connection/base.rb#86
   def receive(websocket_message); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
   def rescue_handlers?; end
 
   # Invoke a method on the connection asynchronously through the pool of thread workers.
@@ -1344,19 +1344,19 @@ class ActionCable::Connection::Base
   def websocket; end
 
   class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#955
     def _command_callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#959
     def _command_callbacks=(value); end
 
     # source://actioncable//lib/action_cable/connection/identification.rb#11
@@ -1368,13 +1368,13 @@ class ActionCable::Connection::Base
     # source://actioncable//lib/action_cable/connection/identification.rb#11
     def identifiers?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.4/lib/active_support/rescuable.rb#15
     def rescue_handlers?; end
   end
 end
@@ -2087,7 +2087,7 @@ end
 # source://actioncable//lib/action_cable/engine.rb#8
 class ActionCable::Engine < ::Rails::Engine
   class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks; end
   end
 end
@@ -2619,16 +2619,16 @@ class ActionCable::Server::Worker
   # source://actioncable//lib/action_cable/server/worker.rb#19
   def initialize(max_size: T.unsafe(nil)); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#951
   def _run_work_callbacks(&block); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.4/lib/active_support/callbacks.rb#963
   def _work_callbacks; end
 
   # source://actioncable//lib/action_cable/server/worker.rb#46
@@ -2637,10 +2637,10 @@ class ActionCable::Server::Worker
   # source://actioncable//lib/action_cable/server/worker.rb#50
   def async_invoke(receiver, method, *args, connection: T.unsafe(nil), &block); end
 
-  # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#74
+  # source://activesupport/7.1.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#74
   def connection; end
 
-  # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#116
+  # source://activesupport/7.1.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#116
   def connection=(obj); end
 
   # Returns the value of attribute executor.
@@ -2671,25 +2671,25 @@ class ActionCable::Server::Worker
   def logger; end
 
   class << self
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#955
     def _work_callbacks; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.4/lib/active_support/callbacks.rb#959
     def _work_callbacks=(value); end
 
-    # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#49
+    # source://activesupport/7.1.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#49
     def connection; end
 
-    # source://activesupport/7.1.3.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#108
+    # source://activesupport/7.1.4/lib/active_support/core_ext/module/attribute_accessors_per_thread.rb#108
     def connection=(obj); end
   end
 end
@@ -2999,7 +2999,7 @@ module ActionCable::TestHelper
   #     end
   #   end
   #
-  # source://actioncable//lib/action_cable/test_helper.rb#116
+  # source://actioncable//lib/action_cable/test_helper.rb#112
   def assert_broadcast_on(stream, data, &block); end
 
   # Asserts that the number of broadcasted messages to the stream matches the given number.
@@ -3013,24 +3013,20 @@ module ActionCable::TestHelper
   #   end
   #
   # If a block is passed, that block should cause the specified number of
-  # messages to be broadcasted. It returns the messages that were broadcasted.
+  # messages to be broadcasted.
   #
   #   def test_broadcasts_again
-  #     message = assert_broadcasts('messages', 1) do
+  #     assert_broadcasts('messages', 1) do
   #       ActionCable.server.broadcast 'messages', { text: 'hello' }
   #     end
-  #     assert_equal({ text: 'hello' }, message)
   #
-  #     messages = assert_broadcasts('messages', 2) do
+  #     assert_broadcasts('messages', 2) do
   #       ActionCable.server.broadcast 'messages', { text: 'hi' }
   #       ActionCable.server.broadcast 'messages', { text: 'how are you?' }
   #     end
-  #     assert_equal 2, messages.length
-  #     assert_equal({ text: 'hi' }, messages.first)
-  #     assert_equal({ text: 'how are you?' }, messages.last)
   #   end
   #
-  # source://actioncable//lib/action_cable/test_helper.rb#49
+  # source://actioncable//lib/action_cable/test_helper.rb#45
   def assert_broadcasts(stream, number, &block); end
 
   # Asserts that no messages have been sent to the stream.
@@ -3053,13 +3049,13 @@ module ActionCable::TestHelper
   #
   #   assert_broadcasts 'messages', 0, &block
   #
-  # source://actioncable//lib/action_cable/test_helper.rb#81
+  # source://actioncable//lib/action_cable/test_helper.rb#77
   def assert_no_broadcasts(stream, &block); end
 
   # source://actioncable//lib/action_cable/test_helper.rb#6
   def before_setup; end
 
-  # source://actioncable//lib/action_cable/test_helper.rb#147
+  # source://actioncable//lib/action_cable/test_helper.rb#143
   def broadcasts(*_arg0, **_arg1, &_arg2); end
 
   # Returns the messages that are broadcasted in the block.
@@ -3074,18 +3070,18 @@ module ActionCable::TestHelper
   #     assert_equal({ text: 'how are you?' }, messages.last)
   #   end
   #
-  # source://actioncable//lib/action_cable/test_helper.rb#97
+  # source://actioncable//lib/action_cable/test_helper.rb#93
   def capture_broadcasts(stream, &block); end
 
-  # source://actioncable//lib/action_cable/test_helper.rb#147
+  # source://actioncable//lib/action_cable/test_helper.rb#143
   def clear_messages(*_arg0, **_arg1, &_arg2); end
 
-  # source://actioncable//lib/action_cable/test_helper.rb#143
+  # source://actioncable//lib/action_cable/test_helper.rb#139
   def pubsub_adapter; end
 
   private
 
-  # source://actioncable//lib/action_cable/test_helper.rb#150
+  # source://actioncable//lib/action_cable/test_helper.rb#146
   def new_broadcasts_from(current_messages, stream, assertion, &block); end
 end
 
@@ -3099,7 +3095,7 @@ ActionCable::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActionCable::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://actioncable//lib/action_cable/gem_version.rb#13
-ActionCable::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActionCable::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # source://actioncable//lib/action_cable/gem_version.rb#15
 ActionCable::VERSION::STRING = T.let(T.unsafe(nil), String)
