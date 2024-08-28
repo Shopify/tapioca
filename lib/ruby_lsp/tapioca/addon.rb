@@ -26,6 +26,8 @@ module RubyLsp
         @index = global_state.index
         @global_state = global_state
         @rails_addon = RubyLsp::Addon.get("Ruby LSP Rails")
+      rescue AddonNotFoundError
+        $stderr.puts("Tapioca LSP: The LSP will not be available as the Ruby LSP Rails addon was not found")
       end
 
       sig { override.void }
