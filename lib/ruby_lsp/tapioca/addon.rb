@@ -56,7 +56,7 @@ module RubyLsp
         constants = changes.map do |change|
           path = change[:uri].gsub("file://", "")
 
-          entries = @index.entries_for(path, RubyIndexer::Entry::Namespace)
+          entries = @index.entries_for(path, RubyIndexer::Entry::Namespace).grep_v(RubyIndexer::Entry::SingletonClass)
 
           entries.map(&:name)
         end.flatten.compact
