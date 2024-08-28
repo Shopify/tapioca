@@ -61,11 +61,9 @@ module RubyLsp
           entries.map(&:name)
         end.flatten.compact
 
-        # TODO: confirm with kaan if we expect a response here? (i.e. should it be a notificatio or a request)
-
         # TODO: `tapioca/dsl` instead?
-        $stderr.puts "Tapioca LSP: Sending request 'tapioca.dsl' with constants #{constants}"
-        @rails_addon.rails_runner_client.send_notification("tapioca.dsl", constants: constants) if constants.any?
+        $stderr.puts "Tapioca LSP: Making DSL request with constants #{constants}"
+        @rails_addon.rails_runner_client.make_request("tapioca.dsl", constants: constants) if constants.any?
       end
     end
   end
