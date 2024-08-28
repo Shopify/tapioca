@@ -57,7 +57,6 @@ module RubyLsp
           path = change[:uri].gsub("file://", "")
 
           entries = @index.entries_for(path, RubyIndexer::Entry::Namespace)
-          return unless entries # rubocop:disable Lint/NonLocalExitFromIterator
 
           entries.map(&:name)
         end.flatten.compact
