@@ -56,6 +56,8 @@ module T::Private
   end
 end
 
+class T::Types::AttachedClassType < T::Types::Base; end
+
 class T::Enum
   def values; end
 end

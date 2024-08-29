@@ -8,6 +8,8 @@ module Tapioca
     class LyingFoo < BasicObject
       include ::Kernel
 
+      class AttachedClass; end
+
       class << self
         def constants
           [::Symbol, ::String]
@@ -106,7 +108,7 @@ module Tapioca
         it "return the correct results with Reflection helpers" do
           foo = LyingFoo.new
 
-          assert_equal([], Runtime::Reflection.constants_of(LyingFoo))
+          assert_equal([:AttachedClass], Runtime::Reflection.constants_of(LyingFoo))
           assert_equal("Tapioca::Runtime::LyingFoo", Runtime::Reflection.name_of(LyingFoo))
           assert_equal([Tapioca::Runtime::LyingFoo, Kernel, BasicObject], Runtime::Reflection.ancestors_of(LyingFoo))
           assert_equal(BasicObject, Runtime::Reflection.superclass_of(LyingFoo))
@@ -133,6 +135,17 @@ module Tapioca
 
         it "returns top level anchored name for named class" do
           assert_equal("::Tapioca::Runtime::LyingFoo", Runtime::Reflection.qualified_name_of(LyingFoo))
+        end
+
+        it "returns the right name for attached classes" do
+          assert_equal(
+            "::Tapioca::Runtime::LyingFoo::AttachedClass",
+            Runtime::Reflection.name_of_type(T::Types::Simple.new(LyingFoo::AttachedClass)),
+          )
+          assert_equal(
+            "T.attached_class",
+            Runtime::Reflection.name_of_type(T::Types::AttachedClassType.new),
+          )
         end
 
         describe "signature_for" do
