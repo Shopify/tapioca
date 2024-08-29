@@ -14,11 +14,14 @@ module Tapioca
           constant = event.constant
           return unless T::Enum > event.constant # rubocop:disable Style/InvertibleUnlessCondition
 
-          enums = T.unsafe(constant).values.map do |enum_type|
-            enum_type.instance_variable_get(:@const_name).to_s
+          enum_block = RBI::TEnumBlock.new
+
+          T.unsafe(constant).values.each do |enum_type|
+            enum_name = enum_type.instance_variable_get(:@const_name).to_s
+            enum_block << RBI::Const.new(enum_name, "new")
           end
 
-          event.node << RBI::TEnumBlock.new(enums)
+          event.node << enum_block
         end
 
         sig { override.params(event: NodeAdded).returns(T::Boolean) }
