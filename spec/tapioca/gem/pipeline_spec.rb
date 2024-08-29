@@ -3949,6 +3949,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           class FooAttachedClass; end
+          class AttachedClass; end
           class << self
             extend(T::Sig)
 
@@ -3962,7 +3963,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
               { Foo.new => [Foo.new] }
             end
 
-            sig { returns(FooAttachedClass) }
+            sig { returns(T.any(FooAttachedClass, AttachedClass)) }
             def c
               FooAttachedClass.new
             end
@@ -3979,11 +3980,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             sig { returns(T::Hash[T.attached_class, T::Array[T.attached_class]]) }
             def b; end
 
-            sig { returns(::Foo::FooAttachedClass) }
+            sig { returns(T.any(::Foo::AttachedClass, ::Foo::FooAttachedClass)) }
             def c; end
           end
         end
 
+        class Foo::AttachedClass; end
         class Foo::FooAttachedClass; end
       RBI
 

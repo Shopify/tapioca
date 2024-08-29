@@ -143,7 +143,7 @@ module Tapioca
 
       sig { params(type: T::Types::Base).returns(String) }
       def name_of_type(type)
-        type.to_s.gsub(/\bAttachedClass\b/, "T.attached_class")
+        type.to_s
       end
 
       sig { params(constant: Module, method: Symbol).returns(Method) }
