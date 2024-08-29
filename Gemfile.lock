@@ -12,7 +12,7 @@ PATH
       bundler (>= 2.2.25)
       netrc (>= 0.11.0)
       parallel (>= 1.21.0)
-      rbi (>= 0.1.14, < 0.2)
+      rbi (~> 0.2)
       sorbet-static-and-runtime (>= 0.5.11087)
       spoom (>= 1.2.0)
       thor (>= 1.2.0)
@@ -224,7 +224,7 @@ GEM
     parser (3.3.4.0)
       ast (~> 2.4.1)
       racc
-    prism (0.30.0)
+    prism (1.0.0)
     psych (5.1.2)
       stringio
     public_suffix (5.0.5)
@@ -268,8 +268,8 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.2.1)
-    rbi (0.1.14)
-      prism (>= 0.18.0, < 1.0.0)
+    rbi (0.2.0)
+      prism (~> 1.0)
       sorbet-runtime (>= 0.5.9204)
     rdoc (6.7.0)
       psych (>= 4.0.0)

@@ -34,7 +34,7 @@ module Tapioca
       group_nodes: true,
       max_line_length: nil,
       nest_singleton_methods: true,
-      nest_non_public_methods: true,
+      nest_non_public_members: true,
       sort_nodes: true,
     ),
     RBIFormatter,
