@@ -38,8 +38,11 @@ module RubyLsp
 
       def self.dsl(params)
         File.write("output.txt", "DSL called: #{params[:constants]}\n", mode: "a")
-        $stdout.reopen("out.txt", "w")
-        ::Tapioca::Cli.start(["dsl", "generate", "--lsp_addon"] + params[:constants])
+        $stdout.reopen("tapioca.txt", "w")
+        $stderr.reopen("tapioca_err.txt", "w")
+        # TODO: We reload the CLI so that thor defaults are set. ConfigHelper sets them to nil after starting
+        load("tapioca/cli.rb")
+        ::Tapioca::Cli.start(["dsl", "--lsp_addon"] + params[:constants])
       end
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
@@ -58,7 +61,10 @@ module RubyLsp
           end
         end.flatten.compact
 
-        send_message("tapioca_dsl", constants: constants) if constants.any?
+        if constants.any?
+          send_message("reload", {})
+          send_message("tapioca_dsl", constants: constants)
+        end
       end
 
       sig { params(request: String, params: T::Hash[Symbol, T.untyped]).void }

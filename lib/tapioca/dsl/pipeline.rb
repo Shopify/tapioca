@@ -81,6 +81,7 @@ module Tapioca
           abort_if_pending_migrations!
         end
 
+        puts "Constants to process: #{constants_to_process}"
         result = Executor.new(
           constants_to_process,
           number_of_workers: @number_of_workers,
@@ -203,6 +204,8 @@ module Tapioca
 
         active_compilers.each do |compiler_class|
           next unless compiler_class.handles?(constant)
+
+          puts "Compiler: #{compiler_class}, Constant: #{constant}"
 
           compiler = compiler_class.new(self, file.root, constant, @compiler_options)
           compiler.decorate
