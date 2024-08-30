@@ -239,6 +239,33 @@ module Tapioca
                 assert_includes(rbi_for(:Post), expected)
               end
 
+              it "handles composite primary keys" do
+                if rails_version(">= 7.1")
+                  add_ruby_file("schema.rb", <<~RUBY)
+                    ActiveRecord::Migration.suppress_messages do
+                      ActiveRecord::Schema.define do
+                        create_table :posts, primary_key: [:a, :b] do |t|
+                          t.string :a, null: false
+                          t.integer :b, null: false
+                        end
+                      end
+                    end
+                  RUBY
+
+                  add_ruby_file("post.rb", <<~RUBY)
+                    class Post < ActiveRecord::Base
+                    end
+                  RUBY
+
+                  expected = indented(<<~RBI, 4)
+                    sig { returns([::String, ::Integer]) }
+                    def id; end
+                  RBI
+
+                  assert_includes(rbi_for(:Post), expected)
+                end
+              end
+
               it "uses ActiveModel::Type::Value types when inheriting from EncryptedAttributeType" do
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do

@@ -88,11 +88,18 @@ module Tapioca
         sig { returns([String, String]) }
         def id_type
           if @constant.respond_to?(:composite_primary_key?) && T.unsafe(@constant).composite_primary_key?
-            @constant.primary_key.map do |column|
-              column_type_for(column)
-            end.map do |tuple|
-              "[#{tuple.join(", ")}]"
+            primary_key_columns = @constant.primary_key
+
+            getters = []
+            setters = []
+
+            primary_key_columns.each do |column|
+              getter, setter = column_type_for(column)
+              getters << getter
+              setters << setter
             end
+
+            ["[#{getters.join(", ")}]", "[#{setters.join(", ")}]"]
           else
             column_type_for(@constant.primary_key)
           end
