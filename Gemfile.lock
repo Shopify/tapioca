@@ -302,7 +302,7 @@ GEM
     rubocop-sorbet (0.8.5)
       rubocop (>= 1)
     ruby-progressbar (1.13.0)
-    shopify-money (2.2.2)
+    shopify-money (3.0.0)
     sidekiq (7.3.1)
       concurrent-ruby (< 2)
       connection_pool (>= 2.3.0)
