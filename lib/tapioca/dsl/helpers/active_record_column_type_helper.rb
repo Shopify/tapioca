@@ -187,6 +187,11 @@ module Tapioca
                }
             "T::Hash[::String, ::String]"
           when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval === type
+               }
+            "::ActiveSupport::Duration"
+          when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array === type
                }
