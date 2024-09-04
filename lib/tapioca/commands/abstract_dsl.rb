@@ -142,6 +142,7 @@ module Tapioca
           skipped_constants: constantize(@skip_constant, ignore_missing: true),
           number_of_workers: @number_of_workers,
           compiler_options: @compiler_options,
+          lsp_addon: @lsp_addon,
         )
       end
 
