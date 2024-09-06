@@ -105,7 +105,7 @@ module Tapioca
           end
         end
 
-        sig { params(column_name: String).returns([String, String]) }
+        sig { params(column_name: T.nilable(String)).returns([String, String]) }
         def column_type_for(column_name)
           return ["T.untyped", "T.untyped"] if @column_type_option.untyped?
 
