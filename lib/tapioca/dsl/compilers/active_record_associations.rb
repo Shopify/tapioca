@@ -162,7 +162,7 @@ module Tapioca
               ).returns(AssociationTypeOption)
             end
             def from_options(options, &block)
-              column_type_option = Nilable
+              association_type_option = Nilable
               value = options["ActiveRecordAssociationTypes"]
 
               if value
