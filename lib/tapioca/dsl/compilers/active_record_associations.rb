@@ -167,7 +167,7 @@ module Tapioca
 
               if value
                 if has_serialized?(value)
-                  column_type_option = from_serialized(value)
+                  association_type_option = from_serialized(value)
                 else
                   block.call(value, column_type_option)
                 end
