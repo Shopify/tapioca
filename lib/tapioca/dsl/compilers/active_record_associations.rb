@@ -173,7 +173,7 @@ module Tapioca
                 end
               end
 
-              column_type_option
+              association_type_option
             end
           end
 
