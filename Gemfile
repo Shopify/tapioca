@@ -52,7 +52,6 @@ group :development, :test do
   gem "bcrypt"
   gem "xpath"
   gem "kredis"
-  gem "ostruct"
 end
 
 group :test do
