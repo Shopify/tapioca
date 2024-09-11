@@ -10,6 +10,7 @@ PATH
   specs:
     tapioca (0.16.2)
       bundler (>= 2.2.25)
+      logger
       netrc (>= 0.11.0)
       parallel (>= 1.21.0)
       rbi (~> 0.2)
