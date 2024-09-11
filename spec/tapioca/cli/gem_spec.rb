@@ -1022,11 +1022,9 @@ module Tapioca
           @project.require_mock_gem(foo)
           # We know RDoc is problematic with respect to calling `abort` in an autoload
           @project.require_real_gem("rdoc")
-          # Just so that we have something else we can generate for.
-          @project.require_real_gem("json")
           @project.bundle_install!
 
-          result = @project.tapioca("gem json")
+          result = @project.tapioca("gem rdoc")
           assert_empty_stderr(result)
           assert_success_status(result)
         end
