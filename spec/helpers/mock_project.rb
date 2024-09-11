@@ -38,6 +38,7 @@ module Tapioca
         source("https://rubygems.org")
 
         gemspec name: "tapioca", path: "#{TAPIOCA_PATH}"
+        gem "json", ">= 2.7.2"
       GEMFILE
     end
 
