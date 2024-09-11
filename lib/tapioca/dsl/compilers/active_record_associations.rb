@@ -169,7 +169,7 @@ module Tapioca
                 if has_serialized?(value)
                   association_type_option = from_serialized(value)
                 else
-                  block.call(value, column_type_option)
+                  block.call(value, association_type_option)
                 end
               end
 
@@ -392,10 +392,7 @@ module Tapioca
         # should also be considered required.
         sig { params(reflection: ReflectionType).returns(T::Boolean) }
         def has_one_and_required_reflection?(reflection)
-          return false unless reflection.has_one?
-          return false if reflection.options[:required].nil?
-
-          reflection.options[:required]
+          reflection.has_one? && !!reflection.options[:required]
         end
 
         # Note - one can do more here. If the FK defining the belongs_to association is non-nullable at the DB level, or
@@ -405,10 +402,17 @@ module Tapioca
         def belongs_to_and_non_optional_reflection?(reflection)
           return false unless reflection.belongs_to?
 
-          required_by_default = !!reflection.active_record.belongs_to_required_by_default
-          return required_by_default if reflection.options[:optional].nil?
+          optional = if reflection.options.key?(:required)
+            !reflection.options[:required]
+          else
+            reflection.options[:optional]
+          end
 
-          !reflection.options[:optional]
+          if optional.nil?
+            !!reflection.active_record.belongs_to_required_by_default
+          else
+            !optional
+          end
         end
 
         sig do
