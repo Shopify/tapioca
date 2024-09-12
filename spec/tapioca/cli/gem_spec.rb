@@ -704,6 +704,14 @@ module Tapioca
         end
 
         it "must not generate RBIs for missing gem specs" do
+          @project = MockProject.new("#{TEST_TMP_PATH}/#{spec_name}_missing_gem/project")
+          @project.write_gemfile!(@project.tapioca_gemfile)
+          @project.require_real_gem(
+            "sorbet-static-and-runtime",
+            ::Gem::Specification.find_by_name("sorbet-static-and-runtime").version.to_s,
+          )
+          @project.tapioca("configure")
+
           @project.write_gemfile!(<<~GEMFILE, append: true)
             platform :rbx do
               gem "ruby2_keywords", "0.0.5"
