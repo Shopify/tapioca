@@ -197,6 +197,16 @@ module Tapioca
                }
             "T::Array[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
           when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit === type
+               }
+            "::String"
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::BitVarying) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::BitVarying === type
+               }
+            "::String"
+          when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range === type
                }
