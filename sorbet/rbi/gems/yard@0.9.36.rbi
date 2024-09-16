@@ -491,19 +491,19 @@ RUBY19 = T.let(T.unsafe(nil), TrueClass)
 #
 # source://yard//lib/yard/server/rack_adapter.rb#93
 class Rack::Request
-  # source://rack/3.1.4/lib/rack/request.rb#62
+  # source://rack/3.1.7/lib/rack/request.rb#62
   def initialize(env); end
 
-  # source://rack/3.1.4/lib/rack/request.rb#76
+  # source://rack/3.1.7/lib/rack/request.rb#76
   def delete_param(k); end
 
-  # source://rack/3.1.4/lib/rack/request.rb#67
+  # source://rack/3.1.7/lib/rack/request.rb#67
   def params; end
 
-  # source://rack/3.1.4/lib/rack/request.rb#67
+  # source://rack/3.1.7/lib/rack/request.rb#67
   def query; end
 
-  # source://rack/3.1.4/lib/rack/request.rb#71
+  # source://rack/3.1.7/lib/rack/request.rb#71
   def update_param(k, v); end
 
   # Returns the value of attribute version_supplied.
@@ -524,22 +524,22 @@ class Rack::Request
   def xhr?; end
 
   class << self
-    # source://rack/3.1.4/lib/rack/request.rb#31
+    # source://rack/3.1.7/lib/rack/request.rb#31
     def forwarded_priority; end
 
-    # source://rack/3.1.4/lib/rack/request.rb#31
+    # source://rack/3.1.7/lib/rack/request.rb#31
     def forwarded_priority=(_arg0); end
 
-    # source://rack/3.1.4/lib/rack/request.rb#18
+    # source://rack/3.1.7/lib/rack/request.rb#18
     def ip_filter; end
 
-    # source://rack/3.1.4/lib/rack/request.rb#18
+    # source://rack/3.1.7/lib/rack/request.rb#18
     def ip_filter=(_arg0); end
 
-    # source://rack/3.1.4/lib/rack/request.rb#40
+    # source://rack/3.1.7/lib/rack/request.rb#40
     def x_forwarded_proto_priority; end
 
-    # source://rack/3.1.4/lib/rack/request.rb#40
+    # source://rack/3.1.7/lib/rack/request.rb#40
     def x_forwarded_proto_priority=(_arg0); end
   end
 end

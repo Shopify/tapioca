@@ -47,6 +47,7 @@ class Google::Protobuf::AbstractMessage
   def dup; end
   def eql?(_arg0); end
   def freeze; end
+  def frozen?; end
   def hash; end
   def inspect; end
   def method_missing(*_arg0); end
@@ -303,7 +304,17 @@ class Google::Protobuf::Map
   # sequence.
   def each; end
 
+  # Freezes the map object. We have to intercept this so we can freeze the
+  # underlying representation, not just the Ruby wrapper. Returns self.
   def freeze; end
+
+  # Is this object frozen?
+  # Returns true if either this Ruby wrapper or the underlying
+  # representation are frozen. Freezes the wrapper if the underlying
+  # representation is already frozen but this wrapper isn't.
+  #
+  # @return [Boolean]
+  def frozen?; end
 
   # @return [Boolean]
   def has_key?(_arg0); end
@@ -520,7 +531,19 @@ class Google::Protobuf::RepeatedField
   # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
   def flatten!(*args, &block); end
 
+  # Freezes the RepeatedField object. We have to intercept this so we can
+  # freeze the underlying representation, not just the Ruby wrapper. Returns
+  # self.
   def freeze; end
+
+  # Is this object frozen?
+  # Returns true if either this Ruby wrapper or the underlying
+  # representation are frozen. Freezes the wrapper if the underlying
+  # representation is already frozen but this wrapper isn't.
+  #
+  # @return [Boolean]
+  def frozen?; end
+
   def hash; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
