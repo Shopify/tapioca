@@ -1,5 +1,6 @@
 --dir
 .
 --ignore=/vendor
+--ignore=lib/ruby_lsp/tapioca/server_addon.rb
 --enable-experimental-requires-ancestor
 --suppress-payload-superclass-redefinition-for=Reline::ANSI

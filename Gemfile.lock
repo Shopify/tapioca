@@ -6,11 +6,17 @@ GIT
     cityhash (0.6.0)
 
 PATH
+  remote: ../ruby-lsp-rails
+  specs:
+    ruby-lsp-rails (0.3.14)
+      ruby-lsp (>= 0.17.12, < 0.18.0)
+
+PATH
   remote: ../ruby-lsp
   specs:
-    ruby-lsp (0.17.17)
+    ruby-lsp (0.17.18)
       language_server-protocol (~> 3.17.0)
-      prism (>= 0.29.0, < 0.31)
+      prism (~> 1.0)
       rbs (>= 3, < 4)
       sorbet-runtime (>= 0.5.10782)
 
@@ -398,6 +404,7 @@ DEPENDENCIES
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
   ruby-lsp!
+  ruby-lsp-rails!
   shopify-money
   sidekiq
   smart_properties

@@ -1,6 +1,7 @@
 # typed: true
 # frozen_string_literal: true
 
+require "ruby_lsp/addon"
 begin
   require "ruby-lsp-rails"
 rescue LoadError
@@ -11,34 +12,30 @@ require "tapioca/internal"
 
 # bug? saving file before rails boots causes crash
 
-require "ruby_lsp/ruby_lsp_rails/server" # for ServerAddon
+# require "ruby_lsp/ruby_lsp_rails/server" # for ServerAddon
+
+# TODO: Use async pattern in Rails addo
 
 module RubyLsp
   module Tapioca
-    class Addon < ::RubyLsp::Rails::ServerAddon
+    class Addon < ::RubyLsp::Addon
       extend T::Sig
 
       def initialize
         super
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
+        @rails_addon = T.let(nil, T.nilable(::RubyLsp::Rails::Addon))
       end
 
       def activate(global_state, outgoing_queue)
         $stderr.puts("Activating Tapioca LSP addon v#{VERSION}")
         @index = global_state.index
         @global_state = global_state
-        # @rails_addon = RubyLsp::Addon.get("Ruby LSP Rails")
-        # @server.execute("register_server_addon", server_addon_path: File.expand_path("server_addon.rb"))
-        # @rails_addon.rails_runner_client.make_request("register_server_addon", server_addon_path: File.expand_path("addon.rb"))
+        addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails"), T.nilable(::RubyLsp::Rails::Addon))
+        @rails_addon = addon
+        T.must(@rails_addon).rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
       rescue AddonNotFoundError
         $stderr.puts("Tapioca LSP: The LSP will not be available as the Ruby LSP Rails addon was not found")
-      end
-
-      def execute(request, params)
-        case request
-        when "tapioca.dsl"
-          dsl(params)
-        end
       end
 
       sig { override.void }
@@ -50,34 +47,27 @@ module RubyLsp
         "Tapioca"
       end
 
-      def dsl(params)
-        command = ::Tapioca::Commands::DslGenerate.new(
-          requested_constants: params[:constants],
-          tapioca_path: ::Tapioca::TAPIOCA_DIR,
-          requested_paths: [],
-          outpath: Pathname.new(::Tapioca::DEFAULT_DSL_DIR),
-          file_header: true,
-          exclude: [],
-          only: [],
-        )
-
-        command.generate_without_booting
-      end
-
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
-        constants = changes.map do |change|
+        constants = changes.filter_map do |change|
           path = change[:uri].gsub("file://", "")
 
-          entries = @index.entries_for(path, RubyIndexer::Entry::Namespace).grep_v(RubyIndexer::Entry::SingletonClass)
+          entries = T.must(@index).entries_for(path, RubyIndexer::Entry::Namespace)
+          next unless entries
 
-          entries.map(&:name)
-        end.flatten.compact
+          entries.grep_v(RubyIndexer::Entry::SingletonClass).map(&:name)
+        end.flatten
 
         # TODO: `tapioca/dsl` instead?
         $stderr.puts "Tapioca LSP: Making DSL request with constants #{constants}"
         # @rails_addon.rails_runner_client.make_request("tapioca.dsl", constants: constants) if constants.any?
-        execute("tapioca.dsl", constants: constants) if constants.any?
+        # execute("tapioca.dsl", constants: constants) if constants.any?
+        client = T.must(@rails_addon).rails_runner_client
+        client.send_notification(
+          "server_addon/delegate",
+          server_addon_name: "Tapioca",
+          constants: constants,
+        ) if constants.any?
       end
     end
   end
