@@ -11,9 +11,11 @@ require "tapioca/internal"
 
 # bug? saving file before rails boots causes crash
 
+require "ruby_lsp/ruby_lsp_rails/server" # for ServerAddon
+
 module RubyLsp
   module Tapioca
-    class Addon < ::RubyLsp::Addon
+    class Addon < ::RubyLsp::Rails::ServerAddon
       extend T::Sig
 
       def initialize
@@ -25,9 +27,18 @@ module RubyLsp
         $stderr.puts("Activating Tapioca LSP addon v#{VERSION}")
         @index = global_state.index
         @global_state = global_state
-        @rails_addon = RubyLsp::Addon.get("Ruby LSP Rails")
+        # @rails_addon = RubyLsp::Addon.get("Ruby LSP Rails")
+        # @server.execute("register_server_addon", server_addon_path: File.expand_path("server_addon.rb"))
+        # @rails_addon.rails_runner_client.make_request("register_server_addon", server_addon_path: File.expand_path("addon.rb"))
       rescue AddonNotFoundError
         $stderr.puts("Tapioca LSP: The LSP will not be available as the Ruby LSP Rails addon was not found")
+      end
+
+      def execute(request, params)
+        case request
+        when "tapioca.dsl"
+          dsl(params)
+        end
       end
 
       sig { override.void }
@@ -65,7 +76,8 @@ module RubyLsp
 
         # TODO: `tapioca/dsl` instead?
         $stderr.puts "Tapioca LSP: Making DSL request with constants #{constants}"
-        @rails_addon.rails_runner_client.make_request("tapioca.dsl", constants: constants) if constants.any?
+        # @rails_addon.rails_runner_client.make_request("tapioca.dsl", constants: constants) if constants.any?
+        execute("tapioca.dsl", constants: constants) if constants.any?
       end
     end
   end
