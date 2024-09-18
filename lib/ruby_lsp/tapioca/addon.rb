@@ -10,8 +10,6 @@ end
 
 require "tapioca/internal"
 
-# bug? saving file before rails boots causes crash
-
 # require "ruby_lsp/ruby_lsp_rails/server" # for ServerAddon
 
 # TODO: Use async pattern in Rails addo
@@ -24,16 +22,22 @@ module RubyLsp
       def initialize
         super
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
-        @rails_addon = T.let(nil, T.nilable(::RubyLsp::Rails::Addon))
       end
 
       def activate(global_state, outgoing_queue)
         $stderr.puts("Activating Tapioca LSP addon v#{VERSION}")
         @index = global_state.index
         @global_state = global_state
-        addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails"), T.nilable(::RubyLsp::Rails::Addon))
-        @rails_addon = addon
-        T.must(@rails_addon).rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
+        addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails"), ::RubyLsp::Rails::Addon)
+
+        Thread.new do
+          @rails_runner_client = T.let(
+            addon.rails_runner_client,
+            T.nilable(RubyLsp::Rails::RunnerClient),
+          )
+          $stderr.puts("nil client? #{@rails_runner_client.nil?}")
+          T.must(@rails_runner_client).register_server_addon(File.expand_path("server_addon.rb", __dir__))
+        end
       rescue AddonNotFoundError
         $stderr.puts("Tapioca LSP: The LSP will not be available as the Ruby LSP Rails addon was not found")
       end
@@ -62,9 +66,9 @@ module RubyLsp
         $stderr.puts "Tapioca LSP: Making DSL request with constants #{constants}"
         # @rails_addon.rails_runner_client.make_request("tapioca.dsl", constants: constants) if constants.any?
         # execute("tapioca.dsl", constants: constants) if constants.any?
-        client = T.must(@rails_addon).rails_runner_client
-        client.send_notification(
+        @rails_runner_client&.send_notification(
           "server_addon/delegate",
+          request_name: "tapioca.dsl", # change?
           server_addon_name: "Tapioca",
           constants: constants,
         ) if constants.any?

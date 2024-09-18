@@ -11,17 +11,17 @@ module RubyLsp
       end
 
       def execute(request, params)
-        $stderr.puts("Tapioca DSL execute")
         case request
         when "tapioca.dsl" # TODO: remove tapioca. prefix
           dsl(params)
         end
+      rescue => e
+        File.write("tapioca.txt", "rescue\n#{e.full_message}", mode: "a")
       end
 
       private
 
       def dsl(params)
-        $stderr.puts("dsl...")
         command = ::Tapioca::Commands::DslGenerate.new(
           requested_constants: params[:constants],
           tapioca_path: ::Tapioca::TAPIOCA_DIR,
