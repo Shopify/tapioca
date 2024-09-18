@@ -706,7 +706,7 @@ module Tapioca
         it "must not generate RBIs for missing gem specs" do
           @project.write_gemfile!(<<~GEMFILE, append: true)
             platform :rbx do
-              gem "ruby2_keywords", "0.0.5"
+              gem "sidekiq", "=7.1.2"
             end
           GEMFILE
 
@@ -714,8 +714,8 @@ module Tapioca
 
           result = @project.tapioca("gem --all")
 
-          assert_stdout_includes(result, "completed with missing specs: ruby2_keywords (0.0.5)")
-          refute_includes(result.out, "Compiled ruby2_keywords")
+          assert_stdout_includes(result, "completed with missing specs: sidekiq (7.1.2)")
+          refute_includes(result.out, "Compiled sidekiq")
 
           assert_empty_stderr(result)
           assert_success_status(result)
