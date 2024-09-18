@@ -31,11 +31,7 @@ module RubyLsp
         addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails"), ::RubyLsp::Rails::Addon)
 
         Thread.new do
-          @rails_runner_client = T.let(
-            addon.rails_runner_client,
-            T.nilable(RubyLsp::Rails::RunnerClient),
-          )
-          $stderr.puts("nil client? #{@rails_runner_client.nil?}")
+          @rails_runner_client = T.let(addon.rails_runner_client, T.nilable(RubyLsp::Rails::RunnerClient))
           T.must(@rails_runner_client).register_server_addon(File.expand_path("server_addon.rb", __dir__))
         end
       rescue AddonNotFoundError
@@ -62,16 +58,17 @@ module RubyLsp
           entries.grep_v(RubyIndexer::Entry::SingletonClass).map(&:name)
         end.flatten
 
-        # TODO: `tapioca/dsl` instead?
+        return if constants.empty?
+
         $stderr.puts "Tapioca LSP: Making DSL request with constants #{constants}"
-        # @rails_addon.rails_runner_client.make_request("tapioca.dsl", constants: constants) if constants.any?
-        # execute("tapioca.dsl", constants: constants) if constants.any?
+
+        # @rails_runner_client may be nil while booting
         @rails_runner_client&.send_notification(
           "server_addon/delegate",
-          request_name: "tapioca.dsl", # change?
+          request_name: "dsl",
           server_addon_name: "Tapioca",
           constants: constants,
-        ) if constants.any?
+        )
       end
     end
   end

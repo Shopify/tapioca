@@ -12,7 +12,7 @@ module RubyLsp
 
       def execute(request, params)
         case request
-        when "tapioca.dsl" # TODO: remove tapioca. prefix
+        when "dsl"
           dsl(params)
         end
       rescue => e
