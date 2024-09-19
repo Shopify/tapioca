@@ -8,6 +8,7 @@ module Tapioca
   class ConfigureSpec < SpecWithProject
     describe "cli::configure" do
       before(:all) do
+        project.require_default_gems
         project.bundle_install!
       end
 

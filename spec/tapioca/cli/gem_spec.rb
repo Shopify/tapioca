@@ -103,6 +103,10 @@ module Tapioca
       end
     RBI
 
+    before(:all) do
+      @project.require_default_gems
+    end
+
     describe "cli::gem" do
       before(:all) do
         @project.bundle_install!
@@ -186,6 +190,7 @@ module Tapioca
 
         after do
           project.write_gemfile!(project.tapioca_gemfile)
+          @project.require_default_gems
           project.remove!("sorbet/rbi")
           project.remove!("../gems")
           project.remove!("sorbet/tapioca/require.rb")
@@ -266,8 +271,8 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          gem_name = "ostruct"
-          gem_top_level_constant = "class OpenStruct"
+          gem_name = "base64"
+          gem_top_level_constant = "module Base64"
 
           gem_spec = ::Gem::Specification.default_stubs("*.gemspec").find do |spec|
             spec.name == gem_name && spec.default_gem?

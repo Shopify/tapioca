@@ -31,6 +31,12 @@ module Tapioca
       write_gemfile!(line, append: true)
     end
 
+    sig { void }
+    def require_default_gems
+      require_real_gem("ostruct")
+      require_real_gem("logger")
+    end
+
     # Default Gemfile contents requiring only Tapioca
     sig { returns(String) }
     def tapioca_gemfile

@@ -7,6 +7,7 @@ module Tapioca
   class TodoSpec < SpecWithProject
     describe "cli::todo" do
       before(:all) do
+        project.require_default_gems
         project.bundle_install!
         project.tapioca("configure")
       end
