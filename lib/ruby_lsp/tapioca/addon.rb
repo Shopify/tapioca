@@ -49,6 +49,11 @@ module RubyLsp
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
+        unless @rails_runner_client
+          $stderr.puts "Tapioca LSP: Rails runner client not available yet, skipping request"
+          return
+        end
+
         constants = changes.filter_map do |change|
           path = change[:uri].gsub("file://", "")
 
@@ -62,8 +67,7 @@ module RubyLsp
 
         $stderr.puts "Tapioca LSP: Making DSL request with constants #{constants}"
 
-        # @rails_runner_client may be nil while booting
-        @rails_runner_client&.send_notification(
+        @rails_runner_client.send_notification(
           "server_addon/delegate",
           request_name: "dsl",
           server_addon_name: "Tapioca",
