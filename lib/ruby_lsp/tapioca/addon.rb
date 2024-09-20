@@ -10,10 +10,6 @@ end
 
 require "tapioca/internal"
 
-# require "ruby_lsp/ruby_lsp_rails/server" # for ServerAddon
-
-# TODO: Use async pattern in Rails addo
-
 module RubyLsp
   module Tapioca
     class Addon < ::RubyLsp::Addon
@@ -26,8 +22,8 @@ module RubyLsp
 
       def activate(global_state, outgoing_queue)
         $stderr.puts("Activating Tapioca LSP addon v#{VERSION}")
-        @index = global_state.index
         @global_state = global_state
+        @index = global_state.index
         addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails"), ::RubyLsp::Rails::Addon)
 
         Thread.new do

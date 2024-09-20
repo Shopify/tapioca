@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "tapioca/internal"
-# require "ruby_lsp/ruby_lsp_rails/server" # for ServerAddon
 
 module RubyLsp
   module Tapioca
