@@ -15,7 +15,7 @@ module RubyLsp
           dsl(params)
         end
       rescue => e
-        File.write("tapioca.txt", "rescue\n#{e.full_message}", mode: "a")
+        File.write("tapioca_lsp.log", "#{Time.now} #{e.full_message}", mode: "a")
       end
 
       private
