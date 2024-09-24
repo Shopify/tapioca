@@ -88,7 +88,7 @@ module I18n
     # source://i18n//lib/i18n/interpolate/ruby.rb#29
     def interpolate_hash(string, values); end
 
-    # source://i18n//lib/i18n.rb#37
+    # source://i18n//lib/i18n.rb#38
     def new_double_nested_cache; end
 
     # @return [Boolean]
@@ -101,10 +101,10 @@ module I18n
     # extra keys as I18n options, you should call I18n.reserve_key
     # before any I18n.translate (etc) calls are made.
     #
-    # source://i18n//lib/i18n.rb#45
+    # source://i18n//lib/i18n.rb#46
     def reserve_key(key); end
 
-    # source://i18n//lib/i18n.rb#50
+    # source://i18n//lib/i18n.rb#51
     def reserved_keys_pattern; end
   end
 end
@@ -124,15 +124,15 @@ module I18n::Backend::Base
   #
   # @raise [NotImplementedError]
   #
-  # source://i18n//lib/i18n/backend/base.rb#96
+  # source://i18n//lib/i18n/backend/base.rb#97
   def available_locales; end
 
-  # source://i18n//lib/i18n/backend/base.rb#104
+  # source://i18n//lib/i18n/backend/base.rb#105
   def eager_load!; end
 
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n/backend/base.rb#70
+  # source://i18n//lib/i18n/backend/base.rb#71
   def exists?(locale, key, options = T.unsafe(nil)); end
 
   # Accepts a list of paths to translation files. Loads translations from
@@ -148,10 +148,10 @@ module I18n::Backend::Base
   #
   # @raise [ArgumentError]
   #
-  # source://i18n//lib/i18n/backend/base.rb#77
+  # source://i18n//lib/i18n/backend/base.rb#78
   def localize(locale, object, format = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://i18n//lib/i18n/backend/base.rb#100
+  # source://i18n//lib/i18n/backend/base.rb#101
   def reload!; end
 
   # This method receives a locale, a data hash and options for storing translations.
@@ -175,7 +175,7 @@ module I18n::Backend::Base
   #                    ann: 'good', john: 'big'
   #   #=> { people: { ann: "Ann is good", john: "John is big" } }
   #
-  # source://i18n//lib/i18n/backend/base.rb#209
+  # source://i18n//lib/i18n/backend/base.rb#217
   def deep_interpolate(locale, data, values = T.unsafe(nil)); end
 
   # Evaluates defaults.
@@ -183,12 +183,12 @@ module I18n::Backend::Base
   # first translation that can be resolved. Otherwise it tries to resolve
   # the translation directly.
   #
-  # source://i18n//lib/i18n/backend/base.rb#127
+  # source://i18n//lib/i18n/backend/base.rb#128
   def default(locale, object, subject, options = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n/backend/base.rb#110
+  # source://i18n//lib/i18n/backend/base.rb#111
   def eager_loaded?; end
 
   # Interpolates values into a given subject.
@@ -202,7 +202,7 @@ module I18n::Backend::Base
   #   method interpolates ["yes, %{user}", ["maybe no, %{user}", "no, %{user}"]], :user => "bartuz"
   #   # => ["yes, bartuz", ["maybe no, bartuz", "no, bartuz"]]
   #
-  # source://i18n//lib/i18n/backend/base.rb#193
+  # source://i18n//lib/i18n/backend/base.rb#201
   def interpolate(locale, subject, values = T.unsafe(nil)); end
 
   # Loads a single translations file by delegating to #load_rb or
@@ -212,41 +212,41 @@ module I18n::Backend::Base
   #
   # @raise [UnknownFileType]
   #
-  # source://i18n//lib/i18n/backend/base.rb#232
+  # source://i18n//lib/i18n/backend/base.rb#240
   def load_file(filename); end
 
   # Loads a JSON translations file. The data must have locales as
   # toplevel keys.
   #
-  # source://i18n//lib/i18n/backend/base.rb#268
+  # source://i18n//lib/i18n/backend/base.rb#276
   def load_json(filename); end
 
   # Loads a plain Ruby translations file. eval'ing the file must yield
   # a Hash containing translation data with locales as toplevel keys.
   #
-  # source://i18n//lib/i18n/backend/base.rb#246
+  # source://i18n//lib/i18n/backend/base.rb#254
   def load_rb(filename); end
 
   # Loads a YAML translations file. The data must have locales as
   # toplevel keys.
   #
-  # source://i18n//lib/i18n/backend/base.rb#253
+  # source://i18n//lib/i18n/backend/base.rb#261
   def load_yaml(filename); end
 
   # Loads a YAML translations file. The data must have locales as
   # toplevel keys.
   #
-  # source://i18n//lib/i18n/backend/base.rb#253
+  # source://i18n//lib/i18n/backend/base.rb#261
   def load_yml(filename); end
 
   # The method which actually looks up for the translation in the store.
   #
   # @raise [NotImplementedError]
   #
-  # source://i18n//lib/i18n/backend/base.rb#115
+  # source://i18n//lib/i18n/backend/base.rb#116
   def lookup(locale, key, scope = T.unsafe(nil), options = T.unsafe(nil)); end
 
-  # source://i18n//lib/i18n/backend/base.rb#300
+  # source://i18n//lib/i18n/backend/base.rb#308
   def pluralization_key(entry, count); end
 
   # Picks a translation from a pluralized mnemonic subkey according to English
@@ -260,7 +260,7 @@ module I18n::Backend::Base
   #
   # @raise [InvalidPluralizationData]
   #
-  # source://i18n//lib/i18n/backend/base.rb#174
+  # source://i18n//lib/i18n/backend/base.rb#182
   def pluralize(locale, entry, count); end
 
   # Resolves a translation.
@@ -268,7 +268,7 @@ module I18n::Backend::Base
   # given options. If it is a Proc then it will be evaluated. All other
   # subjects will be returned directly.
   #
-  # source://i18n//lib/i18n/backend/base.rb#149
+  # source://i18n//lib/i18n/backend/base.rb#150
   def resolve(locale, object, subject, options = T.unsafe(nil)); end
 
   # Resolves a translation.
@@ -276,15 +276,15 @@ module I18n::Backend::Base
   # given options. If it is a Proc then it will be evaluated. All other
   # subjects will be returned directly.
   #
-  # source://i18n//lib/i18n/backend/base.rb#149
+  # source://i18n//lib/i18n/backend/base.rb#150
   def resolve_entry(locale, object, subject, options = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n/backend/base.rb#119
+  # source://i18n//lib/i18n/backend/base.rb#120
   def subtrees?; end
 
-  # source://i18n//lib/i18n/backend/base.rb#281
+  # source://i18n//lib/i18n/backend/base.rb#289
   def translate_localization_format(locale, object, format, options); end
 end
 
@@ -448,10 +448,10 @@ end
 module I18n::Backend::Fallbacks
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n/backend/fallbacks.rb#94
+  # source://i18n//lib/i18n/backend/fallbacks.rb#98
   def exists?(locale, key, options = T.unsafe(nil)); end
 
-  # source://i18n//lib/i18n/backend/fallbacks.rb#85
+  # source://i18n//lib/i18n/backend/fallbacks.rb#89
   def extract_non_symbol_default!(options); end
 
   # source://i18n//lib/i18n/backend/fallbacks.rb#67
@@ -475,7 +475,7 @@ module I18n::Backend::Fallbacks
 
   # Overwrite on_fallback to add specified logic when the fallback succeeds.
   #
-  # source://i18n//lib/i18n/backend/fallbacks.rb#110
+  # source://i18n//lib/i18n/backend/fallbacks.rb#114
   def on_fallback(_original_locale, _fallback_locale, _key, _options); end
 end
 
@@ -1061,14 +1061,14 @@ end
 # The implementation is provided by a Implementation module allowing to easily
 # extend Simple backend's behavior by including modules. E.g.:
 #
-# module I18n::Backend::Pluralization
-#   def pluralize(*args)
-#     # extended pluralization logic
-#     super
-#   end
-# end
+#     module I18n::Backend::Pluralization
+#       def pluralize(*args)
+#         # extended pluralization logic
+#         super
+#       end
+#     end
 #
-# I18n::Backend::Simple.include(I18n::Backend::Pluralization)
+#     I18n::Backend::Simple.include(I18n::Backend::Pluralization)
 #
 # source://i18n//lib/i18n/backend/simple.rb#21
 class I18n::Backend::Simple
@@ -1193,69 +1193,69 @@ class I18n::Backend::Transliterator::ProcTransliterator
   def transliterate(string, replacement = T.unsafe(nil)); end
 end
 
-# source://i18n//lib/i18n.rb#54
+# source://i18n//lib/i18n.rb#55
 module I18n::Base
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def available_locales; end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def available_locales=(value); end
 
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n.rb#384
+  # source://i18n//lib/i18n.rb#386
   def available_locales_initialized?; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def backend; end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def backend=(value); end
 
   # Gets I18n configuration object.
   #
-  # source://i18n//lib/i18n.rb#56
+  # source://i18n//lib/i18n.rb#57
   def config; end
 
   # Sets I18n configuration object.
   #
-  # source://i18n//lib/i18n.rb#61
+  # source://i18n//lib/i18n.rb#62
   def config=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def default_locale; end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def default_locale=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def default_separator; end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def default_separator=(value); end
 
   # Tells the backend to load translations now. Used in situations like the
   # Rails production environment. Backends can implement whatever strategy
   # is useful.
   #
-  # source://i18n//lib/i18n.rb#90
+  # source://i18n//lib/i18n.rb#91
   def eager_load!; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def enforce_available_locales; end
 
   # Raises an InvalidLocale exception when the passed locale is not available.
   #
-  # source://i18n//lib/i18n.rb#378
+  # source://i18n//lib/i18n.rb#380
   def enforce_available_locales!(locale); end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def enforce_available_locales=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def exception_handler; end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def exception_handler=(value); end
 
   # Returns true if a translation exists for a given key, otherwise returns false.
@@ -1263,7 +1263,7 @@ module I18n::Base
   # @raise [Disabled]
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n.rb#264
+  # source://i18n//lib/i18n.rb#265
   def exists?(key, _locale = T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Returns an array of interpolation keys for the given translation key
@@ -1288,26 +1288,26 @@ module I18n::Base
   #
   # @raise [I18n::ArgumentError]
   #
-  # source://i18n//lib/i18n.rb#253
+  # source://i18n//lib/i18n.rb#254
   def interpolation_keys(key, **options); end
 
   # Localizes certain objects, such as dates and numbers to local formatting.
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#333
+  # source://i18n//lib/i18n.rb#335
   def l(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def load_path; end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def load_path=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def locale; end
 
-  # source://i18n//lib/i18n.rb#73
+  # source://i18n//lib/i18n.rb#74
   def locale=(value); end
 
   # Returns true when the passed locale, which can be either a String or a
@@ -1315,28 +1315,28 @@ module I18n::Base
   #
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n.rb#373
+  # source://i18n//lib/i18n.rb#375
   def locale_available?(locale); end
 
   # Localizes certain objects, such as dates and numbers to local formatting.
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#333
+  # source://i18n//lib/i18n.rb#335
   def localize(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
 
   # Merges the given locale, key and scope into a single array of keys.
   # Splits keys that contain dots into multiple keys. Makes sure all
   # keys are Symbols.
   #
-  # source://i18n//lib/i18n.rb#361
+  # source://i18n//lib/i18n.rb#363
   def normalize_keys(locale, key, scope, separator = T.unsafe(nil)); end
 
   # Tells the backend to reload translations. Used in situations like the
   # Rails development environment. Backends can implement whatever strategy
   # is useful.
   #
-  # source://i18n//lib/i18n.rb#82
+  # source://i18n//lib/i18n.rb#83
   def reload!; end
 
   # Translates, pluralizes and interpolates a given key using a given locale,
@@ -1409,7 +1409,7 @@ module I18n::Base
   # or <tt>default</tt> if no translations for <tt>:foo</tt> and <tt>:bar</tt> were found.
   #   I18n.t :foo, :default => [:bar, 'default']
   #
-  # *BULK LOOKUP*
+  # <b>BULK LOOKUP</b>
   #
   # This returns an array with the translations for <tt>:foo</tt> and <tt>:bar</tt>.
   #   I18n.t [:foo, :bar]
@@ -1428,7 +1428,7 @@ module I18n::Base
   # E.g. assuming the key <tt>:salutation</tt> resolves to:
   #   lambda { |key, options| options[:gender] == 'm' ? "Mr. #{options[:name]}" : "Mrs. #{options[:name]}" }
   #
-  # Then <tt>I18n.t(:salutation, :gender => 'w', :name => 'Smith') will result in "Mrs. Smith".
+  # Then <tt>I18n.t(:salutation, :gender => 'w', :name => 'Smith')</tt> will result in "Mrs. Smith".
   #
   # Note that the string returned by lambda will go through string interpolation too,
   # so the following lambda would give the same result:
@@ -1440,7 +1440,7 @@ module I18n::Base
   # always return the same translations/values per unique combination of argument
   # values.
   #
-  # *Ruby 2.7+ keyword arguments warning*
+  # <b>Ruby 2.7+ keyword arguments warning</b>
   #
   # This method uses keyword arguments.
   # There is a breaking change in ruby that produces warning with ruby 2.7 and won't work as expected with ruby 3.0
@@ -1457,13 +1457,13 @@ module I18n::Base
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#210
+  # source://i18n//lib/i18n.rb#211
   def t(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Wrapper for <tt>translate</tt> that adds <tt>:raise => true</tt>. With
   # this option, if no translation is found, it will raise <tt>I18n::MissingTranslationData</tt>
   #
-  # source://i18n//lib/i18n.rb#229
+  # source://i18n//lib/i18n.rb#230
   def t!(key, **options); end
 
   # Translates, pluralizes and interpolates a given key using a given locale,
@@ -1536,7 +1536,7 @@ module I18n::Base
   # or <tt>default</tt> if no translations for <tt>:foo</tt> and <tt>:bar</tt> were found.
   #   I18n.t :foo, :default => [:bar, 'default']
   #
-  # *BULK LOOKUP*
+  # <b>BULK LOOKUP</b>
   #
   # This returns an array with the translations for <tt>:foo</tt> and <tt>:bar</tt>.
   #   I18n.t [:foo, :bar]
@@ -1555,7 +1555,7 @@ module I18n::Base
   # E.g. assuming the key <tt>:salutation</tt> resolves to:
   #   lambda { |key, options| options[:gender] == 'm' ? "Mr. #{options[:name]}" : "Mrs. #{options[:name]}" }
   #
-  # Then <tt>I18n.t(:salutation, :gender => 'w', :name => 'Smith') will result in "Mrs. Smith".
+  # Then <tt>I18n.t(:salutation, :gender => 'w', :name => 'Smith')</tt> will result in "Mrs. Smith".
   #
   # Note that the string returned by lambda will go through string interpolation too,
   # so the following lambda would give the same result:
@@ -1567,7 +1567,7 @@ module I18n::Base
   # always return the same translations/values per unique combination of argument
   # values.
   #
-  # *Ruby 2.7+ keyword arguments warning*
+  # <b>Ruby 2.7+ keyword arguments warning</b>
   #
   # This method uses keyword arguments.
   # There is a breaking change in ruby that produces warning with ruby 2.7 and won't work as expected with ruby 3.0
@@ -1584,13 +1584,13 @@ module I18n::Base
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#210
+  # source://i18n//lib/i18n.rb#211
   def translate(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Wrapper for <tt>translate</tt> that adds <tt>:raise => true</tt>. With
   # this option, if no translation is found, it will raise <tt>I18n::MissingTranslationData</tt>
   #
-  # source://i18n//lib/i18n.rb#229
+  # source://i18n//lib/i18n.rb#230
   def translate!(key, **options); end
 
   # Transliterates UTF-8 characters to ASCII. By default this method will
@@ -1645,12 +1645,12 @@ module I18n::Base
   #     I18n.transliterate("Jürgen", :locale => :en) # => "Jurgen"
   #     I18n.transliterate("Jürgen", :locale => :de) # => "Juergen"
   #
-  # source://i18n//lib/i18n.rb#322
+  # source://i18n//lib/i18n.rb#324
   def transliterate(key, throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), replacement: T.unsafe(nil), **options); end
 
   # Executes block with given I18n.locale set.
   #
-  # source://i18n//lib/i18n.rb#344
+  # source://i18n//lib/i18n.rb#346
   def with_locale(tmp_locale = T.unsafe(nil)); end
 
   private
@@ -1674,16 +1674,16 @@ module I18n::Base
   #   I18n.exception_handler = I18nExceptionHandler.new               # an object
   #   I18n.exception_handler.call(exception, locale, key, options)    # will be called like this
   #
-  # source://i18n//lib/i18n.rb#420
+  # source://i18n//lib/i18n.rb#422
   def handle_exception(handling, exception, locale, key, options); end
 
-  # source://i18n//lib/i18n.rb#462
+  # source://i18n//lib/i18n.rb#464
   def interpolation_keys_from_translation(translation); end
 
-  # source://i18n//lib/i18n.rb#438
+  # source://i18n//lib/i18n.rb#440
   def normalize_key(key, separator); end
 
-  # source://i18n//lib/i18n.rb#390
+  # source://i18n//lib/i18n.rb#392
   def translate_key(key, throw, raise, locale, backend, options); end
 end
 
@@ -1845,7 +1845,7 @@ class I18n::Disabled < ::I18n::ArgumentError
   def initialize(method); end
 end
 
-# source://i18n//lib/i18n.rb#35
+# source://i18n//lib/i18n.rb#36
 I18n::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 
 # source://i18n//lib/i18n/exceptions.rb#6

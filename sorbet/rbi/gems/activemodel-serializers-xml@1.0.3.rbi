@@ -8,16 +8,16 @@
 # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#8
 module ActiveModel
   class << self
-    # source://activemodel/7.1.3.4/lib/active_model/deprecator.rb#4
+    # source://activemodel/7.1.4/lib/active_model/deprecator.rb#4
     def deprecator; end
 
-    # source://activemodel/7.1.3.4/lib/active_model.rb#76
+    # source://activemodel/7.1.4/lib/active_model.rb#76
     def eager_load!; end
 
-    # source://activemodel/7.1.3.4/lib/active_model/gem_version.rb#5
+    # source://activemodel/7.1.4/lib/active_model/gem_version.rb#5
     def gem_version; end
 
-    # source://activemodel/7.1.3.4/lib/active_model/version.rb#7
+    # source://activemodel/7.1.4/lib/active_model/version.rb#7
     def version; end
   end
 end
@@ -57,7 +57,7 @@ module ActiveModel::Serializers::Xml
   #   person.age           # => 22
   #   person.awesome       # => true
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#232
+  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#233
   def from_xml(xml); end
 
   # Returns XML representing the model. Configuration can be
@@ -86,7 +86,7 @@ module ActiveModel::Serializers::Xml
   #
   # For further documentation, see <tt>ActiveRecord::Serialization#to_xml</tt>
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#204
+  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#205
   def to_xml(options = T.unsafe(nil), &block); end
 end
 
@@ -115,7 +115,7 @@ class ActiveModel::Serializers::Xml::Serializer
 
   # TODO: This can likely be cleaned up to simple use ActiveSupport::XmlMini.to_tag as well.
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#123
+  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#124
   def add_associations(association, records, opts); end
 
   # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#108
@@ -124,10 +124,10 @@ class ActiveModel::Serializers::Xml::Serializer
   # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#105
   def add_extra_behavior; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#116
+  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#117
   def add_includes; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#166
+  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#167
   def add_procs; end
 end
 

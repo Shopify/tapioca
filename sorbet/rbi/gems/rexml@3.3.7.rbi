@@ -113,7 +113,7 @@ class REXML::Attribute
 
   # Returns a copy of this attribute
   #
-  # source://rexml//lib/rexml/attribute.rb#163
+  # source://rexml//lib/rexml/attribute.rb#164
   def clone; end
 
   # source://rexml//lib/rexml/attribute.rb#132
@@ -129,7 +129,7 @@ class REXML::Attribute
   #
   # Returns this attribute
   #
-  # source://rexml//lib/rexml/attribute.rb#171
+  # source://rexml//lib/rexml/attribute.rb#172
   def element=(element); end
 
   # Creates (and returns) a hash from both the name and value
@@ -137,7 +137,7 @@ class REXML::Attribute
   # source://rexml//lib/rexml/attribute.rb#111
   def hash; end
 
-  # source://rexml//lib/rexml/attribute.rb#197
+  # source://rexml//lib/rexml/attribute.rb#198
   def inspect; end
 
   # Returns the namespace URL, if defined, or nil otherwise
@@ -165,13 +165,13 @@ class REXML::Attribute
   # source://rexml//lib/rexml/attribute.rb#95
   def namespace(arg = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/attribute.rb#193
+  # source://rexml//lib/rexml/attribute.rb#194
   def node_type; end
 
   # The normalized value of this attribute.  That is, the attribute with
   # entities intact.
   #
-  # source://rexml//lib/rexml/attribute.rb#157
+  # source://rexml//lib/rexml/attribute.rb#158
   def normalized=(new_normalized); end
 
   # Returns the namespace of the attribute.
@@ -191,7 +191,7 @@ class REXML::Attribute
   #
   # This method is usually not called directly.
   #
-  # source://rexml//lib/rexml/attribute.rb#184
+  # source://rexml//lib/rexml/attribute.rb#185
   def remove; end
 
   # Returns the attribute value, with entities replaced
@@ -217,10 +217,10 @@ class REXML::Attribute
 
   # Writes this attribute (EG, puts 'key="value"' to the output)
   #
-  # source://rexml//lib/rexml/attribute.rb#189
+  # source://rexml//lib/rexml/attribute.rb#190
   def write(output, indent = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/attribute.rb#203
+  # source://rexml//lib/rexml/attribute.rb#204
   def xpath; end
 end
 
@@ -1038,7 +1038,7 @@ class REXML::Document < ::REXML::Element
   #   d.add(REXML::Element.new('foo'))
   #   d.to_s # => "<foo/>"
   #
-  # source://rexml//lib/rexml/document.rb#170
+  # source://rexml//lib/rexml/document.rb#172
   def <<(child); end
 
   # :call-seq:
@@ -1075,7 +1075,7 @@ class REXML::Document < ::REXML::Element
   #   d.add(REXML::Element.new('foo'))
   #   d.to_s # => "<foo/>"
   #
-  # source://rexml//lib/rexml/document.rb#170
+  # source://rexml//lib/rexml/document.rb#172
   def add(child); end
 
   # :call-seq:
@@ -1085,7 +1085,7 @@ class REXML::Document < ::REXML::Element
   #
   #   REXML::Element.add_element(name_or_element, attributes)
   #
-  # source://rexml//lib/rexml/document.rb#209
+  # source://rexml//lib/rexml/document.rb#211
   def add_element(arg = T.unsafe(nil), arg2 = T.unsafe(nil)); end
 
   # :call-seq:
@@ -1094,7 +1094,7 @@ class REXML::Document < ::REXML::Element
   # Returns the new document resulting from executing
   # <tt>Document.new(self)</tt>.  See Document.new.
   #
-  # source://rexml//lib/rexml/document.rb#120
+  # source://rexml//lib/rexml/document.rb#122
   def clone; end
 
   # :call-seq:
@@ -1107,10 +1107,10 @@ class REXML::Document < ::REXML::Element
   #   d = REXML::Document.new('')
   #   d.doctype.class # => nil
   #
-  # source://rexml//lib/rexml/document.rb#241
+  # source://rexml//lib/rexml/document.rb#243
   def doctype; end
 
-  # source://rexml//lib/rexml/document.rb#442
+  # source://rexml//lib/rexml/document.rb#446
   def document; end
 
   # :call-seq:
@@ -1123,20 +1123,39 @@ class REXML::Document < ::REXML::Element
   #   d = REXML::Document.new('')
   #   d.encoding # => "UTF-8"
   #
-  # source://rexml//lib/rexml/document.rb#290
+  # source://rexml//lib/rexml/document.rb#292
   def encoding; end
 
   # Returns the value of attribute entity_expansion_count.
   #
-  # source://rexml//lib/rexml/document.rb#433
+  # source://rexml//lib/rexml/document.rb#435
   def entity_expansion_count; end
+
+  # Sets the attribute entity_expansion_limit
+  #
+  # @param value the value to set the attribute entity_expansion_limit to.
+  #
+  # source://rexml//lib/rexml/document.rb#436
+  def entity_expansion_limit=(_arg0); end
+
+  # Returns the value of attribute entity_expansion_text_limit.
+  #
+  # source://rexml//lib/rexml/document.rb#437
+  def entity_expansion_text_limit; end
+
+  # Sets the attribute entity_expansion_text_limit
+  #
+  # @param value the value to set the attribute entity_expansion_text_limit to.
+  #
+  # source://rexml//lib/rexml/document.rb#437
+  def entity_expansion_text_limit=(_arg0); end
 
   # :call-seq:
   #   expanded_name -> empty_string
   #
   # Returns an empty string.
   #
-  # source://rexml//lib/rexml/document.rb#129
+  # source://rexml//lib/rexml/document.rb#131
   def expanded_name; end
 
   # :call-seq:
@@ -1146,7 +1165,7 @@ class REXML::Document < ::REXML::Element
   # d = doc_type
   # d ? d.name : "UNDEFINED"
   #
-  # source://rexml//lib/rexml/document.rb#129
+  # source://rexml//lib/rexml/document.rb#131
   def name; end
 
   # :call-seq:
@@ -1154,10 +1173,10 @@ class REXML::Document < ::REXML::Element
   #
   # Returns the symbol +:document+.
   #
-  # source://rexml//lib/rexml/document.rb#110
+  # source://rexml//lib/rexml/document.rb#112
   def node_type; end
 
-  # source://rexml//lib/rexml/document.rb#435
+  # source://rexml//lib/rexml/document.rb#439
   def record_entity_expansion; end
 
   # :call-seq:
@@ -1170,7 +1189,7 @@ class REXML::Document < ::REXML::Element
   #   d = REXML::Document.new('')
   #   d.root # => nil
   #
-  # source://rexml//lib/rexml/document.rb#225
+  # source://rexml//lib/rexml/document.rb#227
   def root; end
 
   # :call-seq:
@@ -1186,7 +1205,7 @@ class REXML::Document < ::REXML::Element
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/document.rb#305
+  # source://rexml//lib/rexml/document.rb#307
   def stand_alone?; end
 
   # :call-seq:
@@ -1200,7 +1219,7 @@ class REXML::Document < ::REXML::Element
   #   d = REXML::Document.new('')
   #   d.version # => "1.0"
   #
-  # source://rexml//lib/rexml/document.rb#275
+  # source://rexml//lib/rexml/document.rb#277
   def version; end
 
   # :call-seq:
@@ -1259,7 +1278,7 @@ class REXML::Document < ::REXML::Element
   #   instead of encoding in XML declaration.
   #   Defaults to nil. It means encoding in XML declaration is used.
   #
-  # source://rexml//lib/rexml/document.rb#365
+  # source://rexml//lib/rexml/document.rb#367
   def write(*arguments); end
 
   # :call-seq:
@@ -1275,12 +1294,12 @@ class REXML::Document < ::REXML::Element
   #   d.xml_decl.class # => REXML::XMLDecl
   #   d.xml_decl.to_s  # => ""
   #
-  # source://rexml//lib/rexml/document.rb#258
+  # source://rexml//lib/rexml/document.rb#260
   def xml_decl; end
 
   private
 
-  # source://rexml//lib/rexml/document.rb#447
+  # source://rexml//lib/rexml/document.rb#451
   def build(source); end
 
   class << self
@@ -1288,31 +1307,31 @@ class REXML::Document < ::REXML::Element
     #
     # Deprecated. Use REXML::Security.entity_expansion_limit= instead.
     #
-    # source://rexml//lib/rexml/document.rb#415
+    # source://rexml//lib/rexml/document.rb#417
     def entity_expansion_limit; end
 
     # Set the entity expansion limit. By default the limit is set to 10000.
     #
     # Deprecated. Use REXML::Security.entity_expansion_limit= instead.
     #
-    # source://rexml//lib/rexml/document.rb#408
+    # source://rexml//lib/rexml/document.rb#410
     def entity_expansion_limit=(val); end
 
     # Get the entity expansion limit. By default the limit is set to 10240.
     #
     # Deprecated. Use REXML::Security.entity_expansion_text_limit instead.
     #
-    # source://rexml//lib/rexml/document.rb#429
+    # source://rexml//lib/rexml/document.rb#431
     def entity_expansion_text_limit; end
 
     # Set the entity expansion limit. By default the limit is set to 10240.
     #
     # Deprecated. Use REXML::Security.entity_expansion_text_limit= instead.
     #
-    # source://rexml//lib/rexml/document.rb#422
+    # source://rexml//lib/rexml/document.rb#424
     def entity_expansion_text_limit=(val); end
 
-    # source://rexml//lib/rexml/document.rb#401
+    # source://rexml//lib/rexml/document.rb#403
     def parse_stream(source, listener); end
   end
 end
@@ -3250,7 +3269,7 @@ class REXML::Entity < ::REXML::Child
   # Returns the value of this entity unprocessed -- raw.  This is the
   # normalized value; that is, with all %ent; and &ent; entities intact
   #
-  # source://rexml//lib/rexml/entity.rb#83
+  # source://rexml//lib/rexml/entity.rb#86
   def normalized; end
 
   # Returns the value of attribute pubid.
@@ -3265,7 +3284,7 @@ class REXML::Entity < ::REXML::Child
 
   # Returns this entity as a string.  See write().
   #
-  # source://rexml//lib/rexml/entity.rb#117
+  # source://rexml//lib/rexml/entity.rb#120
   def to_s; end
 
   # Evaluates to the unnormalized value of this entity; that is, replacing
@@ -3288,7 +3307,7 @@ class REXML::Entity < ::REXML::Child
   # indent::
   #   *DEPRECATED* and ignored
   #
-  # source://rexml//lib/rexml/entity.rb#95
+  # source://rexml//lib/rexml/entity.rb#98
   def write(out, indent = T.unsafe(nil)); end
 
   class << self
@@ -3980,34 +3999,48 @@ class REXML::Parsers::BaseParser
   # source://rexml//lib/rexml/parsers/baseparser.rb#162
   def initialize(source); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#169
+  # source://rexml//lib/rexml/parsers/baseparser.rb#171
   def add_listener(listener); end
 
   # Returns true if there are no more events
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#198
+  # source://rexml//lib/rexml/parsers/baseparser.rb#202
   def empty?; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#530
+  # source://rexml//lib/rexml/parsers/baseparser.rb#534
   def entity(reference, entities); end
 
   # Returns the value of attribute entity_expansion_count.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#174
+  # source://rexml//lib/rexml/parsers/baseparser.rb#176
   def entity_expansion_count; end
+
+  # Sets the attribute entity_expansion_limit
+  #
+  # @param value the value to set the attribute entity_expansion_limit to.
+  #
+  # source://rexml//lib/rexml/parsers/baseparser.rb#177
+  def entity_expansion_limit=(_arg0); end
+
+  # Sets the attribute entity_expansion_text_limit
+  #
+  # @param value the value to set the attribute entity_expansion_text_limit to.
+  #
+  # source://rexml//lib/rexml/parsers/baseparser.rb#178
+  def entity_expansion_text_limit=(_arg0); end
 
   # Returns true if there are more events.  Synonymous with !empty?
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#203
+  # source://rexml//lib/rexml/parsers/baseparser.rb#207
   def has_next?; end
 
   # Escapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#541
+  # source://rexml//lib/rexml/parsers/baseparser.rb#545
   def normalize(input, entities = T.unsafe(nil), entity_filter = T.unsafe(nil)); end
 
   # Peek at the +depth+ event in the stack.  The first element on the stack
@@ -4017,71 +4050,71 @@ class REXML::Parsers::BaseParser
   # event, so you can effectively pre-parse the entire document (pull the
   # entire thing into memory) using this method.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#219
+  # source://rexml//lib/rexml/parsers/baseparser.rb#223
   def peek(depth = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#188
+  # source://rexml//lib/rexml/parsers/baseparser.rb#192
   def position; end
 
   # Returns the next event.  This is a +PullEvent+ object.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#234
+  # source://rexml//lib/rexml/parsers/baseparser.rb#238
   def pull; end
 
   # Returns the value of attribute source.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#173
+  # source://rexml//lib/rexml/parsers/baseparser.rb#175
   def source; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#176
+  # source://rexml//lib/rexml/parsers/baseparser.rb#180
   def stream=(source); end
 
   # Unescapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#557
+  # source://rexml//lib/rexml/parsers/baseparser.rb#561
   def unnormalize(string, entities = T.unsafe(nil), filter = T.unsafe(nil)); end
 
   # Push an event back on the head of the stream.  This method
   # has (theoretically) infinite depth.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#209
+  # source://rexml//lib/rexml/parsers/baseparser.rb#213
   def unshift(token); end
 
   private
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#602
+  # source://rexml//lib/rexml/parsers/baseparser.rb#606
   def add_namespace(prefix, uri); end
 
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#635
+  # source://rexml//lib/rexml/parsers/baseparser.rb#639
   def need_source_encoding_update?(xml_declaration_encoding); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#755
+  # source://rexml//lib/rexml/parsers/baseparser.rb#759
   def parse_attributes(prefixes); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#654
+  # source://rexml//lib/rexml/parsers/baseparser.rb#658
   def parse_id(base_error_message, accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#682
+  # source://rexml//lib/rexml/parsers/baseparser.rb#686
   def parse_id_invalid_details(accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#641
+  # source://rexml//lib/rexml/parsers/baseparser.rb#645
   def parse_name(base_error_message); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#617
+  # source://rexml//lib/rexml/parsers/baseparser.rb#621
   def pop_namespaces_restore; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#720
+  # source://rexml//lib/rexml/parsers/baseparser.rb#724
   def process_instruction; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#244
+  # source://rexml//lib/rexml/parsers/baseparser.rb#248
   def pull_event; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#611
+  # source://rexml//lib/rexml/parsers/baseparser.rb#615
   def push_namespaces_restore; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#628
+  # source://rexml//lib/rexml/parsers/baseparser.rb#632
   def record_entity_expansion(delta = T.unsafe(nil)); end
 end
 
@@ -4150,6 +4183,12 @@ class REXML::Parsers::StreamParser
   def entity_expansion_count; end
 
   # source://rexml//lib/rexml/parsers/streamparser.rb#21
+  def entity_expansion_limit=(limit); end
+
+  # source://rexml//lib/rexml/parsers/streamparser.rb#25
+  def entity_expansion_text_limit=(limit); end
+
+  # source://rexml//lib/rexml/parsers/streamparser.rb#29
   def parse; end
 end
 
@@ -4492,7 +4531,7 @@ class REXML::Text < ::REXML::Child
   # source://rexml//lib/rexml/text.rb#199
   def empty?; end
 
-  # source://rexml//lib/rexml/text.rb#298
+  # source://rexml//lib/rexml/text.rb#299
   def indent_text(string, level = T.unsafe(nil), style = T.unsafe(nil), indentfirstline = T.unsafe(nil)); end
 
   # source://rexml//lib/rexml/text.rb#253
@@ -4556,16 +4595,16 @@ class REXML::Text < ::REXML::Child
   #   e[0].value = "bar"    # <a>bar</a>
   #   e[0].value = "<a>"    # <a>&lt;a&gt;</a>
   #
-  # source://rexml//lib/rexml/text.rb#281
+  # source://rexml//lib/rexml/text.rb#282
   def value=(val); end
 
-  # source://rexml//lib/rexml/text.rb#287
+  # source://rexml//lib/rexml/text.rb#288
   def wrap(string, width, addnewline = T.unsafe(nil)); end
 
   # == DEPRECATED
   # See REXML::Formatters
   #
-  # source://rexml//lib/rexml/text.rb#313
+  # source://rexml//lib/rexml/text.rb#314
   def write(writer, indent = T.unsafe(nil), transitive = T.unsafe(nil), ie_hack = T.unsafe(nil)); end
 
   # Writes out text, substituting special characters beforehand.
@@ -4583,18 +4622,18 @@ class REXML::Text < ::REXML::Child
   #   }
   #   puts ascOut
   #
-  # source://rexml//lib/rexml/text.rb#345
+  # source://rexml//lib/rexml/text.rb#346
   def write_with_substitution(out, input); end
 
   # FIXME
   # This probably won't work properly
   #
-  # source://rexml//lib/rexml/text.rb#325
+  # source://rexml//lib/rexml/text.rb#326
   def xpath; end
 
   private
 
-  # source://rexml//lib/rexml/text.rb#358
+  # source://rexml//lib/rexml/text.rb#359
   def clear_cache; end
 
   class << self
@@ -4603,23 +4642,23 @@ class REXML::Text < ::REXML::Child
     # source://rexml//lib/rexml/text.rb#131
     def check(string, pattern, doctype); end
 
-    # source://rexml//lib/rexml/text.rb#427
+    # source://rexml//lib/rexml/text.rb#429
     def expand(ref, doctype, filter); end
 
     # Escapes all possible entities
     #
-    # source://rexml//lib/rexml/text.rb#390
+    # source://rexml//lib/rexml/text.rb#391
     def normalize(input, doctype = T.unsafe(nil), entity_filter = T.unsafe(nil)); end
 
     # Reads text, substituting entities
     #
-    # source://rexml//lib/rexml/text.rb#364
+    # source://rexml//lib/rexml/text.rb#365
     def read_with_substitution(input, illegal = T.unsafe(nil)); end
 
     # Unescapes all possible entities
     #
-    # source://rexml//lib/rexml/text.rb#414
-    def unnormalize(string, doctype = T.unsafe(nil), filter = T.unsafe(nil), illegal = T.unsafe(nil)); end
+    # source://rexml//lib/rexml/text.rb#415
+    def unnormalize(string, doctype = T.unsafe(nil), filter = T.unsafe(nil), illegal = T.unsafe(nil), entity_expansion_text_limit: T.unsafe(nil)); end
   end
 end
 
