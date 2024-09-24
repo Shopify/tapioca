@@ -39,6 +39,8 @@ module Tapioca
         @project.write!("config/environment.rb", <<~RB)
           require_relative "application.rb"
         RB
+
+        @project.require_default_gems
       end
 
       it "shows an error message for unknown options" do
