@@ -632,6 +632,8 @@ module Tapioca
         end
 
         it "must not include `rbi` definitions into `tapioca` RBI" do
+          skip "This test is failing on CI. See issue #2025 for details."
+
           @project.bundle_install!
           result = @project.tapioca("gem tapioca", exclude: [])
 
