@@ -187,10 +187,30 @@ module Tapioca
                }
             "T::Hash[::String, ::String]"
           when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval === type
+               }
+            "::ActiveSupport::Duration"
+          when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array === type
                }
             "T::Array[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit === type
+               }
+            "::String"
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::BitVarying) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::BitVarying === type
+               }
+            "::String"
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range === type
+               }
+            "T::Range[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
           else
             as_non_nilable_if_persisted_and_not_nullable(
               ActiveModelTypeHelper.type_for(column_type),
