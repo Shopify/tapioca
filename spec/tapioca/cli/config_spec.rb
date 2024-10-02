@@ -7,6 +7,7 @@ module Tapioca
   class ConfigTest < SpecWithProject
     describe "cli::configuration" do
       before(:all) do
+        @project.require_default_gems
         @project.bundle_install!
       end
 

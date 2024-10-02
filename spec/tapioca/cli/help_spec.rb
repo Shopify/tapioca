@@ -7,6 +7,7 @@ module Tapioca
   class HelpSpec < SpecWithProject
     describe("cli::help") do
       before(:all) do
+        project.require_default_gems
         project.bundle_install!
       end
 

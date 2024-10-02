@@ -11,6 +11,7 @@ module Tapioca
       end
 
       before(:all) do
+        @project.require_default_gems
         @project.bundle_install!
       end
 

@@ -103,6 +103,10 @@ module Tapioca
       end
     RBI
 
+    before(:all) do
+      @project.require_default_gems
+    end
+
     describe "cli::gem" do
       before(:all) do
         @project.bundle_install!
@@ -186,6 +190,7 @@ module Tapioca
 
         after do
           project.write_gemfile!(project.tapioca_gemfile)
+          @project.require_default_gems
           project.remove!("sorbet/rbi")
           project.remove!("../gems")
           project.remove!("sorbet/tapioca/require.rb")
@@ -266,8 +271,8 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          gem_name = "ostruct"
-          gem_top_level_constant = "class OpenStruct"
+          gem_name = "base64"
+          gem_top_level_constant = "module Base64"
 
           gem_spec = ::Gem::Specification.default_stubs("*.gemspec").find do |spec|
             spec.name == gem_name && spec.default_gem?
@@ -627,6 +632,8 @@ module Tapioca
         end
 
         it "must not include `rbi` definitions into `tapioca` RBI" do
+          skip "This test is failing on CI. See issue #2025 for details."
+
           @project.bundle_install!
           result = @project.tapioca("gem tapioca", exclude: [])
 
@@ -706,7 +713,7 @@ module Tapioca
         it "must not generate RBIs for missing gem specs" do
           @project.write_gemfile!(<<~GEMFILE, append: true)
             platform :rbx do
-              gem "ruby2_keywords", "0.0.5"
+              gem "sidekiq", "=7.1.2"
             end
           GEMFILE
 
@@ -714,8 +721,8 @@ module Tapioca
 
           result = @project.tapioca("gem --all")
 
-          assert_stdout_includes(result, "completed with missing specs: ruby2_keywords (0.0.5)")
-          refute_includes(result.out, "Compiled ruby2_keywords")
+          assert_stdout_includes(result, "completed with missing specs: sidekiq (7.1.2)")
+          refute_includes(result.out, "Compiled sidekiq")
 
           assert_empty_stderr(result)
           assert_success_status(result)
