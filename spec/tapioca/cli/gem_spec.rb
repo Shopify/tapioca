@@ -1530,8 +1530,10 @@ module Tapioca
           # Note that this problem only happens if another gem somehow eager loads the engines. By default, Rails
           # would've not loaded those classes and they would have not been placed in the Rails RBI.
 
+          # This is pointing to the 7-2-stable branch because Rails 8 dropped support for Ruby 3.1. We can point
+          # it to main again once Tapioca drops support for Ruby 3.1 as well.
           @project.write_gemfile!(<<~GEMFILE, append: true)
-            gem("rails", git: "https://github.com/rails/rails", branch: "main")
+            gem("rails", git: "https://github.com/rails/rails", branch: "7-2-stable")
           GEMFILE
 
           # Create a gem that eager loads the ActionMailbox engine
