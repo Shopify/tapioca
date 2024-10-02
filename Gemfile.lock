@@ -8,13 +8,13 @@ GIT
 PATH
   remote: ../ruby-lsp-rails
   specs:
-    ruby-lsp-rails (0.3.14)
-      ruby-lsp (>= 0.17.12, < 0.18.0)
+    ruby-lsp-rails (0.3.16)
+      ruby-lsp (>= 0.18.0, < 0.19.0)
 
 PATH
   remote: ../ruby-lsp
   specs:
-    ruby-lsp (0.17.18)
+    ruby-lsp (0.18.4)
       language_server-protocol (~> 3.17.0)
       prism (~> 1.0)
       rbs (>= 3, < 4)
