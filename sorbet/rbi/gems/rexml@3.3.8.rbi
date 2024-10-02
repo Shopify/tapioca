@@ -3996,51 +3996,51 @@ end
 class REXML::Parsers::BaseParser
   # @return [BaseParser] a new instance of BaseParser
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#162
+  # source://rexml//lib/rexml/parsers/baseparser.rb#163
   def initialize(source); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#171
+  # source://rexml//lib/rexml/parsers/baseparser.rb#172
   def add_listener(listener); end
 
   # Returns true if there are no more events
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#202
+  # source://rexml//lib/rexml/parsers/baseparser.rb#203
   def empty?; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#534
+  # source://rexml//lib/rexml/parsers/baseparser.rb#535
   def entity(reference, entities); end
 
   # Returns the value of attribute entity_expansion_count.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#176
+  # source://rexml//lib/rexml/parsers/baseparser.rb#177
   def entity_expansion_count; end
 
   # Sets the attribute entity_expansion_limit
   #
   # @param value the value to set the attribute entity_expansion_limit to.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#177
+  # source://rexml//lib/rexml/parsers/baseparser.rb#178
   def entity_expansion_limit=(_arg0); end
 
   # Sets the attribute entity_expansion_text_limit
   #
   # @param value the value to set the attribute entity_expansion_text_limit to.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#178
+  # source://rexml//lib/rexml/parsers/baseparser.rb#179
   def entity_expansion_text_limit=(_arg0); end
 
   # Returns true if there are more events.  Synonymous with !empty?
   #
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#207
+  # source://rexml//lib/rexml/parsers/baseparser.rb#208
   def has_next?; end
 
   # Escapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#545
+  # source://rexml//lib/rexml/parsers/baseparser.rb#546
   def normalize(input, entities = T.unsafe(nil), entity_filter = T.unsafe(nil)); end
 
   # Peek at the +depth+ event in the stack.  The first element on the stack
@@ -4050,71 +4050,71 @@ class REXML::Parsers::BaseParser
   # event, so you can effectively pre-parse the entire document (pull the
   # entire thing into memory) using this method.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#223
+  # source://rexml//lib/rexml/parsers/baseparser.rb#224
   def peek(depth = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#192
+  # source://rexml//lib/rexml/parsers/baseparser.rb#193
   def position; end
 
   # Returns the next event.  This is a +PullEvent+ object.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#238
+  # source://rexml//lib/rexml/parsers/baseparser.rb#239
   def pull; end
 
   # Returns the value of attribute source.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#175
+  # source://rexml//lib/rexml/parsers/baseparser.rb#176
   def source; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#180
+  # source://rexml//lib/rexml/parsers/baseparser.rb#181
   def stream=(source); end
 
   # Unescapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#561
+  # source://rexml//lib/rexml/parsers/baseparser.rb#562
   def unnormalize(string, entities = T.unsafe(nil), filter = T.unsafe(nil)); end
 
   # Push an event back on the head of the stream.  This method
   # has (theoretically) infinite depth.
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#213
+  # source://rexml//lib/rexml/parsers/baseparser.rb#214
   def unshift(token); end
 
   private
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#606
+  # source://rexml//lib/rexml/parsers/baseparser.rb#607
   def add_namespace(prefix, uri); end
 
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#639
+  # source://rexml//lib/rexml/parsers/baseparser.rb#640
   def need_source_encoding_update?(xml_declaration_encoding); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#759
+  # source://rexml//lib/rexml/parsers/baseparser.rb#760
   def parse_attributes(prefixes); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#658
+  # source://rexml//lib/rexml/parsers/baseparser.rb#659
   def parse_id(base_error_message, accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#686
+  # source://rexml//lib/rexml/parsers/baseparser.rb#687
   def parse_id_invalid_details(accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#645
+  # source://rexml//lib/rexml/parsers/baseparser.rb#646
   def parse_name(base_error_message); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#621
+  # source://rexml//lib/rexml/parsers/baseparser.rb#622
   def pop_namespaces_restore; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#724
+  # source://rexml//lib/rexml/parsers/baseparser.rb#725
   def process_instruction; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#248
+  # source://rexml//lib/rexml/parsers/baseparser.rb#249
   def pull_event; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#615
+  # source://rexml//lib/rexml/parsers/baseparser.rb#616
   def push_namespaces_restore; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#632
+  # source://rexml//lib/rexml/parsers/baseparser.rb#633
   def record_entity_expansion(delta = T.unsafe(nil)); end
 end
 
@@ -4162,6 +4162,9 @@ REXML::Parsers::BaseParser::Private::PEREFERENCE_PATTERN = T.let(T.unsafe(nil), 
 
 # source://rexml//lib/rexml/parsers/baseparser.rb#145
 REXML::Parsers::BaseParser::Private::TAG_PATTERN = T.let(T.unsafe(nil), Regexp)
+
+# source://rexml//lib/rexml/parsers/baseparser.rb#159
+REXML::Parsers::BaseParser::Private::XML_PREFIXED_NAMESPACE = T.let(T.unsafe(nil), String)
 
 # source://rexml//lib/rexml/parsers/baseparser.rb#66
 REXML::Parsers::BaseParser::QNAME = T.let(T.unsafe(nil), Regexp)

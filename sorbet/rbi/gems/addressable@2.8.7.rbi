@@ -638,7 +638,7 @@ class Addressable::Template::MatchData
   # @param key [String, Symbol, Fixnum] Capture index or name. Note that when accessing by with index
   #   of 0, the full URI will be returned. The intention is to mimic
   #   the ::MatchData#[] behavior.
-  # @param len [#to_int, nil] If provided, an array of values will be returend with the given
+  # @param len [#to_int, nil] If provided, an array of values will be returned with the given
   #   parameter used as length.
   # @return [Array, String, nil] The captured value corresponding to the index or name. If the
   #   value was not provided or the key is unknown, nil will be
