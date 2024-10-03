@@ -15,6 +15,8 @@ gem "irb"
 gem "rubocop-shopify"
 gem "rubocop-sorbet", ">= 0.4.1"
 gem "rubocop-rspec"
+gem "ruby-lsp", ">= 0.19.0"
+gem "ruby-lsp-rails", ">= 0.3.17"
 
 group :deployment, :development do
   gem "rake"
