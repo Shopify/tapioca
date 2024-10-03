@@ -13,6 +13,8 @@ require "tapioca/internal"
 module RubyLsp
   module Tapioca
     class Addon < ::RubyLsp::Addon
+      MINIMUM_RAILS_ADDON_VERSION = "0.3.17"
+
       extend T::Sig
 
       def initialize
@@ -24,7 +26,10 @@ module RubyLsp
         $stderr.puts("Activating Tapioca LSP addon v#{VERSION}")
         @global_state = global_state
         @index = global_state.index
-        addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails"), ::RubyLsp::Rails::Addon)
+        addon = T.cast(
+          ::RubyLsp::Addon.get("Ruby LSP Rails", ">= #{MINIMUM_RAILS_ADDON_VERSION}"),
+          ::RubyLsp::Rails::Addon,
+        )
 
         Thread.new do
           @rails_runner_client = T.let(addon.rails_runner_client, T.nilable(RubyLsp::Rails::RunnerClient))
