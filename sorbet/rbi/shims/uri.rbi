@@ -16,4 +16,9 @@ module URI
     sig { returns(String) }
     attr_reader :fragment
   end
+
+  class Generic
+    sig { returns(String) }
+    def to_standardized_path; end
+  end
 end
