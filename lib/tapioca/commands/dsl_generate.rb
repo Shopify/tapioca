@@ -28,6 +28,7 @@ module Tapioca
 
         purge_stale_dsl_rbi_files(rbi_files_to_purge)
         say("Done", :green)
+        File.write("output.txt", "DSL RBIs generated for #{@requested_constants}", mode: "a")
 
         if @auto_strictness
           say("")

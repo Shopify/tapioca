@@ -52,8 +52,10 @@ module Tapioca
         end
 
         sig { void }
-        def reset_processable_constants
+        def reset_state
           @processable_constants = nil
+          @all_classes = nil
+          @all_modules = nil
         end
 
         private

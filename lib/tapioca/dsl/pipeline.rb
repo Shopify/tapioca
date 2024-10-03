@@ -84,7 +84,7 @@ module Tapioca
           abort_if_pending_migrations!
         end
 
-        puts "Constants to process: #{constants_to_process}"
+        File.write("output.txt", "Constants to process: #{constants_to_process}", mode: "a")
         result = Executor.new(
           constants_to_process,
           number_of_workers: @number_of_workers,
@@ -203,12 +203,13 @@ module Tapioca
 
       sig { params(constant: Module).returns(T.nilable(RBI::File)) }
       def rbi_for_constant(constant)
+        File.write("output.txt", "rbi_for_constant #{constant}", mode: "a")
         file = RBI::File.new(strictness: "true")
 
         active_compilers.each do |compiler_class|
           next unless compiler_class.handles?(constant)
 
-          puts "Compiler: #{compiler_class}, Constant: #{constant}"
+          File.write("output.txt", "\nCompiler: #{compiler_class}, handles Constant: #{constant}\n")
 
           compiler = compiler_class.new(self, file.root, constant, @compiler_options)
           compiler.decorate

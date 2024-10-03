@@ -79,7 +79,7 @@ module Tapioca
         # TODO: Sad
         if @lsp_addon
           pipeline.active_compilers.each do |compiler|
-            compiler.reset_processable_constants
+            compiler.reset_state
           end
         end
 
