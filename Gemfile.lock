@@ -273,6 +273,8 @@ GEM
     rbi (0.2.1)
       prism (~> 1.0)
       sorbet-runtime (>= 0.5.9204)
+    rbs (3.6.1)
+      logger
     rdoc (6.7.0)
       psych (>= 4.0.0)
     redis (5.0.8)
@@ -301,6 +303,13 @@ GEM
       rubocop (~> 1.51)
     rubocop-sorbet (0.8.6)
       rubocop (>= 1)
+    ruby-lsp (0.19.0)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.1, < 2.0)
+      rbs (>= 3, < 4)
+      sorbet-runtime (>= 0.5.10782)
+    ruby-lsp-rails (0.3.17)
+      ruby-lsp (>= 0.19.0, < 0.20.0)
     ruby-progressbar (1.13.0)
     shopify-money (3.0.0)
     sidekiq (7.3.2)
@@ -385,6 +394,8 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
+  ruby-lsp (>= 0.19.0)
+  ruby-lsp-rails (>= 0.3.17)
   shopify-money
   sidekiq
   smart_properties
