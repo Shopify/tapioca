@@ -25,9 +25,6 @@ module URI
     # have the uri gem in their own bundle and thus not use a compatible version.
     PARSER = T.let(const_defined?(:RFC2396_PARSER) ? RFC2396_PARSER : DEFAULT_PARSER, RFC2396_Parser)
 
-    alias_method(:gem_name, :host)
-    alias_method(:line_number, :fragment)
-
     sig { returns(T.nilable(String)) }
     attr_reader :gem_version
 
@@ -52,6 +49,16 @@ module URI
           }
         )
       end
+    end
+
+    sig { returns(T.nilable(String)) }
+    def gem_name
+      host
+    end
+
+    sig { returns(T.nilable(String)) }
+    def line_number
+      fragment
     end
 
     sig { params(v: T.nilable(String)).void }
