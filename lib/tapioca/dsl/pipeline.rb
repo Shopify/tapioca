@@ -34,6 +34,7 @@ module Tapioca
           skipped_constants: T::Array[Module],
           number_of_workers: T.nilable(Integer),
           compiler_options: T::Hash[String, T.untyped],
+          lsp_addon: T::Boolean,
         ).void
       end
       def initialize(
@@ -44,7 +45,8 @@ module Tapioca
         error_handler: $stderr.method(:puts).to_proc,
         skipped_constants: [],
         number_of_workers: nil,
-        compiler_options: {}
+        compiler_options: {},
+        lsp_addon: false
       )
         @active_compilers = T.let(
           gather_active_compilers(requested_compilers, excluded_compilers),
@@ -57,6 +59,7 @@ module Tapioca
         @number_of_workers = number_of_workers
         @compiler_options = compiler_options
         @errors = T.let([], T::Array[String])
+        @lsp_addon = lsp_addon
       end
 
       sig do
@@ -177,7 +180,7 @@ module Tapioca
         # Find the constants that have been reloaded
         reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
 
-        unless reloaded_constants.empty?
+        unless reloaded_constants.empty? || @lsp_addon
           reloaded_constant_names = reloaded_constants.map { |name| "`#{name}`" }.join(", ")
 
           $stderr.puts("WARNING: Multiple constants with the same name: #{reloaded_constant_names}")

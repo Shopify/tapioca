@@ -10,16 +10,27 @@ module Tapioca
         extend T::Sig
 
         sig do
-          params(tapioca_path: String, eager_load: T::Boolean, app_root: String, halt_upon_load_error: T::Boolean).void
+          params(
+            tapioca_path: String,
+            eager_load: T::Boolean,
+            app_root: String,
+            halt_upon_load_error: T::Boolean,
+            lsp_addon: T::Boolean,
+          ).void
         end
-        def load_application(tapioca_path:, eager_load: true, app_root: ".", halt_upon_load_error: true)
+        def load_application(tapioca_path:, eager_load: true, app_root: ".", halt_upon_load_error: true,
+          lsp_addon: false)
           loader = new(
             tapioca_path: tapioca_path,
             eager_load: eager_load,
             app_root: app_root,
             halt_upon_load_error: halt_upon_load_error,
           )
-          loader.load
+          if lsp_addon
+            loader.load_dsl_extensions_and_compilers
+          else
+            loader.load
+          end
         end
       end
 
@@ -27,6 +38,12 @@ module Tapioca
       def load
         load_dsl_extensions
         load_application
+        load_dsl_compilers
+      end
+
+      sig { void }
+      def load_dsl_extensions_and_compilers
+        load_dsl_extensions
         load_dsl_compilers
       end
 

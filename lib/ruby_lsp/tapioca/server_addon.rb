@@ -20,7 +20,8 @@ module RubyLsp
       private
 
       def dsl(params)
-        # TODO
+        load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
+        ::Tapioca::Cli.start(["dsl", "--lsp_addon", "--workers=1"] + params[:constants])
       end
     end
   end
