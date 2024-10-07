@@ -80,7 +80,7 @@ module RubyLsp
         @rails_runner_client.delegate_notification(
           server_addon_name: "Tapioca",
           request_name: "dsl",
-          params: { constants: constants },
+          constants: constants,
         )
       end
     end
