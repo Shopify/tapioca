@@ -28,6 +28,7 @@ module Tapioca
           app_root: String,
           halt_upon_load_error: T::Boolean,
           compiler_options: T::Hash[String, T.untyped],
+          lsp_addon: T::Boolean,
         ).void
       end
       def initialize(
@@ -47,7 +48,8 @@ module Tapioca
         rbi_formatter: DEFAULT_RBI_FORMATTER,
         app_root: ".",
         halt_upon_load_error: true,
-        compiler_options: {}
+        compiler_options: {},
+        lsp_addon: false
       )
         @requested_constants = requested_constants
         @requested_paths = requested_paths
@@ -66,6 +68,7 @@ module Tapioca
         @halt_upon_load_error = halt_upon_load_error
         @skip_constant = skip_constant
         @compiler_options = compiler_options
+        @lsp_addon = lsp_addon
 
         super()
       end
@@ -74,6 +77,10 @@ module Tapioca
 
       sig { params(outpath: Pathname, quiet: T::Boolean).returns(T::Set[Pathname]) }
       def generate_dsl_rbi_files(outpath, quiet:)
+        if @lsp_addon
+          pipeline.active_compilers.each(&:reset_state)
+        end
+
         existing_rbi_files = existing_rbi_filenames(all_requested_constants)
 
         generated_files = pipeline.run do |constant, contents|
@@ -116,6 +123,7 @@ module Tapioca
           eager_load: @requested_constants.empty? && @requested_paths.empty?,
           app_root: @app_root,
           halt_upon_load_error: @halt_upon_load_error,
+          lsp_addon: @lsp_addon,
         )
       end
 
@@ -133,6 +141,7 @@ module Tapioca
           skipped_constants: constantize(@skip_constant, ignore_missing: true),
           number_of_workers: @number_of_workers,
           compiler_options: @compiler_options,
+          lsp_addon: @lsp_addon,
         )
       end
 
