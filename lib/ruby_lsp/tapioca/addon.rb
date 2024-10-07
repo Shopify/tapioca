@@ -12,8 +12,6 @@ rescue LoadError
   return
 end
 
-require "tapioca/internal"
-
 module RubyLsp
   module Tapioca
     class Addon < ::RubyLsp::Addon
@@ -40,6 +38,7 @@ module RubyLsp
           # thread
           addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.3.18", "< 0.4"), ::RubyLsp::Rails::Addon)
           @rails_runner_client = addon.rails_runner_client
+          @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
@@ -62,6 +61,9 @@ module RubyLsp
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
+        return unless T.must(@global_state).experimental_features
+        return unless @rails_runner_client # Client is not ready
+
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
           entries = T.must(@index).entries_for(path)
@@ -74,8 +76,8 @@ module RubyLsp
 
         return if constants.empty?
 
-        T.must(@rails_runner_client).trigger_reload
-        T.must(@rails_runner_client).delegate_notification(
+        @rails_runner_client.trigger_reload
+        @rails_runner_client.delegate_notification(
           server_addon_name: "Tapioca",
           request_name: "dsl",
           params: { constants: constants },
