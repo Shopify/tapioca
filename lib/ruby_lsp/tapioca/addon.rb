@@ -38,7 +38,7 @@ module RubyLsp
           # Get a handle to the Rails add-on's runtime client. The call to `rails_runner_client` will block this thread
           # until the server has finished booting, but it will not block the main LSP. This has to happen inside of a
           # thread
-          addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.3.17", "< 0.4"), ::RubyLsp::Rails::Addon)
+          addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.3.18", "< 0.4"), ::RubyLsp::Rails::Addon)
           @rails_runner_client = addon.rails_runner_client
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
