@@ -29,7 +29,8 @@ module RubyLsp
       sig { override.params(global_state: RubyLsp::GlobalState, outgoing_queue: Thread::Queue).void }
       def activate(global_state, outgoing_queue)
         @global_state = global_state
-        return unless @global_state.experimental_features
+        # TODO: Uncomment
+        # return unless @global_state.experimental_features
 
         @index = @global_state.index
         Thread.new do
