@@ -32,8 +32,8 @@ module Tapioca
 
       sig { void }
       def run_with_deprecation
-        say(DEPRECATION_MESSAGE, :red)
-        say("")
+        logger.info(DEPRECATION_MESSAGE, :red)
+        logger.info("")
 
         run
       end
@@ -42,7 +42,7 @@ module Tapioca
 
       sig { override.void }
       def execute
-        say("Finding all unresolved constants, this may take a few seconds... ")
+        logger.info("Finding all unresolved constants, this may take a few seconds... ")
 
         # Clean all existing unresolved constants before regenerating the list
         # so Sorbet won't grab them as already resolved.
@@ -51,17 +51,17 @@ module Tapioca
         constants = unresolved_constants
 
         if constants.empty?
-          say("Nothing to do", :green)
+          logger.info("Nothing to do", :green)
           return
         end
 
-        say("Done", :green)
+        logger.info("Done", :green)
         contents = rbi(constants, command: default_command(:todo))
         create_file(@todo_file, contents.string, verbose: false)
 
         name = set_color(@todo_file, :yellow, :bold)
-        say("\nAll unresolved constants have been written to #{name}.", [:green, :bold])
-        say("Please review changes and commit them.", [:green, :bold])
+        logger.info("\nAll unresolved constants have been written to #{name}.", [:green, :bold])
+        logger.info("Please review changes and commit them.", [:green, :bold])
       end
 
       sig { params(constants: T::Array[String], command: String).returns(RBI::File) }

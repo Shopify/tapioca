@@ -22,10 +22,10 @@ module Tapioca
             gems: @bundle.dependencies,
           )
 
-          say("All operations performed in working directory.", [:green, :bold])
-          say("Please review changes and commit them.", [:green, :bold])
+          logger.info("All operations performed in working directory.", [:green, :bold])
+          logger.info("Please review changes and commit them.", [:green, :bold])
         else
-          say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
+          logger.info("No operations performed, all RBIs are up-to-date.", [:green, :bold])
         end
 
         puts

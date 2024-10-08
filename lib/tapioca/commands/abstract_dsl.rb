@@ -128,7 +128,7 @@ module Tapioca
           requested_compilers: constantize_compilers(@only),
           excluded_compilers: constantize_compilers(@exclude),
           error_handler: ->(error) {
-            say_error(error, :bold, :red)
+            logger.error(error, :bold, :red)
           },
           skipped_constants: constantize(@skip_constant, ignore_missing: true),
           number_of_workers: @number_of_workers,
@@ -162,7 +162,7 @@ module Tapioca
 
         unless unprocessable_constants.empty? || ignore_missing
           unprocessable_constants.each do |name, _|
-            say("Error: Cannot find constant '#{name}'", :red)
+            logger.info("Error: Cannot find constant '#{name}'", :red)
             filename = dsl_rbi_filename(name)
             remove_file(filename) if File.file?(filename)
           end
@@ -186,8 +186,8 @@ module Tapioca
             set_color("Warning: Cannot find compiler '#{name}'", :yellow)
           end.join("\n")
 
-          say(message)
-          say("")
+          logger.info(message)
+          logger.info("")
         end
 
         T.cast(compiler_map.values, T::Array[T.class_of(Tapioca::Dsl::Compiler)])
@@ -243,12 +243,12 @@ module Tapioca
       sig { params(files: T::Set[Pathname]).void }
       def purge_stale_dsl_rbi_files(files)
         if files.any?
-          say("Removing stale RBI files...")
+          logger.info("Removing stale RBI files...")
 
           files.sort.each do |filename|
             remove_file(filename)
           end
-          say("")
+          logger.info("")
         end
       end
 
@@ -301,7 +301,7 @@ module Tapioca
       sig { params(diff: T::Hash[String, Symbol], command: Symbol).void }
       def report_diff_and_exit_if_out_of_date(diff, command)
         if diff.empty?
-          say("Nothing to do, all RBIs are up-to-date.")
+          logger.info("Nothing to do, all RBIs are up-to-date.")
         else
           reasons = diff.group_by(&:last).sort.map do |cause, diff_for_cause|
             build_error_for_files(cause, diff_for_cause.map(&:first))
