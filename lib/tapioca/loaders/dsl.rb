@@ -46,7 +46,7 @@ module Tapioca
 
       sig { void }
       def load_dsl_extensions
-        say("Loading DSL extension classes... ")
+        logger.info("Loading DSL extension classes... ")
 
         Dir.glob(["#{@tapioca_path}/extensions/**/*.rb"]).each do |extension|
           require File.expand_path(extension)
@@ -56,12 +56,12 @@ module Tapioca
           require File.expand_path(extension)
         end
 
-        say("Done", :green)
+        logger.info("Done", :green)
       end
 
       sig { void }
       def load_dsl_compilers
-        say("Loading DSL compiler classes... ")
+        logger.info("Loading DSL compiler classes... ")
 
         # Load all built-in compilers
         Dir.glob("#{Tapioca::LIB_ROOT_DIR}/tapioca/dsl/compilers/*.rb").each do |compiler|
@@ -81,12 +81,12 @@ module Tapioca
           require File.expand_path(compiler)
         end
 
-        say("Done", :green)
+        logger.info("Done", :green)
       end
 
       sig { void }
       def load_application
-        say("Loading Rails application... ")
+        logger.info("Loading Rails application... ")
 
         load_rails_application(
           environment_load: true,
@@ -95,7 +95,7 @@ module Tapioca
           halt_upon_load_error: @halt_upon_load_error,
         )
 
-        say("Done", :green)
+        logger.info("Done", :green)
       end
     end
   end

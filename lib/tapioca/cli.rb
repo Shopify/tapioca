@@ -6,6 +6,7 @@ module Tapioca
     include CliHelper
     include ConfigHelper
     include EnvHelper
+    include Logging
 
     FILE_HEADER_OPTION_DESC = "Add a \"This file is generated\" header on top of each generated RBI file"
 
@@ -378,7 +379,7 @@ module Tapioca
     private
 
     def print_init_next_steps
-      say(<<~OUTPUT)
+      logger.info(<<~OUTPUT)
         #{set_color("This project is now set up for use with Sorbet and Tapioca", :bold)}
 
         The sorbet/ folder should exist and look something like this:

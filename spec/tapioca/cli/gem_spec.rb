@@ -1458,10 +1458,11 @@ module Tapioca
           refute_includes(result.out, "remove ")
           refute_includes(result.out, "-> Moving:")
 
+          # TODO: why is this whitespace changed needed for the tests?
           assert_stdout_includes(result, <<~OUT)
             Removing RBI files of gems that have been removed:
 
-              Nothing to do.
+            Nothing to do.
           OUT
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
@@ -1485,10 +1486,11 @@ module Tapioca
           assert_stdout_includes(result, "force  sorbet/rbi/gems/baz@0.0.2.rbi\n")
           refute_includes(result.out, "remove ")
 
+          # TODO: why is this whitespace changed needed for the tests?
           assert_stdout_includes(result, <<~OUT)
             Removing RBI files of gems that have been removed:
 
-              Nothing to do.
+            Nothing to do.
           OUT
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")

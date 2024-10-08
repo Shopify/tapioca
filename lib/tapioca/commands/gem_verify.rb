@@ -8,8 +8,8 @@ module Tapioca
 
       sig { override.void }
       def execute
-        say("Checking for out-of-date RBIs...")
-        say("")
+        logger.info("Checking for out-of-date RBIs...")
+        logger.info("")
         perform_sync_verification
       end
 

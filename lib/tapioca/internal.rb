@@ -24,6 +24,8 @@ require "thor"
 require "yaml"
 require "yard-sorbet"
 
+require "tapioca/logging"
+
 require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/sorbet_ext/backcompat_patches"
 require "tapioca/sorbet_ext/name_patch"

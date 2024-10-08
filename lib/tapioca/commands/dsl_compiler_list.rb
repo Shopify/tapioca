@@ -10,9 +10,9 @@ module Tapioca
       def execute
         load_application
 
-        say("")
-        say("Loaded DSL compiler classes:")
-        say("")
+        logger.info("")
+        logger.info("Loaded DSL compiler classes:")
+        logger.info("")
 
         table = pipeline.compilers.map do |compiler|
           status = if pipeline.active_compilers.include?(compiler)

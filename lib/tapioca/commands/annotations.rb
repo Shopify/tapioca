@@ -48,33 +48,33 @@ module Tapioca
 
       sig { returns(T::Array[GemInfo]) }
       def list_gemfile_gems
-        say("Listing gems from Gemfile.lock... ", [:blue, :bold])
+        logger.info("Listing gems from Gemfile.lock... ", [:blue, :bold])
         gemfile = Bundler.read_file("Gemfile.lock")
         parser = Bundler::LockfileParser.new(gemfile)
         gem_info = parser.specs.map { |spec| GemInfo.from_spec(spec) }
-        say("Done", :green)
+        logger.info("Done", :green)
         gem_info
       end
 
       sig { params(project_gems: T::Array[GemInfo]).void }
       def remove_expired_annotations(project_gems)
-        say("Removing annotations for gems that have been removed... ", [:blue, :bold])
+        logger.info("Removing annotations for gems that have been removed... ", [:blue, :bold])
 
         annotations = Pathname.glob(@outpath.join("*.rbi")).map { |f| f.basename(".*").to_s }
         expired = annotations - project_gems.map(&:name)
 
         if expired.empty?
-          say(" Nothing to do")
+          logger.info(" Nothing to do")
           return
         end
 
-        say("\n")
+        logger.info("\n")
         expired.each do |gem_name|
-          say("\n")
+          logger.info("\n")
           path = @outpath.join("#{gem_name}.rbi")
           remove_file(path)
         end
-        say("\nDone\n\n", :green)
+        logger.info("\nDone\n\n", :green)
       end
 
       sig { returns(T::Hash[String, RepoIndex]) }
@@ -100,18 +100,21 @@ module Tapioca
 
       sig { params(repo_uri: String, repo_number: T.nilable(Integer)).returns(T.nilable(RepoIndex)) }
       def fetch_index(repo_uri, repo_number:)
-        say("Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ", [:blue, :bold])
+        logger.info(
+          "Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ",
+          [:blue, :bold],
+        )
         content = fetch_file(repo_uri, CENTRAL_REPO_INDEX_PATH)
         return unless content
 
         index = RepoIndex.from_json(content)
-        say("Done", :green)
+        logger.info("Done", :green)
         index
       end
 
       sig { params(project_gems: T::Array[GemInfo]).returns(T::Array[String]) }
       def fetch_annotations(project_gems)
-        say("Fetching gem annotations from central repository... ", [:blue, :bold])
+        logger.info("Fetching gem annotations from central repository... ", [:blue, :bold])
         fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[GemInfo, T::Array[String]])
 
         project_gems.each_with_object(fetchable_gems) do |gem_info, hash|
@@ -121,14 +124,14 @@ module Tapioca
         end
 
         if fetchable_gems.empty?
-          say(" Nothing to do")
+          logger.info(" Nothing to do")
 
           return []
         end
 
-        say("\n")
+        logger.info("\n")
         fetched_gems = fetchable_gems.select { |gem_info, repo_uris| fetch_annotation(repo_uris, gem_info) }
-        say("\nDone", :green)
+        logger.info("\nDone", :green)
         fetched_gems.keys.map(&:name).sort
       end
 
@@ -148,7 +151,7 @@ module Tapioca
         content = filter_versions(gem_version, content)
         content = add_header(gem_name, content)
 
-        say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
+        logger.info("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
         create_file(@outpath.join("#{gem_name}.rbi"), content)
       end
 
@@ -165,7 +168,7 @@ module Tapioca
       def fetch_local_file(repo_uri, path)
         File.read("#{repo_uri}/#{path}")
       rescue => e
-        say_error("\nCan't fetch file `#{path}` (#{e.message})", :bold, :red)
+        logger.error("\nCan't fetch file `#{path}` (#{e.message})", :bold, :red)
         nil
       end
 
@@ -208,7 +211,7 @@ module Tapioca
         if contents[0]&.start_with?("# typed:") && contents[1]&.empty?
           contents.insert(2, header).join("\n")
         else
-          say_error("Couldn't insert file header for content: #{content} due to unexpected file format")
+          logger.error("Couldn't insert file header for content: #{content} due to unexpected file format")
           content
         end
       end
@@ -247,16 +250,16 @@ module Tapioca
         tree = rewriter.tree
         return tree.string if tree.conflicts.empty?
 
-        say_error("\n\n  Can't import RBI file for `#{gem_name}` as it contains conflicts:", :yellow)
+        logger.error("\n\n  Can't import RBI file for `#{gem_name}` as it contains conflicts:", :yellow)
 
         tree.conflicts.each do |conflict|
-          say_error("    #{conflict}", :yellow)
+          logger.error("    #{conflict}", :yellow)
         end
 
         nil
       rescue RBI::ParseError => e
-        say_error("\n\n  Can't import RBI file for `#{gem_name}` as it contains errors:", :yellow)
-        say_error("    Error: #{e.message} (#{e.location})")
+        logger.error("\n\n  Can't import RBI file for `#{gem_name}` as it contains errors:", :yellow)
+        logger.error("    Error: #{e.message} (#{e.location})")
         nil
       end
 
@@ -290,8 +293,8 @@ module Tapioca
 
       sig { params(path: String, repo_uri: String, message: String).void }
       def say_http_error(path, repo_uri, message:)
-        say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{message})\n\n", :bold, :red)
-        say_error(<<~ERROR)
+        logger.error("\nCan't fetch file `#{path}` from #{repo_uri} (#{message})\n\n", :bold, :red)
+        logger.error(<<~ERROR)
           Tapioca can't access the annotations at #{repo_uri}.
 
           Are you trying to access a private repository?

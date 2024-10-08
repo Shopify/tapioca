@@ -5,6 +5,7 @@ module Tapioca
   module RBIFilesHelper
     extend T::Sig
     extend T::Helpers
+    include Tapioca::Logging
 
     requires_ancestor { Thor::Shell }
     requires_ancestor { SorbetHelper }
@@ -13,12 +14,12 @@ module Tapioca
     def index_rbi(index, kind, file)
       return unless File.exist?(file)
 
-      say("Loading #{kind} RBIs from #{file}... ")
+      logger.info("Loading #{kind} RBIs from #{file}... ")
       time = Benchmark.realtime do
         parse_and_index_files(index, [file], number_of_workers: 1)
       end
-      say(" Done ", :green)
-      say("(#{time.round(2)}s)")
+      logger.info(" Done ", :green)
+      logger.info("(#{time.round(2)}s)")
     end
 
     sig { params(index: RBI::Index, kind: String, dir: String, number_of_workers: T.nilable(Integer)).void }
@@ -26,16 +27,16 @@ module Tapioca
       return unless Dir.exist?(dir) && !Dir.empty?(dir)
 
       if kind == "payload"
-        say("Loading Sorbet payload... ")
+        logger.info("Loading Sorbet payload... ")
       else
-        say("Loading #{kind} RBIs from #{dir}... ")
+        logger.info("Loading #{kind} RBIs from #{dir}... ")
       end
       time = Benchmark.realtime do
         files = Dir.glob("#{dir}/**/*.rbi").sort
         parse_and_index_files(index, files, number_of_workers: number_of_workers)
       end
-      say(" Done ", :green)
-      say("(#{time.round(2)}s)")
+      logger.info(" Done ", :green)
+      logger.info("(#{time.round(2)}s)")
     end
 
     sig do
@@ -47,7 +48,7 @@ module Tapioca
     end
     def duplicated_nodes_from_index(index, shim_rbi_dir:, todo_rbi_file:)
       duplicates = {}
-      say("Looking for duplicates... ")
+      logger.info("Looking for duplicates... ")
       time = Benchmark.realtime do
         index.keys.each do |key|
           nodes = index[key]
@@ -56,8 +57,8 @@ module Tapioca
           duplicates[key] = nodes
         end
       end
-      say(" Done ", :green)
-      say("(#{time.round(2)}s)")
+      logger.info(" Done ", :green)
+      logger.info("(#{time.round(2)}s)")
       duplicates
     end
 
@@ -86,7 +87,7 @@ module Tapioca
     def validate_rbi_files(command:, gem_dir:, dsl_dir:, auto_strictness:, gems: [], compilers: [])
       error_url_base = Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE
 
-      say("Checking generated RBI files... ")
+      logger.info("Checking generated RBI files... ")
       res = sorbet(
         "--no-config",
         "--error-url-base=#{error_url_base}",
@@ -94,12 +95,12 @@ module Tapioca
         dsl_dir,
         gem_dir,
       )
-      say(" Done", :green)
+      logger.info(" Done", :green)
 
       errors = Spoom::Sorbet::Errors::Parser.parse_string(res.err || "")
 
       if errors.empty?
-        say("  No errors found\n\n", [:green, :bold])
+        logger.info("  No errors found\n\n", [:green, :bold])
 
         return
       end
@@ -160,7 +161,7 @@ module Tapioca
 
         RBI::Parser.parse_file(file)
       rescue RBI::ParseError => e
-        say_error("\nWarning: #{e} (#{e.location})", :yellow)
+        logger.error("\nWarning: #{e} (#{e.location})", :yellow)
         nil
       end.compact
 
@@ -270,10 +271,13 @@ module Tapioca
         .select { |file| file.start_with?(gem_dir) }
         .each do |file|
           Spoom::Sorbet::Sigils.change_sigil_in_file(file, "false")
-          say("\n  Changed strictness of #{file} to `typed: false` (conflicting with DSL files)", [:yellow, :bold])
+          logger.info(
+            "\n  Changed strictness of #{file} to `typed: false` (conflicting with DSL files)",
+            [:yellow, :bold],
+          )
         end
 
-      say("\n")
+      logger.info("\n")
     end
 
     sig { params(path: String).returns(String) }
