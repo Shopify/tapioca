@@ -68,13 +68,15 @@ module RubyLsp
 
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
+          next if path.end_with?("_test.rb", "_spec.rb")
+
           entries = T.must(@index).entries_for(path)
           next unless entries
 
           entries.filter_map do |entry|
             entry.name if entry.class == RubyIndexer::Entry::Class || entry.class == RubyIndexer::Entry::Module
           end
-        end
+        end.compact
 
         return if constants.empty?
 
