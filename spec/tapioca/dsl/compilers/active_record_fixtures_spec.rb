@@ -230,6 +230,16 @@ module Tapioca
               assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
             end
           end
+
+          describe "#handles_path?" do
+            it "matches the fixtures path" do
+              assert(ActiveRecordFixtures.handles_path?("test/fixtures/posts.yml"))
+              assert(ActiveRecordFixtures.handles_path?("test/fixtures/posts.yml.erb"))
+              assert(ActiveRecordFixtures.handles_path?("test/fixtures/more/posts.yml"))
+              refute(ActiveRecordFixtures.handles_path?("test/fixtures/posts.rb"))
+              refute(ActiveRecordFixtures.handles_path?("test/elsewhere/posts.yml"))
+            end
+          end
         end
 
         private
