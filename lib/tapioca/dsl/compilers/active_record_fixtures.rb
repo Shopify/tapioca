@@ -66,6 +66,11 @@ module Tapioca
 
             [ActiveSupport::TestCase]
           end
+
+          sig { params(path: String).returns(T::Boolean) }
+          def handles_path?(path)
+            File.fnmatch("test/fixtures/**/*.yml{,.erb}", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
+          end
         end
 
         private
