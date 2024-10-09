@@ -39,6 +39,7 @@ module RubyLsp
           # thread
           addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.3.18", "< 0.4"), ::RubyLsp::Rails::Addon)
           @rails_runner_client = addon.rails_runner_client
+          outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
