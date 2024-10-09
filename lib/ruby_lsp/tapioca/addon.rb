@@ -74,7 +74,7 @@ module RubyLsp
           entries.filter_map do |entry|
             entry.name if entry.class == RubyIndexer::Entry::Class || entry.class == RubyIndexer::Entry::Module
           end
-        end
+        end.compact
 
         return if constants.empty?
 
