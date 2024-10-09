@@ -62,7 +62,8 @@ module RubyLsp
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
-        return unless T.must(@global_state).experimental_features
+        # TODO: Uncomment
+        # return unless T.must(@global_state).experimental_features
         return unless @rails_runner_client # Client is not ready
 
         constants = changes.flat_map do |change|
