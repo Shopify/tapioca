@@ -657,6 +657,9 @@ module Tapioca
                     def minimum(column_name); end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
+                    def size(column_name = nil, &block); end
+
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
                   end
 
@@ -757,6 +760,9 @@ module Tapioca
 
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
+
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
+                    def size(column_name = nil, &block); end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
@@ -1373,6 +1379,9 @@ module Tapioca
                     def minimum(column_name); end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
+                    def size(column_name = nil, &block); end
+
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
                   end
 
@@ -1473,6 +1482,9 @@ module Tapioca
 
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
+
+                    sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
+                    def size(column_name = nil, &block); end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def sum(column_name = nil, &block); end
