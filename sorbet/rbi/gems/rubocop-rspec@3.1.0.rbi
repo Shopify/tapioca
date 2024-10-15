@@ -6290,6 +6290,35 @@ end
 # source://rubocop-rspec//lib/rubocop/cop/rspec/spec_file_path_suffix.rb#24
 RuboCop::Cop::RSpec::SpecFilePathSuffix::MSG = T.let(T.unsafe(nil), String)
 
+# Do not use a string as `instance_double` constant.
+#
+# @example
+#   # bad
+#   instance_double('User', name: 'John')
+#
+#   # good
+#   instance_double(User, name: 'John')
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/string_as_instance_double_constant.rb#20
+class RuboCop::Cop::RSpec::StringAsInstanceDoubleConstant < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/string_as_instance_double_constant.rb#39
+  def autocorrect(corrector, node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/string_as_instance_double_constant.rb#31
+  def on_send(node); end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/string_as_instance_double_constant.rb#27
+  def stringified_instance_double_const?(param0 = T.unsafe(nil)); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/string_as_instance_double_constant.rb#23
+RuboCop::Cop::RSpec::StringAsInstanceDoubleConstant::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/string_as_instance_double_constant.rb#24
+RuboCop::Cop::RSpec::StringAsInstanceDoubleConstant::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Checks that message expectations do not have a configured response.
 #
 # @example

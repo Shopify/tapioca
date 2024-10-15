@@ -7768,7 +7768,7 @@ class GraphQL::Schema
   class << self
     # @api private
     #
-    # source://graphql//lib/graphql/schema.rb#1385
+    # source://graphql//lib/graphql/schema.rb#1386
     def add_subscription_extension_if_necessary; end
 
     # Return a lazy if any of `maybe_lazies` are lazy,
@@ -7777,7 +7777,7 @@ class GraphQL::Schema
     # @api private
     # @param maybe_lazies [Array]
     #
-    # source://graphql//lib/graphql/schema.rb#1445
+    # source://graphql//lib/graphql/schema.rb#1446
     def after_any_lazies(maybe_lazies); end
 
     # Call the given block at the right time, either:
@@ -7786,17 +7786,17 @@ class GraphQL::Schema
     #
     # @api private
     #
-    # source://graphql//lib/graphql/schema.rb#1405
+    # source://graphql//lib/graphql/schema.rb#1406
     def after_lazy(value, &block); end
 
-    # source://graphql//lib/graphql/schema.rb#817
+    # source://graphql//lib/graphql/schema.rb#818
     def analysis_engine; end
 
     # Sets the attribute analysis_engine
     #
     # @param value the value to set the attribute analysis_engine to.
     #
-    # source://graphql//lib/graphql/schema.rb#815
+    # source://graphql//lib/graphql/schema.rb#816
     def analysis_engine=(_arg0); end
 
     # Return the Hash response of {Introspection::INTROSPECTION_QUERY}.
@@ -7811,60 +7811,60 @@ class GraphQL::Schema
     # @param include_is_one_of [Boolean] If true, `isOneOf: true|false` will be included with input objects
     # @return [Hash] GraphQL result
     #
-    # source://graphql//lib/graphql/schema.rb#271
+    # source://graphql//lib/graphql/schema.rb#272
     def as_json(context: T.unsafe(nil), include_deprecated_args: T.unsafe(nil), include_schema_description: T.unsafe(nil), include_is_repeatable: T.unsafe(nil), include_specified_by_url: T.unsafe(nil), include_is_one_of: T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#207
+    # source://graphql//lib/graphql/schema.rb#208
     def build_trace_mode(mode); end
 
     # @return [GraphQL::Pagination::Connections] if installed
     #
-    # source://graphql//lib/graphql/schema.rb#412
+    # source://graphql//lib/graphql/schema.rb#413
     def connections; end
 
     # @api private
     #
-    # source://graphql//lib/graphql/schema.rb#409
+    # source://graphql//lib/graphql/schema.rb#410
     def connections=(_arg0); end
 
-    # source://graphql//lib/graphql/schema.rb#981
+    # source://graphql//lib/graphql/schema.rb#982
     def context_class(new_context_class = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#845
+    # source://graphql//lib/graphql/schema.rb#846
     def count_introspection_fields; end
 
-    # source://graphql//lib/graphql/schema.rb#677
+    # source://graphql//lib/graphql/schema.rb#678
     def cursor_encoder(new_encoder = T.unsafe(nil)); end
 
     # @api private
     # @see GraphQL::Dataloader
     #
-    # source://graphql//lib/graphql/schema.rb#601
+    # source://graphql//lib/graphql/schema.rb#602
     def dataloader_class; end
 
     # Sets the attribute dataloader_class
     #
     # @param value the value to set the attribute dataloader_class to.
     #
-    # source://graphql//lib/graphql/schema.rb#605
+    # source://graphql//lib/graphql/schema.rb#606
     def dataloader_class=(_arg0); end
 
-    # source://graphql//lib/graphql/schema.rb#953
+    # source://graphql//lib/graphql/schema.rb#954
     def default_analysis_engine; end
 
-    # source://graphql//lib/graphql/schema.rb#1195
+    # source://graphql//lib/graphql/schema.rb#1196
     def default_directives; end
 
-    # source://graphql//lib/graphql/schema.rb#945
+    # source://graphql//lib/graphql/schema.rb#946
     def default_execution_strategy; end
 
-    # source://graphql//lib/graphql/schema.rb#961
+    # source://graphql//lib/graphql/schema.rb#962
     def default_logger(new_default_logger = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#684
+    # source://graphql//lib/graphql/schema.rb#685
     def default_max_page_size(new_default_max_page_size = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#703
+    # source://graphql//lib/graphql/schema.rb#704
     def default_page_size(new_default_page_size = T.unsafe(nil)); end
 
     # @param new_mode [Symbol] If configured, this will be used when `context: { trace_mode: ... }` isn't set.
@@ -7877,7 +7877,7 @@ class GraphQL::Schema
 
     # @return [String, nil]
     #
-    # source://graphql//lib/graphql/schema.rb#297
+    # source://graphql//lib/graphql/schema.rb#298
     def description(new_description = T.unsafe(nil)); end
 
     # Attach a single directive to this schema
@@ -7885,51 +7885,51 @@ class GraphQL::Schema
     # @param new_directive [Class]
     # @return void
     #
-    # source://graphql//lib/graphql/schema.rb#1187
+    # source://graphql//lib/graphql/schema.rb#1188
     def directive(new_directive); end
 
     # Add several directives at once
     #
     # @param new_directives [Class]
     #
-    # source://graphql//lib/graphql/schema.rb#1171
+    # source://graphql//lib/graphql/schema.rb#1172
     def directives(*new_directives); end
 
-    # source://graphql//lib/graphql/schema.rb#853
+    # source://graphql//lib/graphql/schema.rb#854
     def disable_introspection_entry_points; end
 
     # @return [Boolean]
     #
-    # source://graphql//lib/graphql/schema.rb#871
+    # source://graphql//lib/graphql/schema.rb#872
     def disable_introspection_entry_points?; end
 
-    # source://graphql//lib/graphql/schema.rb#859
+    # source://graphql//lib/graphql/schema.rb#860
     def disable_schema_introspection_entry_point; end
 
     # @return [Boolean]
     #
-    # source://graphql//lib/graphql/schema.rb#879
+    # source://graphql//lib/graphql/schema.rb#880
     def disable_schema_introspection_entry_point?; end
 
-    # source://graphql//lib/graphql/schema.rb#865
+    # source://graphql//lib/graphql/schema.rb#866
     def disable_type_introspection_entry_point; end
 
     # @return [Boolean]
     #
-    # source://graphql//lib/graphql/schema.rb#887
+    # source://graphql//lib/graphql/schema.rb#888
     def disable_type_introspection_entry_point?; end
 
-    # source://graphql//lib/graphql/schema.rb#821
+    # source://graphql//lib/graphql/schema.rb#822
     def error_bubbling(new_error_bubbling = T.unsafe(nil)); end
 
     # Sets the attribute error_bubbling
     #
     # @param value the value to set the attribute error_bubbling to.
     #
-    # source://graphql//lib/graphql/schema.rb#830
+    # source://graphql//lib/graphql/schema.rb#831
     def error_bubbling=(_arg0); end
 
-    # source://graphql//lib/graphql/schema.rb#1003
+    # source://graphql//lib/graphql/schema.rb#1004
     def error_handlers; end
 
     # Execute a query on itself.
@@ -7937,16 +7937,16 @@ class GraphQL::Schema
     # @return [GraphQL::Query::Result] query result, ready to be serialized as JSON
     # @see {Query#initialize} for arguments.
     #
-    # source://graphql//lib/graphql/schema.rb#1333
+    # source://graphql//lib/graphql/schema.rb#1334
     def execute(query_str = T.unsafe(nil), **kwargs); end
 
     # @param new_extra_types [Module] Type definitions to include in printing and introspection, even though they aren't referenced in the schema
     # @return [Array<Module>] Type definitions added to this schema
     #
-    # source://graphql//lib/graphql/schema.rb#897
+    # source://graphql//lib/graphql/schema.rb#898
     def extra_types(*new_extra_types); end
 
-    # source://graphql//lib/graphql/schema.rb#307
+    # source://graphql//lib/graphql/schema.rb#308
     def find(path); end
 
     # Create schema from an IDL schema or file containing an IDL definition.
@@ -7968,87 +7968,87 @@ class GraphQL::Schema
     # source://graphql//lib/graphql/schema.rb#102
     def from_introspection(introspection_result); end
 
-    # source://graphql//lib/graphql/schema.rb#632
+    # source://graphql//lib/graphql/schema.rb#633
     def get_field(type_or_name, field_name, context = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#655
+    # source://graphql//lib/graphql/schema.rb#656
     def get_fields(type, context = T.unsafe(nil)); end
 
     # @param type_name [String]
     # @return [Module, nil] A type, or nil if there's no type called `type_name`
     #
-    # source://graphql//lib/graphql/schema.rb#365
+    # source://graphql//lib/graphql/schema.rb#366
     def get_type(type_name, context = T.unsafe(nil)); end
 
     # @api private
     #
-    # source://graphql//lib/graphql/schema.rb#1012
+    # source://graphql//lib/graphql/schema.rb#1013
     def handle_or_reraise(context, err); end
 
     # @return [Boolean] Does this schema have _any_ definition for a type named `type_name`, regardless of visibility?
     #
-    # source://graphql//lib/graphql/schema.rb#404
+    # source://graphql//lib/graphql/schema.rb#405
     def has_defined_type?(type_name); end
 
     # @raise [GraphQL::RequiredImplementationMissingError]
     #
-    # source://graphql//lib/graphql/schema.rb#1078
+    # source://graphql//lib/graphql/schema.rb#1079
     def id_from_object(object, type, ctx); end
 
-    # source://graphql//lib/graphql/schema.rb#1060
+    # source://graphql//lib/graphql/schema.rb#1061
     def inherited(child_class); end
 
-    # source://graphql//lib/graphql/schema.rb#1159
+    # source://graphql//lib/graphql/schema.rb#1160
     def instrument(instrument_step, instrumenter, options = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#1377
+    # source://graphql//lib/graphql/schema.rb#1378
     def instrumenters; end
 
-    # source://graphql//lib/graphql/schema.rb#659
+    # source://graphql//lib/graphql/schema.rb#660
     def introspection(new_introspection_namespace = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#669
+    # source://graphql//lib/graphql/schema.rb#670
     def introspection_system; end
 
     # @return [Boolean] True if this object should be lazily resolved
     #
-    # source://graphql//lib/graphql/schema.rb#1437
+    # source://graphql//lib/graphql/schema.rb#1438
     def lazy?(obj); end
 
     # @return [Symbol, nil] The method name to lazily resolve `obj`, or nil if `obj`'s class wasn't registered with {#lazy_resolve}.
     #
-    # source://graphql//lib/graphql/schema.rb#1432
+    # source://graphql//lib/graphql/schema.rb#1433
     def lazy_method_name(obj); end
 
-    # source://graphql//lib/graphql/schema.rb#1155
+    # source://graphql//lib/graphql/schema.rb#1156
     def lazy_resolve(lazy_class, value_method); end
 
     # Called when a type is needed by name at runtime
     #
-    # source://graphql//lib/graphql/schema.rb#1096
+    # source://graphql//lib/graphql/schema.rb#1097
     def load_type(type_name, ctx); end
 
-    # source://graphql//lib/graphql/schema.rb#796
+    # source://graphql//lib/graphql/schema.rb#797
     def max_complexity(max_complexity = T.unsafe(nil), count_introspection_fields: T.unsafe(nil)); end
 
     # Sets the attribute max_complexity
     #
     # @param value the value to set the attribute max_complexity to.
     #
-    # source://graphql//lib/graphql/schema.rb#794
+    # source://graphql//lib/graphql/schema.rb#795
     def max_complexity=(_arg0); end
 
-    # source://graphql//lib/graphql/schema.rb#807
+    # source://graphql//lib/graphql/schema.rb#808
     def max_complexity_count_introspection_fields; end
 
-    # source://graphql//lib/graphql/schema.rb#834
+    # source://graphql//lib/graphql/schema.rb#835
     def max_depth(new_max_depth = T.unsafe(nil), count_introspection_fields: T.unsafe(nil)); end
 
     # Sets the attribute max_depth
     #
     # @param value the value to set the attribute max_depth to.
     #
-    # source://graphql//lib/graphql/schema.rb#832
+    # source://graphql//lib/graphql/schema.rb#833
     def max_depth=(_arg0); end
 
     # A limit on the number of tokens to accept on incoming query strings.
@@ -8056,7 +8056,7 @@ class GraphQL::Schema
     #
     # @return [nil, Integer]
     #
-    # source://graphql//lib/graphql/schema.rb#695
+    # source://graphql//lib/graphql/schema.rb#696
     def max_query_string_tokens(new_max_tokens = T.unsafe(nil)); end
 
     # Execute several queries on itself, concurrently.
@@ -8078,19 +8078,19 @@ class GraphQL::Schema
     # @see {Query#initialize} for query keyword arguments
     # @see {Execution::Multiplex#run_all} for multiplex keyword arguments
     #
-    # source://graphql//lib/graphql/schema.rb#1373
+    # source://graphql//lib/graphql/schema.rb#1374
     def multiplex(queries, **kwargs); end
 
-    # source://graphql//lib/graphql/schema.rb#1314
+    # source://graphql//lib/graphql/schema.rb#1315
     def multiplex_analyzer(new_analyzer); end
 
-    # source://graphql//lib/graphql/schema.rb#1318
+    # source://graphql//lib/graphql/schema.rb#1319
     def multiplex_analyzers; end
 
-    # source://graphql//lib/graphql/schema.rb#446
+    # source://graphql//lib/graphql/schema.rb#447
     def mutation(new_mutation_object = T.unsafe(nil), &lazy_load_block); end
 
-    # source://graphql//lib/graphql/schema.rb#723
+    # source://graphql//lib/graphql/schema.rb#724
     def mutation_execution_strategy(new_mutation_execution_strategy = T.unsafe(nil), deprecation_warning: T.unsafe(nil)); end
 
     # Create a trace instance which will include the trace modules specified for the optional mode.
@@ -8101,21 +8101,21 @@ class GraphQL::Schema
     # @param options [Hash] Keywords that will be passed to the tracing class during `#initialize`
     # @return [Tracing::Trace]
     #
-    # source://graphql//lib/graphql/schema.rb#1281
+    # source://graphql//lib/graphql/schema.rb#1282
     def new_trace(mode: T.unsafe(nil), **options); end
 
     # @raise [GraphQL::RequiredImplementationMissingError]
     #
-    # source://graphql//lib/graphql/schema.rb#1074
+    # source://graphql//lib/graphql/schema.rb#1075
     def object_from_id(node_id, ctx); end
 
-    # source://graphql//lib/graphql/schema.rb#915
+    # source://graphql//lib/graphql/schema.rb#916
     def orphan_types(*new_orphan_types); end
 
-    # source://graphql//lib/graphql/schema.rb#203
+    # source://graphql//lib/graphql/schema.rb#204
     def own_trace_modes; end
 
-    # source://graphql//lib/graphql/schema.rb#240
+    # source://graphql//lib/graphql/schema.rb#241
     def own_trace_modules; end
 
     # A function to call when {#execute} receives an invalid query string
@@ -8126,73 +8126,73 @@ class GraphQL::Schema
     # @param ctx [GraphQL::Query::Context] The context for the query where the error occurred
     # @return void
     #
-    # source://graphql//lib/graphql/schema.rb#1151
+    # source://graphql//lib/graphql/schema.rb#1152
     def parse_error(parse_err, ctx); end
 
-    # source://graphql//lib/graphql/schema.rb#328
+    # source://graphql//lib/graphql/schema.rb#329
     def plugins; end
 
     # @param type [Module] The type definition whose possible types you want to see
     # @return [Hash<String, Module>] All possible types, if no `type` is given.
     # @return [Array<Module>] Possible types for `type`, if it's given.
     #
-    # source://graphql//lib/graphql/schema.rb#548
+    # source://graphql//lib/graphql/schema.rb#549
     def possible_types(type = T.unsafe(nil), context = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#427
+    # source://graphql//lib/graphql/schema.rb#428
     def query(new_query_object = T.unsafe(nil), &lazy_load_block); end
 
-    # source://graphql//lib/graphql/schema.rb#1306
+    # source://graphql//lib/graphql/schema.rb#1307
     def query_analyzer(new_analyzer); end
 
-    # source://graphql//lib/graphql/schema.rb#1310
+    # source://graphql//lib/graphql/schema.rb#1311
     def query_analyzers; end
 
-    # source://graphql//lib/graphql/schema.rb#776
+    # source://graphql//lib/graphql/schema.rb#777
     def query_class(new_query_class = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#711
+    # source://graphql//lib/graphql/schema.rb#712
     def query_execution_strategy(new_query_execution_strategy = T.unsafe(nil), deprecation_warning: T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#1397
+    # source://graphql//lib/graphql/schema.rb#1398
     def query_stack_error(query, err); end
 
-    # source://graphql//lib/graphql/schema.rb#607
+    # source://graphql//lib/graphql/schema.rb#608
     def references_to(to_type = T.unsafe(nil), from: T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#989
+    # source://graphql//lib/graphql/schema.rb#990
     def rescue_from(*err_classes, &handler_block); end
 
     # @raise [GraphQL::RequiredImplementationMissingError]
     #
-    # source://graphql//lib/graphql/schema.rb#1055
+    # source://graphql//lib/graphql/schema.rb#1056
     def resolve_type(type, obj, ctx); end
 
     # @return [GraphQL::ObjectType, nil]
     # @see [GraphQL::Schema::Warden] Restricted access to root types
     #
-    # source://graphql//lib/graphql/schema.rb#490
+    # source://graphql//lib/graphql/schema.rb#491
     def root_type_for_operation(operation); end
 
-    # source://graphql//lib/graphql/schema.rb#503
+    # source://graphql//lib/graphql/schema.rb#504
     def root_types; end
 
-    # source://graphql//lib/graphql/schema.rb#1322
+    # source://graphql//lib/graphql/schema.rb#1323
     def sanitized_printer(new_sanitized_printer = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#1086
+    # source://graphql//lib/graphql/schema.rb#1087
     def schema_directive(dir_class, **options); end
 
-    # source://graphql//lib/graphql/schema.rb#1091
+    # source://graphql//lib/graphql/schema.rb#1092
     def schema_directives; end
 
-    # source://graphql//lib/graphql/schema.rb#315
+    # source://graphql//lib/graphql/schema.rb#316
     def static_validator; end
 
-    # source://graphql//lib/graphql/schema.rb#465
+    # source://graphql//lib/graphql/schema.rb#466
     def subscription(new_subscription_object = T.unsafe(nil), &lazy_load_block); end
 
-    # source://graphql//lib/graphql/schema.rb#735
+    # source://graphql//lib/graphql/schema.rb#736
     def subscription_execution_strategy(new_subscription_execution_strategy = T.unsafe(nil), deprecation_warning: T.unsafe(nil)); end
 
     # @return [GraphQL::Subscriptions]
@@ -8203,14 +8203,14 @@ class GraphQL::Schema
     # source://graphql//lib/graphql/schema.rb#142
     def subscriptions=(new_implementation); end
 
-    # source://graphql//lib/graphql/schema.rb#523
+    # source://graphql//lib/graphql/schema.rb#524
     def subset_class; end
 
     # Sets the attribute subset_class
     #
     # @param value the value to set the attribute subset_class to.
     #
-    # source://graphql//lib/graphql/schema.rb#533
+    # source://graphql//lib/graphql/schema.rb#534
     def subset_class=(_arg0); end
 
     # Override this method to handle lazy objects in a custom way.
@@ -8219,7 +8219,7 @@ class GraphQL::Schema
     # @param value [Object] an instance of a class registered with {.lazy_resolve}
     # @return [Object] A GraphQL-ready (non-lazy) object
     #
-    # source://graphql//lib/graphql/schema.rb#1421
+    # source://graphql//lib/graphql/schema.rb#1422
     def sync_lazy(value); end
 
     # Return the GraphQL IDL for the schema
@@ -8227,14 +8227,14 @@ class GraphQL::Schema
     # @param context [Hash]
     # @return [String]
     #
-    # source://graphql//lib/graphql/schema.rb#286
+    # source://graphql//lib/graphql/schema.rb#287
     def to_definition(context: T.unsafe(nil)); end
 
     # Return the GraphQL::Language::Document IDL AST for the schema
     #
     # @return [GraphQL::Language::Document]
     #
-    # source://graphql//lib/graphql/schema.rb#292
+    # source://graphql//lib/graphql/schema.rb#293
     def to_document; end
 
     # Returns the JSON response of {Introspection::INTROSPECTION_QUERY}.
@@ -8242,7 +8242,7 @@ class GraphQL::Schema
     # @return [String]
     # @see {#as_json}
     #
-    # source://graphql//lib/graphql/schema.rb#257
+    # source://graphql//lib/graphql/schema.rb#258
     def to_json(**args); end
 
     # source://graphql//lib/graphql/schema.rb#159
@@ -8250,7 +8250,7 @@ class GraphQL::Schema
 
     # @return [Class] Return the trace class to use for this mode, looking one up on the superclass if this Schema doesn't have one defined.
     #
-    # source://graphql//lib/graphql/schema.rb#174
+    # source://graphql//lib/graphql/schema.rb#175
     def trace_class_for(mode, build: T.unsafe(nil)); end
 
     # Configure `trace_class` to be used whenever `context: { trace_mode: mode_name }` is requested.
@@ -8266,19 +8266,19 @@ class GraphQL::Schema
     # @param trace_class [Class] subclass of GraphQL::Tracing::Trace
     # @return void
     #
-    # source://graphql//lib/graphql/schema.rb#198
+    # source://graphql//lib/graphql/schema.rb#199
     def trace_mode(mode_name, trace_class); end
 
     # @return [Array<Module>] Modules added for tracing in `trace_mode`, including inherited ones
     #
-    # source://graphql//lib/graphql/schema.rb#245
+    # source://graphql//lib/graphql/schema.rb#246
     def trace_modules_for(trace_mode); end
 
     # The options hash for this trace mode
     #
     # @return [Hash]
     #
-    # source://graphql//lib/graphql/schema.rb#1259
+    # source://graphql//lib/graphql/schema.rb#1260
     def trace_options_for(mode); end
 
     # Mix `trace_mod` into this schema's `Trace` class so that its methods
@@ -8289,19 +8289,19 @@ class GraphQL::Schema
     # @param options [Hash] Keywords that will be passed to the tracing class during `#initialize`
     # @return [void]
     #
-    # source://graphql//lib/graphql/schema.rb#1229
+    # source://graphql//lib/graphql/schema.rb#1230
     def trace_with(trace_mod, mode: T.unsafe(nil), **options); end
 
-    # source://graphql//lib/graphql/schema.rb#1205
+    # source://graphql//lib/graphql/schema.rb#1206
     def tracer(new_tracer, silence_deprecation_warning: T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#1218
+    # source://graphql//lib/graphql/schema.rb#1219
     def tracers; end
 
-    # source://graphql//lib/graphql/schema.rb#1134
+    # source://graphql//lib/graphql/schema.rb#1135
     def type_error(type_error, ctx); end
 
-    # source://graphql//lib/graphql/schema.rb#628
+    # source://graphql//lib/graphql/schema.rb#629
     def type_from_ast(ast_node, context: T.unsafe(nil)); end
 
     # Build a map of `{ name => type }` and return it
@@ -8309,7 +8309,7 @@ class GraphQL::Schema
     # @return [Hash<String => Class>] A dictionary of type classes by their GraphQL name
     # @see get_type Which is more efficient for finding _one type_ by name, because it doesn't merge hashes.
     #
-    # source://graphql//lib/graphql/schema.rb#335
+    # source://graphql//lib/graphql/schema.rb#336
     def types(context = T.unsafe(nil)); end
 
     # This hook is called when a field fails an `authorized?` check.
@@ -8325,7 +8325,7 @@ class GraphQL::Schema
     # @param unauthorized_error [GraphQL::UnauthorizedFieldError]
     # @return [Field] The returned field will be put in the GraphQL response
     #
-    # source://graphql//lib/graphql/schema.rb#1130
+    # source://graphql//lib/graphql/schema.rb#1131
     def unauthorized_field(unauthorized_error); end
 
     # This hook is called when an object fails an `authorized?` check.
@@ -8344,25 +8344,25 @@ class GraphQL::Schema
     # @param unauthorized_error [GraphQL::UnauthorizedError]
     # @return [Object] The returned object will be put in the GraphQL response
     #
-    # source://graphql//lib/graphql/schema.rb#1114
+    # source://graphql//lib/graphql/schema.rb#1115
     def unauthorized_object(unauthorized_error); end
 
-    # source://graphql//lib/graphql/schema.rb#584
+    # source://graphql//lib/graphql/schema.rb#585
     def union_memberships(type = T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#319
+    # source://graphql//lib/graphql/schema.rb#320
     def use(plugin, **kwargs); end
 
     # Sets the attribute use_schema_visibility
     #
     # @param value the value to set the attribute use_schema_visibility to.
     #
-    # source://graphql//lib/graphql/schema.rb#533
+    # source://graphql//lib/graphql/schema.rb#534
     def use_schema_visibility=(_arg0); end
 
     # @return [Boolean]
     #
-    # source://graphql//lib/graphql/schema.rb#535
+    # source://graphql//lib/graphql/schema.rb#536
     def use_schema_visibility?; end
 
     # Validate a query string according to this schema.
@@ -8370,104 +8370,104 @@ class GraphQL::Schema
     # @param string_or_document [String, GraphQL::Language::Nodes::Document]
     # @return [Array<GraphQL::StaticValidation::Error >]
     #
-    # source://graphql//lib/graphql/schema.rb#762
+    # source://graphql//lib/graphql/schema.rb#763
     def validate(string_or_document, rules: T.unsafe(nil), context: T.unsafe(nil)); end
 
-    # source://graphql//lib/graphql/schema.rb#786
+    # source://graphql//lib/graphql/schema.rb#787
     def validate_max_errors(new_validate_max_errors = T.unsafe(nil)); end
 
     # Sets the attribute validate_max_errors
     #
     # @param value the value to set the attribute validate_max_errors to.
     #
-    # source://graphql//lib/graphql/schema.rb#784
+    # source://graphql//lib/graphql/schema.rb#785
     def validate_max_errors=(_arg0); end
 
-    # source://graphql//lib/graphql/schema.rb#749
+    # source://graphql//lib/graphql/schema.rb#750
     def validate_timeout(new_validate_timeout = T.unsafe(nil)); end
 
     # Sets the attribute validate_timeout
     #
     # @param value the value to set the attribute validate_timeout to.
     #
-    # source://graphql//lib/graphql/schema.rb#747
+    # source://graphql//lib/graphql/schema.rb#748
     def validate_timeout=(_arg0); end
 
     # Sets the attribute visibility
     #
     # @param value the value to set the attribute visibility to.
     #
-    # source://graphql//lib/graphql/schema.rb#533
+    # source://graphql//lib/graphql/schema.rb#534
     def visibility=(_arg0); end
 
     # @return [Boolean]
     #
-    # source://graphql//lib/graphql/schema.rb#1082
+    # source://graphql//lib/graphql/schema.rb#1083
     def visible?(member, ctx); end
 
-    # source://graphql//lib/graphql/schema.rb#511
+    # source://graphql//lib/graphql/schema.rb#512
     def warden_class; end
 
     # Sets the attribute warden_class
     #
     # @param value the value to set the attribute warden_class to.
     #
-    # source://graphql//lib/graphql/schema.rb#521
+    # source://graphql//lib/graphql/schema.rb#522
     def warden_class=(_arg0); end
 
     private
 
-    # source://graphql//lib/graphql/schema.rb#1457
+    # source://graphql//lib/graphql/schema.rb#1458
     def add_trace_options_for(mode, new_options); end
 
     # @param t [Module, Array<Module>]
     # @return [void]
     #
-    # source://graphql//lib/graphql/schema.rb#1474
+    # source://graphql//lib/graphql/schema.rb#1475
     def add_type_and_traverse(t, root:); end
 
     # This is overridden in subclasses to check the inheritance chain
     #
-    # source://graphql//lib/graphql/schema.rb#1589
+    # source://graphql//lib/graphql/schema.rb#1590
     def get_references_to(type_defn); end
 
-    # source://graphql//lib/graphql/schema.rb#1526
+    # source://graphql//lib/graphql/schema.rb#1527
     def lazy_methods; end
 
-    # source://graphql//lib/graphql/schema.rb#1548
+    # source://graphql//lib/graphql/schema.rb#1549
     def non_introspection_types; end
 
-    # source://graphql//lib/graphql/schema.rb#1568
+    # source://graphql//lib/graphql/schema.rb#1569
     def own_directives; end
 
-    # source://graphql//lib/graphql/schema.rb#1572
+    # source://graphql//lib/graphql/schema.rb#1573
     def own_instrumenters; end
 
-    # source://graphql//lib/graphql/schema.rb#1584
+    # source://graphql//lib/graphql/schema.rb#1585
     def own_multiplex_analyzers; end
 
-    # source://graphql//lib/graphql/schema.rb#1556
+    # source://graphql//lib/graphql/schema.rb#1557
     def own_orphan_types; end
 
-    # source://graphql//lib/graphql/schema.rb#1552
+    # source://graphql//lib/graphql/schema.rb#1553
     def own_plugins; end
 
-    # source://graphql//lib/graphql/schema.rb#1560
+    # source://graphql//lib/graphql/schema.rb#1561
     def own_possible_types; end
 
-    # source://graphql//lib/graphql/schema.rb#1580
+    # source://graphql//lib/graphql/schema.rb#1581
     def own_query_analyzers; end
 
-    # source://graphql//lib/graphql/schema.rb#1544
+    # source://graphql//lib/graphql/schema.rb#1545
     def own_references_to; end
 
-    # source://graphql//lib/graphql/schema.rb#1576
+    # source://graphql//lib/graphql/schema.rb#1577
     def own_tracers; end
 
-    # source://graphql//lib/graphql/schema.rb#1540
+    # source://graphql//lib/graphql/schema.rb#1541
     def own_types; end
 
-    # source://graphql//lib/graphql/schema.rb#1564
+    # source://graphql//lib/graphql/schema.rb#1565
     def own_union_memberships; end
   end
 end
@@ -8946,7 +8946,7 @@ end
 
 # @api private
 #
-# source://graphql//lib/graphql/schema.rb#1614
+# source://graphql//lib/graphql/schema.rb#1615
 module GraphQL::Schema::DefaultTraceClass; end
 
 # Subclasses of this can influence how {GraphQL::Execution::Interpreter} runs queries.
@@ -9551,7 +9551,7 @@ class GraphQL::Schema::Field
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/schema/field.rb#646
+  # source://graphql//lib/graphql/schema/field.rb#647
   def authorized?(object, args, context); end
 
   # If true, subscription updates with this field can be shared between viewers
@@ -9559,19 +9559,19 @@ class GraphQL::Schema::Field
   # @return [Boolean, nil]
   # @see GraphQL::Subscriptions::BroadcastAnalyzer
   #
-  # source://graphql//lib/graphql/schema/field.rb#385
+  # source://graphql//lib/graphql/schema/field.rb#386
   def broadcastable?; end
 
-  # source://graphql//lib/graphql/schema/field.rb#498
+  # source://graphql//lib/graphql/schema/field.rb#499
   def calculate_complexity(query:, nodes:, child_complexity:); end
 
   # @param text [String]
   # @return [String, nil]
   #
-  # source://graphql//lib/graphql/schema/field.rb#411
+  # source://graphql//lib/graphql/schema/field.rb#412
   def comment(text = T.unsafe(nil)); end
 
-  # source://graphql//lib/graphql/schema/field.rb#548
+  # source://graphql//lib/graphql/schema/field.rb#549
   def complexity(new_complexity = T.unsafe(nil)); end
 
   # Can be set with `connection: true|false` or inferred from a type name ending in `*Connection`
@@ -9583,13 +9583,13 @@ class GraphQL::Schema::Field
 
   # @return [Integer, nil] Applied to connections if {#has_default_page_size?}
   #
-  # source://graphql//lib/graphql/schema/field.rb#594
+  # source://graphql//lib/graphql/schema/field.rb#595
   def default_page_size; end
 
   # @param text [String]
   # @return [String]
   #
-  # source://graphql//lib/graphql/schema/field.rb#397
+  # source://graphql//lib/graphql/schema/field.rb#398
   def description(text = T.unsafe(nil)); end
 
   # Sets the attribute description
@@ -9609,14 +9609,14 @@ class GraphQL::Schema::Field
 
   # Returns the value of attribute dynamic_introspection.
   #
-  # source://graphql//lib/graphql/schema/field.rb#380
+  # source://graphql//lib/graphql/schema/field.rb#381
   def dynamic_introspection; end
 
   # Sets the attribute dynamic_introspection
   #
   # @param value the value to set the attribute dynamic_introspection to.
   #
-  # source://graphql//lib/graphql/schema/field.rb#380
+  # source://graphql//lib/graphql/schema/field.rb#381
   def dynamic_introspection=(_arg0); end
 
   # Calls the definition block, if one was given.
@@ -9639,8 +9639,8 @@ class GraphQL::Schema::Field
   # @param options [Hash] if provided, given as `options:` when initializing `extension`.
   # @return [void]
   #
-  # source://graphql//lib/graphql/schema/field.rb#463
-  def extension(extension_class, call_after_define: T.unsafe(nil), **options); end
+  # source://graphql//lib/graphql/schema/field.rb#464
+  def extension(extension_class, **options); end
 
   # Read extension instances from this field,
   # or add new classes/options to be initialized on this field.
@@ -9655,8 +9655,8 @@ class GraphQL::Schema::Field
   # @param extensions [Array<Class, Hash<Class => Hash>>] Add extensions to this field. For hash elements, only the first key/value is used.
   # @return [Array<GraphQL::Schema::FieldExtension>] extensions to apply to this field
   #
-  # source://graphql//lib/graphql/schema/field.rb#438
-  def extensions(new_extensions = T.unsafe(nil), call_after_define: T.unsafe(nil)); end
+  # source://graphql//lib/graphql/schema/field.rb#439
+  def extensions(new_extensions = T.unsafe(nil)); end
 
   # Read extras (as symbols) from this field,
   # or add new extras to be opted into by this field's resolver.
@@ -9664,12 +9664,12 @@ class GraphQL::Schema::Field
   # @param new_extras [Array<Symbol>] Add extras to this field
   # @return [Array<Symbol>]
   #
-  # source://graphql//lib/graphql/schema/field.rb#480
+  # source://graphql//lib/graphql/schema/field.rb#481
   def extras(new_extras = T.unsafe(nil)); end
 
   # @param ctx [GraphQL::Query::Context]
   #
-  # source://graphql//lib/graphql/schema/field.rb#801
+  # source://graphql//lib/graphql/schema/field.rb#802
   def fetch_extra(extra_name, ctx); end
 
   # @return [String] the GraphQL name for this field, camelized unless `camelize: false` is provided
@@ -9679,12 +9679,12 @@ class GraphQL::Schema::Field
 
   # @return [Boolean] True if this field's {#default_page_size} should override the schema default.
   #
-  # source://graphql//lib/graphql/schema/field.rb#589
+  # source://graphql//lib/graphql/schema/field.rb#590
   def has_default_page_size?; end
 
   # @return [Boolean] True if this field's {#max_page_size} should override the schema default.
   #
-  # source://graphql//lib/graphql/schema/field.rb#573
+  # source://graphql//lib/graphql/schema/field.rb#574
   def has_max_page_size?; end
 
   # Returns the value of attribute hash_key.
@@ -9702,7 +9702,7 @@ class GraphQL::Schema::Field
 
   # @return [Integer, nil] Applied to connections if {#has_max_page_size?}
   #
-  # source://graphql//lib/graphql/schema/field.rb#578
+  # source://graphql//lib/graphql/schema/field.rb#579
   def max_page_size; end
 
   # @return [Boolean] Should we warn if this field's name conflicts with a built-in method?
@@ -9767,7 +9767,7 @@ class GraphQL::Schema::Field
   # @param args [Hash] A symbol-keyed hash of Ruby keyword arguments. (Empty if no args)
   # @param ctx [GraphQL::Query::Context]
   #
-  # source://graphql//lib/graphql/schema/field.rb#695
+  # source://graphql//lib/graphql/schema/field.rb#696
   def resolve(object, args, query_ctx); end
 
   # @return [Class, nil] The {Schema::Resolver} this field was derived from, if there is one
@@ -9809,33 +9809,33 @@ class GraphQL::Schema::Field
   # @param new_type [Module, GraphQL::Schema::NonNull, GraphQL::Schema::List] A GraphQL return type
   # @return [Module, GraphQL::Schema::NonNull, GraphQL::Schema::List, nil] the configured type for this field
   #
-  # source://graphql//lib/graphql/schema/field.rb#612
+  # source://graphql//lib/graphql/schema/field.rb#613
   def type(new_type = T.unsafe(nil)); end
 
   # Sets the attribute type
   #
   # @param value the value to set the attribute type to.
   #
-  # source://graphql//lib/graphql/schema/field.rb#605
+  # source://graphql//lib/graphql/schema/field.rb#606
   def type=(_arg0); end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/schema/field.rb#638
+  # source://graphql//lib/graphql/schema/field.rb#639
   def visible?(context); end
 
   private
 
-  # source://graphql//lib/graphql/schema/field.rb#923
+  # source://graphql//lib/graphql/schema/field.rb#924
   def apply_own_complexity_to(child_complexity, query, nodes); end
 
-  # source://graphql//lib/graphql/schema/field.rb#813
+  # source://graphql//lib/graphql/schema/field.rb#814
   def assert_satisfactory_implementation(receiver, method_name, ruby_kwargs); end
 
-  # source://graphql//lib/graphql/schema/field.rb#900
+  # source://graphql//lib/graphql/schema/field.rb#901
   def run_extensions_before_resolve(obj, args, ctx, extended, idx: T.unsafe(nil)); end
 
-  # source://graphql//lib/graphql/schema/field.rb#941
+  # source://graphql//lib/graphql/schema/field.rb#942
   def set_pagination_extensions(connection_extension:); end
 
   # Wrap execution with hooks.
@@ -9843,7 +9843,7 @@ class GraphQL::Schema::Field
   #
   # @return [Object] Whatever the
   #
-  # source://graphql//lib/graphql/schema/field.rb#867
+  # source://graphql//lib/graphql/schema/field.rb#868
   def with_extensions(obj, args, ctx); end
 
   class << self
@@ -9894,66 +9894,66 @@ class GraphQL::Schema::Field::ConnectionExtension < ::GraphQL::Schema::FieldExte
   def resolve(object:, arguments:, context:); end
 end
 
-# source://graphql//lib/graphql/schema/field.rb#853
+# source://graphql//lib/graphql/schema/field.rb#854
 class GraphQL::Schema::Field::ExtendedState
   # @return [ExtendedState] a new instance of ExtendedState
   #
-  # source://graphql//lib/graphql/schema/field.rb#854
+  # source://graphql//lib/graphql/schema/field.rb#855
   def initialize(args, object); end
 
   # Returns the value of attribute added_extras.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def added_extras; end
 
   # Sets the attribute added_extras
   #
   # @param value the value to set the attribute added_extras to.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def added_extras=(_arg0); end
 
   # Returns the value of attribute arguments.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def arguments; end
 
   # Sets the attribute arguments
   #
   # @param value the value to set the attribute arguments to.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def arguments=(_arg0); end
 
   # Returns the value of attribute memos.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def memos; end
 
   # Sets the attribute memos
   #
   # @param value the value to set the attribute memos to.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def memos=(_arg0); end
 
   # Returns the value of attribute object.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def object; end
 
   # Sets the attribute object
   #
   # @param value the value to set the attribute object to.
   #
-  # source://graphql//lib/graphql/schema/field.rb#861
+  # source://graphql//lib/graphql/schema/field.rb#862
   def object=(_arg0); end
 end
 
 # source://graphql//lib/graphql/schema/field.rb#18
 class GraphQL::Schema::Field::FieldImplementationFailed < ::GraphQL::Error; end
 
-# source://graphql//lib/graphql/schema/field.rb#604
+# source://graphql//lib/graphql/schema/field.rb#605
 class GraphQL::Schema::Field::MissingReturnTypeError < ::GraphQL::Error; end
 
 # source://graphql//lib/graphql/schema/field/scope_extension.rb#6
@@ -12209,9 +12209,9 @@ class GraphQL::Schema::Scalar < ::GraphQL::Schema::Member
   end
 end
 
-# source://graphql//lib/graphql/schema.rb#1594
+# source://graphql//lib/graphql/schema.rb#1595
 module GraphQL::Schema::SubclassGetReferencesTo
-  # source://graphql//lib/graphql/schema.rb#1595
+  # source://graphql//lib/graphql/schema.rb#1596
   def get_references_to(type_defn); end
 end
 
@@ -15980,7 +15980,7 @@ class GraphQL::Subscriptions::ActionCableSubscriptions < ::GraphQL::Subscription
 
   # The channel was closed, forget about it.
   #
-  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#224
+  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#225
   def delete_subscription(subscription_id); end
 
   # This subscription was re-evaluated.
@@ -16001,12 +16001,12 @@ class GraphQL::Subscriptions::ActionCableSubscriptions < ::GraphQL::Subscription
   # @param message [String] n ActionCable-broadcasted string (JSON)
   # @param context [GraphQL::Query::Context] the context of the first event for a given subscription fingerprint
   #
-  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#197
+  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#198
   def load_action_cable_message(message, context); end
 
   # Return the query from "storage" (in memory)
   #
-  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#206
+  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#207
   def read_subscription(subscription_id); end
 
   # Every subscribing channel is listening here, but only one of them takes any action.
@@ -16033,10 +16033,10 @@ class GraphQL::Subscriptions::ActionCableSubscriptions < ::GraphQL::Subscription
 
   private
 
-  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#249
+  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#250
   def stream_event_name(event); end
 
-  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#245
+  # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#246
   def stream_subscription_name(subscription_id); end
 end
 
