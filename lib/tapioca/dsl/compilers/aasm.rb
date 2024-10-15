@@ -69,6 +69,17 @@ module Tapioca
             T::Array[String],
           )
 
+        TRANSITION_CALLBACKS =
+          T.let(
+            [
+              "on_transition",
+              "guard",
+              "after",
+              "success",
+            ].freeze,
+            T::Array[String],
+          )
+
         ConstantType = type_member { { fixed: T.all(T::Class[::AASM], ::AASM::ClassMethods) } }
 
         sig { override.void }
@@ -162,8 +173,37 @@ module Tapioca
                     method,
                     parameters: [
                       create_opt_param("symbol", type: "T.nilable(Symbol)", default: "nil"),
-                      create_block_param("block", type: "T.nilable(T.proc.bind(#{constant_name}).void)"),
+                      create_block_param(
+                        "block",
+                        type: "T.nilable(T.proc.bind(#{constant_name}).params(opts: T.untyped).void)",
+                      ),
                     ],
+                  )
+                end
+
+                event.create_method(
+                  "transitions",
+                  parameters: [
+                    create_opt_param("definitions", default: "nil", type: "T.untyped"),
+                    create_block_param("block", type: "T.nilable(T.proc.bind(PrivateAASMTransition).void)"),
+                  ],
+                )
+              end
+
+              machine.create_class("PrivateAASMTransition", superclass_name: "AASM::Core::Transition") do |transition|
+                TRANSITION_CALLBACKS.each do |method|
+                  return_type = "T.untyped"
+                  return_type = "T::Boolean" if method == "guard"
+
+                  transition.create_method(
+                    method,
+                    parameters: [
+                      create_block_param(
+                        "block",
+                        type: "T.nilable(T.proc.bind(#{constant_name}).params(opts: T.untyped).void)",
+                      ),
+                    ],
+                    return_type: return_type,
                   )
                 end
               end
