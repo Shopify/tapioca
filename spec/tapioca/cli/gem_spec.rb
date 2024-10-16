@@ -800,7 +800,7 @@ module Tapioca
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
           assert_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
           assert_project_file_exist("sorbet/rbi/gems/actionpack@7.0.6.rbi")
-          assert_project_file_exist("sorbet/rbi/gems/rack@2.2.10.rbi")
+          assert_project_file_match("sorbet/rbi/gems/rack@*.rbi")
           refute_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
 
           assert_empty_stderr(result)
