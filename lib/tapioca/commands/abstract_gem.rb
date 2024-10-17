@@ -124,7 +124,7 @@ module Tapioca
             include_doc: @include_doc,
             include_loc: @include_loc,
             error_handler: ->(error) {
-              say_error(error, :bold, :red)
+              logger.error(error, :bold, :red)
             },
           ).compile
         end
@@ -133,9 +133,9 @@ module Tapioca
 
         if rbi.empty?
           @rbi_formatter.write_empty_body_comment!(rbi)
-          say("Compiled #{gem_name} (empty output)", :yellow)
+          logger.info("Compiled #{gem_name} (empty output)", :yellow)
         else
-          say("Compiled #{gem_name}", :green)
+          logger.info("Compiled #{gem_name}", :green)
         end
 
         rbi_string = @rbi_formatter.print_file(rbi)
@@ -148,7 +148,7 @@ module Tapioca
 
       sig { void }
       def perform_removals
-        say("Removing RBI files of gems that have been removed:", [:blue, :bold])
+        logger.info("Removing RBI files of gems that have been removed:", [:blue, :bold])
         puts
 
         anything_done = T.let(false, T::Boolean)
@@ -157,7 +157,7 @@ module Tapioca
 
         shell.indent do
           if gems.empty?
-            say("Nothing to do.")
+            logger.info("Nothing to do.")
           else
             gems.each do |removed|
               filename = existing_rbi(removed)
@@ -175,7 +175,7 @@ module Tapioca
 
       sig { void }
       def perform_additions
-        say("Generating RBI files of gems that are added or updated:", [:blue, :bold])
+        logger.info("Generating RBI files of gems that are added or updated:", [:blue, :bold])
         puts
 
         anything_done = T.let(false, T::Boolean)
@@ -184,7 +184,7 @@ module Tapioca
 
         shell.indent do
           if gems.empty?
-            say("Nothing to do.")
+            logger.info("Nothing to do.")
           else
             Loaders::Gem.load_application(
               bundle: @bundle,
@@ -246,7 +246,7 @@ module Tapioca
       sig { params(diff: T::Hash[String, Symbol], command: Symbol).void }
       def report_diff_and_exit_if_out_of_date(diff, command)
         if diff.empty?
-          say("Nothing to do, all RBIs are up-to-date.")
+          logger.info("Nothing to do, all RBIs are up-to-date.")
         else
           reasons = diff.group_by(&:last).sort.map do |cause, diff_for_cause|
             build_error_for_files(cause, diff_for_cause.map(&:first))
@@ -265,7 +265,7 @@ module Tapioca
 
       sig { params(old_filename: Pathname, new_filename: Pathname).void }
       def move(old_filename, new_filename)
-        say("-> Moving: #{old_filename} to #{new_filename}")
+        logger.info("-> Moving: #{old_filename} to #{new_filename}")
         old_filename.rename(new_filename.to_s)
       end
 
@@ -299,13 +299,13 @@ module Tapioca
         tree = gem.exported_rbi_tree
 
         unless tree.conflicts.empty?
-          say_error("\n\n  RBIs exported by `#{gem.name}` contain conflicts and can't be used:", :yellow)
+          logger.error("\n\n  RBIs exported by `#{gem.name}` contain conflicts and can't be used:", :yellow)
 
           tree.conflicts.each do |conflict|
-            say_error("\n    #{conflict}", :yellow)
-            say_error("    Found at:", :yellow)
-            say_error("      #{conflict.left.loc}", :yellow)
-            say_error("      #{conflict.right.loc}", :yellow)
+            logger.error("\n    #{conflict}", :yellow)
+            logger.error("    Found at:", :yellow)
+            logger.error("      #{conflict.left.loc}", :yellow)
+            logger.error("      #{conflict.right.loc}", :yellow)
           end
 
           return file
@@ -313,8 +313,8 @@ module Tapioca
 
         file.root = RBI::Rewriters::Merge.merge_trees(file.root, tree, keep: RBI::Rewriters::Merge::Keep::LEFT)
       rescue RBI::ParseError => e
-        say_error("\n\n  RBIs exported by `#{gem.name}` contain errors and can't be used:", :yellow)
-        say_error("Cause: #{e.message} (#{e.location})")
+        logger.error("\n\n  RBIs exported by `#{gem.name}` contain errors and can't be used:", :yellow)
+        logger.error("Cause: #{e.message} (#{e.location})")
       end
     end
   end

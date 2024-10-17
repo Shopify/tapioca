@@ -10,6 +10,7 @@ module Tapioca
       include Thor::Base
       include CliHelper
       include Tapioca::GemHelper
+      include Tapioca::Logging
 
       abstract!
 
@@ -58,7 +59,7 @@ module Tapioca
         require File.expand_path(load_path, app_root)
 
         unless defined?(Rails)
-          say(
+          logger.info(
             "\nTried to load the app from `#{load_path}` as a Rails application " \
               "but the `Rails` constant wasn't defined after loading the file.",
             :yellow,
@@ -68,7 +69,7 @@ module Tapioca
 
         eager_load_rails_app if eager_load
       rescue LoadError, StandardError => e
-        say(
+        logger.info(
           "\nTapioca attempted to load the Rails application after encountering a `config/application.rb` file, " \
             "but it failed. If your application uses Rails please ensure it can be loaded correctly before " \
             "generating RBIs. If your application does not use Rails and you wish to continue RBI generation " \
@@ -80,9 +81,9 @@ module Tapioca
 
         if e.backtrace
           backtrace = T.must(e.backtrace).join("\n")
-          say(backtrace, :cyan) # TODO: Check verbose flag to print backtrace.
+          logger.info(backtrace, :cyan) # TODO: Check verbose flag to print backtrace.
         end
-        say("Continuing RBI generation without loading the Rails application.")
+        logger.info("Continuing RBI generation without loading the Rails application.")
       end
 
       sig { void }

@@ -10,13 +10,13 @@ module Tapioca
       def execute
         load_application
 
-        say("Checking for out-of-date RBIs...")
-        say("")
+        logger.info("Checking for out-of-date RBIs...")
+        logger.info("")
 
         outpath = Pathname.new(Dir.mktmpdir)
 
         generate_dsl_rbi_files(outpath, quiet: true)
-        say("")
+        logger.info("")
 
         perform_dsl_verification(outpath)
       end

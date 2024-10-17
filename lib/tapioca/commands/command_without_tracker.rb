@@ -4,6 +4,8 @@
 module Tapioca
   module Commands
     class CommandWithoutTracker < Command
+      include Tapioca::Logging
+
       extend T::Helpers
 
       abstract!
