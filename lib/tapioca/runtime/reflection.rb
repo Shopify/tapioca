@@ -32,7 +32,10 @@ module Tapioca
       METHOD_METHOD = T.let(Kernel.instance_method(:method), UnboundMethod)
       UNDEFINED_CONSTANT = T.let(Module.new.freeze, Module)
 
-      REQUIRED_FROM_LABELS = T.let(["<top (required)>", "<main>"].freeze, T::Array[String])
+      REQUIRED_FROM_LABELS = T.let(
+        ["block in <class:ActiveRecord>", "<top (required)>", "<main>"].freeze,
+        T::Array[String],
+      )
 
       T::Sig::WithoutRuntime.sig { params(constant: BasicObject).returns(T::Boolean) }
       def constant_defined?(constant)
