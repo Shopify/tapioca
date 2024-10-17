@@ -32,7 +32,10 @@ module Tapioca
       METHOD_METHOD = T.let(Kernel.instance_method(:method), UnboundMethod)
       UNDEFINED_CONSTANT = T.let(Module.new.freeze, Module)
 
-      REQUIRED_FROM_LABELS = T.let(["<top (required)>", "<main>"].freeze, T::Array[String])
+      REQUIRED_FROM_LABELS = T.let(
+        ["block in <class:ActiveRecord>", "<top (required)>", "<main>"].freeze,
+        T::Array[String],
+      )
 
       T::Sig::WithoutRuntime.sig { params(constant: BasicObject).returns(T::Boolean) }
       def constant_defined?(constant)
@@ -178,7 +181,8 @@ module Tapioca
       end
 
       # Examines the call stack to identify the closest location where a "require" is performed
-      # by searching for the label "<top (required)>". If none is found, it returns the location
+      # by searching for the label "<top (required)>" or "block in <class:ActiveRecord>" in the
+      # case of an ActiveSupport.on_load hook. If none is found, it returns the location
       # labeled "<main>", which is the original call site.
       sig { params(locations: T.nilable(T::Array[Thread::Backtrace::Location])).returns(String) }
       def resolve_loc(locations)
