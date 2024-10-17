@@ -29,7 +29,8 @@ task :readme do
   end
 
   def skip_option?(option)
-    option.name == "auth"
+    ignored_options = ["auth", "config"]
+    ignored_options.include?(option.name)
   end
 
   def option_value(option)
@@ -54,7 +55,7 @@ task :readme do
   end
 
   def command_options(command)
-    command.options.filter_map do |name, opt|
+    Tapioca::Cli.class_options.merge(command.options).filter_map do |name, opt|
       next if skip_option?(opt)
 
       [name.to_s, option_value(opt)]
