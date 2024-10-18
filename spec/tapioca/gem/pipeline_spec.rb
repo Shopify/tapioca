@@ -3181,6 +3181,23 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RUBY
 
+      add_ruby_file("method_aliases.rb", <<~RUBY)
+        class MethodAliases
+          extend T::Helpers
+          extend T::Sig
+
+          # Foo
+          sig { params(a: Integer, b: String).returns(Object) }
+          def foo(a, b); end
+
+          alias :bar :foo
+          alias_method :baz, :bar
+
+          def fuzz(x); end
+          alias_method :buzz, :fuzz
+        end
+      RUBY
+
       add_ruby_file("generic.rb", <<~RUBY)
         module Generics
           class ComplexGenericType
@@ -3388,6 +3405,21 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         Generics::SimpleGenericType::NullGenericType = T.let(T.unsafe(nil), Generics::SimpleGenericType[::Integer])
+
+        class MethodAliases
+          sig { params(a: ::Integer, b: ::String).returns(::Object) }
+          def bar(a, b); end
+
+          sig { params(a: ::Integer, b: ::String).returns(::Object) }
+          def baz(a, b); end
+
+          def buzz(x); end
+
+          sig { params(a: ::Integer, b: ::String).returns(::Object) }
+          def foo(a, b); end
+
+          def fuzz(x); end
+        end
 
         module Quux
           interface!
