@@ -6,6 +6,7 @@ module Tapioca
     class Command
       extend T::Sig
       extend T::Helpers
+      include Tapioca::Logging
 
       class FileWriter < Thor
         include Thor::Actions
@@ -51,6 +52,8 @@ module Tapioca
         ).void
       end
       def create_file(path, content, force: true, skip: false, verbose: true)
+        # TODO: decide how to handle this
+        verbose = false if ENV["TAPIOCA_DEVELOPMENT"]
         file_writer.create_file(path, force: force, skip: skip, verbose: verbose) { content }
       end
 
@@ -61,6 +64,8 @@ module Tapioca
         ).void
       end
       def remove_file(path, verbose: true)
+        # TODO: decide how to handle this
+        verbose = false if ENV["TAPIOCA_DEVELOPMENT"]
         file_writer.remove_file(path, verbose: verbose)
       end
     end

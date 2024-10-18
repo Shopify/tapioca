@@ -58,7 +58,7 @@ module Tapioca
 
       sig { void }
       def require_gem_file
-        say("Requiring all gems to prepare for compiling... ")
+        logger.info("Requiring all gems to prepare for compiling... ")
         begin
           load_bundle(@bundle, @prerequire, @postrequire, @halt_upon_load_error)
         rescue LoadError => e
@@ -68,23 +68,26 @@ module Tapioca
 
         Runtime::Trackers::Autoload.eager_load_all!
 
-        say(" Done", :green)
+        logger.info(" Done", :green)
         unless @bundle.missing_specs.empty?
-          say("  completed with missing specs: ")
-          say(@bundle.missing_specs.join(", "), :yellow)
+          logger.info("  completed with missing specs: ")
+          logger.info(@bundle.missing_specs.join(", "), :yellow)
         end
         puts
       end
 
       sig { params(file: String, error: LoadError).void }
       def explain_failed_require(file, error)
-        say_error("\n\nLoadError: #{error}", :bold, :red)
-        say_error("\nTapioca could not load all the gems required by your application.", :yellow)
-        say_error("If you populated ", :yellow)
-        say_error("#{file} ", :bold, :blue)
-        say_error("with ", :yellow)
-        say_error("`#{@default_command}`", :bold, :blue)
-        say_error("you should probably review it and remove the faulty line.", :yellow)
+        logger.error("\n\nLoadError: #{error}", :bold, :red)
+        logger.error(
+          "\nTapioca could not load all the gems required by your application.",
+          :yellow,
+        )
+        logger.error("If you populated ", :yellow)
+        logger.error("#{file} ", :bold, :blue)
+        logger.error("with ", :yellow)
+        logger.error("`#{@default_command}`", :bold, :blue)
+        logger.error("you should probably review it and remove the faulty line.", :yellow)
       end
     end
   end
