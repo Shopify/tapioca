@@ -28,6 +28,7 @@ module RubyLsp
 
       sig { override.params(global_state: RubyLsp::GlobalState, outgoing_queue: Thread::Queue).void }
       def activate(global_state, outgoing_queue)
+        File.delete("tmp/tapioca.lock") if File.exist?("tmp/tapioca.lock")
         @global_state = global_state
         # TODO: Uncomment
         # return unless @global_state.experimental_features
@@ -67,6 +68,14 @@ module RubyLsp
         # return unless T.must(@global_state).experimental_features
         return unless @rails_runner_client # Client is not ready
 
+        tapioca_lock_file = "tmp/tapioca.lock"
+
+        if File.exist?(tapioca_lock_file)
+          $stderr.puts "Ignoring save since Tapioca is already processing previous request"
+          return
+        end
+
+        File.write(tapioca_lock_file, "")
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
           next if path.end_with?("_test.rb", "_spec.rb")

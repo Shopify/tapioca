@@ -14,6 +14,7 @@ module RubyLsp
         case request
         when "dsl"
           dsl(params)
+          File.delete("tmp/tapioca.lock")
         end
       end
 
