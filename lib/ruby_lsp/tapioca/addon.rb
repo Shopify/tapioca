@@ -12,6 +12,8 @@ rescue LoadError
   return
 end
 
+require "zlib"
+
 module RubyLsp
   module Tapioca
     class Addon < ::RubyLsp::Addon
@@ -24,6 +26,7 @@ module RubyLsp
         @global_state = T.let(nil, T.nilable(RubyLsp::GlobalState))
         @rails_runner_client = T.let(nil, T.nilable(RubyLsp::Rails::RunnerClient))
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
+        @file_checksums = T.let({}, T::Hash[String, String])
       end
 
       sig { override.params(global_state: RubyLsp::GlobalState, outgoing_queue: Thread::Queue).void }
@@ -70,6 +73,21 @@ module RubyLsp
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
           next if path.end_with?("_test.rb", "_spec.rb")
+
+          case change[:type]
+          when Constant::FileChangeType::CREATED, Constant::FileChangeType::CHANGED
+            content = File.read(path)
+            current_checksum = Zlib.crc32(content).to_s
+
+            if change[:type] == Constant::FileChangeType::CHANGED && @file_checksums[path] == current_checksum
+              $stderr.puts "File has not changed. Skipping #{path}"
+              next
+            end
+
+            @file_checksums[path] = current_checksum
+          when Constant::FileChangeType::DELETED
+            @file_checksums.delete(path)
+          end
 
           entries = T.must(@index).entries_for(path)
           next unless entries
