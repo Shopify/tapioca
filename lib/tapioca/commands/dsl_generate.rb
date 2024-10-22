@@ -10,17 +10,17 @@ module Tapioca
       def execute
         load_application
 
-        say("Compiling DSL RBI files...")
-        say("")
+        logger.info("Compiling DSL RBI files...")
+        logger.info("")
 
         rbi_files_to_purge = generate_dsl_rbi_files(@outpath, quiet: @quiet && !@verbose)
-        say("")
+        logger.info("")
 
         purge_stale_dsl_rbi_files(rbi_files_to_purge)
-        say("Done", :green)
+        logger.info("Done", :green)
 
         if @auto_strictness
-          say("")
+          logger.info("")
           validate_rbi_files(
             command: default_command(:dsl, all_requested_constants.join(" ")),
             gem_dir: @gem_dir,
@@ -30,8 +30,8 @@ module Tapioca
           )
         end
 
-        say("All operations performed in working directory.", [:green, :bold])
-        say("Please review changes and commit them.", [:green, :bold])
+        logger.info("All operations performed in working directory.", [:green, :bold])
+        logger.info("Please review changes and commit them.", [:green, :bold])
       ensure
         GitAttributes.create_generated_attribute_file(@outpath)
       end

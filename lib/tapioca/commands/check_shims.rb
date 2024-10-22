@@ -45,7 +45,7 @@ module Tapioca
         index = RBI::Index.new
 
         if (!Dir.exist?(@shim_rbi_dir) || Dir.empty?(@shim_rbi_dir)) && !File.exist?(@todo_rbi_file)
-          say("No shim RBIs to check", :green)
+          logger.info("No shim RBIs to check", :green)
 
           return
         end
@@ -99,7 +99,7 @@ module Tapioca
           raise Thor::Error, messages.join("\n")
         end
 
-        say("\nNo duplicates found in shim RBIs", :green)
+        logger.info("\nNo duplicates found in shim RBIs", :green)
       end
     end
   end
