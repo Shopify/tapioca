@@ -648,6 +648,23 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "must not include code from an ActiveSupport.on_load hook in ActiveRecord RBIs" do
+          @project.require_real_gem("rails", "7.1.0")
+          # Flipper adds functionality to ActiveRecord via an ActiveSupport.on_load hook
+          @project.require_real_gem("flipper-active_record", "1.3.1")
+
+          @project.bundle_install!
+          result = @project.tapioca("gem")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+
+          activerecord_rbi_file = T.must(
+            Dir.glob("#{@project.absolute_path}/sorbet/rbi/gems/activerecord@7.1.0.rbi").first,
+          )
+          refute_includes(File.read(activerecord_rbi_file), "class Flipper")
+        end
+
         it "must generate multiple gem RBIs" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", FOO_RB)
