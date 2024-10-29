@@ -14,7 +14,7 @@ gem "debug"
 gem "irb"
 gem "rubocop-shopify"
 gem "rubocop-sorbet", ">= 0.4.1"
-gem "rubocop-rspec"
+gem "rubocop-rspec" # useful even though we use minitest/spec
 
 group :deployment, :development do
   gem "rake"
