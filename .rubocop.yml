@@ -5,7 +5,7 @@ inherit_gem:
 
 require:
  - rubocop-sorbet
- - rubocop-rspec
+ - rubocop-rspec # useful even though we use minitest/spec
 
 AllCops:
   NewCops: disable
