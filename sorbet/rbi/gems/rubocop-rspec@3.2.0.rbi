@@ -489,10 +489,10 @@ class RuboCop::Cop::RSpec::ChangeByZero < ::RuboCop::Cop::RSpec::Base
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#133
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#134
   def autocorrect(corrector, node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#140
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#141
   def autocorrect_compound(corrector, node); end
 
   # @return [Boolean]
@@ -500,28 +500,28 @@ class RuboCop::Cop::RSpec::ChangeByZero < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#120
   def compound_expectations?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#150
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#151
   def insert_operator(corrector, node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#124
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#125
   def message(change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#128
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#129
   def message_compound(change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#174
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#175
   def negated_matcher; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#178
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#179
   def preferred_method; end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#105
   def register_offense(node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#163
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#164
   def remove_by_zero(corrector, node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#159
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#160
   def replace_node(node, change_node); end
 end
 
@@ -713,6 +713,9 @@ RuboCop::Cop::RSpec::ContextMethod::MSG = T.let(T.unsafe(nil), String)
 # include `if`, `unless`, `for`, `before`, `after`, or `during`.
 # They may consist of multiple words if desired.
 #
+# If both `Prefixes` and `AllowedPatterns` are empty, this cop will always
+# report an offense. So you need to set at least one of them.
+#
 # This cop can be customized allowed context description pattern
 # with `AllowedPatterns`. By default, there are no checking by pattern.
 #
@@ -754,41 +757,42 @@ RuboCop::Cop::RSpec::ContextMethod::MSG = T.let(T.unsafe(nil), String)
 #   end
 # @see http://www.betterspecs.org/#contexts
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#58
+# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#61
 class RuboCop::Cop::RSpec::ContextWording < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::AllowedPattern
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#64
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#69
   def context_wording(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#68
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#73
   def on_block(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#79
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#83
   def allowed_patterns; end
 
-  # @return [Boolean]
-  #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#87
-  def bad_pattern?(node); end
-
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#93
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#91
   def description(context); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#101
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#107
   def expect_patterns; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#83
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#99
+  def message; end
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#87
   def prefix_regexes; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#111
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#117
   def prefixes; end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#61
-RuboCop::Cop::RSpec::ContextWording::MSG = T.let(T.unsafe(nil), String)
+# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#65
+RuboCop::Cop::RSpec::ContextWording::MSG_ALWAYS = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#64
+RuboCop::Cop::RSpec::ContextWording::MSG_MATCH = T.let(T.unsafe(nil), String)
 
 # Check that the first argument to the top-level describe is a constant.
 #
@@ -4010,7 +4014,7 @@ class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#86
   def expect?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop/1.66.1/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.67.0/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#93
@@ -4125,7 +4129,7 @@ RuboCop::Cop::RSpec::MultipleExpectations::TRUE_NODE = T.let(T.unsafe(nil), Proc
 class RuboCop::Cop::RSpec::MultipleMemoizedHelpers < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::Variable
 
-  # source://rubocop/1.66.1/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.67.0/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#91
@@ -4467,7 +4471,7 @@ end
 class RuboCop::Cop::RSpec::NestedGroups < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::TopLevelGroup
 
-  # source://rubocop/1.66.1/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.67.0/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#107
@@ -6958,7 +6962,7 @@ class RuboCop::Cop::RSpec::VoidExpect < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#26
   def expect_block?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#36
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#37
   def on_block(node); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#30
@@ -6966,12 +6970,17 @@ class RuboCop::Cop::RSpec::VoidExpect < ::RuboCop::Cop::RSpec::Base
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#44
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#46
   def check_expect(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#50
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#59
+  def inside_example?(node); end
+
+  # @return [Boolean]
+  #
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/void_expect.rb#52
   def void?(expect); end
 end
 
