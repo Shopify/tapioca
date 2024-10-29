@@ -17980,8 +17980,6 @@ class Integer < ::Numeric
   def years; end
 end
 
-Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
-
 # source://activesupport//lib/active_support/core_ext/kernel/reporting.rb#3
 module Kernel
   # class_eval on an object acts like +singleton_class.class_eval+.
@@ -18091,6 +18089,19 @@ class LoadError < ::ScriptError
   #
   # source://activesupport//lib/active_support/core_ext/load_error.rb#6
   def is_missing?(location); end
+end
+
+# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#39
+class Method
+  # Methods are not duplicable:
+  #
+  #   method(:puts).duplicable? # => false
+  #   method(:puts).dup         # => TypeError: allocator undefined for Method
+  #
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#44
+  def duplicable?; end
 end
 
 # == Attribute Accessors per Thread
@@ -21272,4 +21283,17 @@ class URI::Generic
 
   # source://activesupport//lib/active_support/core_ext/object/json.rb#225
   def as_json(options = T.unsafe(nil)); end
+end
+
+# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#49
+class UnboundMethod
+  # Unbound methods are not duplicable:
+  #
+  #   method(:puts).unbind.duplicable? # => false
+  #   method(:puts).unbind.dup         # => TypeError: allocator undefined for UnboundMethod
+  #
+  # @return [Boolean]
+  #
+  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#54
+  def duplicable?; end
 end
