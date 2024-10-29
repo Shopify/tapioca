@@ -934,7 +934,7 @@ module Zeitwerk::Registry
     # @return [Boolean]
     #
     # source://zeitwerk//lib/zeitwerk/registry.rb#113
-    def inception?(cpath); end
+    def inception?(cpath, registered_by_loader = T.unsafe(nil)); end
 
     # This hash table addresses an edge case in which an autoload is ignored.
     #
@@ -978,7 +978,7 @@ module Zeitwerk::Registry
 
     # @private
     #
-    # source://zeitwerk//lib/zeitwerk/registry.rb#121
+    # source://zeitwerk//lib/zeitwerk/registry.rb#124
     def loader_for(path); end
 
     # This method returns always a loader, the same instance for the same root
@@ -999,7 +999,7 @@ module Zeitwerk::Registry
 
     # @private
     #
-    # source://zeitwerk//lib/zeitwerk/registry.rb#127
+    # source://zeitwerk//lib/zeitwerk/registry.rb#130
     def on_unload(loader); end
 
     # @private
