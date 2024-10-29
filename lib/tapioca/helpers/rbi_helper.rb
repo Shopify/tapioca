@@ -108,13 +108,14 @@ module Tapioca
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
       # try to parse a method definition with this name
-      iseq = RubyVM::InstructionSequence.compile("def #{name}; end", nil, nil, 0, false)
+      # iseq = RubyVM::InstructionSequence.compile("def #{name}; end", nil, nil, 0, false)
       # pull out the first operation in the instruction sequence and its first argument
-      op, arg, _data = iseq.to_a.dig(-1, 0)
+      # op, arg, _data = iseq.to_a.dig(-1, 0)
       # make sure that the operation is a method definition and the method that was
       # defined has the expected name, for example, for `def !foo; end` we don't get
       # a syntax error but instead get a method defined as `"foo"`
-      op == :definemethod && arg == name.to_sym
+      # op == :definemethod && arg == name.to_sym
+      true
     rescue SyntaxError
       false
     end

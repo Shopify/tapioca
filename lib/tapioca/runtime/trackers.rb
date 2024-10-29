@@ -39,6 +39,11 @@ module Tapioca
         def register_tracker(tracker)
           @trackers << tracker
         end
+
+        sig { void }
+        def reset_state
+          @trackers.each(&:reset_state)
+        end
       end
     end
   end

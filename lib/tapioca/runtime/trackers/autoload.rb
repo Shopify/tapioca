@@ -53,6 +53,11 @@ module Tapioca
               Kernel.define_method(:abort, original_abort)
             end
           end
+
+          sig { override.void }
+          def reset_state
+            @constant_names_registered_for_autoload = []
+          end
         end
       end
     end

@@ -62,6 +62,12 @@ module Tapioca
             find_or_initialize_mixin_lookup(mixin).dig(mixin_type, constant)
           end
 
+          sig { override.void }
+          def reset_state
+            @constants_to_mixin_locations = {}
+            @mixins_to_constants  = {}
+          end
+
           private
 
           sig { params(constant: Module, mixin: Module, mixin_type: Type, location: String).void }

@@ -80,8 +80,8 @@ module RubyLsp
             current_checksum = Zlib.crc32(content).to_s
 
             if change[:type] == Constant::FileChangeType::CHANGED && @file_checksums[path] == current_checksum
-              $stderr.puts "File has not changed. Skipping #{path}"
-              next
+              # $stderr.puts "File has not changed. Skipping #{path}"
+              # next
             end
 
             @file_checksums[path] = current_checksum

@@ -39,6 +39,9 @@ module Tapioca
         ensure
           @enabled = original_state
         end
+
+        sig { abstract.void }
+        def reset_state; end
       end
     end
   end

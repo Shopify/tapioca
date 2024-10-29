@@ -101,6 +101,9 @@ module Tapioca
         files_to_purge = existing_rbi_files - generated_files
 
         files_to_purge
+      ensure
+        # pipeline.active_compilers.each(&:reset_state) if @lsp_addon
+        @pipeline = nil if @lsp_addon
       end
 
       sig { returns(T::Array[String]) }

@@ -44,6 +44,11 @@ module Tapioca
               nil
             end
           end
+
+          sig { override.void }
+          def reset_state
+            @required_ancestors_map = {}
+          end
         end
       end
     end

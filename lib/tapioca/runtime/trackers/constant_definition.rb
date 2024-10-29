@@ -52,6 +52,8 @@ module Tapioca
         end
 
         class << self
+          extend T::Sig
+
           def disable!
             @class_tracepoint.disable
             @creturn_tracepoint.disable
@@ -74,6 +76,11 @@ module Tapioca
 
           def locations_for(klass)
             @class_files.fetch(klass, Set.new)
+          end
+
+          sig { override.void }
+          def reset_state
+            @class_files  = {}
           end
         end
       end
