@@ -107,17 +107,7 @@ module Tapioca
 
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
-      # Special case: Prism supports parsing `def @foo; end`, but the Sorbet parser doesn't. This condition can go away
-      # once Sorbet is using Prism under the hood as it will no longer result in an RBI that Sorbet can't parse
-      return false if name.start_with?("@")
-
-      result = Prism.parse("def #{name}(a); end")
-      return false unless result.success?
-
-      # We don't consider `def foo.bar` as valid for generating RBIs since only `def self.bar` is supported
-      method_def = result.value.statements.body.first
-      receiver = method_def.receiver
-      !receiver || receiver.is_a?(Prism::SelfNode)
+      Prism.parse("def self.#{name}(a); end").success?
     end
 
     sig { params(name: String).returns(T::Boolean) }
