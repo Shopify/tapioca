@@ -225,9 +225,14 @@ module Tapioca
 
       sig { void }
       def abort_if_pending_migrations!
+        # When running within the add-on, we cannot invoke the abort if pending migrations task because that will exit
+        # the process and crash the Rails runtime server. Instead, the Rails add-on checks for pending migrations and
+        # warns the user, so that they are aware they need to migrate their database
+        return if @lsp_addon
         return unless defined?(::Rake)
 
         Rails.application.load_tasks
+
         if Rake::Task.task_defined?("db:abort_if_pending_migrations")
           Rake::Task["db:abort_if_pending_migrations"].invoke
         end
