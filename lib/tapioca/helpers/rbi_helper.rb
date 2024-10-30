@@ -107,36 +107,22 @@ module Tapioca
 
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
-      # try to parse a method definition with this name
-      iseq = RubyVM::InstructionSequence.compile("def #{name}; end", nil, nil, 0, false)
-      # pull out the first operation in the instruction sequence and its first argument
-      op, arg, _data = iseq.to_a.dig(-1, 0)
-      # make sure that the operation is a method definition and the method that was
-      # defined has the expected name, for example, for `def !foo; end` we don't get
-      # a syntax error but instead get a method defined as `"foo"`
-      op == :definemethod && arg == name.to_sym
-    rescue SyntaxError
-      false
+      # Special case: Prism supports parsing `def @foo; end`, but the Sorbet parser doesn't. This condition can go away
+      # once Sorbet is using Prism under the hood as it will no longer result in an RBI that Sorbet can't parse
+      return false if name.start_with?("@")
+
+      result = Prism.parse("def #{name}(a); end")
+      return false unless result.success?
+
+      # We don't consider `def foo.bar` as valid for generating RBIs since only `def self.bar` is supported
+      method_def = result.value.statements.body.first
+      receiver = method_def.receiver
+      !receiver || receiver.is_a?(Prism::SelfNode)
     end
 
     sig { params(name: String).returns(T::Boolean) }
     def valid_parameter_name?(name)
-      sentinel_method_name = :sentinel_method_name
-      # try to parse a method definition with this name as the name of a
-      # keyword parameter. If we use a positional parameter, then parameter names
-      # like `&` (and maybe others) will be treated like `def foo(&); end` and will
-      # thus be considered valid. Using a required keyword parameter prevents that
-      # confusion between Ruby syntax and parameter name.
-      iseq = RubyVM::InstructionSequence.compile("def #{sentinel_method_name}(#{name}:); end", nil, nil, 0, false)
-      # pull out the first operation in the instruction sequence and its first argument and data
-      op, arg, data = iseq.to_a.dig(-1, 0)
-      # make sure that:
-      # 1. a method was defined, and
-      # 2. the method has the expected method name, and
-      # 3. the method has a keyword parameter with the expected name
-      op == :definemethod && arg == sentinel_method_name && data.dig(11, :keyword, 0) == name.to_sym
-    rescue SyntaxError
-      false
+      Prism.parse("def sentinel_method_name(#{name}:); end").success?
     end
   end
 end

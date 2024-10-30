@@ -23,6 +23,7 @@ require "tempfile"
 require "thor"
 require "yaml"
 require "yard-sorbet"
+require "prism"
 
 require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/sorbet_ext/backcompat_patches"
