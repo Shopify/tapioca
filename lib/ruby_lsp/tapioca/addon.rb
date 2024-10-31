@@ -13,6 +13,8 @@ rescue LoadError
 end
 
 require "zlib"
+require "open3"
+require "ruby_lsp/tapioca/lockfile_diff_parser"
 
 module RubyLsp
   module Tapioca
@@ -27,6 +29,7 @@ module RubyLsp
         @rails_runner_client = T.let(nil, T.nilable(RubyLsp::Rails::RunnerClient))
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
         @file_checksums = T.let({}, T::Hash[String, String])
+        @lockfile_diff = T.let(nil, T.nilable(String))
         @outgoing_queue = T.let(nil, T.nilable(Thread::Queue))
       end
 
@@ -45,6 +48,8 @@ module RubyLsp
           @rails_runner_client = addon.rails_runner_client
           @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
+
+          generate_gem_rbis if git_repo? && lockfile_changed?
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
@@ -126,6 +131,58 @@ module RubyLsp
         end
 
         false
+      end
+
+      sig { returns(T::Boolean) }
+      def git_repo?
+        Dir.exist?(".git")
+      end
+
+      sig { returns(T::Boolean) }
+      def lockfile_changed?
+        fetch_lockfile_diff
+        !T.must(@lockfile_diff).empty?
+      end
+
+      sig { returns(String) }
+      def fetch_lockfile_diff
+        @lockfile_diff = %x(git diff HEAD Gemfile.lock).strip
+      end
+
+      sig { void }
+      def generate_gem_rbis
+        parser = LockfileDiffParser.new(@lockfile_diff)
+
+        removed_gems = parser.removed_gems
+        added_or_modified_gems = parser.added_or_modified_gems
+
+        if added_or_modified_gems.any?
+          # Resetting BUNDLE_GEMFILE to root folder to use the project's Gemfile instead of Ruby LSP's composed Gemfile
+          stdout, stderr, status = T.unsafe(Open3).capture3(
+            { "BUNDLE_GEMFILE" => "Gemfile" },
+            "bin/tapioca",
+            "gem",
+            "--lsp_addon",
+            *added_or_modified_gems,
+          )
+          T.must(@outgoing_queue) << if status.success?
+            Notification.window_log_message(
+              stdout,
+              type: Constant::MessageType::INFO,
+            )
+          else
+            Notification.window_log_message(
+              stderr,
+              type: Constant::MessageType::ERROR,
+            )
+          end
+        elsif removed_gems.any?
+          FileUtils.rm_f(Dir.glob("sorbet/rbi/gems/{#{removed_gems.join(",")}}@*.rbi"))
+          T.must(@outgoing_queue) << Notification.window_log_message(
+            "Removed RBIs for: #{removed_gems.join(", ")}",
+            type: Constant::MessageType::INFO,
+          )
+        end
       end
     end
   end
