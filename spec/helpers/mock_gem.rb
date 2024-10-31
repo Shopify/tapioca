@@ -66,5 +66,11 @@ module Tapioca
         end
       GEMSPEC
     end
+
+    sig { params(version: String).void }
+    def update(version)
+      @version = version
+      gemspec(default_gemspec_contents)
+    end
   end
 end
