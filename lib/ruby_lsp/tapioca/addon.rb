@@ -19,6 +19,8 @@ module RubyLsp
     class Addon < ::RubyLsp::Addon
       extend T::Sig
 
+      GEMFILE_LOCK_SNAPSHOT = "tmp/tapioca/.gemfile_lock_snapshot"
+
       sig { void }
       def initialize
         super
@@ -44,6 +46,8 @@ module RubyLsp
           @rails_runner_client = addon.rails_runner_client
           outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
+
+          check_gemfile_changes
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
@@ -105,6 +109,32 @@ module RubyLsp
           request_name: "dsl",
           constants: constants,
         )
+      end
+
+      private
+
+      sig { void }
+      def check_gemfile_changes
+        current_lockfile = File.read("Gemfile.lock")
+        snapshot_lockfile = File.read(GEMFILE_LOCK_SNAPSHOT) if File.exist?(GEMFILE_LOCK_SNAPSHOT)
+
+        unless snapshot_lockfile
+          $stdout.puts("Creating initial Gemfile.lock snapshot at #{GEMFILE_LOCK_SNAPSHOT}")
+          FileUtils.mkdir_p(File.dirname(GEMFILE_LOCK_SNAPSHOT))
+          File.write(GEMFILE_LOCK_SNAPSHOT, current_lockfile)
+          return
+        end
+
+        return if current_lockfile == snapshot_lockfile
+
+        T.must(@rails_runner_client).delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "gem",
+          snapshot_lockfile: snapshot_lockfile,
+          current_lockfile: current_lockfile,
+        )
+
+        File.write(GEMFILE_LOCK_SNAPSHOT, current_lockfile)
       end
     end
   end
