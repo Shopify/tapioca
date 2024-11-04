@@ -561,7 +561,7 @@ module ActiveModel::AttributeMethods
   # attribute method. If so, we tell +attribute_missing+ to dispatch the
   # attribute. This method can be overloaded to customize the behavior.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#515
+  # source://activemodel//lib/active_model/attribute_methods.rb#520
   def attribute_missing(match, *args, **_arg2, &block); end
 
   # Allows access to the object attributes, which are held in the hash
@@ -575,12 +575,12 @@ module ActiveModel::AttributeMethods
   # class belonging to the +clients+ table with a +master_id+ foreign key
   # can instantiate master through <tt>Client#master</tt>.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#501
+  # source://activemodel//lib/active_model/attribute_methods.rb#506
   def method_missing(method, *args, **_arg2, &block); end
 
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#524
+  # source://activemodel//lib/active_model/attribute_methods.rb#529
   def respond_to?(method, include_private_methods = T.unsafe(nil)); end
 
   # A +Person+ instance with a +name+ attribute can ask
@@ -590,23 +590,23 @@ module ActiveModel::AttributeMethods
 
   private
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#552
+  # source://activemodel//lib/active_model/attribute_methods.rb#557
   def _read_attribute(attr); end
 
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#537
+  # source://activemodel//lib/active_model/attribute_methods.rb#542
   def attribute_method?(attr_name); end
 
   # Returns a struct representing the matching attribute method.
   # The struct's attributes are prefix, base and suffix.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#543
+  # source://activemodel//lib/active_model/attribute_methods.rb#548
   def matched_attribute_method(method_name); end
 
   # @raise [ActiveModel::MissingAttributeError]
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#548
+  # source://activemodel//lib/active_model/attribute_methods.rb#553
   def missing_attribute(attr_name, stack); end
 
   module GeneratedClassMethods
@@ -626,7 +626,7 @@ module ActiveModel::AttributeMethods
   end
 end
 
-# source://activemodel//lib/active_model/attribute_methods.rb#556
+# source://activemodel//lib/active_model/attribute_methods.rb#561
 module ActiveModel::AttributeMethods::AttrNames
   class << self
     # We want to generate the methods via module_eval rather than
@@ -644,12 +644,12 @@ module ActiveModel::AttributeMethods::AttrNames
     # Making it frozen means that it doesn't get duped when used to
     # key the @attributes in read_attribute.
     #
-    # source://activemodel//lib/active_model/attribute_methods.rb#573
+    # source://activemodel//lib/active_model/attribute_methods.rb#578
     def define_attribute_accessor_method(owner, attr_name, writer: T.unsafe(nil)); end
   end
 end
 
-# source://activemodel//lib/active_model/attribute_methods.rb#557
+# source://activemodel//lib/active_model/attribute_methods.rb#562
 ActiveModel::AttributeMethods::AttrNames::DEF_SAFE_NAME = T.let(T.unsafe(nil), Regexp)
 
 # source://activemodel//lib/active_model/attribute_methods.rb#68
@@ -684,22 +684,22 @@ module ActiveModel::AttributeMethods::ClassMethods
   # source://activemodel//lib/active_model/attribute_methods.rb#204
   def alias_attribute(new_name, old_name); end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#222
+  # source://activemodel//lib/active_model/attribute_methods.rb#227
   def alias_attribute_method_definition(code_generator, pattern, new_name, old_name); end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#392
+  # source://activemodel//lib/active_model/attribute_methods.rb#397
   def aliases_by_attribute_name; end
 
   # Returns the original name for the alias +name+
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#256
+  # source://activemodel//lib/active_model/attribute_methods.rb#261
   def attribute_alias(name); end
 
   # Is +new_name+ an alias?
   #
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#251
+  # source://activemodel//lib/active_model/attribute_methods.rb#256
   def attribute_alias?(new_name); end
 
   # Declares a method available for all attributes with the given prefix
@@ -832,10 +832,10 @@ module ActiveModel::AttributeMethods::ClassMethods
   #   person.name        # => "Bob"
   #   person.name_short? # => true
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#322
+  # source://activemodel//lib/active_model/attribute_methods.rb#327
   def define_attribute_method(attr_name, _owner: T.unsafe(nil), as: T.unsafe(nil)); end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#331
+  # source://activemodel//lib/active_model/attribute_methods.rb#336
   def define_attribute_method_pattern(pattern, attr_name, owner:, as:, override: T.unsafe(nil)); end
 
   # Declares the attributes that should be prefixed and suffixed by
@@ -862,7 +862,7 @@ module ActiveModel::AttributeMethods::ClassMethods
   #       end
   #   end
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#283
+  # source://activemodel//lib/active_model/attribute_methods.rb#288
   def define_attribute_methods(*attr_names); end
 
   # source://activemodel//lib/active_model/attribute_methods.rb#212
@@ -897,7 +897,7 @@ module ActiveModel::AttributeMethods::ClassMethods
   #   person.name_short? # => NoMethodError
   #   person.first_name  # => NoMethodError
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#385
+  # source://activemodel//lib/active_model/attribute_methods.rb#390
   def undefine_attribute_methods; end
 
   private
@@ -912,69 +912,69 @@ module ActiveModel::AttributeMethods::ClassMethods
   # significantly (in our case our test suite finishes 10% faster with
   # this cache).
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#425
+  # source://activemodel//lib/active_model/attribute_methods.rb#430
   def attribute_method_patterns_cache; end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#429
+  # source://activemodel//lib/active_model/attribute_methods.rb#434
   def attribute_method_patterns_matching(method_name); end
 
   # Define a method `name` in `mod` that dispatches to `send`
   # using the given `extra` args. This falls back on `send`
   # if the called name cannot be compiled.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#438
+  # source://activemodel//lib/active_model/attribute_methods.rb#443
   def define_proxy_call(code_generator, name, proxy_target, parameters, *call_args, namespace:, as: T.unsafe(nil)); end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#408
+  # source://activemodel//lib/active_model/attribute_methods.rb#413
   def generated_attribute_methods; end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#397
+  # source://activemodel//lib/active_model/attribute_methods.rb#402
   def inherited(base); end
 
   # @return [Boolean]
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#412
+  # source://activemodel//lib/active_model/attribute_methods.rb#417
   def instance_method_already_implemented?(method_name); end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#404
+  # source://activemodel//lib/active_model/attribute_methods.rb#409
   def resolve_attribute_name(name); end
 end
 
-# source://activemodel//lib/active_model/attribute_methods.rb#465
+# source://activemodel//lib/active_model/attribute_methods.rb#470
 class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodPattern
   # @return [AttributeMethodPattern] a new instance of AttributeMethodPattern
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#470
+  # source://activemodel//lib/active_model/attribute_methods.rb#475
   def initialize(prefix: T.unsafe(nil), suffix: T.unsafe(nil), parameters: T.unsafe(nil)); end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#479
+  # source://activemodel//lib/active_model/attribute_methods.rb#484
   def match(method_name); end
 
-  # source://activemodel//lib/active_model/attribute_methods.rb#485
+  # source://activemodel//lib/active_model/attribute_methods.rb#490
   def method_name(attr_name); end
 
   # Returns the value of attribute parameters.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#466
+  # source://activemodel//lib/active_model/attribute_methods.rb#471
   def parameters; end
 
   # Returns the value of attribute prefix.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#466
+  # source://activemodel//lib/active_model/attribute_methods.rb#471
   def prefix; end
 
   # Returns the value of attribute proxy_target.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#466
+  # source://activemodel//lib/active_model/attribute_methods.rb#471
   def proxy_target; end
 
   # Returns the value of attribute suffix.
   #
-  # source://activemodel//lib/active_model/attribute_methods.rb#466
+  # source://activemodel//lib/active_model/attribute_methods.rb#471
   def suffix; end
 end
 
-# source://activemodel//lib/active_model/attribute_methods.rb#468
+# source://activemodel//lib/active_model/attribute_methods.rb#473
 class ActiveModel::AttributeMethods::ClassMethods::AttributeMethodPattern::AttributeMethod < ::Struct
   # Returns the value of attribute attr_name
   #
@@ -4945,7 +4945,7 @@ ActiveModel::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveModel::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activemodel//lib/active_model/gem_version.rb#13
-ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveModel::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # source://activemodel//lib/active_model/gem_version.rb#15
 ActiveModel::VERSION::STRING = T.let(T.unsafe(nil), String)
