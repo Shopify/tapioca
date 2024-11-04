@@ -107,12 +107,12 @@ module Tapioca
 
     sig { params(name: String).returns(T::Boolean) }
     def valid_method_name?(name)
-      Prism.parse("def self.#{name}(a); end").success?
+      Prism.parse_success?("def self.#{name}(a); end")
     end
 
     sig { params(name: String).returns(T::Boolean) }
     def valid_parameter_name?(name)
-      Prism.parse("def sentinel_method_name(#{name}:); end").success?
+      Prism.parse_success?("def sentinel_method_name(#{name}:); end")
     end
   end
 end
