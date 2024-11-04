@@ -503,7 +503,7 @@ class ActiveSupport::BroadcastLogger
   def <<(message); end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#116
-  def add(*args, &block); end
+  def add(*_arg0, **_arg1, &_arg2); end
 
   # Add logger(s) to the broadcast.
   #
@@ -522,7 +522,7 @@ class ActiveSupport::BroadcastLogger
   def close; end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#121
-  def debug(*args, &block); end
+  def debug(*_arg0, **_arg1, &_arg2); end
 
   # Sets the log level to Logger::DEBUG for the whole broadcast.
   #
@@ -538,7 +538,7 @@ class ActiveSupport::BroadcastLogger
   def debug?; end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#133
-  def error(*args, &block); end
+  def error(*_arg0, **_arg1, &_arg2); end
 
   # Sets the log level to Logger::ERROR for the whole broadcast.
   #
@@ -554,7 +554,7 @@ class ActiveSupport::BroadcastLogger
   def error?; end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#137
-  def fatal(*args, &block); end
+  def fatal(*_arg0, **_arg1, &_arg2); end
 
   # Sets the log level to Logger::FATAL for the whole broadcast.
   #
@@ -578,7 +578,7 @@ class ActiveSupport::BroadcastLogger
   def formatter=(formatter); end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#125
-  def info(*args, &block); end
+  def info(*_arg0, **_arg1, &_arg2); end
 
   # Sets the log level to Logger::INFO for the whole broadcast.
   #
@@ -603,7 +603,7 @@ class ActiveSupport::BroadcastLogger
   def local_level=(level); end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#116
-  def log(*args, &block); end
+  def log(*_arg0, **_arg1, &_arg2); end
 
   # Returns the value of attribute progname.
   #
@@ -638,10 +638,10 @@ class ActiveSupport::BroadcastLogger
   def stop_broadcasting_to(logger); end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#141
-  def unknown(*args, &block); end
+  def unknown(*_arg0, **_arg1, &_arg2); end
 
   # source://activesupport//lib/active_support/broadcast_logger.rb#129
-  def warn(*args, &block); end
+  def warn(*_arg0, **_arg1, &_arg2); end
 
   # Sets the log level to Logger::WARN for the whole broadcast.
   #
@@ -14691,7 +14691,7 @@ ActiveSupport::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 ActiveSupport::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
 # source://activesupport//lib/active_support/gem_version.rb#13
-ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), String)
+ActiveSupport::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
 # source://activesupport//lib/active_support/gem_version.rb#15
 ActiveSupport::VERSION::STRING = T.let(T.unsafe(nil), String)
@@ -17194,9 +17194,9 @@ end
 # source://activesupport//lib/active_support/core_ext/enumerable.rb#21
 class Enumerable::SoleItemExpectedError < ::StandardError; end
 
-# source://activesupport//lib/active_support/core_ext/object/json.rb#248
+# source://activesupport//lib/active_support/core_ext/object/json.rb#250
 class Exception
-  # source://activesupport//lib/active_support/core_ext/object/json.rb#249
+  # source://activesupport//lib/active_support/core_ext/object/json.rb#251
   def as_json(options = T.unsafe(nil)); end
 end
 
@@ -17904,9 +17904,9 @@ IO::READABLE = T.let(T.unsafe(nil), Integer)
 class IO::TimeoutError < ::IOError; end
 IO::WRITABLE = T.let(T.unsafe(nil), Integer)
 
-# source://activesupport//lib/active_support/core_ext/object/json.rb#236
+# source://activesupport//lib/active_support/core_ext/object/json.rb#237
 class IPAddr
-  # source://activesupport//lib/active_support/core_ext/object/json.rb#237
+  # source://activesupport//lib/active_support/core_ext/object/json.rb#238
   def as_json(options = T.unsafe(nil)); end
 end
 
@@ -17979,6 +17979,8 @@ class Integer < ::Numeric
   # source://activesupport//lib/active_support/core_ext/integer/time.rb#18
   def years; end
 end
+
+Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
 
 # source://activesupport//lib/active_support/core_ext/kernel/reporting.rb#3
 module Kernel
@@ -18089,19 +18091,6 @@ class LoadError < ::ScriptError
   #
   # source://activesupport//lib/active_support/core_ext/load_error.rb#6
   def is_missing?(location); end
-end
-
-# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#39
-class Method
-  # Methods are not duplicable:
-  #
-  #   method(:puts).duplicable? # => false
-  #   method(:puts).dup         # => TypeError: allocator undefined for Method
-  #
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#44
-  def duplicable?; end
 end
 
 # == Attribute Accessors per Thread
@@ -19911,9 +19900,9 @@ module Process
   end
 end
 
-# source://activesupport//lib/active_support/core_ext/object/json.rb#242
+# source://activesupport//lib/active_support/core_ext/object/json.rb#244
 class Process::Status
-  # source://activesupport//lib/active_support/core_ext/object/json.rb#243
+  # source://activesupport//lib/active_support/core_ext/object/json.rb#245
   def as_json(options = T.unsafe(nil)); end
 end
 
@@ -21283,17 +21272,4 @@ class URI::Generic
 
   # source://activesupport//lib/active_support/core_ext/object/json.rb#225
   def as_json(options = T.unsafe(nil)); end
-end
-
-# source://activesupport//lib/active_support/core_ext/object/duplicable.rb#49
-class UnboundMethod
-  # Unbound methods are not duplicable:
-  #
-  #   method(:puts).unbind.duplicable? # => false
-  #   method(:puts).unbind.dup         # => TypeError: allocator undefined for UnboundMethod
-  #
-  # @return [Boolean]
-  #
-  # source://activesupport//lib/active_support/core_ext/object/duplicable.rb#54
-  def duplicable?; end
 end
