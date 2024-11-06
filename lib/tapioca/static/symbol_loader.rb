@@ -51,16 +51,17 @@ module Tapioca
 
         sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
         def symbols_from_paths(paths)
-          output = Tempfile.create("sorbet") do |file|
-            file.write(Array(paths).join("\n"))
-            file.flush
+          model = Spoom::Model.new
 
-            symbol_table_json_from("@#{file.path.shellescape}")
+          paths.each do |path|
+            result = Prism.parse_file(path.to_s)
+            next unless result.success?
+
+            builder = Spoom::Model::Builder.new(model, path.to_s)
+            builder.visit(result.value)
           end
 
-          return Set.new if output.empty?
-
-          SymbolTableParser.parse_json(output)
+          model.symbols.keys.to_set
         end
 
         private
