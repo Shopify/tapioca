@@ -352,7 +352,7 @@ module Tapioca
       sig { returns(T::Array[String]) }
       def constants_from_requested_paths
         @constants_from_requested_paths ||= T.let(
-          Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a,
+          Static::SymbolLoader.symbols_from_paths(@requested_paths),
           T.nilable(T::Array[String]),
         )
       end

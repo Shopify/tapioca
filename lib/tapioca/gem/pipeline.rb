@@ -16,6 +16,9 @@ module Tapioca
       sig { returns(T.proc.params(error: String).void) }
       attr_reader :error_handler
 
+      sig { returns(Spoom::Model) }
+      attr_reader :model
+
       sig do
         params(
           gem: Gemfile::GemSpec,
@@ -38,8 +41,10 @@ module Tapioca
 
         @events = T.let([], T::Array[Gem::Event])
 
+        @model = T.let(Static::SymbolLoader.model_for_gem(@gem), Spoom::Model)
+
         @payload_symbols = T.let(Static::SymbolLoader.payload_symbols, T::Set[String])
-        @bootstrap_symbols = T.let(load_bootstrap_symbols(@gem), T::Set[String])
+        @bootstrap_symbols = T.let(@model.symbols.keys.to_set, T::Set[String])
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
@@ -54,7 +59,7 @@ module Tapioca
         @node_listeners << Gem::Listeners::SorbetRequiredAncestors.new(self)
         @node_listeners << Gem::Listeners::SorbetSignatures.new(self)
         @node_listeners << Gem::Listeners::Subconstants.new(self)
-        @node_listeners << Gem::Listeners::YardDoc.new(self) if include_doc
+        @node_listeners << Gem::Listeners::SpoomDoc.new(self) if include_doc
         @node_listeners << Gem::Listeners::ForeignConstants.new(self)
         @node_listeners << Gem::Listeners::SourceLocation.new(self) if include_loc
         @node_listeners << Gem::Listeners::RemoveEmptyPayloadScopes.new(self)
@@ -173,14 +178,6 @@ module Tapioca
       end
 
       private
-
-      sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
-      def load_bootstrap_symbols(gem)
-        engine_symbols = Static::SymbolLoader.engine_symbols(gem)
-        gem_symbols = Static::SymbolLoader.gem_symbols(gem)
-
-        gem_symbols.union(engine_symbols)
-      end
 
       # Events handling
 

@@ -19,13 +19,32 @@ module Tapioca
           T.must(@payload_symbols)
         end
 
-        sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
-        def engine_symbols(gem)
+        sig { params(gem: Gemfile::GemSpec).returns(Spoom::Model) }
+        def model_for_gem(gem)
+          model = Spoom::Model.new
+
+          add_gem_paths_to_model(gem, model)
+          add_engine_paths_to_model(gem, model)
+
+          model
+        end
+
+        sig { params(paths: T::Enumerable[Pathname]).returns(T::Array[String]) }
+        def symbols_from_paths(paths)
+          Spoom::Model.new.tap do |model|
+            add_paths_to_model(paths, model)
+          end.symbols.keys
+        end
+
+        private
+
+        sig { params(gem: Gemfile::GemSpec, model: Spoom::Model).void }
+        def add_engine_paths_to_model(gem, model)
           gem_engine = engines.find do |engine|
             gem.full_gem_path == engine.config.root.to_s
           end
 
-          return Set.new unless gem_engine
+          return unless gem_engine
 
           # https://github.com/rails/rails/commit/ebfca905db14020589c22e6937382e6f8f687664
           config = gem_engine.config
@@ -39,20 +58,18 @@ module Tapioca
             Pathname.glob("#{load_path}/**/*.rb")
           end
 
-          symbols_from_paths(paths)
+          add_paths_to_model(paths, model)
         rescue
-          Set.new
+          # Ignore errors when trying to load engine paths
         end
 
-        sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
-        def gem_symbols(gem)
-          symbols_from_paths(gem.files)
+        sig { params(gem: Gemfile::GemSpec, model: Spoom::Model).void }
+        def add_gem_paths_to_model(gem, model)
+          add_paths_to_model(gem.files, model)
         end
 
-        sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
-        def symbols_from_paths(paths)
-          model = Spoom::Model.new
-
+        sig { params(paths: T::Enumerable[Pathname], model: Spoom::Model).void }
+        def add_paths_to_model(paths, model)
           paths.each do |path|
             result = Prism.parse_file(path.to_s)
             next unless result.success?
@@ -60,8 +77,6 @@ module Tapioca
             builder = Spoom::Model::Builder.new(model, path.to_s)
             builder.visit(result.value)
           end
-
-          model.symbols.keys.to_set
         end
 
         private
