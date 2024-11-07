@@ -115,6 +115,14 @@ module RubyLsp
 
       sig { void }
       def check_gemfile_changes
+        gemfile_mtime = File.mtime("Gemfile")
+        lockfile_mtime = File.mtime("Gemfile.lock")
+
+        # If Gemfile is more recent than Gemfile.lock, bundle install hasn't been run yet
+        # If Gemfile.lock was modified less than 1 second after Gemfile, it's likely a version control system operation
+        return if gemfile_mtime > lockfile_mtime
+        return if (lockfile_mtime - gemfile_mtime) <= 1.0
+
         current_lockfile = File.read("Gemfile.lock")
         snapshot_lockfile = File.read(GEMFILE_LOCK_SNAPSHOT) if File.exist?(GEMFILE_LOCK_SNAPSHOT)
 
