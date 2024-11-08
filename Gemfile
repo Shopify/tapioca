@@ -23,9 +23,16 @@ end
 group :development, :test do
   if rails_version == "main"
     gem "rails", github: "rails/rails", branch: "main"
+    sqlite_version = ">= 2.0"
   else
     rails_version = CURRENT_RAILS_VERSION if rails_version == "current"
     gem "rails", "~> #{rails_version}.0"
+  end
+
+  if rails_version >= "7.2" || rails_version == "main"
+    sqlite_version = ">= 2.0"
+  else
+    sqlite_version = "~> 1.4"
   end
 
   gem "mutex_m"
@@ -35,7 +42,7 @@ group :development, :test do
   gem "sprockets"
   gem "state_machines"
   gem "activerecord-typedstore"
-  gem "sqlite3", "~>1.4"
+  gem "sqlite3", sqlite_version
   gem "identity_cache"
   gem "cityhash",
     git: "https://github.com/csfrancis/cityhash.git",

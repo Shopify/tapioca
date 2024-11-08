@@ -55,17 +55,13 @@ jobs:
           curl -OL https://github.com/google/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip
           unzip protoc-25.3-linux-x86_64.zip -d $HOME/.local
           export PATH="$PATH:$HOME/.local/bin"
-      - name: Remove Gemfile.lock
-        # Remove Gemfile.lock for Ruby head builds and non-Rails current builds
-        if: ${{ matrix.ruby == 'head' || matrix.rails != 'current' }}
-        run: "rm -f Gemfile.lock"
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
           rubygems: 3.5.11
           bundler: 2.5.11
+      - run: bundle install --jobs 4 --retry 3
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
