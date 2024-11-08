@@ -455,8 +455,9 @@ module Tapioca
                     sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
                     def upsert_all(attributes, returning: nil, unique_by: nil); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
-                    def where(*args, &blk); end
+                    sig { returns(PrivateAssociationRelationWhereChain) }
+                    sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
+                    def where(*args); end
                 <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -608,8 +609,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def unscope(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
-                    def where(*args, &blk); end
+                    sig { returns(PrivateRelationWhereChain) }
+                    sig { params(args: T.untyped).returns(PrivateRelation) }
+                    def where(*args); end
                 <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -660,7 +662,7 @@ module Tapioca
                     def sum(column_name = nil, &block); end
                   end
 
-                  class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
+                  class PrivateAssociationRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
                 <% if rails_version(">= 7.0") %>
@@ -762,7 +764,7 @@ module Tapioca
                     def sum(column_name = nil, &block); end
                   end
 
-                  class PrivateRelationWhereChain < PrivateRelation
+                  class PrivateRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
                 <% if rails_version(">= 7.0") %>
@@ -1171,8 +1173,9 @@ module Tapioca
                     sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
                     def upsert_all(attributes, returning: nil, unique_by: nil); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelationWhereChain) }
-                    def where(*args, &blk); end
+                    sig { returns(PrivateAssociationRelationWhereChain) }
+                    sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
+                    def where(*args); end
                 <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
@@ -1324,8 +1327,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def unscope(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelationWhereChain) }
-                    def where(*args, &blk); end
+                    sig { returns(PrivateRelationWhereChain) }
+                    sig { params(args: T.untyped).returns(PrivateRelation) }
+                    def where(*args); end
                 <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
@@ -1376,7 +1380,7 @@ module Tapioca
                     def sum(column_name = nil, &block); end
                   end
 
-                  class PrivateAssociationRelationWhereChain < PrivateAssociationRelation
+                  class PrivateAssociationRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
                 <% if rails_version(">= 7.0") %>
@@ -1478,7 +1482,7 @@ module Tapioca
                     def sum(column_name = nil, &block); end
                   end
 
-                  class PrivateRelationWhereChain < PrivateRelation
+                  class PrivateRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
                 <% if rails_version(">= 7.0") %>
