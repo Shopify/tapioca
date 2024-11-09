@@ -47,7 +47,7 @@ module RubyLsp
           outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
 
-          check_gemfile_changes
+          handle_gemfile_changes
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
@@ -114,14 +114,25 @@ module RubyLsp
       private
 
       sig { void }
-      def check_gemfile_changes
-        gemfile_mtime = File.mtime("Gemfile")
-        lockfile_mtime = File.mtime("Gemfile.lock")
+      def handle_gemfile_changes
+        return unless File.exist?(".git") && File.exist?(".ruby-lsp/shutdown-timestamp")
 
-        # If Gemfile is more recent than Gemfile.lock, bundle install hasn't been run yet
-        # If Gemfile.lock was modified less than 1 second after Gemfile, it's likely a version control system operation
-        return if gemfile_mtime > lockfile_mtime
-        return if (lockfile_mtime - gemfile_mtime) <= 1.0
+        git_reflog_output = %x(git reflog --date=iso | grep -E "checkout|pull" | head -n 1).strip
+        return if git_reflog_output.empty?
+
+        timestamp_string = T.must(git_reflog_output.match(/\{(.*)\}/))[1]
+        last_git_operation_time = Time.iso8601(T.must(timestamp_string).sub(" ", "T").delete(" "))
+
+        return if last_git_operation_time.nil?
+
+        ruby_lsp_stop_time = Time.iso8601(File.read(".ruby-lsp/shutdown-timestamp"))
+
+        $stderr.puts("ruby_lsp_stop_time: #{ruby_lsp_stop_time}") # TODO: Remove
+        $stderr.puts("last_git_operation_time: #{last_git_operation_time}") # TODO: Remove
+
+        # If the Ruby LSP was stopped shortly after the last git checkout/pull operation, we don't need to regenerate
+        # RBIs since any Gemfile.lock changes were likely from version control, not from running bundle install
+        return if (ruby_lsp_stop_time - last_git_operation_time) <= 15.0
 
         current_lockfile = File.read("Gemfile.lock")
         snapshot_lockfile = File.read(GEMFILE_LOCK_SNAPSHOT) if File.exist?(GEMFILE_LOCK_SNAPSHOT)

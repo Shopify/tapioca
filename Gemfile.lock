@@ -1,4 +1,15 @@
 GIT
+  remote: https://github.com/Shopify/ruby-lsp.git
+  revision: 06602886c19cad7f44101b143bdbba9a5fc40a0d
+  branch: ar/shutdown-timestamp
+  specs:
+    ruby-lsp (0.21.4)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 4)
+      sorbet-runtime (>= 0.5.10782)
+
+GIT
   remote: https://github.com/csfrancis/cityhash.git
   revision: 3cfc7d01f333c01811d5e834f1495eaa29f87c36
   ref: 3cfc7d01f333c01811d5e834f1495eaa29f87c36
@@ -303,13 +314,8 @@ GEM
       rubocop (~> 1.51)
     rubocop-sorbet (0.8.6)
       rubocop (>= 1)
-    ruby-lsp (0.19.1)
-      language_server-protocol (~> 3.17.0)
-      prism (>= 1.1, < 2.0)
-      rbs (>= 3, < 4)
-      sorbet-runtime (>= 0.5.10782)
-    ruby-lsp-rails (0.3.18)
-      ruby-lsp (>= 0.19.0, < 0.20.0)
+    ruby-lsp-rails (0.3.25)
+      ruby-lsp (>= 0.21.2, < 0.22.0)
     ruby-progressbar (1.13.0)
     shopify-money (3.0.0)
     sidekiq (7.3.2)
@@ -394,7 +400,7 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
-  ruby-lsp (>= 0.19.1)
+  ruby-lsp (>= 0.19.1)!
   ruby-lsp-rails (>= 0.3.18)
   shopify-money
   sidekiq
