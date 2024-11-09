@@ -20,6 +20,7 @@ module RubyLsp
       extend T::Sig
 
       GEMFILE_LOCK_SNAPSHOT = "tmp/tapioca/.gemfile_lock_snapshot"
+      GIT_OPERATION_THRESHOLD = 15.0 # seconds
 
       sig { void }
       def initialize
@@ -117,23 +118,32 @@ module RubyLsp
       def handle_gemfile_changes
         return unless File.exist?(".git") && File.exist?(".ruby-lsp/shutdown-timestamp")
 
-        git_reflog_output = %x(git reflog --date=iso | grep -E "checkout|pull" | head -n 1).strip
-        return if git_reflog_output.empty?
-
-        timestamp_string = T.must(git_reflog_output.match(/\{(.*)\}/))[1]
-        last_git_operation_time = Time.iso8601(T.must(timestamp_string).sub(" ", "T").delete(" "))
-
-        return if last_git_operation_time.nil?
+        git_timestamp = fetch_last_git_operation_time
+        return unless git_timestamp
 
         ruby_lsp_stop_time = Time.iso8601(File.read(".ruby-lsp/shutdown-timestamp"))
 
         $stderr.puts("ruby_lsp_stop_time: #{ruby_lsp_stop_time}") # TODO: Remove
-        $stderr.puts("last_git_operation_time: #{last_git_operation_time}") # TODO: Remove
+        $stderr.puts("git_timestamp: #{git_timestamp}") # TODO: Remove
 
         # If the Ruby LSP was stopped shortly after the last git checkout/pull operation, we don't need to regenerate
         # RBIs since any Gemfile.lock changes were likely from version control, not from running bundle install
-        return if (ruby_lsp_stop_time - last_git_operation_time) <= 15.0
+        return if (ruby_lsp_stop_time - git_timestamp) <= GIT_OPERATION_THRESHOLD
 
+        process_gemfile_changes
+      end
+
+      sig { returns(T.nilable(Time)) }
+      def fetch_last_git_operation_time
+        git_reflog_output = %x(git reflog --date=iso | grep -E "checkout|pull" | head -n 1).strip
+        return if git_reflog_output.empty?
+
+        timestamp_string = T.must(git_reflog_output.match(/\{(.*)\}/))[1]
+        Time.iso8601(T.must(timestamp_string).sub(" ", "T").delete(" "))
+      end
+
+      sig { returns(T.nilable(Integer)) }
+      def process_gemfile_changes
         current_lockfile = File.read("Gemfile.lock")
         snapshot_lockfile = File.read(GEMFILE_LOCK_SNAPSHOT) if File.exist?(GEMFILE_LOCK_SNAPSHOT)
 
