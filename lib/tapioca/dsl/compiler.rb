@@ -74,11 +74,7 @@ module Tapioca
         sig { returns(T::Enumerable[T::Class[T.anything]]) }
         def all_classes
           @all_classes ||= T.let(
-            if @@requested_constants.any?
-              @@requested_constants.grep(Class)
-            else
-              ObjectSpace.each_object(Class)
-            end,
+            all_modules.grep(Class).freeze,
             T.nilable(T::Enumerable[T::Class[T.anything]]),
           )
         end
@@ -87,10 +83,10 @@ module Tapioca
         def all_modules
           @all_modules ||= T.let(
             if @@requested_constants.any?
-              @@requested_constants.select { |k| k.is_a?(Module) }
+              @@requested_constants.grep(Module)
             else
-              ObjectSpace.each_object(Module)
-            end,
+              ObjectSpace.each_object(Module).to_a
+            end.freeze,
             T.nilable(T::Enumerable[Module]),
           )
         end
