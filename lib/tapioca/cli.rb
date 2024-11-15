@@ -24,6 +24,10 @@ module Tapioca
       default: false
 
     desc "init", "Get project ready for type checking"
+    option :tutorial,
+      type: :boolean,
+      desc: "Run tapioca init in tutorial mode where it explains what it's doing",
+      default: true
     def init
       # We need to make sure that trackers stay enabled until the `gem` command is invoked
       Runtime::Trackers.with_trackers_enabled do
