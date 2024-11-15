@@ -1268,13 +1268,13 @@ module Tapioca
             RB
           end
 
-          @project.require_real_gem("rails")
+          @project.require_real_gem("rails", ActiveSupport.gem_version.to_s)
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
           res = @project.tapioca("gem foo")
 
-          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.2.rbi", <<~RBI)
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.2.rbi", template(<<~RBI))
             # typed: true
 
             # DO NOT EDIT MANUALLY
@@ -1287,6 +1287,9 @@ module Tapioca
             class Foo::Engine < ::Rails::Engine
               class << self
                 def __callbacks; end
+            <% if rails_version(">= 8.0") %>
+                def __callbacks=(new_value); end
+            <% end %>
               end
             end
 
