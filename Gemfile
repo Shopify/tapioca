@@ -27,6 +27,11 @@ group :development, :test do
     rails_version = CURRENT_RAILS_VERSION if rails_version == "current"
     gem "rails", "~> #{rails_version}.0"
   end
+  if rails_version == "7.0"
+    gem "sqlite3", "~> 1.4"
+  else
+    gem "sqlite3"
+  end
 
   gem "mutex_m"
   gem "smart_properties"
@@ -35,7 +40,6 @@ group :development, :test do
   gem "sprockets"
   gem "state_machines"
   gem "activerecord-typedstore"
-  gem "sqlite3", "~>1.4"
   gem "identity_cache"
   gem "cityhash",
     git: "https://github.com/csfrancis/cityhash.git",
