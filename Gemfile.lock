@@ -158,7 +158,7 @@ GEM
     google-protobuf (4.28.3-x86_64-linux)
       bigdecimal
       rake (>= 13)
-    graphql (2.4.1)
+    graphql (2.4.4)
       base64
       fiber-storage
     hashdiff (1.1.1)
@@ -179,8 +179,8 @@ GEM
       faraday (>= 1.10, < 3.0)
       faraday-gzip (>= 1.0, < 3.0)
       rack (>= 0.2)
-    kramdown (2.4.0)
-      rexml
+    kramdown (2.5.1)
+      rexml (>= 3.3.9)
     kredis (1.7.0)
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -313,14 +313,14 @@ GEM
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
     smart_properties (1.17.0)
-    sorbet (0.5.11633)
-      sorbet-static (= 0.5.11633)
-    sorbet-runtime (0.5.11633)
-    sorbet-static (0.5.11633-universal-darwin)
-    sorbet-static (0.5.11633-x86_64-linux)
-    sorbet-static-and-runtime (0.5.11633)
-      sorbet (= 0.5.11633)
-      sorbet-runtime (= 0.5.11633)
+    sorbet (0.5.11647)
+      sorbet-static (= 0.5.11647)
+    sorbet-runtime (0.5.11647)
+    sorbet-static (0.5.11647-universal-darwin)
+    sorbet-static (0.5.11647-x86_64-linux)
+    sorbet-static-and-runtime (0.5.11647)
+      sorbet (= 0.5.11647)
+      sorbet-runtime (= 0.5.11647)
     spoom (1.5.0)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
@@ -375,7 +375,7 @@ DEPENDENCIES
   identity_cache
   irb
   json_api_client
-  kramdown (~> 2.4)
+  kramdown (~> 2.5)
   kredis
   minitest
   minitest-hooks
