@@ -277,7 +277,7 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # Add the syntax highlighter name to the 'class' attribute of the given attribute hash. And
   # overwrites or add a "language-LANG" part using the +lang+ parameter if +lang+ is not nil.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#409
+  # source://kramdown//lib/kramdown/converter/html.rb#417
   def add_syntax_highlighter_to_class_attr(attr, lang = T.unsafe(nil)); end
 
   # Dispatch the conversion of the element +el+ to a +convert_TYPE+ method using the +type+ of
@@ -286,79 +286,79 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/html.rb#57
   def convert(el, indent = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#272
+  # source://kramdown//lib/kramdown/converter/html.rb#283
   def convert_a(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#365
+  # source://kramdown//lib/kramdown/converter/html.rb#377
   def convert_abbreviation(el, _indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#77
   def convert_blank(_el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#141
+  # source://kramdown//lib/kramdown/converter/html.rb#145
   def convert_blockquote(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#268
+  # source://kramdown//lib/kramdown/converter/html.rb#279
   def convert_br(_el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#111
+  # source://kramdown//lib/kramdown/converter/html.rb#115
   def convert_codeblock(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#280
+  # source://kramdown//lib/kramdown/converter/html.rb#291
   def convert_codespan(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#260
+  # source://kramdown//lib/kramdown/converter/html.rb#271
   def convert_comment(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#178
+  # source://kramdown//lib/kramdown/converter/html.rb#189
   def convert_dd(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#174
+  # source://kramdown//lib/kramdown/converter/html.rb#185
   def convert_dl(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#190
+  # source://kramdown//lib/kramdown/converter/html.rb#201
   def convert_dt(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#319
+  # source://kramdown//lib/kramdown/converter/html.rb#331
   def convert_em(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#324
+  # source://kramdown//lib/kramdown/converter/html.rb#336
   def convert_entity(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#294
+  # source://kramdown//lib/kramdown/converter/html.rb#305
   def convert_footnote(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#145
+  # source://kramdown//lib/kramdown/converter/html.rb#149
   def convert_header(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#155
+  # source://kramdown//lib/kramdown/converter/html.rb#166
   def convert_hr(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#201
+  # source://kramdown//lib/kramdown/converter/html.rb#212
   def convert_html_element(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#276
+  # source://kramdown//lib/kramdown/converter/html.rb#287
   def convert_img(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#178
+  # source://kramdown//lib/kramdown/converter/html.rb#189
   def convert_li(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#351
+  # source://kramdown//lib/kramdown/converter/html.rb#363
   def convert_math(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#162
+  # source://kramdown//lib/kramdown/converter/html.rb#173
   def convert_ol(el, indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#86
   def convert_p(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#311
+  # source://kramdown//lib/kramdown/converter/html.rb#323
   def convert_raw(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#372
+  # source://kramdown//lib/kramdown/converter/html.rb#384
   def convert_root(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#347
+  # source://kramdown//lib/kramdown/converter/html.rb#359
   def convert_smart_quote(el, _indent); end
 
   # Helper method used by +convert_p+ to convert a paragraph that only contains a single :img
@@ -367,71 +367,71 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/html.rb#99
   def convert_standalone_image(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#319
+  # source://kramdown//lib/kramdown/converter/html.rb#331
   def convert_strong(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#238
+  # source://kramdown//lib/kramdown/converter/html.rb#249
   def convert_table(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#238
+  # source://kramdown//lib/kramdown/converter/html.rb#249
   def convert_tbody(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#248
+  # source://kramdown//lib/kramdown/converter/html.rb#259
   def convert_td(el, indent); end
 
   # source://kramdown//lib/kramdown/converter/html.rb#81
   def convert_text(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#238
+  # source://kramdown//lib/kramdown/converter/html.rb#249
   def convert_tfoot(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#238
+  # source://kramdown//lib/kramdown/converter/html.rb#249
   def convert_thead(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#238
+  # source://kramdown//lib/kramdown/converter/html.rb#249
   def convert_tr(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#339
+  # source://kramdown//lib/kramdown/converter/html.rb#351
   def convert_typographic_sym(el, _indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#162
+  # source://kramdown//lib/kramdown/converter/html.rb#173
   def convert_ul(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#228
+  # source://kramdown//lib/kramdown/converter/html.rb#239
   def convert_xml_comment(el, indent); end
 
-  # source://kramdown//lib/kramdown/converter/html.rb#228
+  # source://kramdown//lib/kramdown/converter/html.rb#239
   def convert_xml_pi(el, indent); end
 
   # Fixes the elements for use in a TOC entry.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#453
+  # source://kramdown//lib/kramdown/converter/html.rb#461
   def fix_for_toc_entry(elements); end
 
   # Return an HTML ordered list with the footnote content for the used footnotes.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#488
+  # source://kramdown//lib/kramdown/converter/html.rb#496
   def footnote_content; end
 
   # Format the given element as block HTML.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#397
+  # source://kramdown//lib/kramdown/converter/html.rb#405
   def format_as_block_html(name, attr, body, indent); end
 
   # Format the given element as block HTML with a newline after the start tag and indentation
   # before the end tag.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#403
+  # source://kramdown//lib/kramdown/converter/html.rb#411
   def format_as_indented_block_html(name, attr, body, indent); end
 
   # Format the given element as span HTML.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#392
+  # source://kramdown//lib/kramdown/converter/html.rb#400
   def format_as_span_html(name, attr, body); end
 
   # Generate and return an element tree for the table of contents.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#415
+  # source://kramdown//lib/kramdown/converter/html.rb#423
   def generate_toc_tree(toc, type, attr); end
 
   # The amount of indentation used when nesting HTML tags.
@@ -455,30 +455,30 @@ class Kramdown::Converter::Html < ::Kramdown::Converter::Base
 
   # Obfuscate the +text+ by using HTML entities.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#476
+  # source://kramdown//lib/kramdown/converter/html.rb#484
   def obfuscate(text); end
 
   # Remove all footnotes from the given elements.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#468
+  # source://kramdown//lib/kramdown/converter/html.rb#476
   def remove_footnotes(elements); end
 
   # Remove all link elements by unwrapping them.
   #
-  # source://kramdown//lib/kramdown/converter/html.rb#460
+  # source://kramdown//lib/kramdown/converter/html.rb#468
   def unwrap_links(elements); end
 end
 
-# source://kramdown//lib/kramdown/converter/html.rb#246
+# source://kramdown//lib/kramdown/converter/html.rb#257
 Kramdown::Converter::Html::ENTITY_NBSP = T.let(T.unsafe(nil), Kramdown::Utils::Entities::Entity)
 
-# source://kramdown//lib/kramdown/converter/html.rb#485
+# source://kramdown//lib/kramdown/converter/html.rb#493
 Kramdown::Converter::Html::FOOTNOTE_BACKLINK_FMT = T.let(T.unsafe(nil), String)
 
-# source://kramdown//lib/kramdown/converter/html.rb#328
+# source://kramdown//lib/kramdown/converter/html.rb#340
 Kramdown::Converter::Html::TYPOGRAPHIC_SYMS = T.let(T.unsafe(nil), Hash)
 
-# source://kramdown//lib/kramdown/converter/html.rb#159
+# source://kramdown//lib/kramdown/converter/html.rb#170
 Kramdown::Converter::Html::ZERO_TO_ONETWENTYEIGHT = T.let(T.unsafe(nil), Array)
 
 # Converts an element tree to the kramdown format.
@@ -495,148 +495,148 @@ class Kramdown::Converter::Kramdown < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/kramdown.rb#34
   def convert(el, opts = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#291
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#296
   def convert_a(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#377
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#382
   def convert_abbreviation(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#70
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#71
   def convert_blank(_el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#107
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#111
   def convert_blockquote(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#287
-  def convert_br(_el, _opts); end
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#292
+  def convert_br(_el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#103
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#107
   def convert_codeblock(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#324
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#329
   def convert_codespan(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#279
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#284
   def convert_comment(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#158
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#163
   def convert_dd(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#124
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#129
   def convert_dl(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#182
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#187
   def convert_dt(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#346
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#351
   def convert_em(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#356
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#361
   def convert_entity(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#329
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#334
   def convert_footnote(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#112
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#116
   def convert_header(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#120
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#125
   def convert_hr(_el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#195
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#200
   def convert_html_element(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#308
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#313
   def convert_img(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#130
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#135
   def convert_li(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#373
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#378
   def convert_math(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#124
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#129
   def convert_ol(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#88
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#92
   def convert_p(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#334
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#339
   def convert_raw(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#381
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#386
   def convert_root(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#369
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#374
   def convert_smart_quote(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#351
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#356
   def convert_strong(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#239
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#244
   def convert_table(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#260
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#265
   def convert_tbody(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#275
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#280
   def convert_td(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#76
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#77
   def convert_text(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#267
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#272
   def convert_tfoot(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#244
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#249
   def convert_thead(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#271
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#276
   def convert_tr(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#365
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#370
   def convert_typographic_sym(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#124
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#129
   def convert_ul(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#229
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#234
   def convert_xml_comment(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#229
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#234
   def convert_xml_pi(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#408
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#413
   def create_abbrev_defs; end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#399
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#404
   def create_footnote_defs; end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#389
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#394
   def create_link_defs; end
 
   # Return the IAL containing the attributes of the element +el+.
   #
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#419
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#424
   def ial_for_element(el); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#54
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#55
   def inner(el, opts = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/converter/kramdown.rb#444
+  # source://kramdown//lib/kramdown/converter/kramdown.rb#449
   def parse_title(attr); end
 end
 
-# source://kramdown//lib/kramdown/converter/kramdown.rb#74
+# source://kramdown//lib/kramdown/converter/kramdown.rb#75
 Kramdown::Converter::Kramdown::ESCAPED_CHAR_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://kramdown//lib/kramdown/converter/kramdown.rb#192
+# source://kramdown//lib/kramdown/converter/kramdown.rb#197
 Kramdown::Converter::Kramdown::HTML_ELEMENT_TYPES = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/converter/kramdown.rb#190
+# source://kramdown//lib/kramdown/converter/kramdown.rb#195
 Kramdown::Converter::Kramdown::HTML_TAGS_WITH_BODY = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/converter/kramdown.rb#360
+# source://kramdown//lib/kramdown/converter/kramdown.rb#365
 Kramdown::Converter::Kramdown::TYPOGRAPHIC_SYMS = T.let(T.unsafe(nil), Hash)
 
 # Converts an element tree to LaTeX.
@@ -665,7 +665,7 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
 
   # Return a LaTeX comment containing all attributes as 'key="value"' pairs.
   #
-  # source://kramdown//lib/kramdown/converter/latex.rb#599
+  # source://kramdown//lib/kramdown/converter/latex.rb#600
   def attribute_list(el); end
 
   # Dispatch the conversion of the element +el+ to a +convert_TYPE+ method using the +type+ of
@@ -674,10 +674,10 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/latex.rb#41
   def convert(el, opts = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#216
+  # source://kramdown//lib/kramdown/converter/latex.rb#217
   def convert_a(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#569
+  # source://kramdown//lib/kramdown/converter/latex.rb#570
   def convert_abbreviation(el, _opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#61
@@ -686,16 +686,16 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/latex.rb#110
   def convert_blockquote(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#209
+  # source://kramdown//lib/kramdown/converter/latex.rb#210
   def convert_br(_el, opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#87
   def convert_codeblock(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#239
+  # source://kramdown//lib/kramdown/converter/latex.rb#240
   def convert_codespan(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#205
+  # source://kramdown//lib/kramdown/converter/latex.rb#206
   def convert_comment(el, _opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#151
@@ -707,13 +707,13 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/latex.rb#147
   def convert_dt(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#263
+  # source://kramdown//lib/kramdown/converter/latex.rb#264
   def convert_em(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#533
+  # source://kramdown//lib/kramdown/converter/latex.rb#534
   def convert_entity(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#250
+  # source://kramdown//lib/kramdown/converter/latex.rb#251
   def convert_footnote(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#114
@@ -725,13 +725,13 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/latex.rb#155
   def convert_html_element(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#225
+  # source://kramdown//lib/kramdown/converter/latex.rb#226
   def convert_img(el, _opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#143
   def convert_li(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#556
+  # source://kramdown//lib/kramdown/converter/latex.rb#557
   def convert_math(el, _opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#129
@@ -740,13 +740,13 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/latex.rb#69
   def convert_p(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#255
+  # source://kramdown//lib/kramdown/converter/latex.rb#256
   def convert_raw(el, _opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#57
   def convert_root(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#550
+  # source://kramdown//lib/kramdown/converter/latex.rb#551
   def convert_smart_quote(el, opts); end
 
   # Helper method used by +convert_p+ to convert a paragraph that only contains a single :img
@@ -755,48 +755,48 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # source://kramdown//lib/kramdown/converter/latex.rb#80
   def convert_standalone_image(el, _opts, img); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#267
+  # source://kramdown//lib/kramdown/converter/latex.rb#268
   def convert_strong(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#177
+  # source://kramdown//lib/kramdown/converter/latex.rb#178
   def convert_table(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#189
+  # source://kramdown//lib/kramdown/converter/latex.rb#190
   def convert_tbody(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#201
+  # source://kramdown//lib/kramdown/converter/latex.rb#202
   def convert_td(el, opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#65
   def convert_text(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#193
+  # source://kramdown//lib/kramdown/converter/latex.rb#194
   def convert_tfoot(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#185
+  # source://kramdown//lib/kramdown/converter/latex.rb#186
   def convert_thead(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#197
+  # source://kramdown//lib/kramdown/converter/latex.rb#198
   def convert_tr(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#542
+  # source://kramdown//lib/kramdown/converter/latex.rb#543
   def convert_typographic_sym(el, _opts); end
 
   # source://kramdown//lib/kramdown/converter/latex.rb#129
   def convert_ul(el, opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#166
+  # source://kramdown//lib/kramdown/converter/latex.rb#167
   def convert_xml_comment(el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#170
+  # source://kramdown//lib/kramdown/converter/latex.rb#171
   def convert_xml_pi(_el, _opts); end
 
-  # source://kramdown//lib/kramdown/converter/latex.rb#522
+  # source://kramdown//lib/kramdown/converter/latex.rb#523
   def entity_to_latex(entity); end
 
   # Escape the special LaTeX characters in the string +str+.
   #
-  # source://kramdown//lib/kramdown/converter/latex.rb#618
+  # source://kramdown//lib/kramdown/converter/latex.rb#619
   def escape(str); end
 
   # Return the converted content of the children of +el+ as a string.
@@ -808,38 +808,38 @@ class Kramdown::Converter::Latex < ::Kramdown::Converter::Base
   # the method #attribute_list -- the resulting string is appended to both the \\begin and the
   # \\end lines of the LaTeX environment for easier post-processing of LaTeX environments.
   #
-  # source://kramdown//lib/kramdown/converter/latex.rb#582
+  # source://kramdown//lib/kramdown/converter/latex.rb#583
   def latex_environment(type, el, text); end
 
   # Return a string containing a valid \hypertarget command if the element has an ID defined, or
   # +nil+ otherwise. If the parameter +add_label+ is +true+, a \label command will also be used
   # additionally to the \hypertarget command.
   #
-  # source://kramdown//lib/kramdown/converter/latex.rb#590
+  # source://kramdown//lib/kramdown/converter/latex.rb#591
   def latex_link_target(el, add_label = T.unsafe(nil)); end
 
   # Normalize the abbreviation key so that it only contains allowed ASCII character
   #
-  # source://kramdown//lib/kramdown/converter/latex.rb#575
+  # source://kramdown//lib/kramdown/converter/latex.rb#576
   def normalize_abbreviation_key(key); end
 end
 
 # Inspired by Maruku: entity conversion table based on the one from htmltolatex
 # (http://sourceforge.net/projects/htmltolatex/), with some small adjustments/additions
 #
-# source://kramdown//lib/kramdown/converter/latex.rb#273
+# source://kramdown//lib/kramdown/converter/latex.rb#274
 Kramdown::Converter::Latex::ENTITY_CONV_TABLE = T.let(T.unsafe(nil), Hash)
 
-# source://kramdown//lib/kramdown/converter/latex.rb#605
+# source://kramdown//lib/kramdown/converter/latex.rb#606
 Kramdown::Converter::Latex::ESCAPE_MAP = T.let(T.unsafe(nil), Hash)
 
-# source://kramdown//lib/kramdown/converter/latex.rb#615
+# source://kramdown//lib/kramdown/converter/latex.rb#616
 Kramdown::Converter::Latex::ESCAPE_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://kramdown//lib/kramdown/converter/latex.rb#175
+# source://kramdown//lib/kramdown/converter/latex.rb#176
 Kramdown::Converter::Latex::TABLE_ALIGNMENT_CHAR = T.let(T.unsafe(nil), Hash)
 
-# source://kramdown//lib/kramdown/converter/latex.rb#537
+# source://kramdown//lib/kramdown/converter/latex.rb#538
 Kramdown::Converter::Latex::TYPOGRAPHIC_SYMS = T.let(T.unsafe(nil), Hash)
 
 # Converts a Kramdown::Document to a manpage in groff format. See man(7), groff_man(7) and
@@ -1714,7 +1714,7 @@ module Kramdown::Options
     # Merge the #defaults Hash with the *parsed* options from the given Hash, i.e. only valid option
     # names are considered and their value is run through the #parse method.
     #
-    # source://kramdown//lib/kramdown/options.rb#82
+    # source://kramdown//lib/kramdown/options.rb#83
     def merge(hash); end
 
     # Parse the given value +data+ as if it was a value for the option +name+ and return the parsed
@@ -1725,7 +1725,7 @@ module Kramdown::Options
     #
     # @raise [ArgumentError]
     #
-    # source://kramdown//lib/kramdown/options.rb#96
+    # source://kramdown//lib/kramdown/options.rb#97
     def parse(name, data); end
 
     # Ensures that the option value +val+ for the option called +name+ is a valid array. The
@@ -1736,7 +1736,7 @@ module Kramdown::Options
     #
     # Optionally, the array is checked for the correct size.
     #
-    # source://kramdown//lib/kramdown/options.rb#141
+    # source://kramdown//lib/kramdown/options.rb#142
     def simple_array_validator(val, name, size = T.unsafe(nil)); end
 
     # Ensures that the option value +val+ for the option called +name+ is a valid hash. The
@@ -1747,7 +1747,7 @@ module Kramdown::Options
     #
     # @raise [Kramdown::Error]
     #
-    # source://kramdown//lib/kramdown/options.rb#158
+    # source://kramdown//lib/kramdown/options.rb#159
     def simple_hash_validator(val, name); end
 
     # Converts the given String +data+ into a Symbol or +nil+ with the
@@ -1756,7 +1756,7 @@ module Kramdown::Options
     # - A leading colon is stripped from the string.
     # - An empty value or a value equal to "nil" results in +nil+.
     #
-    # source://kramdown//lib/kramdown/options.rb#122
+    # source://kramdown//lib/kramdown/options.rb#123
     def str_to_sym(data); end
   end
 end
@@ -1847,16 +1847,16 @@ class Kramdown::Options::Definition < ::Struct
   end
 end
 
-# source://kramdown//lib/kramdown/options.rb#396
+# source://kramdown//lib/kramdown/options.rb#406
 Kramdown::Options::SMART_QUOTES_ENTITIES = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/options.rb#397
+# source://kramdown//lib/kramdown/options.rb#407
 Kramdown::Options::SMART_QUOTES_STR = T.let(T.unsafe(nil), String)
 
-# source://kramdown//lib/kramdown/options.rb#336
+# source://kramdown//lib/kramdown/options.rb#346
 Kramdown::Options::TOC_LEVELS_ARRAY = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/options.rb#335
+# source://kramdown//lib/kramdown/options.rb#345
 Kramdown::Options::TOC_LEVELS_RANGE = T.let(T.unsafe(nil), Range)
 
 # This module contains all available parsers. A parser takes an input string and converts the
@@ -1901,19 +1901,19 @@ class Kramdown::Parser::Base
   # Modify the string +source+ to be usable by the parser (unifies line ending characters to
   # +\n+ and makes sure +source+ ends with a new line character).
   #
-  # source://kramdown//lib/kramdown/parser/base.rb#91
+  # source://kramdown//lib/kramdown/parser/base.rb#97
   def adapt_source(source); end
 
   # This helper method adds the given +text+ either to the last element in the +tree+ if it is a
   # +type+ element or creates a new text element with the given +type+.
   #
-  # source://kramdown//lib/kramdown/parser/base.rb#103
+  # source://kramdown//lib/kramdown/parser/base.rb#109
   def add_text(text, tree = T.unsafe(nil), type = T.unsafe(nil)); end
 
   # Extract the part of the StringScanner +strscan+ backed string specified by the +range+. This
   # method works correctly under Ruby 1.8 and Ruby 1.9.
   #
-  # source://kramdown//lib/kramdown/parser/base.rb#115
+  # source://kramdown//lib/kramdown/parser/base.rb#121
   def extract_string(range, strscan); end
 
   # The hash with the parsing options.
@@ -1930,7 +1930,7 @@ class Kramdown::Parser::Base
   #
   # @raise [NotImplementedError]
   #
-  # source://kramdown//lib/kramdown/parser/base.rb#79
+  # source://kramdown//lib/kramdown/parser/base.rb#85
   def parse; end
 
   # The root element of element tree that is created from the source string.
@@ -1945,7 +1945,7 @@ class Kramdown::Parser::Base
 
   # Add the given warning +text+ to the warning array.
   #
-  # source://kramdown//lib/kramdown/parser/base.rb#84
+  # source://kramdown//lib/kramdown/parser/base.rb#90
   def warning(text); end
 
   # The array with the parser warnings.
@@ -1960,7 +1960,7 @@ class Kramdown::Parser::Base
     # Initializes a new instance of the calling class and then calls the +#parse+ method that must
     # be implemented by each subclass.
     #
-    # source://kramdown//lib/kramdown/parser/base.rb#67
+    # source://kramdown//lib/kramdown/parser/base.rb#73
     def parse(source, options = T.unsafe(nil)); end
 
     private
@@ -1981,7 +1981,7 @@ class Kramdown::Parser::Html < ::Kramdown::Parser::Base
 
   # Parse the source string provided on initialization as HTML document.
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#586
+  # source://kramdown//lib/kramdown/parser/html.rb#593
   def parse; end
 end
 
@@ -1990,11 +1990,14 @@ end
 # source://kramdown//lib/kramdown/parser/html.rb#25
 module Kramdown::Parser::Html::Constants; end
 
-# source://kramdown//lib/kramdown/parser/html.rb#32
+# source://kramdown//lib/kramdown/parser/html.rb#33
 Kramdown::Parser::Html::Constants::HTML_ATTRIBUTE_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://kramdown//lib/kramdown/parser/html.rb#59
+# source://kramdown//lib/kramdown/parser/html.rb#60
 Kramdown::Parser::Html::Constants::HTML_BLOCK_ELEMENTS = T.let(T.unsafe(nil), Array)
+
+# source://kramdown//lib/kramdown/parser/html.rb#32
+Kramdown::Parser::Html::Constants::HTML_CDATA_RE = T.let(T.unsafe(nil), Regexp)
 
 # source://kramdown//lib/kramdown/parser/html.rb#30
 Kramdown::Parser::Html::Constants::HTML_COMMENT_RE = T.let(T.unsafe(nil), Regexp)
@@ -2002,16 +2005,16 @@ Kramdown::Parser::Html::Constants::HTML_COMMENT_RE = T.let(T.unsafe(nil), Regexp
 # The following elements are also parsed as raw since they need child elements that cannot
 # be expressed using kramdown syntax: colgroup table tbody thead tfoot tr ul ol
 #
-# source://kramdown//lib/kramdown/parser/html.rb#48
+# source://kramdown//lib/kramdown/parser/html.rb#49
 Kramdown::Parser::Html::Constants::HTML_CONTENT_MODEL = T.let(T.unsafe(nil), Hash)
 
-# source://kramdown//lib/kramdown/parser/html.rb#37
+# source://kramdown//lib/kramdown/parser/html.rb#38
 Kramdown::Parser::Html::Constants::HTML_CONTENT_MODEL_BLOCK = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#44
+# source://kramdown//lib/kramdown/parser/html.rb#45
 Kramdown::Parser::Html::Constants::HTML_CONTENT_MODEL_RAW = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#41
+# source://kramdown//lib/kramdown/parser/html.rb#42
 Kramdown::Parser::Html::Constants::HTML_CONTENT_MODEL_SPAN = T.let(T.unsafe(nil), Array)
 
 # :stopdoc:
@@ -2020,13 +2023,13 @@ Kramdown::Parser::Html::Constants::HTML_CONTENT_MODEL_SPAN = T.let(T.unsafe(nil)
 # source://kramdown//lib/kramdown/parser/html.rb#29
 Kramdown::Parser::Html::Constants::HTML_DOCTYPE_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://kramdown//lib/kramdown/parser/html.rb#66
+# source://kramdown//lib/kramdown/parser/html.rb#67
 Kramdown::Parser::Html::Constants::HTML_ELEMENT = T.let(T.unsafe(nil), Hash)
 
-# source://kramdown//lib/kramdown/parser/html.rb#63
+# source://kramdown//lib/kramdown/parser/html.rb#64
 Kramdown::Parser::Html::Constants::HTML_ELEMENTS_WITHOUT_BODY = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#35
+# source://kramdown//lib/kramdown/parser/html.rb#36
 Kramdown::Parser::Html::Constants::HTML_ENTITY_RE = T.let(T.unsafe(nil), Regexp)
 
 # source://kramdown//lib/kramdown/parser/html.rb#31
@@ -2036,152 +2039,152 @@ Kramdown::Parser::Html::Constants::HTML_INSTRUCTION_RE = T.let(T.unsafe(nil), Re
 # span HTML) and don't appear therefore!
 # script, textarea
 #
-# source://kramdown//lib/kramdown/parser/html.rb#56
+# source://kramdown//lib/kramdown/parser/html.rb#57
 Kramdown::Parser::Html::Constants::HTML_SPAN_ELEMENTS = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#34
+# source://kramdown//lib/kramdown/parser/html.rb#35
 Kramdown::Parser::Html::Constants::HTML_TAG_CLOSE_RE = T.let(T.unsafe(nil), Regexp)
 
-# source://kramdown//lib/kramdown/parser/html.rb#33
+# source://kramdown//lib/kramdown/parser/html.rb#34
 Kramdown::Parser::Html::Constants::HTML_TAG_RE = T.let(T.unsafe(nil), Regexp)
 
 # Converts HTML elements to native elements if possible.
 #
-# source://kramdown//lib/kramdown/parser/html.rb#197
+# source://kramdown//lib/kramdown/parser/html.rb#200
 class Kramdown::Parser::Html::ElementConverter
   include ::Kramdown::Parser::Html::Constants
   include ::Kramdown::Utils::Entities
 
   # @return [ElementConverter] a new instance of ElementConverter
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#216
+  # source://kramdown//lib/kramdown/parser/html.rb#219
   def initialize(root); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#384
+  # source://kramdown//lib/kramdown/parser/html.rb#388
   def convert_a(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#394
+  # source://kramdown//lib/kramdown/parser/html.rb#398
   def convert_b(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#417
+  # source://kramdown//lib/kramdown/parser/html.rb#421
   def convert_code(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#394
+  # source://kramdown//lib/kramdown/parser/html.rb#398
   def convert_em(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#408
+  # source://kramdown//lib/kramdown/parser/html.rb#412
   def convert_h1(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#408
+  # source://kramdown//lib/kramdown/parser/html.rb#412
   def convert_h2(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#408
+  # source://kramdown//lib/kramdown/parser/html.rb#412
   def convert_h3(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#408
+  # source://kramdown//lib/kramdown/parser/html.rb#412
   def convert_h4(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#408
+  # source://kramdown//lib/kramdown/parser/html.rb#412
   def convert_h5(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#408
+  # source://kramdown//lib/kramdown/parser/html.rb#412
   def convert_h6(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#394
+  # source://kramdown//lib/kramdown/parser/html.rb#398
   def convert_i(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#417
+  # source://kramdown//lib/kramdown/parser/html.rb#421
   def convert_pre(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#563
+  # source://kramdown//lib/kramdown/parser/html.rb#570
   def convert_script(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#394
+  # source://kramdown//lib/kramdown/parser/html.rb#398
   def convert_strong(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#460
+  # source://kramdown//lib/kramdown/parser/html.rb#465
   def convert_table(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#380
+  # source://kramdown//lib/kramdown/parser/html.rb#384
   def convert_textarea(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#375
+  # source://kramdown//lib/kramdown/parser/html.rb#379
   def extract_text(el, raw); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#575
+  # source://kramdown//lib/kramdown/parser/html.rb#582
   def handle_math_tag(el); end
 
   # @return [Boolean]
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#571
+  # source://kramdown//lib/kramdown/parser/html.rb#578
   def is_math_tag?(el); end
 
   # @return [Boolean]
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#503
+  # source://kramdown//lib/kramdown/parser/html.rb#508
   def is_simple_table?(el); end
 
   # Convert the element +el+ and its children.
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#225
+  # source://kramdown//lib/kramdown/parser/html.rb#228
   def process(el, do_conversion = T.unsafe(nil), preserve_text = T.unsafe(nil), parent = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#278
+  # source://kramdown//lib/kramdown/parser/html.rb#282
   def process_children(el, do_conversion = T.unsafe(nil), preserve_text = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#320
+  # source://kramdown//lib/kramdown/parser/html.rb#324
   def process_html_element(el, do_conversion = T.unsafe(nil), preserve_text = T.unsafe(nil)); end
 
   # Process the HTML text +raw+: compress whitespace (if +preserve+ is +false+) and convert
   # entities in entity elements.
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#291
+  # source://kramdown//lib/kramdown/parser/html.rb#295
   def process_text(raw, preserve = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#326
+  # source://kramdown//lib/kramdown/parser/html.rb#330
   def remove_text_children(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#359
+  # source://kramdown//lib/kramdown/parser/html.rb#363
   def remove_whitespace_children(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#369
+  # source://kramdown//lib/kramdown/parser/html.rb#373
   def set_basics(el, type, opts = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#349
+  # source://kramdown//lib/kramdown/parser/html.rb#353
   def strip_whitespace(el); end
 
-  # source://kramdown//lib/kramdown/parser/html.rb#330
+  # source://kramdown//lib/kramdown/parser/html.rb#334
   def wrap_text_children(el); end
 
   class << self
-    # source://kramdown//lib/kramdown/parser/html.rb#220
+    # source://kramdown//lib/kramdown/parser/html.rb#223
     def convert(root, el = T.unsafe(nil)); end
   end
 end
 
-# source://kramdown//lib/kramdown/parser/html.rb#393
+# source://kramdown//lib/kramdown/parser/html.rb#397
 Kramdown::Parser::Html::ElementConverter::EMPHASIS_TYPE_MAP = T.let(T.unsafe(nil), Hash)
 
-# source://kramdown//lib/kramdown/parser/html.rb#204
+# source://kramdown//lib/kramdown/parser/html.rb#207
 Kramdown::Parser::Html::ElementConverter::REMOVE_TEXT_CHILDREN = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#208
+# source://kramdown//lib/kramdown/parser/html.rb#211
 Kramdown::Parser::Html::ElementConverter::REMOVE_WHITESPACE_CHILDREN = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#213
+# source://kramdown//lib/kramdown/parser/html.rb#216
 Kramdown::Parser::Html::ElementConverter::SIMPLE_ELEMENTS = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#210
+# source://kramdown//lib/kramdown/parser/html.rb#213
 Kramdown::Parser::Html::ElementConverter::STRIP_WHITESPACE = T.let(T.unsafe(nil), Array)
 
-# source://kramdown//lib/kramdown/parser/html.rb#206
+# source://kramdown//lib/kramdown/parser/html.rb#209
 Kramdown::Parser::Html::ElementConverter::WRAP_TEXT_CHILDREN = T.let(T.unsafe(nil), Array)
 
 # Contains the parsing methods. This module can be mixed into any parser to get HTML parsing
 # functionality. The only thing that must be provided by the class are instance variable
 # parsing.
 #
-# source://kramdown//lib/kramdown/parser/html.rb#77
+# source://kramdown//lib/kramdown/parser/html.rb#78
 module Kramdown::Parser::Html::Parser
   include ::Kramdown::Parser::Html::Constants
 
@@ -2192,12 +2195,12 @@ module Kramdown::Parser::Html::Parser
   # element is already closed, ie. contains no body; the third parameter specifies whether the
   # body - and the end tag - need to be handled in case closed=false).
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#87
+  # source://kramdown//lib/kramdown/parser/html.rb#88
   def handle_html_start_tag(line = T.unsafe(nil)); end
 
   # Handle the raw HTML tag at the current position.
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#127
+  # source://kramdown//lib/kramdown/parser/html.rb#128
   def handle_raw_html_tag(name); end
 
   # Parses the given string for HTML attributes and returns the resulting hash.
@@ -2207,7 +2210,7 @@ module Kramdown::Parser::Html::Parser
   # If the optional +in_html_tag+ parameter is set to +false+, attributes are not modified to
   # contain only lowercase letters.
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#114
+  # source://kramdown//lib/kramdown/parser/html.rb#115
   def parse_html_attributes(str, line = T.unsafe(nil), in_html_tag = T.unsafe(nil)); end
 
   # Parse raw HTML from the current source position, storing the found elements in +el+.
@@ -2220,11 +2223,11 @@ module Kramdown::Parser::Html::Parser
   # When an HTML start tag is found, processing is deferred to #handle_html_start_tag,
   # providing the block given to this method.
   #
-  # source://kramdown//lib/kramdown/parser/html.rb#150
+  # source://kramdown//lib/kramdown/parser/html.rb#151
   def parse_raw_html(el, &block); end
 end
 
-# source://kramdown//lib/kramdown/parser/html.rb#139
+# source://kramdown//lib/kramdown/parser/html.rb#140
 Kramdown::Parser::Html::Parser::HTML_RAW_START = T.let(T.unsafe(nil), Regexp)
 
 # Used for parsing a document in kramdown format.
@@ -2271,6 +2274,7 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
   include ::Kramdown
   include ::Kramdown::Parser::Html::Constants
   include ::Kramdown::Parser::Html::Parser
+  include ::Kramdown::Utils::Html
 
   # Create a new Kramdown parser object with the given +options+.
   #
@@ -2307,7 +2311,7 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
   # source://kramdown//lib/kramdown/parser/kramdown/extensions.rb#96
   def handle_extension(name, opts, body, type, line_no = T.unsafe(nil)); end
 
-  # source://kramdown//lib/kramdown/parser/kramdown/html.rb#25
+  # source://kramdown//lib/kramdown/parser/kramdown/html.rb#26
   def handle_kramdown_html_tag(el, closed, handle_body); end
 
   # Normalize the link identifier.
@@ -2357,7 +2361,7 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
 
   # Parse the HTML at the current position as block-level HTML.
   #
-  # source://kramdown//lib/kramdown/parser/kramdown/html.rb#71
+  # source://kramdown//lib/kramdown/parser/kramdown/html.rb#73
   def parse_block_html; end
 
   # Parse the math block at the current location.
@@ -2521,7 +2525,7 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
   # Create a new block-level element, taking care of applying a preceding block IAL if it
   # exists. This method should always be used for creating a block-level element!
   #
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#305
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#306
   def new_block_el(*args); end
 
   # Parse all block-level elements in +text+ into the element +el+.
@@ -2544,23 +2548,23 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
   #
   # The parameter +text_type+ specifies the type which should be used for created text nodes.
   #
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#214
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#215
   def parse_spans(el, stop_re = T.unsafe(nil), parsers = T.unsafe(nil), text_type = T.unsafe(nil)); end
 
   # Reset the current parsing environment. The parameter +env+ can be used to set initial
   # values for one or more environment variables.
   #
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#253
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#254
   def reset_env(opts = T.unsafe(nil)); end
 
   # Restore the current parsing environment.
   #
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#268
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#269
   def restore_env(env); end
 
   # Return the current parsing environment.
   #
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#263
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#264
   def save_env; end
 
   # Create the needed span parser regexps.
@@ -2571,7 +2575,7 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
   # Update the given attributes hash +attr+ with the information from the inline attribute list
   # +ial+ and all referenced ALDs.
   #
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#274
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#275
   def update_attr_with_ial(attr, ial); end
 
   #
@@ -2586,7 +2590,7 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
 
   # Update the raw text for automatic ID generation.
   #
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#288
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#289
   def update_raw_text(item); end
 
   # Update the tree by parsing all :+raw_text+ elements with the span-level parser (resets the
@@ -2603,7 +2607,7 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
   # source://kramdown//lib/kramdown/parser/kramdown/list.rb#258
   def fetch_pattern(type, indentation); end
 
-  # source://kramdown//lib/kramdown/parser/kramdown.rb#200
+  # source://kramdown//lib/kramdown/parser/kramdown.rb#201
   def span_pattern_cache(stop_re, span_start); end
 
   class << self
@@ -2617,19 +2621,19 @@ class Kramdown::Parser::Kramdown < ::Kramdown::Parser::Base
     # to the registry. The method name is automatically derived from the +name+ or can explicitly
     # be set by using the +meth_name+ parameter.
     #
-    # source://kramdown//lib/kramdown/parser/kramdown.rb#328
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#329
     def define_parser(name, start_re, span_start = T.unsafe(nil), meth_name = T.unsafe(nil)); end
 
     # Return +true+ if there is a parser called +name+.
     #
     # @return [Boolean]
     #
-    # source://kramdown//lib/kramdown/parser/kramdown.rb#339
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#340
     def has_parser?(name); end
 
     # Return the Data structure for the parser +name+.
     #
-    # source://kramdown//lib/kramdown/parser/kramdown.rb#334
+    # source://kramdown//lib/kramdown/parser/kramdown.rb#335
     def parser(name = T.unsafe(nil)); end
   end
 end
@@ -2714,7 +2718,7 @@ Kramdown::Parser::Kramdown::DEFINITION_LIST_START = T.let(T.unsafe(nil), Regexp)
 
 # Struct class holding all the needed data for one block/span-level parser method.
 #
-# source://kramdown//lib/kramdown/parser/kramdown.rb#317
+# source://kramdown//lib/kramdown/parser/kramdown.rb#318
 class Kramdown::Parser::Kramdown::Data < ::Struct
   # Returns the value of attribute method
   #
@@ -2811,14 +2815,14 @@ Kramdown::Parser::Kramdown::HEADER_ID = T.let(T.unsafe(nil), Regexp)
 # source://kramdown//lib/kramdown/parser/kramdown/horizontal_rule.rb#14
 Kramdown::Parser::Kramdown::HR_START = T.let(T.unsafe(nil), Regexp)
 
-# source://kramdown//lib/kramdown/parser/kramdown/html.rb#68
+# source://kramdown//lib/kramdown/parser/kramdown/html.rb#70
 Kramdown::Parser::Kramdown::HTML_BLOCK_START = T.let(T.unsafe(nil), Regexp)
 
 # Mapping of markdown attribute value to content model. I.e. :raw when "0", :default when "1"
 # (use default content model for the HTML element), :span when "span", :block when block and
 # for everything else +nil+ is returned.
 #
-# source://kramdown//lib/kramdown/parser/kramdown/html.rb#21
+# source://kramdown//lib/kramdown/parser/kramdown/html.rb#22
 Kramdown::Parser::Kramdown::HTML_MARKDOWN_ATTR_MAP = T.let(T.unsafe(nil), Hash)
 
 # source://kramdown//lib/kramdown/parser/kramdown/html.rb#99
@@ -2838,7 +2842,7 @@ Kramdown::Parser::Kramdown::IAL_SPAN_START = T.let(T.unsafe(nil), Regexp)
 
 # Regexp for matching indentation (one tab or four spaces)
 #
-# source://kramdown//lib/kramdown/parser/kramdown.rb#344
+# source://kramdown//lib/kramdown/parser/kramdown.rb#345
 Kramdown::Parser::Kramdown::INDENT = T.let(T.unsafe(nil), Regexp)
 
 # source://kramdown//lib/kramdown/parser/kramdown/math.rb#41
@@ -2894,7 +2898,7 @@ Kramdown::Parser::Kramdown::LIST_START_UL = T.let(T.unsafe(nil), Regexp)
 
 # Regexp for matching the optional space (zero or up to three spaces)
 #
-# source://kramdown//lib/kramdown/parser/kramdown.rb#346
+# source://kramdown//lib/kramdown/parser/kramdown.rb#347
 Kramdown::Parser::Kramdown::OPT_SPACE = T.let(T.unsafe(nil), Regexp)
 
 # source://kramdown//lib/kramdown/parser/kramdown/paragraph.rb#28
@@ -2956,7 +2960,7 @@ Kramdown::Parser::Kramdown::TABLE_SEP_LINE = T.let(T.unsafe(nil), Regexp)
 # source://kramdown//lib/kramdown/parser/kramdown/table.rb#22
 Kramdown::Parser::Kramdown::TABLE_START = T.let(T.unsafe(nil), Regexp)
 
-# source://kramdown//lib/kramdown/parser/kramdown/html.rb#23
+# source://kramdown//lib/kramdown/parser/kramdown/html.rb#24
 Kramdown::Parser::Kramdown::TRAILING_WHITESPACE = T.let(T.unsafe(nil), Regexp)
 
 # source://kramdown//lib/kramdown/parser/kramdown/typographic_symbol.rb#14
@@ -3069,20 +3073,20 @@ module Kramdown::Utils::Entities
 
   # Return the entity for the given code point or name +point_or_name+.
   #
-  # source://kramdown//lib/kramdown/utils/entities.rb#334
+  # source://kramdown//lib/kramdown/utils/entities.rb#990
   def entity(point_or_name); end
 
   class << self
     # Return the entity for the given code point or name +point_or_name+.
     #
-    # source://kramdown//lib/kramdown/utils/entities.rb#334
+    # source://kramdown//lib/kramdown/utils/entities.rb#990
     def entity(point_or_name); end
   end
 end
 
 # Contains the mapping of code point (or name) to the actual Entity object.
 #
-# source://kramdown//lib/kramdown/utils/entities.rb#317
+# source://kramdown//lib/kramdown/utils/entities.rb#973
 Kramdown::Utils::Entities::ENTITY_MAP = T.let(T.unsafe(nil), Hash)
 
 # Array of arrays. Each sub-array specifies a code point and the associated name.
