@@ -210,10 +210,6 @@ module Tapioca
             query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
             # Remove the ones we know are private API
             query_methods -= [:all, :arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
-            # Remove "group" which needs a custom return type for GroupChains
-            query_methods -= [:group]
-            # Remove "where" which needs a custom return type for WhereChains
-            query_methods -= [:where]
             # Remove the methods that ...
             query_methods
               .grep_v(/_clause$/) # end with "_clause"
@@ -419,7 +415,7 @@ module Tapioca
 
         sig { void }
         def create_relation_where_chain_class
-          model.create_class(RelationWhereChainClassName, superclass_name: RelationClassName) do |klass|
+          model.create_class(RelationWhereChainClassName) do |klass|
             create_where_chain_methods(klass, RelationClassName)
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
           end
@@ -427,10 +423,7 @@ module Tapioca
 
         sig { void }
         def create_association_relation_where_chain_class
-          model.create_class(
-            AssociationRelationWhereChainClassName,
-            superclass_name: AssociationRelationClassName,
-          ) do |klass|
+          model.create_class(AssociationRelationWhereChainClassName) do |klass|
             create_where_chain_methods(klass, AssociationRelationClassName)
             klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
           end
@@ -560,27 +553,21 @@ module Tapioca
         sig { void }
         def create_relation_methods
           create_relation_method("all")
-          create_relation_method(
-            "group",
-            parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
-            ],
-            relation_return_type: RelationGroupChainClassName,
-            association_return_type: AssociationRelationGroupChainClassName,
-          )
-          create_relation_method(
-            "where",
-            parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
-            ],
-            relation_return_type: RelationWhereChainClassName,
-            association_return_type: AssociationRelationWhereChainClassName,
-          )
 
           QUERY_METHODS.each do |method_name|
             case method_name
+            when :where
+              create_where_relation_method
+            when :group
+              create_relation_method(
+                "group",
+                parameters: [
+                  create_rest_param("args", type: "T.untyped"),
+                  create_block_param("blk", type: "T.untyped"),
+                ],
+                relation_return_type: RelationGroupChainClassName,
+                association_return_type: AssociationRelationGroupChainClassName,
+              )
             when :distinct
               create_relation_method(
                 method_name.to_s,
@@ -1054,6 +1041,35 @@ module Tapioca
             parameters: parameters,
             return_type: return_type || "void",
           )
+        end
+
+        sig { void }
+        def create_where_relation_method
+          relation_methods_module.create_method("where") do |method|
+            method.add_rest_param("args")
+
+            method.add_sig do |sig|
+              sig.return_type = RelationWhereChainClassName
+            end
+
+            method.add_sig do |sig|
+              sig.add_param("args", "T.untyped")
+              sig.return_type = RelationClassName
+            end
+          end
+
+          association_relation_methods_module.create_method("where") do |method|
+            method.add_rest_param("args")
+
+            method.add_sig do |sig|
+              sig.return_type = AssociationRelationWhereChainClassName
+            end
+
+            method.add_sig do |sig|
+              sig.add_param("args", "T.untyped")
+              sig.return_type = AssociationRelationClassName
+            end
+          end
         end
 
         sig do
