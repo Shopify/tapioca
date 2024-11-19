@@ -1257,6 +1257,12 @@ module Tapioca
 
           res = @project.tapioca("gem foo")
 
+          expected_callbacks = if RUBY_VERSION >= "3.2"
+            "def __callbacks; end\n    def __callbacks=(new_value); end"
+          else
+            "def __callbacks; end"
+          end
+
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.2.rbi", <<~RBI)
             # typed: true
 
@@ -1269,7 +1275,7 @@ module Tapioca
 
             class Foo::Engine < ::Rails::Engine
               class << self
-                def __callbacks; end
+                #{expected_callbacks}
               end
             end
 
@@ -1281,7 +1287,7 @@ module Tapioca
         end
 
         it "does not crash while tracking `rbtrace` constants" do
-          @project.require_real_gem("rbtrace", "0.4.14")
+          @project.require_real_gem("rbtrace", "0.5.1")
           @project.bundle_install!
           result = @project.tapioca("gem rbtrace")
           assert_empty_stderr(result)

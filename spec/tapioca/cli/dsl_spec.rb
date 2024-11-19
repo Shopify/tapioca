@@ -1760,7 +1760,7 @@ module Tapioca
 
         it "generates RBIs for lower versions of activerecord-typedstore" do
           @project.require_real_gem("activerecord-typedstore", "1.4.0")
-          @project.require_real_gem("sqlite3", "1.7.3")
+          @project.require_real_gem("sqlite3", "~> 2.1")
           @project.bundle_install!
           @project.write!("lib/post.rb", <<~RB)
             require "active_record"
@@ -2206,7 +2206,7 @@ module Tapioca
 
           @project.require_mock_gem(foo)
           @project.require_real_gem("activerecord", require: "active_record")
-          @project.require_real_gem("sqlite3", "1.7.3")
+          @project.require_real_gem("sqlite3", "~> 2.1")
           @project.bundle_install!
 
           result = @project.tapioca("dsl Post")
@@ -3018,7 +3018,7 @@ module Tapioca
       describe "options for built-in compilers" do
         it "is able to pass 'untyped' to ActiveRecordColumns compiler" do
           @project.require_real_gem("activerecord")
-          @project.require_real_gem("sqlite3", "1.7.3")
+          @project.require_real_gem("sqlite3", "~> 2.1")
           @project.bundle_install!
           @project.write!("lib/post.rb", <<~RB)
             require "active_record"
