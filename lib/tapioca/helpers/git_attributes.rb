@@ -28,7 +28,8 @@ class GitAttributes
       # exist, we just return.
       return unless path.exist?
 
-      File.write(path.join(".gitattributes"), content)
+      git_attributes_path = path.join(".gitattributes")
+      File.write(git_attributes_path, content) unless git_attributes_path.exist?
     end
   end
 end
