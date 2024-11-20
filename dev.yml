@@ -5,6 +5,10 @@ type: ruby
 up:
   - ruby
   - bundler
+  # - custom:
+  #     name: Lefthook
+  #     met?:
+  #     meet: bundle exec lefthook install
 
 env:
   SRB_SKIP_GEM_RBIS: 'true'
