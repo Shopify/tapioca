@@ -51,6 +51,8 @@ module Tapioca
 
         sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
         def symbols_from_paths(paths)
+          return Set.new if paths.empty?
+
           output = Tempfile.create("sorbet") do |file|
             file.write(Array(paths).join("\n"))
             file.flush
