@@ -61,5 +61,8 @@ end
 group :test do
   gem "webmock"
 end
+group :development do
+  gem "lefthook"
+end
 
 gem "kramdown", "~> 2.5"
