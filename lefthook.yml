@@ -1,7 +1,10 @@
+# TODO: make this ignore non-Sorbet projects
+# TODO: consider how to handle monorepos with multiple Gemfile.lock files
 pre-commit:
   commands:
     tapioca-gem:
       glob: "Gemfile.lock"
       run: |
         echo "Changes were detected in Gemfile.lock. Running `tapioca gem`"
-        bin/tapioca gem --verify && bin/tapioca gem
+        # this should be bin/tapioca but that doesn't work Tapioca itself
+        bundle exec tapioca gem --verify && bundle exec tapioca gem
