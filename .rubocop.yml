@@ -45,6 +45,8 @@ Sorbet/TrueSigil:
   Include:
     - "**/*.rb"
     - "**/*.rake"
+  Exclude:
+    - "lib/ruby_lsp/tapioca/server_addon.rb"
 
 Style/CaseEquality:
   Enabled: false

@@ -277,6 +277,42 @@ class RubyLsp::Rails::CodeLens
   def test_command; end
 end
 
+# source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#12
+module RubyLsp::Rails::Common
+  # Log a message to the editor's output panel
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#20
+  def log_message(message); end
+
+  # Sends an error result to a request, if the request failed. DO NOT INVOKE THIS METHOD FOR NOTIFICATIONS! Use
+  # `log_message` instead, otherwise the client/server communication will go out of sync
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#26
+  def send_error_response(message); end
+
+  # Write a message to the client. Can be used for sending notifications to the editor
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#14
+  def send_message(message); end
+
+  # Sends a result back to the client
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#31
+  def send_result(result); end
+
+  # Handle possible errors for a notification. This should only be used for notifications, which means messages that
+  # do not return a response back to the client. Errors are logged to the editor's output panel
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#50
+  def with_notification_error_handling(notification_name, &block); end
+
+  # Handle possible errors for a request. This should only be used for requests, which means messages that return a
+  # response back to the client. Errors are returned as an error object back to the client
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#37
+  def with_request_error_handling(request_name, &block); end
+end
+
 # ![Definition demo](../../definition.gif)
 #
 # The [definition
@@ -644,6 +680,88 @@ class RubyLsp::Rails::RunnerClient::InitializationError < ::StandardError; end
 
 # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#46
 class RubyLsp::Rails::RunnerClient::MessageError < ::StandardError; end
+
+# source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#103
+class RubyLsp::Rails::Server
+  include ::RubyLsp::Rails::Common
+
+  # @return [Server] a new instance of Server
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#106
+  def initialize(stdout: T.unsafe(nil), override_default_output_device: T.unsafe(nil)); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#139
+  def execute(request, params); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#126
+  def start; end
+
+  private
+
+  # @return [Boolean]
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#267
+  def active_record_model?(const); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#298
+  def load_routes; end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#277
+  def pending_migrations_message; end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#255
+  def resolve_association_target(params); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#239
+  def resolve_database_info_from_model(model_name); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#188
+  def resolve_route_info(requirements); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#234
+  def route_location(name); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#287
+  def run_migrations; end
+end
+
+# source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#62
+class RubyLsp::Rails::ServerAddon
+  include ::RubyLsp::Rails::Common
+
+  # @return [ServerAddon] a new instance of ServerAddon
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#90
+  def initialize(stdout); end
+
+  # @raise [NotImplementedError]
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#98
+  def execute(request, params); end
+
+  # @raise [NotImplementedError]
+  #
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#94
+  def name; end
+
+  class << self
+    # Delegate `request` with `params` to the server add-on with the given `name`
+    #
+    # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#77
+    def delegate(name, request, params); end
+
+    # Instantiate all server addons and store them in a hash for easy access after we have discovered the classes
+    #
+    # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#82
+    def finalize_registrations!(stdout); end
+
+    # We keep track of runtime server add-ons the same way we track other add-ons, by storing classes that inherit
+    # from the base one
+    #
+    # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/server.rb#71
+    def inherited(child); end
+  end
+end
 
 # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/support/associations.rb#6
 module RubyLsp::Rails::Support; end
