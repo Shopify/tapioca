@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.20", "< 0.22")
+RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.22.1", "< 0.23")
 
 begin
   # The Tapioca add-on depends on the Rails add-on to add a runtime component to the runtime server. We can allow the
@@ -32,8 +32,7 @@ module RubyLsp
       sig { override.params(global_state: RubyLsp::GlobalState, outgoing_queue: Thread::Queue).void }
       def activate(global_state, outgoing_queue)
         @global_state = global_state
-        # TODO: Uncomment
-        # return unless @global_state.experimental_features
+        return unless @global_state.enabled_feature?(:tapioca_addon)
 
         @index = @global_state.index
         Thread.new do
@@ -67,7 +66,7 @@ module RubyLsp
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
         # TODO: Uncomment
-        # return unless T.must(@global_state).experimental_features
+        return unless T.must(@global_state).enabled_feature?(:tapioca_addon)
         return unless @rails_runner_client # Client is not ready
 
         constants = changes.flat_map do |change|
