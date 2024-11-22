@@ -160,6 +160,8 @@ module Tapioca
 
         processable_constants, unprocessable_constants = constant_map.partition { |_, v| !v.nil? }
 
+        processable_constants.select! { |_, v| v.is_a?(Module) }
+
         unless unprocessable_constants.empty? || ignore_missing
           unprocessable_constants.each do |name, _|
             say("Error: Cannot find constant '#{name}'", :red)
