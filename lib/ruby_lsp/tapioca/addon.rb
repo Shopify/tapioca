@@ -47,7 +47,7 @@ module RubyLsp
           outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
 
-          handle_gemfile_changes
+          generate_gem_rbis if lockfile_changed?
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
@@ -113,18 +113,16 @@ module RubyLsp
 
       private
 
-      sig { void }
-      def handle_gemfile_changes
-        return unless File.exist?(".git")
+      sig { returns(T::Boolean) }
+      def lockfile_changed?
+        return false unless Dir.exist?(".git")
 
         gemfile_status = %x(git status --porcelain Gemfile.lock).strip
-        return if gemfile_status.empty?
-
-        process_gemfile_changes
+        !gemfile_status.empty?
       end
 
-      sig { returns(T.nilable(Integer)) }
-      def process_gemfile_changes
+      sig { void }
+      def generate_gem_rbis
         current_lockfile = File.read("Gemfile.lock")
         snapshot_lockfile = File.read(GEMFILE_LOCK_SNAPSHOT) if File.exist?(GEMFILE_LOCK_SNAPSHOT)
 
