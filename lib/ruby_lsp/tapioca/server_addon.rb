@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca/internal"
+require_relative "lockfile_diff_parser"
 
 module RubyLsp
   module Tapioca
@@ -27,31 +28,22 @@ module RubyLsp
       end
 
       def gem(params)
-        snapshot_specs = parse_lockfile(params[:snapshot_lockfile])
-        current_specs = parse_lockfile(params[:current_lockfile])
+        gem_changes = LockfileDiffParser.new(params[:diff])
 
-        removed_gems = snapshot_specs.keys - current_specs.keys
-        changed_gems = current_specs.select { |name, version| snapshot_specs[name] != version }.keys
-
-        return $stdout.puts("No gem changes detected") if removed_gems.empty? && changed_gems.empty?
+        removed_gems = gem_changes.removed_gems
+        added_or_modified_gems = gem_changes.added_or_modified_gems
 
         if removed_gems.any?
           $stdout.puts("Removing RBIs for deleted gems: #{removed_gems.join(", ")}")
           FileUtils.rm_f(Dir.glob("sorbet/rbi/gems/{#{removed_gems.join(",")}}@*.rbi"))
         end
 
-        if changed_gems.any?
-          $stdout.puts("Generating RBIs for changed gems: #{changed_gems.join(", ")}")
+        if added_or_modified_gems.any?
+          $stdout.puts("Generating RBIs for added or modified gems: #{added_or_modified_gems.join(", ")}")
 
           load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
-          ::Tapioca::Cli.start(["gem"] + changed_gems)
+          ::Tapioca::Cli.start(["gem"] + added_or_modified_gems)
         end
-      end
-
-      def parse_lockfile(content)
-        return {} if content.to_s.empty?
-
-        Bundler::LockfileParser.new(content).specs.to_h { |spec| [spec.name, spec.version.to_s] }
       end
     end
   end
