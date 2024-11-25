@@ -170,7 +170,9 @@ module Tapioca
           raise Thor::Error, ""
         end
 
-        processable_constants.map { |_, constant| constant }
+        processable_constants
+          .map { |_, constant| constant }
+          .grep(Module)
       end
 
       sig { params(compiler_names: T::Array[String]).returns(T::Array[T.class_of(Tapioca::Dsl::Compiler)]) }
