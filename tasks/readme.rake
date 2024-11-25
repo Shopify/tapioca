@@ -29,7 +29,7 @@ task :readme do
   end
 
   def skip_option?(option)
-    option.name == "auth"
+    option.name == "auth" || option.hide
   end
 
   def option_value(option)
