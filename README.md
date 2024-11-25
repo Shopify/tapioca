@@ -489,8 +489,7 @@ Options:
                                                                                                    # Default: false
   -q,        [--quiet], [--no-quiet], [--skip-quiet]                                               # Suppresses file creation output
                                                                                                    # Default: false
-  -w,        [--workers=N]                                                                         # Number of parallel workers to use when generating RBIs (default: 2)
-                                                                                                   # Default: 2
+  -w,        [--workers=N]                                                                         # Number of parallel workers to use when generating RBIs (default: auto)
              [--rbi-max-line-length=N]                                                             # Set the max line length of generated RBIs. Signatures longer than the max line length will be wrapped
                                                                                                    # Default: 120
   -e,        [--environment=ENVIRONMENT]                                                           # The Rack/Rails environment to use when generating RBIs
@@ -949,7 +948,7 @@ dsl:
   exclude: []
   verify: false
   quiet: false
-  workers: 2
+  workers: 1
   rbi_max_line_length: 120
   environment: development
   list_compilers: false
