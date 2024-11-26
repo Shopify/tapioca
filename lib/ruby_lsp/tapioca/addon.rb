@@ -7,7 +7,7 @@ begin
   # The Tapioca add-on depends on the Rails add-on to add a runtime component to the runtime server. We can allow the
   # add-on to work outside of a Rails context in the future, but that may require Tapioca spawning its own runtime
   # server
-  require "ruby-lsp-rails"
+  require "ruby_lsp/ruby_lsp_rails/runner_client"
 rescue LoadError
   return
 end
