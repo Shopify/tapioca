@@ -144,6 +144,11 @@ module Tapioca
       type: :hash,
       desc: "Options to pass to the DSL compilers",
       default: {}
+    option :lsp_addon,
+      type: :boolean,
+      desc: "Generate DSL RBIs from the LSP addon. Internal to tapioca and not intended for end-users",
+      default: false,
+      hide: true
     def dsl(*constant_or_paths)
       set_environment(options)
 

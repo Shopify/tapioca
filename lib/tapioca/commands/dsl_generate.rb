@@ -19,7 +19,7 @@ module Tapioca
         purge_stale_dsl_rbi_files(rbi_files_to_purge)
         say("Done", :green)
 
-        if @auto_strictness
+        if @auto_strictness && !@lsp_addon
           say("")
           validate_rbi_files(
             command: default_command(:dsl, all_requested_constants.join(" ")),
