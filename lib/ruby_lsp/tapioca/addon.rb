@@ -27,6 +27,7 @@ module RubyLsp
         @rails_runner_client = T.let(nil, T.nilable(RubyLsp::Rails::RunnerClient))
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
         @file_checksums = T.let({}, T::Hash[String, String])
+        @outgoing_queue = T.let(nil, T.nilable(Thread::Queue))
       end
 
       sig { override.params(global_state: RubyLsp::GlobalState, outgoing_queue: Thread::Queue).void }
@@ -35,18 +36,22 @@ module RubyLsp
         return unless @global_state.enabled_feature?(:tapiocaAddon)
 
         @index = @global_state.index
+        @outgoing_queue = outgoing_queue
         Thread.new do
           # Get a handle to the Rails add-on's runtime client. The call to `rails_runner_client` will block this thread
           # until the server has finished booting, but it will not block the main LSP. This has to happen inside of a
           # thread
           addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.3.17", "< 0.4"), ::RubyLsp::Rails::Addon)
           @rails_runner_client = addon.rails_runner_client
-          outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
+          @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
-          puts "IncompatibleApiError: Cannot activate Tapioca LSP add-on"
+          @outgoing_queue << Notification.window_log_message(
+            "IncompatibleApiError: Cannot activate Tapioca LSP add-on",
+            type: Constant::MessageType::WARNING,
+          )
         end
       end
 
@@ -72,21 +77,7 @@ module RubyLsp
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
           next if path.end_with?("_test.rb", "_spec.rb")
-
-          case change[:type]
-          when Constant::FileChangeType::CREATED, Constant::FileChangeType::CHANGED
-            content = File.read(path)
-            current_checksum = Zlib.crc32(content).to_s
-
-            if change[:type] == Constant::FileChangeType::CHANGED && @file_checksums[path] == current_checksum
-              $stderr.puts "File has not changed. Skipping #{path}"
-              next
-            end
-
-            @file_checksums[path] = current_checksum
-          when Constant::FileChangeType::DELETED
-            @file_checksums.delete(path)
-          end
+          next unless file_updated?(change, path)
 
           entries = T.must(@index).entries_for(path)
           next unless entries
@@ -104,6 +95,37 @@ module RubyLsp
           request_name: "dsl",
           constants: constants,
         )
+      end
+
+      private
+
+      sig { params(change: T::Hash[Symbol, T.untyped], path: String).returns(T::Boolean) }
+      def file_updated?(change, path)
+        case change[:type]
+        when Constant::FileChangeType::CREATED
+          @file_checksums[path] = Zlib.crc32(File.read(path)).to_s
+          return true
+        when Constant::FileChangeType::CHANGED
+          current_checksum = Zlib.crc32(File.read(path)).to_s
+          if @file_checksums[path] == current_checksum
+            T.must(@outgoing_queue) << Notification.window_log_message(
+              "File has not changed. Skipping #{path}",
+              type: Constant::MessageType::INFO,
+            )
+          else
+            @file_checksums[path] = current_checksum
+            return true
+          end
+        when Constant::FileChangeType::DELETED
+          @file_checksums.delete(path)
+        else
+          T.must(@outgoing_queue) << Notification.window_log_message(
+            "Unexpected file change type: #{change[:type]}",
+            type: Constant::MessageType::WARNING,
+          )
+        end
+
+        false
       end
     end
   end
