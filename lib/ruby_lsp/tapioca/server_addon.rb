@@ -6,6 +6,11 @@ require "tapioca/internal"
 module RubyLsp
   module Tapioca
     class ServerAddon < ::RubyLsp::Rails::ServerAddon
+      def initialize(...)
+        super
+        @loaded_dsl = false
+      end
+
       def name
         "Tapioca"
       end
@@ -13,7 +18,12 @@ module RubyLsp
       def execute(request, params)
         case request
         when "dsl"
-          fork do
+          # Run DSL generation in-process for the first time to load Tapioca and speed up execution in the subsequent
+          # forks
+          if @loaded_dsl
+            fork { dsl(params) }
+          else
+            @loaded_dsl = true
             dsl(params)
           end
         end
