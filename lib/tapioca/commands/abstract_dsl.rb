@@ -77,6 +77,10 @@ module Tapioca
 
       sig { params(outpath: Pathname, quiet: T::Boolean).returns(T::Set[Pathname]) }
       def generate_dsl_rbi_files(outpath, quiet:)
+        if @lsp_addon
+          pipeline.active_compilers.each(&:reset_state)
+        end
+
         existing_rbi_files = existing_rbi_filenames(all_requested_constants)
 
         generated_files = pipeline.run do |constant, contents|

@@ -13,13 +13,17 @@ module RubyLsp
       def execute(request, params)
         case request
         when "dsl"
-          dsl(params)
+          fork do
+            dsl(params)
+          end
         end
       end
 
       private
 
       def dsl(params)
+        load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
+        ::Tapioca::Cli.start(["dsl", "--lsp_addon", "--workers=1"] + params[:constants])
       end
     end
   end
