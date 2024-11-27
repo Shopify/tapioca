@@ -77,7 +77,17 @@ module RubyLsp
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
           next if path.end_with?("_test.rb", "_spec.rb")
-          next unless file_updated?(change, path)
+
+          if file_updated?(change, path)
+            update_checksum(path)
+          elsif file_deleted?(change, path)
+            delete_checksum(path)
+          else
+            T.must(@outgoing_queue) << Notification.window_log_message(
+              "File has not changed. Skipping #{path}",
+              type: Constant::MessageType::WARNING,
+            )
+          end
 
           entries = T.must(@index).entries_for(path)
           next unless entries
@@ -103,29 +113,26 @@ module RubyLsp
       def file_updated?(change, path)
         case change[:type]
         when Constant::FileChangeType::CREATED
-          @file_checksums[path] = Zlib.crc32(File.read(path)).to_s
-          return true
+          true
         when Constant::FileChangeType::CHANGED
           current_checksum = Zlib.crc32(File.read(path)).to_s
-          if @file_checksums[path] == current_checksum
-            T.must(@outgoing_queue) << Notification.window_log_message(
-              "File has not changed. Skipping #{path}",
-              type: Constant::MessageType::WARNING,
-            )
-          else
-            @file_checksums[path] = current_checksum
-            return true
-          end
-        when Constant::FileChangeType::DELETED
-          @file_checksums.delete(path)
+          @file_checksums[path] != current_checksum
         else
-          T.must(@outgoing_queue) << Notification.window_log_message(
-            "Unexpected file change type: #{change[:type]}",
-            type: Constant::MessageType::WARNING,
-          )
+          T.absurd(change[:type])
         end
+      end
 
-        false
+      sig { params(change: T::Hash[Symbol, T.untyped], path: String).returns(T::Boolean) }
+      def file_deleted?(change)
+        change[:type] == Constant::FileChangeType::DELETED
+      end
+
+      def update_file_checksum(path)
+        @file_checksums[path] = Zlib.crc32(File.read(path)).to_s
+      end
+
+      def delete_file_checksum(path)
+        @file_checksums.delete(path)
       end
     end
   end
