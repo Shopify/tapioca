@@ -170,6 +170,7 @@ module Tapioca
         app_root: options[:app_root],
         halt_upon_load_error: options[:halt_upon_load_error],
         compiler_options: options[:compiler_options],
+        lsp_addon: options[:lsp_addon],
       }
 
       command = if options[:verify]
