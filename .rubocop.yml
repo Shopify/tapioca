@@ -12,6 +12,7 @@ AllCops:
   SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
+  - "spec/dummy/**/*"
   Include:
   - "sorbet/rbi/shims/**/*.rbi"
 
