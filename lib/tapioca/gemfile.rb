@@ -66,7 +66,7 @@ module Tapioca
 
     sig { returns([T::Enumerable[Spec], T::Array[String]]) }
     def materialize_deps
-      deps = definition.locked_gems.dependencies.values
+      deps = definition.locked_gems.dependencies.except(*@excluded_gems).values
       materialized_dependencies = definition.resolve.materialize(deps)
       missing_spec_names = materialized_dependencies.missing_specs.map(&:name).to_set
       missing_specs = materialized_dependencies.missing_specs.map do |spec|

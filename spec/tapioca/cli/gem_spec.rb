@@ -780,18 +780,20 @@ module Tapioca
 
         it "must respect exclude option" do
           @project.require_mock_gem(mock_gem("foo", "0.0.1"))
-          @project.require_mock_gem(mock_gem("bar", "0.3.0"))
+          @project.require_mock_gem(mock_gem("bar", "0.3.0", dependencies: ["actionpack"]))
           @project.require_mock_gem(mock_gem("baz", "0.0.2"))
           @project.bundle_install!
 
           result = @project.tapioca("gem --all --exclude foo bar")
 
           refute_includes(result.out, "Compiled bar")
+          refute_includes(result.out, "Compiled actionpack")
           assert_stdout_includes(result, "Compiled baz")
           refute_includes(result.out, "Compiled foo")
 
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
           refute_project_file_exist("sorbet/rbi/gems/bar@0.3.0.rbi")
+          refute_project_file_exist("sorbet/rbi/gems/actionpack@7.0.6.rbi")
           assert_project_file_exist("sorbet/rbi/gems/baz@0.0.2.rbi")
 
           assert_empty_stderr(result)
