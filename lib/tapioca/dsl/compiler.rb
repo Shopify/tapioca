@@ -51,6 +51,13 @@ module Tapioca
           @@requested_constants = constants # rubocop:disable Style/ClassVars
         end
 
+        sig { void }
+        def reset_state
+          @processable_constants = nil
+          @all_classes = nil
+          @all_modules = nil
+        end
+
         private
 
         sig do
