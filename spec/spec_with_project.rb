@@ -108,13 +108,20 @@ module Tapioca
     # `Path` can include patterns such as `*`, useful for testing RBIs for real gems
     sig { params(path: String).void }
     def assert_project_file_match(path)
-      assert(Dir[path].any?)
+      assert(@project.glob(path).any?)
     end
 
     # Refute that `path` exists inside `@project`
     sig { params(path: String).void }
     def refute_project_file_exist(path)
       refute(@project.file?(path))
+    end
+
+    # Refute that `path` exists inside `@project`
+    # `Path` can include patterns such as `*`, useful for testing RBIs for real gems
+    sig { params(path: String).void }
+    def refute_project_file_match(path)
+      refute(@project.glob(path).any?)
     end
 
     sig { params(strictness: String, file: String).void }
