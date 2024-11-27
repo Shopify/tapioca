@@ -47,7 +47,9 @@ module RubyLsp
           @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
 
-          generate_gem_rbis if git_repo? && lockfile_changed?
+          if git_repo?
+            lockfile_changed? ? generate_gem_rbis : cleanup_orphaned_rbis
+          end
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
@@ -153,6 +155,30 @@ module RubyLsp
           request_name: "gem",
           diff: T.must(@lockfile_diff),
         )
+      end
+
+      sig { void }
+      def cleanup_orphaned_rbis
+        untracked_files = %x(git ls-files --others --exclude-standard sorbet/rbi/gems/).lines.map(&:strip)
+        deleted_files = %x(git ls-files --deleted sorbet/rbi/gems/).lines.map(&:strip)
+
+        untracked_files.each do |file|
+          File.delete(file)
+
+          T.must(@outgoing_queue) << Notification.window_log_message(
+            "Deleted untracked RBI: #{file}",
+            type: Constant::MessageType::INFO,
+          )
+        end
+
+        deleted_files.each do |file|
+          %x(git checkout -- #{file})
+
+          T.must(@outgoing_queue) << Notification.window_log_message(
+            "Restored deleted RBI: #{file}",
+            type: Constant::MessageType::INFO,
+          )
+        end
       end
     end
   end
