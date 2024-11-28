@@ -10,6 +10,7 @@ require "google/protobuf"
 require "rake/testtask"
 require "rubocop/rake_task"
 require "zeitwerk"
+require "mocha/minitest"
 
 # Add-on related requires. These are not required by default, so we must list them in order to generate proper RBIs
 require "ruby_lsp/internal"

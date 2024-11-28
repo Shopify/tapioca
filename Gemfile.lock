@@ -205,6 +205,8 @@ GEM
       builder
       minitest (>= 5.0)
       ruby-progressbar
+    mocha (2.6.1)
+      ruby2_keywords (>= 0.0.5)
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
@@ -314,6 +316,7 @@ GEM
     ruby-lsp-rails (0.3.27)
       ruby-lsp (>= 0.22.0, < 0.23.0)
     ruby-progressbar (1.13.0)
+    ruby2_keywords (0.0.5)
     securerandom (0.3.1)
     shopify-money (3.0.0)
     sidekiq (7.3.5)
@@ -389,6 +392,7 @@ DEPENDENCIES
   minitest
   minitest-hooks
   minitest-reporters
+  mocha
   mutex_m
   nokogiri
   rails (~> 7.1.0)

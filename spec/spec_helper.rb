@@ -15,6 +15,7 @@ require "spec_reporter"
 require "dsl_spec_helper"
 require "spec_with_project"
 require "rails_spec_helper"
+require "mocha/minitest"
 
 backtrace_filter = Minitest::ExtensibleBacktraceFilter.default_filter
 backtrace_filter.add_filter(%r{gems/sorbet-runtime})
