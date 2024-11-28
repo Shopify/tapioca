@@ -58,6 +58,7 @@ group :development, :test do
   gem "bcrypt"
   gem "xpath"
   gem "kredis"
+  gem "kaminari-activerecord"
 end
 
 group :test do

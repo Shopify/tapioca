@@ -179,6 +179,10 @@ GEM
       faraday (>= 1.10, < 3.0)
       faraday-gzip (>= 1.0, < 3.0)
       rack (>= 0.2)
+    kaminari-activerecord (1.2.2)
+      activerecord
+      kaminari-core (= 1.2.2)
+    kaminari-core (1.2.2)
     kramdown (2.5.1)
       rexml (>= 3.3.9)
     kredis (1.7.0)
@@ -384,6 +388,7 @@ DEPENDENCIES
   identity_cache
   irb
   json_api_client
+  kaminari-activerecord
   kramdown (~> 2.5)
   kredis
   minitest
