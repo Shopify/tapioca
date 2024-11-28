@@ -77,7 +77,7 @@ module Tapioca
       def gems_to_generate(gem_names)
         return @bundle.dependencies if gem_names.empty?
 
-        gem_names.each_with_object([]) do |gem_name, gems|
+        (gem_names - @exclude).each_with_object([]) do |gem_name, gems|
           gem = @bundle.gem(gem_name)
 
           if gem.nil?
