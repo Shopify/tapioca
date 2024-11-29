@@ -12,7 +12,7 @@
 #
 # Start by requiring the standard library Mutex_m:
 #
-#   require "mutex_m.rb"
+#   require "mutex_m"
 #
 # From here you can extend an object with Mutex instance methods:
 #
@@ -32,61 +32,66 @@
 #   end
 #   obj = Foo.new
 #   # this obj can be handled like Mutex
+#
+# source://mutex_m/lib/mutex_m.rb#41
 module Mutex_m
-  # source://mutex_m//mutex_m.rb#111
+  # source://mutex_m/lib/mutex_m.rb#116
   def initialize(*args, **_arg1); end
 
-  # source://mutex_m//mutex_m.rb#64
+  # source://mutex_m/lib/mutex_m.rb#69
   def mu_extended; end
 
   # See Thread::Mutex#lock
   #
-  # source://mutex_m//mutex_m.rb#91
+  # source://mutex_m/lib/mutex_m.rb#96
   def mu_lock; end
 
   # See Thread::Mutex#locked?
   #
   # @return [Boolean]
   #
-  # source://mutex_m//mutex_m.rb#81
+  # source://mutex_m/lib/mutex_m.rb#86
   def mu_locked?; end
 
   # See Thread::Mutex#synchronize
   #
-  # source://mutex_m//mutex_m.rb#76
+  # source://mutex_m/lib/mutex_m.rb#81
   def mu_synchronize(&block); end
 
   # See Thread::Mutex#try_lock
   #
-  # source://mutex_m//mutex_m.rb#86
+  # source://mutex_m/lib/mutex_m.rb#91
   def mu_try_lock; end
 
   # See Thread::Mutex#unlock
   #
-  # source://mutex_m//mutex_m.rb#96
+  # source://mutex_m/lib/mutex_m.rb#101
   def mu_unlock; end
 
   # See Thread::Mutex#sleep
   #
-  # source://mutex_m//mutex_m.rb#101
+  # source://mutex_m/lib/mutex_m.rb#106
   def sleep(timeout = T.unsafe(nil)); end
 
   private
 
-  # source://mutex_m//mutex_m.rb#107
+  # source://mutex_m/lib/mutex_m.rb#112
   def mu_initialize; end
 
   class << self
-    # source://mutex_m//mutex_m.rb#54
+    # source://mutex_m/lib/mutex_m.rb#59
     def append_features(cl); end
 
-    # source://mutex_m//mutex_m.rb#46
+    # source://mutex_m/lib/mutex_m.rb#46
     def define_aliases(cl); end
 
-    # source://mutex_m//mutex_m.rb#59
+    # source://mutex_m/lib/mutex_m.rb#64
     def extend_object(obj); end
+
+    # source://mutex_m/lib/mutex_m.rb#54
+    def prepend_features(cl); end
   end
 end
 
-# source://mutex_m//mutex_m.rb#43
+# source://mutex_m/lib/mutex_m.rb#43
 Mutex_m::VERSION = T.let(T.unsafe(nil), String)
