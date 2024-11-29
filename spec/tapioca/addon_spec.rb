@@ -4,7 +4,7 @@
 require "spec_helper"
 
 module Tapioca
-  class CliSpec < SpecWithProject
+  class AddonSpec < SpecWithProject
     describe "Tapioca::Cli" do
       before do
         @command_stub = mock(run: nil)
