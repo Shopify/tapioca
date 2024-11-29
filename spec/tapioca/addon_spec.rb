@@ -23,7 +23,7 @@ module Tapioca
           options[:lsp_addon].nil?
         end.returns(@command_stub)
 
-        # Suppress the 'Unknown switche' warning
+        # Suppress the 'Unknown switches' warning
         capture_io { Cli.start(["dsl", "--another-flag"]) }
       end
     end
