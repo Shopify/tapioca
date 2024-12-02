@@ -372,7 +372,7 @@ module Tapioca
             return_type: "T.self_type",
           )
 
-          CALCULATION_METHODS.each do |method_name|
+          (CALCULATION_METHODS + [:size]).each do |method_name|
             case method_name
             when :average, :maximum, :minimum
               klass.create_method(
@@ -400,9 +400,9 @@ module Tapioca
                 ],
                 return_type: "T::Hash[T.untyped, Integer]",
               )
-            when :sum
+            when :sum, :size
               klass.create_method(
-                "sum",
+                method_name.to_s,
                 parameters: [
                   create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
                   create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
