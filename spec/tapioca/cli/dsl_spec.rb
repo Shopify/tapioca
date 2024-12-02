@@ -1158,10 +1158,10 @@ module Tapioca
                 sig { params(foo: T.untyped, bar: T.untyped).returns(String) }
                 def perform_async(foo, bar); end
 
-                sig { params(interval: T.any(DateTime, Time), foo: T.untyped, bar: T.untyped).returns(String) }
+                sig { params(interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone), foo: T.untyped, bar: T.untyped).returns(String) }
                 def perform_at(interval, foo, bar); end
 
-                sig { params(interval: Numeric, foo: T.untyped, bar: T.untyped).returns(String) }
+                sig { params(interval: T.any(Numeric, ActiveSupport::Duration), foo: T.untyped, bar: T.untyped).returns(String) }
                 def perform_in(interval, foo, bar); end
               end
 
