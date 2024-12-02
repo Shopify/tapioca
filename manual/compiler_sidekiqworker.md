@@ -23,10 +23,10 @@ class NotifierWorker
   sig { params(customer_id: T.untyped).returns(String) }
   def self.perform_async(customer_id); end
 
-  sig { params(interval: T.any(DateTime, Time), customer_id: T.untyped).returns(String) }
+  sig { params(interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone), customer_id: T.untyped).returns(String) }
   def self.perform_at(interval, customer_id); end
 
-  sig { params(interval: Numeric, customer_id: T.untyped).returns(String) }
+  sig { params(interval: T.any(T.any(Numeric, ActiveSupport::Duration), ActiveSupport::Duration), customer_id: T.untyped).returns(String) }
   def self.perform_in(interval, customer_id); end
 end
 ~~~
