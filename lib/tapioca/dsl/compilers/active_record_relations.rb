@@ -586,6 +586,22 @@ module Tapioca
                 parameters: parameters,
                 return_type: return_type,
               )
+            when :select
+              [relation_methods_module, association_relation_methods_module].each do |mod|
+                mod.create_method(method_name.to_s) do |method|
+                  method.add_rest_param("args")
+                  method.add_block_param("blk")
+
+                  method.add_sig do |sig|
+                    sig.add_param("args", "T.untyped")
+                    sig.return_type = mod == relation_methods_module ? RelationClassName : AssociationRelationClassName
+                  end
+                  method.add_sig do |sig|
+                    sig.add_param("blk", "T.proc.params(record: #{constant_name}).returns(T::Boolean)")
+                    sig.return_type = "T::Array[#{constant_name}]"
+                  end
+                end
+              end
             else
               create_relation_method(
                 method_name,
