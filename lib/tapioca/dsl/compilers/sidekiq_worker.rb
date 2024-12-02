@@ -54,11 +54,11 @@ module Tapioca
             # accept a datetime, time, or numeric but we're typing them differently so they
             # semantically make sense.
             at_params = [
-              create_param("interval", type: "T.any(DateTime, Time)"),
+              create_param("interval", type: "T.any(DateTime, Time, ActiveSupport::TimeWithZone)"),
               *async_params,
             ]
             in_params = [
-              create_param("interval", type: "Numeric"),
+              create_param("interval", type: "T.any(Numeric, ActiveSupport::Duration)"),
               *async_params,
             ]
 
