@@ -71,7 +71,8 @@ module RubyLsp
         log_message("Ruby LSP Rails booting server")
 
         stdin, stdout, stderr, wait_thread = Bundler.with_original_env do
-          Open3.popen3("bundle", "exec", "rails", "runner", "#{__dir__}/server.rb", "start")
+          path = Gem.loaded_specs["ruby-lsp-rails"].full_gem_path
+          Open3.popen3("bundle", "exec", "rails", "runner", "#{path}/lib/ruby_lsp/ruby_lsp_rails/server.rb", "start")
         end
 
         @stdin = T.let(stdin, IO)
