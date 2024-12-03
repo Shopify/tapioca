@@ -9,10 +9,8 @@ ActiveRecord::Migrator.migrations_paths = [File.expand_path("../test/dummy/db/mi
 ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __dir__)
 require "sorbet-runtime"
 require "rails/test_help"
-require "mocha/minitest"
 require "ruby_lsp/internal"
 require "ruby_lsp/test_helper"
-require "ruby_lsp/ruby_lsp_rails/addon"
 
 if defined?(DEBUGGER__)
   DEBUGGER__::CONFIG[:skip_path] =
