@@ -13,7 +13,6 @@ require "ruby_lsp/test_helper"
 
 module ActiveSupport
   class TestCase
-    extend T::Sig
     include RubyLsp::TestHelper
 
     def dummy_root
