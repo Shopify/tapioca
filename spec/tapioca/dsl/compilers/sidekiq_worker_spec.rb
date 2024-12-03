@@ -11,6 +11,12 @@ module Tapioca
           sig { void }
           def before_setup
             require "sidekiq"
+            Object.const_set(:ActiveSupportBackup, Object.send(:remove_const, :ActiveSupport)) # rubocop:disable RSpec/RemoveConst
+          end
+
+          sig { void }
+          def after_teardown
+            Object.const_set(:ActiveSupport, Object.send(:remove_const, :ActiveSupportBackup)) # rubocop:disable RSpec/RemoveConst
           end
 
           describe "initialize" do
