@@ -1,18 +1,21 @@
 # typed: true
 # frozen_string_literal: true
 
-require "test_helper"
+require "addon_spec_helper"
 require "ruby_lsp/ruby_lsp_rails/runner_client"
 
 module RubyLsp
-  module Rails
-    class RunnerClientTest < ActiveSupport::TestCase
-      setup do
+  module Tapioca
+    # class RunnerClientTest < ActiveSupport::TestCase
+    class AddonSpec < Minitest::Spec
+      # The approach here is based on tests within the Ruby LSP Rails gem
+
+      before do
         @outgoing_queue = Thread::Queue.new
-        @client = T.let(RunnerClient.new(@outgoing_queue), RunnerClient)
+        @client = T.let(RubyLsp::Rails::RunnerClient.new(@outgoing_queue), RubyLsp::Rails::RunnerClient)
       end
 
-      teardown do
+      after do
         @client.shutdown
 
         # On Windows, the server process sometimes takes a lot longer to shutdown and may end up getting force killed,
@@ -21,7 +24,7 @@ module RubyLsp
         @outgoing_queue.close
       end
 
-      test "server add-ons can log messages with the editor" do
+      it "generates DSL RBIs for a gem" do
         raise "RBI already exists" if File.exist?("sorbet/rbi/dsl/user.rbi")
 
         addon_path = File.expand_path("lib/ruby_lsp/tapioca/server_addon.rb")
