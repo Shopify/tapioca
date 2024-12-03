@@ -68,6 +68,40 @@ module Tapioca
                     sig { params(customer_id: T.untyped).returns(String) }
                     def perform_async(customer_id); end
 
+                    sig { params(interval: T.any(DateTime, Time), customer_id: T.untyped).returns(String) }
+                    def perform_at(interval, customer_id); end
+
+                    sig { params(interval: Numeric, customer_id: T.untyped).returns(String) }
+                    def perform_in(interval, customer_id); end
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:NotifierWorker))
+            end
+
+            it "generates correct RBI file for class with perform method when Activesupport is bundled" do
+              add_ruby_file("active_support.rb", <<~RUBY)
+                module ActiveSupport; end
+              RUBY
+
+              add_ruby_file("mailer.rb", <<~RUBY)
+                class NotifierWorker
+                  include Sidekiq::Worker
+                  def perform(customer_id)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class NotifierWorker
+                  class << self
+                    sig { params(customer_id: T.untyped).returns(String) }
+                    def perform_async(customer_id); end
+
                     sig { params(interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone), customer_id: T.untyped).returns(String) }
                     def perform_at(interval, customer_id); end
 

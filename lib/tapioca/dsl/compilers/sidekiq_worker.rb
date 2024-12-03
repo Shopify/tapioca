@@ -29,18 +29,18 @@ module Tapioca
       #   sig { params(customer_id: T.untyped).returns(String) }
       #   def self.perform_async(customer_id); end
       #
-      #   sig do
-      #     params(
-      #       interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone),
-      #       customer_id: T.untyped
-      #     ).returns(String)
-      #   end
+      #   sig { params(interval: T.any(DateTime, Time), customer_id: T.untyped).returns(String) }
       #   def self.perform_at(interval, customer_id); end
       #
-      #   sig { params(interval: T.any(Numeric, ActiveSupport::Duration), customer_id: T.untyped).returns(String) }
+      #   sig { params(interval: Numeric, customer_id: T.untyped).returns(String) }
       #   def self.perform_in(interval, customer_id); end
       # end
       # ~~~
+      #
+      # If your project uses `ActiveSupport` as well, then the compiler will automatically add its classes
+      # as accepted values for the `interval` parameter:
+      # * `self.perform_at` will also accept a `ActiveSupport::TimeWithZone` value
+      # * `self.perform_in` will also accept a `ActiveSupport::Duration` value
       class SidekiqWorker < Compiler
         extend T::Sig
 
@@ -58,12 +58,22 @@ module Tapioca
             # `perform_at` and is just an alias for `perform_in` so both methods technically
             # accept a datetime, time, or numeric but we're typing them differently so they
             # semantically make sense.
+            at_return_type = if defined?(ActiveSupport::TimeWithZone)
+              "T.any(DateTime, Time, ActiveSupport::TimeWithZone)"
+            else
+              "T.any(DateTime, Time)"
+            end
             at_params = [
-              create_param("interval", type: "T.any(DateTime, Time, ActiveSupport::TimeWithZone)"),
+              create_param("interval", type: at_return_type),
               *async_params,
             ]
+            in_return_type = if defined?(ActiveSupport::TimeWithZone)
+              "T.any(Numeric, ActiveSupport::Duration)"
+            else
+              "Numeric"
+            end
             in_params = [
-              create_param("interval", type: "T.any(Numeric, ActiveSupport::Duration)"),
+              create_param("interval", type: in_return_type),
               *async_params,
             ]
 
