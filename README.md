@@ -999,7 +999,16 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/Shopif
 
 ### DSL compilers
 
-Contributions to existing DSL compilers are welcome. However, new compilers that support DSLs for gems other than Rails should live outside of Tapioca. Please refer to [writing custom dsl compilers](https://github.com/Shopify/tapioca?tab=readme-ov-file#writing-custom-dsl-compilers) for more information.
+Tapioca ships with a small collection of high quality DSL compilers for popular Ruby gems that are used heavily at Shopify, like Rails and GraphQL. We encourage the community to contribute new DSL compilers, though they shouldn't necessarily live in the Tapioca repo itself.
+
+It's best for DSL compilers to be contributed directly to gems they apply to ([example](https://github.com/Shopify/measured/tree/main/lib/tapioca/dsl/compilers)). This way, when changes are made to the gem's DSL, the gem's DSL compiler can be updated at the same time and be versioned/released together.
+
+If an upstream gem's maintainers don't wish to host a DSL compiler themselves, you can propose contributing it to:
+
+1. Tapioca, if it's a gem that Shopify uses (ask us in an issue or PR)
+2. A third party DSL compiler repository, like [AngelList/Boba](https://github.com/angellist/boba). These are not supported by Shopify.
+
+For help writing a DSL compiler, please refer to [writing custom dsl compilers](https://github.com/Shopify/tapioca?tab=readme-ov-file#writing-custom-dsl-compilers).
 
 ## License
 
