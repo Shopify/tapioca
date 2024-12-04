@@ -9,14 +9,24 @@ module Tapioca
       class SidekiqWorkerSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::SidekiqWorker" do
           sig { void }
-          def before_setup
-            require "sidekiq"
+          def backup_activesupport
             Object.const_set(:ActiveSupportBackup, Object.send(:remove_const, :ActiveSupport)) # rubocop:disable RSpec/RemoveConst
           end
 
           sig { void }
-          def after_teardown
+          def restore_activesupport
             Object.const_set(:ActiveSupport, Object.send(:remove_const, :ActiveSupportBackup)) # rubocop:disable RSpec/RemoveConst
+          end
+
+          sig { void }
+          def before_setup
+            require "sidekiq"
+            backup_activesupport
+          end
+
+          sig { void }
+          def after_teardown
+            restore_activesupport
           end
 
           describe "initialize" do
@@ -87,9 +97,7 @@ module Tapioca
             end
 
             it "generates correct RBI file for class with perform method when Activesupport is bundled" do
-              add_ruby_file("active_support.rb", <<~RUBY)
-                module ActiveSupport; end
-              RUBY
+              restore_activesupport
 
               add_ruby_file("mailer.rb", <<~RUBY)
                 class NotifierWorker
@@ -117,7 +125,11 @@ module Tapioca
                 end
               RBI
 
-              assert_equal(expected, rbi_for(:NotifierWorker))
+              result = rbi_for(:NotifierWorker)
+
+              backup_activesupport
+
+              assert_equal(expected, result)
             end
 
             it "generates correct RBI file for class with perform method with signature" do
@@ -140,10 +152,10 @@ module Tapioca
                     sig { params(customer_id: ::Integer).returns(String) }
                     def perform_async(customer_id); end
 
-                    sig { params(interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone), customer_id: ::Integer).returns(String) }
+                    sig { params(interval: T.any(DateTime, Time), customer_id: ::Integer).returns(String) }
                     def perform_at(interval, customer_id); end
 
-                    sig { params(interval: T.any(Numeric, ActiveSupport::Duration), customer_id: ::Integer).returns(String) }
+                    sig { params(interval: Numeric, customer_id: ::Integer).returns(String) }
                     def perform_in(interval, customer_id); end
                   end
                 end
@@ -173,10 +185,10 @@ module Tapioca
                     sig { params(customer_id: T.untyped).returns(String) }
                     def perform_async(customer_id); end
 
-                    sig { params(interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone), customer_id: T.untyped).returns(String) }
+                    sig { params(interval: T.any(DateTime, Time), customer_id: T.untyped).returns(String) }
                     def perform_at(interval, customer_id); end
 
-                    sig { params(interval: T.any(Numeric, ActiveSupport::Duration), customer_id: T.untyped).returns(String) }
+                    sig { params(interval: Numeric, customer_id: T.untyped).returns(String) }
                     def perform_in(interval, customer_id); end
                   end
                 end
@@ -211,7 +223,7 @@ module Tapioca
                     sig { params(customer_id: T.untyped, other_id: T.untyped).returns(String) }
                     def perform_async(customer_id, other_id); end
 
-                    sig { params(interval: T.any(Numeric, ActiveSupport::Duration), customer_id: T.untyped, other_id: T.untyped).returns(String) }
+                    sig { params(interval: Numeric, customer_id: T.untyped, other_id: T.untyped).returns(String) }
                     def perform_in(interval, customer_id, other_id); end
                   end
                 end
