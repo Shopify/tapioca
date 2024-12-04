@@ -11,6 +11,7 @@ module Tapioca
           sig { void }
           def before_setup
             require "graphql"
+            GraphQL.eager_load!
           end
 
           describe "initialize" do

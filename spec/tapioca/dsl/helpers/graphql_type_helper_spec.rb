@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "graphql"
 require "tapioca/dsl/helpers/graphql_type_helper"
 
 module Tapioca
@@ -10,6 +9,12 @@ module Tapioca
     module Helpers
       class GraphqlTypeHelperSpec < Minitest::Spec
         extend T::Sig
+
+        sig { void }
+        def before_setup
+          require "graphql"
+          GraphQL.eager_load!
+        end
 
         it "generates the expected sorbet type expression when using type GraphQL::Types::Boolean" do
           type = GraphQL::Types::Boolean
