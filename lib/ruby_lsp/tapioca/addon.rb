@@ -13,6 +13,7 @@ rescue LoadError
 end
 
 require "zlib"
+require "open3"
 
 module RubyLsp
   module Tapioca
@@ -133,9 +134,11 @@ module RubyLsp
         false
       end
 
-      sig { returns(T::Boolean) }
+      sig { returns(T.nilable(T::Boolean)) }
       def git_repo?
-        Dir.exist?(".git")
+        _, _, status = Open3.capture3("git rev-parse --is-inside-work-tree")
+
+        status.success?
       end
 
       sig { returns(T::Boolean) }
