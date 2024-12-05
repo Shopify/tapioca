@@ -9,8 +9,24 @@ module Tapioca
       class SidekiqWorkerSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::SidekiqWorker" do
           sig { void }
+          def backup_activesupport
+            Object.const_set(:ActiveSupportBackup, Object.send(:remove_const, :ActiveSupport)) # rubocop:disable RSpec/RemoveConst
+          end
+
+          sig { void }
+          def restore_activesupport
+            Object.const_set(:ActiveSupport, Object.send(:remove_const, :ActiveSupportBackup)) # rubocop:disable RSpec/RemoveConst
+          end
+
+          sig { void }
           def before_setup
             require "sidekiq"
+            backup_activesupport
+          end
+
+          sig { void }
+          def after_teardown
+            restore_activesupport
           end
 
           describe "initialize" do
@@ -78,6 +94,42 @@ module Tapioca
               RBI
 
               assert_equal(expected, rbi_for(:NotifierWorker))
+            end
+
+            it "generates correct RBI file for class with perform method when Activesupport is bundled" do
+              restore_activesupport
+
+              add_ruby_file("mailer.rb", <<~RUBY)
+                class NotifierWorker
+                  include Sidekiq::Worker
+                  def perform(customer_id)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class NotifierWorker
+                  class << self
+                    sig { params(customer_id: T.untyped).returns(String) }
+                    def perform_async(customer_id); end
+
+                    sig { params(interval: T.any(DateTime, Time, ActiveSupport::TimeWithZone), customer_id: T.untyped).returns(String) }
+                    def perform_at(interval, customer_id); end
+
+                    sig { params(interval: T.any(Numeric, ActiveSupport::Duration), customer_id: T.untyped).returns(String) }
+                    def perform_in(interval, customer_id); end
+                  end
+                end
+              RBI
+
+              result = rbi_for(:NotifierWorker)
+
+              backup_activesupport
+
+              assert_equal(expected, result)
             end
 
             it "generates correct RBI file for class with perform method with signature" do
