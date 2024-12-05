@@ -78,7 +78,7 @@ module Tapioca
             constant.attribute_types.filter_map do |name, value|
               next unless handle_method_pattern?(pattern)
 
-              [pattern.method_name(name), type_for(value)]
+              [pattern.method_name(name), type_for(name, value)]
             end
           end
         end
@@ -99,8 +99,17 @@ module Tapioca
           HANDLED_METHOD_TARGETS.include?(target.to_s)
         end
 
+        sig { params(attribute_name: ::String, attribute_type_value: T.untyped).returns(::String) }
+        def type_for(attribute_name, attribute_type_value)
+          type = if constant.respond_to?(:__tapioca_attribute_types)
+            T.unsafe(constant).__tapioca_attribute_types[attribute_name]
+          end
+
+          type ? type.to_s : parse_attribute_type(attribute_type_value)
+        end
+
         sig { params(attribute_type_value: T.untyped).returns(::String) }
-        def type_for(attribute_type_value)
+        def parse_attribute_type(attribute_type_value)
           type = case attribute_type_value
           when ActiveModel::Type::Boolean
             "T::Boolean"
