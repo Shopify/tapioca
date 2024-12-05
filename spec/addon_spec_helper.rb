@@ -19,7 +19,7 @@ module ActiveSupport
       File.expand_path("#{__dir__}/dummy")
     end
 
-    sig { params(server: RubyLsp::Server).returns(RubyLsp::Result) }
+    # sig { params(server: RubyLsp::Server).returns(RubyLsp::Result) }
     def pop_result(server)
       result = server.pop_response
       result = server.pop_response until result.is_a?(RubyLsp::Result) || result.is_a?(RubyLsp::Error)
