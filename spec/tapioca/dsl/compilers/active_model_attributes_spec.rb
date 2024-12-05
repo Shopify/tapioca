@@ -189,6 +189,37 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:Shop))
             end
+
+            it "generates method sigs for attribute with custom sigs" do
+              add_ruby_file("shop.rb", <<~RUBY)
+                class Owner
+                end
+
+                class Shop
+                  include ActiveModel::Attributes
+
+                  attribute :owner
+
+                  def self.__tapioca_attribute_types
+                    { 'owner' => Owner }
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Shop
+                  sig { returns(Owner) }
+                  def owner; end
+
+                  sig { params(value: Owner).returns(Owner) }
+                  def owner=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Shop))
+            end
           end
         end
       end
