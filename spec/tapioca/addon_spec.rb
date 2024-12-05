@@ -1,6 +1,11 @@
 # typed: true
 # frozen_string_literal: true
 
+unless ENV["LSP_TESTS"]
+  puts "Skipping LSP tests"
+  return
+end
+
 require "addon_spec_helper"
 require "ruby_lsp/ruby_lsp_rails/runner_client"
 
