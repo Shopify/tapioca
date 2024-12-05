@@ -158,7 +158,7 @@ GEM
     google-protobuf (4.29.0-x86_64-linux)
       bigdecimal
       rake (>= 13)
-    graphql (2.4.5)
+    graphql (2.4.6)
       base64
       fiber-storage
     hashdiff (1.1.1)

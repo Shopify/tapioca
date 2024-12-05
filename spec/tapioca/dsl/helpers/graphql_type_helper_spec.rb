@@ -13,7 +13,6 @@ module Tapioca
         sig { void }
         def before_setup
           require "graphql"
-          GraphQL.eager_load!
         end
 
         it "generates the expected sorbet type expression when using type GraphQL::Types::Boolean" do
