@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca/internal"
+require "minitest/autorun"
 require "minitest/spec"
 require "minitest/hooks/default"
 require "minitest/reporters"

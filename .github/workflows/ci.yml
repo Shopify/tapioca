@@ -77,7 +77,7 @@ jobs:
       matrix:
         ruby: ["3.3"]
         rails: ["current"]
-    name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }}
+    name: LSP tests
     env:
       RAILS_VERSION: ${{ matrix.rails }}
     steps:
