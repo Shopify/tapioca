@@ -14,6 +14,7 @@ end
 
 require "zlib"
 require "open3"
+require_relative "lockfile_diff_parser"
 
 module RubyLsp
   module Tapioca
@@ -153,11 +154,33 @@ module RubyLsp
 
       sig { void }
       def generate_gem_rbis
-        T.must(@rails_runner_client).delegate_notification(
-          server_addon_name: "Tapioca",
-          request_name: "gem",
-          diff: T.must(@lockfile_diff),
-        )
+        gem_changes = LockfileDiffParser.new(@lockfile_diff)
+
+        removed_gems = gem_changes.removed_gems
+        added_or_modified_gems = gem_changes.added_or_modified_gems
+
+        if added_or_modified_gems.any?
+          # Resetting BUNDLE_GEMFILE to root folder to use the project's Gemfile instead of Ruby LSP's composed Gemfile
+          stdout, stderr, status = T.unsafe(Open3).capture3(
+            { "BUNDLE_GEMFILE" => "Gemfile" },
+            "bin/tapioca",
+            "gem",
+            *added_or_modified_gems,
+          )
+          T.must(@outgoing_queue) << if status.success?
+            Notification.window_log_message(
+              stdout,
+              type: Constant::MessageType::INFO,
+            )
+          else
+            Notification.window_log_message(
+              stderr,
+              type: Constant::MessageType::ERROR,
+            )
+          end
+        elsif removed_gems.any?
+          FileUtils.rm_f(Dir.glob("sorbet/rbi/gems/{#{removed_gems.join(",")}}@*.rbi"))
+        end
       end
 
       sig { void }
