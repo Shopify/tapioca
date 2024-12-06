@@ -50,6 +50,12 @@ module Tapioca
         namespace.const_get(symbol, inherit)
       rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
         UNDEFINED_CONSTANT
+      rescue => e
+        if defined?(ActiveRecord) && defined?(ActiveRecord::ConnectionNotEstablished) && e.is_a?(ActiveRecord::ConnectionNotEstablished)
+          UNDEFINED_CONSTANT
+        else
+          raise
+        end
       end
 
       sig { params(object: BasicObject).returns(T::Class[T.anything]).checked(:never) }
