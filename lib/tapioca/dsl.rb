@@ -3,6 +3,7 @@
 
 require "rbi"
 require "spoom"
+require "tsort"
 
 require "tapioca"
 require "tapioca/runtime/reflection"
