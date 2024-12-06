@@ -27,6 +27,7 @@ module Tapioca
           dsl_dir: String,
           rbi_formatter: RBIFormatter,
           halt_upon_load_error: T::Boolean,
+          lsp_addon: T.nilable(T::Boolean),
         ).void
       end
       def initialize(
@@ -45,7 +46,8 @@ module Tapioca
         auto_strictness: true,
         dsl_dir: DEFAULT_DSL_DIR,
         rbi_formatter: DEFAULT_RBI_FORMATTER,
-        halt_upon_load_error: true
+        halt_upon_load_error: true,
+        lsp_addon: false
       )
         @gem_names = gem_names
         @exclude = exclude
@@ -59,6 +61,7 @@ module Tapioca
         @auto_strictness = auto_strictness
         @dsl_dir = dsl_dir
         @rbi_formatter = rbi_formatter
+        @lsp_addon = lsp_addon
 
         super()
 
