@@ -4,10 +4,11 @@
 # Configure Rails Environment
 ENV["RAILS_ENV"] = "test"
 
-require_relative "../test/dummy/config/environment"
-ActiveRecord::Migrator.migrations_paths = [File.expand_path("../test/dummy/db/migrate", __dir__)]
-ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __dir__)
+# require_relative "../test/dummy/config/environment"
+# ActiveRecord::Migrator.migrations_paths = [File.expand_path("../test/dummy/db/migrate", __dir__)]
+# ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __dir__)
 
+require "minitest/spec"
 require "ruby_lsp/internal"
 require "ruby_lsp/test_helper"
 
@@ -15,9 +16,11 @@ module ActiveSupport
   class TestCase
     include RubyLsp::TestHelper
 
-    def dummy_root
-      File.expand_path("#{__dir__}/dummy")
-    end
+    # not used?
+    #
+    # def dummy_root
+    #   File.expand_path("#{__dir__}/dummy")
+    # end
 
     # sig { params(server: RubyLsp::Server).returns(RubyLsp::Result) }
     def pop_result(server)
