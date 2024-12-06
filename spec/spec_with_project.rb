@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "helpers/mock_project"
+require "minitest/hooks"
 
 module Tapioca
   class SpecWithProject < Minitest::HooksSpec

@@ -9,10 +9,14 @@ end
 require "addon_spec_helper"
 require "ruby_lsp/ruby_lsp_rails/runner_client"
 
+require "spoom/context"
+
+require "spec_with_project"
+
 module RubyLsp
   module Tapioca
     # class RunnerClientTest < ActiveSupport::TestCase
-    class AddonSpec < Minitest::Spec
+    class AddonSpec < ::Tapioca::SpecWithProject
       # The approach here is based on tests within the Ruby LSP Rails gem
 
       before do
