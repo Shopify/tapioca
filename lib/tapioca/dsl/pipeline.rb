@@ -137,7 +137,21 @@ module Tapioca
         active_compilers = compilers
         active_compilers -= excluded_compilers
         active_compilers &= requested_compilers unless requested_compilers.empty?
-        active_compilers
+        tsort_active_compilers(active_compilers)
+      end
+
+      sig do
+        params(compilers: T::Array[T.class_of(Compiler)]).returns(T::Array[T.class_of(Compiler)])
+      end
+      def tsort_active_compilers(compilers)
+        dependencies = compilers
+          .sort_by { |compiler| T.must(compiler.name) }
+          .to_h { |compiler| [compiler, compiler.run_after_compilers] }
+
+        TSort.tsort(
+          lambda { |&block| dependencies.each_key(&block) },
+          lambda { |compiler, &block| dependencies.fetch(compiler).each(&block) },
+        )
       end
 
       sig do

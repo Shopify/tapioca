@@ -17,6 +17,9 @@ module RBI
         rbi.create_type_variable("G", type: "type_member")
         rbi.create_type_variable("H", type: "type_template", variance: :in, fixed: "Foo")
         rbi.create_method("foo")
+        rbi.create_method("bar", return_type: "String")
+        rbi.remove_method("bar")
+        rbi.create_method("bar", return_type: "Integer")
 
         assert_equal(<<~RBI, rbi.string)
           class A; end
@@ -30,6 +33,9 @@ module RBI
 
           sig { returns(T.untyped) }
           def foo; end
+
+          sig { returns(Integer) }
+          def bar; end
         RBI
       end
 
@@ -119,6 +125,12 @@ module RBI
             module Bar; end
           end
         RBI
+      end
+
+      it "does not raise an nonexistent method is removed" do
+        rbi = RBI::Tree.new
+        rbi.remove_method("garbage")
+        assert_equal("", rbi.string)
       end
     end
   end

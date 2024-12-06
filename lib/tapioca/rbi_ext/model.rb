@@ -112,6 +112,12 @@ module RBI
       self << method
     end
 
+    sig { params(name: String).void }
+    def remove_method(name)
+      method = nodes.grep(RBI::Method).find { |node| node.name == name }
+      nodes.delete(method) if method
+    end
+
     private
 
     sig { returns(T::Hash[String, RBI::Node]) }

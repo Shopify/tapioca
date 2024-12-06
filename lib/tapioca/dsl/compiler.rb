@@ -38,6 +38,11 @@ module Tapioca
         sig { abstract.returns(T::Enumerable[Module]) }
         def gather_constants; end
 
+        sig { overridable.returns(T::Array[T.class_of(Compiler)]) }
+        def run_after_compilers
+          []
+        end
+
         sig { returns(T::Set[Module]) }
         def processable_constants
           @processable_constants ||= T.let(
