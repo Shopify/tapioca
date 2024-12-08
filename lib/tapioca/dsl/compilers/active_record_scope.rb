@@ -46,9 +46,9 @@ module Tapioca
 
         sig { override.void }
         def decorate
-          method_names = scope_method_names
+          scope_method_names = gather_method_names
 
-          return if method_names.empty?
+          return if scope_method_names.empty?
 
           root.create_path(constant) do |model|
             relations_enabled = compiler_enabled?("ActiveRecordRelations")
@@ -56,7 +56,7 @@ module Tapioca
             relation_methods_module = model.create_module(RelationMethodsModuleName)
             assoc_relation_methods_mod = model.create_module(AssociationRelationMethodsModuleName) if relations_enabled
 
-            method_names.each do |scope_method|
+            scope_method_names.each do |scope_method|
               generate_scope_method(
                 relation_methods_module,
                 scope_method.to_s,
@@ -86,7 +86,7 @@ module Tapioca
         private
 
         sig { returns(T::Array[Symbol]) }
-        def scope_method_names
+        def gather_method_names
           scope_methods = T.let([], T::Array[Symbol])
           constant = self.constant
 
