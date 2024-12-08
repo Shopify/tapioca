@@ -118,10 +118,60 @@ module Tapioca
                 assert_equal(expected, rbi_for(:Post))
               end
 
+              it "generates RBI for class methods" do
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    extend T::Sig
+
+                    def self.published
+                      where(published: true)
+                    end
+
+                    sig { returns(T.nilable(Post)) }
+                    def self.most_popular
+                      order(:likes).first
+                    end
+                  end
+                RUBY
+
+                expected = <<~RBI
+                  # typed: strong
+
+                  class Post
+                    extend GeneratedRelationMethods
+
+                    module GeneratedAssociationRelationMethods
+                      sig { returns(T.nilable(::Post)) }
+                      def most_popular; end
+
+                      sig { returns(T.untyped) }
+                      def published; end
+                    end
+
+                    module GeneratedRelationMethods
+                      sig { returns(T.nilable(::Post)) }
+                      def most_popular; end
+
+                      sig { returns(T.untyped) }
+                      def published; end
+                    end
+                  end
+                RBI
+
+                assert_equal(expected, rbi_for(:Post))
+              end
+
               it "generates relation includes from non-abstract parent models" do
                 add_ruby_file("post.rb", <<~RUBY)
                   class Post < ActiveRecord::Base
+                    extend T::Sig
+
                     scope :post_scope, -> { where.not(kind: 'private') }
+
+                    sig { returns(T.nilable(Post)) }
+                    def self.most_popular
+                      order(:likes).first
+                    end
                   end
 
                   class CustomPost < Post
@@ -143,6 +193,9 @@ module Tapioca
                       sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                       def custom_post_scope(*args, &blk); end
 
+                      sig { returns(T.nilable(::Post)) }
+                      def most_popular; end
+
                       sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                       def post_scope(*args, &blk); end
 
@@ -153,6 +206,9 @@ module Tapioca
                     module GeneratedRelationMethods
                       sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                       def custom_post_scope(*args, &blk); end
+
+                      sig { returns(T.nilable(::Post)) }
+                      def most_popular; end
 
                       sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                       def post_scope(*args, &blk); end
