@@ -189,6 +189,45 @@ module Tapioca
 
               assert_equal(expected, rbi_for(:Shop))
             end
+
+            it "generates method sigs for attribute type with `#__sorbet_type`" do
+              add_ruby_file("shop.rb", <<~RUBY)
+                class GenericType < ActiveModel::Type::Value
+                  extend T::Sig
+
+                  def initialize(sorbet_type)
+                    @sorbet_type = sorbet_type
+                  end
+
+                  def __sorbet_type
+                    @sorbet_type
+                  end
+                end
+
+                class Post
+                end
+
+                class Shop
+                  include ActiveModel::Attributes
+
+                  attribute :post, GenericType.new(Post)
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class Shop
+                  sig { returns(T.nilable(::Post)) }
+                  def post; end
+
+                  sig { params(value: T.nilable(::Post)).returns(T.nilable(::Post)) }
+                  def post=(value); end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:Shop))
+            end
           end
         end
       end
