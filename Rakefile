@@ -3,6 +3,10 @@
 require "bundler/gem_tasks"
 Dir["tasks/**/*.rake"].each { |t| load t }
 
+APP_RAKEFILE = File.expand_path("test/dummy/Rakefile", __dir__)
+
+load "rails/tasks/engine.rake"
+
 require "rubocop/rake_task"
 RuboCop::RakeTask.new
 
