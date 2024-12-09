@@ -14,7 +14,8 @@ module Tapioca
           def type_for(type_value)
             return "T.untyped" if Runtime::GenericTypeRegistry.generic_type_instance?(type_value)
 
-            type = lookup_return_type_of_method(type_value, :deserialize) ||
+            type = lookup_sorbet_type(type_value) ||
+              lookup_return_type_of_method(type_value, :deserialize) ||
               lookup_return_type_of_method(type_value, :cast) ||
               lookup_return_type_of_method(type_value, :cast_value) ||
               lookup_arg_type_of_method(type_value, :serialize) ||
@@ -37,6 +38,11 @@ module Tapioca
           sig { params(type: T.untyped).returns(T::Boolean) }
           def meaningful_type?(type)
             !MEANINGLESS_TYPES.include?(type)
+          end
+
+          sig { params(obj: T.untyped).returns(T.nilable(T::Types::Base)) }
+          def lookup_sorbet_type(obj)
+            T::Utils.coerce(obj.__sorbet_type) if obj.respond_to?(:__sorbet_type)
           end
 
           sig { params(obj: T.untyped, method: Symbol).returns(T.nilable(T::Types::Base)) }
