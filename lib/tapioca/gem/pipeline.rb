@@ -22,19 +22,22 @@ module Tapioca
           error_handler: T.proc.params(error: String).void,
           include_doc: T::Boolean,
           include_loc: T::Boolean,
+          lsp_addon: T::Boolean,
         ).void
       end
       def initialize(
         gem,
         error_handler:,
         include_doc: false,
-        include_loc: false
+        include_loc: false,
+        lsp_addon: false
       )
         @root = T.let(RBI::Tree.new, RBI::Tree)
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
         @error_handler = error_handler
+        @lsp_addon = lsp_addon
 
         @events = T.let([], T::Array[Gem::Event])
 
