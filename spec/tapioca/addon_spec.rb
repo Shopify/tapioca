@@ -33,8 +33,9 @@ module RubyLsp
         @outgoing_queue.close
       end
 
+      EXPECTED_RBI_PATH = "sorbet/rbi/dsl/notify_user_job.rbi"
       it "generates DSL RBIs for a gem" do
-        raise "RBI already exists" if File.exist?("sorbet/rbi/dsl/notify_user_job.rbi")
+        raise "RBI already exists" if File.exist?(EXPECTED_RBI_PATH)
 
         addon_path = File.expand_path("lib/ruby_lsp/tapioca/server_addon.rb")
         @client.register_server_addon(File.expand_path(addon_path))
@@ -46,13 +47,13 @@ module RubyLsp
 
         begin
           Timeout.timeout(10) do
-            found = File.exist?("sorbet/rbi/dsl/notify_user_job.rbi") until found
+            found = File.exist?(EXPECTED_RBI_PATH) until found
           end
         rescue Timeout::Error
           flunk("RBI file was not generated")
         end
       ensure
-        FileUtils.rm_f("sorbet/rbi/dsl/notify_user_job.rbi")
+        FileUtils.rm_f(EXPECTED_RBI_PATH)
       end
     end
   end
