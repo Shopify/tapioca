@@ -34,26 +34,26 @@ module RubyLsp
       end
 
       it "generates DSL RBIs for a gem" do
-        raise "RBI already exists" if File.exist?("sorbet/rbi/dsl/user.rbi")
+        raise "RBI already exists" if File.exist?("sorbet/rbi/dsl/create_comment_input.rbi")
 
         addon_path = File.expand_path("lib/ruby_lsp/tapioca/server_addon.rb")
         @client.register_server_addon(File.expand_path(addon_path))
         @client.delegate_notification(
           server_addon_name: "Tapioca",
           request_name: "dsl",
-          constants: ["User"],
+          constants: ["CreateCommentInput"],
         )
 
         # TODO: find a more elegant way to do this
         0.upto(100) do
-          @found = File.exist?("sorbet/rbi/dsl/user.rbi")
+          @found = File.exist?("sorbet/rbi/dsl/create_comment_input.rbi")
           sleep(0.1)
         end
         raise "RBI not generated" unless @found
 
         assert(@found)
       ensure
-        FileUtils.rm("sorbet/rbi/dsl/user.rbi") if @found
+        FileUtils.rm("sorbet/rbi/dsl/create_comment_input.rbi") if @found
       end
     end
   end
