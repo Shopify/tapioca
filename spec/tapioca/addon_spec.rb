@@ -47,7 +47,8 @@ module RubyLsp
 
         begin
           Timeout.timeout(10) do
-            found = File.exist?(EXPECTED_RBI_PATH) until found
+            until File.exist?(EXPECTED_RBI_PATH)
+            end
           end
         rescue Timeout::Error
           flunk("RBI file was not generated")
