@@ -136,7 +136,7 @@ module RubyLsp
 
       sig { returns(T.nilable(T::Boolean)) }
       def git_repo?
-        _, _, status = Open3.capture3("git rev-parse --is-inside-work-tree")
+        _, status = Open3.capture2e("git rev-parse --is-inside-work-tree")
 
         status.success?
       end
