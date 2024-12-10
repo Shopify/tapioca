@@ -84,6 +84,8 @@ module Tapioca
           gem = @bundle.gem(gem_name)
 
           if gem.nil?
+            next say("Warning: Cannot find gem '#{gem_name}', skipping", :yellow) if @lsp_addon
+
             raise Thor::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
           end
 
