@@ -85,7 +85,7 @@ module Tapioca
       def load_dsl_compilers
         say("Loading DSL compiler classes... ")
 
-        # Load all built-in compilers
+        # Load all built-in compilers before any custom compilers
         Dir.glob("#{Tapioca::LIB_ROOT_DIR}/tapioca/dsl/compilers/*.rb").each do |compiler|
           require File.expand_path(compiler)
         end
