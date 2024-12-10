@@ -44,16 +44,15 @@ module RubyLsp
           constants: ["CreateCommentInput"],
         )
 
-        # TODO: find a more elegant way to do this
-        0.upto(100) do
-          @found = File.exist?("sorbet/rbi/dsl/create_comment_input.rbi")
-          sleep(0.1)
+        begin
+          Timeout.timeout(10) do
+            found = File.exist?("sorbet/rbi/dsl/create_comment_input.rbi") until found
+          end
+        rescue Timeout::Error
+          flunk("RBI file was not generated")
         end
-        raise "RBI not generated" unless @found
-
-        assert(@found)
       ensure
-        FileUtils.rm("sorbet/rbi/dsl/create_comment_input.rbi") if @found
+        FileUtils.rm_f("sorbet/rbi/dsl/create_comment_input.rbi")
       end
     end
   end
