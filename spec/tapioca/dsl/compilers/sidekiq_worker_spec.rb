@@ -7,26 +7,22 @@ module Tapioca
   module Dsl
     module Compilers
       class SidekiqWorkerSpec < ::DslSpec
+        include Tapioca::Helpers::Test::Isolation
+
         describe "Tapioca::Dsl::Compilers::SidekiqWorker" do
-          sig { void }
-          def backup_activesupport
-            Object.const_set(:ActiveSupportBackup, Object.send(:remove_const, :ActiveSupport)) # rubocop:disable RSpec/RemoveConst
-          end
-
-          sig { void }
-          def restore_activesupport
-            Object.const_set(:ActiveSupport, Object.send(:remove_const, :ActiveSupportBackup)) # rubocop:disable RSpec/RemoveConst
-          end
-
           sig { void }
           def before_setup
             require "sidekiq"
-            backup_activesupport
-          end
-
-          sig { void }
-          def after_teardown
-            restore_activesupport
+            # We need to undefine and unload `ActiveSupport` so that the test object
+            # space is as clean as possible.
+            #
+            # This is inside a `before` block instead of a `before(:all)` block because
+            # it looks like `before(:all)` blocks run in the parent process, but we don't
+            # want to mess with the object space of the parent process.
+            if defined?(::ActiveSupport)
+              Object.send(:remove_const, :ActiveSupport) # rubocop:disable RSpec/RemoveConst
+              $LOADED_FEATURES.delete_if { |path| path.include?("active_support") }
+            end
           end
 
           describe "initialize" do
@@ -96,10 +92,11 @@ module Tapioca
               assert_equal(expected, rbi_for(:NotifierWorker))
             end
 
-            it "generates correct RBI file for class with perform method when Activesupport is bundled" do
-              restore_activesupport
-
+            it "generates correct RBI file for class with perform method when ActiveSupport is defined" do
               add_ruby_file("mailer.rb", <<~RUBY)
+                require "active_support"
+                require "active_support/time_with_zone"
+
                 class NotifierWorker
                   include Sidekiq::Worker
                   def perform(customer_id)
@@ -125,11 +122,7 @@ module Tapioca
                 end
               RBI
 
-              result = rbi_for(:NotifierWorker)
-
-              backup_activesupport
-
-              assert_equal(expected, result)
+              assert_equal(expected, rbi_for(:NotifierWorker))
             end
 
             it "generates correct RBI file for class with perform method with signature" do
