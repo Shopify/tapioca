@@ -16,9 +16,12 @@ module Tapioca
             postrequire: String,
             default_command: String,
             halt_upon_load_error: T::Boolean,
+            lsp_addon: T::Boolean,
           ).void
         end
-        def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
+        def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:, lsp_addon:)
+          return if lsp_addon
+
           loader = new(
             bundle: bundle,
             prerequire: prerequire,

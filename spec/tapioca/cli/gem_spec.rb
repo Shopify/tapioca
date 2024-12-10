@@ -824,6 +824,22 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "skips missing gems and continues with warning when --lsp_addon is used" do
+          result = @project.tapioca("gem non_existent_gem --lsp_addon")
+
+          assert_stdout_includes(result, "Warning: Cannot find gem 'non_existent_gem', skipping")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "fails with error when gem cannot be found" do
+          result = @project.tapioca("gem non_existent_gem")
+
+          assert_stderr_includes(result, "Error: Cannot find gem 'non_existent_gem'")
+          refute_success_status(result)
+        end
+
         it "does not crash when the extras gem is loaded" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", FOO_RB)
@@ -1268,6 +1284,19 @@ module Tapioca
             RB
           end
 
+          @project.write!("config/application.rb", <<~RB)
+            module Tapioca
+              class Application < Rails::Application
+                config.load_defaults(#{ActiveSupport.gem_version.to_s[0..2]})
+              end
+            end
+          RB
+
+          @project.write!("config/environment.rb", <<~RB)
+            require_relative "application"
+            Rails.application.initialize!
+          RB
+
           @project.require_real_gem("rails", ActiveSupport.gem_version.to_s)
           @project.require_mock_gem(foo)
           @project.bundle_install!
@@ -1325,6 +1354,11 @@ module Tapioca
             end
           RB
 
+          @project.write!("config/environment.rb", <<~RB)
+            require_relative "application"
+            Rails.application.initialize!
+          RB
+
           response = @project.tapioca("gem turbo-rails")
 
           assert_includes(response.out, "Compiled turbo-rails")
@@ -1354,6 +1388,11 @@ module Tapioca
                 config.autoloader = :classic
               end
             end
+          RB
+
+          @project.write!("config/environment.rb", <<~RB)
+            require_relative "application"
+            Rails.application.initialize!
           RB
 
           response = @project.tapioca("gem turbo-rails")

@@ -14,6 +14,7 @@ module Tapioca
           postrequire: @postrequire,
           default_command: default_command(:require),
           halt_upon_load_error: @halt_upon_load_error,
+          lsp_addon: T.must(@lsp_addon),
         )
 
         gem_queue = gems_to_generate(@gem_names).reject { |gem| @exclude.include?(gem.name) }
