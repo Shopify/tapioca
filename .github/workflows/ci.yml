@@ -70,6 +70,28 @@ jobs:
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
 
+  lsp_tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        ruby: ["3.3"]
+        rails: ["current"]
+    name: LSP tests
+    env:
+      RAILS_VERSION: ${{ matrix.rails }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          rubygems: 3.5.11
+          bundler: 2.5.11
+      - name: Run LSP tests
+        run: bin/rails db:setup && LSP_TESTS=1 bin/test spec/tapioca/addon_spec.rb
+
   buildall:
     if: ${{ always() }}
     runs-on: ubuntu-latest

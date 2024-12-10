@@ -8,3 +8,5 @@
 /spec/reports/
 /tmp/
 /vendor/
+*.log
+test/dummy/tmp/
