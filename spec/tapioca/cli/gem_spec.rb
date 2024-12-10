@@ -1268,6 +1268,19 @@ module Tapioca
             RB
           end
 
+          @project.write!("config/application.rb", <<~RB)
+            module Tapioca
+              class Application < Rails::Application
+                config.load_defaults(#{ActiveSupport.gem_version.to_s[0..2]})
+              end
+            end
+          RB
+
+          @project.write!("config/environment.rb", <<~RB)
+            require_relative "application"
+            Rails.application.initialize!
+          RB
+
           @project.require_real_gem("rails", ActiveSupport.gem_version.to_s)
           @project.require_mock_gem(foo)
           @project.bundle_install!
@@ -1325,6 +1338,11 @@ module Tapioca
             end
           RB
 
+          @project.write!("config/environment.rb", <<~RB)
+            require_relative "application"
+            Rails.application.initialize!
+          RB
+
           response = @project.tapioca("gem turbo-rails")
 
           assert_includes(response.out, "Compiled turbo-rails")
@@ -1354,6 +1372,11 @@ module Tapioca
                 config.autoloader = :classic
               end
             end
+          RB
+
+          @project.write!("config/environment.rb", <<~RB)
+            require_relative "application"
+            Rails.application.initialize!
           RB
 
           response = @project.tapioca("gem turbo-rails")
