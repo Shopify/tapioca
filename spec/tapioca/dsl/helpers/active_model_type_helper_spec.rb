@@ -28,12 +28,12 @@ module Tapioca
         end
 
         describe "type_for" do
-          it "discovers custom type from __sorbet_type method" do
+          it "discovers custom type from __tapioca_type method" do
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
               sig { returns(T.untyped) }
-              def __sorbet_type
+              def __tapioca_type
                 T.any(Integer, String)
               end
 
@@ -61,7 +61,7 @@ module Tapioca
             assert_equal(
               "T.any(::Integer, ::String)",
               Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(klass.new),
-              "The type returned from `__sorbet_type` has the highest priority.",
+              "The type returned from `__tapioca_type` has the highest priority.",
             )
           end
 

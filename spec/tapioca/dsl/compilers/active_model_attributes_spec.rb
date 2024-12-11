@@ -190,17 +190,17 @@ module Tapioca
               assert_equal(expected, rbi_for(:Shop))
             end
 
-            it "generates method sigs for attribute type with `#__sorbet_type`" do
+            it "generates method sigs for attribute type with `#__tapioca_type`" do
               add_ruby_file("shop.rb", <<~RUBY)
                 class GenericType < ActiveModel::Type::Value
                   extend T::Sig
 
-                  def initialize(sorbet_type)
-                    @sorbet_type = sorbet_type
+                  def initialize(tapioca_type)
+                    @tapioca_type = tapioca_type
                   end
 
-                  def __sorbet_type
-                    @sorbet_type
+                  def __tapioca_type
+                    @tapioca_type
                   end
                 end
 
