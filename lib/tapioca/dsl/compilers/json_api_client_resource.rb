@@ -147,7 +147,17 @@ module Tapioca
           return "T.untyped" if type.nil?
 
           sorbet_type = if type.respond_to?(:sorbet_type)
+            line, file = type.method(:sorbet_type).source_location
+
+            $stderr.puts <<~MESSAGE
+              WARNING: `#sorbet_type` is deprecated. Please rename your method to `#__tapioca_type`."
+
+              Defined on line #{line} of #{file}
+            MESSAGE
+
             type.sorbet_type
+          elsif type.respond_to?(:__tapioca_type)
+            type.__tapioca_type
           elsif type == ::JsonApiClient::Schema::Types::Integer
             "::Integer"
           elsif type == ::JsonApiClient::Schema::Types::String
