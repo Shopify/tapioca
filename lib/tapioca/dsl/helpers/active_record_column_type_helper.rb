@@ -211,6 +211,11 @@ module Tapioca
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range === type
                }
             "T::Range[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
+          when ->(type) {
+                 defined?(ActiveRecord::Locking::LockingType) &&
+                   ActiveRecord::Locking::LockingType === type
+               }
+            as_non_nilable_if_persisted_and_not_nullable("::Integer", column_nullability:)
           else
             as_non_nilable_if_persisted_and_not_nullable(
               ActiveModelTypeHelper.type_for(column_type),
