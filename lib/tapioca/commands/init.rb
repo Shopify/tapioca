@@ -46,7 +46,7 @@ module Tapioca
           Press #{set_color("enter", :yellow)} to run #{set_color("bin/tapioca gem --all", :yellow)}. Note: This might take long depending on the number of gems.
         GEM
         STDIN.gets
-        call(:gem) # TODO: all
+        show_wait_spinner { call(:gem) } # TODO: all
         say("To continue to the next step, press #{set_color("enter", :yellow)}")
         STDIN.gets
 
@@ -69,10 +69,13 @@ module Tapioca
 
           Press #{set_color("enter", :yellow)} to run #{set_color("bin/tapioca dsl", :yellow)}.
         DSL
+        STDIN.gets
         begin
-          call(:dsl)
+          # $gem_loader.unload
+          # call(:dsl)
+          system("bin/tapioca dsl")
         rescue
-          say(set_color("Error: Couldn't generate DSL RBIs", :red))
+          say(set_color("Error: Couldn't generate DSL RBIs. Ensure your app can be booted locally", :red))
         end
 
         say("To continue to the next step, press #{set_color("enter", :yellow)}")
@@ -98,6 +101,23 @@ module Tapioca
 
       def call(name)
         invoke(name, [], {})
+      end
+
+      def show_wait_spinner(fps=10)
+        chars = %w[| / - \\]
+        delay = 1.0/fps
+        iter = 0
+        spinner = Thread.new do
+          while iter do  # Keep spinning until told otherwise
+            print chars[(iter+=1) % chars.length]
+            sleep delay
+            print "\b"
+          end
+        end
+        yield.tap{       # After yielding to the block, save the return value
+          iter = false   # Tell the thread to exit, cleaning up after itself…
+          spinner.join   # …and wait for it to do so.
+        }                # Use the block's return value as the method's
       end
 
       # def print_init_next_steps
