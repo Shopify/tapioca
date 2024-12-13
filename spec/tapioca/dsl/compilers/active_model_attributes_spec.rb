@@ -193,24 +193,27 @@ module Tapioca
             it "generates method sigs for attribute type with `#__tapioca_type`" do
               add_ruby_file("shop.rb", <<~RUBY)
                 class GenericType < ActiveModel::Type::Value
-                  extend T::Sig
-
                   def initialize(tapioca_type)
                     @tapioca_type = tapioca_type
                   end
 
-                  def __tapioca_type
-                    @tapioca_type
-                  end
+                  def __tapioca_type = @tapioca_type
                 end
 
-                class Post
-                end
+                class User; end
+                class Post; end
 
                 class Shop
+                  include ActiveModel::Model
                   include ActiveModel::Attributes
 
-                  attribute :post, GenericType.new(Post)
+                  attribute :user, GenericType.new(User)
+                  attribute :post, GenericType.new(T.nilable(Post))
+
+                  def initialize(attributes = {})
+                    raise 'User is required' unless attributes.key?(:user)
+                    super
+                  end
                 end
               RUBY
 
@@ -223,6 +226,12 @@ module Tapioca
 
                   sig { params(value: T.nilable(::Post)).returns(T.nilable(::Post)) }
                   def post=(value); end
+
+                  sig { returns(::User) }
+                  def user; end
+
+                  sig { params(value: ::User).returns(::User) }
+                  def user=(value); end
                 end
               RBI
 

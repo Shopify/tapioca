@@ -23,6 +23,11 @@ module Tapioca
             type.to_s
           end
 
+          sig { params(type_value: T.untyped).returns(T::Boolean) }
+          def assume_nilable?(type_value)
+            !type_value.respond_to?(:__tapioca_type)
+          end
+
           private
 
           MEANINGLESS_TYPES = T.let(

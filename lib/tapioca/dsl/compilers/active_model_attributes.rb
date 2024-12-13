@@ -101,26 +101,26 @@ module Tapioca
 
         sig { params(attribute_type_value: T.untyped).returns(::String) }
         def type_for(attribute_type_value)
-          type = case attribute_type_value
+          case attribute_type_value
           when ActiveModel::Type::Boolean
-            "T::Boolean"
+            as_nilable_type("T::Boolean")
           when ActiveModel::Type::Date
-            "::Date"
+            as_nilable_type("::Date")
           when ActiveModel::Type::DateTime, ActiveModel::Type::Time
-            "::Time"
+            as_nilable_type("::Time")
           when ActiveModel::Type::Decimal
-            "::BigDecimal"
+            as_nilable_type("::BigDecimal")
           when ActiveModel::Type::Float
-            "::Float"
+            as_nilable_type("::Float")
           when ActiveModel::Type::Integer
-            "::Integer"
+            as_nilable_type("::Integer")
           when ActiveModel::Type::String
-            "::String"
+            as_nilable_type("::String")
           else
-            Helpers::ActiveModelTypeHelper.type_for(attribute_type_value)
+            type = Helpers::ActiveModelTypeHelper.type_for(attribute_type_value)
+            type = as_nilable_type(type) if Helpers::ActiveModelTypeHelper.assume_nilable?(attribute_type_value)
+            type
           end
-
-          as_nilable_type(type)
         end
 
         sig { params(klass: RBI::Scope, method: String, type: String).void }

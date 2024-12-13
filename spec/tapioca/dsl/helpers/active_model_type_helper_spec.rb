@@ -295,6 +295,31 @@ module Tapioca
             )
           end
         end
+
+        describe "assume_nilable?" do
+          it "assumes the type is nilable when `#__tapioca_type` is not defined" do
+            klass = Class.new(ActiveModel::Type::Value)
+
+            assert_equal(
+              true,
+              Tapioca::Dsl::Helpers::ActiveModelTypeHelper.assume_nilable?(klass.new),
+            )
+          end
+
+          it "does not assume the type is nilable when `#__tapioca_type` is defined" do
+            klass = Class.new(ActiveModel::Type::Value) do
+              extend T::Sig
+
+              sig { returns(Module) }
+              def __tapioca_type = String
+            end
+
+            assert_equal(
+              false,
+              Tapioca::Dsl::Helpers::ActiveModelTypeHelper.assume_nilable?(klass.new),
+            )
+          end
+        end
       end
     end
   end
