@@ -42,11 +42,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       end
 
       # add spec to the list of gem specification stubs
-      Gem::Specification.stubs[gem_name] = spec
+      Gem::Specification.add_spec(spec)
     end
 
     # wrap it in our gemspec wrapper
-    gem = Tapioca::Gemfile::GemSpec.new(Gem::Specification.stubs[gem_name].first)
+    gem = Tapioca::Gemfile::GemSpec.new(Gem::Specification.find_by_name(gem_name))
 
     # clear out previously reported errors
     reported_errors.clear
