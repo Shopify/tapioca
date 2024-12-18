@@ -145,7 +145,7 @@ module Tapioca
       default: {}
     option :lsp_addon,
       type: :boolean,
-      desc: "Generate DSL RBIs from the LSP addon. Internal to tapioca and not intended for end-users",
+      desc: "Generate DSL RBIs from the LSP add-on. Internal to Tapioca and not intended for end-users",
       default: false,
       hide: true
     def dsl(*constant_or_paths)
@@ -266,6 +266,11 @@ module Tapioca
       type: :boolean,
       desc: "Halt upon a load error while loading the Rails application",
       default: true
+    option :lsp_addon,
+      type: :boolean,
+      desc: "Generate Gem RBIs from the LSP add-on. Internal to Tapioca and not intended for end-users",
+      default: false,
+      hide: true
     def gem(*gems)
       set_environment(options)
 
@@ -300,6 +305,7 @@ module Tapioca
         dsl_dir: options[:dsl_dir],
         rbi_formatter: rbi_formatter(options),
         halt_upon_load_error: options[:halt_upon_load_error],
+        lsp_addon: options[:lsp_addon],
       }
 
       command = if verify

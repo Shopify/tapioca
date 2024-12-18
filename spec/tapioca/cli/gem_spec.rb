@@ -828,6 +828,20 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "skips missing gems and continues with warning when --lsp_addon is used" do
+          result = @project.tapioca("gem non_existent_gem --lsp_addon")
+
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "fails with error when gem cannot be found" do
+          result = @project.tapioca("gem non_existent_gem")
+
+          assert_stderr_includes(result, "Error: Cannot find gem 'non_existent_gem'")
+          refute_success_status(result)
+        end
+
         it "does not crash when the extras gem is loaded" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", FOO_RB)
