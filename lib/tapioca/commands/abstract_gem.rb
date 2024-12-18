@@ -73,39 +73,6 @@ module Tapioca
 
       private
 
-      sig { params(gem_names: T::Array[String]).returns(T::Array[Gemfile::GemSpec]) }
-      def gems_to_generate(gem_names)
-        return @bundle.dependencies if gem_names.empty?
-
-        (gem_names - @exclude).each_with_object([]) do |gem_name, gems|
-          gem = @bundle.gem(gem_name)
-
-          if gem.nil?
-            raise Thor::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
-          end
-
-          gems.concat(gem_dependencies(gem)) if @include_dependencies
-          gems << gem
-        end
-      end
-
-      sig do
-        params(
-          gem: Gemfile::GemSpec,
-          dependencies: T::Array[Gemfile::GemSpec],
-        ).returns(T::Array[Gemfile::GemSpec])
-      end
-      def gem_dependencies(gem, dependencies = [])
-        direct_dependencies = gem.dependencies.filter_map { |dependency| @bundle.gem(dependency.name) }
-        gems = dependencies | direct_dependencies
-
-        if direct_dependencies.empty?
-          gems
-        else
-          direct_dependencies.reduce(gems) { |result, gem| gem_dependencies(gem, result) }
-        end
-      end
-
       sig { params(gem: Gemfile::GemSpec).void }
       def compile_gem_rbi(gem)
         gem_name = set_color(gem.name, :yellow, :bold)
