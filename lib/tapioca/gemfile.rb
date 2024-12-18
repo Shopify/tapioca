@@ -67,14 +67,23 @@ module Tapioca
     sig { returns([T::Enumerable[Spec], T::Array[String]]) }
     def materialize_deps
       deps = definition.locked_gems.dependencies.except(*@excluded_gems).values
-      materialized_dependencies = definition.resolve.materialize(deps)
-      missing_spec_names = materialized_dependencies.missing_specs.map(&:name).to_set
-      missing_specs = materialized_dependencies.missing_specs.map do |spec|
-        "#{spec.name} (#{spec.version})"
+      resolve = definition.resolve
+      materialized_dependencies = resolve.materialize(deps)
+
+      if Bundler::VERSION >= "2.6.0"
+        missing_specs = resolve.missing_specs.map do |spec|
+          "#{spec.name} (#{spec.version})"
+        end
+      else
+        missing_spec_names = materialized_dependencies.missing_specs.map(&:name).to_set
+        missing_specs = materialized_dependencies.missing_specs.map do |spec|
+          "#{spec.name} (#{spec.version})"
+        end
+        materialized_dependencies = materialized_dependencies.to_a.reject do |spec|
+          missing_spec_names.include?(spec.name)
+        end
       end
-      materialized_dependencies = materialized_dependencies.to_a.reject do |spec|
-        missing_spec_names.include?(spec.name)
-      end
+
       [materialized_dependencies, missing_specs]
     end
 
