@@ -145,7 +145,7 @@ module Tapioca
       default: {}
     option :lsp_addon,
       type: :boolean,
-      desc: "Generate DSL RBIs from the LSP addon. Internal to tapioca and not intended for end-users",
+      desc: "Generate DSL RBIs from the LSP add-on. Internal to Tapioca and not intended for end-users",
       default: false,
       hide: true
     def dsl(*constant_or_paths)
@@ -268,7 +268,7 @@ module Tapioca
       default: true
     option :lsp_addon,
       type: :boolean,
-      desc: "Generate Gem RBIs from the LSP addon. Internal to tapioca and not intended for end-users",
+      desc: "Generate Gem RBIs from the LSP add-on. Internal to Tapioca and not intended for end-users",
       default: false,
       hide: true
     def gem(*gems)
