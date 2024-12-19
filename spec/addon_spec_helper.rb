@@ -8,6 +8,8 @@ require "ruby_lsp/utils"
 
 module ActiveSupport
   class TestCase
+    # These methods can be removed once https://github.com/Shopify/ruby-lsp/pull/2991 ships
+
     def pop_result(server)
       result = server.pop_response
       result = server.pop_response until result.is_a?(RubyLsp::Result) || result.is_a?(RubyLsp::Error)
