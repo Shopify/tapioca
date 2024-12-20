@@ -73,15 +73,29 @@ module Tapioca
           return unless method_owned_by_constant?(method, constant)
           return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
 
+          is_alias = method.name != method.original_name
           signature = lookup_signature_of(method)
-          method = T.let(signature.method, UnboundMethod) if signature
+          parameters = T.let(nil, T.nilable(T::Array[[Symbol, T.nilable(Symbol)]]))
+
+          if signature
+            method = T.let(signature.method, UnboundMethod)
+          elsif is_alias && signature.nil? && constant.method_defined?(method.original_name)
+            alias_source_method = constant.instance_method(method.original_name)
+            signature = lookup_signature_of(alias_source_method)
+
+            # Skip abstract methods if they are defined this way.
+            # Aliasing abstract methods is likely to yield unwanted results
+            signature = nil if signature&.mode == "abstract"
+            parameters = T.let(signature&.method&.parameters, T.nilable(T::Array[[Symbol, T.nilable(Symbol)]]))
+          end
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
           return if struct_method?(constant, method_name)
           return if method_name.start_with?("__t_props_generated_")
 
-          parameters = T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
+          method = T.let(signature.method, UnboundMethod) if signature
+          parameters ||= T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
 
           sanitized_parameters = parameters.each_with_index.map do |(type, name), index|
             fallback_arg_name = "_arg#{index}"
