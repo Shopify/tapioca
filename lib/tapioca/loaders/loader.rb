@@ -116,7 +116,7 @@ module Tapioca
         managed_dirs = Zeitwerk::Registry.loaders.flat_map(&:dirs).to_set
         # We use a fresh loader to load the engine directories, so that we don't interfere with
         # any of the existing loaders.
-        autoloader = Zeitwerk::Loader.new
+        $autoloader = Zeitwerk::Loader.new
 
         engines.each do |engine|
           eager_load_paths(engine).each do |path|
@@ -125,11 +125,11 @@ module Tapioca
             # We should not add directories that are already managed by a Zeitwerk loader.
             next if managed_dirs.member?(path)
 
-            autoloader.push_dir(path)
+            $autoloader.push_dir(path)
           end
         end
 
-        autoloader.setup
+        $autoloader.setup
       end
 
       sig { void }
