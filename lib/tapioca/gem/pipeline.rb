@@ -286,14 +286,9 @@ module Tapioca
         return if skip_object?(name, value)
 
         klass = class_of(value)
+        klass_name = generic_name_of(klass)
 
-        klass_name = if T::Generic === klass
-          generic_name_of(klass)
-        else
-          name_of(klass)
-        end
-
-        if klass_name == "T::Private::Types::TypeAlias"
+        if klass_name == "::T::Private::Types::TypeAlias"
           type_alias = sanitize_signature_types(T.unsafe(value).aliased_type.to_s)
           node = RBI::Const.new(name, "T.type_alias { #{type_alias} }")
           push_const(name, klass, node)
@@ -301,10 +296,10 @@ module Tapioca
           return
         end
 
-        return if klass_name&.start_with?("T::Types::", "T::Private::")
+        return if klass_name&.start_with?("::T::Types::", "::T::Private::")
 
         type_name = klass_name || "T.untyped"
-        type_name = "T.untyped" if type_name == "NilClass"
+        type_name = "T.untyped" if type_name == "::NilClass"
         node = RBI::Const.new(name, "T.let(T.unsafe(nil), #{type_name})")
         push_const(name, klass, node)
         @root << node
@@ -475,22 +470,6 @@ module Tapioca
       end
 
       # Helpers
-
-      sig { params(constant: T.all(Module, T::Generic)).returns(String) }
-      def generic_name_of(constant)
-        type_name = T.must(constant.name)
-        return type_name if type_name =~ /\[.*\]$/
-
-        type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)
-        return type_name unless type_variables
-
-        type_variables = type_variables.reject(&:fixed?)
-        return type_name if type_variables.empty?
-
-        type_variable_names = type_variables.map { "T.untyped" }.join(", ")
-
-        "#{type_name}[#{type_variable_names}]"
-      end
 
       sig { params(constant: Module, class_name: T.nilable(String)).returns(T.nilable(String)) }
       def name_of_proxy_target(constant, class_name)

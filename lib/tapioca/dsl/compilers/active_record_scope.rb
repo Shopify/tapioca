@@ -87,21 +87,17 @@ module Tapioca
 
         sig { returns(T::Array[Symbol]) }
         def scope_method_names
-          scope_methods = T.let([], T::Array[Symbol])
-          constant = self.constant
+          Enumerator
+            .produce(self.constant) { |constant| superclass_of(constant) }
+            # Keep looking up superclasses until we hit "ActiveRecord::Base"
+            .take_while { |constant| constant != ActiveRecord::Base }
+            .each_with_object([]) { |constant, methods| methods.concat(generated_relation_method_names(constant)) }
+            .uniq
+        end
 
-          # Keep gathering scope methods until we hit "ActiveRecord::Base"
-          until constant == ActiveRecord::Base
-            scope_methods.concat(constant.send(:generated_relation_methods).instance_methods(false))
-
-            superclass = superclass_of(constant)
-            break unless superclass
-
-            # we are guaranteed to have a superclass that is of type "ActiveRecord::Base"
-            constant = T.cast(superclass, T.class_of(ActiveRecord::Base))
-          end
-
-          scope_methods.uniq
+        sig { params(constant: T.class_of(::ActiveRecord::Base)).returns(T::Array[Symbol]) }
+        def generated_relation_method_names(constant)
+          constant.send(:generated_relation_methods).instance_methods(false)
         end
 
         sig do

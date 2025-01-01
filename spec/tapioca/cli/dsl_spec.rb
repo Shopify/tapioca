@@ -2248,6 +2248,7 @@ module Tapioca
         end
 
         it "must be able to modify behaviour of existing compilers" do
+
           @project.write!("lib/post.rb", <<~RB)
             ::ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: ":memory:")
 
@@ -2255,7 +2256,7 @@ module Tapioca
             end
           RB
 
-          foo = mock_gem("foo", "0.0.1") do
+          foo = mock_gem("aoo", "0.0.1") do
             write!("lib/tapioca/dsl/compilers/active_record_relation_ext.rb", <<~RB)
               class Tapioca::Dsl::Compilers::ActiveRecordRelations
                 ID_TYPES = ID_TYPES.union(["Foo"]).freeze

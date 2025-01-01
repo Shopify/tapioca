@@ -68,6 +68,24 @@ module Tapioca
         name&.start_with?("#<") ? nil : name
       end
 
+      sig { params(constant: Module).returns(T.nilable(String)) }
+      def generic_name_of(constant)
+        return qualified_name_of(constant) unless T::Generic === constant
+
+        type_name = T.must(constant.name)
+        return type_name if type_name =~ /\[.*\]$/
+
+        type_variables = GenericTypeRegistry.lookup_type_variables(constant)
+        return type_name unless type_variables
+
+        type_variables = type_variables.reject(&:fixed?)
+        return type_name if type_variables.empty?
+
+        type_variable_names = type_variables.map { "T.untyped" }.join(", ")
+
+        "#{type_name}[#{type_variable_names}]"
+      end
+
       sig { params(constant: Module).returns(T::Class[T.anything]) }
       def singleton_class_of(constant)
         SINGLETON_CLASS_METHOD.bind_call(constant)
