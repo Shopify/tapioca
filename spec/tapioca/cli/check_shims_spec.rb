@@ -523,7 +523,7 @@ module Tapioca
 
         assert_stderr_equals(<<~ERR, result)
 
-          Warning: unexpected end-of-input, assuming it is closing the parent top level context. expected an `end` to close the `class` statement. (sorbet/rbi/shims/foo.rbi:2:0)
+          Warning: unexpected end-of-input, assuming it is closing the parent top level context. expected an `end` to close the `class` statement. (sorbet/rbi/shims/foo.rbi:1:9)
 
           Duplicated RBI for ::Foo#foo:
            * sorbet/rbi/shims/bar.rbi:2:2-2:14
