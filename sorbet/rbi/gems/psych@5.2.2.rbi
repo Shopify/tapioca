@@ -79,7 +79,7 @@ end
 #   Psych.safe_load_file("data.yml", permitted_classes: [Date])
 #   Psych.load_file("trusted_database.yml")
 #
-# ==== Exception handling
+# ==== \Exception handling
 #
 #   begin
 #     # The second argument changes only the exception contents
@@ -143,7 +143,7 @@ end
 #   # Returns Psych::Nodes::Document
 #   Psych.parse_file('database.yml')
 #
-# ==== Exception handling
+# ==== \Exception handling
 #
 #   begin
 #     # The second argument changes only the exception contents
