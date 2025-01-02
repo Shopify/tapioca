@@ -836,7 +836,7 @@ class Logger::LogDevice
   # source://logger/lib/logger/log_device.rb#14
   def initialize(log = T.unsafe(nil), shift_age: T.unsafe(nil), shift_size: T.unsafe(nil), shift_period_suffix: T.unsafe(nil), binmode: T.unsafe(nil), reraise_write_errors: T.unsafe(nil)); end
 
-  # source://logger/lib/logger/log_device.rb#59
+  # source://logger/lib/logger/log_device.rb#43
   def close; end
 
   # Returns the value of attribute dev.
@@ -849,7 +849,7 @@ class Logger::LogDevice
   # source://logger/lib/logger/log_device.rb#11
   def filename; end
 
-  # source://logger/lib/logger/log_device.rb#69
+  # source://logger/lib/logger/log_device.rb#53
   def reopen(log = T.unsafe(nil)); end
 
   # source://logger/lib/logger/log_device.rb#32
@@ -857,30 +857,47 @@ class Logger::LogDevice
 
   private
 
-  # source://logger/lib/logger/log_device.rb#126
+  # source://logger/lib/logger/log_device.rb#143
   def add_log_header(file); end
 
-  # source://logger/lib/logger/log_device.rb#132
+  # source://logger/lib/logger/log_device.rb#149
   def check_shift_log; end
 
-  # source://logger/lib/logger/log_device.rb#110
+  # source://logger/lib/logger/log_device.rb#119
   def create_logfile(filename); end
 
-  # source://logger/lib/logger/log_device.rb#152
+  # source://logger/lib/logger/log_device.rb#91
+  def fixup_mode(dev, filename); end
+
+  # source://logger/lib/logger/log_device.rb#135
+  def handle_write_errors(mesg); end
+
+  # source://logger/lib/logger/log_device.rb#164
   def lock_shift_log; end
 
-  # source://logger/lib/logger/log_device.rb#102
+  # source://logger/lib/logger/log_device.rb#106
   def open_logfile(filename); end
 
-  # source://logger/lib/logger/log_device.rb#86
+  # source://logger/lib/logger/log_device.rb#76
   def set_dev(log); end
 
-  # source://logger/lib/logger/log_device.rb#183
+  # source://logger/lib/logger/log_device.rb#193
   def shift_log_age; end
 
-  # source://logger/lib/logger/log_device.rb#195
+  # source://logger/lib/logger/log_device.rb#205
   def shift_log_period(period_end); end
 end
+
+# :stopdoc:
+#
+# source://logger/lib/logger/log_device.rb#72
+Logger::LogDevice::MODE = T.let(T.unsafe(nil), Integer)
+
+# source://logger/lib/logger/log_device.rb#74
+Logger::LogDevice::MODE_TO_CREATE = T.let(T.unsafe(nil), Integer)
+
+# source://logger/lib/logger/log_device.rb#73
+Logger::LogDevice::MODE_TO_OPEN = T.let(T.unsafe(nil), Integer)
 
 # source://logger/lib/logger/period.rb#4
 module Logger::Period
