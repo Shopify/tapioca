@@ -149,7 +149,7 @@ module Tapioca
 
         assert_stderr_includes(result, <<~ERR)
           Can't import RBI file for `spoom` as it contains errors:
-              Error: unexpected end-of-input, assuming it is closing the parent top level context. expected an `end` to close the `class` statement. (-:4:0)
+              Error: unexpected end-of-input, assuming it is closing the parent top level context. expected an `end` to close the `class` statement. (-:3:24)
         ERR
 
         refute_includes(result.out, "create  sorbet/rbi/annotations/spoom.rbi")

@@ -438,7 +438,7 @@ module Tapioca
             "unexpected end-of-input, assuming it is closing the parent top level context. expected an `end` to " \
               "close the `module` statement.",
           )
-          assert_stderr_includes(result, "foo/rbi/foo.rbi:2:0")
+          assert_stderr_includes(result, "foo/rbi/foo.rbi:1:25")
 
           assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
 
