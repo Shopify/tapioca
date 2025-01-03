@@ -5,6 +5,8 @@ require "spec_helper"
 
 module Tapioca
   class ConfigTest < SpecWithProject
+    include Tapioca::Helpers::Test::Template
+
     describe "cli::configuration" do
       before(:all) do
         @project.require_default_gems
@@ -107,6 +109,12 @@ module Tapioca
 
         result = @project.tapioca("gem")
 
+        hash_inspect = if ruby_version(">= 3.4")
+          '"msgpack" => false'
+        else
+          '"msgpack"=>false'
+        end
+
         assert_stderr_equals(<<~ERR, result)
 
           Configuration file sorbet/tapioca/config.yml has the following errors:
@@ -114,7 +122,7 @@ module Tapioca
           - invalid value for option only for key dsl - expected Array[String] but found [1, false]
           - invalid value for option exclude for key dsl - expected Array[String] but found [1, false]
           - invalid value for option exclude for key gem - expected Array[String] but found [1, false]
-          - invalid value for option typed_overrides for key gem - expected Hash[String, String] but found {"msgpack"=>false}
+          - invalid value for option typed_overrides for key gem - expected Hash[String, String] but found {#{hash_inspect}}
         ERR
 
         assert_empty_stdout(result)
