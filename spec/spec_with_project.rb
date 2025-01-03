@@ -227,9 +227,19 @@ module Tapioca
       assert_includes(result.out, snippet, result.to_s)
     end
 
+    sig { params(result: Spoom::ExecResult, pattern: Regexp).void }
+    def assert_stdout_includes_pattern(result, pattern)
+      assert_match(pattern, result.out.to_s, result.to_s)
+    end
+
     sig { params(result: Spoom::ExecResult, snippet: String).void }
     def assert_stderr_includes(result, snippet)
       assert_includes(result.err, snippet, result.to_s)
+    end
+
+    sig { params(result: Spoom::ExecResult, pattern: Regexp).void }
+    def assert_stderr_includes_pattern(result, pattern)
+      assert_match(pattern, result.err.to_s, result.to_s)
     end
 
     private
