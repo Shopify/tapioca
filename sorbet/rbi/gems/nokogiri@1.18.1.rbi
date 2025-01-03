@@ -2386,6 +2386,7 @@ Nokogiri::VERSION_INFO = T.let(T.unsafe(nil), Hash)
 
 # source://nokogiri/lib/nokogiri/version/info.rb#7
 class Nokogiri::VersionInfo
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -7846,22 +7847,22 @@ module Nokogiri::XML::Searchable
 
   private
 
-  # source://nokogiri/lib/nokogiri/xml/searchable.rb#210
+  # source://nokogiri/lib/nokogiri/xml/searchable.rb#228
   def css_internal(node, rules, handler, ns); end
 
-  # source://nokogiri/lib/nokogiri/xml/searchable.rb#241
+  # source://nokogiri/lib/nokogiri/xml/searchable.rb#232
   def css_rules_to_xpath(rules, ns); end
 
-  # source://nokogiri/lib/nokogiri/xml/searchable.rb#257
+  # source://nokogiri/lib/nokogiri/xml/searchable.rb#210
   def extract_params(params); end
 
-  # source://nokogiri/lib/nokogiri/xml/searchable.rb#229
+  # source://nokogiri/lib/nokogiri/xml/searchable.rb#263
   def xpath_impl(node, path, handler, ns, binds); end
 
-  # source://nokogiri/lib/nokogiri/xml/searchable.rb#214
+  # source://nokogiri/lib/nokogiri/xml/searchable.rb#248
   def xpath_internal(node, paths, handler, ns, binds); end
 
-  # source://nokogiri/lib/nokogiri/xml/searchable.rb#245
+  # source://nokogiri/lib/nokogiri/xml/searchable.rb#236
   def xpath_query_from_css_rule(rule, ns); end
 end
 
@@ -8044,6 +8045,7 @@ end
 # source://nokogiri/lib/nokogiri/xml/xpath_context.rb#5
 class Nokogiri::XML::XPathContext
   def evaluate(*_arg0); end
+  def node=(_arg0); end
 
   # Register namespaces in +namespaces+
   #
@@ -8052,6 +8054,9 @@ class Nokogiri::XML::XPathContext
 
   def register_ns(_arg0, _arg1); end
   def register_variable(_arg0, _arg1); end
+
+  # source://nokogiri/lib/nokogiri/xml/xpath_context.rb#16
+  def register_variables(binds); end
 
   class << self
     def new(_arg0); end

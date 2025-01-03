@@ -271,8 +271,8 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          gem_name = "base64"
-          gem_top_level_constant = "module Base64"
+          gem_name = "cgi"
+          gem_top_level_constant = "class CGI"
 
           gem_spec = ::Gem::Specification.default_stubs("*.gemspec").find do |spec|
             spec.name == gem_name && spec.default_gem?
@@ -2029,9 +2029,11 @@ module Tapioca
             "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
             "\nError during application loading"
           assert_stdout_includes(result, out)
-          err = "/tmp/tapioca/tests/gem_spec/project/config/application.rb:5:in `<class:Application>': Error during " \
-            "application loading (RuntimeError)"
-          assert_stderr_includes(result, err)
+          err = %r{
+            tapioca/tests/gem_spec/project/config/application\.rb:5:in\s['`]<class:Application>':\s
+            Error\sduring\sapplication\sloading\s\(RuntimeError\)
+          }x
+          assert_stderr_includes_pattern(result, err)
           refute_success_status(result)
         end
 
@@ -2044,9 +2046,9 @@ module Tapioca
             "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
             "\nError during application loading"
           assert_stdout_includes(result, out)
-          assert_stdout_includes(
+          assert_stdout_includes_pattern(
             result,
-            "/tmp/tapioca/tests/gem_spec/project/config/application.rb:5:in `<class:Application>'",
+            %r{tapioca/tests/gem_spec/project/config/application\.rb:5:in ['`]<class:Application>'},
           )
           assert_stdout_includes(result, <<~OUT)
             Continuing RBI generation without loading the Rails application.
