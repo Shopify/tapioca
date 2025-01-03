@@ -271,8 +271,8 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          gem_name = "base64"
-          gem_top_level_constant = "module Base64"
+          gem_name = "cgi"
+          gem_top_level_constant = "class CGI"
 
           gem_spec = ::Gem::Specification.default_stubs("*.gemspec").find do |spec|
             spec.name == gem_name && spec.default_gem?
