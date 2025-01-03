@@ -18,5 +18,6 @@ module Tapioca
     autoload :GemVerify, "tapioca/commands/gem_verify"
     autoload :Require, "tapioca/commands/require"
     autoload :Todo, "tapioca/commands/todo"
+    autoload :Init, "tapioca/commands/init"
   end
 end
