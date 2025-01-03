@@ -372,6 +372,7 @@ DEPENDENCIES
   aasm
   activerecord-typedstore
   activeresource
+  base64
   bcrypt
   cityhash!
   config
