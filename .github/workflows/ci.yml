@@ -15,8 +15,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-          rubygems: 3.5.11
-          bundler: 2.5.11
+          rubygems: 3.6.2
       - name: Run type check
         run: bin/typecheck
       - name: Lint Ruby files
@@ -37,6 +36,7 @@ jobs:
       matrix:
         ruby: ["3.1", "3.2", "3.3", "head"]
         rails: ["7.0", "current", "main"]
+        rubygems: ["3.6.2"]
         exclude:
           - ruby: "3.1"
             rails: "main"
@@ -45,6 +45,9 @@ jobs:
             experimental: true
           - ruby: "head"
             experimental: true
+          - rails: "current"
+            ruby: "3.3"
+            rubygems: "3.5.23"
     name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }}
     env:
       RAILS_VERSION: ${{ matrix.rails }}
@@ -64,8 +67,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-          rubygems: 3.5.11
-          bundler: 2.5.11
+          rubygems: ${{ matrix.rubygems }}
       - name: Run tests
         run: bin/test
         continue-on-error: ${{ !!matrix.experimental }}
