@@ -40,6 +40,8 @@ jobs:
         exclude:
           - ruby: "3.1"
             rails: "main"
+          - ruby: "3.4"
+            rails: "7.0"
         include:
           - rails: "main"
             experimental: true
