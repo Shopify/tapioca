@@ -77,7 +77,9 @@ module RubyLsp
         # Resetting BUNDLE_GEMFILE to root folder to use the project's Gemfile instead of Ruby LSP's composed Gemfile
         stdout, stderr, status = T.unsafe(Open3).capture3(
           { "BUNDLE_GEMFILE" => "Gemfile" },
-          "bin/tapioca",
+          "bundle",
+          "exec",
+          "tapioca",
           "gem",
           "--lsp_addon",
           *gems,
