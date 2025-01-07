@@ -53,7 +53,14 @@ module RubyLsp
             workspace_path: @global_state.workspace_path,
           )
 
-          RunGemRbiCheck.new.run
+          gem_rbi_check_result = RunGemRbiCheck.new.run
+          @outgoing_queue << Notification.window_log_message(
+            gem_rbi_check_result.stdout,
+          ) unless gem_rbi_check_result.stdout.empty?
+          @outgoing_queue << Notification.window_log_message(
+            gem_rbi_check_result.stderr,
+            type: Constant::MessageType::WARNING,
+          ) unless gem_rbi_check_result.stderr.empty?
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes

@@ -8,20 +8,33 @@ module RubyLsp
     class RunGemRbiCheck
       extend T::Sig
 
-      def initialize
-        @logs = []
+      class GemRbiCheckResult < T::Struct
+        prop :stdout, String
+        prop :stderr, String
+        prop :status, T.nilable(Process::Status)
       end
 
-      attr_reader :logs
+      sig { void }
+      def initialize
+        @result = T.let(
+          GemRbiCheckResult.new(stdout: "", stderr: "", status: nil),
+          GemRbiCheckResult,
+        )
+      end
 
+      attr_reader :result
+
+      sig { params(project_path: String).returns(GemRbiCheckResult) }
       def run(project_path = ".")
         FileUtils.chdir(project_path) do
           if git_repo?
             lockfile_changed? ? generate_gem_rbis : cleanup_orphaned_rbis
           else
-            @logs << "Not a git repository"
+            @result.stdout = "Not a git repository"
           end
         end
+
+        @result
       end
 
       private
@@ -55,32 +68,17 @@ module RubyLsp
 
         if added_or_modified_gems.any?
           # Resetting BUNDLE_GEMFILE to root folder to use the project's Gemfile instead of Ruby LSP's composed Gemfile
-          stdout, stderr, status = T.unsafe(Open3).capture3(
+          @result.stdout, @result.stderr, @result.status = T.unsafe(Open3).capture3(
             { "BUNDLE_GEMFILE" => "Gemfile" },
             "bin/tapioca",
             "gem",
             "--lsp_addon",
             *added_or_modified_gems,
           )
-          @logs << stdout
-          @logs << stderr
-          T.must(@outgoing_queue) << if status.success?
-            Notification.window_log_message(
-              stdout,
-              type: Constant::MessageType::INFO,
-            )
-          else
-            Notification.window_log_message(
-              stderr,
-              type: Constant::MessageType::ERROR,
-            )
-          end
         elsif removed_gems.any?
           FileUtils.rm_f(Dir.glob("sorbet/rbi/gems/{#{removed_gems.join(",")}}@*.rbi"))
-          T.must(@outgoing_queue) << RubyLsp::Notification.window_log_message(
-            "Removed RBIs for: #{removed_gems.join(", ")}",
-            type: Constant::MessageType::INFO,
-          )
+
+          @result.stdout = "Removed RBIs for: #{removed_gems.join(", ")}"
         end
       end
 
@@ -89,23 +87,22 @@ module RubyLsp
         untracked_files = %x(git ls-files --others --exclude-standard sorbet/rbi/gems/).lines.map(&:strip)
         deleted_files = %x(git ls-files --deleted sorbet/rbi/gems/).lines.map(&:strip)
 
+        deleted_rbis = []
+        restored_rbis = []
+
         untracked_files.each do |file|
           File.delete(file)
-
-          T.must(@outgoing_queue) << Notification.window_log_message(
-            "Deleted untracked RBI: #{file}",
-            type: Constant::MessageType::INFO,
-          )
+          deleted_rbis << file
         end
 
         deleted_files.each do |file|
           %x(git checkout -- #{file})
-
-          T.must(@outgoing_queue) << RubyLsp::Notification.window_log_message(
-            "Restored deleted RBI: #{file}",
-            type: Constant::MessageType::INFO,
-          )
+          restored_rbis << file
         end
+
+        @result.stdout = "Deleted untracked RBIs: #{deleted_rbis.join(", ")}" unless deleted_rbis.empty?
+        @result.stdout += "\n" unless deleted_rbis.empty? || restored_rbis.empty?
+        @result.stdout += "Restored deleted RBIs: #{restored_rbis.join(", ")}" unless restored_rbis.empty?
       end
     end
   end
