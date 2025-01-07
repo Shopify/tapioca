@@ -47,7 +47,7 @@ module Tapioca
         check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
         check.run(@project.absolute_path)
 
-        assert check.logs.include?("Not a git repository")
+        assert check.result.stdout.include?("Not a git repository")
       end
 
       it "creates the RBI for a newly added gem" do

@@ -48,7 +48,14 @@ module RubyLsp
           @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
 
-          RunGemRbiCheck.new.run
+          gem_rbi_check_result = RunGemRbiCheck.new.run
+          @outgoing_queue << Notification.window_log_message(
+            gem_rbi_check_result.stdout,
+          ) unless gem_rbi_check_result.stdout.empty?
+          @outgoing_queue << Notification.window_log_message(
+            gem_rbi_check_result.stderr,
+            type: Constant::MessageType::WARNING,
+          ) unless gem_rbi_check_result.stderr.empty?
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
