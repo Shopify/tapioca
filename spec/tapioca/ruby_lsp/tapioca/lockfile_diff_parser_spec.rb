@@ -38,6 +38,20 @@ module RubyLsp
           lockfile_parser = RubyLsp::Tapioca::LockfileDiffParser.new(diff_output)
           assert_equal ["removed_gem", "outdated_gem"], lockfile_parser.removed_gems
         end
+
+        it "ignores direct dependencies" do
+          diff_output = <<~DIFF
+            foo (1.1.1)
+            bar (1.2.3)
+            -    foo (> 0)
+          DIFF
+
+          lockfile_parser = RubyLsp::Tapioca::LockfileDiffParser.new(
+            diff_output,
+            direct_dependencies: ["foo"],
+          )
+          assert_empty lockfile_parser.removed_gems
+        end
       end
 
       it "handles gem names with hyphens and underscores" do
