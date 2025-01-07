@@ -180,7 +180,7 @@ Options:
                [--include-dependencies], [--no-include-dependencies], [--skip-include-dependencies]  # Generate RBI files for dependencies of the given gem(s)
                                                                                                      # Default: false
   --typed, -t, [--typed-overrides=gem:level [gem:level ...]]                                         # Override for typed sigils for generated gem RBIs
-                                                                                                     # Default: {"activesupport"=>"false"}
+                                                                                                     # Default: {"activesupport" => "false"}
                [--verify], [--no-verify], [--skip-verify]                                            # Verify RBIs are up-to-date
                                                                                                      # Default: false
                [--doc], [--no-doc], [--skip-doc]                                                     # Include YARD documentation from sources when generating RBIs. Warning: this might be slow

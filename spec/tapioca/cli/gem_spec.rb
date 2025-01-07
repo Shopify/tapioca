@@ -271,8 +271,8 @@ module Tapioca
         end
 
         it "must generate RBI for a default gem" do
-          gem_name = "base64"
-          gem_top_level_constant = "module Base64"
+          gem_name = "cgi"
+          gem_top_level_constant = "class CGI"
 
           gem_spec = ::Gem::Specification.default_stubs("*.gemspec").find do |spec|
             spec.name == gem_name && spec.default_gem?
@@ -747,7 +747,7 @@ module Tapioca
 
         it "must generate git gem RBIs with source revision numbers" do
           @project.write_gemfile!(<<~GEMFILE, append: true)
-            gem("faraday", git: "https://github.com/lostisland/faraday", ref: "23e249563613971ced8f851230c46b9eeeefe931")
+            gem("faraday", git: "https://github.com/lostisland/faraday", ref: "a9cf00425e3abc99b78952af44deb2912a65a882")
           GEMFILE
 
           @project.bundle_install!
@@ -757,7 +757,7 @@ module Tapioca
           assert_stdout_includes(result, "Compiled faraday")
 
           assert_project_file_exist(
-            "sorbet/rbi/gems/faraday@2.0.0.alpha.pre.4-23e249563613971ced8f851230c46b9eeeefe931.rbi",
+            "sorbet/rbi/gems/faraday@2.12.2-a9cf00425e3abc99b78952af44deb2912a65a882.rbi",
           )
 
           assert_empty_stderr(result)
@@ -1327,7 +1327,7 @@ module Tapioca
         end
 
         it "generates correct RBIs for a Rails engine in Zeitwerk mode" do
-          @project.require_real_gem("rails", "6.1.7.2")
+          @project.require_real_gem("rails", "7.1.5")
           @project.require_real_gem("turbo-rails", "1.3.2")
           @project.bundle_install!
 
@@ -1337,7 +1337,7 @@ module Tapioca
             module Foo
               class Application < Rails::Application
                 # Initialize configuration defaults for originally generated Rails version.
-                config.load_defaults 6.1
+                config.load_defaults 7.1
                 config.autoloader = :zeitwerk
               end
             end
@@ -1358,7 +1358,7 @@ module Tapioca
         end
 
         it "generates correct RBIs for a Rails engine in Classic mode" do
-          @project.require_real_gem("rails", "6.1.7.2")
+          @project.require_real_gem("rails", "7.1.5")
           @project.require_real_gem("turbo-rails", "1.3.2")
           @project.bundle_install!
 
@@ -1368,7 +1368,7 @@ module Tapioca
             module Foo
               class Application < Rails::Application
                 # Initialize configuration defaults for originally generated Rails version.
-                config.load_defaults 6.1
+                config.load_defaults 7.1
                 config.autoloader = :classic
               end
             end
@@ -2029,9 +2029,11 @@ module Tapioca
             "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
             "\nError during application loading"
           assert_stdout_includes(result, out)
-          err = "/tmp/tapioca/tests/gem_spec/project/config/application.rb:5:in `<class:Application>': Error during " \
-            "application loading (RuntimeError)"
-          assert_stderr_includes(result, err)
+          err = %r{
+            tapioca/tests/gem_spec/project/config/application\.rb:5:in\s['`]<class:Application>':\s
+            Error\sduring\sapplication\sloading\s\(RuntimeError\)
+          }x
+          assert_stderr_includes_pattern(result, err)
           refute_success_status(result)
         end
 
@@ -2044,9 +2046,9 @@ module Tapioca
             "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
             "\nError during application loading"
           assert_stdout_includes(result, out)
-          assert_stdout_includes(
+          assert_stdout_includes_pattern(
             result,
-            "/tmp/tapioca/tests/gem_spec/project/config/application.rb:5:in `<class:Application>'",
+            %r{tapioca/tests/gem_spec/project/config/application\.rb:5:in ['`]<class:Application>'},
           )
           assert_stdout_includes(result, <<~OUT)
             Continuing RBI generation without loading the Rails application.

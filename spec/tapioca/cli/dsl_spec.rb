@@ -2638,9 +2638,11 @@ module Tapioca
             Loading DSL extension classes... Hi from test extension
           OUT
 
-          err = "tapioca/tests/dsl_spec/project/sorbet/tapioca/extensions/test.rb:2:in `<top (required)>': " \
-            "Raising from test extension (RuntimeError)"
-          assert_stderr_includes(result, err)
+          err = %r{
+            tapioca/tests/dsl_spec/project/sorbet/tapioca/extensions/test\.rb:2:in\s['`]<top\s\(required\)>':\s
+            Raising\sfrom\stest\sextension\s\(RuntimeError\)
+          }x
+          assert_stderr_includes_pattern(result, err)
 
           refute_success_status(result)
         end
@@ -3010,9 +3012,11 @@ module Tapioca
             "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
             "\nError during application loading"
           assert_stdout_includes(res, out)
-          err = "tapioca/tests/dsl_spec/project/config/application.rb:5:in `<class:Application>': Error during " \
-            "application loading (RuntimeError)"
-          assert_stderr_includes(res, err)
+          err = %r{
+            tapioca/tests/dsl_spec/project/config/application\.rb:5:in\s['`]<class:Application>':\s
+            Error\sduring\sapplication\sloading\s\(RuntimeError\)
+          }x
+          assert_stderr_includes_pattern(res, err)
           refute_success_status(res)
         end
 
@@ -3025,7 +3029,10 @@ module Tapioca
             "please pass `--no-halt-upon-load-error` to the tapioca command in sorbet/tapioca/config.yml or in CLI." \
             "\nError during application loading"
           assert_stdout_includes(res, out)
-          assert_stdout_includes(res, "tapioca/tests/dsl_spec/project/config/application.rb:5:in `<class:Application>'")
+          assert_stdout_includes_pattern(
+            res,
+            %r{tapioca/tests/dsl_spec/project/config/application\.rb:5:in ['`]<class:Application>'},
+          )
           assert_stdout_includes(res, <<~OUT)
             Continuing RBI generation without loading the Rails application.
             Done
