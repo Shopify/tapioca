@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.22.1", "< 0.23")
+RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.23.1", "< 0.24")
 
 begin
   # The Tapioca add-on depends on the Rails add-on to add a runtime component to the runtime server. We can allow the
@@ -79,7 +79,7 @@ module RubyLsp
           next if path.end_with?("_test.rb", "_spec.rb")
           next unless file_updated?(change, path)
 
-          entries = T.must(@index).entries_for(path)
+          entries = T.must(@index).entries_for(change[:uri])
           next unless entries
 
           entries.filter_map do |entry|
