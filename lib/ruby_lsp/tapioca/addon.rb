@@ -79,7 +79,7 @@ module RubyLsp
           next if path.end_with?("_test.rb", "_spec.rb")
           next unless file_updated?(change, path)
 
-          entries = T.must(@index).entries_for(path)
+          entries = T.must(@index).entries_for(change[:uri])
           next unless entries
 
           entries.filter_map do |entry|
