@@ -11,7 +11,7 @@ module Tapioca
 
     # Spec lifecycle
 
-    # TODO: Replace by `before(:all)` once Sorbet understands it
+    # TODO: Replace with `before(:all)` once Sorbet understands it
     sig { params(args: T.untyped).void }
     def initialize(*args)
       super(*T.unsafe(args))
