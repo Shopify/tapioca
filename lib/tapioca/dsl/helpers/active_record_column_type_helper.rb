@@ -216,6 +216,11 @@ module Tapioca
                    ActiveRecord::Locking::LockingType === type
                }
             as_non_nilable_if_persisted_and_not_nullable("::Integer", column_nullability:)
+          when ->(type) {
+                 defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Enum) &&
+                   ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Enum === type
+               }
+            "::String"
           else
             as_non_nilable_if_persisted_and_not_nullable(
               ActiveModelTypeHelper.type_for(column_type),
