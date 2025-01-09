@@ -8,93 +8,93 @@
 # source://sidekiq/lib/active_job/queue_adapters/sidekiq_adapter.rb#16
 module ActiveJob
   class << self
-    # source://activejob/7.1.5lib/active_job/queue_adapter.rb#7
+    # source://activejob/7.1.5.1lib/active_job/queue_adapter.rb#7
     def adapter_name(adapter); end
 
-    # source://activejob/7.1.5lib/active_job/deprecator.rb#4
+    # source://activejob/7.1.5.1lib/active_job/deprecator.rb#4
     def deprecator; end
 
-    # source://activejob/7.1.5lib/active_job/gem_version.rb#5
+    # source://activejob/7.1.5.1lib/active_job/gem_version.rb#5
     def gem_version; end
 
-    # source://activejob/7.1.5lib/active_job/enqueuing.rb#14
+    # source://activejob/7.1.5.1lib/active_job/enqueuing.rb#14
     def perform_all_later(*jobs); end
 
-    # source://activejob/7.1.5lib/active_job.rb#56
+    # source://activejob/7.1.5.1lib/active_job.rb#56
     def use_big_decimal_serializer; end
 
-    # source://activejob/7.1.5lib/active_job.rb#56
+    # source://activejob/7.1.5.1lib/active_job.rb#56
     def use_big_decimal_serializer=(_arg0); end
 
-    # source://activejob/7.1.5lib/active_job.rb#64
+    # source://activejob/7.1.5.1lib/active_job.rb#64
     def verbose_enqueue_logs; end
 
-    # source://activejob/7.1.5lib/active_job.rb#64
+    # source://activejob/7.1.5.1lib/active_job.rb#64
     def verbose_enqueue_logs=(_arg0); end
 
-    # source://activejob/7.1.5lib/active_job/version.rb#7
+    # source://activejob/7.1.5.1lib/active_job/version.rb#7
     def version; end
 
     private
 
-    # source://activejob/7.1.5lib/active_job/instrumentation.rb#6
+    # source://activejob/7.1.5.1lib/active_job/instrumentation.rb#6
     def instrument_enqueue_all(queue_adapter, jobs); end
   end
 end
 
 class ActiveJob::Base
-  # source://activesupport/7.1.5lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#70
   def __callbacks; end
 
-  # source://activesupport/7.1.5lib/active_support/callbacks.rb#70
+  # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#70
   def __callbacks?; end
 
-  # source://activesupport/7.1.5lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#963
   def _enqueue_callbacks; end
 
-  # source://activesupport/7.1.5lib/active_support/callbacks.rb#963
+  # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#963
   def _perform_callbacks; end
 
-  # source://activesupport/7.1.5lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#951
   def _run_enqueue_callbacks(&block); end
 
-  # source://activesupport/7.1.5lib/active_support/callbacks.rb#951
+  # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#951
   def _run_perform_callbacks(&block); end
 
-  # source://activejob/7.1.5lib/active_job/exceptions.rb#12
+  # source://activejob/7.1.5.1lib/active_job/exceptions.rb#12
   def after_discard_procs; end
 
-  # source://activejob/7.1.5lib/active_job/exceptions.rb#12
+  # source://activejob/7.1.5.1lib/active_job/exceptions.rb#12
   def after_discard_procs=(_arg0); end
 
-  # source://activejob/7.1.5lib/active_job/exceptions.rb#12
+  # source://activejob/7.1.5.1lib/active_job/exceptions.rb#12
   def after_discard_procs?; end
 
-  # source://activejob/7.1.5lib/active_job/logging.rb#11
+  # source://activejob/7.1.5.1lib/active_job/logging.rb#11
   def logger; end
 
-  # source://activejob/7.1.5lib/active_job/logging.rb#11
+  # source://activejob/7.1.5.1lib/active_job/logging.rb#11
   def logger=(val); end
 
-  # source://activejob/7.1.5lib/active_job/queue_adapter.rb#26
+  # source://activejob/7.1.5.1lib/active_job/queue_adapter.rb#26
   def queue_adapter(&block); end
 
-  # source://activejob/7.1.5lib/active_job/queue_name.rb#57
+  # source://activejob/7.1.5.1lib/active_job/queue_name.rb#57
   def queue_name_prefix; end
 
-  # source://activejob/7.1.5lib/active_job/queue_name.rb#57
+  # source://activejob/7.1.5.1lib/active_job/queue_name.rb#57
   def queue_name_prefix=(_arg0); end
 
-  # source://activejob/7.1.5lib/active_job/queue_name.rb#57
+  # source://activejob/7.1.5.1lib/active_job/queue_name.rb#57
   def queue_name_prefix?; end
 
-  # source://activesupport/7.1.5lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.5.1lib/active_support/rescuable.rb#15
   def rescue_handlers; end
 
-  # source://activesupport/7.1.5lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.5.1lib/active_support/rescuable.rb#15
   def rescue_handlers=(_arg0); end
 
-  # source://activesupport/7.1.5lib/active_support/rescuable.rb#15
+  # source://activesupport/7.1.5.1lib/active_support/rescuable.rb#15
   def rescue_handlers?; end
 
   # source://sidekiq/lib/sidekiq/job.rb#141
@@ -116,118 +116,118 @@ class ActiveJob::Base
   def sidekiq_retry_in_block=(_arg0); end
 
   class << self
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#70
     def __callbacks; end
 
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#70
     def __callbacks=(value); end
 
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#70
     def __callbacks?; end
 
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#955
     def _enqueue_callbacks; end
 
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#959
     def _enqueue_callbacks=(value); end
 
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#955
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#955
     def _perform_callbacks; end
 
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#959
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#959
     def _perform_callbacks=(value); end
 
-    # source://activejob/7.1.5lib/active_job/queue_adapter.rb#24
+    # source://activejob/7.1.5.1lib/active_job/queue_adapter.rb#24
     def _queue_adapter; end
 
-    # source://activejob/7.1.5lib/active_job/queue_adapter.rb#24
+    # source://activejob/7.1.5.1lib/active_job/queue_adapter.rb#24
     def _queue_adapter=(value); end
 
-    # source://activejob/7.1.5lib/active_job/queue_adapter.rb#23
+    # source://activejob/7.1.5.1lib/active_job/queue_adapter.rb#23
     def _queue_adapter_name; end
 
-    # source://activejob/7.1.5lib/active_job/queue_adapter.rb#23
+    # source://activejob/7.1.5.1lib/active_job/queue_adapter.rb#23
     def _queue_adapter_name=(value); end
 
-    # source://activejob/7.1.5lib/active_job/test_helper.rb#19
+    # source://activejob/7.1.5.1lib/active_job/test_helper.rb#19
     def _test_adapter; end
 
-    # source://activejob/7.1.5lib/active_job/test_helper.rb#19
+    # source://activejob/7.1.5.1lib/active_job/test_helper.rb#19
     def _test_adapter=(value); end
 
-    # source://activejob/7.1.5lib/active_job/exceptions.rb#12
+    # source://activejob/7.1.5.1lib/active_job/exceptions.rb#12
     def after_discard_procs; end
 
-    # source://activejob/7.1.5lib/active_job/exceptions.rb#12
+    # source://activejob/7.1.5.1lib/active_job/exceptions.rb#12
     def after_discard_procs=(value); end
 
-    # source://activejob/7.1.5lib/active_job/exceptions.rb#12
+    # source://activejob/7.1.5.1lib/active_job/exceptions.rb#12
     def after_discard_procs?; end
 
-    # source://activejob/7.1.5lib/active_job/logging.rb#12
+    # source://activejob/7.1.5.1lib/active_job/logging.rb#12
     def log_arguments; end
 
-    # source://activejob/7.1.5lib/active_job/logging.rb#12
+    # source://activejob/7.1.5.1lib/active_job/logging.rb#12
     def log_arguments=(value); end
 
-    # source://activejob/7.1.5lib/active_job/logging.rb#12
+    # source://activejob/7.1.5.1lib/active_job/logging.rb#12
     def log_arguments?; end
 
-    # source://activejob/7.1.5lib/active_job/logging.rb#11
+    # source://activejob/7.1.5.1lib/active_job/logging.rb#11
     def logger; end
 
-    # source://activejob/7.1.5lib/active_job/logging.rb#11
+    # source://activejob/7.1.5.1lib/active_job/logging.rb#11
     def logger=(val); end
 
-    # source://activejob/7.1.5lib/active_job/queue_priority.rb#49
+    # source://activejob/7.1.5.1lib/active_job/queue_priority.rb#49
     def priority; end
 
-    # source://activejob/7.1.5lib/active_job/queue_priority.rb#49
+    # source://activejob/7.1.5.1lib/active_job/queue_priority.rb#49
     def priority=(value); end
 
-    # source://activejob/7.1.5lib/active_job/queue_priority.rb#49
+    # source://activejob/7.1.5.1lib/active_job/queue_priority.rb#49
     def priority?; end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#55
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#55
     def queue_name; end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#55
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#55
     def queue_name=(value); end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#55
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#55
     def queue_name?; end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#56
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#56
     def queue_name_delimiter; end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#56
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#56
     def queue_name_delimiter=(value); end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#56
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#56
     def queue_name_delimiter?; end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#57
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#57
     def queue_name_prefix; end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#57
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#57
     def queue_name_prefix=(value); end
 
-    # source://activejob/7.1.5lib/active_job/queue_name.rb#57
+    # source://activejob/7.1.5.1lib/active_job/queue_name.rb#57
     def queue_name_prefix?; end
 
-    # source://activesupport/7.1.5lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.5.1lib/active_support/rescuable.rb#15
     def rescue_handlers; end
 
-    # source://activesupport/7.1.5lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.5.1lib/active_support/rescuable.rb#15
     def rescue_handlers=(value); end
 
-    # source://activesupport/7.1.5lib/active_support/rescuable.rb#15
+    # source://activesupport/7.1.5.1lib/active_support/rescuable.rb#15
     def rescue_handlers?; end
 
-    # source://activejob/7.1.5lib/active_job/exceptions.rb#11
+    # source://activejob/7.1.5.1lib/active_job/exceptions.rb#11
     def retry_jitter; end
 
-    # source://activejob/7.1.5lib/active_job/exceptions.rb#11
+    # source://activejob/7.1.5.1lib/active_job/exceptions.rb#11
     def retry_jitter=(value); end
 
     # source://sidekiq/lib/sidekiq/job.rb#108
@@ -264,7 +264,7 @@ end
 # source://sidekiq/lib/active_job/queue_adapters/sidekiq_adapter.rb#17
 module ActiveJob::QueueAdapters
   class << self
-    # source://activejob/7.1.5lib/active_job/queue_adapters.rb#137
+    # source://activejob/7.1.5.1lib/active_job/queue_adapters.rb#137
     def lookup(name); end
   end
 end
@@ -662,14 +662,14 @@ class Sidekiq::Config
   #
   # See sidekiq/scheduled.rb for an in-depth explanation of this value
   #
-  # source://sidekiq/lib/sidekiq/config.rb#230
+  # source://sidekiq/lib/sidekiq/config.rb#236
   def average_scheduled_poll_interval=(interval); end
 
   # register a new queue processing subsystem
   #
   # @yield [cap]
   #
-  # source://sidekiq/lib/sidekiq/config.rb#117
+  # source://sidekiq/lib/sidekiq/config.rb#123
   def capsule(name); end
 
   # Returns the value of attribute capsules.
@@ -679,16 +679,16 @@ class Sidekiq::Config
 
   # @yield [@client_chain]
   #
-  # source://sidekiq/lib/sidekiq/config.rb#100
+  # source://sidekiq/lib/sidekiq/config.rb#106
   def client_middleware; end
 
-  # source://sidekiq/lib/sidekiq/config.rb#74
+  # source://sidekiq/lib/sidekiq/config.rb#80
   def concurrency; end
 
   # LEGACY: edits the default capsule
   # config.concurrency = 5
   #
-  # source://sidekiq/lib/sidekiq/config.rb#70
+  # source://sidekiq/lib/sidekiq/config.rb#76
   def concurrency=(val); end
 
   # Death handlers are called when all retries for a job have been exhausted and
@@ -700,10 +700,10 @@ class Sidekiq::Config
   #   end
   # end
   #
-  # source://sidekiq/lib/sidekiq/config.rb#221
+  # source://sidekiq/lib/sidekiq/config.rb#227
   def death_handlers; end
 
-  # source://sidekiq/lib/sidekiq/config.rb#112
+  # source://sidekiq/lib/sidekiq/config.rb#118
   def default_capsule(&block); end
 
   # source://forwardable/1.3.3forwardable.rb#231
@@ -717,41 +717,44 @@ class Sidekiq::Config
   #
   # The default error handler logs errors to @logger.
   #
-  # source://sidekiq/lib/sidekiq/config.rb#241
+  # source://sidekiq/lib/sidekiq/config.rb#247
   def error_handlers; end
 
   # source://forwardable/1.3.3forwardable.rb#231
   def fetch(*args, **_arg1, &block); end
 
-  # source://sidekiq/lib/sidekiq/config.rb#206
+  # source://sidekiq/lib/sidekiq/config.rb#212
   def freeze!; end
 
   # INTERNAL USE ONLY
   #
-  # source://sidekiq/lib/sidekiq/config.rb#285
+  # source://sidekiq/lib/sidekiq/config.rb#291
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3forwardable.rb#231
   def has_key?(*args, **_arg1, &block); end
 
+  # source://sidekiq/lib/sidekiq/config.rb#64
+  def inspect; end
+
   # source://forwardable/1.3.3forwardable.rb#231
   def key?(*args, **_arg1, &block); end
 
-  # source://sidekiq/lib/sidekiq/config.rb#259
+  # source://sidekiq/lib/sidekiq/config.rb#265
   def logger; end
 
-  # source://sidekiq/lib/sidekiq/config.rb#270
+  # source://sidekiq/lib/sidekiq/config.rb#276
   def logger=(logger); end
 
   # find a singleton
   #
-  # source://sidekiq/lib/sidekiq/config.rb#198
+  # source://sidekiq/lib/sidekiq/config.rb#204
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # source://forwardable/1.3.3forwardable.rb#231
   def merge!(*args, **_arg1, &block); end
 
-  # source://sidekiq/lib/sidekiq/config.rb#142
+  # source://sidekiq/lib/sidekiq/config.rb#148
   def new_redis_pool(size, name = T.unsafe(nil)); end
 
   # Register a block to run at a point in the Sidekiq lifecycle.
@@ -765,10 +768,10 @@ class Sidekiq::Config
   #
   # @raise [ArgumentError]
   #
-  # source://sidekiq/lib/sidekiq/config.rb#253
+  # source://sidekiq/lib/sidekiq/config.rb#259
   def on(event, &block); end
 
-  # source://sidekiq/lib/sidekiq/config.rb#96
+  # source://sidekiq/lib/sidekiq/config.rb#102
   def queues; end
 
   # Edit the default capsule.
@@ -782,47 +785,47 @@ class Sidekiq::Config
   # are ridiculous and unnecessarily expensive. You can get random queue ordering
   # by explicitly setting all weights to 1.
   #
-  # source://sidekiq/lib/sidekiq/config.rb#92
+  # source://sidekiq/lib/sidekiq/config.rb#98
   def queues=(val); end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq/lib/sidekiq/config.rb#164
+  # source://sidekiq/lib/sidekiq/config.rb#170
   def redis; end
 
   # All capsules must use the same Redis configuration
   #
-  # source://sidekiq/lib/sidekiq/config.rb#128
+  # source://sidekiq/lib/sidekiq/config.rb#134
   def redis=(hash); end
 
-  # source://sidekiq/lib/sidekiq/config.rb#148
+  # source://sidekiq/lib/sidekiq/config.rb#154
   def redis_info; end
 
-  # source://sidekiq/lib/sidekiq/config.rb#132
+  # source://sidekiq/lib/sidekiq/config.rb#138
   def redis_pool; end
 
   # register global singletons which can be accessed elsewhere
   #
-  # source://sidekiq/lib/sidekiq/config.rb#187
+  # source://sidekiq/lib/sidekiq/config.rb#193
   def register(name, instance); end
 
   # @yield [@server_chain]
   #
-  # source://sidekiq/lib/sidekiq/config.rb#106
+  # source://sidekiq/lib/sidekiq/config.rb#112
   def server_middleware; end
 
-  # source://sidekiq/lib/sidekiq/config.rb#64
+  # source://sidekiq/lib/sidekiq/config.rb#70
   def to_json(*_arg0); end
 
-  # source://sidekiq/lib/sidekiq/config.rb#78
+  # source://sidekiq/lib/sidekiq/config.rb#84
   def total_concurrency; end
 
   private
 
-  # source://sidekiq/lib/sidekiq/config.rb#136
+  # source://sidekiq/lib/sidekiq/config.rb#142
   def local_redis_pool; end
 
-  # source://sidekiq/lib/sidekiq/config.rb#279
+  # source://sidekiq/lib/sidekiq/config.rb#285
   def parameter_size(handler); end
 end
 
@@ -1823,7 +1826,7 @@ Sidekiq::NAME = T.let(T.unsafe(nil), String)
 # source://sidekiq/lib/sidekiq/rails.rb#7
 class Sidekiq::Rails < ::Rails::Engine
   class << self
-    # source://activesupport/7.1.5lib/active_support/callbacks.rb#70
+    # source://activesupport/7.1.5.1lib/active_support/callbacks.rb#70
     def __callbacks; end
   end
 end
