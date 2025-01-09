@@ -32,6 +32,7 @@ In the following section you will find all available DSL compilers:
 * [GraphqlMutation](compiler_graphqlmutation.md)
 * [IdentityCache](compiler_identitycache.md)
 * [JsonApiClientResource](compiler_jsonapiclientresource.md)
+* [Kaminari](compiler_kaminari.md)
 * [Kredis](compiler_kredis.md)
 * [MixedInClassAttributes](compiler_mixedinclassattributes.md)
 * [Protobuf](compiler_protobuf.md)
