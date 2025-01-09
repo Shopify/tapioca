@@ -597,7 +597,7 @@ module Tapioca
                     sig.return_type = mod == relation_methods_module ? RelationClassName : AssociationRelationClassName
                   end
                   method.add_sig do |sig|
-                    sig.add_param("blk", "T.proc.params(record: #{constant_name}).returns(T::Boolean)")
+                    sig.add_param("blk", "T.proc.params(record: #{constant_name}).returns(BasicObject)")
                     sig.return_type = "T::Array[#{constant_name}]"
                   end
                 end
