@@ -27,6 +27,7 @@ module RubyLsp
       sig { params(project_path: String).returns(GemRbiCheckResult) }
       def run(project_path = ".")
         FileUtils.chdir(project_path) do
+          $stderr.puts "Inside Run Method"
           if git_repo?
             lockfile_changed? ? generate_gem_rbis : cleanup_orphaned_rbis
           else
@@ -119,6 +120,7 @@ module RubyLsp
 
       sig { params(message: String).void }
       def log_message(message)
+        $stderr.puts message
         @result.stdout += "#{message}\n"
       end
     end
