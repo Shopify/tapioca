@@ -27,7 +27,9 @@ module RubyLsp
       sig { params(project_path: String).returns(GemRbiCheckResult) }
       def run(project_path = ".")
         FileUtils.chdir(project_path) do
+          $stderr.puts "Inside Run Method"
           if git_repo?
+            $stderr.puts "Inside git_repo? Check"
             lockfile_changed? ? generate_gem_rbis : cleanup_orphaned_rbis
           else
             log_message("Not a git repository")
@@ -49,25 +51,30 @@ module RubyLsp
 
       sig { returns(T::Boolean) }
       def lockfile_changed?
+        $stdout.puts "Inside lockfile_changed? Method"
         fetch_lockfile_diff
-        !T.must(@lockfile_diff).empty?
+        $stdout.puts "fetch_lockfile_diff = #{fetch_lockfile_diff}"
+        !@lockfile_diff.empty?
       end
 
       sig { returns(String) }
       def fetch_lockfile_diff
-        @lockfile_diff = %x(git diff HEAD Gemfile.lock).strip
+        @lockfile_diff = File.exist?("Gemfile.lock") ? %x(git diff Gemfile.lock).strip : ""
       end
 
       sig { void }
       def generate_gem_rbis
+        $stdout.puts "Inside generate_gem_rbis Method"
         parser = Tapioca::LockfileDiffParser.new(@lockfile_diff)
         removed_gems = parser.removed_gems
         added_or_modified_gems = parser.added_or_modified_gems
 
         if added_or_modified_gems.any?
+          $stdout.puts "Inside if added_or_modified_gems.any? Check"
           log_message("Identified lockfile changes, attempting to generate gem RBIs...")
           execute_tapioca_gem_command(added_or_modified_gems)
         elsif removed_gems.any?
+          $stdout.puts "Inside elsif removed_gems.any? Check"
           remove_rbis(removed_gems)
         end
       end
@@ -98,8 +105,11 @@ module RubyLsp
 
       sig { void }
       def cleanup_orphaned_rbis
+        $stdout.puts "Inside cleanup_orphaned_rbis Method"
         untracked_files = %x(git ls-files --others --exclude-standard sorbet/rbi/gems/).lines.map(&:strip)
         deleted_files = %x(git ls-files --deleted sorbet/rbi/gems/).lines.map(&:strip)
+        $stdout.puts "untracked_files = #{untracked_files}"
+        $stdout.puts "deleted_files = #{deleted_files}"
 
         delete_files(untracked_files, "Deleted untracked RBIs")
         restore_files(deleted_files, "Restored deleted RBIs")
@@ -107,18 +117,21 @@ module RubyLsp
 
       sig { params(files: T::Array[String], message: String).void }
       def delete_files(files, message)
+        $stdout.puts "Inside delete_files Method"
         files.each { |file| File.delete(file) }
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
       sig { params(files: T::Array[String], message: String).void }
       def restore_files(files, message)
+        $stdout.puts "Inside restore_files Method"
         files.each { |file| %x(git checkout -- #{file}) }
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
       sig { params(message: String).void }
       def log_message(message)
+        $stderr.puts message
         @result.stdout += "#{message}\n"
       end
     end

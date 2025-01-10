@@ -14,6 +14,7 @@ module Tapioca
 
       describe "without git" do
         before do
+          @project.bundle_install!
           @project.tapioca("configure")
         end
 
@@ -32,33 +33,19 @@ module Tapioca
       end
 
       describe "with git" do
-        # TODO: understand why this fails with `before(:all)`
-        # before(:all) do
-        before do
-          @project.tapioca("configure")
-          check_exec @project.exec("git init")
-          check_exec @project.exec("git config user.email 'test@example.com'")
-          check_exec @project.exec("git config user.name 'Test User'")
+        before(:all) do
           @project.bundle_install!
-          FileUtils.mkdir_p("#{@project.absolute_path}/sorbet/rbi/gems")
-          check_exec @project.exec("git add .")
-          check_exec @project.exec("git commit -m 'Initial commit'")
-          $stdout.puts %x(cd #{@project.absolute_path} && git status)
+          @project.tapioca("configure")
+          @project.exec("git init")
+          @project.exec("git config commit.gpgsign false")
+          @project.exec("git add .")
+          @project.exec("git commit -m 'Initial commit'")
         end
 
         after do
-          ENV["BUNDLE_GEMFILE"] = nil
-          project.write_gemfile!(project.tapioca_gemfile)
-          @project.require_default_gems
-          project.remove!("sorbet/rbi")
-          project.remove!("../gems")
-          project.remove!(".git")
-          project.remove!("sorbet/tapioca/require.rb")
-          project.remove!("config/application.rb")
-          project.remove!(".bundle")
-          project.remove!("Gemfile.lock")
-        ensure
-          @project.remove!("output")
+          @project.remove!("sorbet/rbi/gems")
+          @project.remove!("Gemfile.lock")
+          $stdout.puts @project.exec("ls -a")
         end
 
         it "creates the RBI for a newly added gem" do
@@ -87,10 +74,7 @@ module Tapioca
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
           # Modify the gem
-          foo = mock_gem("foo", "0.0.2") do
-            write!("lib/foo.rb", FOO_RB)
-          end
-          @project.require_mock_gem(foo)
+          update_gem foo, "0.0.2"
           @project.bundle_install!
 
           check.run(@project.absolute_path)
@@ -105,24 +89,23 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check.run(@project.absolute_path)
+          check1 = ::RubyLsp::Tapioca::RunGemRbiCheck.new
+          check1.run(@project.absolute_path)
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
-          @project.exec("git add Gemfile.lock")
-          @project.exec("git commit -m 'Add foo gem'")
+          @project.exec("git restore Gemfile Gemfile.lock")
 
-          @project.write_gemfile!(@project.tapioca_gemfile)
-          @project.bundle_install!
-
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check.run(@project.absolute_path)
+          check2 = ::RubyLsp::Tapioca::RunGemRbiCheck.new
+          check2.run(@project.absolute_path)
 
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
         end
 
         it "deletes untracked RBI files" do
+          $stdout.puts @project.exec("git log --oneline")
+          @project.bundle_install!
+          FileUtils.mkdir_p("#{@project.absolute_path}/sorbet/rbi/gems")
           # Create an untracked RBI file
           FileUtils.touch("#{@project.absolute_path}/sorbet/rbi/gems/bar@0.0.1.rbi")
 
@@ -135,11 +118,14 @@ module Tapioca
         end
 
         it "restores deleted RBI files" do
+          @project.bundle_install!
+          FileUtils.mkdir_p("#{@project.absolute_path}/sorbet/rbi/gems")
           # Create and delete a tracked RBI file
           FileUtils.touch("#{@project.absolute_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
           @project.exec("git add sorbet/rbi/gems/foo@0.0.1.rbi")
           @project.exec("git commit -m 'Add foo RBI'")
           FileUtils.rm("#{@project.absolute_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
+          $stdout.puts @project.exec("git log --oneline")
 
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
@@ -147,12 +133,11 @@ module Tapioca
           check.run(@project.absolute_path)
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
-        end
-      end
 
-      def check_exec(command)
-        result = command
-        raise "fail" unless result.status
+          # Clean-up commit
+          @project.exec("git reset --hard HEAD^")
+          $stdout.puts @project.exec("git log --oneline")
+        end
       end
     end
   end

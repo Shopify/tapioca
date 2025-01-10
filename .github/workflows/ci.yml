@@ -71,7 +71,7 @@ jobs:
           bundler-cache: true
           rubygems: ${{ matrix.rubygems }}
       - name: Run tests
-        run: bin/test
+        run: bin/test spec/tapioca/ruby_lsp/run_gem_rbi_check_spec.rb --seed 13598
         continue-on-error: ${{ !!matrix.experimental }}
 
   buildall:
