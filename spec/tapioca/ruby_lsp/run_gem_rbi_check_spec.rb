@@ -48,15 +48,15 @@ module Tapioca
 
         after do
           ENV["BUNDLE_GEMFILE"] = nil
-          project.write_gemfile!(project.tapioca_gemfile)
+          @project.write_gemfile!(project.tapioca_gemfile)
           @project.require_default_gems
-          project.remove!("sorbet/rbi")
-          project.remove!("../gems")
-          project.remove!(".git")
-          project.remove!("sorbet/tapioca/require.rb")
-          project.remove!("config/application.rb")
-          project.remove!(".bundle")
-          project.remove!("Gemfile.lock")
+          @project.remove!("sorbet/rbi")
+          @project.remove!("../gems")
+          @project.remove!(".git")
+          @project.remove!("sorbet/tapioca/require.rb")
+          @project.remove!("config/application.rb")
+          @project.remove!(".bundle")
+          @project.remove!("Gemfile.lock")
         ensure
           @project.remove!("output")
         end
