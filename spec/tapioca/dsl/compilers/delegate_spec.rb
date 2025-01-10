@@ -155,12 +155,23 @@ module Tapioca
                   def string_method; end
                 end
 
+                class OtherTarget
+                  extend T::Sig
+
+                  sig { params(step: Integer).returns(Integer) }
+                  def echo_integer(step); step; end
+                end
+
                 class Delegate
                   extend T::Sig
                   sig { returns(Target) }
                   attr_reader :target
 
+                  sig { returns(OtherTarget) }
+                  attr_reader :other_target
+
                   delegate :string_method, to: :target, prefix: "target"
+                  delegate :echo_integer, to: :other_target, prefix: true
                 end
               RUBY
 
@@ -168,6 +179,9 @@ module Tapioca
                 # typed: strong
 
                 class Delegate
+                  sig { params(step: ::Integer).returns(::Integer) }
+                  def other_target_echo_integer(step); end
+
                   sig { returns(::String) }
                   def target_string_method; end
                 end

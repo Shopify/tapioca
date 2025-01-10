@@ -59,7 +59,7 @@ module Tapioca
             return [] unless defined?(Tapioca::Dsl::Compilers::Extensions::Module)
 
             all_classes.grep(Tapioca::Dsl::Compilers::Extensions::Module).select do |c|
-                T.unsafe(c).__tapioca_delegated_methods.any?
+              T.unsafe(c).__tapioca_delegated_methods.any?
             end
           end
         end
@@ -72,63 +72,127 @@ module Tapioca
                 # We don't handle delegations to instance, class and global variables
                 next if delegated_method[:to].start_with?("@", "$")
 
-                constant_target = if delegated_method[:to] == :class
-                  constant
-                elsif delegated_method[:to].start_with?(/[A-Z]/)
-                  target_klass = constantize(delegated_method[:to], namespace: constant)
-                  next unless Module === target_klass
-
-                  target_klass
+                delegate_sig = if delegated_method[:to] == :class || delegated_method[:to].start_with?(/[A-Z]/)
+                  ClassMethodDelegate.new(constant, method, **delegated_method.except(:methods))
                 else
-                  false
+                  DelegateMethod.new(constant, method, **delegated_method.except(:methods))
                 end
 
-                sig = if constant_target
-                  signature_of(constant_target.singleton_method(method))
-                else
-                  signature_of(constant.instance_method(delegated_method[:to]))
-                end
-
-                next unless sig
-
-                delegate_klass = if delegated_method[:allow_nil]
-                  sig.return_type.unwrap_nilable.raw_type
-                else
-                  sig.return_type.raw_type
-                end
-
-                next if delegate_klass == T.untyped
-
-                visibility = if delegated_method[:private]
-                  RBI::Private.new
-                else
-                  RBI::Public.new
-                end
-
-                method_def = if constant_target
-                  constant_target.singleton_method(method)
-                else
-                  delegate_klass.instance_method(method)
-                end
-
-                method_name = [delegated_method[:prefix], method.name.to_s].compact.join("_")
-
-                method_return_type = if delegated_method[:allow_nil]
-                  non_nilable = compile_method_return_type_to_rbi(method_def)
-                  "T.nilable(#{non_nilable})"
-                else
-                  compile_method_return_type_to_rbi(method_def)
-                end
+                parameters = compile_method_parameters_to_rbi(delegate_sig.method_def)
+                return_type = delegate_sig.maybe_wrap_return(
+                  compile_method_return_type_to_rbi(
+                    delegate_sig.method_def,
+                  ),
+                )
 
                 klass.create_method(
-                  method_name,
-                  parameters: compile_method_parameters_to_rbi(method_def),
-                  return_type: method_return_type,
+                  delegate_sig.method_name,
+                  parameters:,
+                  return_type:,
                   class_method: false,
-                  visibility: visibility,
+                  visibility: delegate_sig.visibility,
                 )
+
+              # if the target of the delegate is a constant, but not resolvable, we skip it,
+              # or if the target of the delegate is a method, but the return type of that method
+              # doesn't hold a signature for this the method we're looking for, we skip it.
+              rescue UntypedDelegate
+                next
               end
             end
+          end
+        end
+
+        class UntypedDelegate < StandardError; end
+
+        class DelegateMethod
+          include RBIHelper
+          include Runtime::Reflection
+          extend Runtime::Reflection
+
+          attr_reader :klass, :method, :target, :allow_nil, :prefix, :private
+
+          def initialize(klass, method, to:, allow_nil: false, prefix: nil, private: false)
+            @klass = klass
+            @method = method
+            @target = to
+            @allow_nil = allow_nil
+            @prefix = prefix
+            @private = private
+          end
+
+          def target_klass
+            @target_klass ||= klass
+          end
+
+          def method_def
+            @method_def ||= target_return_type.instance_method(method)
+          end
+
+          def method_name
+            if prefix == true
+              [@target, method.name.to_s].compact.join("_")
+            else
+              [prefix, method.name.to_s].compact.join("_")
+            end
+          end
+
+          def visibility
+            private ? RBI::Private.new : RBI::Public.new
+          end
+
+          def target_method
+            target_klass.instance_method(target)
+          end
+
+          def maybe_wrap_return(type)
+            allow_nil ? "T.nilable(#{type})" : type
+          end
+
+          private
+
+          def target_method_signature
+            signature_of(target_method)
+          end
+
+          def target_return_type
+            return @target_return_type if defined?(@target_return_type)
+
+            @target_return_type = if allow_nil
+              target_method_signature.return_type.unwrap_nilable.raw_type
+            else
+              target_method_signature.return_type.raw_type
+            end
+
+            raise UntypedDelegate if @target_return_type == T.untyped
+
+            @target_return_type
+          end
+        end
+
+        class ClassMethodDelegate < DelegateMethod
+          def target_klass
+            return @target_klass if defined?(@target_klass)
+
+            @target_klass = if target == :class
+              @klass
+            elsif target.start_with?(/[A-Z]/)
+              constantize(target)
+            end
+
+            raise UntypedDelegate if @target_klass.nil?
+            raise UntypedDelegate if @target_klass == UNDEFINED_CONSTANT
+            raise UntypedDelegate unless Module === @target_klass
+
+            @target_klass
+          end
+
+          def method_def
+            @method_def ||= target_klass.singleton_method(method)
+          end
+
+          def target_method
+            target_klass.singleton_method(method)
           end
         end
       end
