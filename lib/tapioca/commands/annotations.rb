@@ -238,8 +238,9 @@ module Tapioca
         return if contents.empty?
 
         rewriter = RBI::Rewriters::Merge.new(keep: RBI::Rewriters::Merge::Keep::NONE)
-
+        content2 = T.let(nil, T.untyped)
         contents.each do |content|
+          content2 = content
           rbi = RBI::Parser.parse_string(content)
           rewriter.merge(rbi)
         end
@@ -257,6 +258,7 @@ module Tapioca
       rescue RBI::ParseError => e
         say_error("\n\n  Can't import RBI file for `#{gem_name}` as it contains errors:", :yellow)
         say_error("    Error: #{e.message} (#{e.location})")
+        say_error(content2)
         nil
       end
 
