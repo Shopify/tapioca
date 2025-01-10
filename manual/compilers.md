@@ -27,6 +27,7 @@ In the following section you will find all available DSL compilers:
 * [ActiveSupportCurrentAttributes](compiler_activesupportcurrentattributes.md)
 * [ActiveSupportTimeExt](compiler_activesupporttimeext.md)
 * [Config](compiler_config.md)
+* [Delegate](compiler_delegate.md)
 * [FrozenRecord](compiler_frozenrecord.md)
 * [GraphqlInputObject](compiler_graphqlinputobject.md)
 * [GraphqlMutation](compiler_graphqlmutation.md)
