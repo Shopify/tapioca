@@ -7,8 +7,6 @@ rescue LoadError
   return
 end
 
-return unless Module.respond_to?(:delegate)
-
 module Tapioca
   module Dsl
     module Compilers

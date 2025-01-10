@@ -56,6 +56,8 @@ module Tapioca
 
           sig { override.returns(T::Enumerable[::Module]) }
           def gather_constants
+            return [] unless defined?(Tapioca::Dsl::Compilers::Extensions::Module)
+
             all_classes.select do |c|
               c.singleton_class < Tapioca::Dsl::Compilers::Extensions::Module &&
                 T.unsafe(c).__tapioca_delegated_methods.any?
@@ -86,6 +88,8 @@ module Tapioca
                 else
                   signature_of(constant.instance_method(delegated_method[:to]))
                 end
+
+                next unless sig
 
                 delegate_klass = if delegated_method[:allow_nil]
                   sig.return_type.unwrap_nilable.raw_type
