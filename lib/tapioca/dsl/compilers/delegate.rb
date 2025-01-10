@@ -106,7 +106,6 @@ module Tapioca
         class UntypedDelegate < StandardError; end
 
         class DelegateMethod
-          include RBIHelper
           include Runtime::Reflection
           extend Runtime::Reflection
 
