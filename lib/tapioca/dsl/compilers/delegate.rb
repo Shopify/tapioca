@@ -58,8 +58,7 @@ module Tapioca
           def gather_constants
             return [] unless defined?(Tapioca::Dsl::Compilers::Extensions::Module)
 
-            all_classes.select do |c|
-              c.singleton_class < Tapioca::Dsl::Compilers::Extensions::Module &&
+            all_classes.grep(Tapioca::Dsl::Compilers::Extensions::Module).select do |c|
                 T.unsafe(c).__tapioca_delegated_methods.any?
             end
           end
@@ -70,13 +69,14 @@ module Tapioca
           root.create_path(constant) do |klass|
             constant.__tapioca_delegated_methods.each do |delegated_method|
               delegated_method[:methods].each do |method|
-                next if delegated_method[:to].to_s.match?(/^[@$]/)
+                # We don't handle delegations to instance, class and global variables
+                next if delegated_method[:to].start_with?("@", "$")
 
                 constant_target = if delegated_method[:to] == :class
                   constant
-                elsif delegated_method[:to].to_s.match?(/^[A-Z]/)
-                  target_klass = constant.const_get(delegated_method[:to])
-                  next unless target_klass.is_a?(Module)
+                elsif delegated_method[:to].start_with?(/[A-Z]/)
+                  target_klass = constantize(delegated_method[:to], namespace: constant)
+                  next unless Module === target_klass
 
                   target_klass
                 else
