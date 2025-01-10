@@ -12,7 +12,7 @@ module Tapioca
 
     # The gem's version string such as "1.0.0" or ">= 2.0.5"
     sig { returns(String) }
-    attr_reader :version
+    attr_accessor :version
 
     # The dependencies to be added to the gem's gemspec
     sig { returns(T::Array[String]) }

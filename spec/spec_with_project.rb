@@ -84,6 +84,13 @@ module Tapioca
       gem
     end
 
+    sig { params(gem: MockGem, version: String).returns(MockGem) }
+    def update_gem(gem, version)
+      gem.version = version
+      gem.gemspec(gem.default_gemspec_contents)
+      gem
+    end
+
     # Spec assertions
 
     # Assert that the contents of `path` inside `@project` is equals to `expected`
