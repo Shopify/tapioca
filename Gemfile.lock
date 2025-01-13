@@ -137,7 +137,7 @@ GEM
       reline (>= 0.3.8)
     deep_merge (1.2.2)
     drb (2.2.1)
-    erubi (1.13.0)
+    erubi (1.13.1)
     faraday (2.9.0)
       faraday-net_http (>= 2.0, < 3.2)
     faraday-gzip (2.0.1)
