@@ -158,6 +158,12 @@ module Tapioca
 
             own_ancestors.include?(helper)
           end
+
+          sig { params(path: String).returns(T::Boolean) }
+          def handles_path?(path)
+            # e.g. config/routes.rb or routes/*.rb
+            path.end_with?("/routes.rb") || path.match?(%r{\/routes/.*\.rb})
+          end
         end
 
         NON_DISCOVERABLE_INCLUDERS = T.let(gather_non_discoverable_includers, T::Array[Module])

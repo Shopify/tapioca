@@ -345,6 +345,14 @@ module Tapioca
               end
             end
 
+            describe "#handles_path?" do
+              it "matches the routes path" do
+                assert(UrlHelpers.handles_path?("routes.rb"))
+                refute(UrlHelpers.handles_path?("other.rb"))
+                assert(UrlHelpers.handles_path?("routes/admin.rb"))
+              end
+            end
+
             it "generates RBI for constant that includes url_helpers" do
               add_ruby_file("routes.rb", <<~RUBY)
                 class Application < Rails::Application
