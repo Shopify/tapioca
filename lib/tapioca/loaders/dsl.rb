@@ -15,27 +15,20 @@ module Tapioca
             eager_load: T::Boolean,
             app_root: String,
             halt_upon_load_error: T::Boolean,
-            lsp_addon: T::Boolean,
           ).void
         end
         def load_application(
           tapioca_path:,
           eager_load: true,
           app_root: ".",
-          halt_upon_load_error: true,
-          lsp_addon: false
+          halt_upon_load_error: true
         )
-          loader = new(
+          new(
             tapioca_path: tapioca_path,
             eager_load: eager_load,
             app_root: app_root,
             halt_upon_load_error: halt_upon_load_error,
-          )
-          if lsp_addon
-            loader.load_dsl_extensions_and_compilers
-          else
-            loader.load
-          end
+          ).load
         end
       end
 
