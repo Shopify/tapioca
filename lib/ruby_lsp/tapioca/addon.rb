@@ -45,6 +45,11 @@ module RubyLsp
           @rails_runner_client = addon.rails_runner_client
           @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
+          @rails_runner_client.delegate_notification(
+            server_addon_name: "Tapioca",
+            request_name: "load_compilers_and_extensions",
+            workspace_path: @global_state.workspace_path,
+          )
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes

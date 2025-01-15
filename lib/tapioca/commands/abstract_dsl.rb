@@ -118,12 +118,14 @@ module Tapioca
 
       sig { void }
       def load_application
+        # Loaded ahead of time when using the add-on to avoid reloading multiple times
+        return if @lsp_addon
+
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
           eager_load: @requested_constants.empty? && @requested_paths.empty?,
           app_root: @app_root,
           halt_upon_load_error: @halt_upon_load_error,
-          lsp_addon: @lsp_addon,
         )
       end
 
