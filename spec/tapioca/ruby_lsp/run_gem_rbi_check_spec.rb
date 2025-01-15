@@ -12,6 +12,14 @@ module Tapioca
         end
       RUBY
 
+      before do
+        @project = mock_project
+      end
+
+      after do
+        @project.destroy!
+      end
+
       describe "without git" do
         before do
           @project.bundle_install!
@@ -33,19 +41,13 @@ module Tapioca
       end
 
       describe "with git" do
-        before(:all) do
+        before do
           @project.bundle_install!
           @project.tapioca("configure")
           @project.exec("git init")
           @project.exec("git config commit.gpgsign false")
           @project.exec("git add .")
           @project.exec("git commit -m 'Initial commit'")
-        end
-
-        after do
-          @project.remove!("sorbet/rbi/gems")
-          @project.remove!("Gemfile.lock")
-          $stdout.puts @project.exec("ls -a")
         end
 
         it "creates the RBI for a newly added gem" do
