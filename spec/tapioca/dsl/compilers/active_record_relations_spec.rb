@@ -648,8 +648,8 @@ module Tapioca
                     sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
-                    sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
-                    def count(column_name = nil); end
+                    sig { params(column_name: T.untyped, block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Integer]) }
+                    def count(column_name = nil, &block); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(T.self_type) }
                     def having(*args, &blk); end
@@ -753,8 +753,8 @@ module Tapioca
                     sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
-                    sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
-                    def count(column_name = nil); end
+                    sig { params(column_name: T.untyped, block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Integer]) }
+                    def count(column_name = nil, &block); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(T.self_type) }
                     def having(*args, &blk); end
@@ -1374,8 +1374,8 @@ module Tapioca
                     sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
-                    sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
-                    def count(column_name = nil); end
+                    sig { params(column_name: T.untyped, block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Integer]) }
+                    def count(column_name = nil, &block); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(T.self_type) }
                     def having(*args, &blk); end
@@ -1479,8 +1479,8 @@ module Tapioca
                     sig { params(operation: Symbol, column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
                     def calculate(operation, column_name); end
 
-                    sig { params(column_name: T.untyped).returns(T::Hash[T.untyped, Integer]) }
-                    def count(column_name = nil); end
+                    sig { params(column_name: T.untyped, block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, Integer]) }
+                    def count(column_name = nil, &block); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(T.self_type) }
                     def having(*args, &blk); end
