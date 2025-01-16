@@ -402,6 +402,7 @@ module Tapioca
                 "count",
                 parameters: [
                   create_opt_param("column_name", type: "T.untyped", default: "nil"),
+                  create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
                 ],
                 return_type: "T::Hash[T.untyped, Integer]",
               )
