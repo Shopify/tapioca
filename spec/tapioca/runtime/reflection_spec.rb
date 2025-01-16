@@ -178,7 +178,9 @@ module Tapioca
 
           it "returns nil when a signature block raises an exception" do
             method = SignatureFoo.instance_method(:bad_method)
-            assert_raises(ArgumentError) { Runtime::Reflection.signature_of!(method) }
+            assert_raises(Tapioca::Runtime::Reflection::SignatureBlockError) do
+              Runtime::Reflection.signature_of!(method)
+            end
           end
         end
       end

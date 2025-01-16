@@ -89,7 +89,10 @@ class StateMachines::AllMatcher < ::StateMachines::Matcher
   class << self
     private
 
+    # source://state_machines//lib/state_machines/matcher.rb#24
     def allocate; end
+
+    # source://state_machines//lib/state_machines/matcher.rb#24
     def new(*_arg0); end
   end
 end
@@ -1166,7 +1169,7 @@ module StateMachines::Integrations
     #   StateMachines::Integrations.integrations
     #   # => [StateMachines::Integrations::ActiveModel]
     #
-    # source://state_machines//lib/state_machines/integrations.rb#48
+    # source://state_machines//lib/state_machines/integrations.rb#53
     def list; end
 
     # Attempts to find an integration that matches the given class.  This will
@@ -1369,7 +1372,10 @@ class StateMachines::LoopbackMatcher < ::StateMachines::Matcher
   class << self
     private
 
+    # source://state_machines//lib/state_machines/matcher.rb#102
     def allocate; end
+
+    # source://state_machines//lib/state_machines/matcher.rb#102
     def new(*_arg0); end
   end
 end
@@ -2723,7 +2729,7 @@ class StateMachines::Machine
   #     end
   #   end
   #
-  # source://state_machines//lib/state_machines/machine.rb#1308
+  # source://state_machines//lib/state_machines/machine.rb#1337
   def on(*names, &block); end
 
   # Customizes the definition of one or more states in the machine.
@@ -2994,7 +3000,7 @@ class StateMachines::Machine
   # The minimum requirement is that the last argument in the method be an
   # options hash which contains at least <tt>:if</tt> condition support.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1005
+  # source://state_machines//lib/state_machines/machine.rb#1038
   def other_states(*names, &block); end
 
   # The class that the machine is defined in
@@ -4409,7 +4415,7 @@ module StateMachines::MatcherHelpers
   # * +stalled+
   # * +idling+
   #
-  # source://state_machines//lib/state_machines/matcher_helpers.rb#28
+  # source://state_machines//lib/state_machines/matcher_helpers.rb#31
   def any; end
 
   # Represents a state that matches the original +from+ state.  This is useful
@@ -4932,7 +4938,7 @@ class StateMachines::State
 
   # Whether or not this state is the initial state to use for new objects
   #
-  # source://state_machines//lib/state_machines/state.rb#33
+  # source://state_machines//lib/state_machines/state.rb#34
   def initial?; end
 
   # Generates a nicely formatted description of this state's contents.

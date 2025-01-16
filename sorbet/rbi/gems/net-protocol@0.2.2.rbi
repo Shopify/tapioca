@@ -11,7 +11,7 @@ class Net::BufferedIO
   # source://net-protocol//net/protocol.rb#116
   def initialize(io, read_timeout: T.unsafe(nil), write_timeout: T.unsafe(nil), continue_timeout: T.unsafe(nil), debug_output: T.unsafe(nil)); end
 
-  # source://net-protocol//net/protocol.rb#285
+  # source://net-protocol//net/protocol.rb#291
   def <<(*strs); end
 
   # source://net-protocol//net/protocol.rb#145
@@ -251,7 +251,7 @@ class Net::WriteAdapter
   # source://net-protocol//net/protocol.rb#491
   def inspect; end
 
-  # source://net-protocol//net/protocol.rb#495
+  # source://net-protocol//net/protocol.rb#499
   def print(str); end
 
   # source://net-protocol//net/protocol.rb#510
