@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/runtime/source_location"
+
 # On Ruby 3.2 or newer, Class defines an attached_object method that returns the
 # attached class of a singleton class without iterating ObjectSpace. On older
 # versions of Ruby, we fall back to iterating ObjectSpace.
@@ -33,10 +35,6 @@ module Tapioca
       UNDEFINED_CONSTANT = Module.new.freeze #: Module
 
       REQUIRED_FROM_LABELS = ["<top (required)>", "<main>", "<compiled>"].freeze #: Array[String]
-      # this looks something like:
-      # "(eval at /path/to/file.rb:123)"
-      # and we are just interested in the "/path/to/file.rb" part
-      EVAL_SOURCE_FILE_PATTERN = /\(eval at (.+):\d+\)/ #: Regexp
 
       # @without_runtime
       #: (BasicObject constant) -> bool
@@ -183,20 +181,14 @@ module Tapioca
 
         file, line = Object.const_source_location(constant_name)
 
-        # Ruby 3.3 adds automatic definition of source location for evals if
-        # `file` and `line` arguments are not provided. This results in the source
-        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
-        # this string to get the actual source file.
-        file = file&.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
-
-        [file, line] if file && line
+        SourceLocation.from_loc([file, line]) if file && line
       end
 
       # Examines the call stack to identify the closest location where a "require" is performed
       # by searching for the label "<top (required)>" or "block in <class:...>" in the
       # case of an ActiveSupport.on_load hook. If none is found, it returns the location
       # labeled "<main>", which is the original call site.
-      #: (Array[Thread::Backtrace::Location]? locations) -> [String, Integer]?
+      #: (Array[Thread::Backtrace::Location]? locations) -> SourceLocation?
       def resolve_loc(locations)
         return unless locations
 
@@ -219,13 +211,8 @@ module Tapioca
         return if locations.first&.label == "require"
 
         file = resolved_loc.absolute_path || ""
-        # Ruby 3.3 adds automatic definition of source location for evals if
-        # `file` and `line` arguments are not provided. This results in the source
-        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
-        # this string to get the actual source file.
-        file = file.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
 
-        [file, resolved_loc.lineno]
+        SourceLocation.from_loc([file, resolved_loc.lineno])
       end
 
       #: (Module constant) -> Set[String]

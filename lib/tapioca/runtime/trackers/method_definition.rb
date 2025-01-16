@@ -31,7 +31,7 @@ module Tapioca
 
             if definitions.empty?
               source_loc = owner.instance_method(method_name).source_location
-              definitions = [source_loc] if source_loc
+              definitions = [SourceLocation.from_loc(source_loc)].compact
             end
 
             definitions
