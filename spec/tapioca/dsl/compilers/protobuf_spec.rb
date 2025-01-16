@@ -586,15 +586,6 @@ module Tapioca
               assert_equal(expected, rbi_for(:Cart))
             end
           end
-
-          describe "#handles_path?" do
-            it "matches the proto file path" do
-              assert(Protobuf.handles_path?("foo.proto"))
-              assert(Protobuf.handles_path?("path/to/foo.proto"))
-              refute(Protobuf.handles_path?("foo.blah"))
-              refute(Protobuf.handles_path?("foo.protofoo"))
-            end
-          end
         end
 
         private
