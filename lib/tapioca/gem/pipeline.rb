@@ -128,12 +128,12 @@ module Tapioca
 
       sig { params(name: T.any(String, Symbol)).returns(T::Boolean) }
       def constant_in_gem?(name)
-        source_file, _ = const_source_location(name)
+        loc = const_source_location(name)
 
         # If the source location of the constant isn't available or is "(eval)", all bets are off.
-        return true if source_file.nil? || source_file == "(eval)"
+        return true if loc.nil? || loc.file.nil? || loc.file == "(eval)"
 
-        gem.contains_path?(source_file)
+        gem.contains_path?(loc.file)
       end
 
       sig { params(method_name: Symbol, owner: Module).returns(T.any([String, Integer], NilClass, T::Boolean)) }
@@ -144,11 +144,11 @@ module Tapioca
         return if definitions.empty?
 
         # Look up the first entry that matches a file in the gem.
-        found = definitions.find { |file, _line| @gem.contains_path?(file) }
+        found = definitions.find { |loc| @gem.contains_path?(loc.file) }
 
         unless found
           # If the source location of the method is "(eval)", err on the side of caution and include the method.
-          found = definitions.find { |file, _line| file == "(eval)" }
+          found = definitions.find { |loc| loc.file == "(eval)" }
           # However, we can just return true to signal that the method should be included.
           # We can't provide a source location for it, but we want it to be included in the gem RBI.
           return true if found

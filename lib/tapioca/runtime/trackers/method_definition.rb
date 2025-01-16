@@ -10,7 +10,7 @@ module Tapioca
 
         @method_definitions = T.let(
           {}.compare_by_identity,
-          T::Hash[Module, T::Hash[Symbol, T::Array[[String, Integer]]]],
+          T::Hash[Module, T::Hash[Symbol, T::Array[SourceLocation]]],
         )
 
         class << self
@@ -30,13 +30,13 @@ module Tapioca
             registrations_for(method_name, owner) << loc
           end
 
-          sig { params(method_name: Symbol, owner: Module).returns(T::Array[[String, Integer]]) }
+          sig { params(method_name: Symbol, owner: Module).returns(T::Array[SourceLocation]) }
           def method_definitions_for(method_name, owner)
             definitions = registrations_for(method_name, owner)
 
             if definitions.empty?
               source_loc = owner.instance_method(method_name).source_location
-              definitions = [source_loc] if source_loc
+              definitions = [SourceLocation.from_loc(source_loc)].compact
             end
 
             definitions
@@ -44,7 +44,7 @@ module Tapioca
 
           private
 
-          sig { params(method_name: Symbol, owner: Module).returns(T::Array[[String, Integer]]) }
+          sig { params(method_name: Symbol, owner: Module).returns(T::Array[SourceLocation]) }
           def registrations_for(method_name, owner)
             owner_lookup = (@method_definitions[owner] ||= {})
             owner_lookup[method_name] ||= []
