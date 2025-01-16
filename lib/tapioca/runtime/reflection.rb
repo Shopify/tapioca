@@ -127,7 +127,7 @@ module Tapioca
         end
       end
 
-      SignatureBlockError = Class.new(StandardError)
+      SignatureBlockError = Class.new(Tapioca::Error)
 
       #: ((UnboundMethod | Method) method) -> untyped
       def signature_of!(method)
