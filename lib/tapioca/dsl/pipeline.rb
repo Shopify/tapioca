@@ -77,12 +77,14 @@ module Tapioca
 
         requested_paths.each do |requested_path|
           @active_compilers.each do |compiler|
-            if compiler.handles_path?(requested_path.to_s)
-              # TODO: need to prevent dupes?
-              constants_to_process << compiler
-            end
+            next unless compiler.handles_path?(requested_path.to_s)
+
+            # TODO: generalize for other types
+            # constants_to_process << compiler.gather_constants
+            constants_to_process += compiler.gather_constants
           end
         end
+        # binding.break
         if constants_to_process.empty? && requested_paths.none? { |p| File.exist?(p) }
           report_error(<<~ERROR)
             No classes/modules can be matched for RBI generation.
