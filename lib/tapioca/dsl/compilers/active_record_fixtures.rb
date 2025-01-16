@@ -69,6 +69,7 @@ module Tapioca
 
           sig { params(path: String).returns(T::Boolean) }
           def handles_path?(path)
+            # TODO: `spec` too?
             File.fnmatch("test/fixtures/**/*.yml{,.erb}", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
           end
         end
