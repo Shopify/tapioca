@@ -38,9 +38,7 @@ module Tapioca
         def on_method(event)
           definition = @pipeline.method_definition_in_gem(event.method.name, event.constant)
 
-          case definition
-          when NilClass, FalseClass, TrueClass
-          else
+          if Pipeline::MethodInGemWithLocation === definition
             loc = definition.location
             add_source_location_comment(event.node, loc.file, loc.line)
           end

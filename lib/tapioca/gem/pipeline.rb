@@ -117,12 +117,40 @@ module Tapioca
         gem.contains_path?(loc.file)
       end
 
-      #: (UnboundMethod method) -> [String, Integer] | bool?
+      class MethodDefinitionLookupResult
+        extend T::Helpers
+        abstract!
+      end
+
+      # The method doesn't seem to exist
+      class MethodUnknown < MethodDefinitionLookupResult; end
+
+      # The method is not defined in the gem
+      class MethodNotInGem < MethodDefinitionLookupResult; end
+
+      # The method probably defined in the gem but doesn't have a source location
+      class MethodInGemWithoutLocation < MethodDefinitionLookupResult; end
+
+      # The method defined in gem and has a source location
+      class MethodInGemWithLocation < MethodDefinitionLookupResult
+        extend T::Sig
+
+        #: Runtime::SourceLocation
+        attr_reader :location
+
+        #: (Runtime::SourceLocation location) -> void
+        def initialize(location)
+          @location = location
+          super()
+        end
+      end
+
+      #: (Symbol method_name, Module owner) -> MethodDefinitionLookupResult
       def method_definition_in_gem(method_name, owner)
         definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(method_name, owner)
 
         # If the source location of the method isn't available, signal that by returning nil.
-        return if definitions.empty?
+        return MethodUnknown.new if definitions.empty?
 
         # Look up the first entry that matches a file in the gem.
         found = definitions.find { |loc| @gem.contains_path?(loc.file) }
@@ -132,13 +160,13 @@ module Tapioca
           found = definitions.find { |loc| loc.file == "(eval)" }
           # However, we can just return true to signal that the method should be included.
           # We can't provide a source location for it, but we want it to be included in the gem RBI.
-          return true if found
+          return MethodInGemWithoutLocation.new if found
         end
 
         # If we searched but couldn't find a source location in the gem, return false to signal that.
-        return false unless found
+        return MethodNotInGem.new unless found
 
-        found
+        MethodInGemWithLocation.new(found)
       end
 
       # Helpers

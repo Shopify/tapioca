@@ -62,13 +62,13 @@ module Tapioca
             method = signature.method if signature #: UnboundMethod
 
             case @pipeline.method_definition_in_gem(method.name, constant)
-            when nil
+            when Pipeline::MethodUnknown
               # This means that this is a C-method. Thus, we want to
               # skip it only if the constant is an ignored one, since
               # that probably means that we've hit a C-method for a
               # core type.
               return if @pipeline.symbol_in_payload?(symbol_name)
-            when false
+            when Pipeline::MethodNotInGem
               # Do not process this method, if it is not defined by the current gem
               return
             end
