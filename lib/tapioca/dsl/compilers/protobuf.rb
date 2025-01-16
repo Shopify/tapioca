@@ -174,11 +174,6 @@ module Tapioca
             results = results.concat(enum_modules)
             results.any? ? results + [Google::Protobuf::RepeatedField, Google::Protobuf::Map] : []
           end
-
-          sig { params(path: String).returns(T::Boolean) }
-          def handles_path?(path)
-            File.fnmatch("**/*.proto", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
-          end
         end
 
         private
