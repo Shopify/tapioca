@@ -35,6 +35,11 @@ module Tapioca
           processable_constants.include?(constant)
         end
 
+        sig { params(path: String).returns(T::Boolean) }
+        def handles_path?(path)
+          path.end_with?(".rb")
+        end
+
         sig { abstract.returns(T::Enumerable[Module]) }
         def gather_constants; end
 

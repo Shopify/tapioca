@@ -73,6 +73,18 @@ module Tapioca
           .sort_by! { |c| T.must(Runtime::Reflection.name_of(c)) }
 
         # It's OK if there are no constants to process if we received a valid file/path.
+        # binding.break
+
+        requested_paths.each do |requested_path|
+          @active_compilers.each do |compiler|
+            next unless compiler.handles_path?(requested_path.to_s)
+
+            # TODO: generalize for other types
+            # constants_to_process << compiler.gather_constants
+            constants_to_process += compiler.gather_constants
+          end
+        end
+        # binding.break
         if constants_to_process.empty? && requested_paths.none? { |p| File.exist?(p) }
           report_error(<<~ERROR)
             No classes/modules can be matched for RBI generation.
@@ -84,6 +96,7 @@ module Tapioca
           abort_if_pending_migrations!
         end
 
+        # binding.break
         result = Executor.new(
           constants_to_process,
           number_of_workers: @number_of_workers,
@@ -205,6 +218,7 @@ module Tapioca
           next unless compiler_class.handles?(constant)
 
           compiler = compiler_class.new(self, file.root, constant, @compiler_options)
+          # binding.break
           compiler.decorate
         rescue
           $stderr.puts("Error: `#{compiler_class.name}` failed to generate RBI for `#{constant}`")
