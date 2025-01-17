@@ -131,7 +131,7 @@ module Tapioca
       def create_pipeline
         Tapioca::Dsl::Pipeline.new(
           requested_constants:
-            constantize(@requested_constants) + constantize(constants_from_requested_paths, ignore_missing: true),
+            constantize(@requested_constants) + constantize(constants_from_requested_paths, ignore_missing: true), # constants_from_requested_paths
           requested_paths: @requested_paths,
           requested_compilers: constantize_compilers(@only),
           excluded_compilers: constantize_compilers(@exclude),

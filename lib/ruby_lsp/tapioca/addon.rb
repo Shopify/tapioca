@@ -71,21 +71,31 @@ module RubyLsp
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
+        T.must(@outgoing_queue) << Notification.window_log_message("***: did_change")
         return unless T.must(@global_state).enabled_feature?(:tapiocaAddon)
         return unless @rails_runner_client # Client is not ready
 
+        T.must(@outgoing_queue) << Notification.window_log_message("***: collecting")
+
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
+          T.must(@outgoing_queue) << Notification.window_log_message("***: path: #{path}")
           next if path.end_with?("_test.rb", "_spec.rb")
           next unless file_updated?(change, path)
 
-          entries = T.must(@index).entries_for(change[:uri])
-          next unless entries
+          entries = T.must(@index).entries_for(change[:uri]) || []
+          # unless entries
+          #   T.must(@outgoing_queue) << Notification.window_log_message("***: nexting")
+          #   next
+          # end
+          T.must(@outgoing_queue) << Notification.window_log_message("***: nexting")
 
           entries.filter_map do |entry|
             entry.name if entry.class == RubyIndexer::Entry::Class || entry.class == RubyIndexer::Entry::Module
-          end
+          end + [path]
         end.compact
+
+        T.must(@outgoing_queue) << Notification.window_log_message("***: #{constants}")
 
         return if constants.empty?
 
