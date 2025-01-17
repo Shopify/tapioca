@@ -43,10 +43,6 @@ group :development, :test do
   gem "state_machines"
   gem "activerecord-typedstore"
   gem "identity_cache"
-  gem "cityhash",
-    git: "https://github.com/csfrancis/cityhash.git",
-    ref: "3cfc7d01f333c01811d5e834f1495eaa29f87c36",
-    require: false
   gem "activeresource"
   gem "google-protobuf"
   gem "graphql"
