@@ -76,10 +76,10 @@ module Tapioca
           # so in this case, we install whichever is the latest
           if ::Gem::Version.new(bundler_version).prerelease?
             ::Gem.install("bundler")
-            "bundle install"
+            "bundle config set --local path 'vendor/bundle' && bundle install"
           else
             ::Gem.install("bundler", bundler_version)
-            "bundle _#{bundler_version}_ install"
+            "bundle config set --local path 'vendor/bundle' && bundle _#{bundler_version}_ install"
           end
 
         out, err, status = Open3.capture3(cmd, opts)
@@ -96,6 +96,10 @@ module Tapioca
     def bundle_exec(command, env = {})
       opts = {}
       opts[:chdir] = absolute_path
+      env = {
+        "BUNDLE_PATH" => "vendor/bundle",
+        "BUNDLE_GEMFILE" => File.join(absolute_path, "Gemfile"),
+      }.merge(env)
       Bundler.with_unbundled_env do
         out, err, status = Open3.capture3(env, ["bundle", "_#{bundler_version}_", "exec", command].join(" "), opts)
         Spoom::ExecResult.new(out: out, err: err, status: T.must(status.success?), exit_code: T.must(status.exitstatus))
