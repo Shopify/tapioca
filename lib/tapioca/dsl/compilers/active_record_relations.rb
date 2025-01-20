@@ -374,7 +374,7 @@ module Tapioca
 
           klass.create_method(
             "size",
-            return_type: "Integer",
+            return_type: "T::Hash[T.untyped, Integer]",
           )
 
           CALCULATION_METHODS.each do |method_name|

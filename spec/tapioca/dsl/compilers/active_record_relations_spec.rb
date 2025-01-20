@@ -660,7 +660,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { returns(Integer) }
+                    sig { returns(T::Hash[T.untyped, Integer]) }
                     def size; end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
@@ -765,7 +765,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { returns(Integer) }
+                    sig { returns(T::Hash[T.untyped, Integer]) }
                     def size; end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
@@ -1386,7 +1386,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { returns(Integer) }
+                    sig { returns(T::Hash[T.untyped, Integer]) }
                     def size; end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
@@ -1491,7 +1491,7 @@ module Tapioca
                     sig { params(column_name: T.any(String, Symbol)).returns(T::Hash[T.untyped, T.untyped]) }
                     def minimum(column_name); end
 
-                    sig { returns(Integer) }
+                    sig { returns(T::Hash[T.untyped, Integer]) }
                     def size; end
 
                     sig { params(column_name: T.nilable(T.any(String, Symbol)), block: T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))).returns(T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]) }
