@@ -7,6 +7,7 @@ ENV["DEFAULT_TEST"] = "spec/**/*_spec.rb"
 require "bundler/setup"
 require "debug/prelude"
 
+require "logger" # can remove soon since we plan to stop supporting Rails 7.0: https://github.com/rails/rails/issues/54260
 require "active_support" # Remove this when we drop support to Rails 6.
 require "rails/test_unit/runner"
 
