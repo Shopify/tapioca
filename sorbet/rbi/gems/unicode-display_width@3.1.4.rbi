@@ -15,13 +15,13 @@ module Unicode; end
 class Unicode::DisplayWidth
   # @return [DisplayWidth] a new instance of DisplayWidth
   #
-  # source://unicode-display_width/lib/unicode/display_width.rb#220
+  # source://unicode-display_width/lib/unicode/display_width.rb#229
   def initialize(ambiguous: T.unsafe(nil), overwrite: T.unsafe(nil), emoji: T.unsafe(nil)); end
 
-  # source://unicode-display_width/lib/unicode/display_width.rb#226
+  # source://unicode-display_width/lib/unicode/display_width.rb#235
   def get_config(**kwargs); end
 
-  # source://unicode-display_width/lib/unicode/display_width.rb#234
+  # source://unicode-display_width/lib/unicode/display_width.rb#243
   def of(string, **kwargs); end
 
   class << self
@@ -30,30 +30,30 @@ class Unicode::DisplayWidth
 
     # Returns width of all considered Emoji and remaining string
     #
-    # source://unicode-display_width/lib/unicode/display_width.rb#134
+    # source://unicode-display_width/lib/unicode/display_width.rb#143
     def emoji_width(string, mode = T.unsafe(nil), ambiguous = T.unsafe(nil)); end
 
     # Match possible Emoji first, then refine
     #
-    # source://unicode-display_width/lib/unicode/display_width.rb#164
+    # source://unicode-display_width/lib/unicode/display_width.rb#173
     def emoji_width_via_possible(string, emoji_set_regex, strict_eaw = T.unsafe(nil), ambiguous = T.unsafe(nil)); end
 
-    # source://unicode-display_width/lib/unicode/display_width.rb#192
+    # source://unicode-display_width/lib/unicode/display_width.rb#201
     def normalize_options(string, ambiguous = T.unsafe(nil), overwrite = T.unsafe(nil), old_options = T.unsafe(nil), **options); end
 
     # Returns monospace display width of string
     #
-    # source://unicode-display_width/lib/unicode/display_width.rb#49
+    # source://unicode-display_width/lib/unicode/display_width.rb#51
     def of(string, ambiguous = T.unsafe(nil), overwrite = T.unsafe(nil), old_options = T.unsafe(nil), **options); end
 
     # Returns width for ASCII-only strings. Will consider zero-width control symbols.
     #
-    # source://unicode-display_width/lib/unicode/display_width.rb#124
+    # source://unicode-display_width/lib/unicode/display_width.rb#133
     def width_ascii(string); end
 
     # Returns width of custom overwrites and remaining string
     #
-    # source://unicode-display_width/lib/unicode/display_width.rb#108
+    # source://unicode-display_width/lib/unicode/display_width.rb#117
     def width_custom(string, overwrite); end
   end
 end
@@ -114,10 +114,12 @@ Unicode::DisplayWidth::INITIAL_DEPTH = T.let(T.unsafe(nil), Integer)
 # source://unicode-display_width/lib/unicode/display_width.rb#24
 Unicode::DisplayWidth::NOT_COMMON_NARROW_REGEX = T.let(T.unsafe(nil), Hash)
 
-# source://unicode-display_width/lib/unicode/display_width.rb#45
+# ebase = Unicode::Emoji::REGEX_PROP_MODIFIER_BASE.source
+#
+# source://unicode-display_width/lib/unicode/display_width.rb#47
 Unicode::DisplayWidth::REGEX_EMOJI_ALL_SEQUENCES = T.let(T.unsafe(nil), Regexp)
 
-# source://unicode-display_width/lib/unicode/display_width.rb#46
+# source://unicode-display_width/lib/unicode/display_width.rb#48
 Unicode::DisplayWidth::REGEX_EMOJI_ALL_SEQUENCES_AND_VS16 = T.let(T.unsafe(nil), Regexp)
 
 # source://unicode-display_width/lib/unicode/display_width.rb#37
