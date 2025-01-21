@@ -137,13 +137,13 @@ class RedisClient
   # source://redis-client/lib/redis_client.rb#657
   def build_transaction; end
 
-  # source://redis-client/lib/redis_client.rb#745
+  # source://redis-client/lib/redis_client.rb#750
   def connect; end
 
   # source://redis-client/lib/redis_client.rb#691
   def ensure_connected(retryable: T.unsafe(nil)); end
 
-  # source://redis-client/lib/redis_client.rb#738
+  # source://redis-client/lib/redis_client.rb#743
   def raw_connection; end
 
   # source://redis-client/lib/redis_client.rb#665

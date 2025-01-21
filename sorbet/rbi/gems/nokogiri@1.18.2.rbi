@@ -602,7 +602,7 @@ class Nokogiri::CSS::XPathVisitor
   # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#69
   def initialize(builtins: T.unsafe(nil), doctype: T.unsafe(nil), prefix: T.unsafe(nil), namespaces: T.unsafe(nil)); end
 
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#297
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#298
   def accept(node); end
 
   # The visitor configuration set via the +builtins:+ keyword argument to XPathVisitor.new.
@@ -634,7 +634,7 @@ class Nokogiri::CSS::XPathVisitor
   # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#54
   def prefix; end
 
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#293
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#294
   def visit_attrib_name(node); end
 
   # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#175
@@ -680,24 +680,24 @@ class Nokogiri::CSS::XPathVisitor
 
   private
 
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#364
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#365
   def css_class(hay, needle); end
 
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#309
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#310
   def html5_element_name_needs_namespace_handling(node); end
 
   # @return [Boolean]
   #
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#354
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#355
   def is_of_type_pseudo_class?(node); end
 
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#316
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#317
   def nth(node, options = T.unsafe(nil)); end
 
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#340
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#341
   def read_a_and_positive_b(values); end
 
-  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#303
+  # source://nokogiri/lib/nokogiri/css/xpath_visitor.rb#304
   def validate_xpath_function_name(name); end
 end
 
@@ -2386,7 +2386,6 @@ Nokogiri::VERSION_INFO = T.let(T.unsafe(nil), Hash)
 
 # source://nokogiri/lib/nokogiri/version/info.rb#7
 class Nokogiri::VersionInfo
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
