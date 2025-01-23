@@ -79,10 +79,17 @@ module RubyLsp
         return unless T.must(@global_state).enabled_feature?(:tapiocaAddon)
         return unless @rails_runner_client # Client is not ready
 
+        has_route_change = T.let(false, T::Boolean)
+
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
           next if path.end_with?("_test.rb", "_spec.rb")
           next unless file_updated?(change, path)
+
+          if File.basename(path) == "routes.rb" || File.fnmatch?("**/routes/**/*.rb", path, File::FNM_PATHNAME)
+            has_route_change = true
+            next
+          end
 
           entries = T.must(@index).entries_for(change[:uri])
           next unless entries
@@ -92,14 +99,21 @@ module RubyLsp
           end
         end.compact
 
-        return if constants.empty?
+        return if constants.empty? && !has_route_change
 
         @rails_runner_client.trigger_reload
-        @rails_runner_client.delegate_notification(
-          server_addon_name: "Tapioca",
-          request_name: "dsl",
-          constants: constants,
-        )
+
+        if has_route_change
+          @rails_runner_client.delegate_notification(server_addon_name: "Tapioca", request_name: "route_dsl")
+        end
+
+        if constants.any?
+          @rails_runner_client.delegate_notification(
+            server_addon_name: "Tapioca",
+            request_name: "dsl",
+            constants: constants,
+          )
+        end
       end
 
       private
