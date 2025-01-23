@@ -120,7 +120,11 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   sig { params(id: ::String).void }
   def end_progress(id); end
 
-  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/addon.rb#240
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/addon.rb#243
+  sig { returns(::LanguageServer::Protocol::Interface::FileSystemWatcher) }
+  def fixture_file_watcher; end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/addon.rb#251
   sig { void }
   def offer_to_run_pending_migrations; end
 
@@ -131,6 +135,10 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/addon.rb#200
   sig { params(id: ::String, percentage: T.nilable(::Integer), message: T.nilable(::String)).void }
   def report_progress(id, percentage: T.unsafe(nil), message: T.unsafe(nil)); end
+
+  # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/addon.rb#235
+  sig { returns(::LanguageServer::Protocol::Interface::FileSystemWatcher) }
+  def structure_sql_file_watcher; end
 end
 
 # source://ruby-lsp-rails/lib/ruby_lsp/ruby_lsp_rails/addon.rb#24
