@@ -3,8 +3,8 @@
 
 require "uri/file"
 
-module URI
-  class Source < URI::File
+module Tapioca
+  class SourceURI < URI::File
     extend T::Sig
 
     COMPONENT = T.let(
@@ -37,7 +37,7 @@ module URI
           gem_version: T.nilable(String),
           path: String,
           line_number: T.nilable(String),
-        ).returns(URI::Source)
+        ).returns(T.attached_class)
       end
       def build(gem_name:, gem_version:, path:, line_number:)
         super(

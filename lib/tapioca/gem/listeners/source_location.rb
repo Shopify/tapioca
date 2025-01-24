@@ -57,7 +57,7 @@ module Tapioca
           # we can clear the gem version if the gem is the same one we are processing
           version = "" if gem == @pipeline.gem
 
-          uri = URI::Source.build(
+          uri = SourceURI.build(
             gem_name: gem.name,
             gem_version: version,
             path: path.to_s,
