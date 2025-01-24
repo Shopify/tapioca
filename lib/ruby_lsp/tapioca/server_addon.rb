@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "tapioca/internal"
+require "tapioca/dsl/compilers/url_helpers"
 
 module RubyLsp
   module Tapioca
@@ -22,17 +23,28 @@ module RubyLsp
             halt_upon_load_error: false,
           ).load_dsl_extensions_and_compilers
         when "dsl"
+          fork { dsl(params[:constants]) }
+        when "route_dsl"
           fork do
-            dsl(params)
+            constants = ::Tapioca::Dsl::Compilers::UrlHelpers.gather_constants
+            dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::UrlHelpers", "ActiveSupportConcern")
           end
         end
       end
 
       private
 
-      def dsl(params)
+      def dsl(constants, *args)
         load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
-        ::Tapioca::Cli.start(["dsl", "--lsp_addon", "--workers=1"] + params[:constants])
+
+        # Order here is important to avoid having Thor confuse arguments. Do not put an array argument at the end before
+        # the list of constants
+        arguments = ["dsl"]
+        arguments.concat(args)
+        arguments.push("--lsp_addon", "--workers=1")
+        arguments.concat(constants)
+
+        ::Tapioca::Cli.start(arguments)
       end
     end
   end
