@@ -13,6 +13,7 @@ rescue LoadError
 end
 
 require "zlib"
+require "ruby_lsp/tapioca/run_gem_rbi_check"
 
 module RubyLsp
   module Tapioca
@@ -27,6 +28,7 @@ module RubyLsp
         @rails_runner_client = T.let(nil, T.nilable(RubyLsp::Rails::RunnerClient))
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
         @file_checksums = T.let({}, T::Hash[String, String])
+        @lockfile_diff = T.let(nil, T.nilable(String))
         @outgoing_queue = T.let(nil, T.nilable(Thread::Queue))
       end
 
@@ -50,6 +52,8 @@ module RubyLsp
             request_name: "load_compilers_and_extensions",
             workspace_path: @global_state.workspace_path,
           )
+
+          run_gem_rbi_check
         rescue IncompatibleApiError
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
@@ -145,6 +149,20 @@ module RubyLsp
         end
 
         false
+      end
+
+      sig { void }
+      def run_gem_rbi_check
+        gem_rbi_check = RunGemRbiCheck.new
+        gem_rbi_check.run
+
+        T.must(@outgoing_queue) << Notification.window_log_message(
+          gem_rbi_check.stdout,
+        ) unless gem_rbi_check.stdout.empty?
+        T.must(@outgoing_queue) << Notification.window_log_message(
+          gem_rbi_check.stderr,
+          type: Constant::MessageType::WARNING,
+        ) unless gem_rbi_check.stderr.empty?
       end
     end
   end
