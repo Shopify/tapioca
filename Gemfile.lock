@@ -402,7 +402,7 @@ DEPENDENCIES
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
   ruby-lsp (>= 0.23.1)
-  ruby-lsp-rails (>= 0.3.28)
+  ruby-lsp-rails (>= 0.3.31)
   shopify-money
   sidekiq
   smart_properties

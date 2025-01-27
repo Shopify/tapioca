@@ -84,6 +84,7 @@ module RubyLsp
         return unless @rails_runner_client # Client is not ready
 
         has_route_change = T.let(false, T::Boolean)
+        has_fixtures_change = T.let(false, T::Boolean)
 
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
@@ -95,6 +96,12 @@ module RubyLsp
             next
           end
 
+          # NOTE: We only get notification for fixtures if ruby-lsp-rails is v0.3.31 or higher
+          if File.fnmatch("**/fixtures/**/*.yml{,.erb}", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
+            has_fixtures_change = true
+            next
+          end
+
           entries = T.must(@index).entries_for(change[:uri])
           next unless entries
 
@@ -103,12 +110,16 @@ module RubyLsp
           end
         end.compact
 
-        return if constants.empty? && !has_route_change
+        return if constants.empty? && !has_route_change && !has_fixtures_change
 
         @rails_runner_client.trigger_reload
 
         if has_route_change
           @rails_runner_client.delegate_notification(server_addon_name: "Tapioca", request_name: "route_dsl")
+        end
+
+        if has_fixtures_change
+          @rails_runner_client.delegate_notification(server_addon_name: "Tapioca", request_name: "fixtures_dsl")
         end
 
         if constants.any?
