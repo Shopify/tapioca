@@ -3,6 +3,7 @@
 
 require "tapioca/internal"
 require "tapioca/dsl/compilers/url_helpers"
+require "tapioca/dsl/compilers/active_record_fixtures"
 
 module RubyLsp
   module Tapioca
@@ -28,6 +29,11 @@ module RubyLsp
           fork do
             constants = ::Tapioca::Dsl::Compilers::UrlHelpers.gather_constants
             dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::UrlHelpers", "ActiveSupportConcern")
+          end
+        when "fixtures_dsl"
+          fork do
+            constants = ::Tapioca::Dsl::Compilers::ActiveRecordFixtures.gather_constants
+            dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::ActiveRecordFixtures")
           end
         end
       end

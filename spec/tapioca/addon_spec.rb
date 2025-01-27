@@ -67,6 +67,44 @@ module RubyLsp
         FileUtils.rm("spec/dummy/config/routes.rb") if File.exist?("spec/dummy/config/routes.rb")
       end
 
+      it "triggers ActiveRecordFixtures DSL compiler if a fixture is modified" do
+        create_client
+
+        global_state = RubyLsp::GlobalState.new
+        global_state.apply_options({
+          initializationOptions: {
+            enabledFeatureFlags: {
+              tapiocaAddon: true,
+            },
+          },
+        })
+
+        addon = Addon.new
+        addon.instance_variable_set(:@rails_runner_client, @client)
+        addon.instance_variable_set(:@global_state, global_state)
+        addon.instance_variable_set(:@index, global_state.index)
+        addon.instance_variable_set(:@outgoing_queue, @outgoing_queue)
+
+        FileUtils.mkdir_p("spec/dummy/test/fixtures")
+        FileUtils.touch("spec/dummy/test/fixtures/users.yml")
+
+        addon.workspace_did_change_watched_files([{
+          uri: "file://#{Dir.pwd}/spec/dummy/test/fixtures/users.yml",
+          type: Constant::FileChangeType::CREATED,
+        }])
+
+        wait_until_exists("spec/dummy/sorbet/rbi/dsl/active_support/test_case.rbi")
+        shutdown_client
+
+        assert_match(
+          "def users",
+          File.read("#{Dir.pwd}/spec/dummy/sorbet/rbi/dsl/active_support/test_case.rbi"),
+        )
+      ensure
+        FileUtils.rm_rf("spec/dummy/sorbet/rbi")
+        FileUtils.rm("spec/dummy/test/fixtures/users.yml") if File.exist?("spec/dummy/test/fixtures/users.yml")
+      end
+
       private
 
       # Starts a new client
