@@ -25,8 +25,8 @@ module Tapioca
           @project.require_mock_gem(foo)
 
           @project.bundle_install!
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check.run(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check.run
 
           assert check.stdout.include?("Not a git repository")
         end
@@ -55,8 +55,8 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check.run(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check.run
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
         end
@@ -68,8 +68,8 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check.run(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check.run
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
@@ -77,7 +77,7 @@ module Tapioca
           foo.update("0.0.2")
           @project.bundle_install!
 
-          check.run(@project.absolute_path)
+          check.run
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.2.rbi")
         end
@@ -89,15 +89,15 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
-          check1 = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check1.run(@project.absolute_path)
+          check1 = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check1.run
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
           @project.exec("git restore Gemfile Gemfile.lock")
 
-          check2 = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check2.run(@project.absolute_path)
+          check2 = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check2.run
 
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
         end
@@ -110,8 +110,8 @@ module Tapioca
 
           assert_project_file_exist("/sorbet/rbi/gems/bar@0.0.1.rbi")
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check.run(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check.run
 
           refute_project_file_exist("sorbet/rbi/gems/bar@0.0.1.rbi")
         end
@@ -127,8 +127,8 @@ module Tapioca
 
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new
-          check.run(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check.run
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
