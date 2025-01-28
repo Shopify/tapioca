@@ -24,21 +24,35 @@ module RubyLsp
             halt_upon_load_error: false,
           ).load_dsl_extensions_and_compilers
         when "dsl"
-          fork { dsl(params[:constants]) }
+          fork do
+            with_notification_wrapper("dsl", "Generating DSL RBIs") do
+              dsl(params[:constants])
+            end
+          end
         when "route_dsl"
           fork do
-            constants = ::Tapioca::Dsl::Compilers::UrlHelpers.gather_constants
-            dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::UrlHelpers", "ActiveSupportConcern")
+            with_notification_wrapper("route_dsl", "Generating route DSL RBIs") do
+              constants = ::Tapioca::Dsl::Compilers::UrlHelpers.gather_constants
+              dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::UrlHelpers", "ActiveSupportConcern")
+            end
           end
         when "fixtures_dsl"
           fork do
-            constants = ::Tapioca::Dsl::Compilers::ActiveRecordFixtures.gather_constants
-            dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::ActiveRecordFixtures")
+            with_notification_wrapper("fixture_dsl", "Generating fixture DSL RBIs") do
+              constants = ::Tapioca::Dsl::Compilers::ActiveRecordFixtures.gather_constants
+              dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::ActiveRecordFixtures")
+            end
           end
         end
       end
 
       private
+
+      def with_notification_wrapper(request_name, title, &block)
+        with_progress(request_name, title) do
+          with_notification_error_handling(request_name, &block)
+        end
+      end
 
       def dsl(constants, *args)
         load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
