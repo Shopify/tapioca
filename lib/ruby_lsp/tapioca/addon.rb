@@ -25,7 +25,7 @@ module RubyLsp
         super
 
         @global_state = T.let(nil, T.nilable(RubyLsp::GlobalState))
-        @rails_runner_client = T.let(nil, T.nilable(RubyLsp::Rails::RunnerClient))
+        @rails_runner_client = T.let(Rails::NullClient.new, RubyLsp::Rails::RunnerClient)
         @index = T.let(nil, T.nilable(RubyIndexer::Index))
         @file_checksums = T.let({}, T::Hash[String, String])
         @lockfile_diff = T.let(nil, T.nilable(String))
@@ -81,7 +81,7 @@ module RubyLsp
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
         return unless T.must(@global_state).enabled_feature?(:tapiocaAddon)
-        return unless @rails_runner_client # Client is not ready
+        return unless @rails_runner_client.connected?
 
         has_route_change = T.let(false, T::Boolean)
         has_fixtures_change = T.let(false, T::Boolean)
