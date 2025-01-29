@@ -40,17 +40,24 @@ module RubyLsp
 
       sig { returns(T::Boolean) }
       def lockfile_changed?
-        fetch_lockfile_diff
-        !@lockfile_diff.empty?
+        !lockfile_diff.empty?
+      end
+
+      sig { returns(Pathname) }
+      def lockfile
+        @lockfile ||= T.let(Pathname(project_path).join("Gemfile.lock"), T.nilable(Pathname))
       end
 
       sig { returns(String) }
-      def fetch_lockfile_diff
-        @lockfile_diff = if File.exist?(File.join(project_path, "Gemfile.lock"))
-          execute_in_project_path("git", "diff", "Gemfile.lock").strip
-        else
-          ""
-        end
+      def lockfile_diff
+        @lockfile_diff ||= T.let(read_lockfile_diff, T.nilable(String))
+      end
+
+      sig { returns(String) }
+      def read_lockfile_diff
+        return "" unless lockfile.exist?
+
+        execute_in_project_path("git", "diff", lockfile.to_s).strip
       end
 
       sig { void }
