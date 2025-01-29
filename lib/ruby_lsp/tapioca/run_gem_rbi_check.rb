@@ -13,28 +13,28 @@ module RubyLsp
       attr_reader :stderr
       attr_reader :status
 
-      sig { void }
-      def initialize
+      sig { params(project_path: String).void }
+      def initialize(project_path)
+        @project_path = project_path
         @stdout = T.let("", String)
         @stderr = T.let("", String)
         @status = T.let(nil, T.nilable(Process::Status))
       end
 
-      sig { params(project_path: String).void }
-      def run(project_path = ".")
-        FileUtils.chdir(project_path) do
-          return log_message("Not a git repository") unless git_repo?
+      sig { void }
+      def run
+        return log_message("Not a git repository") unless git_repo?
 
-          lockfile_changed? ? generate_gem_rbis : cleanup_orphaned_rbis
-        end
+        lockfile_changed? ? generate_gem_rbis : cleanup_orphaned_rbis
       end
 
       private
 
+      attr_reader :project_path
+
       sig { returns(T::Boolean) }
       def git_repo?
-        _, status = Open3.capture2e("git rev-parse --is-inside-work-tree")
-        T.must(status.success?)
+        !!system("git rev-parse --is-inside-work-tree", chdir: project_path)
       end
 
       sig { returns(T::Boolean) }
@@ -45,7 +45,11 @@ module RubyLsp
 
       sig { returns(String) }
       def fetch_lockfile_diff
-        @lockfile_diff = File.exist?("Gemfile.lock") ? %x(git diff Gemfile.lock).strip : ""
+        @lockfile_diff = if File.exist?(File.join(project_path, "Gemfile.lock"))
+          execute_in_project_path("git", "diff", "Gemfile.lock").strip
+        else
+          ""
+        end
       end
 
       sig { void }
@@ -72,6 +76,7 @@ module RubyLsp
             "gem",
             "--lsp_addon",
             *gems,
+            chdir: project_path,
           )
 
           log_message(stdout) unless stdout.empty?
@@ -82,14 +87,20 @@ module RubyLsp
 
       sig { params(gems: T::Array[String]).void }
       def remove_rbis(gems)
-        FileUtils.rm_f(Dir.glob("sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi"))
+        FileUtils.rm_f(Dir.glob("sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi", base: project_path))
         log_message("Removed RBIs for: #{gems.join(", ")}")
       end
 
       sig { void }
       def cleanup_orphaned_rbis
-        untracked_files = %x(git ls-files --others --exclude-standard sorbet/rbi/gems/).lines.map(&:strip)
-        deleted_files = %x(git ls-files --deleted sorbet/rbi/gems/).lines.map(&:strip)
+        untracked_files = execute_in_project_path(
+          "git",
+          "ls-files",
+          "--others",
+          "--exclude-standard",
+          "sorbet/rbi/gems/",
+        ).lines.map(&:strip)
+        deleted_files = execute_in_project_path("git", "ls-files", "--deleted", "sorbet/rbi/gems/").lines.map(&:strip)
 
         delete_files(untracked_files, "Deleted untracked RBIs")
         restore_files(deleted_files, "Restored deleted RBIs")
@@ -97,19 +108,24 @@ module RubyLsp
 
       sig { params(files: T::Array[String], message: String).void }
       def delete_files(files, message)
-        files.each { |file| File.delete(file) }
+        FileUtils.rm(files.map { |file| File.join(project_path, file) })
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
       sig { params(files: T::Array[String], message: String).void }
       def restore_files(files, message)
-        files.each { |file| %x(git checkout -- #{file}) }
+        files.each { |file| execute_in_project_path("git", "checkout", "--", file) }
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
       sig { params(message: String).void }
       def log_message(message)
         @stdout += "#{message}\n"
+      end
+
+      def execute_in_project_path(*parts)
+        stdout_and_stderr, _status = T.unsafe(Open3).capture2e(*parts, chdir: project_path)
+        stdout_and_stderr
       end
     end
   end
