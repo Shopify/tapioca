@@ -32,9 +32,10 @@ module RubyLsp
 
       attr_reader :project_path
 
-      sig { returns(T::Boolean) }
+      sig { returns(T.nilable(T::Boolean)) }
       def git_repo?
-        !!system("git rev-parse --is-inside-work-tree", chdir: project_path)
+        _, status = Open3.capture2e("git", "rev-parse", "--is-inside-work-tree", chdir: project_path)
+        status.success?
       end
 
       sig { returns(T::Boolean) }
