@@ -110,8 +110,9 @@ module RubyLsp
       # Starts a new client
       def create_client
         @outgoing_queue = Thread::Queue.new
+        global_state = GlobalState.new
         @client = FileUtils.chdir("spec/dummy") do
-          RubyLsp::Rails::RunnerClient.new(@outgoing_queue)
+          RubyLsp::Rails::RunnerClient.new(@outgoing_queue, global_state)
         end
 
         addon_path = File.expand_path("lib/ruby_lsp/tapioca/server_addon.rb")
