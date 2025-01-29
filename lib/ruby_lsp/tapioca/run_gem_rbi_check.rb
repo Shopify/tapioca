@@ -129,7 +129,7 @@ module RubyLsp
 
       sig { params(files: T::Array[String], message: String).void }
       def restore_files(files, message)
-        files.each { |file| execute_in_project_path("git", "checkout", "--", file) }
+        execute_in_project_path("git", "checkout", "--pathspec-from-file=-", stdin: files.join("\n"))
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
@@ -138,8 +138,10 @@ module RubyLsp
         @stdout += "#{message}\n"
       end
 
-      def execute_in_project_path(*parts)
-        stdout_and_stderr, _status = T.unsafe(Open3).capture2e(*parts, chdir: project_path)
+      def execute_in_project_path(*parts, stdin: nil)
+        options = { chdir: project_path }
+        options[:stdin_data] = stdin if stdin
+        stdout_and_stderr, _status = T.unsafe(Open3).capture2e(*parts, options)
         stdout_and_stderr
       end
     end
