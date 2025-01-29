@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/Shopify/ruby-lsp-rails.git
+  revision: 5c59f2f9f2b2a6a7a1416834c53275eee8020dab
+  branch: main
+  specs:
+    ruby-lsp-rails (0.4.0)
+      ruby-lsp (>= 0.23.0, < 0.24.0)
+
 PATH
   remote: .
   specs:
@@ -183,7 +191,7 @@ GEM
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
       redis (>= 4.2, < 6)
-    language_server-protocol (3.17.0.3)
+    language_server-protocol (3.17.0.4)
     logger (1.6.5)
     loofah (2.23.1)
       crass (~> 1.0.2)
@@ -314,13 +322,11 @@ GEM
       rubocop (~> 1.51)
     rubocop-sorbet (0.8.7)
       rubocop (>= 1)
-    ruby-lsp (0.23.6)
+    ruby-lsp (0.23.7)
       language_server-protocol (~> 3.17.0)
       prism (>= 1.2, < 2.0)
       rbs (>= 3, < 4)
       sorbet-runtime (>= 0.5.10782)
-    ruby-lsp-rails (0.3.31)
-      ruby-lsp (>= 0.23.0, < 0.24.0)
     ruby-progressbar (1.13.0)
     securerandom (0.4.0)
     shopify-money (3.0.0)
@@ -418,7 +424,7 @@ DEPENDENCIES
   rubocop-shopify
   rubocop-sorbet (>= 0.4.1)
   ruby-lsp (>= 0.23.1)
-  ruby-lsp-rails (>= 0.3.31)
+  ruby-lsp-rails!
   shopify-money
   sidekiq
   smart_properties
