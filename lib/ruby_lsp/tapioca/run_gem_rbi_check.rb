@@ -104,17 +104,20 @@ module RubyLsp
 
       sig { void }
       def cleanup_orphaned_rbis
-        untracked_files = execute_in_project_path(
-          "git",
-          "ls-files",
-          "--others",
-          "--exclude-standard",
-          "sorbet/rbi/gems/",
-        ).lines.map(&:strip)
-        deleted_files = execute_in_project_path("git", "ls-files", "--deleted", "sorbet/rbi/gems/").lines.map(&:strip)
+        untracked_files = git_ls_gem_rbis("--others", "--exclude-standard")
+        deleted_files = git_ls_gem_rbis("--deleted")
 
         delete_files(untracked_files, "Deleted untracked RBIs")
         restore_files(deleted_files, "Restored deleted RBIs")
+      end
+
+      sig { params(flags: T.untyped).returns(T::Array[String]) }
+      def git_ls_gem_rbis(*flags)
+        flags = T.unsafe(["git", "ls-files", *flags, "sorbet/rbi/gems/"])
+
+        execute_in_project_path(*flags)
+          .lines
+          .map(&:strip)
       end
 
       sig { params(files: T::Array[String], message: String).void }
