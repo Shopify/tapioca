@@ -95,8 +95,11 @@ module RubyLsp
 
       sig { params(gems: T::Array[String]).void }
       def remove_rbis(gems)
-        FileUtils.rm_f(Dir.glob("sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi", base: project_path))
-        log_message("Removed RBIs for: #{gems.join(", ")}")
+        files = Dir.glob(
+          "sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi",
+          base: project_path,
+        )
+        delete_files(files, "Removed RBIs for")
       end
 
       sig { void }
@@ -116,7 +119,8 @@ module RubyLsp
 
       sig { params(files: T::Array[String], message: String).void }
       def delete_files(files, message)
-        FileUtils.rm(files.map { |file| File.join(project_path, file) })
+        files_to_remove = files.map { |file| File.join(project_path, file) }
+        FileUtils.rm(files_to_remove)
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
