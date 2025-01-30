@@ -14,6 +14,33 @@ module RubyLsp
 
       def execute(request, params)
         case request
+        when "reload_workspace_compilers"
+          with_notification_wrapper("reload_workspace_compilers", "Reloading DSL compilers") do
+            compiler_paths = Dir.glob(
+              "#{params[:workspace_path]}/**/tapioca/**/compilers/**/*.rb",
+              File::FNM_PATHNAME | File::Constants::FNM_EXTGLOB,
+            )
+
+            # Remove all loaded compilers that are inside the workspace
+            ::Tapioca::Dsl::Compiler.descendants.each do |compiler|
+              name = compiler.name
+              next unless name && compiler_paths.include?(Module.const_source_location(name).first)
+
+              *parts, unqualified_name = name.split("::")
+
+              if parts.empty?
+                Object.send(:remove_const, unqualified_name)
+              else
+                parts.join("::").safe_constantize.send(:remove_const, unqualified_name)
+              end
+            end
+
+            # Remove from $LOADED_FEATURES each workspace compiler file and then re-required it to reload
+            compiler_paths.each do |path|
+              $LOADED_FEATURES.delete(path)
+              require File.expand_path(path)
+            end
+          end
         when "load_compilers_and_extensions"
           # Load DSL extensions and compilers ahead of time, so that we don't have to pay the price of invoking
           # `Gem.find_files` on every execution, which is quite expensive

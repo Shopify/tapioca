@@ -105,6 +105,49 @@ module RubyLsp
         FileUtils.rm("spec/dummy/test/fixtures/users.yml") if File.exist?("spec/dummy/test/fixtures/users.yml")
       end
 
+      it "reloads compilers automatically" do
+        create_client
+
+        FileUtils.mkdir_p("spec/dummy/sorbet/tapioca/compilers")
+        File.write("spec/dummy/sorbet/tapioca/compilers/test_compiler.rb", <<~RUBY)
+          class TestCompiler < ::Tapioca::Dsl::Compiler
+            def self.gather_constants
+              descendants_of(::ActiveJob::Base)
+            end
+
+            def decorate
+              root.create_path(constant) do |job|
+                job.create_method(
+                  "hello_from_spec",
+                  parameters: [],
+                  return_type: "T.untyped",
+                  class_method: true,
+                )
+              end
+            end
+          end
+        RUBY
+
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "reload_workspace_compilers",
+          workspace_path: File.expand_path("spec/dummy"),
+        )
+
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "dsl",
+          constants: ["NotifyUserJob"],
+        )
+        wait_until_exists("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi")
+        shutdown_client
+
+        assert_match("hello_from_spec", File.read("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi"))
+      ensure
+        FileUtils.rm_rf("spec/dummy/sorbet/rbi")
+        FileUtils.rm_rf("spec/dummy/sorbet/tapioca")
+      end
+
       private
 
       # Starts a new client
