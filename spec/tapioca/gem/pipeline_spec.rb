@@ -4097,6 +4097,50 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "handles class_eval created methods" do
+      add_ruby_file("container.rb", <<~'RUBY')
+        class Foo
+          class_eval <<~EOF
+            def foo; end
+            def bar; end
+          EOF
+
+          class_eval <<~EOF, __FILE__, __LINE__ + 1
+            def baz; end
+            def qux; end
+          EOF
+
+          # Somehow defining methods in a loop triggers a different behavior
+          # in backtrace locations where the absolute path ends up being `nil`.
+          %w[string integer float boolean date datetime decimal money].each do |attr_type|
+            class_eval <<-EOV, __FILE__, __LINE__ + 1
+              def #{attr_type}
+              end
+            EOV
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          def bar; end
+          def baz; end
+          def boolean; end
+          def date; end
+          def datetime; end
+          def decimal; end
+          def float; end
+          def foo; end
+          def integer; end
+          def money; end
+          def qux; end
+          def string; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "includes comment documentation from sources when doc is true" do
       add_ruby_file("foo.rb", <<~RUBY)
         # frozen_string_literal: true

@@ -202,15 +202,17 @@ module Tapioca
         end
         return unless resolved_loc
 
+        resolved_loc_path = resolved_loc.absolute_path || resolved_loc.path
+
         # Find the location of the last frame in this file to get the most accurate line number.
-        resolved_loc = locations.find { |loc| loc.absolute_path == resolved_loc.absolute_path }
+        resolved_loc = locations.find { |loc| loc.absolute_path == resolved_loc_path }
         return unless resolved_loc
 
         # If the last operation was a `require`, and we have no more frames,
         # we are probably dealing with a C-method.
         return if locations.first&.label == "require"
 
-        file = resolved_loc.absolute_path || ""
+        file = resolved_loc.absolute_path || resolved_loc.path || ""
 
         SourceLocation.from_loc([file, resolved_loc.lineno])
       end
