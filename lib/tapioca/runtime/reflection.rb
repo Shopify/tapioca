@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "tapioca/runtime/source_location"
+
 # On Ruby 3.2 or newer, Class defines an attached_object method that returns the
 # attached class of a singleton class without iterating ObjectSpace. On older
 # versions of Ruby, we fall back to iterating ObjectSpace.
@@ -129,15 +131,19 @@ module Tapioca
         end
       end
 
+      SignatureBlockError = Class.new(Tapioca::Error)
+
       sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
       def signature_of!(method)
         T::Utils.signature_for_method(method)
+      rescue LoadError, StandardError
+        Kernel.raise SignatureBlockError
       end
 
       sig { params(method: T.any(UnboundMethod, Method)).returns(T.untyped) }
       def signature_of(method)
         signature_of!(method)
-      rescue LoadError, StandardError
+      rescue SignatureBlockError
         nil
       end
 
@@ -177,23 +183,46 @@ module Tapioca
         T.unsafe(result)
       end
 
+      sig { params(constant_name: T.any(String, Symbol)).returns(T.nilable(SourceLocation)) }
+      def const_source_location(constant_name)
+        return unless Object.respond_to?(:const_source_location)
+
+        file, line = Object.const_source_location(constant_name)
+
+        SourceLocation.from_loc([file, line]) if file && line
+      end
+
       # Examines the call stack to identify the closest location where a "require" is performed
       # by searching for the label "<top (required)>" or "block in <class:...>" in the
       # case of an ActiveSupport.on_load hook. If none is found, it returns the location
       # labeled "<main>", which is the original call site.
-      sig { params(locations: T.nilable(T::Array[Thread::Backtrace::Location])).returns(String) }
+      sig { params(locations: T.nilable(T::Array[Thread::Backtrace::Location])).returns(T.nilable(SourceLocation)) }
       def resolve_loc(locations)
-        return "" unless locations
+        return unless locations
 
+        # Find the location of the closest file load, which should give us the location of the file that
+        # triggered the definition.
         resolved_loc = locations.find do |loc|
           label = loc.label
           next unless label
 
           REQUIRED_FROM_LABELS.include?(label) || label.start_with?("block in <class:")
         end
-        return "" unless resolved_loc
+        return unless resolved_loc
 
-        resolved_loc.absolute_path || ""
+        resolved_loc_path = resolved_loc.absolute_path || resolved_loc.path
+
+        # Find the location of the last frame in this file to get the most accurate line number.
+        resolved_loc = locations.find { |loc| loc.absolute_path == resolved_loc_path }
+        return unless resolved_loc
+
+        # If the last operation was a `require`, and we have no more frames,
+        # we are probably dealing with a C-method.
+        return if locations.first&.label == "require"
+
+        file = resolved_loc.absolute_path || resolved_loc.path || ""
+
+        SourceLocation.from_loc([file, resolved_loc.lineno])
       end
 
       sig { params(constant: Module).returns(T::Set[String]) }

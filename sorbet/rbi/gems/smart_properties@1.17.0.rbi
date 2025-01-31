@@ -470,6 +470,7 @@ class SmartProperties::Validations::Ancestor
   def validate(klass); end
 
   class << self
+    # source://smart_properties//lib/smart_properties/validations/ancestor.rb#23
     def must_be(*_arg0); end
   end
 end

@@ -148,30 +148,47 @@ class WebSocket::Driver::CloseEvent < ::Struct
   # Returns the value of attribute code
   #
   # @return [Object] the current value of code
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#53
   def code; end
 
   # Sets the attribute code
   #
   # @param value [Object] the value to set the attribute code to.
   # @return [Object] the newly set value
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#53
   def code=(_); end
 
   # Returns the value of attribute reason
   #
   # @return [Object] the current value of reason
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#53
   def reason; end
 
   # Sets the attribute reason
   #
   # @param value [Object] the value to set the attribute reason to.
   # @return [Object] the newly set value
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#53
   def reason=(_); end
 
   class << self
+    # source://websocket-driver//lib/websocket/driver.rb#53
     def [](*_arg0); end
+
+    # source://websocket-driver//lib/websocket/driver.rb#53
     def inspect; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#53
     def keyword_init?; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#53
     def members; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#53
     def new(*_arg0); end
   end
 end
@@ -182,10 +199,19 @@ class WebSocket::Driver::ConfigurationError < ::ArgumentError; end
 # source://websocket-driver//lib/websocket/driver.rb#48
 class WebSocket::Driver::ConnectEvent < ::Struct
   class << self
+    # source://websocket-driver//lib/websocket/driver.rb#48
     def [](*_arg0); end
+
+    # source://websocket-driver//lib/websocket/driver.rb#48
     def inspect; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#48
     def keyword_init?; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#48
     def members; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#48
     def new(*_arg0); end
   end
 end
@@ -647,19 +673,32 @@ class WebSocket::Driver::MessageEvent < ::Struct
   # Returns the value of attribute data
   #
   # @return [Object] the current value of data
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#50
   def data; end
 
   # Sets the attribute data
   #
   # @param value [Object] the value to set the attribute data to.
   # @return [Object] the newly set value
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#50
   def data=(_); end
 
   class << self
+    # source://websocket-driver//lib/websocket/driver.rb#50
     def [](*_arg0); end
+
+    # source://websocket-driver//lib/websocket/driver.rb#50
     def inspect; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#50
     def keyword_init?; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#50
     def members; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#50
     def new(*_arg0); end
   end
 end
@@ -667,10 +706,19 @@ end
 # source://websocket-driver//lib/websocket/driver.rb#49
 class WebSocket::Driver::OpenEvent < ::Struct
   class << self
+    # source://websocket-driver//lib/websocket/driver.rb#49
     def [](*_arg0); end
+
+    # source://websocket-driver//lib/websocket/driver.rb#49
     def inspect; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#49
     def keyword_init?; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#49
     def members; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#49
     def new(*_arg0); end
   end
 end
@@ -683,19 +731,32 @@ class WebSocket::Driver::PingEvent < ::Struct
   # Returns the value of attribute data
   #
   # @return [Object] the current value of data
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#51
   def data; end
 
   # Sets the attribute data
   #
   # @param value [Object] the value to set the attribute data to.
   # @return [Object] the newly set value
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#51
   def data=(_); end
 
   class << self
+    # source://websocket-driver//lib/websocket/driver.rb#51
     def [](*_arg0); end
+
+    # source://websocket-driver//lib/websocket/driver.rb#51
     def inspect; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#51
     def keyword_init?; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#51
     def members; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#51
     def new(*_arg0); end
   end
 end
@@ -705,19 +766,32 @@ class WebSocket::Driver::PongEvent < ::Struct
   # Returns the value of attribute data
   #
   # @return [Object] the current value of data
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#52
   def data; end
 
   # Sets the attribute data
   #
   # @param value [Object] the value to set the attribute data to.
   # @return [Object] the newly set value
+  #
+  # source://websocket-driver//lib/websocket/driver.rb#52
   def data=(_); end
 
   class << self
+    # source://websocket-driver//lib/websocket/driver.rb#52
     def [](*_arg0); end
+
+    # source://websocket-driver//lib/websocket/driver.rb#52
     def inspect; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#52
     def keyword_init?; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#52
     def members; end
+
+    # source://websocket-driver//lib/websocket/driver.rb#52
     def new(*_arg0); end
   end
 end
