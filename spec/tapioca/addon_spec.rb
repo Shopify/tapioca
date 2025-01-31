@@ -22,10 +22,9 @@ module RubyLsp
         )
         wait_until_exists("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi")
 
-        shutdown_client
-
         assert_path_exists("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi")
       ensure
+        shutdown_client
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
       end
 
@@ -58,11 +57,11 @@ module RubyLsp
         }])
 
         wait_until_exists("spec/dummy/sorbet/rbi/dsl/generated_path_helpers_module.rbi")
-        shutdown_client
 
         assert_match("rails_info_routes_path", File.read("spec/dummy/sorbet/rbi/dsl/generated_path_helpers_module.rbi"))
         assert_match("rails_info_routes_url", File.read("spec/dummy/sorbet/rbi/dsl/generated_url_helpers_module.rbi"))
       ensure
+        shutdown_client
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
         FileUtils.rm("spec/dummy/config/routes.rb") if File.exist?("spec/dummy/config/routes.rb")
       end
@@ -94,13 +93,13 @@ module RubyLsp
         }])
 
         wait_until_exists("spec/dummy/sorbet/rbi/dsl/active_support/test_case.rbi")
-        shutdown_client
 
         assert_match(
           "def users",
           File.read("#{Dir.pwd}/spec/dummy/sorbet/rbi/dsl/active_support/test_case.rbi"),
         )
       ensure
+        shutdown_client
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
         FileUtils.rm("spec/dummy/test/fixtures/users.yml") if File.exist?("spec/dummy/test/fixtures/users.yml")
       end
@@ -140,10 +139,10 @@ module RubyLsp
           constants: ["NotifyUserJob"],
         )
         wait_until_exists("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi")
-        shutdown_client
 
         assert_match("hello_from_spec", File.read("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi"))
       ensure
+        shutdown_client
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
         FileUtils.rm_rf("spec/dummy/sorbet/tapioca")
       end
