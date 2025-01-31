@@ -85,11 +85,17 @@ module RubyLsp
 
         has_route_change = T.let(false, T::Boolean)
         has_fixtures_change = T.let(false, T::Boolean)
+        needs_compiler_reload = T.let(false, T::Boolean)
 
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
           next if path.end_with?("_test.rb", "_spec.rb")
           next unless file_updated?(change, path)
+
+          if File.fnmatch?("**/tapioca/**/compilers/**/*.rb", path, File::FNM_PATHNAME)
+            needs_compiler_reload = true
+            next
+          end
 
           if File.basename(path) == "routes.rb" || File.fnmatch?("**/routes/**/*.rb", path, File::FNM_PATHNAME)
             has_route_change = true
@@ -110,9 +116,17 @@ module RubyLsp
           end
         end.compact
 
-        return if constants.empty? && !has_route_change && !has_fixtures_change
+        return if constants.empty? && !has_route_change && !has_fixtures_change && !needs_compiler_reload
 
         @rails_runner_client.trigger_reload
+
+        if needs_compiler_reload
+          @rails_runner_client.delegate_notification(
+            server_addon_name: "Tapioca",
+            request_name: "reload_workspace_compilers",
+            workspace_path: T.must(@global_state).workspace_path,
+          )
+        end
 
         if has_route_change
           @rails_runner_client.delegate_notification(server_addon_name: "Tapioca", request_name: "route_dsl")

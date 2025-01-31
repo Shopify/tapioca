@@ -45,6 +45,27 @@ module Tapioca
         load_dsl_compilers
       end
 
+      sig { void }
+      def reload_custom_compilers
+        # Remove all loaded custom compilers
+        ::Tapioca::Dsl::Compiler.descendants.each do |compiler|
+          name = compiler.name
+          next unless name && @custom_compiler_paths.include?(Module.const_source_location(name)&.first)
+
+          *parts, unqualified_name = name.split("::")
+
+          if parts.empty?
+            Object.send(:remove_const, unqualified_name)
+          else
+            parts.join("::").safe_constantize.send(:remove_const, unqualified_name)
+          end
+        end
+
+        # Remove from $LOADED_FEATURES each workspace compiler file and then re-load
+        @custom_compiler_paths.each { |path| $LOADED_FEATURES.delete(path) }
+        load_custom_dsl_compilers
+      end
+
       protected
 
       sig do
@@ -57,6 +78,7 @@ module Tapioca
         @eager_load = eager_load
         @app_root = app_root
         @halt_upon_load_error = halt_upon_load_error
+        @custom_compiler_paths = T.let([], T::Array[String])
       end
 
       sig { void }
@@ -89,12 +111,7 @@ module Tapioca
         end
 
         # Load all custom compilers from the project
-        Dir.glob([
-          "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later
-          "#{@tapioca_path}/compilers/**/*.rb",
-        ]).each do |compiler|
-          require File.expand_path(compiler)
-        end
+        load_custom_dsl_compilers
 
         say("Done", :green)
       end
@@ -111,6 +128,17 @@ module Tapioca
         )
 
         say("Done", :green)
+      end
+
+      private
+
+      sig { void }
+      def load_custom_dsl_compilers
+        @custom_compiler_paths = Dir.glob([
+          "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later
+          "#{@tapioca_path}/compilers/**/*.rb",
+        ])
+        @custom_compiler_paths.each { |compiler| require File.expand_path(compiler) }
       end
     end
   end
