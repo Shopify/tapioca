@@ -1,6 +1,6 @@
 ---
 layout: default
-title: RBI files for gems
+title: Generate RBI files for gems
 parent: Tapioca
 nav_order: 1
 ---

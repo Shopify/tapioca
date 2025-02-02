@@ -1,6 +1,6 @@
 ---
 layout: default
-title: RBI files for missing constants and methods
+title: Create RBI files for missing constants and methods
 parent: Tapioca
 nav_order: 4
 ---

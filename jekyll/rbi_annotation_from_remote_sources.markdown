@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Pulling RBI annotations from remote sources
+title: Pull RBI annotations from remote sources
 parent: Tapioca
 nav_order: 3
 ---

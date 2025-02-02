@@ -1,6 +1,6 @@
 ---
 layout: default
-title: RBI files for Rails and other DSLs
+title: Generate RBI files for Rails and other DSLs
 parent: Tapioca
 nav_order: 2
 ---
