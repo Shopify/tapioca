@@ -4,16 +4,27 @@ description: >-
 baseurl: "/tapioca"
 url: "https://shopify.github.io"
 github_username: shopify
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /tapioca-logo.svg
+
 aux_links:
-  "Tapioca on GitHub":
-    - "https://github.com/Shopify/tapioca"
   "Report an Issue":
     - "https://github.com/Shopify/tapioca/issues/new"
-  "Sorbet.org":
-    - "https://sorbet.org"
+nav_external_links:
+  - title: "Tapioca on GitHub"
+    url: "https://github.com/Shopify/tapioca"
+    opens_in_new_tab: true
+  - title: "Sorbet.org"
+    url: "https://sorbet.org"
+    opens_in_new_tab: true
 
 theme: just-the-docs
 layout: minimal
 plugins:
   - jekyll-feed
+  - jekyll-seo-tag
 destination: ../doc
