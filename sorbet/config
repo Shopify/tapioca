@@ -1,5 +1,6 @@
 --dir
 .
 --ignore=/vendor
+--ignore=/jekyll
 --enable-experimental-requires-ancestor
 --suppress-payload-superclass-redefinition-for=Reline::ANSI

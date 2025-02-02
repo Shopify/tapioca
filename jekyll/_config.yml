@@ -1,0 +1,17 @@
+title: Tapioca
+description: >-
+  The swiss army knife of RBI generation
+baseurl: "/tapioca"
+url: "https://shopify.github.io"
+github_username: shopify
+aux_links:
+  "Tapioca on GitHub":
+    - "https://github.com/Shopify/tapioca"
+  "Report an Issue":
+    - "https://github.com/Shopify/tapioca/issues/new"
+
+theme: just-the-docs
+layout: minimal
+plugins:
+  - jekyll-feed
+destination: ../doc
