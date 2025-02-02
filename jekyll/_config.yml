@@ -9,6 +9,8 @@ aux_links:
     - "https://github.com/Shopify/tapioca"
   "Report an Issue":
     - "https://github.com/Shopify/tapioca/issues/new"
+  "Sorbet.org":
+    - "https://sorbet.org"
 
 theme: just-the-docs
 layout: minimal
