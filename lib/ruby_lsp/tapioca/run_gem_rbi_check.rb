@@ -25,10 +25,10 @@ module RubyLsp
       def run
         return log_message("Not a git repository") unless git_repo?
 
+        cleanup_orphaned_rbis
+
         if lockfile_changed?
           generate_gem_rbis
-        else
-          cleanup_orphaned_rbis
         end
       end
 
