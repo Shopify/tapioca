@@ -451,7 +451,7 @@ class RubyIndexer::Entry
 
   # @return [RubyIndexer::Location]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.11798/lib/types/private/methods/_methods.rb#257
   def name_location(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/entry.rb#57
@@ -824,7 +824,7 @@ class RubyIndexer::Entry::Parameter
   #
   # @return [Symbol]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.11798/lib/types/private/methods/_methods.rb#257
   def decorated_name(*args, **_arg1, &blk); end
 
   # Name includes just the name of the parameter, excluding symbols like splats
@@ -1015,7 +1015,7 @@ class RubyIndexer::Index
   sig { params(entry: ::RubyIndexer::Entry, skip_prefix_tree: T::Boolean).void }
   def add(entry, skip_prefix_tree: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#615
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#644
   sig { params(name: ::String, owner_name: ::String).returns(T::Array[::RubyIndexer::Entry::ClassVariable]) }
   def class_variable_completion_candidates(name, owner_name); end
 
@@ -1023,7 +1023,7 @@ class RubyIndexer::Index
   sig { returns(::RubyIndexer::Configuration) }
   def configuration; end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#253
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#261
   sig do
     params(
       name: ::String,
@@ -1036,11 +1036,11 @@ class RubyIndexer::Index
   sig { params(uri: ::URI::Generic, skip_require_paths_tree: T::Boolean).void }
   def delete(uri, skip_require_paths_tree: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#663
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#694
   sig { returns(T::Boolean) }
   def empty?; end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#711
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#742
   sig do
     type_parameters(:T)
       .params(
@@ -1050,7 +1050,7 @@ class RubyIndexer::Index
   end
   def entries_for(uri, type = T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#683
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#714
   sig { params(name: ::String).returns(::RubyIndexer::Entry::SingletonClass) }
   def existing_or_new_singleton_class(name); end
 
@@ -1076,13 +1076,13 @@ class RubyIndexer::Index
   # `Something::Else`, then we first discover `Something::Else::Baz`. But `Something::Else::Baz` might contain other
   # aliases, so we have to invoke `follow_aliased_namespace` again to check until we only return a real name
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#425
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#433
   sig { params(name: ::String, seen_names: T::Array[::String]).returns(::String) }
   def follow_aliased_namespace(name, seen_names = T.unsafe(nil)); end
 
   # Fuzzy searches index entries based on Jaro-Winkler similarity. If no query is provided, all entries are returned
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#171
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#179
   sig { params(query: T.nilable(::String)).returns(T::Array[::RubyIndexer::Entry]) }
   def fuzzy_search(query); end
 
@@ -1091,7 +1091,7 @@ class RubyIndexer::Index
   # consumer of this API has to handle deleting and inserting/updating entries in the index instead of passing the
   # document's source (used to handle unsaved changes to files)
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#631
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#662
   sig do
     params(
       uri: ::URI::Generic,
@@ -1105,7 +1105,7 @@ class RubyIndexer::Index
   # indexing progress. That block is invoked with the current progress percentage and should return `true` to continue
   # indexing or `false` to stop indexing.
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#359
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#367
   sig do
     params(
       uris: T::Array[::URI::Generic],
@@ -1116,26 +1116,31 @@ class RubyIndexer::Index
 
   # Indexes a File URI by reading the contents from disk
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#407
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#415
   sig { params(uri: ::URI::Generic, collect_comments: T::Boolean).void }
   def index_file(uri, collect_comments: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#385
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#393
   sig { params(uri: ::URI::Generic, source: ::String, collect_comments: T::Boolean).void }
   def index_single(uri, source, collect_comments: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#673
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#704
   sig { params(name: ::String).returns(T::Boolean) }
   def indexed?(name); end
 
   # Returns a list of possible candidates for completion of instance variables for a given owner name. The name must
   # include the `@` prefix
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#605
-  sig { params(name: ::String, owner_name: ::String).returns(T::Array[::RubyIndexer::Entry::InstanceVariable]) }
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#615
+  sig do
+    params(
+      name: ::String,
+      owner_name: ::String
+    ).returns(T::Array[T.any(::RubyIndexer::Entry::ClassVariable, ::RubyIndexer::Entry::InstanceVariable)])
+  end
   def instance_variable_completion_candidates(name, owner_name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#678
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#709
   sig { returns(::Integer) }
   def length; end
 
@@ -1150,11 +1155,11 @@ class RubyIndexer::Index
   #
   # @raise [NonExistingNamespaceError]
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#503
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#511
   sig { params(fully_qualified_name: ::String).returns(T::Array[::String]) }
   def linearized_ancestors_of(fully_qualified_name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#200
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#208
   sig do
     params(
       name: T.nilable(::String),
@@ -1163,7 +1168,7 @@ class RubyIndexer::Index
   end
   def method_completion_candidates(name, receiver_name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#668
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#699
   sig { returns(T::Array[::String]) }
   def names; end
 
@@ -1181,7 +1186,7 @@ class RubyIndexer::Index
   # ]
   # ```
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#152
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#160
   sig do
     params(
       query: ::String,
@@ -1209,7 +1214,7 @@ class RubyIndexer::Index
   # seen_names: this parameter should not be used by consumers of the api. It is used to avoid infinite recursion when
   # resolving circular references
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#318
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#326
   sig do
     params(
       name: ::String,
@@ -1219,7 +1224,7 @@ class RubyIndexer::Index
   end
   def resolve(name, nesting, seen_names = T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#592
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#600
   sig do
     params(
       variable_name: ::String,
@@ -1231,7 +1236,7 @@ class RubyIndexer::Index
   # Resolves an instance variable name for a given owner name. This method will linearize the ancestors of the owner
   # and find inherited instance variables as well
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#581
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#589
   sig do
     params(
       variable_name: ::String,
@@ -1244,7 +1249,7 @@ class RubyIndexer::Index
   # as it is used only internally to prevent infinite loops when resolving circular aliases
   # Returns `nil` if the method does not exist on that receiver
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#465
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#473
   sig do
     params(
       method_name: ::String,
@@ -1266,11 +1271,11 @@ class RubyIndexer::Index
   # with `A::B::A::B::Foo`. This method will remove any redundant parts from the final name based on the reference and
   # the nesting
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1011
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1056
   sig { params(name: ::String, nesting: T::Array[::String]).returns(::String) }
   def build_non_redundant_full_name(name, nesting); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1043
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1088
   sig do
     params(
       full_name: ::String,
@@ -1279,7 +1284,7 @@ class RubyIndexer::Index
   end
   def direct_or_aliased_constant(full_name, seen_names); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#972
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1017
   sig do
     params(
       name: T.nilable(::String),
@@ -1291,7 +1296,7 @@ class RubyIndexer::Index
   # Linearize mixins for an array of namespace entries. This method will mutate the `ancestors` array with the
   # linearized ancestors of the mixins
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#757
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#802
   sig do
     params(
       ancestors: T::Array[::String],
@@ -1304,7 +1309,7 @@ class RubyIndexer::Index
   # Linearize the superclass of a given namespace (including modules with the implicit `Module` superclass). This
   # method will mutate the `ancestors` array with the linearized ancestors of the superclass
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#807
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#852
   sig do
     params(
       ancestors: T::Array[::String],
@@ -1317,7 +1322,14 @@ class RubyIndexer::Index
   end
   def linearize_superclass(ancestors, attached_class_name, fully_qualified_name, namespace_entries, nesting, singleton_levels); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#942
+  # Always returns the linearized ancestors for the attached class, regardless of whether `name` refers to a singleton
+  # or attached namespace
+  #
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#754
+  sig { params(name: ::String).returns(T::Array[::String]) }
+  def linearized_attached_ancestors(name); end
+
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#987
   sig do
     params(
       name: ::String,
@@ -1327,7 +1339,7 @@ class RubyIndexer::Index
   end
   def lookup_ancestor_chain(name, nesting, seen_names); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#913
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#958
   sig do
     params(
       name: ::String,
@@ -1340,7 +1352,7 @@ class RubyIndexer::Index
   # Attempts to resolve an UnresolvedAlias into a resolved Alias. If the unresolved alias is pointing to a constant
   # that doesn't exist, then we return the same UnresolvedAlias
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#880
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#925
   sig do
     params(
       entry: ::RubyIndexer::Entry::UnresolvedConstantAlias,
@@ -1352,7 +1364,7 @@ class RubyIndexer::Index
   # Attempt to resolve a given unresolved method alias. This method returns the resolved alias if we managed to
   # identify the target or the same unresolved alias entry if we couldn't
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1065
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1110
   sig do
     params(
       entry: ::RubyIndexer::Entry::UnresolvedMethodAlias,
@@ -1364,7 +1376,7 @@ class RubyIndexer::Index
 
   # Runs the registered included hooks
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#722
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#767
   sig { params(fully_qualified_name: ::String, nesting: T::Array[::String]).void }
   def run_included_hooks(fully_qualified_name, nesting); end
 end
@@ -5684,7 +5696,7 @@ class RubyLsp::ResponseBuilders::DocumentSymbol < ::RubyLsp::ResponseBuilders::R
   # @param symbol [Interface::DocumentSymbol]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.11798/lib/types/private/methods/_methods.rb#257
   def <<(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_lsp/response_builders/document_symbol.rb#47
@@ -6056,11 +6068,11 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   private
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1189
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1193
   sig { params(id: ::String, title: ::String, percentage: ::Integer).void }
   def begin_progress(id, title, percentage: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1219
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1223
   sig { void }
   def check_formatter_is_available; end
 
@@ -6068,15 +6080,19 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def code_action_resolve(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1290
-  sig { params(message: T::Hash[::Symbol, T.untyped]).void }
+  # NOTE: all servers methods are void because they can produce several messages for the client. The only reason this
+  # method returns the created thread is to that we can join it in tests and avoid flakiness. The implementation is
+  # not supposed to rely on the return of this method
+  #
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1297
+  sig { params(message: T::Hash[::Symbol, T.untyped]).returns(T.nilable(::Thread)) }
   def compose_bundle(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1209
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1213
   sig { params(id: ::String).void }
   def end_progress(id); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1042
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1046
   sig { params(uri: ::URI::Generic).void }
   def handle_rubocop_config_change(uri); end
 
@@ -6084,15 +6100,15 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(index: ::RubyIndexer::Index, file_path: ::String, change_type: ::Integer).void }
   def handle_ruby_file_change(index, file_path, change_type); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1157
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1161
   sig { void }
   def perform_initial_indexing; end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1237
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1241
   sig { params(indexing_options: T.nilable(T::Hash[::Symbol, T.untyped])).void }
   def process_indexing_configuration(indexing_options); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1202
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1206
   sig { params(id: ::String, percentage: ::Integer).void }
   def progress(id, percentage); end
 
@@ -6108,7 +6124,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { void }
   def run_initialized; end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1152
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1156
   sig { override.void }
   def shutdown; end
 
@@ -6123,7 +6139,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.11798/lib/types/private/methods/_methods.rb#257
   def text_document_code_lens(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_lsp/server.rb#905
@@ -6161,19 +6177,19 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.11798/lib/types/private/methods/_methods.rb#257
   def text_document_document_link(*args, **_arg1, &blk); end
 
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.11798/lib/types/private/methods/_methods.rb#257
   def text_document_document_symbol(*args, **_arg1, &blk); end
 
   # @param message [Hash{Symbol => T.untyped}]
   # @return [void]
   #
-  # source://sorbet-runtime/0.5.11781/lib/types/private/methods/_methods.rb#257
+  # source://sorbet-runtime/0.5.11798/lib/types/private/methods/_methods.rb#257
   def text_document_folding_range(*args, **_arg1, &blk); end
 
   # source://ruby-lsp//lib/ruby_lsp/server.rb#612
@@ -6196,7 +6212,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def text_document_prepare_rename(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1094
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1098
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def text_document_prepare_type_hierarchy(message); end
 
@@ -6228,7 +6244,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def text_document_semantic_tokens_range(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1075
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1079
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def text_document_show_syntax_tree(message); end
 
@@ -6236,19 +6252,19 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def text_document_signature_help(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1122
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1126
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def type_hierarchy_subtypes(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1113
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1117
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def type_hierarchy_supertypes(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1278
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1282
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def window_show_message_request(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1129
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1133
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def workspace_dependencies(message); end
 
@@ -6256,7 +6272,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def workspace_did_change_watched_files(message); end
 
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1062
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1066
   sig { params(message: T::Hash[::Symbol, T.untyped]).void }
   def workspace_symbol(message); end
 end
