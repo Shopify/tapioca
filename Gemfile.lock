@@ -9,7 +9,7 @@ GIT
 PATH
   remote: .
   specs:
-    tapioca (0.16.8)
+    tapioca (0.16.9)
       benchmark
       bundler (>= 2.2.25)
       netrc (>= 0.11.0)
