@@ -8,6 +8,7 @@ module Tapioca
   module RubyLsp
     class RunGemRbiCheckSpec < SpecWithProject
       FOO_RB = "module Foo; end"
+      BAR_RB = "module Bar; end"
 
       before(:all) do
         @project = mock_project
@@ -34,6 +35,7 @@ module Tapioca
 
       describe "with git" do
         before do
+          FileUtils.mkdir_p("#{@project.absolute_path}/sorbet/rbi/gems")
           @project.write!("Gemfile", @project.tapioca_gemfile)
           @project.bundle_install!
           @project.exec("git init")
@@ -104,7 +106,6 @@ module Tapioca
 
         it "deletes untracked RBI files" do
           @project.bundle_install!
-          FileUtils.mkdir_p("#{@project.absolute_path}/sorbet/rbi/gems")
           # Create an untracked RBI file
           FileUtils.touch("#{@project.absolute_path}/sorbet/rbi/gems/bar@0.0.1.rbi")
 
@@ -118,7 +119,6 @@ module Tapioca
 
         it "restores deleted RBI files" do
           @project.bundle_install!
-          FileUtils.mkdir_p("#{@project.absolute_path}/sorbet/rbi/gems")
           # Create and delete a tracked RBI file
           FileUtils.touch("#{@project.absolute_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
           @project.exec("git add sorbet/rbi/gems/foo@0.0.1.rbi")
@@ -134,6 +134,47 @@ module Tapioca
 
           # Clean-up commit
           @project.exec("git reset --hard HEAD^")
+        end
+
+        it "cleans up orphaned RBIs when gems are not present in the lockfile diff" do
+          # Setup initial state
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", FOO_RB)
+          end
+          bar = mock_gem("bar", "0.0.1") do
+            write!("lib/bar.rb", BAR_RB)
+          end
+          @project.require_mock_gem(foo)
+          @project.require_mock_gem(bar)
+          @project.bundle_install!
+
+          FileUtils.touch("#{@project.absolute_path}/sorbet/rbi/gems/foo@0.0.1.rbi")
+          FileUtils.touch("#{@project.absolute_path}/sorbet/rbi/gems/bar@0.0.1.rbi")
+
+          @project.exec("git add *")
+          @project.exec("git commit -m 'Add foo and bar gems'")
+
+          # Update both gems without committing
+
+          foo.update("0.0.2")
+          bar.update("0.0.2")
+          @project.bundle_install!
+
+          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.2.rbi")
+          assert_project_file_exist("sorbet/rbi/gems/bar@0.0.2.rbi")
+
+          # Downgrade foo gem back to 0.0.1 which removes it from the git diff output
+
+          foo.update("0.0.1")
+          @project.bundle_install!
+
+          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+
+          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run
+
+          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
         end
       end
     end
