@@ -148,6 +148,66 @@ module RubyLsp
         FileUtils.rm_rf("spec/dummy/sorbet/tapioca")
       end
 
+      it "triggers gem RBI generation upon activation" do
+        global_state = RubyLsp::GlobalState.new
+        global_state.apply_options({
+          initializationOptions: {
+            enabledFeatureFlags: {
+              tapiocaAddon: true,
+            },
+          },
+        })
+
+        outgoing_queue = Thread::Queue.new
+        FileUtils.chdir("spec/dummy") do
+          # Activate the Rails add-on manually
+          rails_addon = Rails::Addon.new
+          RubyLsp::Addon.addons << rails_addon
+          rails_addon.activate(global_state, outgoing_queue)
+
+          Thread.new do
+            # Wait until the Rails runner client is ready and then patch its methods so that we can avoid doing work we
+            # are not interested in while at the same time asserting that we invoked the right notification
+            client = rails_addon.rails_runner_client
+            client.instance_eval do
+              def server_addon_name
+                @server_addon_name
+              end
+
+              def request_name
+                @request_name
+              end
+
+              def register_server_addon(path); end
+
+              def delegate_notification(**kwargs)
+                @server_addon_name = kwargs[:server_addon_name]
+                @request_name = kwargs[:request_name]
+              end
+            end
+          end.join
+
+          begin
+            addon = Addon.new
+            assert_includes(RubyLsp::Addon.addons, rails_addon)
+            assert_equal(rails_addon, ::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.4.0", "< 0.5"))
+
+            # Activate the Tapioca add-on and wait until all notifications have been popped from both add-ons
+            addon.activate(global_state, outgoing_queue)
+            4.times do
+              outgoing_queue.pop
+            end
+
+            # Verify that we triggered gem RBI generation
+            assert_equal("Tapioca", T.unsafe(rails_addon.rails_runner_client).server_addon_name)
+            assert_equal("gem", T.unsafe(rails_addon.rails_runner_client).request_name)
+          ensure
+            outgoing_queue.close
+            RubyLsp::Addon.unload_addons
+          end
+        end
+      end
+
       private
 
       # Starts a new client

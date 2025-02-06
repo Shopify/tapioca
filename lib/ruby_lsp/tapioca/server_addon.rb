@@ -48,6 +48,12 @@ module RubyLsp
               dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::ActiveRecordFixtures")
             end
           end
+        when "gem"
+          fork do
+            with_notification_wrapper("gem", "Generating gem RBIs") do
+              gem
+            end
+          end
         end
       end
 
@@ -70,6 +76,12 @@ module RubyLsp
         arguments.concat(constants)
 
         ::Tapioca::Cli.start(arguments)
+      end
+
+      def gem
+        load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
+
+        ::Tapioca::Cli.start(["gem", "--lsp_addon", "--workers=1"])
       end
     end
   end
