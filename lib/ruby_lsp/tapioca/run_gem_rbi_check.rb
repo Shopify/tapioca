@@ -68,10 +68,10 @@ module RubyLsp
         parser = Tapioca::LockfileDiffParser.new(@lockfile_diff)
         added_or_modified_gems = parser.added_or_modified_gems
 
-        if added_or_modified_gems.any?
-          log_message("Identified lockfile changes, attempting to generate gem RBIs...")
-          execute_tapioca_gem_command(added_or_modified_gems)
-        end
+        return if added_or_modified_gems.none?
+
+        log_message("Identified lockfile changes, attempting to generate gem RBIs...")
+        execute_tapioca_gem_command(added_or_modified_gems)
       end
 
       sig { params(gems: T::Array[String]).void }
