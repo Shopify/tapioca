@@ -12,12 +12,10 @@ module RubyLsp
       attr_reader :stdout
       attr_reader :status
 
-      sig { params(project_path: String, rails_runner_client: RubyLsp::Rails::RunnerClient).void }
-      def initialize(project_path, rails_runner_client)
+      def initialize(project_path)
         @project_path = project_path
         @stdout = T.let("", String)
         @status = T.let(nil, T.nilable(Process::Status))
-        @rails_runner_client = rails_runner_client
       end
 
       sig { void }
@@ -27,7 +25,7 @@ module RubyLsp
         cleanup_orphaned_rbis
 
         if lockfile_changed?
-          generate_gem_rbis
+          yield(gems_to_generate) if block_given?
         end
       end
 
@@ -63,20 +61,15 @@ module RubyLsp
         execute_in_project_path("git", "diff", lockfile.to_s).strip
       end
 
-      sig { void }
-      def generate_gem_rbis
+      sig { returns(T::Array[String]) }
+      def gems_to_generate
         parser = Tapioca::LockfileDiffParser.new(@lockfile_diff)
         added_or_modified_gems = parser.added_or_modified_gems
 
-        return if added_or_modified_gems.none?
+        return [] if added_or_modified_gems.none?
 
         log_message("Identified lockfile changes, attempting to generate gem RBIs...")
-        @rails_runner_client.delegate_notification(
-          server_addon_name: "Tapioca",
-          request_name: "gem",
-          workspace_path: project_path,
-          added_or_modified_gems: gems,
-        )
+        added_or_modified_gems
       end
 
       sig { void }

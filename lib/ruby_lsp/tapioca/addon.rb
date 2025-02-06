@@ -178,8 +178,15 @@ module RubyLsp
 
       sig { void }
       def run_gem_rbi_check
-        gem_rbi_check = RunGemRbiCheck.new(T.must(@global_state).workspace_path, @rails_runner_client)
-        gem_rbi_check.run
+        gem_rbi_check = RunGemRbiCheck.new(T.must(@global_state).workspace_path)
+        gem_rbi_check.run do |gems|
+          @rails_runner_client.delegate_notification(
+            server_addon_name: "Tapioca",
+            request_name: "gem",
+            workspace_path: T.must(@global_state).workspace_path,
+            added_or_modified_gems: gems,
+          )
+        end
       end
     end
   end
