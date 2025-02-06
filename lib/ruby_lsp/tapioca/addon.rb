@@ -180,14 +180,6 @@ module RubyLsp
       def run_gem_rbi_check
         gem_rbi_check = RunGemRbiCheck.new(T.must(@global_state).workspace_path, @rails_runner_client)
         gem_rbi_check.run
-
-        T.must(@outgoing_queue) << Notification.window_log_message(
-          gem_rbi_check.stdout,
-        ) unless gem_rbi_check.stdout.empty?
-        T.must(@outgoing_queue) << Notification.window_log_message(
-          gem_rbi_check.stderr,
-          type: Constant::MessageType::WARNING,
-        ) unless gem_rbi_check.stderr.empty?
       end
     end
   end

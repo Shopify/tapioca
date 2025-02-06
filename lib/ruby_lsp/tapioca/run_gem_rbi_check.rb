@@ -10,14 +10,12 @@ module RubyLsp
       extend T::Sig
 
       attr_reader :stdout
-      attr_reader :stderr
       attr_reader :status
 
       sig { params(project_path: String, rails_runner_client: RubyLsp::Rails::RunnerClient).void }
       def initialize(project_path, rails_runner_client)
         @project_path = project_path
         @stdout = T.let("", String)
-        @stderr = T.let("", String)
         @status = T.let(nil, T.nilable(Process::Status))
         @rails_runner_client = rails_runner_client
       end
