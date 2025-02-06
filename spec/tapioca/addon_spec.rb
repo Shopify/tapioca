@@ -46,7 +46,6 @@ module RubyLsp
           server_addon_name: "Tapioca",
           request_name: "gem",
           added_or_modified_gems: ["foo"],
-          removed_gems: ["bar"],
         )
         expected_rbi_path = @project.absolute_path_to("sorbet/rbi/gems/foo@0.0.1.rbi")
         wait_until_exists(expected_rbi_path)
@@ -54,45 +53,6 @@ module RubyLsp
         shutdown_client
 
         assert_path_exists(expected_rbi_path)
-      end
-
-      it "deletes gem RBIs for removed gems" do
-        create_rails_project
-        create_client(@project.absolute_path)
-        FOO_RB = <<~RB
-          module Foo
-          end
-        RB
-        foo = mock_gem("foo", "0.0.1") do
-          write!("lib/foo.rb", FOO_RB)
-        end
-        @project.require_mock_gem(foo)
-        @project.bundle_install!
-        wait_until_exists(@project.absolute_path_to("Gemfile.lock"))
-
-        @client.delegate_notification(
-          server_addon_name: "Tapioca",
-          request_name: "gem",
-          added_or_modified_gems: ["foo"],
-          removed_gems: [],
-        )
-
-        expected_rbi_path = @project.absolute_path_to("sorbet/rbi/gems/foo@0.0.1.rbi")
-        wait_until_exists(expected_rbi_path)
-
-        # We 'remove' the gem overwriting with the default lockfile
-        @project.write_gemfile!(@project.tapioca_gemfile)
-
-        @client.delegate_notification(
-          server_addon_name: "Tapioca",
-          request_name: "gem",
-          added_or_modified_gems: [],
-          removed_gems: ["foo"],
-        )
-        wait_until_removed(expected_rbi_path)
-        refute(File.exist?(expected_rbi_path))
-
-        shutdown_client
       end
 
       it "triggers route DSL generation if routes.rb is modified" do
@@ -249,14 +209,6 @@ module RubyLsp
         end
       rescue Timeout::Error
         flunk("#{path} was not created in time")
-      end
-
-      def wait_until_removed(path)
-        Timeout.timeout(4) do
-          sleep(0.2) while File.exist?(path)
-        end
-      rescue Timeout::Error
-        flunk("#{path} was not removed in time")
       end
 
       def create_rails_project

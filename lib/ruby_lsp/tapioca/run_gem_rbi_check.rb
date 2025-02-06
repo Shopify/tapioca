@@ -68,14 +68,11 @@ module RubyLsp
       sig { void }
       def generate_gem_rbis
         parser = Tapioca::LockfileDiffParser.new(@lockfile_diff)
-        removed_gems = parser.removed_gems
         added_or_modified_gems = parser.added_or_modified_gems
 
         if added_or_modified_gems.any?
           log_message("Identified lockfile changes, attempting to generate gem RBIs...")
           execute_tapioca_gem_command(added_or_modified_gems)
-        elsif removed_gems.any?
-          remove_rbis(removed_gems)
         end
       end
 
@@ -87,15 +84,6 @@ module RubyLsp
           workspace_path: project_path,
           added_or_modified_gems: gems,
         )
-      end
-
-      sig { params(gems: T::Array[String]).void }
-      def remove_rbis(gems)
-        files = Dir.glob(
-          "sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi",
-          base: project_path,
-        )
-        delete_files(files, "Removed RBIs for")
       end
 
       sig { void }
