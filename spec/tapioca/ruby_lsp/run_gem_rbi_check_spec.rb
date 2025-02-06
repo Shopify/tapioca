@@ -57,10 +57,15 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
-          check.run
+          gem_list = nil
+          my_callback = proc do |gems|
+            gem_list = gems
+          end
 
-          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check.run(&my_callback)
+
+          assert_equal(["foo"], gem_list)
         end
 
         it "regenerates RBI when a gem version changes" do
@@ -70,18 +75,17 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
-          check.run
-
-          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
-
-          # Modify the gem
           foo.update("0.0.2")
-          @project.bundle_install!
 
-          check.run
+          gem_list = nil
+          my_callback = proc do |gems|
+            gem_list = gems
+          end
 
-          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.2.rbi")
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check.run(&my_callback)
+
+          assert_equal(["foo"], gem_list)
         end
 
         it "removes RBI file when a gem is removed" do
