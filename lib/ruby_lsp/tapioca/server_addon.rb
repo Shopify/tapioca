@@ -84,8 +84,6 @@ module RubyLsp
         arguments.push("--lsp_addon", "--workers=1")
         arguments.concat(added_or_modified_gems)
 
-        # when gems are removed, we just run without any arguments
-
         ::Tapioca::Cli.start(arguments)
       end
     end
