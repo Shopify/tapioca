@@ -26,7 +26,7 @@ module RubyLsp
         cleanup_orphaned_rbis
 
         if lockfile_changed?
-          yield(gems_to_generate) if block_given?
+          yield(gems_to_generate)
         end
       end
 

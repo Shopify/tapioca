@@ -57,15 +57,11 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
-          gem_list = nil
-          my_callback = proc do |gems|
-            gem_list = gems
-          end
-
+          gem_list_for_tapioca_command = []
           check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
-          check.run(&my_callback)
+          check.run { |gem| gem_list_for_tapioca_command.concat(gem) }
 
-          assert_equal(["foo"], gem_list)
+          assert_equal(["foo"], gem_list_for_tapioca_command)
         end
 
         it "regenerates RBI when a gem version changes" do
@@ -77,15 +73,12 @@ module Tapioca
 
           foo.update("0.0.2")
 
-          gem_list = nil
-          my_callback = proc do |gems|
-            gem_list = gems
-          end
+          gem_list_for_tapioca_command = []
 
           check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
-          check.run(&my_callback)
+          check.run { |gem| gem_list_for_tapioca_command.concat(gem) }
 
-          assert_equal(["foo"], gem_list)
+          assert_equal(["foo"], gem_list_for_tapioca_command)
         end
 
         it "removes RBI file when a gem is removed" do
@@ -95,17 +88,18 @@ module Tapioca
           @project.require_mock_gem(foo)
           @project.bundle_install!
 
+          gem_list_for_tapioca_command = []
           check1 = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
-          check1.run
+          check1.run { |gem| gem_list_for_tapioca_command.concat(gem) }
 
-          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_equal(["foo"], gem_list_for_tapioca_command)
 
           @project.exec("git restore Gemfile Gemfile.lock")
 
+          gem_list_for_tapioca_command = []
           check2 = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
-          check2.run
-
-          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          check2.run { |gem| gem_list_for_tapioca_command.concat(gem) }
+          assert_equal([], gem_list_for_tapioca_command)
         end
 
         it "deletes untracked RBI files" do
@@ -164,21 +158,22 @@ module Tapioca
           bar.update("0.0.2")
           @project.bundle_install!
 
-          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run
-
-          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.2.rbi")
-          assert_project_file_exist("sorbet/rbi/gems/bar@0.0.2.rbi")
+          gem_list_for_tapioca_command = []
+          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run do |gem|
+            gem_list_for_tapioca_command.concat(gem)
+          end
+          assert_equal(["bar", "foo"], gem_list_for_tapioca_command)
 
           # Downgrade foo gem back to 0.0.1 which removes it from the git diff output
 
           foo.update("0.0.1")
           @project.bundle_install!
 
-          refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
-
-          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run
-
-          assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
+          gem_list_for_tapioca_command = []
+          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run do |gem|
+            gem_list_for_tapioca_command.concat(gem)
+          end
+          assert_equal(["bar"], gem_list_for_tapioca_command)
         end
       end
     end
