@@ -2,11 +2,11 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "ruby_lsp/tapioca/run_gem_rbi_check"
+require "ruby_lsp/tapioca/gem_rbi_check"
 
 module Tapioca
   module RubyLsp
-    class RunGemRbiCheckSpec < SpecWithProject
+    class GemRbiCheckSpec < SpecWithProject
       FOO_RB = "module Foo; end"
       BAR_RB = "module Bar; end"
 
@@ -26,7 +26,7 @@ module Tapioca
           @project.require_mock_gem(foo)
 
           @project.bundle_install!
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check.run
 
           assert check.stdout.include?("Not a git repository")
@@ -58,7 +58,7 @@ module Tapioca
           @project.bundle_install!
 
           gem_list_for_tapioca_command = []
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check.run { |gem| gem_list_for_tapioca_command.concat(gem) }
 
           assert_equal(["foo"], gem_list_for_tapioca_command)
@@ -75,7 +75,7 @@ module Tapioca
 
           gem_list_for_tapioca_command = []
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check.run { |gem| gem_list_for_tapioca_command.concat(gem) }
 
           assert_equal(["foo"], gem_list_for_tapioca_command)
@@ -89,7 +89,7 @@ module Tapioca
           @project.bundle_install!
 
           gem_list_for_tapioca_command = []
-          check1 = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check1 = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check1.run { |gem| gem_list_for_tapioca_command.concat(gem) }
 
           assert_equal(["foo"], gem_list_for_tapioca_command)
@@ -97,7 +97,7 @@ module Tapioca
           @project.exec("git restore Gemfile Gemfile.lock")
 
           gem_list_for_tapioca_command = []
-          check2 = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check2 = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check2.run { |gem| gem_list_for_tapioca_command.concat(gem) }
           assert_equal([], gem_list_for_tapioca_command)
         end
@@ -109,7 +109,7 @@ module Tapioca
 
           assert_project_file_exist("/sorbet/rbi/gems/bar@0.0.1.rbi")
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check.run
 
           refute_project_file_exist("sorbet/rbi/gems/bar@0.0.1.rbi")
@@ -125,7 +125,7 @@ module Tapioca
 
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
-          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path)
+          check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check.run
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
@@ -159,7 +159,7 @@ module Tapioca
           @project.bundle_install!
 
           gem_list_for_tapioca_command = []
-          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run do |gem|
+          ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path).run do |gem|
             gem_list_for_tapioca_command.concat(gem)
           end
           assert_equal(["bar", "foo"], gem_list_for_tapioca_command)
@@ -170,7 +170,7 @@ module Tapioca
           @project.bundle_install!
 
           gem_list_for_tapioca_command = []
-          ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path).run do |gem|
+          ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path).run do |gem|
             gem_list_for_tapioca_command.concat(gem)
           end
           assert_equal(["bar"], gem_list_for_tapioca_command)

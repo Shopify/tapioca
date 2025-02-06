@@ -6,7 +6,7 @@ require "ruby_lsp/tapioca/lockfile_diff_parser"
 
 module RubyLsp
   module Tapioca
-    class RunGemRbiCheck
+    class GemRbiCheck
       extend T::Sig
 
       attr_reader :stdout
