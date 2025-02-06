@@ -71,11 +71,6 @@ module RubyLsp
         return if added_or_modified_gems.none?
 
         log_message("Identified lockfile changes, attempting to generate gem RBIs...")
-        execute_tapioca_gem_command(added_or_modified_gems)
-      end
-
-      sig { params(gems: T::Array[String]).void }
-      def execute_tapioca_gem_command(gems)
         @rails_runner_client.delegate_notification(
           server_addon_name: "Tapioca",
           request_name: "gem",
