@@ -178,7 +178,7 @@ module RubyLsp
 
       sig { void }
       def run_gem_rbi_check
-        gem_rbi_check = RunGemRbiCheck.new(T.must(@global_state).workspace_path)
+        gem_rbi_check = RunGemRbiCheck.new(T.must(@global_state).workspace_path, @rails_runner_client)
         gem_rbi_check.run
 
         T.must(@outgoing_queue) << Notification.window_log_message(

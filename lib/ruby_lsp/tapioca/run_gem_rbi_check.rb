@@ -13,12 +13,13 @@ module RubyLsp
       attr_reader :stderr
       attr_reader :status
 
-      sig { params(project_path: String).void }
-      def initialize(project_path)
+      sig { params(project_path: String, rails_runner_client: RubyLsp::Rails::RunnerClient).void }
+      def initialize(project_path, rails_runner_client)
         @project_path = project_path
         @stdout = T.let("", String)
         @stderr = T.let("", String)
         @status = T.let(nil, T.nilable(Process::Status))
+        @rails_runner_client = rails_runner_client
       end
 
       sig { void }
@@ -80,21 +81,12 @@ module RubyLsp
 
       sig { params(gems: T::Array[String]).void }
       def execute_tapioca_gem_command(gems)
-        Bundler.with_unbundled_env do
-          stdout, stderr, status = T.unsafe(Open3).capture3(
-            "bundle",
-            "exec",
-            "tapioca",
-            "gem",
-            "--lsp_addon",
-            *gems,
-            chdir: project_path,
-          )
-
-          log_message(stdout) unless stdout.empty?
-          @stderr = stderr unless stderr.empty?
-          @status = status
-        end
+        @rails_runner_client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "gem",
+          workspace_path: project_path,
+          added_or_modified_gems: gems,
+        )
       end
 
       sig { params(gems: T::Array[String]).void }

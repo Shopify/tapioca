@@ -10,7 +10,7 @@ require "minitest/hooks"
 
 module RubyLsp
   module Tapioca
-    class AddonSpec < Minitest::HooksSpec
+    class AddonSpec < ::Tapioca::SpecWithProject
       # The approach here is based on tests within the Ruby LSP Rails gem
 
       it "generates DSL RBIs for a given constant" do
@@ -27,6 +27,72 @@ module RubyLsp
         assert_path_exists("spec/dummy/sorbet/rbi/dsl/notify_user_job.rbi")
       ensure
         FileUtils.rm_rf("spec/dummy/sorbet/rbi")
+      end
+
+      it "generates gem RBIs for added gems" do
+        create_rails_project
+        create_client(@project.absolute_path)
+        FOO_RB = <<~RB
+          module Foo
+          end
+        RB
+        foo = mock_gem("foo", "0.0.1") do
+          write!("lib/foo.rb", FOO_RB)
+        end
+        @project.require_mock_gem(foo)
+        @project.bundle_install!
+
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "gem",
+          added_or_modified_gems: ["foo"],
+          removed_gems: ["bar"],
+        )
+        expected_rbi_path = @project.absolute_path_to("sorbet/rbi/gems/foo@0.0.1.rbi")
+        wait_until_exists(expected_rbi_path)
+
+        shutdown_client
+
+        assert_path_exists(expected_rbi_path)
+      end
+
+      it "deletes gem RBIs for removed gems" do
+        create_rails_project
+        create_client(@project.absolute_path)
+        FOO_RB = <<~RB
+          module Foo
+          end
+        RB
+        foo = mock_gem("foo", "0.0.1") do
+          write!("lib/foo.rb", FOO_RB)
+        end
+        @project.require_mock_gem(foo)
+        @project.bundle_install!
+        wait_until_exists(@project.absolute_path_to("Gemfile.lock"))
+
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "gem",
+          added_or_modified_gems: ["foo"],
+          removed_gems: [],
+        )
+
+        expected_rbi_path = @project.absolute_path_to("sorbet/rbi/gems/foo@0.0.1.rbi")
+        wait_until_exists(expected_rbi_path)
+
+        # We 'remove' the gem overwriting with the default lockfile
+        @project.write_gemfile!(@project.tapioca_gemfile)
+
+        @client.delegate_notification(
+          server_addon_name: "Tapioca",
+          request_name: "gem",
+          added_or_modified_gems: [],
+          removed_gems: ["foo"],
+        )
+        wait_until_removed(expected_rbi_path)
+        refute(File.exist?(expected_rbi_path))
+
+        shutdown_client
       end
 
       it "triggers route DSL generation if routes.rb is modified" do
@@ -151,10 +217,10 @@ module RubyLsp
       private
 
       # Starts a new client
-      def create_client
+      def create_client(path = "spec/dummy")
         @outgoing_queue = Thread::Queue.new
         global_state = GlobalState.new
-        @client = FileUtils.chdir("spec/dummy") do
+        @client = FileUtils.chdir(path) do
           RubyLsp::Rails::RunnerClient.new(@outgoing_queue, global_state)
         end
 
@@ -168,6 +234,7 @@ module RubyLsp
       end
 
       # Triggers shutdown and waits for it to complete
+      # TODO: move all shutdown_client calls into `ensure`? See https://github.com/Shopify/tapioca/pull/2179
       def shutdown_client
         @client.shutdown
         @client.instance_variable_get(:@wait_thread).join
@@ -182,6 +249,34 @@ module RubyLsp
         end
       rescue Timeout::Error
         flunk("#{path} was not created in time")
+      end
+
+      def wait_until_removed(path)
+        Timeout.timeout(4) do
+          sleep(0.2) while File.exist?(path)
+        end
+      rescue Timeout::Error
+        flunk("#{path} was not removed in time")
+      end
+
+      def create_rails_project
+        @project.write!("config/environment.rb", <<~RB)
+          require_relative "application.rb"
+        RB
+
+        @project.write!("config/application.rb", <<~RB)
+          require "rails"
+
+          module Test
+            class Application < Rails::Application
+            end
+          end
+        RB
+
+        @project.require_real_gem("rails")
+
+        content = File.read("spec/dummy/bin/rails")
+        @project.write!("bin/rails", content)
       end
     end
   end

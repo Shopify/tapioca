@@ -34,6 +34,12 @@ module RubyLsp
               dsl(params[:constants])
             end
           end
+        when "gem"
+          fork do
+            with_notification_wrapper("gem", "Generating gem RBIs") do
+              gem(params[:added_or_modified_gems])
+            end
+          end
         when "route_dsl"
           fork do
             with_notification_wrapper("route_dsl", "Generating route DSL RBIs") do
@@ -68,6 +74,17 @@ module RubyLsp
         arguments.concat(args)
         arguments.push("--lsp_addon", "--workers=1")
         arguments.concat(constants)
+
+        ::Tapioca::Cli.start(arguments)
+      end
+
+      def gem(added_or_modified_gems)
+        load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
+        arguments = ["gem"]
+        arguments.push("--lsp_addon", "--workers=1")
+        arguments.concat(added_or_modified_gems)
+
+        # when gems are removed, we just run without any arguments
 
         ::Tapioca::Cli.start(arguments)
       end
