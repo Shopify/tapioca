@@ -8,13 +8,15 @@ module RubyLsp
   module Tapioca
     class GemRbiCheck
       extend T::Sig
-
-      attr_reader :log
-
-      sig { params(project_path: String).void }
-      def initialize(project_path)
+      sig do
+        params(
+          project_path: String,
+          logger_callback: T.nilable(T.proc.params(arg0: String).void),
+        ).void
+      end
+      def initialize(project_path, logger_callback: nil)
         @project_path = project_path
-        @log = T.let("", String)
+        @logger_callback = logger_callback
       end
 
       sig { params(callback: T.proc.params(arg0: T::Array[String]).void).void }
@@ -107,7 +109,9 @@ module RubyLsp
 
       sig { params(message: String).void }
       def log_message(message)
-        @log += "#{message}\n"
+        return unless @logger_callback
+
+        @logger_callback.call(message)
       end
 
       def execute_in_project_path(*parts, stdin: nil)

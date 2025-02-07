@@ -26,10 +26,13 @@ module Tapioca
           @project.require_mock_gem(foo)
 
           @project.bundle_install!
-          check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
+          logs = []
+          logger_callback = lambda { |message| logs << message }
+          check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path, logger_callback: logger_callback)
+
           check.run {}
 
-          assert check.log.include?("Not a git repository")
+          assert logs.include?("Not a git repository")
         end
       end
 
