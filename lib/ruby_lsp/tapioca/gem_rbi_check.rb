@@ -10,13 +10,11 @@ module RubyLsp
       extend T::Sig
 
       attr_reader :stdout
-      attr_reader :status
 
       sig { params(project_path: String).void }
       def initialize(project_path)
         @project_path = project_path
         @stdout = T.let("", String)
-        @status = T.let(nil, T.nilable(Process::Status))
       end
 
       sig { void }
