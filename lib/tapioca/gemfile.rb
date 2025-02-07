@@ -27,11 +27,10 @@ module Tapioca
     def initialize(excluded_gems)
       @gemfile = T.let(File.new(Bundler.default_gemfile), File)
       @lockfile = T.let(File.new(Bundler.default_lockfile), File)
+      puts "*** Core fails on this line, #{gemfile.path}, #{lockfile.path}" # TODO: fix for core
       @definition = T.let(Bundler::Dsl.evaluate(gemfile, lockfile, {}), Bundler::Definition)
       @excluded_gems = excluded_gems
-
       dependencies, missing_specs = load_dependencies
-
       @dependencies = T.let(dependencies, T::Array[GemSpec])
       @missing_specs = T.let(missing_specs, T::Array[String])
     end
