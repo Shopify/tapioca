@@ -27,7 +27,7 @@ module Tapioca
 
           @project.bundle_install!
           check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
-          check.run
+          check.run {}
 
           assert check.stdout.include?("Not a git repository")
         end
@@ -110,7 +110,7 @@ module Tapioca
           assert_project_file_exist("/sorbet/rbi/gems/bar@0.0.1.rbi")
 
           check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
-          check.run
+          check.run {}
 
           refute_project_file_exist("sorbet/rbi/gems/bar@0.0.1.rbi")
         end
@@ -126,7 +126,7 @@ module Tapioca
           refute_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 
           check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
-          check.run
+          check.run {}
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
 

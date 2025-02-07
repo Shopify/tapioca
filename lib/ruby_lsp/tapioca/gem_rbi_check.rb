@@ -17,8 +17,8 @@ module RubyLsp
         @stdout = T.let("", String)
       end
 
-      sig { void }
-      def run
+      sig { params(callback: T.proc.params(arg0: T::Array[String]).void).void }
+      def run(&callback)
         return log_message("Not a git repository") unless git_repo?
 
         cleanup_orphaned_rbis
