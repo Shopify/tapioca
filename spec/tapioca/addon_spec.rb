@@ -226,6 +226,7 @@ module RubyLsp
         RB
 
         @project.require_real_gem("rails")
+        @project.bundle_install!
 
         content = File.read("spec/dummy/bin/rails")
         @project.write!("bin/rails", content)
