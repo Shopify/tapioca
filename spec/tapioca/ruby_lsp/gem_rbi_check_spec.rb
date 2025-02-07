@@ -99,7 +99,7 @@ module Tapioca
           gem_list_for_tapioca_command = []
           check2 = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check2.run { |gem| gem_list_for_tapioca_command.concat(gem) }
-          assert_equal([], gem_list_for_tapioca_command)
+          assert_empty(gem_list_for_tapioca_command)
         end
 
         it "deletes untracked RBI files" do
