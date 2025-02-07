@@ -9,12 +9,12 @@ module RubyLsp
     class GemRbiCheck
       extend T::Sig
 
-      attr_reader :stdout
+      attr_reader :log
 
       sig { params(project_path: String).void }
       def initialize(project_path)
         @project_path = project_path
-        @stdout = T.let("", String)
+        @log = T.let("", String)
       end
 
       sig { params(callback: T.proc.params(arg0: T::Array[String]).void).void }
@@ -104,7 +104,7 @@ module RubyLsp
 
       sig { params(message: String).void }
       def log_message(message)
-        @stdout += "#{message}\n"
+        @log += "#{message}\n"
       end
 
       def execute_in_project_path(*parts, stdin: nil)

@@ -29,7 +29,7 @@ module Tapioca
           check = ::RubyLsp::Tapioca::GemRbiCheck.new(@project.absolute_path)
           check.run {}
 
-          assert check.stdout.include?("Not a git repository")
+          assert check.log.include?("Not a git repository")
         end
       end
 
