@@ -62,11 +62,13 @@ module RubyLsp
       def dsl(constants, *args)
         load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
 
+        ::Tapioca::Cli.addon_mode!
+
         # Order here is important to avoid having Thor confuse arguments. Do not put an array argument at the end before
         # the list of constants
         arguments = ["dsl"]
         arguments.concat(args)
-        arguments.push("--lsp_addon", "--workers=1")
+        arguments.push("--workers=1")
         arguments.concat(constants)
 
         ::Tapioca::Cli.start(arguments)
