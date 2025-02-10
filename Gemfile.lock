@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/Shopify/ruby-lsp-rails.git
-  revision: 5c59f2f9f2b2a6a7a1416834c53275eee8020dab
+  revision: d44779e54939fdbeaaa9e1b4344a9864f2a21cc7
   branch: main
   specs:
     ruby-lsp-rails (0.4.0)
