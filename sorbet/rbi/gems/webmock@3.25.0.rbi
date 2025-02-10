@@ -11,79 +11,79 @@ module Net::WebMockHTTPResponse
   def read_body(dest = T.unsafe(nil), &block); end
 end
 
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#210
+# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#224
 class StubSocket
   # @return [StubSocket] a new instance of StubSocket
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#214
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#228
   def initialize(*args); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#222
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#236
   def close; end
 
   # @return [Boolean]
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#218
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#232
   def closed?; end
 
   # Returns the value of attribute continue_timeout.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#212
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
   def continue_timeout; end
 
   # Sets the attribute continue_timeout
   #
   # @param value the value to set the attribute continue_timeout to.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#212
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
   def continue_timeout=(_arg0); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#230
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#244
   def io; end
 
   # Returns the value of attribute read_timeout.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#212
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
   def read_timeout; end
 
   # Sets the attribute read_timeout
   #
   # @param value the value to set the attribute read_timeout to.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#212
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
   def read_timeout=(_arg0); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#227
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#241
   def readuntil(*args); end
 
   # Returns the value of attribute write_timeout.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#212
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
   def write_timeout; end
 
   # Sets the attribute write_timeout
   #
   # @param value the value to set the attribute write_timeout to.
   #
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#212
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#226
   def write_timeout=(_arg0); end
 end
 
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#234
+# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#248
 class StubSocket::StubIO
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#239
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#253
   def cipher; end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#236
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#250
   def peer_cert; end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#237
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#251
   def peeraddr; end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#235
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#249
   def setsockopt(*args); end
 
-  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#238
+  # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#252
   def ssl_version; end
 end
 
@@ -388,6 +388,7 @@ end
 
 # source://webmock//lib/webmock/config.rb#4
 class WebMock::Config
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -568,6 +569,7 @@ end
 
 # source://webmock//lib/webmock/http_lib_adapters/http_lib_adapter_registry.rb#4
 class WebMock::HttpLibAdapterRegistry
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -608,13 +610,21 @@ module WebMock::HttpLibAdapters; end
 # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#11
 class WebMock::HttpLibAdapters::NetHttpAdapter < ::WebMock::HttpLibAdapter
   class << self
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#23
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#27
     def disable!; end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#16
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#18
     def enable!; end
+
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#46
+    def remove_silently(mod, const); end
   end
 end
+
+# This will be removed in Ruby 3.5. In Ruby 3.4, const_remove will warn.
+#
+# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#16
+WebMock::HttpLibAdapters::NetHttpAdapter::HAS_LEGACY_CONSTANT = T.let(T.unsafe(nil), TrueClass)
 
 # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#14
 WebMock::HttpLibAdapters::NetHttpAdapter::OriginalNetHTTP = Net::HTTP
@@ -702,19 +712,19 @@ class WebMock::NetConnectNotAllowedError < ::Exception
   def initialize(request_signature); end
 end
 
-# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#244
+# source://webmock//lib/webmock/http_lib_adapters/net_http.rb#258
 module WebMock::NetHTTPUtility
   class << self
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#283
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#297
     def check_right_http_connection; end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#274
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#288
     def get_uri(net_http, path = T.unsafe(nil)); end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#287
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#301
     def puts_warning_for_right_http_if_needed; end
 
-    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#246
+    # source://webmock//lib/webmock/http_lib_adapters/net_http.rb#260
     def request_signature_from_request(net_http, request, body = T.unsafe(nil)); end
   end
 end
@@ -972,6 +982,7 @@ end
 
 # source://webmock//lib/webmock/request_registry.rb#5
 class WebMock::RequestRegistry
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -1317,6 +1328,7 @@ end
 
 # source://webmock//lib/webmock/stub_registry.rb#5
 class WebMock::StubRegistry
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
