@@ -24,13 +24,13 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   sig { void }
   def initialize; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#56
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#62
   sig { override.params(global_state: ::RubyLsp::GlobalState, outgoing_queue: ::Thread::Queue).void }
   def activate(global_state, outgoing_queue); end
 
   # Creates a new CodeLens listener. This method is invoked on every CodeLens request
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#85
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#94
   sig do
     override
       .params(
@@ -41,7 +41,7 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_code_lens_listener(response_builder, uri, dispatcher); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#138
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#147
   sig do
     override
       .params(
@@ -53,7 +53,7 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_completion_listener(response_builder, node_context, dispatcher, uri); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#124
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#133
   sig do
     override
       .params(
@@ -65,7 +65,7 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_definition_listener(response_builder, uri, node_context, dispatcher); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#110
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#119
   sig do
     override
       .params(
@@ -75,7 +75,7 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_document_symbol_listener(response_builder, dispatcher); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#98
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#107
   sig do
     override
       .params(
@@ -86,57 +86,57 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
   end
   def create_hover_listener(response_builder, node_context, dispatcher); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#68
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#77
   sig { override.void }
   def deactivate; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#162
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#171
   sig { override.params(title: ::String).void }
   def handle_window_show_message_response(title); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#157
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#166
   sig { override.returns(::String) }
   def name; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#51
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#57
   sig { returns(::RubyLsp::Rails::RunnerClient) }
   def rails_runner_client; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#73
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#82
   sig { override.returns(::String) }
   def version; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#143
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#152
   sig { params(changes: T::Array[{uri: ::String, type: ::Integer}]).void }
   def workspace_did_change_watched_files(changes); end
 
   private
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#189
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#198
   sig { params(id: ::String, title: ::String, percentage: T.nilable(::Integer), message: T.nilable(::String)).void }
   def begin_progress(id, title, percentage: T.unsafe(nil), message: T.unsafe(nil)); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#214
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#223
   sig { params(id: ::String).void }
   def end_progress(id); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#250
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#259
   sig { returns(::LanguageServer::Protocol::Interface::FileSystemWatcher) }
   def fixture_file_watcher; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#258
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#267
   sig { void }
   def offer_to_run_pending_migrations; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#221
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#230
   sig { params(global_state: ::RubyLsp::GlobalState, outgoing_queue: ::Thread::Queue).void }
   def register_additional_file_watchers(global_state:, outgoing_queue:); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#207
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#216
   sig { params(id: ::String, percentage: T.nilable(::Integer), message: T.nilable(::String)).void }
   def report_progress(id, percentage: T.unsafe(nil), message: T.unsafe(nil)); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#242
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#251
   sig { returns(::LanguageServer::Protocol::Interface::FileSystemWatcher) }
   def structure_sql_file_watcher; end
 end

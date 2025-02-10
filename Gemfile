@@ -16,7 +16,7 @@ gem "rubocop-shopify"
 gem "rubocop-sorbet", ">= 0.4.1"
 gem "rubocop-rspec" # useful even though we use minitest/spec
 gem "ruby-lsp", ">= 0.23.1"
-gem "ruby-lsp-rails", github: "Shopify/ruby-lsp-rails", branch: "main"
+gem "ruby-lsp-rails", ">= 0.4"
 
 group :deployment, :development do
   gem "rake"
