@@ -92,11 +92,10 @@ module RubyLsp
 
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path
-          next if path.end_with?("_test.rb", "_spec.rb")
           next unless file_updated?(change, path)
 
-          if File.fnmatch?("**/tapioca/**/compilers/**/*.rb", path, File::FNM_PATHNAME)
-            needs_compiler_reload = true
+          if File.fnmatch("**/fixtures/**/*.yml{,.erb}", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
+            has_fixtures_change = true
             next
           end
 
@@ -105,9 +104,10 @@ module RubyLsp
             next
           end
 
-          # NOTE: We only get notification for fixtures if ruby-lsp-rails is v0.3.31 or higher
-          if File.fnmatch("**/fixtures/**/*.yml{,.erb}", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
-            has_fixtures_change = true
+          next if File.fnmatch?("**/{test,spec,features}/**/*", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
+
+          if File.fnmatch?("**/tapioca/**/compilers/**/*.rb", path, File::FNM_PATHNAME)
+            needs_compiler_reload = true
             next
           end
 
