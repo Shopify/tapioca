@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.23.1", "< 0.24")
+RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.23.10", "< 0.24")
 
 begin
   # The Tapioca add-on depends on the Rails add-on to add a runtime component to the runtime server. We can allow the
@@ -53,8 +53,11 @@ module RubyLsp
             workspace_path: @global_state.workspace_path,
           )
 
+          send_usage_telemetry("activated")
           run_gem_rbi_check
         rescue IncompatibleApiError
+          send_usage_telemetry("incompatible_api_error")
+
           # The requested version for the Rails add-on no longer matches. We need to upgrade and fix the breaking
           # changes
           @outgoing_queue << Notification.window_log_message(
@@ -80,7 +83,7 @@ module RubyLsp
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
       def workspace_did_change_watched_files(changes)
-        return unless T.must(@global_state).enabled_feature?(:tapiocaAddon)
+        return unless @global_state&.enabled_feature?(:tapiocaAddon)
         return unless @rails_runner_client.connected?
 
         has_route_change = T.let(false, T::Boolean)
@@ -124,19 +127,22 @@ module RubyLsp
           @rails_runner_client.delegate_notification(
             server_addon_name: "Tapioca",
             request_name: "reload_workspace_compilers",
-            workspace_path: T.must(@global_state).workspace_path,
+            workspace_path: @global_state.workspace_path,
           )
         end
 
         if has_route_change
+          send_usage_telemetry("route_dsl")
           @rails_runner_client.delegate_notification(server_addon_name: "Tapioca", request_name: "route_dsl")
         end
 
         if has_fixtures_change
+          send_usage_telemetry("fixtures_dsl")
           @rails_runner_client.delegate_notification(server_addon_name: "Tapioca", request_name: "fixtures_dsl")
         end
 
         if constants.any?
+          send_usage_telemetry("dsl")
           @rails_runner_client.delegate_notification(
             server_addon_name: "Tapioca",
             request_name: "dsl",
@@ -146,6 +152,25 @@ module RubyLsp
       end
 
       private
+
+      sig { params(feature_name: String).void }
+      def send_usage_telemetry(feature_name)
+        return unless @outgoing_queue && @global_state
+
+        # Telemetry is not captured by default even if events are produced by the server
+        # See https://github.com/Shopify/ruby-lsp/tree/main/vscode#telemetry
+        @outgoing_queue << Notification.telemetry({
+          eventName: "tapioca_addon.feature_usage",
+          type: "data",
+          data: {
+            type: "counter",
+            attributes: {
+              label: feature_name,
+              machineId: @global_state.telemetry_machine_id,
+            },
+          },
+        })
+      end
 
       sig { params(change: T::Hash[Symbol, T.untyped], path: String).returns(T::Boolean) }
       def file_updated?(change, path)
