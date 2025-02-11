@@ -78,7 +78,7 @@ module RubyLsp
 
       sig { override.returns(String) }
       def version
-        "0.1.1"
+        "0.1.2"
       end
 
       sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
