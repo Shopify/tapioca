@@ -156,7 +156,7 @@ module Tapioca
           mod.ancestors
             .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || name_of(ancestor).nil? }
             .map { |ancestor| T.must(qualified_name_of(ancestor)) }
-            .reverse
+            .sort
         end
       end
     end

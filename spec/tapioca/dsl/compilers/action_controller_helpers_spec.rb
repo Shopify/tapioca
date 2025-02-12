@@ -270,6 +270,66 @@ module Tapioca
               assert_equal(expected, rbi_for(:UserController))
             end
 
+            it "sorts gathered helper module includes" do
+              add_ruby_file("alpha_helper.rb", <<~RUBY)
+                module AlphaHelper
+                  def alpha(user)
+                    # ...
+                  end
+                end
+              RUBY
+
+              add_ruby_file("bravo_helper.rb", <<~RUBY)
+                module BravoHelper
+                  def beta(user)
+                    # ...
+                  end
+                end
+              RUBY
+
+              add_ruby_file("charlie_helper.rb", <<~RUBY)
+                module CharlieHelper
+                  def charlie(user)
+                    # ...
+                  end
+                end
+              RUBY
+
+              add_ruby_file("controller.rb", <<~RUBY)
+                class UserController < ActionController::Base
+                  helper BravoHelper
+                  helper AlphaHelper
+                  helper CharlieHelper
+
+                  def current_user_name
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = <<~RBI
+                # typed: strong
+
+                class UserController
+                  sig { returns(HelperProxy) }
+                  def helpers; end
+
+                  module HelperMethods
+                    include ::ActionController::Base::HelperMethods
+                    include ::AlphaHelper
+                    include ::BravoHelper
+                    include ::CharlieHelper
+                  end
+
+                  class HelperProxy < ::ActionView::Base
+                    include HelperMethods
+                  end
+                end
+              RBI
+
+              assert_equal(expected, rbi_for(:UserController))
+            end
+
             it "does not crash if the helper redefines `name`" do
               add_ruby_file("greet_helper.rb", <<~RUBY)
                 module GreetHelper
