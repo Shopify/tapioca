@@ -526,7 +526,7 @@ class Rack::CommonLogger
   # Attempt to determine the content length for the response to
   # include it in the logged data.
   #
-  # source://rack//lib/rack/common_logger.rb#83
+  # source://rack//lib/rack/common_logger.rb#84
   def extract_content_length(headers); end
 
   # Log the request to the configured logger.
@@ -1717,7 +1717,12 @@ class Rack::MediaType
     # this method responds with the following Hash:
     #   { 'charset' => 'utf-8' }
     #
-    # source://rack//lib/rack/media_type.rb#30
+    # This will pass back parameters with empty strings in the hash if they
+    # lack a value (e.g., "text/plain;charset=" will return { 'charset' => '' },
+    # and "text/plain;charset" will return { 'charset' => '' }, similarly to
+    # the query params parser (barring the latter case, which returns nil instead)).
+    #
+    # source://rack//lib/rack/media_type.rb#35
     def params(content_type); end
 
     # The media type (type/subtype) portion of the CONTENT_TYPE header
@@ -1732,7 +1737,7 @@ class Rack::MediaType
 
     private
 
-    # source://rack//lib/rack/media_type.rb#43
+    # source://rack//lib/rack/media_type.rb#48
     def strip_doublequotes(str); end
   end
 end
