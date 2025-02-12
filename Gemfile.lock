@@ -244,7 +244,7 @@ GEM
       stringio
     public_suffix (6.0.1)
     racc (1.8.1)
-    rack (3.1.8)
+    rack (3.1.10)
     rack-session (2.0.0)
       rack (>= 3.0.0)
     rack-test (2.1.0)
