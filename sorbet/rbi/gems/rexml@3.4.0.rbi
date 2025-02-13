@@ -3454,6 +3454,224 @@ class REXML::Formatters::Pretty < ::REXML::Formatters::Default
   def wrap(string, width); end
 end
 
+# If you add a method, keep in mind two things:
+# (1) the first argument will always be a list of nodes from which to
+# filter.  In the case of context methods (such as position), the function
+# should return an array with a value for each child in the array.
+# (2) all method calls from XML will have "-" replaced with "_".
+# Therefore, in XML, "local-name()" is identical (and actually becomes)
+# "local_name()"
+#
+# source://rexml//lib/rexml/functions.rb#10
+module REXML::Functions
+  class << self
+    # source://rexml//lib/rexml/functions.rb#317
+    def boolean(object = T.unsafe(nil)); end
+
+    # source://rexml//lib/rexml/functions.rb#417
+    def ceiling(number); end
+
+    # source://rexml//lib/rexml/functions.rb#370
+    def compare_language(lang1, lang2); end
+
+    # source://rexml//lib/rexml/functions.rb#190
+    def concat(*objects); end
+
+    # Fixed by Mike Stok
+    #
+    # source://rexml//lib/rexml/functions.rb#204
+    def contains(string, test); end
+
+    # source://rexml//lib/rexml/functions.rb#38
+    def context=(value); end
+
+    # Returns the size of the given list of nodes.
+    #
+    # source://rexml//lib/rexml/functions.rb#60
+    def count(node_set); end
+
+    # UNTESTED
+    #
+    # source://rexml//lib/rexml/functions.rb#347
+    def false; end
+
+    # source://rexml//lib/rexml/functions.rb#413
+    def floor(number); end
+
+    # Helper method.
+    #
+    # source://rexml//lib/rexml/functions.rb#87
+    def get_namespace(node_set = T.unsafe(nil)); end
+
+    # Since REXML is non-validating, this method is not implemented as it
+    # requires a DTD
+    #
+    # source://rexml//lib/rexml/functions.rb#66
+    def id(object); end
+
+    # UNTESTED
+    #
+    # source://rexml//lib/rexml/functions.rb#352
+    def lang(language); end
+
+    # Returns the last node of the given list of nodes.
+    #
+    # source://rexml//lib/rexml/functions.rb#51
+    def last; end
+
+    # source://rexml//lib/rexml/functions.rb#69
+    def local_name(node_set = T.unsafe(nil)); end
+
+    # source://rexml//lib/rexml/functions.rb#80
+    def name(node_set = T.unsafe(nil)); end
+
+    # source://rexml//lib/rexml/functions.rb#35
+    def namespace_context; end
+
+    # source://rexml//lib/rexml/functions.rb#33
+    def namespace_context=(x); end
+
+    # source://rexml//lib/rexml/functions.rb#76
+    def namespace_uri(node_set = T.unsafe(nil)); end
+
+    # source://rexml//lib/rexml/functions.rb#265
+    def normalize_space(string = T.unsafe(nil)); end
+
+    # UNTESTED
+    #
+    # source://rexml//lib/rexml/functions.rb#337
+    def not(object); end
+
+    # a string that consists of optional whitespace followed by an optional
+    # minus sign followed by a Number followed by whitespace is converted to
+    # the IEEE 754 number that is nearest (according to the IEEE 754
+    # round-to-nearest rule) to the mathematical value represented by the
+    # string; any other string is converted to NaN
+    #
+    # boolean true is converted to 1; boolean false is converted to 0
+    #
+    # a node-set is first converted to a string as if by a call to the string
+    # function and then converted in the same way as a string argument
+    #
+    # an object of a type other than the four basic types is converted to a
+    # number in a way that is dependent on that type
+    #
+    # source://rexml//lib/rexml/functions.rb#387
+    def number(object = T.unsafe(nil)); end
+
+    # source://rexml//lib/rexml/functions.rb#55
+    def position; end
+
+    # source://rexml//lib/rexml/functions.rb#432
+    def processing_instruction(node); end
+
+    # source://rexml//lib/rexml/functions.rb#421
+    def round(number); end
+
+    # source://rexml//lib/rexml/functions.rb#436
+    def send(name, *args); end
+
+    # source://rexml//lib/rexml/functions.rb#26
+    def singleton_method_added(name); end
+
+    # Fixed by Mike Stok
+    #
+    # source://rexml//lib/rexml/functions.rb#199
+    def starts_with(string, test); end
+
+    # A node-set is converted to a string by returning the string-value of the
+    # node in the node-set that is first in document order. If the node-set is
+    # empty, an empty string is returned.
+    #
+    # A number is converted to a string as follows
+    #
+    # NaN is converted to the string NaN
+    #
+    # positive zero is converted to the string 0
+    #
+    # negative zero is converted to the string 0
+    #
+    # positive infinity is converted to the string Infinity
+    #
+    # negative infinity is converted to the string -Infinity
+    #
+    # if the number is an integer, the number is represented in decimal form
+    # as a Number with no decimal point and no leading zeros, preceded by a
+    # minus sign (-) if the number is negative
+    #
+    # otherwise, the number is represented in decimal form as a Number
+    # including a decimal point with at least one digit before the decimal
+    # point and at least one digit after the decimal point, preceded by a
+    # minus sign (-) if the number is negative; there must be no leading zeros
+    # before the decimal point apart possibly from the one required digit
+    # immediately before the decimal point; beyond the one required digit
+    # after the decimal point there must be as many, but only as many, more
+    # digits as are needed to uniquely distinguish the number from all other
+    # IEEE 754 numeric values.
+    #
+    # The boolean false value is converted to the string false. The boolean
+    # true value is converted to the string true.
+    #
+    # An object of a type other than the four basic types is converted to a
+    # string in a way that is dependent on that type.
+    #
+    # source://rexml//lib/rexml/functions.rb#138
+    def string(object = T.unsafe(nil)); end
+
+    # UNTESTED
+    #
+    # source://rexml//lib/rexml/functions.rb#261
+    def string_length(string); end
+
+    # A node-set is converted to a string by
+    # returning the concatenation of the string-value
+    # of each of the children of the node in the
+    # node-set that is first in document order.
+    # If the node-set is empty, an empty string is returned.
+    #
+    # source://rexml//lib/rexml/functions.rb#178
+    def string_value(o); end
+
+    # Take equal portions of Mike Stok and Sean Russell; mix
+    # vigorously, and pour into a tall, chilled glass.  Serves 10,000.
+    #
+    # source://rexml//lib/rexml/functions.rb#228
+    def substring(string, start, length = T.unsafe(nil)); end
+
+    # Kouhei fixed this too
+    #
+    # source://rexml//lib/rexml/functions.rb#220
+    def substring_after(string, test); end
+
+    # Kouhei fixed this
+    #
+    # source://rexml//lib/rexml/functions.rb#209
+    def substring_before(string, test); end
+
+    # source://rexml//lib/rexml/functions.rb#408
+    def sum(nodes); end
+
+    # source://rexml//lib/rexml/functions.rb#40
+    def text; end
+
+    # This is entirely Mike Stok's beast
+    #
+    # source://rexml//lib/rexml/functions.rb#275
+    def translate(string, tr1, tr2); end
+
+    # UNTESTED
+    #
+    # source://rexml//lib/rexml/functions.rb#342
+    def true; end
+
+    # source://rexml//lib/rexml/functions.rb#36
+    def variables; end
+
+    # source://rexml//lib/rexml/functions.rb#34
+    def variables=(x); end
+  end
+end
+
 # A Source that wraps an IO.  See the Source class for method
 # documentation
 #
@@ -3721,6 +3939,54 @@ end
 
 # source://rexml//lib/rexml/namespace.rb#13
 REXML::Namespace::NAME_WITHOUT_NAMESPACE = T.let(T.unsafe(nil), Regexp)
+
+# Represents a node in the tree.  Nodes are never encountered except as
+# superclasses of other objects.  Nodes have siblings.
+#
+# source://rexml//lib/rexml/node.rb#9
+module REXML::Node
+  # Visit all subnodes of +self+ recursively
+  #
+  # source://rexml//lib/rexml/node.rb#54
+  def each_recursive(&block); end
+
+  # Find (and return) first subnode (recursively) for which the block
+  # evaluates to true. Returns +nil+ if none was found.
+  #
+  # source://rexml//lib/rexml/node.rb#67
+  def find_first_recursive(&block); end
+
+  # source://rexml//lib/rexml/node.rb#39
+  def indent(to, ind); end
+
+  # Returns the position that +self+ holds in its parent's array, indexed
+  # from 1.
+  #
+  # source://rexml//lib/rexml/node.rb#76
+  def index_in_parent; end
+
+  # @return the next sibling (nil if unset)
+  #
+  # source://rexml//lib/rexml/node.rb#11
+  def next_sibling_node; end
+
+  # @return [Boolean]
+  #
+  # source://rexml//lib/rexml/node.rb#48
+  def parent?; end
+
+  # @return the previous sibling (nil if unset)
+  #
+  # source://rexml//lib/rexml/node.rb#17
+  def previous_sibling_node; end
+
+  # indent::
+  #   *DEPRECATED* This parameter is now ignored.  See the formatters in the
+  #   REXML::Formatters package for changing the output style.
+  #
+  # source://rexml//lib/rexml/node.rb#27
+  def to_s(indent = T.unsafe(nil)); end
+end
 
 # source://rexml//lib/rexml/doctype.rb#280
 class REXML::NotationDecl < ::REXML::Child
@@ -4378,6 +4644,31 @@ class REXML::ReferenceWriter
   def write(output); end
 end
 
+# source://rexml//lib/rexml/security.rb#3
+module REXML::Security
+  class << self
+    # Get the entity expansion limit. By default the limit is set to 10000.
+    #
+    # source://rexml//lib/rexml/security.rb#12
+    def entity_expansion_limit; end
+
+    # Set the entity expansion limit. By default the limit is set to 10000.
+    #
+    # source://rexml//lib/rexml/security.rb#7
+    def entity_expansion_limit=(val); end
+
+    # Get the entity expansion limit. By default the limit is set to 10240.
+    #
+    # source://rexml//lib/rexml/security.rb#24
+    def entity_expansion_text_limit; end
+
+    # Set the entity expansion limit. By default the limit is set to 10240.
+    #
+    # source://rexml//lib/rexml/security.rb#19
+    def entity_expansion_text_limit=(val); end
+  end
+end
+
 # A Source can be searched for patterns, and wraps buffers and other
 # objects and provides consumption of text
 #
@@ -4472,6 +4763,21 @@ REXML::Source::Private::PRE_DEFINED_TERM_PATTERNS = T.let(T.unsafe(nil), Hash)
 
 # source://rexml//lib/rexml/source.rb#68
 REXML::Source::Private::SCANNER_RESET_SIZE = T.let(T.unsafe(nil), Integer)
+
+# Generates Source-s.  USE THIS CLASS.
+#
+# source://rexml//lib/rexml/source.rb#38
+class REXML::SourceFactory
+  class << self
+    # Generates a Source object
+    #
+    # @param arg Either a String, or an IO
+    # @return a Source, or nil if a bad argument was given
+    #
+    # source://rexml//lib/rexml/source.rb#42
+    def create_from(arg); end
+  end
+end
 
 # Represents text nodes in an XML document
 #
@@ -4795,6 +5101,63 @@ class REXML::XMLDecl < ::REXML::Child
     #
     # source://rexml//lib/rexml/xmldecl.rb#92
     def default; end
+  end
+end
+
+# Wrapper class.  Use this class to access the XPath functions.
+#
+# source://rexml//lib/rexml/xpath.rb#7
+class REXML::XPath
+  include ::REXML::Functions
+
+  class << self
+    # Iterates over nodes that match the given path, calling the supplied
+    # block with the match.
+    # element::
+    #   The context element
+    # path::
+    #   The xpath to search for.  If not supplied or nil, defaults to '*'
+    # namespaces::
+    #   If supplied, a Hash which defines a namespace mapping
+    # variables::
+    #   If supplied, a Hash which maps $variables in the query
+    #   to values. This can be used to avoid XPath injection attacks
+    #   or to automatically handle escaping string values.
+    #
+    #  XPath.each( node ) { |el| ... }
+    #  XPath.each( node, '/*[@attr='v']' ) { |el| ... }
+    #  XPath.each( node, 'ancestor::x' ) { |el| ... }
+    #  XPath.each( node, '/book/publisher/text()=$publisher', {}, {"publisher"=>"O'Reilly"}) \
+    #    {|el| ... }
+    #
+    # source://rexml//lib/rexml/xpath.rb#60
+    def each(element, path = T.unsafe(nil), namespaces = T.unsafe(nil), variables = T.unsafe(nil), options = T.unsafe(nil), &block); end
+
+    # Finds and returns the first node that matches the supplied xpath.
+    # element::
+    #   The context element
+    # path::
+    #   The xpath to search for.  If not supplied or nil, returns the first
+    #   node matching '*'.
+    # namespaces::
+    #   If supplied, a Hash which defines a namespace mapping.
+    # variables::
+    #   If supplied, a Hash which maps $variables in the query
+    #   to values. This can be used to avoid XPath injection attacks
+    #   or to automatically handle escaping string values.
+    #
+    #  XPath.first( node )
+    #  XPath.first( doc, "//b"} )
+    #  XPath.first( node, "a/x:b", { "x"=>"http://doofus" } )
+    #  XPath.first( node, '/book/publisher/text()=$publisher', {}, {"publisher"=>"O'Reilly"})
+    #
+    # source://rexml//lib/rexml/xpath.rb#31
+    def first(element, path = T.unsafe(nil), namespaces = T.unsafe(nil), variables = T.unsafe(nil), options = T.unsafe(nil)); end
+
+    # Returns an array of nodes matching a given XPath.
+    #
+    # source://rexml//lib/rexml/xpath.rb#72
+    def match(element, path = T.unsafe(nil), namespaces = T.unsafe(nil), variables = T.unsafe(nil), options = T.unsafe(nil)); end
   end
 end
 

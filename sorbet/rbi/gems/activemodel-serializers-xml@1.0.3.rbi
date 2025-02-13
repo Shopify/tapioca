@@ -8,16 +8,16 @@
 # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#8
 module ActiveModel
   class << self
-    # source://activemodel/7.1.4/lib/active_model/deprecator.rb#4
+    # source://activemodel/7.1.5.1/lib/active_model/deprecator.rb#4
     def deprecator; end
 
-    # source://activemodel/7.1.4/lib/active_model.rb#76
+    # source://activemodel/7.1.5.1/lib/active_model.rb#76
     def eager_load!; end
 
-    # source://activemodel/7.1.4/lib/active_model/gem_version.rb#5
+    # source://activemodel/7.1.5.1/lib/active_model/gem_version.rb#5
     def gem_version; end
 
-    # source://activemodel/7.1.4/lib/active_model/version.rb#7
+    # source://activemodel/7.1.5.1/lib/active_model/version.rb#7
     def version; end
   end
 end
