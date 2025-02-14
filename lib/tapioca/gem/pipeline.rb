@@ -22,19 +22,22 @@ module Tapioca
           error_handler: T.proc.params(error: String).void,
           include_doc: T::Boolean,
           include_loc: T::Boolean,
+          ignore: T::Array[String],
         ).void
       end
       def initialize(
         gem,
         error_handler:,
         include_doc: false,
-        include_loc: false
+        include_loc: false,
+        ignore: []
       )
         @root = T.let(RBI::Tree.new, RBI::Tree)
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])
         @alias_namespace = T.let(Set.new, T::Set[String])
         @error_handler = error_handler
+        @ignore = ignore
 
         @events = T.let([], T::Array[Gem::Event])
 
@@ -75,11 +78,15 @@ module Tapioca
 
       sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def push_constant(symbol, constant)
+        return if @ignore.any? { |const| symbol.start_with?(const) }
+
         @events << Gem::ConstantFound.new(symbol, constant)
       end
 
       sig { params(symbol: String, constant: Module).void.checked(:never) }
       def push_foreign_constant(symbol, constant)
+        return if @ignore.any? { |const| symbol.start_with?(const) }
+
         @events << Gem::ForeignConstantFound.new(symbol, constant)
       end
 
