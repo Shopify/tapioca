@@ -1175,6 +1175,8 @@ end
 # source://net-smtp//lib/net/smtp.rb#195
 Net::SMTP::VERSION = T.let(T.unsafe(nil), String)
 
+# Represents an SMTP authentication error.
+#
 # source://net-smtp//lib/net/smtp.rb#49
 class Net::SMTPAuthenticationError < ::Net::ProtoAuthError
   include ::Net::SMTPError
@@ -1197,11 +1199,15 @@ module Net::SMTPError
   def response; end
 end
 
+# Represents a fatal SMTP error (error code 5xx, except for 500)
+#
 # source://net-smtp//lib/net/smtp.rb#64
 class Net::SMTPFatalError < ::Net::ProtoFatalError
   include ::Net::SMTPError
 end
 
+# Represents SMTP error code 4xx, a temporary error.
+#
 # source://net-smtp//lib/net/smtp.rb#54
 class Net::SMTPServerBusy < ::Net::ProtoServerError
   include ::Net::SMTPError
@@ -1212,16 +1218,22 @@ end
 # source://net-smtp//lib/net/smtp.rb#1158
 Net::SMTPSession = Net::SMTP
 
+# Represents an SMTP command syntax error (error code 500)
+#
 # source://net-smtp//lib/net/smtp.rb#59
 class Net::SMTPSyntaxError < ::Net::ProtoSyntaxError
   include ::Net::SMTPError
 end
 
+# Unexpected reply code returned from server.
+#
 # source://net-smtp//lib/net/smtp.rb#69
 class Net::SMTPUnknownError < ::Net::ProtoUnknownError
   include ::Net::SMTPError
 end
 
+# Command is not supported on server.
+#
 # source://net-smtp//lib/net/smtp.rb#74
 class Net::SMTPUnsupportedCommand < ::Net::ProtocolError
   include ::Net::SMTPError

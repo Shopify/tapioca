@@ -597,7 +597,7 @@ class URI::GID < ::URI::Generic
   #
   # Read the documentation for +parse+, +create+ and +build+ for more.
   #
-  # source://uri/0.13.0/uri/generic.rb#243
+  # source://uri/0.13.0/lib/uri/generic.rb#243
   def app; end
 
   # source://globalid//lib/global_id/uri/gid.rb#107

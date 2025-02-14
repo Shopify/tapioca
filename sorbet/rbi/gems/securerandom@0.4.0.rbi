@@ -40,7 +40,7 @@
 # If a secure random number generator is not available,
 # +NotImplementedError+ is raised.
 #
-# source://securerandom/lib/securerandom.rb#41
+# source://securerandom//lib/securerandom.rb#41
 module SecureRandom
   extend ::Random::Formatter
 
@@ -49,27 +49,27 @@ module SecureRandom
     #
     # See Random.bytes
     #
-    # source://securerandom/lib/securerandom.rb#50
+    # source://securerandom//lib/securerandom.rb#50
     def bytes(n); end
 
-    # source://securerandom/lib/securerandom.rb#64
+    # source://securerandom//lib/securerandom.rb#64
     def gen_random(n); end
 
     private
 
     # Implementation using OpenSSL
     #
-    # source://securerandom/lib/securerandom.rb#59
+    # source://securerandom//lib/securerandom.rb#59
     def gen_random_openssl(n); end
 
     # Implementation using system random device
     #
-    # source://securerandom/lib/securerandom.rb#64
+    # source://securerandom//lib/securerandom.rb#64
     def gen_random_urandom(n); end
   end
 end
 
 # The version
 #
-# source://securerandom/lib/securerandom.rb#44
+# source://securerandom//lib/securerandom.rb#44
 SecureRandom::VERSION = T.let(T.unsafe(nil), String)

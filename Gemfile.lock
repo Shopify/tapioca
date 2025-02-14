@@ -170,7 +170,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.9.1)
+    json (2.10.1)
     json_api_client (1.23.0)
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)

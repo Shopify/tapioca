@@ -5,7 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem bigdecimal`.
 
 
-# source://bigdecimal/lib/bigdecimal/util.rb#78
+# source://bigdecimal//lib/bigdecimal/util.rb#78
 class BigDecimal < ::Numeric
   # call-seq:
   #     a.to_d -> bigdecimal
@@ -17,7 +17,7 @@ class BigDecimal < ::Numeric
   #     d = BigDecimal("3.14")
   #     d.to_d                       # => 0.314e1
   #
-  # source://bigdecimal/lib/bigdecimal/util.rb#110
+  # source://bigdecimal//lib/bigdecimal/util.rb#110
   def to_d; end
 
   # call-seq:
@@ -31,13 +31,13 @@ class BigDecimal < ::Numeric
   #     d = BigDecimal("3.14")
   #     d.to_digits                  # => "3.14"
   #
-  # source://bigdecimal/lib/bigdecimal/util.rb#90
+  # source://bigdecimal//lib/bigdecimal/util.rb#90
   def to_digits; end
 end
 
 BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 
-# source://bigdecimal/lib/bigdecimal/util.rb#138
+# source://bigdecimal//lib/bigdecimal/util.rb#138
 class Complex < ::Numeric
   # call-seq:
   #     cmp.to_d             -> bigdecimal
@@ -57,11 +57,11 @@ class Complex < ::Numeric
   #
   # See also Kernel.BigDecimal.
   #
-  # source://bigdecimal/lib/bigdecimal/util.rb#157
+  # source://bigdecimal//lib/bigdecimal/util.rb#157
   def to_d(*args); end
 end
 
-# source://bigdecimal/lib/bigdecimal/util.rb#171
+# source://bigdecimal//lib/bigdecimal/util.rb#171
 class NilClass
   # call-seq:
   #     nil.to_d -> bigdecimal
@@ -73,6 +73,6 @@ class NilClass
   #
   #     nil.to_d   # => 0.0
   #
-  # source://bigdecimal/lib/bigdecimal/util.rb#182
+  # source://bigdecimal//lib/bigdecimal/util.rb#182
   def to_d; end
 end

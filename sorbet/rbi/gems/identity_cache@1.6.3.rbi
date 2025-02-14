@@ -406,7 +406,7 @@ IdentityCache::CacheFetcher::FillLock::FILL_LOCKED = T.let(T.unsafe(nil), Symbol
 
 # source://identity_cache//lib/identity_cache/cache_hash.rb#23
 module IdentityCache::CacheHash
-  # source://identity_cache//lib/identity_cache/cache_hash.rb#26
+  # source://identity_cache//lib/identity_cache/cache_hash.rb#31
   def memcache_hash(key); end
 end
 

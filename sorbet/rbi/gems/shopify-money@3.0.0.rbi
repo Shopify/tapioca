@@ -8,6 +8,15 @@
 # source://shopify-money//lib/money/deprecations.rb#3
 ACTIVE_SUPPORT_DEFINED = T.let(T.unsafe(nil), String)
 
+class ActiveRecord::Base
+  include ::ActiveModel::Access
+  include ::ActiveModel::ForbiddenAttributesProtection
+  include ::ActiveModel::AttributeAssignment
+  include ::ActiveModel::Serialization
+  include ::MoneyColumn::ActiveRecordHooks
+  extend ::MoneyColumn::ActiveRecordHooks::ClassMethods
+end
+
 # source://shopify-money//lib/money/version.rb#2
 class Money
   include ::Comparable
