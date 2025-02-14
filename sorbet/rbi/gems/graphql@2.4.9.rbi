@@ -7342,7 +7342,6 @@ GraphQL::Query::InputValidationResult::VALID = T.let(T.unsafe(nil), GraphQL::Que
 #
 # source://graphql//lib/graphql/query/null_context.rb#6
 class GraphQL::Query::NullContext < ::GraphQL::Query::Context
-  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 

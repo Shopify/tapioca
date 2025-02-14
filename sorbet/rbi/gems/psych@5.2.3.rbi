@@ -1132,10 +1132,613 @@ class Psych::Handler::DumperOptions
   def line_width=(_arg0); end
 end
 
+# source://psych//lib/psych/handlers/document_stream.rb#6
+class Psych::Handlers::DocumentStream < ::Psych::TreeBuilder
+  # @return [DocumentStream] a new instance of DocumentStream
+  #
+  # source://psych//lib/psych/handlers/document_stream.rb#7
+  def initialize(&block); end
+
+  # source://psych//lib/psych/handlers/document_stream.rb#17
+  def end_document(implicit_end = T.unsafe(nil)); end
+
+  # source://psych//lib/psych/handlers/document_stream.rb#12
+  def start_document(version, tag_directives, implicit); end
+end
+
+# source://psych//lib/psych/json/ruby_events.rb#4
+module Psych::JSON::RubyEvents
+  # source://psych//lib/psych/json/ruby_events.rb#10
+  def visit_DateTime(o); end
+
+  # source://psych//lib/psych/json/ruby_events.rb#14
+  def visit_String(o); end
+
+  # source://psych//lib/psych/json/ruby_events.rb#14
+  def visit_Symbol(o); end
+
+  # source://psych//lib/psych/json/ruby_events.rb#5
+  def visit_Time(o); end
+end
+
 # source://psych//lib/psych/json/stream.rb#7
 class Psych::JSON::Stream < ::Psych::Visitors::JSONTree
   include ::Psych::Streaming
   extend ::Psych::Streaming::ClassMethods
+end
+
+# source://psych//lib/psych/json/stream.rb#12
+class Psych::JSON::Stream::Emitter < ::Psych::Stream::Emitter
+  include ::Psych::JSON::YAMLEvents
+end
+
+# Psych::JSON::TreeBuilder is an event based AST builder.  Events are sent
+# to an instance of Psych::JSON::TreeBuilder and a JSON AST is constructed.
+#
+# source://psych//lib/psych/json/tree_builder.rb#9
+class Psych::JSON::TreeBuilder < ::Psych::TreeBuilder
+  include ::Psych::JSON::YAMLEvents
+end
+
+# source://psych//lib/psych/json/yaml_events.rb#4
+module Psych::JSON::YAMLEvents
+  # source://psych//lib/psych/json/yaml_events.rb#9
+  def end_document(implicit_end = T.unsafe(nil)); end
+
+  # source://psych//lib/psych/json/yaml_events.rb#21
+  def scalar(value, anchor, tag, plain, quoted, style); end
+
+  # source://psych//lib/psych/json/yaml_events.rb#5
+  def start_document(version, tag_directives, implicit); end
+
+  # source://psych//lib/psych/json/yaml_events.rb#13
+  def start_mapping(anchor, tag, implicit, style); end
+
+  # source://psych//lib/psych/json/yaml_events.rb#17
+  def start_sequence(anchor, tag, implicit, style); end
+end
+
+# This class represents a {YAML Alias}[http://yaml.org/spec/1.1/#alias].
+# It points to an +anchor+.
+#
+# A Psych::Nodes::Alias is a terminal node and may have no children.
+#
+# source://psych//lib/psych/nodes/alias.rb#9
+class Psych::Nodes::Alias < ::Psych::Nodes::Node
+  # Create a new Alias that points to an +anchor+
+  #
+  # @return [Alias] a new instance of Alias
+  #
+  # source://psych//lib/psych/nodes/alias.rb#14
+  def initialize(anchor); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/alias.rb#18
+  def alias?; end
+
+  # The anchor this alias links to
+  #
+  # source://psych//lib/psych/nodes/alias.rb#11
+  def anchor; end
+
+  # The anchor this alias links to
+  #
+  # source://psych//lib/psych/nodes/alias.rb#11
+  def anchor=(_arg0); end
+end
+
+# This represents a YAML Document.  This node must be a child of
+# Psych::Nodes::Stream.  A Psych::Nodes::Document must have one child,
+# and that child may be one of the following:
+#
+# * Psych::Nodes::Sequence
+# * Psych::Nodes::Mapping
+# * Psych::Nodes::Scalar
+#
+# source://psych//lib/psych/nodes/document.rb#12
+class Psych::Nodes::Document < ::Psych::Nodes::Node
+  # Create a new Psych::Nodes::Document object.
+  #
+  # +version+ is a list indicating the YAML version.
+  # +tags_directives+ is a list of tag directive declarations
+  # +implicit+ is a flag indicating whether the document will be implicitly
+  # started.
+  #
+  # == Example:
+  # This creates a YAML document object that represents a YAML 1.1 document
+  # with one tag directive, and has an implicit start:
+  #
+  #   Psych::Nodes::Document.new(
+  #     [1,1],
+  #     [["!", "tag:tenderlovemaking.com,2009:"]],
+  #     true
+  #   )
+  #
+  # == See Also
+  # See also Psych::Handler#start_document
+  #
+  # @return [Document] a new instance of Document
+  #
+  # source://psych//lib/psych/nodes/document.rb#45
+  def initialize(version = T.unsafe(nil), tag_directives = T.unsafe(nil), implicit = T.unsafe(nil)); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/document.rb#60
+  def document?; end
+
+  # Was this document implicitly created?
+  #
+  # source://psych//lib/psych/nodes/document.rb#20
+  def implicit; end
+
+  # Was this document implicitly created?
+  #
+  # source://psych//lib/psych/nodes/document.rb#20
+  def implicit=(_arg0); end
+
+  # Is the end of the document implicit?
+  #
+  # source://psych//lib/psych/nodes/document.rb#23
+  def implicit_end; end
+
+  # Is the end of the document implicit?
+  #
+  # source://psych//lib/psych/nodes/document.rb#23
+  def implicit_end=(_arg0); end
+
+  # Returns the root node.  A Document may only have one root node:
+  # http://yaml.org/spec/1.1/#id898031
+  #
+  # source://psych//lib/psych/nodes/document.rb#56
+  def root; end
+
+  # A list of tag directives for this document
+  #
+  # source://psych//lib/psych/nodes/document.rb#17
+  def tag_directives; end
+
+  # A list of tag directives for this document
+  #
+  # source://psych//lib/psych/nodes/document.rb#17
+  def tag_directives=(_arg0); end
+
+  # The version of the YAML document
+  #
+  # source://psych//lib/psych/nodes/document.rb#14
+  def version; end
+
+  # The version of the YAML document
+  #
+  # source://psych//lib/psych/nodes/document.rb#14
+  def version=(_arg0); end
+end
+
+# This class represents a {YAML Mapping}[http://yaml.org/spec/1.1/#mapping].
+#
+# A Psych::Nodes::Mapping node may have 0 or more children, but must have
+# an even number of children.  Here are the valid children a
+# Psych::Nodes::Mapping node may have:
+#
+# * Psych::Nodes::Sequence
+# * Psych::Nodes::Mapping
+# * Psych::Nodes::Scalar
+# * Psych::Nodes::Alias
+#
+# source://psych//lib/psych/nodes/mapping.rb#15
+class Psych::Nodes::Mapping < ::Psych::Nodes::Node
+  # Create a new Psych::Nodes::Mapping object.
+  #
+  # +anchor+ is the anchor associated with the map or +nil+.
+  # +tag+ is the tag associated with the map or +nil+.
+  # +implicit+ is a boolean indicating whether or not the map was implicitly
+  # started.
+  # +style+ is an integer indicating the mapping style.
+  #
+  # == See Also
+  # See also Psych::Handler#start_mapping
+  #
+  # @return [Mapping] a new instance of Mapping
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#48
+  def initialize(anchor = T.unsafe(nil), tag = T.unsafe(nil), implicit = T.unsafe(nil), style = T.unsafe(nil)); end
+
+  # The optional anchor for this mapping
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#26
+  def anchor; end
+
+  # The optional anchor for this mapping
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#26
+  def anchor=(_arg0); end
+
+  # Is this an implicit mapping?
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#32
+  def implicit; end
+
+  # Is this an implicit mapping?
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#32
+  def implicit=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#56
+  def mapping?; end
+
+  # The style of this mapping
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#35
+  def style; end
+
+  # The style of this mapping
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#35
+  def style=(_arg0); end
+
+  # The optional tag for this mapping
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#29
+  def tag; end
+
+  # The optional tag for this mapping
+  #
+  # source://psych//lib/psych/nodes/mapping.rb#29
+  def tag=(_arg0); end
+end
+
+# The base class for any Node in a YAML parse tree.  This class should
+# never be instantiated.
+#
+# source://psych//lib/psych/nodes/node.rb#10
+class Psych::Nodes::Node
+  include ::Enumerable
+
+  # Create a new Psych::Nodes::Node
+  #
+  # @return [Node] a new instance of Node
+  #
+  # source://psych//lib/psych/nodes/node.rb#32
+  def initialize; end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/node.rb#67
+  def alias?; end
+
+  # The children of this node
+  #
+  # source://psych//lib/psych/nodes/node.rb#14
+  def children; end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/node.rb#68
+  def document?; end
+
+  # Iterate over each node in the tree. Yields each node to +block+ depth
+  # first.
+  #
+  # source://psych//lib/psych/nodes/node.rb#39
+  def each(&block); end
+
+  # The column number where this node ends
+  #
+  # source://psych//lib/psych/nodes/node.rb#29
+  def end_column; end
+
+  # The column number where this node ends
+  #
+  # source://psych//lib/psych/nodes/node.rb#29
+  def end_column=(_arg0); end
+
+  # The line number where this node ends
+  #
+  # source://psych//lib/psych/nodes/node.rb#26
+  def end_line; end
+
+  # The line number where this node ends
+  #
+  # source://psych//lib/psych/nodes/node.rb#26
+  def end_line=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/node.rb#69
+  def mapping?; end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/node.rb#70
+  def scalar?; end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/node.rb#71
+  def sequence?; end
+
+  # The column number where this node start
+  #
+  # source://psych//lib/psych/nodes/node.rb#23
+  def start_column; end
+
+  # The column number where this node start
+  #
+  # source://psych//lib/psych/nodes/node.rb#23
+  def start_column=(_arg0); end
+
+  # The line number where this node start
+  #
+  # source://psych//lib/psych/nodes/node.rb#20
+  def start_line; end
+
+  # The line number where this node start
+  #
+  # source://psych//lib/psych/nodes/node.rb#20
+  def start_line=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/node.rb#72
+  def stream?; end
+
+  # An associated tag
+  #
+  # source://psych//lib/psych/nodes/node.rb#17
+  def tag; end
+
+  # Convert this node to Ruby.
+  #
+  # See also Psych::Visitors::ToRuby
+  #
+  # source://psych//lib/psych/nodes/node.rb#48
+  def to_ruby(symbolize_names: T.unsafe(nil), freeze: T.unsafe(nil), strict_integer: T.unsafe(nil)); end
+
+  # Convert this node to YAML.
+  #
+  # See also Psych::Visitors::Emitter
+  #
+  # source://psych//lib/psych/nodes/node.rb#57
+  def to_yaml(io = T.unsafe(nil), options = T.unsafe(nil)); end
+
+  # Convert this node to Ruby.
+  #
+  # See also Psych::Visitors::ToRuby
+  #
+  # source://psych//lib/psych/nodes/node.rb#48
+  def transform(symbolize_names: T.unsafe(nil), freeze: T.unsafe(nil), strict_integer: T.unsafe(nil)); end
+
+  # Convert this node to YAML.
+  #
+  # See also Psych::Visitors::Emitter
+  #
+  # source://psych//lib/psych/nodes/node.rb#57
+  def yaml(io = T.unsafe(nil), options = T.unsafe(nil)); end
+end
+
+# This class represents a {YAML Scalar}[http://yaml.org/spec/1.1/#id858081].
+#
+# This node type is a terminal node and should not have any children.
+#
+# source://psych//lib/psych/nodes/scalar.rb#8
+class Psych::Nodes::Scalar < ::Psych::Nodes::Node
+  # Create a new Psych::Nodes::Scalar object.
+  #
+  # +value+ is the string value of the scalar
+  # +anchor+ is an associated anchor or nil
+  # +tag+ is an associated tag or nil
+  # +plain+ is a boolean value
+  # +quoted+ is a boolean value
+  # +style+ is an integer indicating the string style
+  #
+  # == See Also
+  #
+  # See also Psych::Handler#scalar
+  #
+  # @return [Scalar] a new instance of Scalar
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#58
+  def initialize(value, anchor = T.unsafe(nil), tag = T.unsafe(nil), plain = T.unsafe(nil), quoted = T.unsafe(nil), style = T.unsafe(nil)); end
+
+  # The anchor value (if there is one)
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#31
+  def anchor; end
+
+  # The anchor value (if there is one)
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#31
+  def anchor=(_arg0); end
+
+  # Is this a plain scalar?
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#37
+  def plain; end
+
+  # Is this a plain scalar?
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#37
+  def plain=(_arg0); end
+
+  # Is this scalar quoted?
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#40
+  def quoted; end
+
+  # Is this scalar quoted?
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#40
+  def quoted=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#67
+  def scalar?; end
+
+  # The style of this scalar
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#43
+  def style; end
+
+  # The style of this scalar
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#43
+  def style=(_arg0); end
+
+  # The tag value (if there is one)
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#34
+  def tag; end
+
+  # The tag value (if there is one)
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#34
+  def tag=(_arg0); end
+
+  # The scalar value
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#28
+  def value; end
+
+  # The scalar value
+  #
+  # source://psych//lib/psych/nodes/scalar.rb#28
+  def value=(_arg0); end
+end
+
+# This class represents a
+# {YAML sequence}[http://yaml.org/spec/1.1/#sequence/syntax].
+#
+# A YAML sequence is basically a list, and looks like this:
+#
+#   %YAML 1.1
+#   ---
+#   - I am
+#   - a Sequence
+#
+# A YAML sequence may have an anchor like this:
+#
+#   %YAML 1.1
+#   ---
+#   &A [
+#     "This sequence",
+#     "has an anchor"
+#   ]
+#
+# A YAML sequence may also have a tag like this:
+#
+#   %YAML 1.1
+#   ---
+#   !!seq [
+#     "This sequence",
+#     "has a tag"
+#   ]
+#
+# This class represents a sequence in a YAML document.  A
+# Psych::Nodes::Sequence node may have 0 or more children.  Valid children
+# for this node are:
+#
+# * Psych::Nodes::Sequence
+# * Psych::Nodes::Mapping
+# * Psych::Nodes::Scalar
+# * Psych::Nodes::Alias
+#
+# source://psych//lib/psych/nodes/sequence.rb#41
+class Psych::Nodes::Sequence < ::Psych::Nodes::Node
+  # Create a new object representing a YAML sequence.
+  #
+  # +anchor+ is the anchor associated with the sequence or nil.
+  # +tag+ is the tag associated with the sequence or nil.
+  # +implicit+ a boolean indicating whether or not the sequence was
+  # implicitly started.
+  # +style+ is an integer indicating the list style.
+  #
+  # See Psych::Handler#start_sequence
+  #
+  # @return [Sequence] a new instance of Sequence
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#73
+  def initialize(anchor = T.unsafe(nil), tag = T.unsafe(nil), implicit = T.unsafe(nil), style = T.unsafe(nil)); end
+
+  # The anchor for this sequence (if any)
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#52
+  def anchor; end
+
+  # The anchor for this sequence (if any)
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#52
+  def anchor=(_arg0); end
+
+  # Is this sequence started implicitly?
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#58
+  def implicit; end
+
+  # Is this sequence started implicitly?
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#58
+  def implicit=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#81
+  def sequence?; end
+
+  # The sequence style used
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#61
+  def style; end
+
+  # The sequence style used
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#61
+  def style=(_arg0); end
+
+  # The tag name for this sequence (if any)
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#55
+  def tag; end
+
+  # The tag name for this sequence (if any)
+  #
+  # source://psych//lib/psych/nodes/sequence.rb#55
+  def tag=(_arg0); end
+end
+
+# Represents a YAML stream.  This is the root node for any YAML parse
+# tree.  This node must have one or more child nodes.  The only valid
+# child node for a Psych::Nodes::Stream node is Psych::Nodes::Document.
+#
+# source://psych//lib/psych/nodes/stream.rb#8
+class Psych::Nodes::Stream < ::Psych::Nodes::Node
+  # Create a new Psych::Nodes::Stream node with an +encoding+ that
+  # defaults to Psych::Nodes::Stream::UTF8.
+  #
+  # See also Psych::Handler#start_stream
+  #
+  # @return [Stream] a new instance of Stream
+  #
+  # source://psych//lib/psych/nodes/stream.rb#32
+  def initialize(encoding = T.unsafe(nil)); end
+
+  # The encoding used for this stream
+  #
+  # source://psych//lib/psych/nodes/stream.rb#25
+  def encoding; end
+
+  # The encoding used for this stream
+  #
+  # source://psych//lib/psych/nodes/stream.rb#25
+  def encoding=(_arg0); end
+
+  # @return [Boolean]
+  #
+  # source://psych//lib/psych/nodes/stream.rb#37
+  def stream?; end
 end
 
 # YAML event parser class.  This class parses a YAML document and calls
@@ -1468,6 +2071,53 @@ class Psych::Visitors::DepthFirst < ::Psych::Visitors::Visitor
 
   # source://psych//lib/psych/visitors/depth_first.rb#11
   def visit_Psych_Nodes_Stream(o); end
+end
+
+# source://psych//lib/psych/visitors/emitter.rb#4
+class Psych::Visitors::Emitter < ::Psych::Visitors::Visitor
+  # @return [Emitter] a new instance of Emitter
+  #
+  # source://psych//lib/psych/visitors/emitter.rb#5
+  def initialize(io, options = T.unsafe(nil)); end
+
+  # source://psych//lib/psych/visitors/emitter.rb#47
+  def visit_Psych_Nodes_Alias(o); end
+
+  # source://psych//lib/psych/visitors/emitter.rb#25
+  def visit_Psych_Nodes_Document(o); end
+
+  # source://psych//lib/psych/visitors/emitter.rb#41
+  def visit_Psych_Nodes_Mapping(o); end
+
+  # source://psych//lib/psych/visitors/emitter.rb#31
+  def visit_Psych_Nodes_Scalar(o); end
+
+  # source://psych//lib/psych/visitors/emitter.rb#35
+  def visit_Psych_Nodes_Sequence(o); end
+
+  # source://psych//lib/psych/visitors/emitter.rb#19
+  def visit_Psych_Nodes_Stream(o); end
+end
+
+# source://psych//lib/psych/visitors/json_tree.rb#6
+class Psych::Visitors::JSONTree < ::Psych::Visitors::YAMLTree
+  include ::Psych::JSON::RubyEvents
+
+  # source://psych//lib/psych/visitors/json_tree.rb#16
+  def accept(target); end
+
+  class << self
+    # source://psych//lib/psych/visitors/json_tree.rb#9
+    def create(options = T.unsafe(nil)); end
+  end
+end
+
+# source://psych//lib/psych/visitors/to_ruby.rb#429
+class Psych::Visitors::NoAliasRuby < ::Psych::Visitors::ToRuby
+  # @raise [AliasesNotEnabled]
+  #
+  # source://psych//lib/psych/visitors/to_ruby.rb#430
+  def visit_Psych_Nodes_Alias(o); end
 end
 
 # source://psych//lib/psych/visitors/yaml_tree.rb#537

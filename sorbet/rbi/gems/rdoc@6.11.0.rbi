@@ -2512,6 +2512,41 @@ class RDoc::Generator::JsonIndex
   def search_string(string); end
 end
 
+# Handle common RDoc::Markup tasks for various CodeObjects
+#
+# This module is loaded by generators.  It allows RDoc's CodeObject tree to
+# avoid loading generator code to improve startup time for +ri+.
+#
+# source://rdoc//lib/rdoc/generator/markup.rb#8
+module RDoc::Generator::Markup
+  # Generates a relative URL from this object's path to +target_path+
+  #
+  # source://rdoc//lib/rdoc/generator/markup.rb#13
+  def aref_to(target_path); end
+
+  # Generates a relative URL from +from_path+ to this object's path
+  #
+  # source://rdoc//lib/rdoc/generator/markup.rb#20
+  def as_href(from_path); end
+
+  # Build a webcvs URL starting for the given +url+ with +full_path+ appended
+  # as the destination path.  If +url+ contains '%s' +full_path+ will be
+  # will replace the %s using sprintf on the +url+.
+  #
+  # source://rdoc//lib/rdoc/generator/markup.rb#50
+  def cvs_url(url, full_path); end
+
+  # Handy wrapper for marking up this object's comment
+  #
+  # source://rdoc//lib/rdoc/generator/markup.rb#27
+  def description; end
+
+  # Creates an RDoc::Markup::ToHtmlCrossref formatter
+  #
+  # source://rdoc//lib/rdoc/generator/markup.rb#34
+  def formatter; end
+end
+
 # Generates a POT file.
 #
 # Here is a translator work flow with the generator.
@@ -11088,6 +11123,90 @@ RDoc::RI::Driver::RDOC_REFS_REGEXP = T.let(T.unsafe(nil), Regexp)
 #
 # source://rdoc//lib/rdoc/ri/formatter.rb#5
 module RDoc::RI::Formatter; end
+
+# The directories where ri data lives.  Paths can be enumerated via ::each, or
+# queried individually via ::system_dir, ::site_dir, ::home_dir and ::gem_dir.
+#
+# source://rdoc//lib/rdoc/ri/paths.rb#8
+module RDoc::RI::Paths
+  class << self
+    # Iterates over each selected path yielding the directory and type.
+    #
+    # Yielded types:
+    # :system:: Where Ruby's ri data is stored.  Yielded when +system+ is
+    #           true
+    # :site:: Where ri for installed libraries are stored.  Yielded when
+    #         +site+ is true.  Normally no ri data is stored here.
+    # :home:: ~/.rdoc.  Yielded when +home+ is true.
+    # :gem:: ri data for an installed gem.  Yielded when +gems+ is true.
+    # :extra:: ri data directory from the command line.  Yielded for each
+    #          entry in +extra_dirs+
+    #
+    # @yield [system_dir, :system]
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#33
+    def each(system = T.unsafe(nil), site = T.unsafe(nil), home = T.unsafe(nil), gems = T.unsafe(nil), *extra_dirs); end
+
+    # The ri directory for the gem with +gem_name+.
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#55
+    def gem_dir(name, version); end
+
+    # The latest installed gems' ri directories.  +filter+ can be :all or
+    # :latest.
+    #
+    # A +filter+ :all includes all versions of gems and includes gems without
+    # ri documentation.
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#70
+    def gemdirs(filter = T.unsafe(nil)); end
+
+    # The location of the rdoc data in the user's home directory.
+    #
+    # Like ::system, ri data in the user's home directory is rare and predates
+    # libraries distributed via RubyGems.  ri data is rarely generated into this
+    # directory.
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#115
+    def home_dir; end
+
+    # Returns existing directories from the selected documentation directories
+    # as an Array.
+    #
+    # See also ::each
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#125
+    def path(system = T.unsafe(nil), site = T.unsafe(nil), home = T.unsafe(nil), gems = T.unsafe(nil), *extra_dirs); end
+
+    # Returns selected documentation directories including nonexistent
+    # directories.
+    #
+    # See also ::each
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#137
+    def raw_path(system, site, home, gems, *extra_dirs); end
+
+    # The location of ri data installed into the site dir.
+    #
+    # Historically this was available for documentation installed by Ruby
+    # libraries predating RubyGems.  It is unlikely to contain any content for
+    # modern Ruby installations.
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#154
+    def site_dir; end
+
+    # The location of the built-in ri data.
+    #
+    # This data is built automatically when `make` is run when Ruby is
+    # installed.  If you did not install Ruby by hand you may need to install
+    # the documentation yourself.  Please consult the documentation for your
+    # package manager or Ruby installer for details.  You can also use the
+    # rdoc-data gem to install system ri data for common versions of Ruby.
+    #
+    # source://rdoc//lib/rdoc/ri/paths.rb#167
+    def system_dir; end
+  end
+end
 
 # source://rdoc//lib/rdoc/ri/store.rb#4
 RDoc::RI::Store = RDoc::Store
