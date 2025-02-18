@@ -491,21 +491,6 @@ module Tapioca
 
         "#{type_name}[#{type_variable_names}]"
       end
-
-      sig { params(constant: Module, class_name: T.nilable(String)).returns(T.nilable(String)) }
-      def name_of_proxy_target(constant, class_name)
-        return unless class_name == "ActiveSupport::Deprecation::DeprecatedConstantProxy"
-
-        # We are dealing with a ActiveSupport::Deprecation::DeprecatedConstantProxy
-        # so try to get the name of the target class
-        begin
-          target = constant.__send__(:target)
-        rescue NoMethodError
-          return
-        end
-
-        name_of(target)
-      end
     end
   end
 end
