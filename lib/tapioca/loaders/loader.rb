@@ -29,9 +29,9 @@ module Tapioca
       def load_bundle(gemfile, initialize_file, require_file, halt_upon_load_error)
         require_helper(initialize_file)
 
-        gemfile.require_bundle
-
         load_rails_application(environment_load: true, halt_upon_load_error: halt_upon_load_error)
+
+        gemfile.require_bundle
 
         require_helper(require_file)
       end
