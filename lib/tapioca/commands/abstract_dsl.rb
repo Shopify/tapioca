@@ -131,15 +131,22 @@ module Tapioca
 
       sig { returns(Tapioca::Dsl::Pipeline) }
       def create_pipeline
+        error_handler = if @lsp_addon
+          ->(error) {
+            say(error)
+          }
+        else
+          ->(error) {
+            say_error(error, :bold, :red)
+          }
+        end
         Tapioca::Dsl::Pipeline.new(
           requested_constants:
             constantize(@requested_constants) + constantize(constants_from_requested_paths, ignore_missing: true),
           requested_paths: @requested_paths,
           requested_compilers: constantize_compilers(@only),
           excluded_compilers: constantize_compilers(@exclude),
-          error_handler: ->(error) {
-            say_error(error, :bold, :red)
-          },
+          error_handler: error_handler,
           skipped_constants: constantize(@skip_constant, ignore_missing: true),
           number_of_workers: @number_of_workers,
           compiler_options: @compiler_options,
