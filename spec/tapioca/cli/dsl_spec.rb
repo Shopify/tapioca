@@ -101,7 +101,7 @@ module Tapioca
         it "must not generate a .gitattributes file if the output folder is not created" do
           result = @project.tapioca("dsl --outdir output")
 
-          assert_stderr_equals(<<~ERR, result)
+          assert_stderr_includes(result, <<~ERR)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -124,15 +124,14 @@ module Tapioca
 
           result = @project.tapioca("dsl")
 
-          assert_stdout_equals(<<~OUT, result)
+          assert_stdout_includes(result, <<~OUT)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
-
           OUT
 
-          assert_stderr_equals(<<~ERR, result)
+          assert_stderr_includes(result, <<~ERR)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -147,15 +146,14 @@ module Tapioca
 
           result = @project.tapioca("dsl User")
 
-          assert_stdout_equals(<<~OUT, result)
+          assert_stdout_includes(result, <<~OUT)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
-
           OUT
 
-          assert_stderr_equals(<<~ERR, result)
+          assert_stderr_includes(result, <<~ERR)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
@@ -922,15 +920,14 @@ module Tapioca
 
           result = @project.tapioca("dsl path/to/nowhere.rb")
 
-          assert_stdout_equals(<<~OUT, result)
+          assert_stdout_includes(result, <<~OUT)
             Loading DSL extension classes... Done
             Loading Rails application... Done
             Loading DSL compiler classes... Done
             Compiling DSL RBI files...
-
           OUT
 
-          assert_stderr_equals(<<~ERR, result)
+          assert_stderr_includes(result, <<~ERR)
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERR
