@@ -2,4 +2,5 @@
 .
 --ignore=/vendor
 --enable-experimental-requires-ancestor
+--enable-experimental-rbs-signatures
 --suppress-payload-superclass-redefinition-for=Reline::ANSI
