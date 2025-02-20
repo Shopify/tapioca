@@ -102,9 +102,11 @@ module Tapioca
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
-            # Load routes if they haven't been loaded yet (see https://github.com/rails/rails/pull/51614).
-            routes_reloader = Rails.application.routes_reloader
-            routes_reloader.execute_unless_loaded if routes_reloader&.respond_to?(:execute_unless_loaded)
+            # In rails 8, `Rails.application.routes_reloader.execute_unless_loaded`
+            # is not behaving as it did in Rails 7.
+            # With this workaround we force the routes to be reloaded regardless
+            # of whether they have been loaded or not
+            Rails.application.reload_routes!
 
             url_helpers_module = Rails.application.routes.named_routes.url_helpers_module
             path_helpers_module = Rails.application.routes.named_routes.path_helpers_module
