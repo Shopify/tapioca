@@ -39,7 +39,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::Time) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return unless constant.respond_to?(:zone)
 
@@ -57,7 +58,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             [::Time]
           end

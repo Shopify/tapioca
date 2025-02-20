@@ -8,17 +8,7 @@ module Tapioca
       include SorbetHelper
       include RBIFilesHelper
 
-      sig do
-        params(
-          gem_rbi_dir: String,
-          dsl_rbi_dir: String,
-          annotations_rbi_dir: String,
-          shim_rbi_dir: String,
-          todo_rbi_file: String,
-          payload: T::Boolean,
-          number_of_workers: T.nilable(Integer),
-        ).void
-      end
+      #: (gem_rbi_dir: String, dsl_rbi_dir: String, annotations_rbi_dir: String, shim_rbi_dir: String, todo_rbi_file: String, payload: bool, number_of_workers: Integer?) -> void
       def initialize(
         gem_rbi_dir:,
         dsl_rbi_dir:,
@@ -40,7 +30,8 @@ module Tapioca
 
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         index = RBI::Index.new
 

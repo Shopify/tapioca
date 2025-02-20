@@ -11,7 +11,8 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           constant = event.constant
           node = event.node
@@ -23,7 +24,7 @@ module Tapioca
           node << sclass if sclass.nodes.length > 1
         end
 
-        sig { params(tree: RBI::Tree, constant: Module).void }
+        #: (RBI::Tree tree, Module constant) -> void
         def compile_type_variable_declarations(tree, constant)
           # Try to find the type variables defined on this constant, bail if we can't
           type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)
@@ -46,7 +47,7 @@ module Tapioca
           tree << RBI::Extend.new("T::Generic")
         end
 
-        sig { params(type_variable: Tapioca::TypeVariableModule).returns(T.nilable(RBI::Node)) }
+        #: (Tapioca::TypeVariableModule type_variable) -> RBI::Node?
         def node_from_type_variable(type_variable)
           case type_variable.type
           when Tapioca::TypeVariableModule::Type::HasAttachedClass
@@ -59,7 +60,8 @@ module Tapioca
           end
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        # @override
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
         end

@@ -13,10 +13,10 @@ module Tapioca
     class SymbolFound < Event
       extend T::Sig
 
-      sig { returns(String) }
+      #: String
       attr_reader :symbol
 
-      sig { params(symbol: String).void }
+      #: (String symbol) -> void
       def initialize(symbol)
         super()
         @symbol = symbol
@@ -26,13 +26,13 @@ module Tapioca
     class ConstantFound < Event
       extend T::Sig
 
-      sig { returns(String) }
+      #: String
       attr_reader :symbol
 
-      sig { returns(BasicObject).checked(:never) }
+      #: BasicObject
       attr_reader :constant
 
-      sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
+      #: (String symbol, BasicObject constant) -> void
       def initialize(symbol, constant)
         super()
         @symbol = symbol
@@ -43,12 +43,13 @@ module Tapioca
     class ForeignConstantFound < ConstantFound
       extend T::Sig
 
-      sig { override.returns(Module) }
+      # @override
+      #: -> Module
       def constant
         T.cast(@constant, Module)
       end
 
-      sig { params(symbol: String, constant: Module).void }
+      #: (String symbol, Module constant) -> void
       def initialize(symbol, constant)
         super
       end
@@ -60,13 +61,13 @@ module Tapioca
 
       abstract!
 
-      sig { returns(String) }
+      #: String
       attr_reader :symbol
 
-      sig { returns(Module).checked(:never) }
+      #: Module
       attr_reader :constant
 
-      sig { params(symbol: String, constant: Module).void.checked(:never) }
+      #: (String symbol, Module constant) -> void
       def initialize(symbol, constant)
         super()
         @symbol = symbol
@@ -77,10 +78,10 @@ module Tapioca
     class ConstNodeAdded < NodeAdded
       extend T::Sig
 
-      sig { returns(RBI::Const) }
+      #: RBI::Const
       attr_reader :node
 
-      sig { params(symbol: String, constant: Module, node: RBI::Const).void.checked(:never) }
+      #: (String symbol, Module constant, RBI::Const node) -> void
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -90,10 +91,10 @@ module Tapioca
     class ScopeNodeAdded < NodeAdded
       extend T::Sig
 
-      sig { returns(RBI::Scope) }
+      #: RBI::Scope
       attr_reader :node
 
-      sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
+      #: (String symbol, Module constant, RBI::Scope node) -> void
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -105,28 +106,19 @@ module Tapioca
     class MethodNodeAdded < NodeAdded
       extend T::Sig
 
-      sig { returns(UnboundMethod) }
+      #: UnboundMethod
       attr_reader :method
 
-      sig { returns(RBI::Method) }
+      #: RBI::Method
       attr_reader :node
 
-      sig { returns(T.untyped) }
+      #: untyped
       attr_reader :signature
 
-      sig { returns(T::Array[[Symbol, String]]) }
+      #: Array[[Symbol, String]]
       attr_reader :parameters
 
-      sig do
-        params(
-          symbol: String,
-          constant: Module,
-          method: UnboundMethod,
-          node: RBI::Method,
-          signature: T.untyped,
-          parameters: T::Array[[Symbol, String]],
-        ).void.checked(:never)
-      end
+      #: (String symbol, Module constant, UnboundMethod method, RBI::Method node, untyped signature, Array[[Symbol, String]] parameters) -> void
       def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
         super(symbol, constant)
         @node = node

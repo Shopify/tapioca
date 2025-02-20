@@ -7,7 +7,7 @@ module Tapioca
   module Dsl
     module Compilers
       class ActiveSupportTimeExtSpec < ::DslSpec
-        sig { void }
+        #: -> void
         def before_setup
           require "active_support/core_ext/time"
         end

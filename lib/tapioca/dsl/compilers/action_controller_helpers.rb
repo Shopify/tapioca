@@ -66,7 +66,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActionController::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           helpers_module = constant._helpers
           proxied_helper_methods = constant._helper_methods.map(&:to_s).map(&:to_sym)
@@ -120,7 +121,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActionController::Base).select(&:name).select do |klass|
               klass.const_defined?(:HelperMethods, false)
@@ -130,7 +132,7 @@ module Tapioca
 
         private
 
-        sig { params(method_name: Symbol).returns(T.nilable(UnboundMethod)) }
+        #: (Symbol method_name) -> UnboundMethod?
         def helper_method_proxy_target(method_name)
           # Lookup the proxy target method only if it is defined as a public/protected or private method.
           if constant.method_defined?(method_name) || constant.private_method_defined?(method_name)
@@ -138,7 +140,7 @@ module Tapioca
           end
         end
 
-        sig { params(helper_methods: RBI::Scope, method_name: Symbol).void }
+        #: (RBI::Scope helper_methods, Symbol method_name) -> void
         def create_unknown_proxy_method(helper_methods, method_name)
           helper_methods.create_method(
             method_name.to_s,
@@ -151,7 +153,7 @@ module Tapioca
           )
         end
 
-        sig { params(mod: Module).returns(T::Array[String]) }
+        #: (Module mod) -> Array[String]
         def gather_includes(mod)
           mod.ancestors
             .reject { |ancestor| ancestor.is_a?(Class) || ancestor == mod || name_of(ancestor).nil? }

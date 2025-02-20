@@ -54,14 +54,16 @@ module Tapioca
         end
 
         class << self
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             # Collect all the classes that include ActiveModel::Validations
             all_classes.select { |c| ActiveModel::Validations > c }
           end
         end
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           confirmation_validators = constant.validators.grep(ActiveModel::Validations::ConfirmationValidator)
 

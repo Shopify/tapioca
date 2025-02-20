@@ -12,11 +12,7 @@ module Tapioca
   class << self
     extend T::Sig
 
-    sig do
-      type_parameters(:Result)
-        .params(blk: T.proc.returns(T.type_parameter(:Result)))
-        .returns(T.type_parameter(:Result))
-    end
+    #: [Result] { -> Result } -> Result
     def silence_warnings(&blk)
       original_verbosity = $VERBOSE
       $VERBOSE = nil

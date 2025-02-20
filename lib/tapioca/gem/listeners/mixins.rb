@@ -11,7 +11,8 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           constant = event.constant
           singleton_class = singleton_class_of(constant)
@@ -31,14 +32,7 @@ module Tapioca
           add_mixins(node, constant, extends.reverse, Runtime::Trackers::Mixin::Type::Extend)
         end
 
-        sig do
-          params(
-            tree: RBI::Tree,
-            constant: Module,
-            mods: T::Array[Module],
-            mixin_type: Runtime::Trackers::Mixin::Type,
-          ).void
-        end
+        #: (RBI::Tree tree, Module constant, Array[Module] mods, Runtime::Trackers::Mixin::Type mixin_type) -> void
         def add_mixins(tree, constant, mods, mixin_type)
           mods
             .select do |mod|
@@ -65,13 +59,7 @@ module Tapioca
             end
         end
 
-        sig do
-          params(
-            constant: Module,
-            mixin: Module,
-            mixin_type: Runtime::Trackers::Mixin::Type,
-          ).returns(T::Boolean)
-        end
+        #: (Module constant, Module mixin, Runtime::Trackers::Mixin::Type mixin_type) -> bool
         def mixed_in_by_gem?(constant, mixin, mixin_type)
           mixin_location = Runtime::Trackers::Mixin.mixin_location(mixin, mixin_type, constant)
 
@@ -80,14 +68,14 @@ module Tapioca
           @pipeline.gem.contains_path?(mixin_location)
         end
 
-        sig { params(mixin_name: String).returns(T::Boolean) }
+        #: (String mixin_name) -> bool
         def filtered_mixin?(mixin_name)
           # filter T:: namespace mixins that aren't T::Props
           # T::Props and subconstants have semantic value
           mixin_name.start_with?("T::") && !mixin_name.start_with?("T::Props")
         end
 
-        sig { params(constant: Module).returns(T::Array[Module]) }
+        #: (Module constant) -> Array[Module]
         def interesting_ancestors_of(constant)
           inherited_ancestors = Set.new.compare_by_identity.merge(inherited_ancestors_of(constant))
 

@@ -13,7 +13,7 @@ module Tapioca
 
       requires_ancestor { Tapioca::Runtime::Reflection }
 
-      sig { params(singleton_class: Class).returns(T.nilable(Module)) }
+      #: (Class singleton_class) -> Module?
       def attached_class_of(singleton_class)
         # https://stackoverflow.com/a/36622320/98634
         result = ObjectSpace.each_object(singleton_class).find do |klass|

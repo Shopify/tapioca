@@ -22,12 +22,7 @@ module Tapioca
           class << self
             extend T::Sig
 
-            sig do
-              params(
-                options: T::Hash[String, T.untyped],
-                block: T.proc.params(value: String, default_column_type_option: ColumnTypeOption).void,
-              ).returns(ColumnTypeOption)
-            end
+            #: (Hash[String, untyped] options) { (String value, ColumnTypeOption default_column_type_option) -> void } -> ColumnTypeOption
             def from_options(options, &block)
               column_type_option = Persisted
               value = options["ActiveRecordColumnTypes"]
@@ -44,39 +39,29 @@ module Tapioca
             end
           end
 
-          sig { returns(T::Boolean) }
+          #: -> bool
           def persisted?
             self == ColumnTypeOption::Persisted
           end
 
-          sig { returns(T::Boolean) }
+          #: -> bool
           def nilable?
             self == ColumnTypeOption::Nilable
           end
 
-          sig { returns(T::Boolean) }
+          #: -> bool
           def untyped?
             self == ColumnTypeOption::Untyped
           end
         end
 
-        sig do
-          params(
-            constant: T.class_of(ActiveRecord::Base),
-            column_type_option: ColumnTypeOption,
-          ).void
-        end
+        #: (singleton(ActiveRecord::Base) constant, ?column_type_option: ColumnTypeOption) -> void
         def initialize(constant, column_type_option: ColumnTypeOption::Persisted)
           @constant = constant
           @column_type_option = column_type_option
         end
 
-        sig do
-          params(
-            attribute_name: String,
-            column_name: String,
-          ).returns([String, String])
-        end
+        #: (String attribute_name, ?String column_name) -> [String, String]
         def type_for(attribute_name, column_name = attribute_name)
           return id_type if attribute_name == "id"
 
@@ -85,7 +70,7 @@ module Tapioca
 
         private
 
-        sig { returns([String, String]) }
+        #: -> [String, String]
         def id_type
           if @constant.respond_to?(:composite_primary_key?) && T.unsafe(@constant).composite_primary_key?
             primary_key_columns = @constant.primary_key
@@ -105,7 +90,7 @@ module Tapioca
           end
         end
 
-        sig { params(column_name: T.nilable(String)).returns([String, String]) }
+        #: (String? column_name) -> [String, String]
         def column_type_for(column_name)
           return ["T.untyped", "T.untyped"] if @column_type_option.untyped?
 
@@ -128,7 +113,7 @@ module Tapioca
           end
         end
 
-        sig { params(column_type: T.untyped, column_nullability: T::Boolean).returns(String) }
+        #: (untyped column_type, column_nullability: bool) -> String
         def type_for_activerecord_value(column_type, column_nullability:)
           case column_type
           when ->(type) { defined?(MoneyColumn) && MoneyColumn::ActiveRecordType === type }
@@ -229,7 +214,7 @@ module Tapioca
           end
         end
 
-        sig { params(base_type: String, column_nullability: T::Boolean).returns(String) }
+        #: (String base_type, column_nullability: bool) -> String
         def as_non_nilable_if_persisted_and_not_nullable(base_type, column_nullability:)
           # It's possible that when ActiveModel::Type::Value is used, the signature being reflected on in
           # ActiveModelTypeHelper.type_for(type_value) may say the type can be nilable. However, if the type is
@@ -239,7 +224,7 @@ module Tapioca
           base_type
         end
 
-        sig { params(column_type: ActiveRecord::Enum::EnumType).returns(String) }
+        #: (ActiveRecord::Enum::EnumType column_type) -> String
         def enum_setter_type(column_type)
           # In Rails < 7 this method is private. When support for that is dropped we can call the method directly
           case column_type.send(:subtype)
@@ -250,7 +235,7 @@ module Tapioca
           end
         end
 
-        sig { params(column_type: ActiveRecord::Type::Serialized).returns(String) }
+        #: (ActiveRecord::Type::Serialized column_type) -> String
         def serialized_column_type(column_type)
           case column_type.coder
           when ActiveRecord::Coders::YAMLColumn
@@ -267,7 +252,7 @@ module Tapioca
           end
         end
 
-        sig { params(column_type: T.untyped).returns(T::Boolean) }
+        #: (untyped column_type) -> bool
         def not_nilable_serialized_column?(column_type)
           return false unless column_type.is_a?(ActiveRecord::Type::Serialized)
           return false unless column_type.coder.is_a?(ActiveRecord::Coders::YAMLColumn)

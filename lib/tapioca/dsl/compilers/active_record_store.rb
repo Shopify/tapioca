@@ -84,7 +84,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.all(T.class_of(ActiveRecord::Base), Extensions::ActiveRecord) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return if constant.__tapioca_stored_attributes.nil?
 
@@ -134,7 +135,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
           end

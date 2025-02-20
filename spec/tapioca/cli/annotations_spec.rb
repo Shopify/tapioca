@@ -402,7 +402,7 @@ module Tapioca
 
     private
 
-    sig { params(annotations: T::Hash[String, String], repo_name: String).returns(Spoom::Context) }
+    #: (Hash[String, String] annotations, ?repo_name: String) -> Spoom::Context
     def create_repo(annotations, repo_name: "repo")
       repo = Spoom::Context.new("#{@project.absolute_path}/#{repo_name}")
       repo.mkdir!
@@ -417,7 +417,7 @@ module Tapioca
       repo
     end
 
-    sig { params(path: String, content: String).void }
+    #: (String path, String content) -> void
     def assert_project_annotation_equal(path, content)
       assert_equal(content, @project.read(path))
     end

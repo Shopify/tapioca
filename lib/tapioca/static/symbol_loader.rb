@@ -9,7 +9,7 @@ module Tapioca
         include SorbetHelper
         include Runtime::Reflection
 
-        sig { returns(T::Set[String]) }
+        #: -> Set[String]
         def payload_symbols
           unless @payload_symbols
             output = symbol_table_json_from("-e ''", table_type: "symbol-table-full-json")
@@ -19,7 +19,7 @@ module Tapioca
           T.must(@payload_symbols)
         end
 
-        sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
+        #: (Gemfile::GemSpec gem) -> Set[String]
         def engine_symbols(gem)
           gem_engine = engines.find do |engine|
             gem.full_gem_path == engine.config.root.to_s
@@ -44,12 +44,12 @@ module Tapioca
           Set.new
         end
 
-        sig { params(gem: Gemfile::GemSpec).returns(T::Set[String]) }
+        #: (Gemfile::GemSpec gem) -> Set[String]
         def gem_symbols(gem)
           symbols_from_paths(gem.files)
         end
 
-        sig { params(paths: T::Array[Pathname]).returns(T::Set[String]) }
+        #: (Array[Pathname] paths) -> Set[String]
         def symbols_from_paths(paths)
           return Set.new if paths.empty?
 
@@ -67,7 +67,7 @@ module Tapioca
 
         private
 
-        T::Sig::WithoutRuntime.sig { returns(T::Array[T.class_of(Rails::Engine)]) }
+        #: -> Array[singleton(Rails::Engine)]
         def engines
           @engines ||= T.let(
             if Object.const_defined?("Rails::Engine")
@@ -80,7 +80,7 @@ module Tapioca
           )
         end
 
-        sig { params(input: String, table_type: String).returns(String) }
+        #: (String input, ?table_type: String) -> String
         def symbol_table_json_from(input, table_type: "symbol-table-json")
           sorbet("--no-config", "--quiet", "--print=#{table_type}", input).out
         end

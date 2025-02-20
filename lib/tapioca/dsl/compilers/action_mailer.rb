@@ -34,7 +34,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActionMailer::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           root.create_path(constant) do |mailer|
             action_methods_for_constant.each do |mailer_method|
@@ -53,7 +54,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActionMailer::Base).reject(&:abstract?)
           end
@@ -61,7 +63,7 @@ module Tapioca
 
         private
 
-        sig { returns(T::Array[String]) }
+        #: -> Array[String]
         def action_methods_for_constant
           constant.action_methods.to_a
         end

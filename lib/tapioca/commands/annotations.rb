@@ -6,15 +6,7 @@ module Tapioca
     class Annotations < CommandWithoutTracker
       extend T::Sig
 
-      sig do
-        params(
-          central_repo_root_uris: T::Array[String],
-          auth: T.nilable(String),
-          netrc_file: T.nilable(String),
-          central_repo_index_path: String,
-          typed_overrides: T::Hash[String, String],
-        ).void
-      end
+      #: (central_repo_root_uris: Array[String], ?auth: String?, ?netrc_file: String?, ?central_repo_index_path: String, ?typed_overrides: Hash[String, String]) -> void
       def initialize(
         central_repo_root_uris:,
         auth: nil,
@@ -35,7 +27,8 @@ module Tapioca
 
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         @indexes = fetch_indexes
         project_gems = list_gemfile_gems
@@ -46,7 +39,7 @@ module Tapioca
         GitAttributes.create_vendored_attribute_file(@outpath)
       end
 
-      sig { returns(T::Array[GemInfo]) }
+      #: -> Array[GemInfo]
       def list_gemfile_gems
         say("Listing gems from Gemfile.lock... ", [:blue, :bold])
         gemfile = Bundler.read_file("Gemfile.lock")
@@ -56,7 +49,7 @@ module Tapioca
         gem_info
       end
 
-      sig { params(project_gems: T::Array[GemInfo]).void }
+      #: (Array[GemInfo] project_gems) -> void
       def remove_expired_annotations(project_gems)
         say("Removing annotations for gems that have been removed... ", [:blue, :bold])
 
@@ -77,7 +70,7 @@ module Tapioca
         say("\nDone\n\n", :green)
       end
 
-      sig { returns(T::Hash[String, RepoIndex]) }
+      #: -> Hash[String, RepoIndex]
       def fetch_indexes
         multiple_repos = @central_repo_root_uris.size > 1
         repo_number = 1
@@ -98,7 +91,7 @@ module Tapioca
         indexes
       end
 
-      sig { params(repo_uri: String, repo_number: T.nilable(Integer)).returns(T.nilable(RepoIndex)) }
+      #: (String repo_uri, Integer? repo_number) -> RepoIndex?
       def fetch_index(repo_uri, repo_number:)
         say("Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ", [:blue, :bold])
         content = fetch_file(repo_uri, CENTRAL_REPO_INDEX_PATH)
@@ -109,7 +102,7 @@ module Tapioca
         index
       end
 
-      sig { params(project_gems: T::Array[GemInfo]).returns(T::Array[String]) }
+      #: (Array[GemInfo] project_gems) -> Array[String]
       def fetch_annotations(project_gems)
         say("Fetching gem annotations from central repository... ", [:blue, :bold])
         fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[GemInfo, T::Array[String]])
@@ -153,7 +146,7 @@ module Tapioca
         true
       end
 
-      sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
+      #: (String repo_uri, String path) -> String?
       def fetch_file(repo_uri, path)
         if repo_uri.start_with?(%r{https?://})
           fetch_http_file(repo_uri, path)
@@ -162,7 +155,7 @@ module Tapioca
         end
       end
 
-      sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
+      #: (String repo_uri, String path) -> String?
       def fetch_local_file(repo_uri, path)
         File.read("#{repo_uri}/#{path}")
       rescue => e
@@ -170,7 +163,7 @@ module Tapioca
         nil
       end
 
-      sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
+      #: (String repo_uri, String path) -> String?
       def fetch_http_file(repo_uri, path)
         auth = @tokens[repo_uri]
         uri = URI("#{repo_uri}/#{path}")
@@ -194,7 +187,7 @@ module Tapioca
         nil
       end
 
-      sig { params(name: String, content: String).returns(String) }
+      #: (String name, String content) -> String
       def add_header(name, content)
         # WARNING: Changing this header could impact how GitHub determines if the file should be hidden:
         # https://github.com/github/linguist/pull/6143
@@ -214,7 +207,7 @@ module Tapioca
         end
       end
 
-      sig { params(name: String, content: String).returns(String) }
+      #: (String name, String content) -> String
       def apply_typed_override(name, content)
         strictness = @typed_overrides[name]
         return content unless strictness
@@ -226,7 +219,7 @@ module Tapioca
         Spoom::Sorbet::Sigils.update_sigil(content, strictness)
       end
 
-      sig { params(gem_version: ::Gem::Version, content: String).returns(String) }
+      #: (::Gem::Version gem_version, String content) -> String
       def filter_versions(gem_version, content)
         rbi = RBI::Parser.parse_string(content)
         rbi.filter_versions!(gem_version)
@@ -234,7 +227,7 @@ module Tapioca
         rbi.string
       end
 
-      sig { params(gem_name: String, contents: T::Array[String]).returns(T.nilable(String)) }
+      #: (String gem_name, Array[String] contents) -> String?
       def merge_files(gem_name, contents)
         return if contents.empty?
 
@@ -261,7 +254,7 @@ module Tapioca
         nil
       end
 
-      sig { returns(T::Hash[String, T.nilable(String)]) }
+      #: -> Hash[String, String?]
       def repo_tokens
         @netrc_info = Netrc.read(@netrc_file) if @netrc_file
         @central_repo_root_uris.filter_map do |uri|
@@ -273,7 +266,7 @@ module Tapioca
         end.to_h
       end
 
-      sig { params(repo_uri: String).returns(T.nilable(String)) }
+      #: (String repo_uri) -> String?
       def token_for(repo_uri)
         return unless @netrc_info
 
@@ -289,7 +282,7 @@ module Tapioca
         "token #{token}"
       end
 
-      sig { params(path: String, repo_uri: String, message: String).void }
+      #: (String path, String repo_uri, String message) -> void
       def say_http_error(path, repo_uri, message:)
         say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{message})\n\n", :bold, :red)
         say_error(<<~ERROR)

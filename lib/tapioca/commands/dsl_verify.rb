@@ -6,7 +6,8 @@ module Tapioca
     class DslVerify < AbstractDsl
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         load_application
 

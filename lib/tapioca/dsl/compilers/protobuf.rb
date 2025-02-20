@@ -78,7 +78,8 @@ module Tapioca
 
         FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           root.create_path(constant) do |klass|
             if constant == Google::Protobuf::RepeatedField
@@ -155,7 +156,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             marker = Google::Protobuf::MessageExts::ClassMethods
 
@@ -178,7 +180,7 @@ module Tapioca
 
         private
 
-        sig { params(desc: Google::Protobuf::FieldDescriptor).returns(T::Boolean) }
+        #: (Google::Protobuf::FieldDescriptor desc) -> bool
         def has_presence?(desc)
           if desc.respond_to?(:has_presence?)
             # This method is only defined in google-protobuf 3.26.0 and later
@@ -190,7 +192,7 @@ module Tapioca
           end
         end
 
-        sig { params(klass: RBI::Scope, names: String).void }
+        #: (RBI::Scope klass, *String names) -> void
         def create_type_members(klass, *names)
           klass.create_extend("T::Generic")
 
@@ -199,11 +201,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            descriptor: Google::Protobuf::FieldDescriptor,
-          ).returns(String)
-        end
+        #: (Google::Protobuf::FieldDescriptor descriptor) -> String
         def type_of(descriptor)
           case descriptor.type
           when :enum
@@ -229,12 +227,12 @@ module Tapioca
           end
         end
 
-        sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(T::Boolean) }
+        #: (Google::Protobuf::FieldDescriptor descriptor) -> bool
         def nilable_descriptor?(descriptor)
           descriptor.label == :optional && descriptor.type == :message
         end
 
-        sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(T::Boolean) }
+        #: (Google::Protobuf::FieldDescriptor descriptor) -> bool
         def map_type?(descriptor)
           # Defensively make sure that we are dealing with a repeated field
           return false unless descriptor.label == :repeated
@@ -248,7 +246,7 @@ module Tapioca
           false
         end
 
-        sig { params(descriptor: Google::Protobuf::FieldDescriptor).returns(Field) }
+        #: (Google::Protobuf::FieldDescriptor descriptor) -> Field
         def field_of(descriptor)
           if descriptor.label == :repeated
             if map_type?(descriptor)
@@ -290,12 +288,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            klass: RBI::Scope,
-            desc: Google::Protobuf::FieldDescriptor,
-          ).returns(Field)
-        end
+        #: (RBI::Scope klass, Google::Protobuf::FieldDescriptor desc) -> Field
         def create_descriptor_method(klass, desc)
           field = field_of(desc)
 
@@ -325,12 +318,7 @@ module Tapioca
           field
         end
 
-        sig do
-          params(
-            klass: RBI::Scope,
-            desc: Google::Protobuf::OneofDescriptor,
-          ).void
-        end
+        #: (RBI::Scope klass, Google::Protobuf::OneofDescriptor desc) -> void
         def create_oneof_method(klass, desc)
           klass.create_method(
             desc.name,

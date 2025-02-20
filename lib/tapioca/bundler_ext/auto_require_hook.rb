@@ -18,7 +18,7 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig { params(name: T.untyped).returns(T::Boolean) }
+        #: (untyped name) -> bool
         def excluded?(name)
           @exclude.include?(name)
         end
@@ -27,12 +27,7 @@ module Tapioca
           @enabled
         end
 
-        sig do
-          type_parameters(:Result).params(
-            exclude: T::Array[String],
-            blk: T.proc.returns(T.type_parameter(:Result)),
-          ).returns(T.type_parameter(:Result))
-        end
+        #: [Result] (exclude: Array[String]) { -> Result } -> Result
         def override_require_false(exclude:, &blk)
           @enabled = true
           @exclude = exclude
@@ -42,7 +37,7 @@ module Tapioca
         end
       end
 
-      sig { returns(T.untyped).checked(:never) }
+      #: -> untyped
       def autorequire
         value = super
 

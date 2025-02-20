@@ -141,7 +141,7 @@ module Tapioca
 
     private
 
-    sig { params(gem: MockGem).returns(Gemfile::GemSpec) }
+    #: (MockGem gem) -> Gemfile::GemSpec
     def make_spec(gem)
       mock = MockGemSpecification.new(gem.absolute_path)
       Gemfile::GemSpec.new(mock)
@@ -154,22 +154,22 @@ module Tapioca
 
     Elem = type_template
 
-    sig { params(rel_path: String).void }
+    #: (String rel_path) -> void
     def initialize(rel_path) # rubocop:disable Lint/MissingSuper
       @rel_path = rel_path
     end
 
-    sig { returns(String) }
+    #: -> String
     def full_gem_path
       @rel_path
     end
 
-    sig { returns(T::Array[String]) }
+    #: -> Array[String]
     def full_require_paths
       []
     end
 
-    sig { returns(String) }
+    #: -> String
     def name
       ""
     end

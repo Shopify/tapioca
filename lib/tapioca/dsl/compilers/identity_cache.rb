@@ -65,7 +65,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           caches = constant.send(:all_cached_associations)
           cache_indexes = constant.send(:cache_indexes)
@@ -97,7 +98,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base).select do |klass|
               ::IdentityCache::WithoutPrimaryIndex > klass
@@ -107,12 +109,7 @@ module Tapioca
 
         private
 
-        sig do
-          params(
-            field: T.untyped,
-            returns_collection: T::Boolean,
-          ).returns(String)
-        end
+        #: (untyped field, returns_collection: bool) -> String
         def type_for_field(field, returns_collection:)
           cache_type = field.reflection.compute_class(field.reflection.class_name)
           if returns_collection
@@ -124,13 +121,7 @@ module Tapioca
           "T.untyped"
         end
 
-        sig do
-          params(
-            field: T.untyped,
-            klass: RBI::Scope,
-            returns_collection: T::Boolean,
-          ).void
-        end
+        #: (untyped field, RBI::Scope klass, returns_collection: bool) -> void
         def create_fetch_field_methods(field, klass, returns_collection:)
           name = field.cached_accessor_name.to_s
           type = type_for_field(field, returns_collection: returns_collection)
@@ -143,12 +134,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            field: T.untyped,
-            klass: RBI::Scope,
-          ).void
-        end
+        #: (untyped field, RBI::Scope klass) -> void
         def create_fetch_by_methods(field, klass)
           is_cache_index = field.instance_variable_defined?(:@attribute_proc)
 
@@ -159,12 +145,7 @@ module Tapioca
           create_index_fetch_by_methods(field, klass) if is_cache_index
         end
 
-        sig do
-          params(
-            field: T.untyped,
-            klass: RBI::Scope,
-          ).void
-        end
+        #: (untyped field, RBI::Scope klass) -> void
         def create_index_fetch_by_methods(field, klass)
           fields_name = field.key_fields.join("_and_")
           name = "fetch_by_#{fields_name}"
@@ -209,12 +190,7 @@ module Tapioca
           )
         end
 
-        sig do
-          params(
-            field: T.untyped,
-            klass: RBI::Scope,
-          ).void
-        end
+        #: (untyped field, RBI::Scope klass) -> void
         def create_aliased_fetch_by_methods(field, klass)
           type, _ = Helpers::ActiveRecordColumnTypeHelper.new(
             constant,

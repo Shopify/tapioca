@@ -16,13 +16,13 @@ module Tapioca
 
       abstract!
 
-      sig { returns(ConstantType) }
+      #: ConstantType
       attr_reader :constant
 
-      sig { returns(RBI::Tree) }
+      #: RBI::Tree
       attr_reader :root
 
-      sig { returns(T::Hash[String, T.untyped]) }
+      #: Hash[String, untyped]
       attr_reader :options
 
       @@requested_constants = T.let([], T::Array[Module]) # rubocop:disable Style/ClassVars
@@ -30,7 +30,7 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig { params(constant: Module).returns(T::Boolean) }
+        #: (Module constant) -> bool
         def handles?(constant)
           processable_constants.include?(constant)
         end
@@ -38,7 +38,7 @@ module Tapioca
         sig { abstract.returns(T::Enumerable[Module]) }
         def gather_constants; end
 
-        sig { returns(T::Set[Module]) }
+        #: -> Set[Module]
         def processable_constants
           @processable_constants ||= T.let(
             T::Set[Module].new.compare_by_identity.merge(gather_constants),
@@ -46,12 +46,12 @@ module Tapioca
           )
         end
 
-        sig { params(constants: T::Array[Module]).void }
+        #: (Array[Module] constants) -> void
         def requested_constants=(constants)
           @@requested_constants = constants # rubocop:disable Style/ClassVars
         end
 
-        sig { void }
+        #: -> void
         def reset_state
           @processable_constants = nil
           @all_classes = nil
@@ -60,11 +60,7 @@ module Tapioca
 
         private
 
-        sig do
-          type_parameters(:U)
-            .params(klass: T.all(T::Class[T.anything], T.type_parameter(:U)))
-            .returns(T::Array[T.type_parameter(:U)])
-        end
+        #: [U] ((Class[top] & U) klass) -> Array[U]
         def descendants_of(klass)
           if @@requested_constants.any?
             T.cast(
@@ -78,7 +74,7 @@ module Tapioca
           end
         end
 
-        sig { returns(T::Enumerable[T::Class[T.anything]]) }
+        #: -> T::Enumerable[Class[top]]
         def all_classes
           @all_classes ||= T.let(
             all_modules.grep(Class).freeze,
@@ -86,7 +82,7 @@ module Tapioca
           )
         end
 
-        sig { returns(T::Enumerable[Module]) }
+        #: -> T::Enumerable[Module]
         def all_modules
           @all_modules ||= T.let(
             if @@requested_constants.any?
@@ -99,14 +95,7 @@ module Tapioca
         end
       end
 
-      sig do
-        params(
-          pipeline: Tapioca::Dsl::Pipeline,
-          root: RBI::Tree,
-          constant: ConstantType,
-          options: T::Hash[String, T.untyped],
-        ).void
-      end
+      #: (Tapioca::Dsl::Pipeline pipeline, RBI::Tree root, ConstantType constant, ?Hash[String, untyped] options) -> void
       def initialize(pipeline, root, constant, options = {})
         @pipeline = pipeline
         @root = root
@@ -115,7 +104,7 @@ module Tapioca
         @errors = T.let([], T::Array[String])
       end
 
-      sig { params(compiler_name: String).returns(T::Boolean) }
+      #: (String compiler_name) -> bool
       def compiler_enabled?(compiler_name)
         @pipeline.compiler_enabled?(compiler_name)
       end
@@ -124,7 +113,7 @@ module Tapioca
       def decorate; end
 
       # NOTE: This should eventually accept an `Error` object or `Exception` rather than simply a `String`.
-      sig { params(error: String).void }
+      #: (String error) -> void
       def add_error(error)
         @pipeline.add_error(error)
       end
@@ -132,12 +121,7 @@ module Tapioca
       private
 
       # Get the types of each parameter from a method signature
-      sig do
-        params(
-          method_def: T.any(Method, UnboundMethod),
-          signature: T.untyped, # as `T::Private::Methods::Signature` is private
-        ).returns(T::Array[String])
-      end
+      #: ((Method | UnboundMethod) method_def, untyped signature) -> Array[String]
       def parameters_types_from_signature(method_def, signature)
         params = T.let([], T::Array[String])
 
@@ -163,7 +147,7 @@ module Tapioca
         params
       end
 
-      sig { params(scope: RBI::Scope, method_def: T.any(Method, UnboundMethod), class_method: T::Boolean).void }
+      #: (RBI::Scope scope, (Method | UnboundMethod) method_def, ?class_method: bool) -> void
       def create_method_from_def(scope, method_def, class_method: false)
         scope.create_method(
           method_def.name.to_s,
@@ -173,7 +157,7 @@ module Tapioca
         )
       end
 
-      sig { params(method_def: T.any(Method, UnboundMethod)).returns(T::Array[RBI::TypedParam]) }
+      #: ((Method | UnboundMethod) method_def) -> Array[RBI::TypedParam]
       def compile_method_parameters_to_rbi(method_def)
         signature = signature_of(method_def)
         method_def = signature.nil? ? method_def : signature.method
@@ -209,7 +193,7 @@ module Tapioca
         end
       end
 
-      sig { params(method_def: T.any(Method, UnboundMethod)).returns(String) }
+      #: ((Method | UnboundMethod) method_def) -> String
       def compile_method_return_type_to_rbi(method_def)
         signature = signature_of(method_def)
         return_type = signature.nil? ? "T.untyped" : name_of_type(signature.return_type)

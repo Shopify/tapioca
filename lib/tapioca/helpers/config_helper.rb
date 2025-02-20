@@ -8,13 +8,13 @@ module Tapioca
 
     requires_ancestor { Thor }
 
-    sig { returns(String) }
+    #: String
     attr_reader :command_name
 
-    sig { returns(Thor::CoreExt::HashWithIndifferentAccess) }
+    #: Thor::CoreExt::HashWithIndifferentAccess
     attr_reader :defaults
 
-    sig { params(args: T.untyped, local_options: T.untyped, config: T.untyped).void }
+    #: (?untyped args, ?untyped local_options, ?untyped config) -> void
     def initialize(args = [], local_options = {}, config = {})
       # Store current command
       command = config[:current_command]
@@ -30,7 +30,7 @@ module Tapioca
       super
     end
 
-    sig { returns(Thor::CoreExt::HashWithIndifferentAccess) }
+    #: -> Thor::CoreExt::HashWithIndifferentAccess
     def options
       @merged_options ||= begin
         original_options = super
@@ -42,7 +42,7 @@ module Tapioca
 
     private
 
-    sig { params(options: T::Hash[Symbol, Thor::Option]).void }
+    #: (Hash[Symbol, Thor::Option] options) -> void
     def filter_defaults(options)
       options.each do |key, option|
         # Store the value of the current default in our defaults hash
@@ -52,7 +52,7 @@ module Tapioca
       end
     end
 
-    sig { params(options: Thor::CoreExt::HashWithIndifferentAccess).returns(Thor::CoreExt::HashWithIndifferentAccess) }
+    #: (Thor::CoreExt::HashWithIndifferentAccess options) -> Thor::CoreExt::HashWithIndifferentAccess
     def config_options(options)
       config_file = options[:config]
       config = {}
@@ -66,7 +66,7 @@ module Tapioca
       Thor::CoreExt::HashWithIndifferentAccess.new(config[command_name] || {})
     end
 
-    sig { params(config_file: String, config: T::Hash[T.untyped, T.untyped]).void }
+    #: (String config_file, Hash[untyped, untyped] config) -> void
     def validate_config!(config_file, config)
       # To ensure that this is not re-entered, we mark during validation
       return if @validating_config
@@ -92,13 +92,7 @@ module Tapioca
       @validating_config = false
     end
 
-    sig do
-      params(
-        command_options: T::Hash[Symbol, Thor::Option],
-        config_key: String,
-        config_options: T::Hash[T.untyped, T.untyped],
-      ).returns(T::Array[ConfigError])
-    end
+    #: (Hash[Symbol, Thor::Option] command_options, String config_key, Hash[untyped, untyped] config_options) -> Array[ConfigError]
     def validate_config_options(command_options, config_key, config_options)
       config_options.filter_map do |config_option_key, config_option_value|
         command_option = command_options[config_option_key.to_sym]
@@ -149,7 +143,7 @@ module Tapioca
       const :message_parts, T::Array[ConfigErrorMessagePart]
     end
 
-    sig { params(msg: String).returns(ConfigError) }
+    #: (String msg) -> ConfigError
     def build_error(msg)
       parts = msg.split(/(`[^`]+` ?)/)
 
@@ -174,7 +168,7 @@ module Tapioca
       )
     end
 
-    sig { params(config_file: String, errors: T::Array[ConfigError]).returns(String) }
+    #: (String config_file, Array[ConfigError] errors) -> String
     def build_error_message(config_file, errors)
       error_messages = errors.map do |error|
         "- " + error.message_parts.map do |part|
@@ -189,10 +183,7 @@ module Tapioca
       ERROR
     end
 
-    sig do
-      params(options: T.nilable(Thor::CoreExt::HashWithIndifferentAccess))
-        .returns(Thor::CoreExt::HashWithIndifferentAccess)
-    end
+    #: (*Thor::CoreExt::HashWithIndifferentAccess? options) -> Thor::CoreExt::HashWithIndifferentAccess
     def merge_options(*options)
       merged = options.each_with_object({}) do |option, result|
         result.merge!(option || {}) do |_, this_val, other_val|

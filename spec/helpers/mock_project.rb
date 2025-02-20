@@ -13,7 +13,7 @@ module Tapioca
     TAPIOCA_PATH = T.let((Pathname.new(__FILE__) / ".." / ".." / "..").to_s, String)
 
     # Add a gem requirement to this project's gemfile from a `MockGem`
-    sig { params(gem: MockGem, require: T.nilable(T.any(FalseClass, String))).void }
+    #: (MockGem gem, ?require: (FalseClass | String)?) -> void
     def require_mock_gem(gem, require: nil)
       line = gem.gemfile_line.dup
       line << ", require: #{require.inspect}" unless require.nil?
@@ -22,7 +22,7 @@ module Tapioca
     end
 
     # Add a gem requirement to this project's gemfile from a real gem
-    sig { params(name: String, version: T.nilable(String), require: T.nilable(T.any(FalseClass, String))).void }
+    #: (String name, ?String? version, ?require: (FalseClass | String)?) -> void
     def require_real_gem(name, version = nil, require: nil)
       line = +"gem \"#{name}\""
       line << ", \"#{version}\"" if version
@@ -31,14 +31,14 @@ module Tapioca
       write_gemfile!(line, append: true)
     end
 
-    sig { void }
+    #: -> void
     def require_default_gems
       require_real_gem("ostruct")
       require_real_gem("logger")
     end
 
     # Default Gemfile contents requiring only Tapioca
-    sig { returns(String) }
+    #: -> String
     def tapioca_gemfile
       <<~GEMFILE
         source("https://rubygems.org")
@@ -47,12 +47,12 @@ module Tapioca
       GEMFILE
     end
 
-    sig { returns(String) }
+    #: -> String
     def bundler_version
       @bundler_version || Bundler::VERSION
     end
 
-    sig { void }
+    #: -> void
     def reset_bundler_version
       return unless @bundler_version
 
@@ -60,11 +60,8 @@ module Tapioca
     end
 
     # Run `bundle install` in this project context (unbundled env)
-    sig do
-      override(allow_incompatible: true) # rubocop:disable Sorbet/AllowIncompatibleOverride
-        .params(version: T.nilable(String))
-        .returns(Spoom::ExecResult)
-    end
+    # @override(allow_incompatible: true)
+    #: (?version: String?) -> Spoom::ExecResult
     def bundle_install!(version: nil)
       @bundler_version = T.let(version, T.nilable(String))
 
@@ -88,11 +85,8 @@ module Tapioca
     end
 
     # Run a `command` with `bundle exec` in this project context (unbundled env)
-    sig do
-      override(allow_incompatible: true) # rubocop:disable Sorbet/AllowIncompatibleOverride
-        .params(command: String, env: T::Hash[String, String])
-        .returns(Spoom::ExecResult)
-    end
+    # @override(allow_incompatible: true)
+    #: (String command, ?Hash[String, String] env) -> Spoom::ExecResult
     def bundle_exec(command, env = {})
       opts = {}
       opts[:chdir] = absolute_path
@@ -103,13 +97,7 @@ module Tapioca
     end
 
     # Run a Tapioca `command` with `bundle exec` in this project context (unbundled env)
-    sig do
-      params(
-        command: String,
-        enforce_typechecking: T::Boolean,
-        exclude: T::Array[String],
-      ).returns(Spoom::ExecResult)
-    end
+    #: (String command, ?enforce_typechecking: bool, ?exclude: Array[String]) -> Spoom::ExecResult
     def tapioca(command, enforce_typechecking: true, exclude: tapioca_dependencies)
       exec_command = ["tapioca", command]
       if command.start_with?("gem")
@@ -134,7 +122,7 @@ module Tapioca
 
     private
 
-    sig { params(spec: ::Gem::Specification).returns(T::Array[::Gem::Specification]) }
+    #: (::Gem::Specification spec) -> Array[::Gem::Specification]
     def transitive_runtime_deps(spec)
       spec.runtime_dependencies.concat(
         spec.runtime_dependencies.flat_map do |dep|
@@ -143,7 +131,7 @@ module Tapioca
       )
     end
 
-    sig { returns(T::Array[String]) }
+    #: -> Array[String]
     def tapioca_dependencies
       @tapioca_dependencies ||= T.let(
         transitive_runtime_deps(::Gem.loaded_specs["tapioca"]).map(&:name).uniq,

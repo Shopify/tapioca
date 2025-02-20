@@ -10,7 +10,7 @@ module Tapioca
     module AttachedClassOf
       extend T::Sig
 
-      sig { params(singleton_class: Class).returns(T.nilable(Module)) }
+      #: (Class singleton_class) -> Module?
       def attached_class_of(singleton_class)
         result = singleton_class.attached_object
         Module === result ? result : nil

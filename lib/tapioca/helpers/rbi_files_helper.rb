@@ -9,7 +9,7 @@ module Tapioca
     requires_ancestor { Thor::Shell }
     requires_ancestor { SorbetHelper }
 
-    sig { params(index: RBI::Index, kind: String, file: String).void }
+    #: (RBI::Index index, String kind, String file) -> void
     def index_rbi(index, kind, file)
       return unless File.exist?(file)
 
@@ -21,7 +21,7 @@ module Tapioca
       say("(#{time.round(2)}s)")
     end
 
-    sig { params(index: RBI::Index, kind: String, dir: String, number_of_workers: T.nilable(Integer)).void }
+    #: (RBI::Index index, String kind, String dir, number_of_workers: Integer?) -> void
     def index_rbis(index, kind, dir, number_of_workers:)
       return unless Dir.exist?(dir) && !Dir.empty?(dir)
 
@@ -38,13 +38,7 @@ module Tapioca
       say("(#{time.round(2)}s)")
     end
 
-    sig do
-      params(
-        index: RBI::Index,
-        shim_rbi_dir: String,
-        todo_rbi_file: String,
-      ).returns(T::Hash[String, T::Array[RBI::Node]])
-    end
+    #: (RBI::Index index, shim_rbi_dir: String, todo_rbi_file: String) -> Hash[String, Array[RBI::Node]]
     def duplicated_nodes_from_index(index, shim_rbi_dir:, todo_rbi_file:)
       duplicates = {}
       say("Looking for duplicates... ")
@@ -61,7 +55,7 @@ module Tapioca
       duplicates
     end
 
-    sig { params(loc: RBI::Loc, path_prefix: T.nilable(String)).returns(String) }
+    #: (RBI::Loc loc, path_prefix: String?) -> String
     def location_to_payload_url(loc, path_prefix:)
       return loc.to_s unless path_prefix
 
@@ -73,16 +67,7 @@ module Tapioca
       url
     end
 
-    sig do
-      params(
-        command: String,
-        gem_dir: String,
-        dsl_dir: String,
-        auto_strictness: T::Boolean,
-        gems: T::Array[Gemfile::GemSpec],
-        compilers: T::Enumerable[T.class_of(Dsl::Compiler)],
-      ).void
-    end
+    #: (command: String, gem_dir: String, dsl_dir: String, auto_strictness: bool, ?gems: Array[Gemfile::GemSpec], ?compilers: T::Enumerable[singleton(Dsl::Compiler)]) -> void
     def validate_rbi_files(command:, gem_dir:, dsl_dir:, auto_strictness:, gems: [], compilers: [])
       error_url_base = Spoom::Sorbet::Errors::DEFAULT_ERROR_URL_BASE
 
@@ -151,7 +136,7 @@ module Tapioca
 
     private
 
-    sig { params(index: RBI::Index, files: T::Array[String], number_of_workers: T.nilable(Integer)).void }
+    #: (RBI::Index index, Array[String] files, number_of_workers: Integer?) -> void
     def parse_and_index_files(index, files, number_of_workers:)
       executor = Executor.new(files, number_of_workers: number_of_workers)
 
@@ -167,7 +152,7 @@ module Tapioca
       index.visit_all(trees)
     end
 
-    sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String, todo_rbi_file: String).returns(T::Boolean) }
+    #: (Array[RBI::Node] nodes, shim_rbi_dir: String, todo_rbi_file: String) -> bool
     def shims_or_todos_have_duplicates?(nodes, shim_rbi_dir:, todo_rbi_file:)
       return false if nodes.size == 1
 
@@ -212,19 +197,19 @@ module Tapioca
       true
     end
 
-    sig { params(nodes: T::Array[RBI::Node], shim_rbi_dir: String, todo_rbi_file: String).returns(T::Array[RBI::Node]) }
+    #: (Array[RBI::Node] nodes, shim_rbi_dir: String, todo_rbi_file: String) -> Array[RBI::Node]
     def extract_shims_and_todos(nodes, shim_rbi_dir:, todo_rbi_file:)
       nodes.select do |node|
         node.loc&.file&.start_with?(shim_rbi_dir) || node.loc&.file == todo_rbi_file
       end
     end
 
-    sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[RBI::Scope]) }
+    #: (Array[RBI::Node] nodes) -> Array[RBI::Scope]
     def extract_empty_scopes(nodes)
       T.cast(nodes.select { |node| node.is_a?(RBI::Scope) && node.empty? }, T::Array[RBI::Scope])
     end
 
-    sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }
+    #: (Array[RBI::Node] nodes) -> Array[(RBI::Method | RBI::Attr)]
     def extract_methods_and_attrs(nodes)
       T.cast(
         nodes.select do |node|
@@ -234,7 +219,7 @@ module Tapioca
       )
     end
 
-    sig { params(nodes: T::Array[RBI::Node]).returns(T::Array[T.any(RBI::Mixin, RBI::RequiresAncestor)]) }
+    #: (Array[RBI::Node] nodes) -> Array[(RBI::Mixin | RBI::RequiresAncestor)]
     def extract_mixins(nodes)
       T.cast(
         nodes.select do |node|
@@ -244,12 +229,12 @@ module Tapioca
       )
     end
 
-    sig { params(nodes: T::Array[T.any(RBI::Method, RBI::Attr)]).returns(T::Array[T.any(RBI::Method, RBI::Attr)]) }
+    #: (Array[(RBI::Method | RBI::Attr)] nodes) -> Array[(RBI::Method | RBI::Attr)]
     def extract_nodes_with_sigs(nodes)
       nodes.reject { |node| node.sigs.empty? }
     end
 
-    sig { params(errors: T::Array[Spoom::Sorbet::Errors::Error], gem_dir: String).void }
+    #: (Array[Spoom::Sorbet::Errors::Error] errors, String gem_dir) -> void
     def update_gem_rbis_strictnesses(errors, gem_dir)
       files = []
 
@@ -276,7 +261,7 @@ module Tapioca
       say("\n")
     end
 
-    sig { params(path: String).returns(String) }
+    #: (String path) -> String
     def gem_name_from_rbi_path(path)
       T.must(File.basename(path, ".rbi").split("@").first)
     end

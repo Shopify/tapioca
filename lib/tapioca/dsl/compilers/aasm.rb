@@ -82,7 +82,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.all(T::Class[::AASM], ::AASM::ClassMethods) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           state_machine_store = ::AASM::StateMachineStore.fetch(constant)
           return unless state_machine_store
@@ -214,7 +215,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             T.cast(ObjectSpace.each_object(::AASM::ClassMethods), T::Enumerable[Module])
           end

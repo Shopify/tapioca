@@ -13,7 +13,7 @@ module RubyLsp
       attr_reader :stderr
       attr_reader :status
 
-      sig { params(project_path: String).void }
+      #: (String project_path) -> void
       def initialize(project_path)
         @project_path = project_path
         @stdout = T.let("", String)
@@ -21,7 +21,7 @@ module RubyLsp
         @status = T.let(nil, T.nilable(Process::Status))
       end
 
-      sig { void }
+      #: -> void
       def run
         return log_message("Not a git repository") unless git_repo?
 
@@ -36,35 +36,35 @@ module RubyLsp
 
       attr_reader :project_path
 
-      sig { returns(T.nilable(T::Boolean)) }
+      #: -> bool?
       def git_repo?
         _, status = Open3.capture2e("git", "rev-parse", "--is-inside-work-tree", chdir: project_path)
         status.success?
       end
 
-      sig { returns(T::Boolean) }
+      #: -> bool
       def lockfile_changed?
         !lockfile_diff.empty?
       end
 
-      sig { returns(Pathname) }
+      #: -> Pathname
       def lockfile
         @lockfile ||= T.let(Pathname(project_path).join("Gemfile.lock"), T.nilable(Pathname))
       end
 
-      sig { returns(String) }
+      #: -> String
       def lockfile_diff
         @lockfile_diff ||= T.let(read_lockfile_diff, T.nilable(String))
       end
 
-      sig { returns(String) }
+      #: -> String
       def read_lockfile_diff
         return "" unless lockfile.exist?
 
         execute_in_project_path("git", "diff", lockfile.to_s).strip
       end
 
-      sig { void }
+      #: -> void
       def generate_gem_rbis
         parser = Tapioca::LockfileDiffParser.new(@lockfile_diff)
         removed_gems = parser.removed_gems
@@ -78,7 +78,7 @@ module RubyLsp
         end
       end
 
-      sig { params(gems: T::Array[String]).void }
+      #: (Array[String] gems) -> void
       def execute_tapioca_gem_command(gems)
         Bundler.with_unbundled_env do
           stdout, stderr, status = T.unsafe(Open3).capture3(
@@ -97,7 +97,7 @@ module RubyLsp
         end
       end
 
-      sig { params(gems: T::Array[String]).void }
+      #: (Array[String] gems) -> void
       def remove_rbis(gems)
         files = Dir.glob(
           "sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi",
@@ -106,7 +106,7 @@ module RubyLsp
         delete_files(files, "Removed RBIs for")
       end
 
-      sig { void }
+      #: -> void
       def cleanup_orphaned_rbis
         untracked_files = git_ls_gem_rbis("--others", "--exclude-standard")
         deleted_files = git_ls_gem_rbis("--deleted")
@@ -115,7 +115,7 @@ module RubyLsp
         restore_files(deleted_files, "Restored deleted RBIs")
       end
 
-      sig { params(flags: T.untyped).returns(T::Array[String]) }
+      #: (*untyped flags) -> Array[String]
       def git_ls_gem_rbis(*flags)
         flags = T.unsafe(["git", "ls-files", *flags, "sorbet/rbi/gems/"])
 
@@ -124,20 +124,20 @@ module RubyLsp
           .map(&:strip)
       end
 
-      sig { params(files: T::Array[String], message: String).void }
+      #: (Array[String] files, String message) -> void
       def delete_files(files, message)
         files_to_remove = files.map { |file| File.join(project_path, file) }
         FileUtils.rm(files_to_remove)
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
-      sig { params(files: T::Array[String], message: String).void }
+      #: (Array[String] files, String message) -> void
       def restore_files(files, message)
         execute_in_project_path("git", "checkout", "--pathspec-from-file=-", stdin: files.join("\n"))
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
 
-      sig { params(message: String).void }
+      #: (String message) -> void
       def log_message(message)
         @stdout += "#{message}\n"
       end

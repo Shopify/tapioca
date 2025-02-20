@@ -9,14 +9,7 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig do
-          params(
-            tapioca_path: String,
-            eager_load: T::Boolean,
-            app_root: String,
-            halt_upon_load_error: T::Boolean,
-          ).void
-        end
+        #: (tapioca_path: String, ?eager_load: bool, ?app_root: String, ?halt_upon_load_error: bool) -> void
         def load_application(
           tapioca_path:,
           eager_load: true,
@@ -32,20 +25,21 @@ module Tapioca
         end
       end
 
-      sig { override.void }
+      # @override
+      #: -> void
       def load
         load_dsl_extensions
         load_application
         load_dsl_compilers
       end
 
-      sig { void }
+      #: -> void
       def load_dsl_extensions_and_compilers
         load_dsl_extensions
         load_dsl_compilers
       end
 
-      sig { void }
+      #: -> void
       def reload_custom_compilers
         # Remove all loaded custom compilers
         ::Tapioca::Dsl::Compiler.descendants.each do |compiler|
@@ -68,9 +62,7 @@ module Tapioca
 
       protected
 
-      sig do
-        params(tapioca_path: String, eager_load: T::Boolean, app_root: String, halt_upon_load_error: T::Boolean).void
-      end
+      #: (tapioca_path: String, ?eager_load: bool, ?app_root: String, ?halt_upon_load_error: bool) -> void
       def initialize(tapioca_path:, eager_load: true, app_root: ".", halt_upon_load_error: true)
         super()
 
@@ -81,7 +73,7 @@ module Tapioca
         @custom_compiler_paths = T.let([], T::Array[String])
       end
 
-      sig { void }
+      #: -> void
       def load_dsl_extensions
         say("Loading DSL extension classes... ")
 
@@ -96,7 +88,7 @@ module Tapioca
         say("Done", :green)
       end
 
-      sig { void }
+      #: -> void
       def load_dsl_compilers
         say("Loading DSL compiler classes... ")
 
@@ -116,7 +108,7 @@ module Tapioca
         say("Done", :green)
       end
 
-      sig { void }
+      #: -> void
       def load_application
         say("Loading Rails application... ")
 
@@ -132,7 +124,7 @@ module Tapioca
 
       private
 
-      sig { void }
+      #: -> void
       def load_custom_dsl_compilers
         @custom_compiler_paths = Dir.glob([
           "#{@tapioca_path}/generators/**/*.rb", # TODO: Here for backcompat, remove later

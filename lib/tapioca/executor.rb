@@ -7,7 +7,7 @@ module Tapioca
 
     MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
 
-    sig { params(queue: T::Array[T.untyped], number_of_workers: T.nilable(Integer)).void }
+    #: (Array[untyped] queue, ?number_of_workers: Integer?) -> void
     def initialize(queue, number_of_workers: nil)
       @queue = queue
 
@@ -20,11 +20,7 @@ module Tapioca
       )
     end
 
-    sig do
-      type_parameters(:T).params(
-        block: T.proc.params(item: T.untyped).returns(T.type_parameter(:T)),
-      ).returns(T::Array[T.type_parameter(:T)])
-    end
+    #: [T] { (untyped item) -> T } -> Array[T]
     def run_in_parallel(&block)
       # To have the parallel gem run jobs in the parent process, you must pass 0 as the number of processes
       number_of_processes = @number_of_workers == 1 ? 0 : @number_of_workers
@@ -33,7 +29,7 @@ module Tapioca
 
     private
 
-    sig { returns(Integer) }
+    #: -> Integer
     def max_processors
       env_max_processors = ENV["PARALLEL_PROCESSOR_COUNT"].to_i
       env_max_processors.positive? ? env_max_processors : Etc.nprocessors

@@ -17,12 +17,7 @@ module Tapioca
         4. Manually create an RBI shim defining the missing constants
       DEPRECATION
 
-      sig do
-        params(
-          todo_file: String,
-          file_header: T::Boolean,
-        ).void
-      end
+      #: (todo_file: String, file_header: bool) -> void
       def initialize(todo_file:, file_header:)
         @todo_file = todo_file
         @file_header = file_header
@@ -30,7 +25,7 @@ module Tapioca
         super()
       end
 
-      sig { void }
+      #: -> void
       def run_with_deprecation
         say(DEPRECATION_MESSAGE, :red)
         say("")
@@ -40,7 +35,8 @@ module Tapioca
 
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         say("Finding all unresolved constants, this may take a few seconds... ")
 
@@ -64,7 +60,7 @@ module Tapioca
         say("Please review changes and commit them.", [:green, :bold])
       end
 
-      sig { params(constants: T::Array[String], command: String).returns(RBI::File) }
+      #: (Array[String] constants, command: String) -> RBI::File
       def rbi(constants, command:)
         file = RBI::File.new
 
@@ -84,7 +80,7 @@ module Tapioca
         file
       end
 
-      sig { returns(T::Array[String]) }
+      #: -> Array[String]
       def unresolved_constants
         # Taken from https://github.com/sorbet/sorbet/blob/master/gems/sorbet/lib/todo-rbi.rb
         sorbet("--print=missing-constants", "--quiet", "--stdout-hup-hack", "--no-error-count")

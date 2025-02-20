@@ -22,16 +22,12 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig do
-            type_parameters(:Result)
-              .params(block: T.proc.returns(T.type_parameter(:Result)))
-              .returns(T.type_parameter(:Result))
-          end
+          #: [Result] { -> Result } -> Result
           def with_disabled_registration(&block)
             with_disabled_tracker(&block)
           end
 
-          sig { params(constant: Module, mixin: Module, mixin_type: Type).void }
+          #: (Module constant, Module mixin, Type mixin_type) -> void
           def register(constant, mixin, mixin_type)
             return unless enabled?
 
@@ -52,19 +48,19 @@ module Tapioca
             attached_class
           end
 
-          sig { params(mixin: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
+          #: (Module mixin) -> Hash[Type, Hash[Module, String]]
           def constants_with_mixin(mixin)
             find_or_initialize_mixin_lookup(mixin)
           end
 
-          sig { params(mixin: Module, mixin_type: Type, constant: Module).returns(T.nilable(String)) }
+          #: (Module mixin, Type mixin_type, Module constant) -> String?
           def mixin_location(mixin, mixin_type, constant)
             find_or_initialize_mixin_lookup(mixin).dig(mixin_type, constant)
           end
 
           private
 
-          sig { params(constant: Module, mixin: Module, mixin_type: Type, location: String).void }
+          #: (Module constant, Module mixin, Type mixin_type, String location) -> void
           def register_with_location(constant, mixin, mixin_type, location)
             return unless @enabled
 
@@ -72,7 +68,7 @@ module Tapioca
             constants.fetch(mixin_type).store(constant, location)
           end
 
-          sig { params(mixin: Module).returns(T::Hash[Type, T::Hash[Module, String]]) }
+          #: (Module mixin) -> Hash[Type, Hash[Module, String]]
           def find_or_initialize_mixin_lookup(mixin)
             @mixins_to_constants[mixin] ||= {
               Type::Prepend => {}.compare_by_identity,

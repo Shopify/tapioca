@@ -4,13 +4,7 @@
 module Tapioca
   module Commands
     class Configure < CommandWithoutTracker
-      sig do
-        params(
-          sorbet_config: String,
-          tapioca_config: String,
-          default_postrequire: String,
-        ).void
-      end
+      #: (sorbet_config: String, tapioca_config: String, default_postrequire: String) -> void
       def initialize(
         sorbet_config:,
         tapioca_config:,
@@ -28,7 +22,8 @@ module Tapioca
 
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         create_sorbet_config
         create_tapioca_config
@@ -36,7 +31,7 @@ module Tapioca
         create_binstub
       end
 
-      sig { void }
+      #: -> void
       def create_sorbet_config
         create_file(@sorbet_config, <<~CONTENT, skip: true, force: false)
           --dir
@@ -46,7 +41,7 @@ module Tapioca
         CONTENT
       end
 
-      sig { void }
+      #: -> void
       def create_tapioca_config
         create_file(@tapioca_config, <<~YAML, skip: true, force: false)
           gem:
@@ -65,7 +60,7 @@ module Tapioca
         YAML
       end
 
-      sig { void }
+      #: -> void
       def create_post_require
         create_file(@default_postrequire, <<~CONTENT, skip: true, force: false)
           # typed: true
@@ -75,7 +70,7 @@ module Tapioca
         CONTENT
       end
 
-      sig { void }
+      #: -> void
       def create_binstub
         force = File.exist?(Tapioca::BINARY_FILE)
 
@@ -88,12 +83,12 @@ module Tapioca
         )
       end
 
-      sig { returns(Bundler::Installer) }
+      #: -> Bundler::Installer
       def installer
         @installer ||= Bundler::Installer.new(Bundler.root, Bundler.definition)
       end
 
-      sig { returns(T.any(Bundler::StubSpecification, ::Gem::Specification)) }
+      #: -> (Bundler::StubSpecification | ::Gem::Specification)
       def spec
         @spec ||= Bundler.definition.specs.find { |s| s.name == "tapioca" }
       end

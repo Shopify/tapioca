@@ -54,7 +54,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return if constant.defined_enums.empty?
 
@@ -77,7 +78,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base)
           end
@@ -85,7 +87,7 @@ module Tapioca
 
         private
 
-        sig { params(enum_map: T::Hash[T.untyped, T.untyped]).returns(String) }
+        #: (Hash[untyped, untyped] enum_map) -> String
         def type_for_enum(enum_map)
           value_type = enum_map.values.map { |v| v.class.name }.uniq
           value_type = if value_type.length == 1
@@ -97,7 +99,7 @@ module Tapioca
           "T::Hash[T.any(String, Symbol), #{value_type}]"
         end
 
-        sig { params(klass: RBI::Scope).void }
+        #: (RBI::Scope klass) -> void
         def generate_instance_methods(klass)
           methods = constant.send(:_enum_methods_module).instance_methods
 

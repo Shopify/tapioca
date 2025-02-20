@@ -10,7 +10,7 @@ module Tapioca
 
           # Returns the type indicated by the custom ActiveModel::Type::Value.
           # Accepts subclasses of ActiveModel::Type::Value as well as classes that implement similar methods.
-          sig { params(type_value: T.untyped).returns(String) }
+          #: (untyped type_value) -> String
           def type_for(type_value)
             return "T.untyped" if Runtime::GenericTypeRegistry.generic_type_instance?(type_value)
 
@@ -23,7 +23,7 @@ module Tapioca
             type.to_s
           end
 
-          sig { params(type_value: T.untyped).returns(T::Boolean) }
+          #: (untyped type_value) -> bool
           def assume_nilable?(type_value)
             !type_value.respond_to?(:__tapioca_type)
           end
@@ -40,17 +40,17 @@ module Tapioca
             T::Array[Object],
           )
 
-          sig { params(type: T.untyped).returns(T::Boolean) }
+          #: (untyped type) -> bool
           def meaningful_type?(type)
             !MEANINGLESS_TYPES.include?(type)
           end
 
-          sig { params(obj: T.untyped).returns(T.nilable(T::Types::Base)) }
+          #: (untyped obj) -> T::Types::Base?
           def lookup_tapioca_type(obj)
             T::Utils.coerce(obj.__tapioca_type) if obj.respond_to?(:__tapioca_type)
           end
 
-          sig { params(obj: T.untyped, method: Symbol).returns(T.nilable(T::Types::Base)) }
+          #: (untyped obj, Symbol method) -> T::Types::Base?
           def lookup_return_type_of_method(obj, method)
             return_type = lookup_signature_of_method(obj, method)&.return_type
             return unless return_type && meaningful_type?(return_type)
@@ -58,7 +58,7 @@ module Tapioca
             return_type
           end
 
-          sig { params(obj: T.untyped, method: Symbol).returns(T.nilable(T::Types::Base)) }
+          #: (untyped obj, Symbol method) -> T::Types::Base?
           def lookup_arg_type_of_method(obj, method)
             # Arg types is an array of [name, type] entries, so we dig into first entry (index 0)
             # and then into the type which is the last element (index 1)
@@ -68,7 +68,7 @@ module Tapioca
             first_arg_type
           end
 
-          sig { params(obj: T.untyped, method: Symbol).returns(T.untyped) }
+          #: (untyped obj, Symbol method) -> untyped
           def lookup_signature_of_method(obj, method)
             Runtime::Reflection.signature_of(obj.method(method))
           rescue NameError

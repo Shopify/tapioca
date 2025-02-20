@@ -11,7 +11,7 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig { params(json_string: String).returns(T::Set[String]) }
+        #: (String json_string) -> Set[String]
         def parse_json(json_string)
           obj = JSON.parse(json_string)
 
@@ -23,16 +23,16 @@ module Tapioca
         end
       end
 
-      sig { returns(T::Set[String]) }
+      #: Set[String]
       attr_reader :symbols
 
-      sig { void }
+      #: -> void
       def initialize
         @symbols = T.let(Set.new, T::Set[String])
         @parents = T.let([], T::Array[String])
       end
 
-      sig { params(object: T::Hash[String, T.untyped]).void }
+      #: (Hash[String, untyped] object) -> void
       def parse_object(object)
         children = object.fetch("children", [])
 
@@ -61,7 +61,7 @@ module Tapioca
         end
       end
 
-      sig { params(name: String).returns(String) }
+      #: (String name) -> String
       def fully_qualified_name(name)
         [*@parents, name].join("::")
       end

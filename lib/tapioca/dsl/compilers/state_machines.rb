@@ -114,7 +114,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.all(Module, ::StateMachines::ClassMethods) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return if constant.state_machines.empty?
 
@@ -157,7 +158,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_classes.select { |mod| ::StateMachines::InstanceMethods > mod }
           end
@@ -165,7 +167,7 @@ module Tapioca
 
         private
 
-        sig { params(machine: ::StateMachines::Machine).returns(String) }
+        #: (::StateMachines::Machine machine) -> String
         def state_type_for(machine)
           value_types = machine.states.map { |state| state.value.class.name }.uniq
 
@@ -176,7 +178,7 @@ module Tapioca
           end
         end
 
-        sig { params(instance_module: RBI::Module).void }
+        #: (RBI::Module instance_module) -> void
         def define_activerecord_methods(instance_module)
           instance_module.create_method(
             "changed_for_autosave?",
@@ -184,7 +186,7 @@ module Tapioca
           )
         end
 
-        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
+        #: (RBI::Module instance_module, ::StateMachines::Machine machine) -> void
         def define_state_methods(instance_module, machine)
           machine.states.each do |state|
             instance_module.create_method(
@@ -194,7 +196,7 @@ module Tapioca
           end
         end
 
-        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
+        #: (RBI::Module instance_module, ::StateMachines::Machine machine) -> void
         def define_event_methods(instance_module, machine)
           machine.events.each do |event|
             instance_module.create_method(
@@ -219,13 +221,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            instance_module: RBI::Module,
-            machine: ::StateMachines::Machine,
-            state_type: String,
-          ).void
-        end
+        #: (RBI::Module instance_module, ::StateMachines::Machine machine, String state_type) -> void
         def define_state_accessor(instance_module, machine, state_type)
           attribute = machine.attribute.to_s
           instance_module.create_method(
@@ -239,7 +235,7 @@ module Tapioca
           ) if ::StateMachines::HelperModule === machine.owner_class.instance_method("#{attribute}=").owner
         end
 
-        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
+        #: (RBI::Module instance_module, ::StateMachines::Machine machine) -> void
         def define_state_predicate(instance_module, machine)
           instance_module.create_method(
             "#{machine.name}?",
@@ -248,7 +244,7 @@ module Tapioca
           )
         end
 
-        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
+        #: (RBI::Module instance_module, ::StateMachines::Machine machine) -> void
         def define_event_helpers(instance_module, machine)
           events_attribute = machine.attribute(:events).to_s
           transitions_attribute = machine.attribute(:transitions).to_s
@@ -295,7 +291,7 @@ module Tapioca
           end
         end
 
-        sig { params(instance_module: RBI::Module, machine: ::StateMachines::Machine).void }
+        #: (RBI::Module instance_module, ::StateMachines::Machine machine) -> void
         def define_path_helpers(instance_module, machine)
           paths_attribute = machine.attribute(:paths).to_s
 
@@ -306,13 +302,7 @@ module Tapioca
           )
         end
 
-        sig do
-          params(
-            instance_module: RBI::Module,
-            class_module: RBI::Module,
-            machine: ::StateMachines::Machine,
-          ).void
-        end
+        #: (RBI::Module instance_module, RBI::Module class_module, ::StateMachines::Machine machine) -> void
         def define_name_helpers(instance_module, class_module, machine)
           name_attribute = machine.attribute(:name).to_s
           event_name_attribute = machine.attribute(:event_name).to_s
@@ -337,7 +327,7 @@ module Tapioca
           )
         end
 
-        sig { params(class_module: RBI::Module, machine: ::StateMachines::Machine).void }
+        #: (RBI::Module class_module, ::StateMachines::Machine machine) -> void
         def define_scopes(class_module, machine)
           helper_modules = machine.instance_variable_get(:@helper_modules)
           class_methods = helper_modules[:class].instance_methods(false)

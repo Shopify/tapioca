@@ -43,7 +43,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::Rails::Generators::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           base_class = base_class_of_constant
           arguments = constant.arguments - base_class.arguments
@@ -62,7 +63,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_classes.select do |const|
               name = qualified_name_of(const)
@@ -76,7 +78,7 @@ module Tapioca
 
         private
 
-        sig { params(klass: RBI::Tree, argument: T.any(Thor::Argument, Thor::Option)).void }
+        #: (RBI::Tree klass, (Thor::Argument | Thor::Option) argument) -> void
         def generate_methods_for_argument(klass, argument)
           klass.create_method(
             argument.name,
@@ -85,7 +87,7 @@ module Tapioca
           )
         end
 
-        sig { returns(T.class_of(::Rails::Generators::Base)) }
+        #: -> singleton(::Rails::Generators::Base)
         def base_class_of_constant
           ancestor = inherited_ancestors_of(constant).find do |klass|
             qualified_name_of(klass)&.match?(BUILT_IN_MATCHER)
@@ -94,7 +96,7 @@ module Tapioca
           T.cast(ancestor, T.class_of(::Rails::Generators::Base))
         end
 
-        sig { params(arg: T.any(Thor::Argument, Thor::Option)).returns(String) }
+        #: ((Thor::Argument | Thor::Option) arg) -> String
         def type_for(arg)
           type =
             case arg.type

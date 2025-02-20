@@ -70,7 +70,8 @@ module Tapioca
           { fixed: T.all(T::Class[::Kredis::Attributes], ::Kredis::Attributes::ClassMethods, Extensions::Kredis) }
         end
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return if constant.__tapioca_kredis_types.nil?
 
@@ -89,7 +90,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_classes
               .grep(::Kredis::Attributes::ClassMethods)
@@ -99,7 +101,7 @@ module Tapioca
 
         private
 
-        sig { params(mod: RBI::Scope, method: String, data: T::Hash[Symbol, T.untyped]).void }
+        #: (RBI::Scope mod, String method, Hash[Symbol, untyped] data) -> void
         def generate_methods(mod, method, data)
           return_type = data.fetch(:type)
           case return_type
@@ -114,7 +116,7 @@ module Tapioca
           mod.create_method(method, return_type: return_type)
         end
 
-        sig { params(mod: RBI::Scope, klass_name: String, values: T::Array[T.untyped]).void }
+        #: (RBI::Scope mod, String klass_name, Array[untyped] values) -> void
         def create_enum_class(mod, klass_name, values)
           klass = mod.create_class(klass_name, superclass_name: "Kredis::Types::Enum")
           values.each do |value|

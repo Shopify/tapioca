@@ -12,14 +12,14 @@ module Tapioca
     # Spec lifecycle
 
     # TODO: Replace with `before(:all)` once Sorbet understands it
-    sig { params(args: T.untyped).void }
+    #: (*untyped args) -> void
     def initialize(*args)
       super(*T.unsafe(args))
       @project = T.let(mock_project, MockProject)
     end
 
     # TODO: Remove this `before(:all)` once Sorbet understands `after(:all)` or instance variables access after a bind
-    sig { returns(MockProject) }
+    #: MockProject
     attr_reader :project
 
     after(:all) do
@@ -38,12 +38,7 @@ module Tapioca
     #
     # assert(@project.file?("lib/foo.rb"))
     # ~~~
-    sig do
-      params(
-        sorbet_dependency: T::Boolean,
-        block: T.nilable(T.proc.params(gem: MockProject).bind(MockProject).void),
-      ).returns(MockProject)
-    end
+    #: (?sorbet_dependency: bool) ?{ (MockProject gem) [self: MockProject] -> void } -> MockProject
     def mock_project(sorbet_dependency: true, &block)
       project = MockProject.new("#{TEST_TMP_PATH}/#{spec_name}/project")
       project.write_gemfile!(project.tapioca_gemfile)
@@ -67,15 +62,7 @@ module Tapioca
     #
     # assert(@gem.file?("lib/foo.rb"))
     # ~~~
-    sig do
-      params(
-        name: String,
-        version: String,
-        dependencies: T::Array[String],
-        path: String,
-        block: T.nilable(T.proc.params(gem: MockGem).bind(MockGem).void),
-      ).returns(MockGem)
-    end
+    #: (String name, String version, ?dependencies: Array[String], ?path: String) ?{ (MockGem gem) [self: MockGem] -> void } -> MockGem
     def mock_gem(name, version, dependencies: [], path: default_gem_path(name), &block)
       gem = MockGem.new(path, name, version, dependencies)
       gem.mkdir!
@@ -87,69 +74,69 @@ module Tapioca
     # Spec assertions
 
     # Assert that the contents of `path` inside `@project` is equals to `expected`
-    sig { params(path: String, expected: String).void }
+    #: (String path, String expected) -> void
     def assert_project_file_equal(path, expected)
       assert_equal(expected, @project.read(path))
     end
 
     # Assert that the contents of `path` inside `@project` includes `expected`
-    sig { params(path: String, expected: String).void }
+    #: (String path, String expected) -> void
     def assert_project_file_includes(path, expected)
       assert_includes(@project.read(path), expected)
     end
 
     # Assert that `path` exists inside `@project`
-    sig { params(path: String).void }
+    #: (String path) -> void
     def assert_project_file_exist(path)
       assert(@project.file?(path))
     end
 
     # Assert that `path` exists inside project.
     # `Path` can include patterns such as `*`, useful for testing RBIs for real gems
-    sig { params(path: String).void }
+    #: (String path) -> void
     def assert_project_file_match(path)
       assert(@project.glob(path).any?)
     end
 
     # Refute that `path` exists inside `@project`
-    sig { params(path: String).void }
+    #: (String path) -> void
     def refute_project_file_exist(path)
       refute(@project.file?(path))
     end
 
     # Refute that `path` exists inside `@project`
     # `Path` can include patterns such as `*`, useful for testing RBIs for real gems
-    sig { params(path: String).void }
+    #: (String path) -> void
     def refute_project_file_match(path)
       refute(@project.glob(path).any?)
     end
 
-    sig { params(strictness: String, file: String).void }
+    #: (String strictness, String file) -> void
     def assert_file_strictness(strictness, file)
       assert_equal(strictness, Spoom::Sorbet::Sigils.file_strictness(@project.absolute_path_to(file)))
     end
 
-    sig { params(result: Spoom::ExecResult).void }
+    #: (Spoom::ExecResult result) -> void
     def assert_empty_stdout(result)
       assert_empty(result.out, result.to_s)
     end
 
-    sig { params(result: Spoom::ExecResult).void }
+    #: (Spoom::ExecResult result) -> void
     def assert_empty_stderr(result)
       assert_empty(result.err, result.to_s)
     end
 
-    sig { params(result: Spoom::ExecResult).void }
+    #: (Spoom::ExecResult result) -> void
     def assert_success_status(result)
       assert(result.status, result.to_s)
     end
 
-    sig { params(result: Spoom::ExecResult).void }
+    #: (Spoom::ExecResult result) -> void
     def refute_success_status(result)
       refute(result.status, result.to_s)
     end
 
-    sig { params(text: String, result: Spoom::ExecResult).void }
+    #: (String text, Spoom::ExecResult result) -> void
     def assert_stdout_equals(text, result)
       if ENV["TAPIOCA_ASSERTIONS_UPDATE"] && (text != result.out)
         SpecWithProject.assertion_update(:assert_stdout_equals, result.out)
@@ -158,7 +145,7 @@ module Tapioca
       assert_equal(text, result.out, result.to_s)
     end
 
-    sig { params(text: String, result: Spoom::ExecResult).void }
+    #: (String text, Spoom::ExecResult result) -> void
     def assert_stderr_equals(text, result)
       if ENV["TAPIOCA_ASSERTIONS_UPDATE"] && (text != result.err)
         SpecWithProject.assertion_update(:assert_stderr_equals, result.err || "")
@@ -183,10 +170,10 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig { returns(T::Hash[String, T::Array[[Integer, Symbol, String]]]) }
+        #: Hash[String, Array[[Integer, Symbol, String]]]
         attr_reader :assertion_updates
 
-        sig { params(type: Symbol, actual: String).void }
+        #: (Symbol type, String actual) -> void
         def assertion_update(type, actual)
           location = caller_locations.find { |caller_location| caller_location.path&.end_with?("_spec.rb") }
           absolute_path = location&.absolute_path
@@ -222,34 +209,34 @@ module Tapioca
       end
     end
 
-    sig { params(result: Spoom::ExecResult, snippet: String).void }
+    #: (Spoom::ExecResult result, String snippet) -> void
     def assert_stdout_includes(result, snippet)
       assert_includes(result.out, snippet, result.to_s)
     end
 
-    sig { params(result: Spoom::ExecResult, pattern: Regexp).void }
+    #: (Spoom::ExecResult result, Regexp pattern) -> void
     def assert_stdout_includes_pattern(result, pattern)
       assert_match(pattern, result.out.to_s, result.to_s)
     end
 
-    sig { params(result: Spoom::ExecResult, snippet: String).void }
+    #: (Spoom::ExecResult result, String snippet) -> void
     def assert_stderr_includes(result, snippet)
       assert_includes(result.err, snippet, result.to_s)
     end
 
-    sig { params(result: Spoom::ExecResult, pattern: Regexp).void }
+    #: (Spoom::ExecResult result, Regexp pattern) -> void
     def assert_stderr_includes_pattern(result, pattern)
       assert_match(pattern, result.err.to_s, result.to_s)
     end
 
     private
 
-    sig { params(name: String).returns(String) }
+    #: (String name) -> String
     def default_gem_path(name)
       "#{TEST_TMP_PATH}/#{spec_name}/gems/#{name}"
     end
 
-    sig { returns(String) }
+    #: -> String
     def spec_name
       spec_class = T.unsafe(self).class
       spec_class = spec_class.superclass while spec_class.superclass != SpecWithProject

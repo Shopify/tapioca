@@ -69,7 +69,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.all(T.class_of(ActiveRecord::Base), Extensions::ActiveRecord) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return if constant.__tapioca_delegated_types.nil?
 
@@ -90,7 +91,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
           end
@@ -98,7 +100,7 @@ module Tapioca
 
         private
 
-        sig { params(mod: RBI::Scope, role: Symbol, types: T::Array[String]).void }
+        #: (RBI::Scope mod, Symbol role, Array[String] types) -> void
         def populate_role_accessors(mod, role, types)
           mod.create_method(
             "#{role}_name",
@@ -119,14 +121,14 @@ module Tapioca
           )
         end
 
-        sig { params(mod: RBI::Scope, role: Symbol, types: T::Array[String], options: T::Hash[Symbol, T.untyped]).void }
+        #: (RBI::Scope mod, Symbol role, Array[String] types, Hash[Symbol, untyped] options) -> void
         def populate_type_helpers(mod, role, types, options)
           types.each do |type|
             populate_type_helper(mod, role, type, options)
           end
         end
 
-        sig { params(mod: RBI::Scope, role: Symbol, type: String, options: T::Hash[Symbol, T.untyped]).void }
+        #: (RBI::Scope mod, Symbol role, String type, Hash[Symbol, untyped] options) -> void
         def populate_type_helper(mod, role, type, options)
           singular   = type.tableize.tr("/", "_").singularize
           query      = "#{singular}?"
