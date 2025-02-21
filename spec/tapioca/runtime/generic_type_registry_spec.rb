@@ -71,6 +71,17 @@ module Tapioca
             refute_same(result, RaisesInInheritedCallback)
             assert_operator(result, :<, RaisesInInheritedCallback)
           end
+
+          it "works for classes that specify a 'loose' sig on .inherited" do
+            # By "loose", we mean `T::Class[T.anything]` instead of `T::Class[SampleGenericClass[T.anything]]`
+            _ = HasNonRecursiveInheritedSig[Object]
+          end
+
+          it "works for classes whose .inherited sig reference the generic type itself" do
+            # Our swizzled implementation of the `.inherited` method needs to be carefully implemented to not fall into
+            # infinite recursion when the sig for the method references the class that it's defined on.
+            _ = HasRecursiveInheritedSig[Object]
+          end
         end
       end
 
@@ -89,6 +100,37 @@ module Tapioca
           def inherited(subclass)
             super
             raise "Boom"
+          end
+        end
+      end
+
+      class HasNonRecursiveInheritedSig
+        extend T::Generic
+
+        Element = type_member
+
+        class << self
+          extend T::Sig
+
+          sig { params(subclass: T::Class[T.anything]).void }
+          def inherited(subclass)
+            super
+          end
+        end
+      end
+
+      class HasRecursiveInheritedSig
+        extend T::Generic
+
+        Element = type_member
+
+        class << self
+          extend T::Sig
+
+          # This sig references an instantiation of this class itself.
+          sig { params(subclass: T::Class[HasRecursiveInheritedSig[T.anything]]).void }
+          def inherited(subclass)
+            super
           end
         end
       end
