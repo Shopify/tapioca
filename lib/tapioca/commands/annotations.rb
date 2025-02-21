@@ -132,7 +132,7 @@ module Tapioca
         fetched_gems.keys.map(&:name).sort
       end
 
-      sig { params(repo_uris: T::Array[String], gem_info: GemInfo).void }
+      sig { params(repo_uris: T::Array[String], gem_info: GemInfo).returns(T::Boolean) }
       def fetch_annotation(repo_uris, gem_info)
         gem_name = gem_info.name
         gem_version = gem_info.version
@@ -142,7 +142,7 @@ module Tapioca
         end
 
         content = merge_files(gem_name, contents.compact)
-        return unless content
+        return false unless content
 
         content = apply_typed_override(gem_name, content)
         content = filter_versions(gem_version, content)
@@ -150,6 +150,7 @@ module Tapioca
 
         say("\n  Fetched #{set_color(gem_name, :yellow, :bold)}", :green)
         create_file(@outpath.join("#{gem_name}.rbi"), content)
+        true
       end
 
       sig { params(repo_uri: String, path: String).returns(T.nilable(String)) }
