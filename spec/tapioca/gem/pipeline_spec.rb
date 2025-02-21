@@ -28,9 +28,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       include_doc: T::Boolean,
       include_loc: T::Boolean,
       reported_errors_expected: T::Boolean,
+      ignore: T::Array[String],
     ).returns(String)
   end
-  def compile(gem_name = DEFAULT_GEM_NAME, include_doc: false, include_loc: false, reported_errors_expected: false)
+  def compile(gem_name = DEFAULT_GEM_NAME, include_doc: false, include_loc: false, reported_errors_expected: false,
+    ignore: [])
     mock_gem_path = mock_gems[gem_name]
 
     # If we are compiling for a mock gem, we need to create a fake gemspec
@@ -57,6 +59,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       include_doc: include_doc,
       include_loc: include_loc,
       error_handler: ->(error) { reported_errors << error },
+      ignore:,
     ).compile
 
     # NOTE: This is not returning a `RBI::File`.
@@ -1999,6 +2002,31 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RBI
 
       assert_equal(output, compile)
+    end
+
+    it "can ignore constants specifically" do
+      add_ruby_file("bar.rb", <<~RUBY)
+        class Bar
+          BAR = 1
+        end
+      RUBY
+
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          module Toto
+            TOTO = 1
+          end
+        end
+
+        Bar.singleton_class.prepend(Foo::Toto)
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo; end
+        module Foo::Toto; end
+      RBI
+
+      assert_equal(output, compile(ignore: ["Bar", "Foo::Toto::TOTO"]))
     end
 
     it "renames unnamed splats" do
