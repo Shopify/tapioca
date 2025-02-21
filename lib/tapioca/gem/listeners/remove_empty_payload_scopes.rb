@@ -11,12 +11,14 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           event.node.detach if @pipeline.symbol_in_payload?(event.symbol) && event.node.empty?
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        # @override
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
         end

@@ -8,7 +8,7 @@ module Tapioca
 
       abstract!
 
-      sig { void }
+      #: -> void
       def initialize
         Tapioca::Runtime::Trackers.disable_all!
         super

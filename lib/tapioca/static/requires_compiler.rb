@@ -6,12 +6,12 @@ module Tapioca
     class RequiresCompiler
       extend T::Sig
 
-      sig { params(sorbet_path: String).void }
+      #: (String sorbet_path) -> void
       def initialize(sorbet_path)
         @sorbet_path = sorbet_path
       end
 
-      sig { returns(String) }
+      #: -> String
       def compile
         config = Spoom::Sorbet::Config.parse_file(@sorbet_path)
         files = collect_files(config)
@@ -25,7 +25,7 @@ module Tapioca
 
       private
 
-      sig { params(config: Spoom::Sorbet::Config).returns(T::Array[String]) }
+      #: (Spoom::Sorbet::Config config) -> Array[String]
       def collect_files(config)
         config.paths.flat_map do |path|
           path = (Pathname.new(@sorbet_path) / "../.." / path).cleanpath
@@ -40,14 +40,14 @@ module Tapioca
         end.sort.uniq
       end
 
-      sig { params(file_path: String).returns(T::Enumerable[String]) }
+      #: (String file_path) -> T::Enumerable[String]
       def collect_requires(file_path)
         File.binread(file_path).lines.filter_map do |line|
           /^\s*require\s*(\(\s*)?['"](?<name>[^'"]+)['"](\s*\))?/.match(line) { |m| m["name"] }
         end.reject { |require| require.include?('#{') } # ignore interpolation
       end
 
-      sig { params(config: Spoom::Sorbet::Config, file_path: Pathname).returns(T::Boolean) }
+      #: (Spoom::Sorbet::Config config, Pathname file_path) -> bool
       def file_ignored_by_sorbet?(config, file_path)
         file_path_parts = path_parts(file_path)
 
@@ -76,7 +76,7 @@ module Tapioca
         end
       end
 
-      sig { params(path: Pathname).returns(T::Array[String]) }
+      #: (Pathname path) -> Array[String]
       def path_parts(path)
         T.unsafe(path).descend.map { |part| part.basename.to_s }
       end

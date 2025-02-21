@@ -47,7 +47,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: Module } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           # The constant we are given is the specialized config options type
           option_class_name = constant.name
@@ -95,7 +96,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             name = ::Config.const_name
             return [] unless Object.const_defined?(name)

@@ -11,7 +11,7 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { params(requiring: T::Helpers, block: T.proc.void).void }
+          #: (T::Helpers requiring, ^-> void block) -> void
           def register(requiring, block)
             return unless enabled?
 
@@ -19,12 +19,12 @@ module Tapioca
             ancestors << block
           end
 
-          sig { params(mod: Module).returns(T::Array[T.proc.void]) }
+          #: (Module mod) -> Array[^-> void]
           def required_ancestors_blocks_by(mod)
             @required_ancestors_map[mod] || []
           end
 
-          sig { params(mod: Module).returns(T::Array[T.untyped]) }
+          #: (Module mod) -> Array[untyped]
           def required_ancestors_by(mod)
             blocks = required_ancestors_blocks_by(mod)
             blocks.map do |block|

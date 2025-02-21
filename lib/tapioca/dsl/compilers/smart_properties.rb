@@ -59,7 +59,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::SmartProperties) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           properties = T.let(
             T.unsafe(constant).properties,
@@ -82,7 +83,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_modules.select do |c|
               name_of(c) &&
@@ -95,12 +97,7 @@ module Tapioca
 
         private
 
-        sig do
-          params(
-            mod: RBI::Scope,
-            property: ::SmartProperties::Property,
-          ).void
-        end
+        #: (RBI::Scope mod, ::SmartProperties::Property property) -> void
         def generate_methods_for_property(mod, property)
           type = type_for(property)
 
@@ -122,7 +119,7 @@ module Tapioca
           T::Array[[T::Boolean, T::Boolean]],
         )
 
-        sig { params(property: ::SmartProperties::Property).returns(String) }
+        #: (::SmartProperties::Property property) -> String
         def type_for(property)
           converter, accepter, required = property.to_h.fetch_values(
             :converter,

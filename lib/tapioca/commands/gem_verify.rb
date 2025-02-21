@@ -6,14 +6,15 @@ module Tapioca
     class GemVerify < AbstractGem
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         say("Checking for out-of-date RBIs...")
         say("")
         perform_sync_verification
       end
 
-      sig { void }
+      #: -> void
       def perform_sync_verification
         diff = {}
 

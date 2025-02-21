@@ -12,7 +12,7 @@ class DslSpec < Minitest::Spec
   class << self
     extend T::Sig
 
-    sig { returns(T.class_of(DslSpec)) }
+    #: -> singleton(DslSpec)
     def spec_test_class
       # It should be the one that directly inherits from DslSpec
       class_ancestors = T.cast(ancestors.grep(Class), T::Array[T.class_of(DslSpec)])
@@ -24,24 +24,24 @@ class DslSpec < Minitest::Spec
       T.must(klass)
     end
 
-    sig { returns(String) }
+    #: -> String
     def target_class_name
       # Get the name of the class under test from the name of the
       # test class
       spec_test_class.name.gsub(/Spec$/, "")
     end
 
-    sig { returns(T.class_of(Tapioca::Dsl::Compiler)) }
+    #: -> singleton(Tapioca::Dsl::Compiler)
     def target_class
       Object.const_get(target_class_name)
     end
 
-    sig { returns(String) }
+    #: -> String
     def target_class_file
       underscore(target_class_name)
     end
 
-    sig { params(class_name: String).returns(String) }
+    #: (String class_name) -> String
     def underscore(class_name)
       return class_name unless /[A-Z-]|::/.match?(class_name)
 
@@ -66,7 +66,7 @@ class DslSpec < Minitest::Spec
     generated_errors.clear
   end
 
-  sig { returns(T.nilable(T::Boolean)) }
+  #: -> bool?
   def expect_dsl_compiler_errors!
     @expecting_errors = T.let(true, T.nilable(T::Boolean))
   end

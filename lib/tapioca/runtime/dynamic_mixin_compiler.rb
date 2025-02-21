@@ -7,16 +7,16 @@ module Tapioca
       extend T::Sig
       include Runtime::Reflection
 
-      sig { returns(T::Array[Module]) }
+      #: Array[Module]
       attr_reader :dynamic_extends, :dynamic_includes
 
-      sig { returns(T::Array[Symbol]) }
+      #: Array[Symbol]
       attr_reader :class_attribute_readers, :class_attribute_writers, :class_attribute_predicates
 
-      sig { returns(T::Array[Symbol]) }
+      #: Array[Symbol]
       attr_reader :instance_attribute_readers, :instance_attribute_writers, :instance_attribute_predicates
 
-      sig { params(constant: Module).void }
+      #: (Module constant) -> void
       def initialize(constant)
         @constant = constant
         mixins_from_modules = {}.compare_by_identity
@@ -128,12 +128,12 @@ module Tapioca
         @instance_attribute_predicates = T.let(instance_attribute_predicates, T::Array[Symbol])
       end
 
-      sig { returns(T::Boolean) }
+      #: -> bool
       def empty_attributes?
         @class_attribute_readers.empty? && @class_attribute_writers.empty?
       end
 
-      sig { params(tree: RBI::Tree).void }
+      #: (RBI::Tree tree) -> void
       def compile_class_attributes(tree)
         return if empty_attributes?
 
@@ -176,7 +176,7 @@ module Tapioca
         tree << RBI::Include.new("GeneratedInstanceMethods")
       end
 
-      sig { params(tree: RBI::Tree).returns([T::Array[Module], T::Array[Module]]) }
+      #: (RBI::Tree tree) -> [Array[Module], Array[Module]]
       def compile_mixes_in_class_methods(tree)
         includes = dynamic_includes.filter_map do |mod|
           qname = qualified_name_of(mod)
@@ -211,14 +211,14 @@ module Tapioca
         [[], []] # silence errors
       end
 
-      sig { params(mod: Module, dynamic_extends: T::Array[Module]).returns(T::Boolean) }
+      #: (Module mod, Array[Module] dynamic_extends) -> bool
       def module_included_by_another_dynamic_extend?(mod, dynamic_extends)
         dynamic_extends.any? do |dynamic_extend|
           mod != dynamic_extend && ancestors_of(dynamic_extend).include?(mod)
         end
       end
 
-      sig { params(qualified_mixin_name: String).returns(T::Boolean) }
+      #: (String qualified_mixin_name) -> bool
       def filtered_mixin?(qualified_mixin_name)
         # filter T:: namespace mixins that aren't T::Props
         # T::Props and subconstants have semantic value

@@ -11,7 +11,8 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           mixin = event.constant
           return if Class === mixin # Classes can't be mixed into other constants
@@ -47,16 +48,13 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            location: String,
-          ).returns(T::Boolean)
-        end
+        #: (String location) -> bool
         def mixed_in_by_gem?(location)
           @pipeline.gem.contains_path?(location)
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        # @override
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
         end

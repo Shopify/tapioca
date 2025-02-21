@@ -590,7 +590,7 @@ module Tapioca
 
         private
 
-        sig { params(name: String, content: String, require_file: T::Boolean).void }
+        #: (String name, String content, ?require_file: bool) -> void
         def add_proto_file(name, content, require_file: true)
           add_content_file("proto/#{name}.proto", content).tap do |proto_path|
             lib_path = tmp_path("lib")

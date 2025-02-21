@@ -10,12 +10,12 @@ module Tapioca
 
         abstract!
 
-        sig { params(pipeline: Pipeline).void }
+        #: (Pipeline pipeline) -> void
         def initialize(pipeline)
           @pipeline = pipeline
         end
 
-        sig { params(event: NodeAdded).void }
+        #: (NodeAdded event) -> void
         def dispatch(event)
           return if ignore?(event)
 
@@ -33,19 +33,19 @@ module Tapioca
 
         private
 
-        sig { params(event: ConstNodeAdded).void }
+        #: (ConstNodeAdded event) -> void
         def on_const(event)
         end
 
-        sig { params(event: ScopeNodeAdded).void }
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
         end
 
-        sig { params(event: MethodNodeAdded).void }
+        #: (MethodNodeAdded event) -> void
         def on_method(event)
         end
 
-        sig { params(event: NodeAdded).returns(T::Boolean) }
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           # Some listeners do not have to take any action on certain events. For example,
           # almost every listener should skip ForeignScopeNodeAdded events in order not to generate

@@ -22,14 +22,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
   private
 
-  sig do
-    params(
-      gem_name: String,
-      include_doc: T::Boolean,
-      include_loc: T::Boolean,
-      reported_errors_expected: T::Boolean,
-    ).returns(String)
-  end
+  #: (?String gem_name, ?include_doc: bool, ?include_loc: bool, ?reported_errors_expected: bool) -> String
   def compile(gem_name = DEFAULT_GEM_NAME, include_doc: false, include_loc: false, reported_errors_expected: false)
     mock_gem_path = mock_gems[gem_name]
 
@@ -69,7 +62,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     tree.string
   end
 
-  sig { params(gem_name: String, block: T.proc.void).void }
+  #: (String gem_name) { -> void } -> void
   def mock_gem(gem_name, &block)
     current_tmp_path = tmp_path
 
@@ -80,14 +73,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     @tmp_path = current_tmp_path
   end
 
-  sig { returns(T::Hash[String, String]) }
+  #: -> Hash[String, String]
   def mock_gems
     @gems ||= T.let({}, T.nilable(T::Hash[String, String]))
     @gems[DEFAULT_GEM_NAME] = tmp_path if @gems.empty?
     @gems
   end
 
-  sig { returns(T::Array[String]) }
+  #: -> Array[String]
   def reported_errors
     @reported_errors ||= T.let([], T.nilable(T::Array[String]))
   end

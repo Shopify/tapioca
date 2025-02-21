@@ -63,7 +63,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.all(T.class_of(::FrozenRecord::Base), Extensions::FrozenRecord) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           attributes = constant.attributes
           return if attributes.empty?
@@ -87,7 +88,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::FrozenRecord::Base).reject(&:abstract_class?)
           end
@@ -95,7 +97,7 @@ module Tapioca
 
         private
 
-        sig { params(record: RBI::Scope).void }
+        #: (RBI::Scope record) -> void
         def decorate_scopes(record)
           scopes = constant.__tapioca_scope_names
           return if scopes.nil?
@@ -111,12 +113,7 @@ module Tapioca
           record.create_extend(module_name)
         end
 
-        sig do
-          params(
-            scope_method: String,
-            mod: RBI::Scope,
-          ).void
-        end
+        #: (String scope_method, RBI::Scope mod) -> void
         def generate_scope_method(scope_method, mod)
           mod.create_method(
             scope_method,

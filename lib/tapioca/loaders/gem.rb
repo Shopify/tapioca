@@ -9,15 +9,7 @@ module Tapioca
       class << self
         extend T::Sig
 
-        sig do
-          params(
-            bundle: Gemfile,
-            prerequire: T.nilable(String),
-            postrequire: String,
-            default_command: String,
-            halt_upon_load_error: T::Boolean,
-          ).void
-        end
+        #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool) -> void
         def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
           loader = new(
             bundle: bundle,
@@ -30,22 +22,15 @@ module Tapioca
         end
       end
 
-      sig { override.void }
+      # @override
+      #: -> void
       def load
         require_gem_file
       end
 
       protected
 
-      sig do
-        params(
-          bundle: Gemfile,
-          prerequire: T.nilable(String),
-          postrequire: String,
-          default_command: String,
-          halt_upon_load_error: T::Boolean,
-        ).void
-      end
+      #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool) -> void
       def initialize(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
         super()
 
@@ -56,7 +41,7 @@ module Tapioca
         @halt_upon_load_error = halt_upon_load_error
       end
 
-      sig { void }
+      #: -> void
       def require_gem_file
         say("Requiring all gems to prepare for compiling... ")
         begin
@@ -76,7 +61,7 @@ module Tapioca
         puts
       end
 
-      sig { params(file: String, error: LoadError).void }
+      #: (String file, LoadError error) -> void
       def explain_failed_require(file, error)
         say_error("\n\nLoadError: #{error}", :bold, :red)
         say_error("\nTapioca could not load all the gems required by your application.", :yellow)

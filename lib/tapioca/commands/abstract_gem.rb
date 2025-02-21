@@ -9,27 +9,7 @@ module Tapioca
 
       abstract!
 
-      sig do
-        params(
-          gem_names: T::Array[String],
-          exclude: T::Array[String],
-          include_dependencies: T::Boolean,
-          prerequire: T.nilable(String),
-          postrequire: String,
-          typed_overrides: T::Hash[String, String],
-          outpath: Pathname,
-          file_header: T::Boolean,
-          include_doc: T::Boolean,
-          include_loc: T::Boolean,
-          include_exported_rbis: T::Boolean,
-          number_of_workers: T.nilable(Integer),
-          auto_strictness: T::Boolean,
-          dsl_dir: String,
-          rbi_formatter: RBIFormatter,
-          halt_upon_load_error: T::Boolean,
-          lsp_addon: T.nilable(T::Boolean),
-        ).void
-      end
+      #: (gem_names: Array[String], exclude: Array[String], include_dependencies: bool, prerequire: String?, postrequire: String, typed_overrides: Hash[String, String], outpath: Pathname, file_header: bool, include_doc: bool, include_loc: bool, include_exported_rbis: bool, ?number_of_workers: Integer?, ?auto_strictness: bool, ?dsl_dir: String, ?rbi_formatter: RBIFormatter, ?halt_upon_load_error: bool, ?lsp_addon: bool?) -> void
       def initialize(
         gem_names:,
         exclude:,
@@ -76,7 +56,7 @@ module Tapioca
 
       private
 
-      sig { params(gem: Gemfile::GemSpec).void }
+      #: (Gemfile::GemSpec gem) -> void
       def compile_gem_rbi(gem)
         gem_name = set_color(gem.name, :yellow, :bold)
 
@@ -116,7 +96,7 @@ module Tapioca
         end
       end
 
-      sig { void }
+      #: -> void
       def perform_removals
         say("Removing RBI files of gems that have been removed:", [:blue, :bold])
         puts
@@ -143,7 +123,7 @@ module Tapioca
         anything_done
       end
 
-      sig { void }
+      #: -> void
       def perform_additions
         say("Generating RBI files of gems that are added or updated:", [:blue, :bold])
         puts
@@ -186,34 +166,34 @@ module Tapioca
         anything_done
       end
 
-      sig { returns(T::Array[String]) }
+      #: -> Array[String]
       def removed_rbis
         (existing_rbis.keys - expected_rbis.keys).sort
       end
 
-      sig { params(gem_name: String).returns(Pathname) }
+      #: (String gem_name) -> Pathname
       def existing_rbi(gem_name)
         gem_rbi_filename(gem_name, T.must(existing_rbis[gem_name]))
       end
 
-      sig { returns(T::Array[String]) }
+      #: -> Array[String]
       def added_rbis
         expected_rbis.select do |name, value|
           existing_rbis[name] != value
         end.keys.sort
       end
 
-      sig { params(gem_name: String).returns(Pathname) }
+      #: (String gem_name) -> Pathname
       def expected_rbi(gem_name)
         gem_rbi_filename(gem_name, T.must(expected_rbis[gem_name]))
       end
 
-      sig { params(gem_name: String).returns(T::Boolean) }
+      #: (String gem_name) -> bool
       def gem_rbi_exists?(gem_name)
         existing_rbis.key?(gem_name)
       end
 
-      sig { params(diff: T::Hash[String, Symbol], command: Symbol).void }
+      #: (Hash[String, Symbol] diff, Symbol command) -> void
       def report_diff_and_exit_if_out_of_date(diff, command)
         if diff.empty?
           say("Nothing to do, all RBIs are up-to-date.")
@@ -233,36 +213,36 @@ module Tapioca
         end
       end
 
-      sig { params(old_filename: Pathname, new_filename: Pathname).void }
+      #: (Pathname old_filename, Pathname new_filename) -> void
       def move(old_filename, new_filename)
         say("-> Moving: #{old_filename} to #{new_filename}")
         old_filename.rename(new_filename.to_s)
       end
 
-      sig { returns(T::Hash[String, String]) }
+      #: -> Hash[String, String]
       def existing_rbis
         @existing_rbis ||= Pathname.glob((@outpath / "*@*.rbi").to_s)
           .to_h { |f| T.cast(f.basename(".*").to_s.split("@", 2), [String, String]) }
       end
 
-      sig { returns(T::Hash[String, String]) }
+      #: -> Hash[String, String]
       def expected_rbis
         @expected_rbis ||= @bundle.dependencies
           .reject { |gem| @exclude.include?(gem.name) }
           .to_h { |gem| [gem.name, gem.version.to_s] }
       end
 
-      sig { params(gem_name: String, version: String).returns(Pathname) }
+      #: (String gem_name, String version) -> Pathname
       def gem_rbi_filename(gem_name, version)
         @outpath / "#{gem_name}@#{version}.rbi"
       end
 
-      sig { params(cause: Symbol, files: T::Array[String]).returns(String) }
+      #: (Symbol cause, Array[String] files) -> String
       def build_error_for_files(cause, files)
         "  File(s) #{cause}:\n  - #{files.join("\n  - ")}"
       end
 
-      sig { params(gem: Gemfile::GemSpec, file: RBI::File).void }
+      #: (Gemfile::GemSpec gem, RBI::File file) -> void
       def merge_with_exported_rbi(gem, file)
         return file unless gem.export_rbi_files?
 

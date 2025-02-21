@@ -39,7 +39,8 @@ module Tapioca
         ConstantType = type_member { { fixed: T.class_of(ActiveSupport::TestCase) } }
         MISSING = Object.new
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           method_names = if fixture_loader.respond_to?(:fixture_sets)
             method_names_from_lazy_fixture_loader
@@ -60,7 +61,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
@@ -70,7 +72,7 @@ module Tapioca
 
         private
 
-        sig { returns(T::Class[ActiveRecord::TestFixtures]) }
+        #: -> Class[ActiveRecord::TestFixtures]
         def fixture_loader
           @fixture_loader ||= T.let(
             Class.new do
@@ -93,12 +95,12 @@ module Tapioca
           )
         end
 
-        sig { returns(T::Array[String]) }
+        #: -> Array[String]
         def method_names_from_lazy_fixture_loader
           T.unsafe(fixture_loader).fixture_sets.keys
         end
 
-        sig { returns(T::Array[String]) }
+        #: -> Array[String]
         def method_names_from_eager_fixture_loader
           fixture_loader.ancestors # get all ancestors from class that includes AR fixtures
             .drop(1) # drop the anonymous class itself from the array
@@ -108,7 +110,7 @@ module Tapioca
             end
         end
 
-        sig { params(mod: RBI::Scope, name: String).void }
+        #: (RBI::Scope mod, String name) -> void
         def create_fixture_method(mod, name)
           return_type = return_type_for_fixture(name)
           mod.create_method(name) do |node|
@@ -135,7 +137,7 @@ module Tapioca
           end
         end
 
-        sig { params(fixture_name: String).returns(String) }
+        #: (String fixture_name) -> String
         def return_type_for_fixture(fixture_name)
           fixture_class_mapping_from_fixture_files[fixture_name] ||
             fixture_class_from_fixture_set(fixture_name) ||
@@ -143,7 +145,7 @@ module Tapioca
             "T.untyped"
         end
 
-        sig { params(fixture_name: String).returns(T.nilable(String)) }
+        #: (String fixture_name) -> String?
         def fixture_class_from_fixture_set(fixture_name)
           # only rails 7.1+ support fixture sets so this is conditional
           return unless fixture_loader.respond_to?(:fixture_sets)
@@ -157,7 +159,7 @@ module Tapioca
           model_name
         end
 
-        sig { returns(T::Hash[String, String]) }
+        #: -> Hash[String, String]
         def fixture_class_from_active_record_base_class_mapping
           @fixture_class_mapping ||= T.let(
             begin
@@ -176,7 +178,7 @@ module Tapioca
           )
         end
 
-        sig { returns(T::Hash[String, String]) }
+        #: -> Hash[String, String]
         def fixture_class_mapping_from_fixture_files
           @fixture_file_class_mapping ||= T.let(
             begin

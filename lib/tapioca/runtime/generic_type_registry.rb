@@ -34,14 +34,15 @@ module Tapioca
       class GenericType < T::Types::Simple
         extend T::Sig
 
-        sig { params(raw_type: Module, underlying_type: Module).void }
+        #: (Module raw_type, Module underlying_type) -> void
         def initialize(raw_type, underlying_type)
           super(raw_type)
 
           @underlying_type = T.let(underlying_type, Module)
         end
 
-        sig { override.params(obj: T.untyped).returns(T::Boolean) }
+        # @override
+        #: (untyped obj) -> bool
         def valid?(obj)
           obj.is_a?(@underlying_type)
         end
@@ -61,7 +62,7 @@ module Tapioca
         # 2 hash lookups (for the other two `Foo[Integer]`s).
         #
         # This method returns the created or cached clone of the constant.
-        sig { params(constant: T.untyped, types: T.untyped).returns(Module) }
+        #: (untyped constant, untyped types) -> Module
         def register_type(constant, types)
           # Build the name of the instantiated generic type,
           # something like `"Foo[X, Y, Z]"`
@@ -76,12 +77,12 @@ module Tapioca
           @generic_instances[name] ||= create_generic_type(constant, name)
         end
 
-        sig { params(instance: Object).returns(T::Boolean) }
+        #: (Object instance) -> bool
         def generic_type_instance?(instance)
           @generic_instances.values.any? { |generic_type| generic_type === instance }
         end
 
-        sig { params(constant: Module).returns(T.nilable(T::Array[TypeVariableModule])) }
+        #: (Module constant) -> Array[TypeVariableModule]?
         def lookup_type_variables(constant)
           @type_variables[constant]
         end
@@ -95,12 +96,7 @@ module Tapioca
         #
         # Finally, the original `type_variable` is returned from this method, so that the caller
         # can return it from the original methods as well.
-        sig do
-          params(
-            constant: T.untyped,
-            type_variable: TypeVariableModule,
-          ).void
-        end
+        #: (untyped constant, TypeVariableModule type_variable) -> void
         def register_type_variable(constant, type_variable)
           type_variables = lookup_or_initialize_type_variables(constant)
 
@@ -109,7 +105,7 @@ module Tapioca
 
         private
 
-        sig { params(constant: Module, name: String).returns(Module) }
+        #: (Module constant, String name) -> Module
         def create_generic_type(constant, name)
           generic_type = case constant
           when Class
@@ -151,7 +147,7 @@ module Tapioca
           generic_type
         end
 
-        sig { params(constant: T::Class[T.anything]).returns(T::Class[T.anything]) }
+        #: (Class[top] constant) -> Class[top]
         def create_safe_subclass(constant)
           # Lookup the "inherited" class method
           inherited_method = constant.method(:inherited)
@@ -178,7 +174,7 @@ module Tapioca
           end
         end
 
-        sig { params(constant: Module).returns(T::Array[TypeVariableModule]) }
+        #: (Module constant) -> Array[TypeVariableModule]
         def lookup_or_initialize_type_variables(constant)
           @type_variables[constant] ||= []
         end

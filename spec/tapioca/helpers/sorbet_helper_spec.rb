@@ -36,7 +36,7 @@ class Tapioca::SorbetHelperSpec < Minitest::Spec
 
   private
 
-  sig { params(path: T.nilable(String), block: T.proc.params(custom_path: T.nilable(String)).void).void }
+  #: (String? path) { (String? custom_path) -> void } -> void
   def with_custom_sorbet_exe_path(path, &block)
     sorbet_exe_env_value = ENV[SORBET_EXE_PATH_ENV_VAR]
     begin

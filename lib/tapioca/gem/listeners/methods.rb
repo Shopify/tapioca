@@ -12,7 +12,8 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           symbol = event.symbol
           constant = event.constant
@@ -23,15 +24,7 @@ module Tapioca
           compile_directly_owned_methods(node, symbol, singleton_class_of(constant), attached_class: constant)
         end
 
-        sig do
-          params(
-            tree: RBI::Tree,
-            module_name: String,
-            mod: Module,
-            for_visibility: T::Array[Symbol],
-            attached_class: T.nilable(Module),
-          ).void
-        end
+        #: (RBI::Tree tree, String module_name, Module mod, ?Array[Symbol] for_visibility, ?attached_class: Module?) -> void
         def compile_directly_owned_methods(
           tree,
           module_name,
@@ -59,15 +52,7 @@ module Tapioca
             end
         end
 
-        sig do
-          params(
-            tree: RBI::Tree,
-            symbol_name: String,
-            constant: Module,
-            method: T.nilable(UnboundMethod),
-            visibility: RBI::Visibility,
-          ).void
-        end
+        #: (RBI::Tree tree, String symbol_name, Module constant, UnboundMethod? method, ?RBI::Visibility visibility) -> void
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
           return unless method_owned_by_constant?(method, constant)
@@ -154,7 +139,7 @@ module Tapioca
         # This method implements a better way of checking whether a constant defines a method.
         # It walks up the ancestor tree via the `super_method` method; if any of the super
         # methods are owned by the constant, it means that the constant declares the method.
-        sig { params(method: UnboundMethod, constant: Module).returns(T::Boolean) }
+        #: (UnboundMethod method, Module constant) -> bool
         def method_owned_by_constant?(method, constant)
           # Widen the type of `method` to be nilable
           method = T.let(method, T.nilable(UnboundMethod))
@@ -168,7 +153,7 @@ module Tapioca
           false
         end
 
-        sig { params(mod: Module).returns(T::Hash[Symbol, T::Array[Symbol]]) }
+        #: (Module mod) -> Hash[Symbol, Array[Symbol]]
         def method_names_by_visibility(mod)
           {
             public: public_instance_methods_of(mod),
@@ -177,7 +162,7 @@ module Tapioca
           }
         end
 
-        sig { params(constant: Module, method_name: String).returns(T::Boolean) }
+        #: (Module constant, String method_name) -> bool
         def struct_method?(constant, method_name)
           return false unless T::Props::ClassMethods === constant
 
@@ -187,12 +172,7 @@ module Tapioca
             .include?(method_name.gsub(/=$/, "").to_sym)
         end
 
-        sig do
-          params(
-            attached_class: T.nilable(Module),
-            method_name: Symbol,
-          ).returns(T.nilable(T::Boolean))
-        end
+        #: (Module? attached_class, Symbol method_name) -> bool?
         def method_new_in_abstract_class?(attached_class, method_name)
           attached_class &&
             method_name == :new &&
@@ -200,19 +180,20 @@ module Tapioca
             Class === attached_class.singleton_class
         end
 
-        sig { params(constant: Module).returns(T.nilable(UnboundMethod)) }
+        #: (Module constant) -> UnboundMethod?
         def initialize_method_for(constant)
           constant.instance_method(:initialize)
         rescue
           nil
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        # @override
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
         end
 
-        sig { params(method: UnboundMethod).returns(T.untyped) }
+        #: (UnboundMethod method) -> untyped
         def lookup_signature_of(method)
           signature_of!(method)
         rescue LoadError, StandardError => error

@@ -59,7 +59,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveResource::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return if constant.schema.blank?
 
@@ -73,7 +74,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveResource::Base)
           end
@@ -97,12 +99,12 @@ module Tapioca
           T::Hash[Symbol, String],
         )
 
-        sig { params(attr_type: Symbol).returns(String) }
+        #: (Symbol attr_type) -> String
         def type_for(attr_type)
           TYPES.fetch(attr_type, "T.untyped")
         end
 
-        sig { params(klass: RBI::Scope, attribute: String, type: String).void }
+        #: (RBI::Scope klass, String attribute, String type) -> void
         def create_schema_methods(klass, attribute, type)
           return_type = type_for(type.to_sym)
 

@@ -11,7 +11,8 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           constant = event.constant
           return if constant.is_a?(Class)
@@ -27,7 +28,8 @@ module Tapioca
           end
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        # @override
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
         end

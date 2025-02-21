@@ -41,7 +41,8 @@ module Tapioca
           { fixed: T.all(T::Class[::ActiveModel::Attributes], ::ActiveModel::Attributes::ClassMethods) }
         end
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           attribute_methods = attribute_methods_for_constant
           return if attribute_methods.empty?
@@ -56,7 +57,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_classes.grep(::ActiveModel::Attributes::ClassMethods)
           end
@@ -66,7 +68,7 @@ module Tapioca
 
         HANDLED_METHOD_TARGETS = T.let(["attribute", "attribute="], T::Array[String])
 
-        sig { returns(T::Array[[::String, ::String]]) }
+        #: -> Array[[::String, ::String]]
         def attribute_methods_for_constant
           patterns = if constant.respond_to?(:attribute_method_patterns)
             # https://github.com/rails/rails/pull/44367
@@ -83,7 +85,7 @@ module Tapioca
           end
         end
 
-        sig { params(pattern: T.untyped).returns(T::Boolean) }
+        #: (untyped pattern) -> bool
         def handle_method_pattern?(pattern)
           target = if pattern.respond_to?(:method_missing_target)
             # Pre-Rails 6.0, the field is named "method_missing_target"
@@ -99,7 +101,7 @@ module Tapioca
           HANDLED_METHOD_TARGETS.include?(target.to_s)
         end
 
-        sig { params(attribute_type_value: T.untyped).returns(::String) }
+        #: (untyped attribute_type_value) -> ::String
         def type_for(attribute_type_value)
           case attribute_type_value
           when ActiveModel::Type::Boolean
@@ -123,7 +125,7 @@ module Tapioca
           end
         end
 
-        sig { params(klass: RBI::Scope, method: String, type: String).void }
+        #: (RBI::Scope klass, String method, String type) -> void
         def generate_method(klass, method, type)
           if method.end_with?("=")
             parameter = create_param("value", type: type)

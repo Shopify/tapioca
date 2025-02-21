@@ -39,7 +39,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::InputObject) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           # Skip methods explicitly defined in code
           arguments = constant.all_argument_definitions.select do |argument|
@@ -61,7 +62,7 @@ module Tapioca
 
         private
 
-        sig { returns(T.nilable(String)) }
+        #: -> String?
         def graphql_input_object_argument_source_file
           @graphql_input_object_argument_source_file ||= T.let(
             GraphQL::Schema::InputObject.method(:argument).source_location&.first,
@@ -69,7 +70,7 @@ module Tapioca
           )
         end
 
-        sig { params(method_name: String).returns(T::Boolean) }
+        #: (String method_name) -> bool
         def method_defined_by_graphql?(method_name)
           method_file = constant.instance_method(method_name).source_location&.first
           !!(method_file && graphql_input_object_argument_source_file == method_file)
@@ -78,7 +79,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_classes.select { |c| GraphQL::Schema::InputObject > c }
           end

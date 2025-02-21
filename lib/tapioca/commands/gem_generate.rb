@@ -6,7 +6,8 @@ module Tapioca
     class GemGenerate < AbstractGem
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         Loaders::Gem.load_application(
           bundle: @bundle,
@@ -47,7 +48,7 @@ module Tapioca
         GitAttributes.create_generated_attribute_file(@outpath)
       end
 
-      sig { params(gem_names: T::Array[String]).returns(T::Array[Gemfile::GemSpec]) }
+      #: (Array[String] gem_names) -> Array[Gemfile::GemSpec]
       def gems_to_generate(gem_names)
         return @bundle.dependencies if gem_names.empty?
 
@@ -65,12 +66,7 @@ module Tapioca
         end
       end
 
-      sig do
-        params(
-          gem: Gemfile::GemSpec,
-          dependencies: T::Array[Gemfile::GemSpec],
-        ).returns(T::Array[Gemfile::GemSpec])
-      end
+      #: (Gemfile::GemSpec gem, ?Array[Gemfile::GemSpec] dependencies) -> Array[Gemfile::GemSpec]
       def gem_dependencies(gem, dependencies = [])
         direct_dependencies = gem.dependencies.filter_map { |dependency| @bundle.gem(dependency.name) }
         gems = dependencies | direct_dependencies

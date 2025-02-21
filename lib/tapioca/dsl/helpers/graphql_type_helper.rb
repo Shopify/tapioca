@@ -9,12 +9,7 @@ module Tapioca
 
         extend T::Sig
 
-        sig do
-          params(
-            argument: GraphQL::Schema::Argument,
-            constant: T.any(T.class_of(GraphQL::Schema::Mutation), T.class_of(GraphQL::Schema::InputObject)),
-          ).returns(String)
-        end
+        #: (GraphQL::Schema::Argument argument, (singleton(GraphQL::Schema::Mutation) | singleton(GraphQL::Schema::InputObject)) constant) -> String
         def type_for_argument(argument, constant)
           type = if argument.loads
             loads_type = ::GraphQL::Schema::Wrapper.new(argument.loads)
@@ -39,21 +34,7 @@ module Tapioca
           )
         end
 
-        sig do
-          params(
-            type: T.any(
-              GraphQL::Schema::Wrapper,
-              T.class_of(GraphQL::Schema::Scalar),
-              T.class_of(GraphQL::Schema::Enum),
-              T.class_of(GraphQL::Schema::Union),
-              T.class_of(GraphQL::Schema::Object),
-              T.class_of(GraphQL::Schema::Interface),
-              T.class_of(GraphQL::Schema::InputObject),
-            ),
-            ignore_nilable_wrapper: T::Boolean,
-            prepare_method: T.nilable(Method),
-          ).returns(String)
-        end
+        #: ((GraphQL::Schema::Wrapper | singleton(GraphQL::Schema::Scalar) | singleton(GraphQL::Schema::Enum) | singleton(GraphQL::Schema::Union) | singleton(GraphQL::Schema::Object) | singleton(GraphQL::Schema::Interface) | singleton(GraphQL::Schema::InputObject)) type, ?ignore_nilable_wrapper: bool, ?prepare_method: Method?) -> String
         def type_for(type, ignore_nilable_wrapper: false, prepare_method: nil)
           unwrapped_type = type.unwrap
 
@@ -116,7 +97,7 @@ module Tapioca
 
         private
 
-        sig { params(constant: Module).returns(String) }
+        #: (Module constant) -> String
         def type_for_constant(constant)
           if constant.instance_methods.include?(:prepare)
             prepare_method = constant.instance_method(:prepare)
@@ -129,12 +110,12 @@ module Tapioca
           Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
         end
 
-        sig { params(argument: GraphQL::Schema::Argument).returns(T::Boolean) }
+        #: (GraphQL::Schema::Argument argument) -> bool
         def has_replaceable_default?(argument)
           !!argument.replace_null_with_default? && !argument.default_value.nil?
         end
 
-        sig { params(return_type: T.nilable(T::Types::Base)).returns(T::Boolean) }
+        #: (T::Types::Base? return_type) -> bool
         def valid_return_type?(return_type)
           !!return_type && !(T::Private::Types::Void === return_type || T::Private::Types::NotTyped === return_type)
         end

@@ -174,7 +174,8 @@ module Tapioca
           T::Set[String],
         )
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           create_classes_and_includes
           create_common_methods
@@ -185,7 +186,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             ActiveRecord::Base.descendants.reject(&:abstract_class?)
           end
@@ -240,7 +242,7 @@ module Tapioca
 
         private
 
-        sig { returns(RBI::Scope) }
+        #: -> RBI::Scope
         def model
           @model ||= T.let(
             root.create_path(constant),
@@ -248,7 +250,7 @@ module Tapioca
           )
         end
 
-        sig { returns(RBI::Scope) }
+        #: -> RBI::Scope
         def relation_methods_module
           @relation_methods_module ||= T.let(
             model.create_module(RelationMethodsModuleName),
@@ -256,7 +258,7 @@ module Tapioca
           )
         end
 
-        sig { returns(RBI::Scope) }
+        #: -> RBI::Scope
         def association_relation_methods_module
           @association_relation_methods_module ||= T.let(
             model.create_module(AssociationRelationMethodsModuleName),
@@ -264,7 +266,7 @@ module Tapioca
           )
         end
 
-        sig { returns(RBI::Scope) }
+        #: -> RBI::Scope
         def common_relation_methods_module
           @common_relation_methods_module ||= T.let(
             model.create_module(CommonRelationMethodsModuleName),
@@ -272,17 +274,17 @@ module Tapioca
           )
         end
 
-        sig { returns(String) }
+        #: -> String
         def constant_name
           @constant_name ||= T.let(T.must(qualified_name_of(constant)), T.nilable(String))
         end
 
-        sig { params(method_name: Symbol).returns(T::Boolean) }
+        #: (Symbol method_name) -> bool
         def bang_method?(method_name)
           method_name.to_s.end_with?("!")
         end
 
-        sig { void }
+        #: -> void
         def create_classes_and_includes
           model.create_extend(CommonRelationMethodsModuleName)
           # The model always extends the generated relation module
@@ -297,7 +299,7 @@ module Tapioca
           create_collection_proxy_class
         end
 
-        sig { void }
+        #: -> void
         def create_relation_class
           superclass = "::ActiveRecord::Relation"
 
@@ -316,7 +318,7 @@ module Tapioca
           create_relation_where_chain_class
         end
 
-        sig { void }
+        #: -> void
         def create_association_relation_class
           superclass = "::ActiveRecord::AssociationRelation"
 
@@ -335,7 +337,7 @@ module Tapioca
           create_association_relation_where_chain_class
         end
 
-        sig { void }
+        #: -> void
         def create_relation_group_chain_class
           model.create_class(RelationGroupChainClassName, superclass_name: RelationClassName) do |klass|
             create_group_chain_methods(klass)
@@ -343,7 +345,7 @@ module Tapioca
           end
         end
 
-        sig { void }
+        #: -> void
         def create_association_relation_group_chain_class
           model.create_class(
             AssociationRelationGroupChainClassName,
@@ -354,7 +356,7 @@ module Tapioca
           end
         end
 
-        sig { params(klass: RBI::Scope).void }
+        #: (RBI::Scope klass) -> void
         def create_group_chain_methods(klass)
           # Calculation methods used with `group` return a hash where the keys cannot be typed
           # but the values can. Technically a `group` anywhere in the query chain produces
@@ -418,7 +420,7 @@ module Tapioca
           end
         end
 
-        sig { void }
+        #: -> void
         def create_relation_where_chain_class
           model.create_class(RelationWhereChainClassName) do |klass|
             create_where_chain_methods(klass, RelationClassName)
@@ -426,7 +428,7 @@ module Tapioca
           end
         end
 
-        sig { void }
+        #: -> void
         def create_association_relation_where_chain_class
           model.create_class(AssociationRelationWhereChainClassName) do |klass|
             create_where_chain_methods(klass, AssociationRelationClassName)
@@ -434,7 +436,7 @@ module Tapioca
           end
         end
 
-        sig { params(klass: RBI::Scope, return_type: String).void }
+        #: (RBI::Scope klass, String return_type) -> void
         def create_where_chain_methods(klass, return_type)
           WHERE_CHAIN_QUERY_METHODS.each do |method_name|
             case method_name
@@ -459,7 +461,7 @@ module Tapioca
           end
         end
 
-        sig { void }
+        #: -> void
         def create_collection_proxy_class
           superclass = "::ActiveRecord::Associations::CollectionProxy"
 
@@ -476,7 +478,7 @@ module Tapioca
           end
         end
 
-        sig { params(klass: RBI::Scope).void }
+        #: (RBI::Scope klass) -> void
         def create_collection_proxy_methods(klass)
           # For these cases, it is valid to pass:
           # - a model instance, thus `Model`
@@ -555,7 +557,7 @@ module Tapioca
           end
         end
 
-        sig { void }
+        #: -> void
         def create_relation_methods
           create_relation_method("all")
 
@@ -619,7 +621,7 @@ module Tapioca
           end
         end
 
-        sig { void }
+        #: -> void
         def create_association_relation_methods
           returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
           unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
@@ -664,7 +666,7 @@ module Tapioca
           end
         end
 
-        sig { void }
+        #: -> void
         def create_common_methods
           create_common_method(
             "destroy_all",
@@ -1049,13 +1051,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            name: T.any(Symbol, String),
-            parameters: T::Array[RBI::TypedParam],
-            return_type: T.nilable(String),
-          ).void
-        end
+        #: ((Symbol | String) name, ?parameters: Array[RBI::TypedParam], ?return_type: String?) -> void
         def create_common_method(name, parameters: [], return_type: nil)
           common_relation_methods_module.create_method(
             name.to_s,
@@ -1064,7 +1060,7 @@ module Tapioca
           )
         end
 
-        sig { void }
+        #: -> void
         def create_where_relation_method
           relation_methods_module.create_method("where") do |method|
             method.add_rest_param("args")
@@ -1093,14 +1089,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            name: T.any(Symbol, String),
-            parameters: T::Array[RBI::TypedParam],
-            relation_return_type: String,
-            association_return_type: String,
-          ).void
-        end
+        #: ((Symbol | String) name, ?parameters: Array[RBI::TypedParam], ?relation_return_type: String, ?association_return_type: String) -> void
         def create_relation_method(
           name,
           parameters: [],

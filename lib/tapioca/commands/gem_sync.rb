@@ -6,7 +6,8 @@ module Tapioca
     class GemSync < AbstractGem
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         anything_done = [
           perform_removals,

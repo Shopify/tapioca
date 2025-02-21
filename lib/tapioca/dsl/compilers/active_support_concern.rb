@@ -42,7 +42,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: Module } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           dependencies = linearized_dependencies
 
@@ -64,7 +65,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_modules.select do |mod|
               name_of(mod) && # i.e. not anonymous
@@ -75,10 +77,10 @@ module Tapioca
           end
 
           # Returns true when `mod` includes other concerns
-          sig { params(mod: Module).returns(T::Boolean) }
+          #: (Module mod) -> bool
           def has_dependencies?(mod) = dependencies_of(mod).any?
 
-          sig { params(concern: Module).returns(T::Array[Module]) }
+          #: (Module concern) -> Array[Module]
           def dependencies_of(concern)
             concern.instance_variable_get(:@_dependencies) || []
           end
@@ -86,12 +88,12 @@ module Tapioca
 
         private
 
-        sig { params(concern: Module).returns(T::Array[Module]) }
+        #: (Module concern) -> Array[Module]
         def dependencies_of(concern)
           self.class.dependencies_of(concern)
         end
 
-        sig { params(concern: Module).returns(T::Array[Module]) }
+        #: (?Module concern) -> Array[Module]
         def linearized_dependencies(concern = constant)
           # Grab all the dependencies of the concern
           dependencies = dependencies_of(concern)

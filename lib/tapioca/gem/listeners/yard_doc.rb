@@ -23,7 +23,7 @@ module Tapioca
 
         IGNORED_SIG_TAGS = T.let(["param", "return"], T::Array[String])
 
-        sig { params(pipeline: Pipeline).void }
+        #: (Pipeline pipeline) -> void
         def initialize(pipeline)
           YARD::Registry.clear
           super(pipeline)
@@ -32,17 +32,20 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ConstNodeAdded).void }
+        # @override
+        #: (ConstNodeAdded event) -> void
         def on_const(event)
           event.node.comments = documentation_comments(event.symbol)
         end
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           event.node.comments = documentation_comments(event.symbol)
         end
 
-        sig { override.params(event: MethodNodeAdded).void }
+        # @override
+        #: (MethodNodeAdded event) -> void
         def on_method(event)
           separator = event.constant.singleton_class? ? "." : "#"
           event.node.comments = documentation_comments(
@@ -51,7 +54,7 @@ module Tapioca
           )
         end
 
-        sig { params(name: String, sigs: T::Array[RBI::Sig]).returns(T::Array[RBI::Comment]) }
+        #: (String name, ?sigs: Array[RBI::Sig]) -> Array[RBI::Comment]
         def documentation_comments(name, sigs: [])
           yard_docs = YARD::Registry.at(name)
           return [] unless yard_docs
@@ -95,7 +98,8 @@ module Tapioca
           comments
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        # @override
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
         end

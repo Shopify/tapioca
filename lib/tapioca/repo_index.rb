@@ -9,12 +9,12 @@ module Tapioca
     class << self
       extend T::Sig
 
-      sig { params(json: String).returns(RepoIndex) }
+      #: (String json) -> RepoIndex
       def from_json(json)
         RepoIndex.from_hash(JSON.parse(json))
       end
 
-      sig { params(hash: T::Hash[String, T::Hash[T.untyped, T.untyped]]).returns(RepoIndex) }
+      #: (Hash[String, Hash[untyped, untyped]] hash) -> RepoIndex
       def from_hash(hash)
         hash.each_with_object(RepoIndex.new) do |(name, _), index|
           index << name
@@ -22,22 +22,22 @@ module Tapioca
       end
     end
 
-    sig { void }
+    #: -> void
     def initialize
       @entries = T.let(Set.new, T::Set[String])
     end
 
-    sig { params(gem_name: String).void }
+    #: (String gem_name) -> void
     def <<(gem_name)
       @entries.add(gem_name)
     end
 
-    sig { returns(T::Enumerable[String]) }
+    #: -> T::Enumerable[String]
     def gems
       @entries.sort
     end
 
-    sig { params(gem_name: String).returns(T::Boolean) }
+    #: (String gem_name) -> bool
     def has_gem?(gem_name)
       @entries.include?(gem_name)
     end

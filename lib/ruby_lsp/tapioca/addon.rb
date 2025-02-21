@@ -20,7 +20,7 @@ module RubyLsp
     class Addon < ::RubyLsp::Addon
       extend T::Sig
 
-      sig { void }
+      #: -> void
       def initialize
         super
 
@@ -32,7 +32,8 @@ module RubyLsp
         @outgoing_queue = T.let(nil, T.nilable(Thread::Queue))
       end
 
-      sig { override.params(global_state: RubyLsp::GlobalState, outgoing_queue: Thread::Queue).void }
+      # @override
+      #: (RubyLsp::GlobalState global_state, Thread::Queue outgoing_queue) -> void
       def activate(global_state, outgoing_queue)
         @global_state = global_state
         return unless @global_state.enabled_feature?(:tapiocaAddon)
@@ -67,21 +68,24 @@ module RubyLsp
         end
       end
 
-      sig { override.void }
+      # @override
+      #: -> void
       def deactivate
       end
 
-      sig { override.returns(String) }
+      # @override
+      #: -> String
       def name
         "Tapioca"
       end
 
-      sig { override.returns(String) }
+      # @override
+      #: -> String
       def version
         "0.1.3"
       end
 
-      sig { params(changes: T::Array[{ uri: String, type: Integer }]).void }
+      #: (Array[{uri: String, type: Integer}] changes) -> void
       def workspace_did_change_watched_files(changes)
         return unless @global_state&.enabled_feature?(:tapiocaAddon)
         return unless @rails_runner_client.connected?
@@ -153,7 +157,7 @@ module RubyLsp
 
       private
 
-      sig { params(feature_name: String).void }
+      #: (String feature_name) -> void
       def send_usage_telemetry(feature_name)
         return unless @outgoing_queue && @global_state
 
@@ -172,7 +176,7 @@ module RubyLsp
         })
       end
 
-      sig { params(change: T::Hash[Symbol, T.untyped], path: String).returns(T::Boolean) }
+      #: (Hash[Symbol, untyped] change, String path) -> bool
       def file_updated?(change, path)
         case change[:type]
         when Constant::FileChangeType::CREATED
@@ -201,7 +205,7 @@ module RubyLsp
         false
       end
 
-      sig { void }
+      #: -> void
       def run_gem_rbi_check
         gem_rbi_check = RunGemRbiCheck.new(T.must(@global_state).workspace_path)
         gem_rbi_check.run

@@ -14,7 +14,8 @@ module Tapioca
 
         private
 
-        sig { override.params(event: MethodNodeAdded).void }
+        # @override
+        #: (MethodNodeAdded event) -> void
         def on_method(event)
           signature = event.signature
           return unless signature
@@ -22,7 +23,7 @@ module Tapioca
           event.node.sigs << compile_signature(signature, event.parameters)
         end
 
-        sig { params(signature: T.untyped, parameters: T::Array[[Symbol, String]]).returns(RBI::Sig) }
+        #: (untyped signature, Array[[Symbol, String]] parameters) -> RBI::Sig
         def compile_signature(signature, parameters)
           parameter_types = T.let(signature.arg_types.to_h, T::Hash[Symbol, T::Types::Base])
           parameter_types.merge!(signature.kwarg_types)
@@ -64,7 +65,7 @@ module Tapioca
           sig
         end
 
-        sig { params(signature: T.untyped).returns(T::Boolean) }
+        #: (untyped signature) -> bool
         def signature_final?(signature)
           modules_with_final = T::Private::Methods.instance_variable_get(:@modules_with_final)
           # In https://github.com/sorbet/sorbet/pull/7531, Sorbet changed internal hashes to be compared by identity,
@@ -75,7 +76,8 @@ module Tapioca
           final_methods.include?(signature.method_name)
         end
 
-        sig { override.params(event: NodeAdded).returns(T::Boolean) }
+        # @override
+        #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
         end

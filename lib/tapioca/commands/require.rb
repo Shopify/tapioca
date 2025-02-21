@@ -4,12 +4,7 @@
 module Tapioca
   module Commands
     class Require < CommandWithoutTracker
-      sig do
-        params(
-          requires_path: String,
-          sorbet_config_path: String,
-        ).void
-      end
+      #: (requires_path: String, sorbet_config_path: String) -> void
       def initialize(requires_path:, sorbet_config_path:)
         @requires_path = requires_path
         @sorbet_config_path = sorbet_config_path
@@ -19,7 +14,8 @@ module Tapioca
 
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         compiler = Static::RequiresCompiler.new(@sorbet_config_path)
         name = set_color(@requires_path, :yellow, :bold)

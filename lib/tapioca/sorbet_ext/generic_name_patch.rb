@@ -132,17 +132,10 @@ module Tapioca
 
     DEFAULT_BOUNDS_PROC = T.let(-> { {} }, T.proc.returns(T::Hash[Symbol, T.untyped]))
 
-    sig { returns(Type) }
+    #: Type
     attr_reader :type
 
-    sig do
-      params(
-        context: Module,
-        type: Type,
-        variance: Symbol,
-        bounds_proc: T.nilable(T.proc.returns(T::Hash[Symbol, T.untyped])),
-      ).void
-    end
+    #: (Module context, Type type, Symbol variance, (^-> Hash[Symbol, untyped])? bounds_proc) -> void
     def initialize(context, type, variance, bounds_proc)
       @context = context
       @type = type
@@ -151,18 +144,19 @@ module Tapioca
 
       super()
     end
-    sig { returns(T.nilable(String)) }
+
+    #: -> String?
     def name
       constant_name = super
       constant_name&.split("::")&.last
     end
 
-    sig { returns(T::Boolean) }
+    #: -> bool
     def fixed?
       bounds.key?(:fixed)
     end
 
-    sig { returns(String) }
+    #: -> String
     def serialize
       fixed = bounds[:fixed].to_s if fixed?
       lower = bounds[:lower].to_s if bounds.key?(:lower)
@@ -177,14 +171,14 @@ module Tapioca
       )
     end
 
-    sig { returns(Tapioca::TypeVariable) }
+    #: -> Tapioca::TypeVariable
     def coerce_to_type_variable
       TypeVariable.new(name, @variance)
     end
 
     private
 
-    sig { returns(T::Hash[Symbol, T.untyped]) }
+    #: -> Hash[Symbol, untyped]
     def bounds
       @bounds ||= @bounds_proc.call
     end

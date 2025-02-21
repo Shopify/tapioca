@@ -126,7 +126,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(ActiveRecord::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return unless constant.table_exists?
 
@@ -165,7 +166,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
           end
@@ -175,7 +177,7 @@ module Tapioca
 
         ColumnTypeOption = Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption
 
-        sig { returns(ColumnTypeOption) }
+        #: -> ColumnTypeOption
         def column_type_option
           @column_type_option ||= T.let(
             ColumnTypeOption.from_options(options) do |value, default_column_type_option|
@@ -188,15 +190,7 @@ module Tapioca
           )
         end
 
-        sig do
-          params(
-            klass: RBI::Scope,
-            name: String,
-            methods_to_add: T.nilable(T::Array[String]),
-            return_type: String,
-            parameters: T::Array[RBI::TypedParam],
-          ).void
-        end
+        #: (RBI::Scope klass, String name, Array[String]? methods_to_add, ?return_type: String, ?parameters: Array[RBI::TypedParam]) -> void
         def add_method(klass, name, methods_to_add, return_type: "void", parameters: [])
           klass.create_method(
             name,
@@ -205,14 +199,7 @@ module Tapioca
           ) if methods_to_add.nil? || methods_to_add.include?(name)
         end
 
-        sig do
-          params(
-            klass: RBI::Scope,
-            attribute_name: String,
-            column_name: String,
-            methods_to_add: T.nilable(T::Array[String]),
-          ).void
-        end
+        #: (RBI::Scope klass, String attribute_name, ?String column_name, ?Array[String]? methods_to_add) -> void
         def add_methods_for_attribute(klass, attribute_name, column_name = attribute_name, methods_to_add = nil)
           getter_type, setter_type = Helpers::ActiveRecordColumnTypeHelper
             .new(constant, column_type_option: column_type_option)

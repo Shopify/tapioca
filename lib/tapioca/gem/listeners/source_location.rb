@@ -9,13 +9,15 @@ module Tapioca
 
         private
 
-        sig { override.params(event: ConstNodeAdded).void }
+        # @override
+        #: (ConstNodeAdded event) -> void
         def on_const(event)
           file, line = Object.const_source_location(event.symbol)
           add_source_location_comment(event.node, file, line)
         end
 
-        sig { override.params(event: ScopeNodeAdded).void }
+        # @override
+        #: (ScopeNodeAdded event) -> void
         def on_scope(event)
           # Instead of using `const_source_location`, which always reports the first place where a constant is defined,
           # we filter the locations tracked by ConstantDefinition. This allows us to provide the correct location for
@@ -31,13 +33,14 @@ module Tapioca
           add_source_location_comment(event.node, location.path, location.lineno) unless location.nil?
         end
 
-        sig { override.params(event: MethodNodeAdded).void }
+        # @override
+        #: (MethodNodeAdded event) -> void
         def on_method(event)
           file, line = event.method.source_location
           add_source_location_comment(event.node, file, line)
         end
 
-        sig { params(node: RBI::NodeWithComments, file: T.nilable(String), line: T.nilable(Integer)).void }
+        #: (RBI::NodeWithComments node, String? file, Integer? line) -> void
         def add_source_location_comment(node, file, line)
           return unless file && line
 

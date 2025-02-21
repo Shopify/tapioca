@@ -86,7 +86,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           stores = constant.typed_stores
           return if stores.values.all? { |store| store.accessors.empty? }
@@ -110,7 +111,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base).select do |klass|
               klass.include?(ActiveRecord::TypedStore::Behavior)
@@ -135,7 +137,7 @@ module Tapioca
           T::Hash[Symbol, String],
         )
 
-        sig { params(field: ActiveRecord::TypedStore::Field).returns(String) }
+        #: (ActiveRecord::TypedStore::Field field) -> String
         def type_for(field)
           type = TYPES.fetch(field.type_sym, "T.untyped")
 
@@ -154,14 +156,7 @@ module Tapioca
           type
         end
 
-        sig do
-          params(
-            klass: RBI::Scope,
-            name: String,
-            type: String,
-          )
-            .void
-        end
+        #: (RBI::Scope klass, String name, String type) -> void
         def generate_methods(klass, name, type)
           klass.create_method(
             "#{name}=",

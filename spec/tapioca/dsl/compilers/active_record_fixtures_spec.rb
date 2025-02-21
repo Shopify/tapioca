@@ -234,7 +234,7 @@ module Tapioca
 
         private
 
-        sig { void }
+        #: -> void
         def define_fake_rails_app
           base_folder = Pathname.new(tmp_path("lib"))
 

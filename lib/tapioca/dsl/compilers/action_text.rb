@@ -48,7 +48,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           root.create_path(constant) do |scope|
             self.class.action_text_associations(constant).each do |name|
@@ -75,7 +76,7 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { params(constant: T.class_of(::ActiveRecord::Base)).returns(T::Array[String]) }
+          #: (singleton(::ActiveRecord::Base) constant) -> Array[String]
           def action_text_associations(constant)
             # Implementation copied from https://github.com/rails/rails/blob/31052d0e518b9da103eea2f79d250242ed1e3705/actiontext/lib/action_text/attribute.rb#L66
             constant.reflect_on_all_associations(:has_one)
@@ -83,7 +84,8 @@ module Tapioca
               .select { |n| n.start_with?("rich_text_") }
           end
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base)
               .reject(&:abstract_class?)

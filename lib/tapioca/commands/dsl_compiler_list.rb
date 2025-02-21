@@ -6,7 +6,8 @@ module Tapioca
     class DslCompilerList < AbstractDsl
       private
 
-      sig { override.void }
+      # @override
+      #: -> void
       def execute
         load_application
 

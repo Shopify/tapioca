@@ -13,7 +13,7 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { returns(T::Boolean) }
+          #: -> bool
           def forking_env?
             !ENV["NO_FORK"] && Process.respond_to?(:fork)
           end
@@ -33,7 +33,7 @@ module Tapioca
 
           requires_ancestor { Kernel }
 
-          sig { params(_blk: T.untyped).returns(String) }
+          #: ?{ (?) -> untyped } -> String
           def run_in_isolation(&_blk)
             read, write = IO.pipe
             read.binmode
@@ -82,7 +82,7 @@ module Tapioca
 
           # Crazy H4X to get this working in windows / jruby with
           # no forking.
-          sig { params(_blk: T.untyped).returns(String) }
+          #: ?{ (?) -> untyped } -> String
           def run_in_isolation(&_blk)
             this = T.cast(self, Minitest::Test)
             require "tempfile"

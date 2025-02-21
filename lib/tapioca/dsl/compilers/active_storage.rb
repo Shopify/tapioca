@@ -50,7 +50,8 @@ module Tapioca
           }
         end
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return if constant.reflect_on_all_attachments.empty?
 
@@ -74,7 +75,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             descendants_of(::ActiveRecord::Base)
               .reject(&:abstract_class?)
@@ -84,9 +86,7 @@ module Tapioca
 
         private
 
-        sig do
-          params(reflection: ActiveRecord::Reflection::MacroReflection).returns(String)
-        end
+        #: (ActiveRecord::Reflection::MacroReflection reflection) -> String
         def type_of(reflection)
           case reflection
           when ::ActiveStorage::Reflection::HasOneAttachedReflection

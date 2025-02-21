@@ -40,7 +40,8 @@ module Tapioca
 
         ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::Mutation) } }
 
-        sig { override.void }
+        # @override
+        #: -> void
         def decorate
           return unless constant.method_defined?(:resolve)
 
@@ -63,12 +64,7 @@ module Tapioca
           end
         end
 
-        sig do
-          params(
-            argument: T.nilable(GraphQL::Schema::Argument),
-            constant: T.class_of(GraphQL::Schema::Mutation),
-          ).returns(String)
-        end
+        #: (GraphQL::Schema::Argument? argument, singleton(GraphQL::Schema::Mutation) constant) -> String
         def argument_type(argument, constant)
           return "T.untyped" unless argument
 
@@ -78,7 +74,8 @@ module Tapioca
         class << self
           extend T::Sig
 
-          sig { override.returns(T::Enumerable[Module]) }
+          # @override
+          #: -> T::Enumerable[Module]
           def gather_constants
             all_classes.select { |c| GraphQL::Schema::Mutation > c && GraphQL::Schema::RelayClassicMutation != c }
           end

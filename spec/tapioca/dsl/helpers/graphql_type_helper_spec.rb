@@ -10,7 +10,7 @@ module Tapioca
       class GraphqlTypeHelperSpec < Minitest::Spec
         extend T::Sig
 
-        sig { void }
+        #: -> void
         def before_setup
           require "graphql"
         end

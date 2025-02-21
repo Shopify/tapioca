@@ -21,7 +21,7 @@ module Tapioca
 
           Elem = type_member
 
-          sig { params(value: T.untyped).returns(Elem) }
+          #: (untyped value) -> Elem
           def cast(value)
             super
           end

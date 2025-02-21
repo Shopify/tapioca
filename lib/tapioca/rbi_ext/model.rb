@@ -5,7 +5,7 @@ module RBI
   class Tree
     extend T::Sig
 
-    sig { params(constant: ::Module, block: T.nilable(T.proc.params(scope: Scope).void)).returns(Scope) }
+    #: (::Module constant) ?{ (Scope scope) -> void } -> Scope
     def create_path(constant, &block)
       constant_name = Tapioca::Runtime::Reflection.name_of(constant)
       raise "given constant does not have a name" unless constant_name
@@ -21,72 +21,47 @@ module RBI
       end
     end
 
-    sig { params(name: String, block: T.nilable(T.proc.params(scope: Scope).void)).returns(Scope) }
+    #: (String name) ?{ (Scope scope) -> void } -> Scope
     def create_module(name, &block)
       T.cast(create_node(RBI::Module.new(name)), RBI::Scope).tap do |node|
         block&.call(node)
       end
     end
 
-    sig do
-      params(
-        name: String,
-        superclass_name: T.nilable(String),
-        block: T.nilable(T.proc.params(scope: RBI::Scope).void),
-      ).returns(Scope)
-    end
+    #: (String name, ?superclass_name: String?) ?{ (RBI::Scope scope) -> void } -> Scope
     def create_class(name, superclass_name: nil, &block)
       T.cast(create_node(RBI::Class.new(name, superclass_name: superclass_name)), RBI::Scope).tap do |node|
         block&.call(node)
       end
     end
 
-    sig { params(name: String, value: String).void }
+    #: (String name, value: String) -> void
     def create_constant(name, value:)
       create_node(RBI::Const.new(name, value))
     end
 
-    sig { params(name: String).void }
+    #: (String name) -> void
     def create_include(name)
       create_node(RBI::Include.new(name))
     end
 
-    sig { params(name: String).void }
+    #: (String name) -> void
     def create_extend(name)
       create_node(RBI::Extend.new(name))
     end
 
-    sig { params(name: String).void }
+    #: (String name) -> void
     def create_mixes_in_class_methods(name)
       create_node(RBI::MixesInClassMethods.new(name))
     end
 
-    sig do
-      params(
-        name: String,
-        type: String,
-        variance: Symbol,
-        fixed: T.nilable(String),
-        upper: T.nilable(String),
-        lower: T.nilable(String),
-      ).void
-    end
+    #: (String name, type: String, ?variance: Symbol, ?fixed: String?, ?upper: String?, ?lower: String?) -> void
     def create_type_variable(name, type:, variance: :invariant, fixed: nil, upper: nil, lower: nil)
       value = Tapioca::RBIHelper.serialize_type_variable(type, variance, fixed, upper, lower)
       create_node(RBI::TypeMember.new(name, value))
     end
 
-    sig do
-      params(
-        name: String,
-        parameters: T::Array[TypedParam],
-        return_type: T.nilable(String),
-        class_method: T::Boolean,
-        visibility: RBI::Visibility,
-        comments: T::Array[RBI::Comment],
-        block: T.nilable(T.proc.params(node: RBI::Method).void),
-      ).void
-    end
+    #: (String name, ?parameters: Array[TypedParam], ?return_type: String?, ?class_method: bool, ?visibility: RBI::Visibility, ?comments: Array[RBI::Comment]) ?{ (RBI::Method node) -> void } -> void
     def create_method(name, parameters: [], return_type: nil, class_method: false, visibility: RBI::Public.new,
       comments: [], &block)
       return unless Tapioca::RBIHelper.valid_method_name?(name)
@@ -114,12 +89,12 @@ module RBI
 
     private
 
-    sig { returns(T::Hash[String, RBI::Node]) }
+    #: -> Hash[String, RBI::Node]
     def nodes_cache
       @nodes_cache ||= T.let({}, T.nilable(T::Hash[String, Node]))
     end
 
-    sig { params(node: RBI::Node).returns(RBI::Node) }
+    #: (RBI::Node node) -> RBI::Node
     def create_node(node)
       cached = nodes_cache[node.to_s]
       return cached if cached

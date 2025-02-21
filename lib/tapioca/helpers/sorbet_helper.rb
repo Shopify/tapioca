@@ -28,19 +28,19 @@ module Tapioca
       T::Hash[Symbol, ::Gem::Requirement],
     )
 
-    sig { params(sorbet_args: String).returns(Spoom::ExecResult) }
+    #: (*String sorbet_args) -> Spoom::ExecResult
     def sorbet(*sorbet_args)
       SPOOM_CONTEXT.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path)
     end
 
-    sig { returns(String) }
+    #: -> String
     def sorbet_path
       sorbet_path = ENV.fetch(SORBET_EXE_PATH_ENV_VAR, SORBET_BIN)
       sorbet_path = SORBET_BIN if sorbet_path.empty?
       sorbet_path.to_s.shellescape
     end
 
-    sig { params(feature: Symbol, version: T.nilable(::Gem::Version)).returns(T::Boolean) }
+    #: (Symbol feature, ?version: ::Gem::Version?) -> bool
     def sorbet_supports?(feature, version: nil)
       version = SORBET_GEM_SPEC.version unless version
       requirement = FEATURE_REQUIREMENTS[feature]
