@@ -30,3 +30,8 @@ class NotifierWorker
   def self.perform_in(interval, customer_id); end
 end
 ~~~
+
+If your project uses `ActiveSupport` as well, then the compiler will automatically add its classes
+as accepted values for the `interval` parameter:
+* `self.perform_at` will also accept a `ActiveSupport::TimeWithZone` value
+* `self.perform_in` will also accept a `ActiveSupport::Duration` value
