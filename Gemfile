@@ -43,6 +43,7 @@ group :development, :test do
   gem "state_machines"
   gem "activerecord-typedstore"
   gem "identity_cache"
+  gem "cityhash" # identity_cache emits a warning if this is not present
   gem "activeresource"
   gem "google-protobuf"
   gem "graphql"
