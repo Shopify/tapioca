@@ -23,6 +23,8 @@ module Tapioca
 
         IGNORED_SIG_TAGS = T.let(["param", "return"], T::Array[String])
 
+        RBS_SIGNATURE_PREFIX = T.let(":", String)
+
         #: (Pipeline pipeline) -> void
         def initialize(pipeline)
           YARD::Registry.clear
@@ -35,36 +37,43 @@ module Tapioca
         # @override
         #: (ConstNodeAdded event) -> void
         def on_const(event)
-          event.node.comments = documentation_comments(event.symbol)
+          event.node.comments, _ = documentation_comments(event.symbol)
         end
 
         # @override
         #: (ScopeNodeAdded event) -> void
         def on_scope(event)
-          event.node.comments = documentation_comments(event.symbol)
+          event.node.comments, _ = documentation_comments(event.symbol)
         end
 
         # @override
         #: (MethodNodeAdded event) -> void
         def on_method(event)
           separator = event.constant.singleton_class? ? "." : "#"
-          event.node.comments = documentation_comments(
-            "#{event.symbol}#{separator}#{event.node.name}",
-            sigs: event.node.sigs,
-          )
+          name = "#{event.symbol}#{separator}#{event.node.name}"
+          event.node.comments, event.node.rbs_sigs = documentation_comments(name, sigs: event.node.sigs)
         end
 
-        #: (String name, ?sigs: Array[RBI::Sig]) -> Array[RBI::Comment]
+        #: (String name, ?sigs: Array[RBI::Sig]) -> [Array[RBI::Comment], Array[RBI::RBSSig]]
         def documentation_comments(name, sigs: [])
           yard_docs = YARD::Registry.at(name)
-          return [] unless yard_docs
+          return [], [] unless yard_docs
 
           docstring = yard_docs.docstring
-          return [] if /(copyright|license)/i.match?(docstring)
+          return [], [] if /(copyright|license)/i.match?(docstring)
 
-          comments = docstring.lines
+          comments = []
+          rbs_sigs = []
+
+          docstring.lines
             .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
-            .map! { |line| RBI::Comment.new(line) }
+            .map! do |line|
+              if line.strip.start_with?(RBS_SIGNATURE_PREFIX)
+                rbs_sigs << RBI::RBSSig.new(line[1..].strip)
+              else
+                comments << RBI::Comment.new(line)
+              end
+            end
 
           tags = yard_docs.tags
           tags.reject! { |tag| IGNORED_SIG_TAGS.include?(tag.tag_name) } unless sigs.empty?
@@ -95,7 +104,7 @@ module Tapioca
             comments << RBI::Comment.new(line)
           end
 
-          comments
+          [comments, rbs_sigs]
         end
 
         # @override
