@@ -4542,6 +4542,32 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compiled)
     end
 
+    it "compiles RBS signatures" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          #: -> String
+          def foo; end
+
+          #: -> Integer
+          def self.bar; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          #: -> String
+          def foo; end
+
+          class << self
+            #: -> Integer
+            def bar; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile(include_doc: true))
+    end
+
     it "compiles constants with nil values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo

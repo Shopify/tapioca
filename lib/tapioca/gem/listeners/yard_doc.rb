@@ -23,6 +23,8 @@ module Tapioca
 
         IGNORED_SIG_TAGS = T.let(["param", "return"], T::Array[String])
 
+        RBS_SIGNATURE_PREFIX = T.let(":", String)
+
         #: (Pipeline pipeline) -> void
         def initialize(pipeline)
           YARD::Registry.clear
@@ -64,7 +66,13 @@ module Tapioca
 
           comments = docstring.lines
             .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
-            .map! { |line| RBI::Comment.new(line) }
+            .map! do |line|
+              if line.strip.start_with?(RBS_SIGNATURE_PREFIX)
+                RBI::RBSSig.new(line[1..])
+              else
+                RBI::Comment.new(line)
+              end
+            end
 
           tags = yard_docs.tags
           tags.reject! { |tag| IGNORED_SIG_TAGS.include?(tag.tag_name) } unless sigs.empty?
