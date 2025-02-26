@@ -49,12 +49,12 @@ module RubyLsp
 
       #: -> Pathname
       def lockfile
-        @lockfile ||= T.let(Pathname(project_path).join("Gemfile.lock"), T.nilable(Pathname))
+        @lockfile ||= Pathname(project_path).join("Gemfile.lock") #: Pathname?
       end
 
       #: -> String
       def lockfile_diff
-        @lockfile_diff ||= T.let(read_lockfile_diff, T.nilable(String))
+        @lockfile_diff ||= read_lockfile_diff #: String?
       end
 
       #: -> String

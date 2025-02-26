@@ -69,15 +69,12 @@ module Tapioca
 
         #: -> Array[singleton(Rails::Engine)]
         def engines
-          @engines ||= T.let(
-            if Object.const_defined?("Rails::Engine")
-              descendants_of(Object.const_get("Rails::Engine"))
-                .reject(&:abstract_railtie?)
-            else
-              []
-            end,
-            T.nilable(T::Array[T.class_of(Rails::Engine)]),
-          )
+          @engines ||= if Object.const_defined?("Rails::Engine")
+            descendants_of(Object.const_get("Rails::Engine"))
+              .reject(&:abstract_railtie?)
+          else
+            []
+          end #: Array[singleton(Rails::Engine)]?
         end
 
         #: (String input, ?table_type: String) -> String

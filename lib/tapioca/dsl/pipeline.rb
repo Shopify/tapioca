@@ -103,12 +103,9 @@ module Tapioca
 
       #: -> Array[singleton(Compiler)]
       def compilers
-        @compilers ||= T.let(
-          Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
-            T.must(compiler.name)
-          end,
-          T.nilable(T::Array[T.class_of(Compiler)]),
-        )
+        @compilers ||= Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
+          T.must(compiler.name)
+        end #: Array[singleton(Compiler)]?
       end
 
       private

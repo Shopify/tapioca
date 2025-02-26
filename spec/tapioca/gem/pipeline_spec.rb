@@ -75,14 +75,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
   #: -> Hash[String, String]
   def mock_gems
-    @gems ||= T.let({}, T.nilable(T::Hash[String, String]))
+    @gems ||= {} #: Hash[String, String]?
     @gems[DEFAULT_GEM_NAME] = tmp_path if @gems.empty?
     @gems
   end
 
   #: -> Array[String]
   def reported_errors
-    @reported_errors ||= T.let([], T.nilable(T::Array[String]))
+    @reported_errors ||= [] #: Array[String]?
   end
 
   describe Tapioca::Gem::Pipeline do

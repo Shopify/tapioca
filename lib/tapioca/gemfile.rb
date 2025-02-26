@@ -111,14 +111,11 @@ module Tapioca
 
         #: -> Hash[String, Gemfile::GemSpec]
         def spec_lookup_by_file_path
-          @lookup ||= T.let(
-            [*::Gem::Specification.default_stubs, *::Gem::Specification.stubs]
-              .map! { |spec| new(spec.to_spec) }
-              .flat_map do |spec|
-                spec.files.filter_map { |file| [file.realpath.to_s, spec] if file.exist? }
-              end.to_h,
-            T.nilable(T::Hash[String, Gemfile::GemSpec]),
-          )
+          @lookup ||= [*::Gem::Specification.default_stubs, *::Gem::Specification.stubs]
+            .map! { |spec| new(spec.to_spec) }
+            .flat_map do |spec|
+              spec.files.filter_map { |file| [file.realpath.to_s, spec] if file.exist? }
+            end.to_h #: Hash[String, Gemfile::GemSpec]?
         end
       end
 
@@ -253,14 +250,11 @@ module Tapioca
 
       #: -> Regexp
       def require_paths_prefix_matcher
-        @require_paths_prefix_matcher ||= T.let(
-          begin
-            require_paths = T.unsafe(@spec).require_paths
-            prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
-            Regexp.union(prefix_matchers)
-          end,
-          T.nilable(Regexp),
-        )
+        @require_paths_prefix_matcher ||= begin
+          require_paths = T.unsafe(@spec).require_paths
+          prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
+          Regexp.union(prefix_matchers)
+        end #: Regexp?
       end
 
       #: (String file) -> Pathname

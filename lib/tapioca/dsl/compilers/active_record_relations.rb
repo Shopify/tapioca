@@ -223,39 +223,27 @@ module Tapioca
 
         #: -> RBI::Scope
         def model
-          @model ||= T.let(
-            root.create_path(constant),
-            T.nilable(RBI::Scope),
-          )
+          @model ||= root.create_path(constant) #: RBI::Scope?
         end
 
         #: -> RBI::Scope
         def relation_methods_module
-          @relation_methods_module ||= T.let(
-            model.create_module(RelationMethodsModuleName),
-            T.nilable(RBI::Scope),
-          )
+          @relation_methods_module ||= model.create_module(RelationMethodsModuleName) #: RBI::Scope?
         end
 
         #: -> RBI::Scope
         def association_relation_methods_module
-          @association_relation_methods_module ||= T.let(
-            model.create_module(AssociationRelationMethodsModuleName),
-            T.nilable(RBI::Scope),
-          )
+          @association_relation_methods_module ||= model.create_module(AssociationRelationMethodsModuleName) #: RBI::Scope?
         end
 
         #: -> RBI::Scope
         def common_relation_methods_module
-          @common_relation_methods_module ||= T.let(
-            model.create_module(CommonRelationMethodsModuleName),
-            T.nilable(RBI::Scope),
-          )
+          @common_relation_methods_module ||= model.create_module(CommonRelationMethodsModuleName) #: RBI::Scope?
         end
 
         #: -> String
         def constant_name
-          @constant_name ||= T.let(T.must(qualified_name_of(constant)), T.nilable(String))
+          @constant_name ||= T.must(qualified_name_of(constant)) #: String?
         end
 
         #: (Symbol method_name) -> bool

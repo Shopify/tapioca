@@ -179,15 +179,12 @@ module Tapioca
 
         #: -> ColumnTypeOption
         def column_type_option
-          @column_type_option ||= T.let(
-            ColumnTypeOption.from_options(options) do |value, default_column_type_option|
-              add_error(<<~MSG.strip)
-                Unknown value for compiler option `ActiveRecordColumnTypes` given: `#{value}`.
-                Proceeding with the default value: `#{default_column_type_option.serialize}`.
-              MSG
-            end,
-            T.nilable(ColumnTypeOption),
-          )
+          @column_type_option ||= ColumnTypeOption.from_options(options) do |value, default_column_type_option|
+            add_error(<<~MSG.strip)
+              Unknown value for compiler option `ActiveRecordColumnTypes` given: `#{value}`.
+              Proceeding with the default value: `#{default_column_type_option.serialize}`.
+            MSG
+          end #: ColumnTypeOption?
         end
 
         #: (RBI::Scope klass, String name, Array[String]? methods_to_add, ?return_type: String, ?parameters: Array[RBI::TypedParam]) -> void
