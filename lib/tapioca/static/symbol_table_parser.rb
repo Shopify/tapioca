@@ -6,7 +6,7 @@ module Tapioca
     class SymbolTableParser
       extend T::Sig
 
-      SKIP_PARSE_KINDS = T.let(["CLASS_OR_MODULE", "STATIC_FIELD"].freeze, T::Array[String])
+      SKIP_PARSE_KINDS = ["CLASS_OR_MODULE", "STATIC_FIELD"].freeze #: Array[String]
 
       class << self
         extend T::Sig

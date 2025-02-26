@@ -122,18 +122,15 @@ module Tapioca
         end
       end
 
-      IGNORED_GEMS = T.let(
-        [
-          "sorbet",
-          "sorbet-static",
-          "sorbet-runtime",
-          "sorbet-static-and-runtime",
-          "debug",
-          "irb",
-          "fakefs",
-        ].freeze,
-        T::Array[String],
-      )
+      IGNORED_GEMS = [
+        "sorbet",
+        "sorbet-static",
+        "sorbet-runtime",
+        "sorbet-static-and-runtime",
+        "debug",
+        "irb",
+        "fakefs",
+      ].freeze #: Array[String]
 
       #: String
       attr_reader :full_gem_path, :version

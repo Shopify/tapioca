@@ -10,13 +10,10 @@ module Tapioca
       # a different namespace and can only be referred to using their fully
       # qualified name. This constant encapsulates that dual lookup when
       # a compiler needs to be resolved by name.
-      NAMESPACES = T.let(
-        [
-          "#{name}::", # compilers in this namespace
-          "::", # compilers that need to be fully namespaced
-        ],
-        T::Array[String],
-      )
+      NAMESPACES = [
+        "#{name}::", # compilers in this namespace
+        "::", # compilers that need to be fully namespaced
+      ] #: Array[String]
     end
   end
 end

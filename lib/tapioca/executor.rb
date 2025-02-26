@@ -5,7 +5,7 @@ module Tapioca
   class Executor
     extend T::Sig
 
-    MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
+    MINIMUM_ITEMS_PER_WORKER = 2 #: Integer
 
     #: (Array[untyped] queue, ?number_of_workers: Integer?) -> void
     def initialize(queue, number_of_workers: nil)

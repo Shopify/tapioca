@@ -6,7 +6,7 @@ module Tapioca
     class Todo < CommandWithoutTracker
       include SorbetHelper
 
-      DEPRECATION_MESSAGE = T.let(<<~DEPRECATION, String)
+      DEPRECATION_MESSAGE = <<~DEPRECATION #: String
         The `todo` command is deprecated and will be removed in a future release.
 
         If your project is still missing type definitions for constants, try the following:

@@ -10,7 +10,7 @@ module Tapioca
     extend T::Sig
 
     # Path to Tapioca's source files
-    TAPIOCA_PATH = T.let((Pathname.new(__FILE__) / ".." / ".." / "..").to_s, String)
+    TAPIOCA_PATH = (Pathname.new(__FILE__) / ".." / ".." / "..").to_s #: String
 
     # Add a gem requirement to this project's gemfile from a `MockGem`
     #: (MockGem gem, ?require: (FalseClass | String)?) -> void

@@ -8,7 +8,7 @@ module Tapioca
       include Runtime::Reflection
       include RBIHelper
 
-      IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
+      IGNORED_SYMBOLS = ["YAML", "MiniTest", "Mutex"] #: Array[String]
 
       #: Gemfile::GemSpec
       attr_reader :gem
@@ -109,7 +109,7 @@ module Tapioca
       # this looks something like:
       # "(eval at /path/to/file.rb:123)"
       # and we are just interested in the "/path/to/file.rb" part
-      EVAL_SOURCE_FILE_PATTERN = T.let(/\(eval at (.+):\d+\)/, Regexp)
+      EVAL_SOURCE_FILE_PATTERN = /\(eval at (.+):\d+\)/ #: Regexp
 
       #: ((String | Symbol) name) -> bool
       def constant_in_gem?(name)

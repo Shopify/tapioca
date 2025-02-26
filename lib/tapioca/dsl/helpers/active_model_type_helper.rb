@@ -30,15 +30,12 @@ module Tapioca
 
           private
 
-          MEANINGLESS_TYPES = T.let(
-            [
-              T.untyped,
-              T.noreturn,
-              T::Private::Types::Void,
-              T::Private::Types::NotTyped,
-            ].freeze,
-            T::Array[Object],
-          )
+          MEANINGLESS_TYPES = [
+            T.untyped,
+            T.noreturn,
+            T::Private::Types::Void,
+            T::Private::Types::NotTyped,
+          ].freeze #: Array[Object]
 
           #: (untyped type) -> bool
           def meaningful_type?(type)

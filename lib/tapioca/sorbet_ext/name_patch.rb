@@ -5,7 +5,7 @@ module T
   module Types
     class Simple
       module NamePatch
-        NAME_METHOD = T.let(Module.instance_method(:name), UnboundMethod)
+        NAME_METHOD = Module.instance_method(:name) #: UnboundMethod
 
         def name
           # Sorbet memoizes this method into the `@name` instance variable but

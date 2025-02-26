@@ -58,10 +58,7 @@ module Tapioca
       class IdentityCache < Compiler
         extend T::Sig
 
-        COLLECTION_TYPE = T.let(
-          ->(type) { "T::Array[::#{type}]" },
-          T.proc.params(type: T.any(Module, String)).returns(String),
-        )
+        COLLECTION_TYPE = ->(type) { "T::Array[::#{type}]" } #: ^((Module | String) type) -> String
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
