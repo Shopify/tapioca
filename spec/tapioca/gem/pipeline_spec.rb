@@ -4550,15 +4550,43 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           #: -> Integer
           def self.bar; end
+
+          #: Integer
+          attr_reader :baz
+
+          #: (^(Integer) -> String) -> void
+          attr_reader :qux
+
+          #: (^(Integer) -> String proc) -> void
+          def quux(proc); end
+
+          #: ((^(Integer) -> String proc) -> void) -> void
+          def corge(nested_proc); end
         end
       RUBY
 
       output = template(<<~RBI)
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#1
         class Foo
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#9
+          #: -> Integer
+          def baz; end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#18
+          #: ((^(Integer) -> String proc) -> void) -> void
+          def corge(nested_proc); end
+
           # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#3
           #: -> String
           def foo; end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#15
+          #: (^(Integer) -> String proc) -> void
+          def quux(proc); end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#12
+          #: (^(Integer) -> String) -> void
+          def qux; end
 
           class << self
             # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#6

@@ -69,7 +69,7 @@ module Tapioca
             .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
             .map! do |line|
               if line.strip.start_with?(RBS_SIGNATURE_PREFIX)
-                rbs_sigs << RBI::RBSSig.new(line[1..].strip)
+                rbs_sigs << create_rbs_sig(line)
               else
                 comments << RBI::Comment.new(line)
               end
@@ -105,6 +105,25 @@ module Tapioca
           end
 
           [comments, rbs_sigs]
+        end
+
+        #: (String line) -> RBI::RBSSig
+        def create_rbs_sig(line)
+          sig = T.must(line[1..]).strip
+
+          # attr_* methods don't have to specify "->" in their signatures but since we convert it
+          # to a regular method definitions we need to have "->" to represent the return type.
+          # Also we need becareful of proc types since they contain a "->" already.
+          if !sig.include?("->")
+            sig = "-> #{sig}"
+          elsif sig.include?("^") # Proc type
+            # Check if there's a "->" that's not inside a proc type
+            # A proc type will have the form (^(Arg1, Arg2) -> ReturnType)
+            outer_arrow_present = !/\([^()]*->[^()]*\)/.match?(sig)
+            sig = "-> #{sig}" unless outer_arrow_present
+          end
+
+          RBI::RBSSig.new(sig)
         end
 
         # @override
