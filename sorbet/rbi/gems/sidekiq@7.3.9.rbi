@@ -5,7 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem sidekiq`.
 
 
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#16
+# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#3
 module ActiveJob
   class << self
     # source://activejob/7.1.5.1/lib/active_job/queue_adapter.rb#7
@@ -261,7 +261,7 @@ class ActiveJob::Base
   end
 end
 
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#17
+# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#4
 module ActiveJob::QueueAdapters
   class << self
     # source://activejob/7.1.5.1/lib/active_job/queue_adapters.rb#137
@@ -275,11 +275,11 @@ end
 #
 #   Rails.application.config.active_job.queue_adapter = :sidekiq
 #
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#26
+# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#13
 class ActiveJob::QueueAdapters::SidekiqAdapter
   # @api private
   #
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#35
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#22
   def enqueue(job); end
 
   # Defines whether enqueuing should happen implicitly to after commit when called
@@ -288,17 +288,17 @@ class ActiveJob::QueueAdapters::SidekiqAdapter
   # @api private
   # @return [Boolean]
   #
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#30
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#17
   def enqueue_after_transaction_commit?; end
 
   # @api private
   #
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#51
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#38
   def enqueue_all(jobs); end
 
   # @api private
   #
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#43
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#30
   def enqueue_at(job, timestamp); end
 end
 
@@ -306,7 +306,7 @@ end
 #
 # @api private
 #
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#84
+# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#71
 class ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper < ::Sidekiq::ActiveJob::Wrapper; end
 
 # Use `Sidekiq.transactional_push!` in your sidekiq.rb initializer
@@ -402,12 +402,12 @@ module Sidekiq
   end
 end
 
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#4
+# source://sidekiq//lib/sidekiq/rails.rb#7
 module Sidekiq::ActiveJob; end
 
 # @api private
 #
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#6
+# source://sidekiq//lib/sidekiq/rails.rb#9
 class Sidekiq::ActiveJob::Wrapper
   include ::Sidekiq::Job
   include ::Sidekiq::Job::Options
@@ -416,7 +416,7 @@ class Sidekiq::ActiveJob::Wrapper
 
   # @api private
   #
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#9
+  # source://sidekiq//lib/sidekiq/rails.rb#12
   def perform(job_data); end
 
   # source://sidekiq//lib/sidekiq/job.rb#141
@@ -1823,7 +1823,7 @@ end
 # source://sidekiq//lib/sidekiq.rb#42
 Sidekiq::NAME = T.let(T.unsafe(nil), String)
 
-# source://sidekiq//lib/sidekiq/rails.rb#7
+# source://sidekiq//lib/sidekiq/rails.rb#18
 class Sidekiq::Rails < ::Rails::Engine
   class << self
     # source://activesupport/7.1.5.1/lib/active_support/callbacks.rb#70
@@ -1831,20 +1831,20 @@ class Sidekiq::Rails < ::Rails::Engine
   end
 end
 
-# source://sidekiq//lib/sidekiq/rails.rb#8
+# source://sidekiq//lib/sidekiq/rails.rb#19
 class Sidekiq::Rails::Reloader
   # @return [Reloader] a new instance of Reloader
   #
-  # source://sidekiq//lib/sidekiq/rails.rb#9
+  # source://sidekiq//lib/sidekiq/rails.rb#20
   def initialize(app = T.unsafe(nil)); end
 
-  # source://sidekiq//lib/sidekiq/rails.rb#13
+  # source://sidekiq//lib/sidekiq/rails.rb#24
   def call; end
 
-  # source://sidekiq//lib/sidekiq/rails.rb#20
+  # source://sidekiq//lib/sidekiq/rails.rb#31
   def inspect; end
 
-  # source://sidekiq//lib/sidekiq/rails.rb#24
+  # source://sidekiq//lib/sidekiq/rails.rb#35
   def to_hash; end
 end
 
