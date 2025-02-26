@@ -2386,6 +2386,7 @@ Nokogiri::VERSION_INFO = T.let(T.unsafe(nil), Hash)
 
 # source://nokogiri//lib/nokogiri/version/info.rb#7
 class Nokogiri::VersionInfo
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 

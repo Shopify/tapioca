@@ -190,15 +190,15 @@ RuboCop::Cop::Sorbet::BuggyObsoleteStrictMemoization::MSG = T.let(T.unsafe(nil),
 #   end
 #   end
 #
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#35
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#36
 class RuboCop::Cop::Sorbet::CallbackConditionalsBinding < ::RuboCop::Cop::Base
   include ::RuboCop::Cop::Alignment
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#81
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#82
   def argumentless_unbound_callable_callback_conditional?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#91
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#92
   def on_send(node); end
 
   private
@@ -206,14 +206,14 @@ class RuboCop::Cop::Sorbet::CallbackConditionalsBinding < ::RuboCop::Cop::Base
   # Find the immediately enclosing class or module name.
   # Returns `nil`` if the immediate parent (skipping begin if present) is not a class or module.
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#128
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#129
   def immediately_enclosing_module_name(node); end
 end
 
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#39
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#40
 RuboCop::Cop::Sorbet::CallbackConditionalsBinding::MSG = T.let(T.unsafe(nil), String)
 
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#41
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/callback_conditionals_binding.rb#42
 RuboCop::Cop::Sorbet::CallbackConditionalsBinding::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Disallows the usage of `checked(true)`. This usage could cause
@@ -716,6 +716,37 @@ end
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_superclass_const_literal.rb#29
 RuboCop::Cop::Sorbet::ForbidSuperclassConstLiteral::MSG = T.let(T.unsafe(nil), String)
 
+# Disallow using `T::Enum`.
+#
+# @example
+#
+#   # bad
+#   class MyEnum < T::Enum
+#   enums do
+#   A = new
+#   B = new
+#   end
+#   end
+#
+#   # good
+#   class MyEnum
+#   A = "a"
+#   B = "b"
+#   C = "c"
+#   end
+#
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_enum.rb#26
+class RuboCop::Cop::Sorbet::ForbidTEnum < ::RuboCop::Cop::Base
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_enum.rb#34
+  def on_class(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_enum.rb#30
+  def t_enum?(param0 = T.unsafe(nil)); end
+end
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_enum.rb#27
+RuboCop::Cop::Sorbet::ForbidTEnum::MSG = T.let(T.unsafe(nil), String)
+
 # Disallow using `T::Struct` and `T::Props`.
 #
 # @example
@@ -888,6 +919,9 @@ end
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#17
 class RuboCop::Cop::Sorbet::ForbidTUnsafe < ::RuboCop::Cop::Base
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#24
+  def on_csend(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#24
   def on_send(node); end
 
   # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_unsafe.rb#22
@@ -1028,13 +1062,14 @@ RuboCop::Cop::Sorbet::GemVersionAnnotationHelper::VERSION_PREFIX = T.let(T.unsaf
 # * `SuggestedStrictness`: Sorbet strictness level suggested in offense messages (default: 'false')
 # * `MinimumStrictness`: If set, make offense if the strictness level in the file is below this one
 #
+# If a `SuggestedStrictness` level is specified, it will be used in autocorrect.
 # If a `MinimumStrictness` level is specified, it will be used in offense messages and autocorrect.
 #
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/has_sigil.rb#17
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/has_sigil.rb#18
 class RuboCop::Cop::Sorbet::HasSigil < ::RuboCop::Cop::Sorbet::ValidSigil
   # @return [Boolean]
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/has_sigil.rb#18
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/has_sigil.rb#19
   def require_sigil_on_all_files?; end
 end
 
@@ -1399,9 +1434,20 @@ RuboCop::Cop::Sorbet::SingleLineRbiClassModuleDefinitions::MSG = T.let(T.unsafe(
 
 # Makes the Sorbet `strict` sigil mandatory in all files.
 #
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/strict_sigil.rb#10
+# @example
+#
+#   # bad
+#   # typed: true
+#
+#   # bad
+#   # typed: false
+#
+#   # good
+#   # typed: strict
+#
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/strict_sigil.rb#25
 class RuboCop::Cop::Sorbet::StrictSigil < ::RuboCop::Cop::Sorbet::HasSigil
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/strict_sigil.rb#11
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/strict_sigil.rb#26
   def minimum_strictness; end
 end
 
@@ -1557,72 +1603,73 @@ RuboCop::Cop::Sorbet::ValidGemVersionAnnotations::VALID_OPERATORS = T.let(T.unsa
 # * `ExactStrictness`: If set, make offense if the strictness level in the file is different than this one
 #
 # If an `ExactStrictness` level is specified, it will be used in offense messages and autocorrect.
+# If a `SuggestedStrictness` level is specified, it will be used in autocorrect.
 # Otherwise, if a `MinimumStrictness` level is specified, it will be used in offense messages and autocorrect.
 #
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#20
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#21
 class RuboCop::Cop::Sorbet::ValidSigil < ::RuboCop::Cop::Base
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#23
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#24
   def on_new_investigation; end
 
   protected
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#150
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#151
   def autocorrect(corrector); end
 
   # checks
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#55
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#56
   def check_sigil_present(sigil); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#118
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#119
   def check_strictness_level(sigil, strictness); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#94
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#95
   def check_strictness_not_empty(sigil, strictness); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#106
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#107
   def check_strictness_valid(sigil, strictness); end
 
   # Default is `nil`
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#184
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#185
   def exact_strictness; end
 
   # extraction
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#43
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#44
   def extract_sigil(processed_source); end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#49
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#50
   def extract_strictness(sigil); end
 
   # Default is `nil`
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#178
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#179
   def minimum_strictness; end
 
   # Default is `false`
   #
   # @return [Boolean]
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#167
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#168
   def require_sigil_on_all_files?; end
 
   # Default is `'false'`
   #
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#172
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#173
   def suggested_strictness; end
 
-  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#72
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#73
   def suggested_strictness_level; end
 end
 
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#39
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#40
 RuboCop::Cop::Sorbet::ValidSigil::SIGIL_REGEX = T.let(T.unsafe(nil), Regexp)
 
-# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#38
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/sigils/valid_sigil.rb#39
 RuboCop::Cop::Sorbet::ValidSigil::STRICTNESS_LEVELS = T.let(T.unsafe(nil), Array)
 
 # Disallows the usage of `.void.checked(:tests)`.
