@@ -101,7 +101,7 @@ module Tapioca
         @root = root
         @constant = constant
         @options = options
-        @errors = T.let([], T::Array[String])
+        @errors = [] #: Array[String]
       end
 
       #: (String compiler_name) -> bool

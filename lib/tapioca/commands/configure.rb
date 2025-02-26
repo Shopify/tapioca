@@ -16,8 +16,8 @@ module Tapioca
 
         super()
 
-        @installer = T.let(nil, T.nilable(Bundler::Installer))
-        @spec = T.let(nil, T.nilable(Bundler::StubSpecification))
+        @installer = nil #: Bundler::Installer?
+        @spec = nil #: Bundler::StubSpecification?
       end
 
       private

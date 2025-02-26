@@ -28,8 +28,8 @@ module Tapioca
 
       #: -> void
       def initialize
-        @symbols = T.let(Set.new, T::Set[String])
-        @parents = T.let([], T::Array[String])
+        @symbols = Set.new #: Set[String]
+        @parents = [] #: Array[String]
       end
 
       #: (Hash[String, untyped] object) -> void

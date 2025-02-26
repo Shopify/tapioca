@@ -15,13 +15,13 @@ module Tapioca
         typed_overrides: {}
       )
         super()
-        @outpath = T.let(Pathname.new(DEFAULT_ANNOTATIONS_DIR), Pathname)
+        @outpath = Pathname.new(DEFAULT_ANNOTATIONS_DIR) #: Pathname
         @central_repo_root_uris = central_repo_root_uris
         @auth = auth
         @netrc_file = netrc_file
-        @netrc_info = T.let(nil, T.nilable(Netrc))
-        @tokens = T.let(repo_tokens, T::Hash[String, T.nilable(String)])
-        @indexes = T.let({}, T::Hash[String, RepoIndex])
+        @netrc_info = nil #: Netrc?
+        @tokens = repo_tokens #: Hash[String, String?]
+        @indexes = {} #: Hash[String, RepoIndex]
         @typed_overrides = typed_overrides
       end
 

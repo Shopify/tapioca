@@ -25,15 +25,15 @@ module Tapioca
 
     #: (Array[String] excluded_gems) -> void
     def initialize(excluded_gems)
-      @gemfile = T.let(File.new(Bundler.default_gemfile), File)
-      @lockfile = T.let(File.new(Bundler.default_lockfile), File)
-      @definition = T.let(Bundler::Dsl.evaluate(gemfile, lockfile, {}), Bundler::Definition)
+      @gemfile = File.new(Bundler.default_gemfile) #: File
+      @lockfile = File.new(Bundler.default_lockfile) #: File
+      @definition = Bundler::Dsl.evaluate(gemfile, lockfile, {}) #: Bundler::Definition
       @excluded_gems = excluded_gems
 
       dependencies, missing_specs = load_dependencies
 
-      @dependencies = T.let(dependencies, T::Array[GemSpec])
-      @missing_specs = T.let(missing_specs, T::Array[String])
+      @dependencies = dependencies #: Array[GemSpec]
+      @missing_specs = missing_specs #: Array[String]
     end
 
     #: (String gem_name) -> GemSpec?
@@ -143,12 +143,12 @@ module Tapioca
 
       #: (Spec spec) -> void
       def initialize(spec)
-        @spec = T.let(spec, Tapioca::Gemfile::Spec)
+        @spec = spec #: Tapioca::Gemfile::Spec
         real_gem_path = to_realpath(@spec.full_gem_path)
-        @full_gem_path = T.let(real_gem_path, String)
-        @version = T.let(version_string, String)
-        @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
-        @files = T.let(collect_files, T::Array[Pathname])
+        @full_gem_path = real_gem_path #: String
+        @version = version_string #: String
+        @exported_rbi_files = nil #: Array[String]?
+        @files = collect_files #: Array[Pathname]
       end
 
       #: (BasicObject other) -> bool

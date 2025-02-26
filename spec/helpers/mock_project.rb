@@ -63,7 +63,7 @@ module Tapioca
     # @override(allow_incompatible: true)
     #: (?version: String?) -> Spoom::ExecResult
     def bundle_install!(version: nil)
-      @bundler_version = T.let(version, T.nilable(String))
+      @bundler_version = version #: String?
 
       opts = {}
       opts[:chdir] = absolute_path

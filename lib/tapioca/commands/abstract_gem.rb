@@ -45,11 +45,11 @@ module Tapioca
 
         super()
 
-        @bundle = T.let(Gemfile.new(exclude), Gemfile)
-        @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
-        @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
-        @include_doc = T.let(include_doc, T::Boolean)
-        @include_loc = T.let(include_loc, T::Boolean)
+        @bundle = Gemfile.new(exclude) #: Gemfile
+        @existing_rbis = nil #: Hash[String, String]?
+        @expected_rbis = nil #: Hash[String, String]?
+        @include_doc = include_doc #: bool
+        @include_loc = include_loc #: bool
         @include_exported_rbis = include_exported_rbis
         @halt_upon_load_error = halt_upon_load_error
       end

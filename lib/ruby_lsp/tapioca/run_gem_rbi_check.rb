@@ -16,9 +16,9 @@ module RubyLsp
       #: (String project_path) -> void
       def initialize(project_path)
         @project_path = project_path
-        @stdout = T.let("", String)
-        @stderr = T.let("", String)
-        @status = T.let(nil, T.nilable(Process::Status))
+        @stdout = "" #: String
+        @stderr = "" #: String
+        @status = nil #: Process::Status?
       end
 
       #: -> void

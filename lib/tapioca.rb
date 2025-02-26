@@ -7,7 +7,7 @@ require "rubygems/user_interaction"
 module Tapioca
   extend T::Sig
 
-  @traces = T.let([], T::Array[TracePoint])
+  @traces = [] #: Array[TracePoint]
 
   class << self
     extend T::Sig

@@ -13,7 +13,7 @@ module Tapioca
         def payload_symbols
           unless @payload_symbols
             output = symbol_table_json_from("-e ''", table_type: "symbol-table-full-json")
-            @payload_symbols = T.let(SymbolTableParser.parse_json(output), T.nilable(T::Set[String]))
+            @payload_symbols = SymbolTableParser.parse_json(output) #: Set[String]?
           end
 
           T.must(@payload_symbols)

@@ -23,20 +23,20 @@ module Tapioca
         include_doc: false,
         include_loc: false
       )
-        @root = T.let(RBI::Tree.new, RBI::Tree)
+        @root = RBI::Tree.new #: RBI::Tree
         @gem = gem
-        @seen = T.let(Set.new, T::Set[String])
-        @alias_namespace = T.let(Set.new, T::Set[String])
+        @seen = Set.new #: Set[String]
+        @alias_namespace = Set.new #: Set[String]
         @error_handler = error_handler
 
-        @events = T.let([], T::Array[Gem::Event])
+        @events = [] #: Array[Gem::Event]
 
-        @payload_symbols = T.let(Static::SymbolLoader.payload_symbols, T::Set[String])
-        @bootstrap_symbols = T.let(load_bootstrap_symbols(@gem), T::Set[String])
+        @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
+        @bootstrap_symbols = load_bootstrap_symbols(@gem) #: Set[String]
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
-        @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
+        @node_listeners = [] #: Array[Gem::Listeners::Base]
         @node_listeners << Gem::Listeners::SorbetTypeVariables.new(self)
         @node_listeners << Gem::Listeners::Mixins.new(self)
         @node_listeners << Gem::Listeners::DynamicMixins.new(self)

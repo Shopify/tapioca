@@ -15,7 +15,7 @@ module Tapioca
     #: (*untyped args) -> void
     def initialize(*args)
       super(*T.unsafe(args))
-      @project = T.let(mock_project, MockProject)
+      @project = mock_project #: MockProject
     end
 
     # TODO: Remove this `before(:all)` once Sorbet understands `after(:all)` or instance variables access after a bind
@@ -165,7 +165,7 @@ module Tapioca
     # helper for making development easier. The diff that this creates should be
     # checked carefully.
     if ENV["TAPIOCA_ASSERTIONS_UPDATE"]
-      @assertion_updates = T.let({}, T::Hash[String, T::Array[[Integer, Symbol, String]]])
+      @assertion_updates = {} #: Hash[String, Array[[Integer, Symbol, String]]]
 
       class << self
         extend T::Sig
