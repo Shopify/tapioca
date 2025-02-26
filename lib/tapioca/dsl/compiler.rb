@@ -123,7 +123,7 @@ module Tapioca
       # Get the types of each parameter from a method signature
       #: ((Method | UnboundMethod) method_def, untyped signature) -> Array[String]
       def parameters_types_from_signature(method_def, signature)
-        params = T.let([], T::Array[String])
+        params = [] #: Array[String]
 
         return method_def.parameters.map { "T.untyped" } unless signature
 
@@ -163,7 +163,7 @@ module Tapioca
         method_def = signature.nil? ? method_def : signature.method
         method_types = parameters_types_from_signature(method_def, signature)
 
-        parameters = T.let(method_def.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
+        parameters = method_def.parameters #: Array[[Symbol, Symbol?]]
 
         parameters.each_with_index.map do |(type, name), index|
           fallback_arg_name = "_arg#{index}"

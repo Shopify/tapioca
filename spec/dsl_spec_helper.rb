@@ -15,7 +15,7 @@ class DslSpec < Minitest::Spec
     #: -> singleton(DslSpec)
     def spec_test_class
       # It should be the one that directly inherits from DslSpec
-      class_ancestors = T.cast(ancestors.grep(Class), T::Array[T.class_of(DslSpec)])
+      class_ancestors = ancestors.grep(Class) #: Array[singleton(DslSpec)]
 
       klass = class_ancestors
         .take_while { |ancestor| ancestor != DslSpec }

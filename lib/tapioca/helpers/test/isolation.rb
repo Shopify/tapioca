@@ -39,7 +39,7 @@ module Tapioca
             read.binmode
             write.binmode
 
-            this = T.cast(self, Minitest::Test)
+            this = self #: Minitest::Test
             pid = fork do
               read.close
               yield
@@ -84,7 +84,7 @@ module Tapioca
           # no forking.
           #: ?{ (?) -> untyped } -> String
           def run_in_isolation(&_blk)
-            this = T.cast(self, Minitest::Test)
+            this = self #: Minitest::Test
             require "tempfile"
 
             if ENV["ISOLATION_TEST"]

@@ -74,7 +74,7 @@ module Tapioca
       def fetch_indexes
         multiple_repos = @central_repo_root_uris.size > 1
         repo_number = 1
-        indexes = T.let({}, T::Hash[String, RepoIndex])
+        indexes = {} #: Hash[String, RepoIndex]
 
         @central_repo_root_uris.each do |uri|
           index = fetch_index(uri, repo_number: multiple_repos ? repo_number : nil)
@@ -105,7 +105,7 @@ module Tapioca
       #: (Array[GemInfo] project_gems) -> Array[String]
       def fetch_annotations(project_gems)
         say("Fetching gem annotations from central repository... ", [:blue, :bold])
-        fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[GemInfo, T::Array[String]])
+        fetchable_gems = Hash.new { |h, k| h[k] = [] } #: Hash[GemInfo, Array[String]]
 
         project_gems.each_with_object(fetchable_gems) do |gem_info, hash|
           @indexes.each do |uri, index|

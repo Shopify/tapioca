@@ -44,7 +44,7 @@ module RubyLsp
           # Get a handle to the Rails add-on's runtime client. The call to `rails_runner_client` will block this thread
           # until the server has finished booting, but it will not block the main LSP. This has to happen inside of a
           # thread
-          addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.4.0", "< 0.5"), ::RubyLsp::Rails::Addon)
+          addon = ::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.4.0", "< 0.5") #: ::RubyLsp::Rails::Addon
           @rails_runner_client = addon.rails_runner_client
           @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
@@ -90,9 +90,9 @@ module RubyLsp
         return unless @global_state&.enabled_feature?(:tapiocaAddon)
         return unless @rails_runner_client.connected?
 
-        has_route_change = T.let(false, T::Boolean)
-        has_fixtures_change = T.let(false, T::Boolean)
-        needs_compiler_reload = T.let(false, T::Boolean)
+        has_route_change = false #: bool
+        has_fixtures_change = false #: bool
+        needs_compiler_reload = false #: bool
 
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path

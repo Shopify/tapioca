@@ -62,10 +62,7 @@ module Tapioca
         # @override
         #: -> void
         def decorate
-          properties = T.let(
-            T.unsafe(constant).properties,
-            ::SmartProperties::PropertyCollection,
-          )
+          properties = T.unsafe(constant).properties #: ::SmartProperties::PropertyCollection
           return if properties.keys.empty?
 
           root.create_path(constant) do |k|

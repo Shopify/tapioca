@@ -20,13 +20,13 @@ module Tapioca
       def initialize(constant)
         @constant = constant
         mixins_from_modules = {}.compare_by_identity
-        class_attribute_readers = T.let([], T::Array[Symbol])
-        class_attribute_writers = T.let([], T::Array[Symbol])
-        class_attribute_predicates = T.let([], T::Array[Symbol])
+        class_attribute_readers = [] #: Array[Symbol]
+        class_attribute_writers = [] #: Array[Symbol]
+        class_attribute_predicates = [] #: Array[Symbol]
 
-        instance_attribute_readers = T.let([], T::Array[Symbol])
-        instance_attribute_writers = T.let([], T::Array[Symbol])
-        instance_attribute_predicates = T.let([], T::Array[Symbol])
+        instance_attribute_readers = [] #: Array[Symbol]
+        instance_attribute_writers = [] #: Array[Symbol]
+        instance_attribute_predicates = [] #: Array[Symbol]
 
         Class.new do
           # Override the `self.include` method

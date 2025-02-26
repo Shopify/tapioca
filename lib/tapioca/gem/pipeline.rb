@@ -317,7 +317,7 @@ module Tapioca
 
       #: (Class[top] constant) -> String?
       def compile_superclass(constant)
-        superclass = T.let(nil, T.nilable(T::Class[T.anything])) # rubocop:disable Lint/UselessAssignment
+        superclass = nil #: Class[top]? # rubocop:disable Lint/UselessAssignment
 
         while (superclass = superclass_of(constant))
           constant_name = name_of(constant)

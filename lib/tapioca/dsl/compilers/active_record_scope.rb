@@ -89,7 +89,7 @@ module Tapioca
 
         #: -> Array[Symbol]
         def scope_method_names
-          scope_methods = T.let([], T::Array[Symbol])
+          scope_methods = [] #: Array[Symbol]
           constant = self.constant
 
           # Keep gathering scope methods until we hit "ActiveRecord::Base"
@@ -100,7 +100,7 @@ module Tapioca
             break unless superclass
 
             # we are guaranteed to have a superclass that is of type "ActiveRecord::Base"
-            constant = T.cast(superclass, T.class_of(ActiveRecord::Base))
+            constant = superclass #: singleton(ActiveRecord::Base)
           end
 
           scope_methods.uniq

@@ -59,14 +59,14 @@ module Tapioca
           return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
 
           signature = lookup_signature_of(method)
-          method = T.let(signature.method, UnboundMethod) if signature
+          method = signature.method #: UnboundMethod if signature
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
           return if struct_method?(constant, method_name)
           return if method_name.start_with?("__t_props_generated_")
 
-          parameters = T.let(method.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
+          parameters = method.parameters #: Array[[Symbol, Symbol?]]
 
           sanitized_parameters = parameters.each_with_index.map do |(type, name), index|
             fallback_arg_name = "_arg#{index}"
@@ -142,7 +142,7 @@ module Tapioca
         #: (UnboundMethod method, Module constant) -> bool
         def method_owned_by_constant?(method, constant)
           # Widen the type of `method` to be nilable
-          method = T.let(method, T.nilable(UnboundMethod))
+          method = method #: UnboundMethod?
 
           while method
             return true if method.owner == constant

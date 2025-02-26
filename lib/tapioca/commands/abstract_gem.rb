@@ -101,7 +101,7 @@ module Tapioca
         say("Removing RBI files of gems that have been removed:", [:blue, :bold])
         puts
 
-        anything_done = T.let(false, T::Boolean)
+        anything_done = false #: bool
 
         gems = removed_rbis
 
@@ -128,7 +128,7 @@ module Tapioca
         say("Generating RBI files of gems that are added or updated:", [:blue, :bold])
         puts
 
-        anything_done = T.let(false, T::Boolean)
+        anything_done = false #: bool
 
         gems = added_rbis
 
