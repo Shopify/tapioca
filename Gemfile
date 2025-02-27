@@ -62,3 +62,5 @@ group :test do
 end
 
 gem "kramdown", "~> 2.5"
+
+gem "rbs", "~> 3.8"

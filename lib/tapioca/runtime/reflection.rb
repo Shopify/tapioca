@@ -123,9 +123,61 @@ module Tapioca
         end
       end
 
+      RbsSignature = Struct.new(:method, :arg_types, :kwarg_types, :rest_type, :keyrest_type, :block_name, :block_type) do
+        #: () -> bool
+        def has_rest
+          !rest_type.nil?
+        end
+
+        #: () -> bool
+        def has_keyrest
+          !keyrest_type.nil?
+        end
+      end
+
+      #: ((UnboundMethod | Method) method) -> untyped
+      def rbs_signature_of(method)
+        require "rbs"
+
+        YARD.parse(method.source_location.first, [], Logger::Severity::FATAL)
+        constant = method.owner
+
+        separator = constant.singleton_class? ? "." : "#"
+        name = "#{constant.name}#{separator}#{method.name}"
+
+        yard_docs = YARD::Registry.at(name)
+        docstring = yard_docs.docstring
+
+        rbs_signature_string = docstring.lines.find do |line|
+          line.strip.start_with?(":")
+        end&.delete_prefix(":")
+
+        return nil if rbs_signature_string.nil?
+
+        rbs_method_type = RBS::Parser.parse_method_type(rbs_signature_string)
+
+        RbsSignature.new(
+          method: method,
+          arg_types: rbs_method_type.type.required_positionals.map do |param|
+            [param.name, param.type.to_s]
+          end,
+          kwarg_types: [],
+          rest_type: nil,
+          keyrest_type: nil,
+          block_name: nil,
+          block_type: nil,
+        )
+      end
+
       #: ((UnboundMethod | Method) method) -> untyped
       def signature_of!(method)
-        T::Utils.signature_for_method(method)
+        signature = T::Utils.signature_for_method(method)
+
+        if signature.nil?
+          signature = rbs_signature_of(method)
+        end
+
+        signature
       end
 
       #: ((UnboundMethod | Method) method) -> untyped

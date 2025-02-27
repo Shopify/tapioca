@@ -99,7 +99,7 @@ module Tapioca
               add_ruby_file("mailer.rb", <<~RUBY)
                 class NotifierMailer < ActionMailer::Base
                   extend T::Sig
-                  sig { params(customer_id: Integer).void }
+                  #: (Integer customer_id) -> void
                   def notify_customer(customer_id)
                     # ...
                   end
