@@ -4552,7 +4552,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def self.bar; end
 
           #: Integer
-          attr_reader :baz
+          attr_accessor :baz
 
           #: (^(Integer) -> String) -> void
           attr_reader :qux
@@ -4571,6 +4571,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#9
           #: -> Integer
           def baz; end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#9
+          #: (Integer _arg0) -> Integer
+          def baz=(_arg0); end
 
           # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#18
           #: ((^(Integer) -> String proc) -> void) -> void
