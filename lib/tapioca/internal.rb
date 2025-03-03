@@ -18,12 +18,15 @@ require "net/http"
 require "netrc"
 require "parallel"
 require "pathname"
+
 require "shellwords"
 require "tempfile"
 require "thor"
 require "yaml"
 require "yard-sorbet"
 require "prism"
+
+
 
 require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/sorbet_ext/backcompat_patches"
@@ -61,3 +64,10 @@ require "tapioca/gem"
 require "tapioca/dsl"
 require "tapioca/commands"
 require "tapioca/cli"
+
+require "ruby-next"
+require "ruby-next/language"
+require "ruby-next/language/setup"
+require "tapioca/rbs/rewriter"
+require "ruby-next/language/runtime"
+require "ruby-next/core/runtime"

@@ -23,6 +23,7 @@ module Tapioca
         include_doc: false,
         include_loc: false
       )
+        puts "PIPELINE.NEW"
         @root = T.let(RBI::Tree.new, RBI::Tree)
         @gem = gem
         @seen = T.let(Set.new, T::Set[String])

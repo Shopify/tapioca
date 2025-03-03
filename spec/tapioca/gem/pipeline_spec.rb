@@ -39,6 +39,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     end
 
     # wrap it in our gemspec wrapper
+
     gem = Tapioca::Gemfile::GemSpec.new(Gem::Specification.find_by_name(gem_name))
 
     # clear out previously reported errors
@@ -4561,10 +4562,16 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
     it "compiles methods with RBS signatures" do
       add_ruby_file("foo.rb", <<~RUBY)
+        puts "IN GEM"
+
+        require "sorbet-runtime"
+
         class Foo
           class Bar; end
 
           class Baz
+            extend T::Sig
+
             #: -> Bar
             def foo; end
           end
