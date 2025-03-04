@@ -4603,6 +4603,31 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile(include_doc: true, include_loc: true))
     end
 
+    it "compiles RBS signatures with fully qualified names" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          class Bar
+            #: -> Bar
+            def bar; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        # source://the-default-gem//lib/foo.rb#1
+        module Foo; end
+
+        # source://the-default-gem//lib/foo.rb#2
+        class Foo::Bar
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#4
+          # -> Foo::Bar
+          def bar; end
+        end
+      RBI
+
+      assert_equal(output, compile(include_doc: true, include_loc: true))
+    end
+
     it "compiles constants with nil values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo

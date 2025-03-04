@@ -1,6 +1,8 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "rbs"
+
 module Tapioca
   module Gem
     module Listeners
@@ -124,10 +126,38 @@ module Tapioca
             sig = add_return_type_for_proc(sig)
           end
 
+          sig = fully_qualify_types(sig, node)
+
           # Signatures for writer methods lack the `_arg0` parameter required for type checking
-          sig = add_implicit_arg0(sig, node) if writer_method?(node)
+          # sig = add_implicit_arg0(sig, node) if writer_method?(node)
 
           RBI::RBSSig.new(sig)
+        end
+
+        # Signature types don't have to be fully qualified, this causes errors when we generate flat class definitions.
+        #: (String sig, RBI::Method node) -> String
+        def fully_qualify_types(sig, node)
+          method_type = RBS::Parser.parse_method_type(sig)
+          return sig unless method_type.type.return_type.is_a?(RBS::Types::ClassInstance)
+
+          return_type_name = method_type.type.return_type.name.name.to_s
+          if return_type_name == "Array"
+            array = true
+            return_type_name = method_type.type.return_type.args[0].name.name
+          end
+
+          possible_parent_namespaces(node.parent_tree.name).each do |namespace|
+            fully_qualified_name = "#{namespace}::#{return_type_name}"
+            if Object.const_defined?(fully_qualified_name)
+              if array
+                method_type.type.return_type.args[0].name.instance_variable_set(:@name, fully_qualified_name)
+              else
+                method_type.type.return_type.name.instance_variable_set(:@name, fully_qualified_name)
+              end
+            end
+          end
+
+          method_type.to_s
         end
 
         # Adds implicit `_arg0` parameter. Useful for `attr_writer` and `attr_accessor` signatures
@@ -159,6 +189,20 @@ module Tapioca
         #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
+        end
+
+        #: (String name) -> T::Array[String]
+        def possible_parent_namespaces(name)
+          parts = name.split("::")
+          result = []
+
+          # Build up parent namespaces from the parts, starting with the full namespace
+          # and progressively removing the rightmost part
+          parts.size.downto(1) do |i|
+            result << parts[0...i].join("::")
+          end
+
+          result
         end
       end
     end
