@@ -26,8 +26,6 @@ require "yaml"
 require "yard-sorbet"
 require "prism"
 
-
-
 require "tapioca/runtime/dynamic_mixin_compiler"
 require "tapioca/sorbet_ext/backcompat_patches"
 require "tapioca/sorbet_ext/name_patch"
