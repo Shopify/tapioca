@@ -1,25 +1,24 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "ruby-next/language/runtime"
+
 module Tapioca
   module RBS
     class Rewriter < RubyNext::Language::Rewriters::Text
-      # NAME = "RBS rewriter"
-      # MIN_SUPPORTED_VERSION = Gem::Version.new(RubyNext::NEXT_VERSION)
+      NAME = "rbs_rewriter"
 
       def rewrite(source)
-        safe_rewrite(source).tap do |rewritten|
-          context.track!(self) if rewritten != source
+        puts source
+
+        rewritten = source.gsub("#: -> Bar") do |_match|
+          context.track!(self)
+          "extend T::Sig; sig { returns(Bar) }"
         end
-      end
 
-      def safe_rewrite(source)
-        puts source
+        puts rewritten
 
-        source = source.gsub("#: -> Bar", "def qux; end; sig { returns(Bar) }")
-        puts source
-        # res
-        source
+        rewritten
       end
     end
   end

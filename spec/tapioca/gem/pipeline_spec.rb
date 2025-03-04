@@ -4564,14 +4564,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       add_ruby_file("foo.rb", <<~RUBY)
         puts "IN GEM"
 
-        require "sorbet-runtime"
-
         class Foo
           class Bar; end
 
           class Baz
-            extend T::Sig
-
             #: -> Bar
             def foo; end
           end
@@ -4583,7 +4579,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Foo::Bar; end
 
         class Foo::Baz
-          #: -> Foo::Bar
+          sig { returns(::Foo::Bar) }
           def foo; end
         end
       RBI
