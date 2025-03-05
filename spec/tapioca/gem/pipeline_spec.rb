@@ -4558,18 +4558,72 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    # RBS
-
-    it "compiles methods with RBS signatures" do
+    it "compiles RBS signatures" do
       add_ruby_file("foo.rb", <<~RUBY)
-        puts "IN GEM"
+        class Foo
+          #: (Integer a, b: String) -> void
+          def foo(a, b:); end
 
+          #: (Integer a, b: String) -> Integer
+          def bar(a, b:); end
+
+          #: [U] (a: U) -> U
+          def baz(a); end
+
+          #: (Integer? a, ?Integer b, *Integer c, d: Integer, ?e: Integer, **Integer) { (Integer) -> String } -> ::Foo
+          def qux(a, b = 42, *c, d:, e: 43, **f, &g); end
+
+          #: (^(String) -> void)
+          attr_accessor :some_attribute
+
+          class << self
+            extend T::Sig
+
+            #: -> void
+            def quux; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(a: ::Integer, b: ::String).returns(::Integer) }
+          def bar(a, b:); end
+
+          sig { type_parameters(:U).params(a: T.type_parameter(:U)).returns(T.type_parameter(:U)) }
+          def baz(a); end
+
+          sig { params(a: ::Integer, b: ::String).void }
+          def foo(a, b:); end
+
+          sig { params(a: T.nilable(::Integer), b: ::Integer, c: ::Integer, d: ::Integer, e: ::Integer, f: ::Integer, g: T.proc.params(arg0: ::Integer).returns(::String)).returns(::Foo) }
+          def qux(a, b = T.unsafe(nil), *c, d:, e: T.unsafe(nil), **f, &g); end
+
+          sig { returns(T.proc.params(arg0: ::String).void) }
+          def some_attribute; end
+
+          def some_attribute=(_arg0); end
+
+          class << self
+            sig { void }
+            def quux; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles RBS signatures with nested namespaces" do
+      add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           class Bar; end
 
           class Baz
             #: -> Bar
-            def foo; end
+            def foo
+              Bar.new
+            end
           end
         end
       RUBY
@@ -4581,6 +4635,25 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Foo::Baz
           sig { returns(::Foo::Bar) }
           def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "does not compile yard comments" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          attr_reader :results #:nodoc:
+
+          def foo; end #:yields:
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          def foo; end
+          def results; end
         end
       RBI
 
