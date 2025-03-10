@@ -125,7 +125,7 @@ module Tapioca
         fetched_gems.keys.map(&:name).sort
       end
 
-      sig { params(repo_uris: T::Array[String], gem_info: GemInfo).returns(T::Boolean) }
+      #: (Array[String] repo_uris, GemInfo gem_info) -> bool
       def fetch_annotation(repo_uris, gem_info)
         gem_name = gem_info.name
         gem_version = gem_info.version
