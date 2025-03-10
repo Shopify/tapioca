@@ -258,7 +258,7 @@ module Tapioca
             say_error("      #{conflict.right.loc}", :yellow)
           end
 
-          return file
+          # return file
         end
 
         file.root = RBI::Rewriters::Merge.merge_trees(file.root, tree, keep: RBI::Rewriters::Merge::Keep::LEFT)

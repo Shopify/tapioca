@@ -4638,6 +4638,38 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
       RBI
 
+      assert_equal(output, compile(include_loc: true))
+    end
+
+    it "compiles RBS signatures with generic types" do
+      RubyNext::Language.include_patterns << "**/foo.rb"
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          extend T::Generic
+          Elem = type_member
+
+          #: (a: Elem) -> Elem
+          def foo(a); end
+
+          #: (b: Array[Elem]) -> Array[Elem]
+          def bar(b); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          extend T::Generic
+
+          Elem = type_member
+
+          sig { params(b: T::Array[Elem]).returns(T::Array[Elem]) }
+          def bar(b); end
+
+          sig { params(a: Elem).returns(Elem) }
+          def foo(a); end
+        end
+      RBI
+
       assert_equal(output, compile)
     end
 
