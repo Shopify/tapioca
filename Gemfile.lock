@@ -347,7 +347,7 @@ GEM
     sorbet-static-and-runtime (0.5.11911)
       sorbet (= 0.5.11911)
       sorbet-runtime (= 0.5.11911)
-    spoom (1.5.4)
+    spoom (1.6.0)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
       rbi (>= 0.2.3)
