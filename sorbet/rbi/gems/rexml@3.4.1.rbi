@@ -3675,48 +3675,48 @@ end
 # A Source that wraps an IO.  See the Source class for method
 # documentation
 #
-# source://rexml//lib/rexml/source.rb#201
+# source://rexml//lib/rexml/source.rb#215
 class REXML::IOSource < ::REXML::Source
   # block_size has been deprecated
   #
   # @return [IOSource] a new instance of IOSource
   #
-  # source://rexml//lib/rexml/source.rb#205
+  # source://rexml//lib/rexml/source.rb#219
   def initialize(arg, block_size = T.unsafe(nil), encoding = T.unsafe(nil)); end
 
   # @return the current line in the source
   #
-  # source://rexml//lib/rexml/source.rb#310
+  # source://rexml//lib/rexml/source.rb#324
   def current_line; end
 
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/source.rb#305
+  # source://rexml//lib/rexml/source.rb#319
   def empty?; end
 
-  # source://rexml//lib/rexml/source.rb#265
+  # source://rexml//lib/rexml/source.rb#279
   def ensure_buffer; end
 
-  # source://rexml//lib/rexml/source.rb#269
+  # source://rexml//lib/rexml/source.rb#283
   def match(pattern, cons = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/source.rb#288
+  # source://rexml//lib/rexml/source.rb#302
   def match?(pattern, cons = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#226
+  # source://rexml//lib/rexml/source.rb#240
   def read(term = T.unsafe(nil), min_bytes = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#247
+  # source://rexml//lib/rexml/source.rb#261
   def read_until(term); end
 
   private
 
-  # source://rexml//lib/rexml/source.rb#357
+  # source://rexml//lib/rexml/source.rb#371
   def encoding_updated; end
 
-  # source://rexml//lib/rexml/source.rb#332
+  # source://rexml//lib/rexml/source.rb#346
   def readline(term = T.unsafe(nil)); end
 end
 
@@ -4280,7 +4280,7 @@ class REXML::Parsers::BaseParser
   # source://rexml//lib/rexml/parsers/baseparser.rb#208
   def empty?; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#540
+  # source://rexml//lib/rexml/parsers/baseparser.rb#543
   def entity(reference, entities); end
 
   # Returns the value of attribute entity_expansion_count.
@@ -4311,7 +4311,7 @@ class REXML::Parsers::BaseParser
 
   # Escapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#551
+  # source://rexml//lib/rexml/parsers/baseparser.rb#554
   def normalize(input, entities = T.unsafe(nil), entity_filter = T.unsafe(nil)); end
 
   # Peek at the +depth+ event in the stack.  The first element on the stack
@@ -4345,7 +4345,7 @@ class REXML::Parsers::BaseParser
 
   # Unescapes all possible entities
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#567
+  # source://rexml//lib/rexml/parsers/baseparser.rb#570
   def unnormalize(string, entities = T.unsafe(nil), filter = T.unsafe(nil)); end
 
   # Push an event back on the head of the stream.  This method
@@ -4356,40 +4356,43 @@ class REXML::Parsers::BaseParser
 
   private
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#616
+  # source://rexml//lib/rexml/parsers/baseparser.rb#619
   def add_namespace(prefix, uri); end
 
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/parsers/baseparser.rb#649
+  # source://rexml//lib/rexml/parsers/baseparser.rb#652
   def need_source_encoding_update?(xml_declaration_encoding); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#769
+  # source://rexml//lib/rexml/parsers/baseparser.rb#791
   def parse_attributes(prefixes); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#668
+  # source://rexml//lib/rexml/parsers/baseparser.rb#671
   def parse_id(base_error_message, accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#696
+  # source://rexml//lib/rexml/parsers/baseparser.rb#699
   def parse_id_invalid_details(accept_external_id:, accept_public_id:); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#655
+  # source://rexml//lib/rexml/parsers/baseparser.rb#658
   def parse_name(base_error_message); end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#631
+  # source://rexml//lib/rexml/parsers/baseparser.rb#634
   def pop_namespaces_restore; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#734
+  # source://rexml//lib/rexml/parsers/baseparser.rb#737
   def process_instruction; end
 
   # source://rexml//lib/rexml/parsers/baseparser.rb#254
   def pull_event; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#625
+  # source://rexml//lib/rexml/parsers/baseparser.rb#628
   def push_namespaces_restore; end
 
-  # source://rexml//lib/rexml/parsers/baseparser.rb#642
+  # source://rexml//lib/rexml/parsers/baseparser.rb#645
   def record_entity_expansion(delta = T.unsafe(nil)); end
+
+  # source://rexml//lib/rexml/parsers/baseparser.rb#777
+  def scan_quote; end
 end
 
 # source://rexml//lib/rexml/parsers/baseparser.rb#130
@@ -4683,28 +4686,28 @@ class REXML::Source
   # @param encoding if non-null, sets the encoding of the source to this
   # @return [Source] a new instance of Source
   #
-  # source://rexml//lib/rexml/source.rb#81
+  # source://rexml//lib/rexml/source.rb#87
   def initialize(arg, encoding = T.unsafe(nil)); end
 
   # The current buffer (what we're going to read next)
   #
-  # source://rexml//lib/rexml/source.rb#94
+  # source://rexml//lib/rexml/source.rb#100
   def buffer; end
 
-  # source://rexml//lib/rexml/source.rb#104
+  # source://rexml//lib/rexml/source.rb#110
   def buffer_encoding=(encoding); end
 
   # @return the current line in the source
   #
-  # source://rexml//lib/rexml/source.rb#161
+  # source://rexml//lib/rexml/source.rb#175
   def current_line; end
 
-  # source://rexml//lib/rexml/source.rb#98
+  # source://rexml//lib/rexml/source.rb#104
   def drop_parsed_content; end
 
   # @return [Boolean] true if the Source is exhausted
   #
-  # source://rexml//lib/rexml/source.rb#156
+  # source://rexml//lib/rexml/source.rb#170
   def empty?; end
 
   # Returns the value of attribute encoding.
@@ -4715,10 +4718,10 @@ class REXML::Source
   # Inherited from Encoding
   # Overridden to support optimized en/decoding
   #
-  # source://rexml//lib/rexml/source.rb#110
+  # source://rexml//lib/rexml/source.rb#116
   def encoding=(enc); end
 
-  # source://rexml//lib/rexml/source.rb#128
+  # source://rexml//lib/rexml/source.rb#134
   def ensure_buffer; end
 
   # The line number of the last consumed text
@@ -4726,32 +4729,38 @@ class REXML::Source
   # source://rexml//lib/rexml/source.rb#64
   def line; end
 
-  # source://rexml//lib/rexml/source.rb#131
+  # source://rexml//lib/rexml/source.rb#137
   def match(pattern, cons = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://rexml//lib/rexml/source.rb#139
+  # source://rexml//lib/rexml/source.rb#145
   def match?(pattern, cons = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#147
+  # source://rexml//lib/rexml/source.rb#161
+  def peek_byte; end
+
+  # source://rexml//lib/rexml/source.rb#153
   def position; end
 
-  # source://rexml//lib/rexml/source.rb#151
+  # source://rexml//lib/rexml/source.rb#157
   def position=(pos); end
 
-  # source://rexml//lib/rexml/source.rb#115
+  # source://rexml//lib/rexml/source.rb#121
   def read(term = T.unsafe(nil)); end
 
-  # source://rexml//lib/rexml/source.rb#118
+  # source://rexml//lib/rexml/source.rb#124
   def read_until(term); end
+
+  # source://rexml//lib/rexml/source.rb#165
+  def scan_byte; end
 
   private
 
-  # source://rexml//lib/rexml/source.rb#170
+  # source://rexml//lib/rexml/source.rb#184
   def detect_encoding; end
 
-  # source://rexml//lib/rexml/source.rb#188
+  # source://rexml//lib/rexml/source.rb#202
   def encoding_updated; end
 end
 
