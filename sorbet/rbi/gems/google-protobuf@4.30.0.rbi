@@ -82,6 +82,7 @@ class Google::Protobuf::Descriptor
   def msgclass; end
   def name; end
   def options; end
+  def to_proto; end
 end
 
 class Google::Protobuf::DescriptorPool
@@ -109,6 +110,7 @@ class Google::Protobuf::EnumDescriptor
   def lookup_value(_arg0); end
   def name; end
   def options; end
+  def to_proto; end
 end
 
 # source://google-protobuf//lib/google/protobuf.rb#16
@@ -167,6 +169,7 @@ class Google::Protobuf::FieldDescriptor
 
   def submsg_name; end
   def subtype; end
+  def to_proto; end
   def type; end
 end
 
@@ -176,6 +179,7 @@ class Google::Protobuf::FileDescriptor
 
   def name; end
   def options; end
+  def to_proto; end
 end
 
 # source://google-protobuf//lib/google/protobuf.rb#46
@@ -385,6 +389,7 @@ class Google::Protobuf::MethodDescriptor
   def options; end
   def output_type; end
   def server_streaming; end
+  def to_proto; end
 end
 
 class Google::Protobuf::OneofDescriptor
@@ -396,6 +401,7 @@ class Google::Protobuf::OneofDescriptor
   def each; end
   def name; end
   def options; end
+  def to_proto; end
 end
 
 # source://google-protobuf//lib/google/protobuf.rb#20
@@ -725,6 +731,7 @@ class Google::Protobuf::ServiceDescriptor
   def file_descriptor; end
   def name; end
   def options; end
+  def to_proto; end
 end
 
 # source://google-protobuf//lib/google/protobuf.rb#18
