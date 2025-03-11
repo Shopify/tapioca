@@ -61,3 +61,5 @@ require "tapioca/gem"
 require "tapioca/dsl"
 require "tapioca/commands"
 require "tapioca/cli"
+
+require "tapioca/rbs/rewriter"

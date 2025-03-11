@@ -4556,5 +4556,134 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       assert_equal(output, compile)
     end
+
+    it "compiles RBS signatures" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: strict
+
+        class Foo
+          #: String
+          attr_accessor :foo
+
+          #: (Integer a, b: String) -> void
+          def bar(a, b:); end
+
+          #: -> (^(String) -> void)
+          def self.baz; end
+
+          class << self
+            extend T::Sig
+
+            #: -> void
+            def qux; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { params(a: ::Integer, b: ::String).void }
+          def bar(a, b:); end
+
+          sig { returns(::String) }
+          def foo; end
+
+          def foo=(_arg0); end
+
+          class << self
+            sig { returns(T.proc.params(arg0: ::String).void) }
+            def baz; end
+
+            sig { void }
+            def qux; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "compiles RBS signatures with nested namespaces" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        class Foo
+          class Bar; end
+
+          class Baz
+            #: -> Bar
+            def foo
+              Bar.new
+            end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo; end
+        class Foo::Bar; end
+
+        class Foo::Baz
+          sig { returns(::Foo::Bar) }
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "does not compile yard comments as RBS" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        class Foo
+          #:nodoc:
+          attr_reader :bar
+
+          #:yields:
+          def foo; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          def bar; end
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "ignorers RBS signatures that contain errors" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        class Foo
+          #: \o/
+          attr_reader :bar
+
+          #: foo
+          def foo; end
+
+          #: -> void
+          def qux; end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          sig { returns(T.untyped) }
+          def bar; end
+
+          def foo; end
+
+          sig { void }
+          def qux; end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
   end
 end
