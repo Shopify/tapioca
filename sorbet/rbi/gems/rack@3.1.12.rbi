@@ -4295,7 +4295,7 @@ class Rack::Static
 
   # Convert HTTP header rules to HTTP headers
   #
-  # source://rack//lib/rack/static.rb#166
+  # source://rack//lib/rack/static.rb#167
   def applicable_rules(path); end
 
   # source://rack//lib/rack/static.rb#125
