@@ -35,7 +35,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveModelAttributes < Compiler
-        extend T::Sig
 
         ConstantType = type_member do
           { fixed: T.all(T::Class[::ActiveModel::Attributes], ::ActiveModel::Attributes::ClassMethods) }
@@ -55,7 +54,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

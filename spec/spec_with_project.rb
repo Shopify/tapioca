@@ -168,7 +168,6 @@ module Tapioca
       @assertion_updates = T.let({}, T::Hash[String, T::Array[[Integer, Symbol, String]]])
 
       class << self
-        extend T::Sig
 
         #: Hash[String, Array[[Integer, Symbol, String]]]
         attr_reader :assertion_updates

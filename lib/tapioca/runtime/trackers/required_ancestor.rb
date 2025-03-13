@@ -9,7 +9,6 @@ module Tapioca
         @required_ancestors_map = {}.compare_by_identity
 
         class << self
-          extend T::Sig
 
           #: (T::Helpers requiring, ^-> void block) -> void
           def register(requiring, block)

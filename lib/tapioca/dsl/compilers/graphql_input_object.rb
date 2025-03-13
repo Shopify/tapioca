@@ -35,7 +35,6 @@ module Tapioca
       # end
       # ~~~
       class GraphqlInputObject < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::InputObject) } }
 
@@ -77,7 +76,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

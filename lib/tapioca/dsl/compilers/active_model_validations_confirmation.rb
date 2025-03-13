@@ -41,7 +41,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveModelValidationsConfirmation < Compiler
-        extend T::Sig
 
         ConstantType = type_member do
           {

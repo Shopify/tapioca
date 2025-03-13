@@ -5,7 +5,6 @@ module Tapioca
   module Helpers
     module Test
       module Content
-        extend T::Sig
         extend T::Helpers
 
         requires_ancestor { Kernel }

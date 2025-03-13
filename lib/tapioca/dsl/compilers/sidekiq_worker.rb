@@ -42,7 +42,6 @@ module Tapioca
       # * `self.perform_at` will also accept a `ActiveSupport::TimeWithZone` value
       # * `self.perform_in` will also accept a `ActiveSupport::Duration` value
       class SidekiqWorker < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(::Sidekiq::Worker) } }
 
@@ -85,7 +84,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

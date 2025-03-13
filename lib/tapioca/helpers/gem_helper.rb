@@ -3,7 +3,6 @@
 
 module Tapioca
   module GemHelper
-    extend T::Sig
 
     #: ((String | Pathname) app_dir, String full_gem_path) -> bool
     def gem_in_app_dir?(app_dir, full_gem_path)

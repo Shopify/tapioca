@@ -7,11 +7,9 @@ module Tapioca
       # Copied from ActiveSupport::Testing::Isolation since we cannot require
       # constants from ActiveSupport without polluting the global namespace.
       module Isolation
-        extend T::Sig
         require "thread"
 
         class << self
-          extend T::Sig
 
           #: -> bool
           def forking_env?
@@ -28,7 +26,6 @@ module Tapioca
         end
 
         module Forking
-          extend T::Sig
           extend T::Helpers
 
           requires_ancestor { Kernel }
@@ -73,7 +70,6 @@ module Tapioca
         end
 
         module Subprocess
-          extend T::Sig
           extend T::Helpers
 
           requires_ancestor { Kernel }

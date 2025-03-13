@@ -5,13 +5,11 @@ module Tapioca
   module Runtime
     module Trackers
       module Tracker
-        extend T::Sig
         extend T::Helpers
 
         abstract!
 
         class << self
-          extend T::Sig
 
           #: ((Tracker & Module) base) -> void
           def extended(base)

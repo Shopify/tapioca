@@ -5,7 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class SourceLocation < Base
-        extend T::Sig
 
         private
 

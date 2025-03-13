@@ -9,6 +9,8 @@ module Tapioca
   module Dsl
     module Helpers
       class ActiveModelTypeHelperSpec < Minitest::Spec
+        extend T::Sig
+
         class ValueType
           extend T::Generic
 
@@ -30,8 +32,6 @@ module Tapioca
         describe "type_for" do
           it "discovers custom type from __tapioca_type method" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { returns(T.untyped) }
               def __tapioca_type
                 T.any(Integer, String)
@@ -67,8 +67,6 @@ module Tapioca
 
           it "discovers custom type from signature on deserialize method" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { params(value: T.untyped).returns(String) }
               def cast(value)
                 super
@@ -99,8 +97,6 @@ module Tapioca
 
           it "discovers custom type from signature on cast method" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { params(value: T.untyped).returns(String) }
               def cast(value)
                 super
@@ -131,8 +127,6 @@ module Tapioca
 
           it "discovers custom type from signature on cast_value method" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { params(value: T.untyped).returns(T.untyped) }
               def cast(value)
                 super
@@ -163,8 +157,6 @@ module Tapioca
 
           it "discovers custom type from signature on serialize method" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { params(value: T.untyped).returns(T.untyped) }
               def cast(value)
                 super
@@ -195,8 +187,6 @@ module Tapioca
 
           it "discovers custom type even if it is not ActiveModel::Type::Value" do
             klass = Class.new do
-              extend T::Sig
-
               sig { params(value: T.untyped).returns(Integer) }
               def cast(value)
               end
@@ -210,8 +200,6 @@ module Tapioca
 
           it "discovers custom type even if it is generic" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { params(value: T.untyped).returns(ValueType[Integer]) }
               def cast(value)
               end
@@ -232,8 +220,6 @@ module Tapioca
 
           it "returns a weak type if custom type cannot be discovered from signatures" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { params(value: T.untyped).returns(T.untyped) }
               def cast(value)
                 super
@@ -308,8 +294,6 @@ module Tapioca
 
           it "does not assume the type is nilable when `#__tapioca_type` is defined" do
             klass = Class.new(ActiveModel::Type::Value) do
-              extend T::Sig
-
               sig { returns(Module) }
               def __tapioca_type = String
             end

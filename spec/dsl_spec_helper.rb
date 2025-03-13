@@ -10,7 +10,6 @@ class DslSpec < Minitest::Spec
   include Tapioca::Helpers::Test::DslCompiler
 
   class << self
-    extend T::Sig
 
     #: -> singleton(DslSpec)
     def spec_test_class

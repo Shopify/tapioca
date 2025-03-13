@@ -3,7 +3,6 @@
 
 module RBI
   class Tree
-    extend T::Sig
 
     #: (::Module constant) ?{ (Scope scope) -> void } -> Scope
     def create_path(constant, &block)

@@ -5,7 +5,6 @@ require "spec_helper"
 
 module Tapioca
   class GemfileSpec < SpecWithProject
-    extend T::Sig
 
     describe Tapioca::Gemfile do
       it "export_rbi_files? returns false if the gem does not export RBI files" do
@@ -149,7 +148,6 @@ module Tapioca
   end
 
   class MockGemSpecification < ::Gem::Specification
-    extend T::Sig
     extend T::Generic
 
     Elem = type_template

@@ -55,7 +55,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveResource < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveResource::Base) } }
 
@@ -72,7 +71,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

@@ -34,7 +34,6 @@ module Tapioca
       # end
       # ~~~
       class RailsGenerators < Compiler
-        extend T::Sig
 
         BUILT_IN_MATCHER = T.let(
           /::(ActionMailbox|ActionText|ActiveRecord|Rails)::Generators/,
@@ -61,7 +60,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

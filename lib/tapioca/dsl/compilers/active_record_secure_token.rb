@@ -33,7 +33,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveRecordSecureToken < Compiler
-        extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
 
         ConstantType = type_member { { fixed: T.all(T.class_of(ActiveRecord::Base), Extensions::ActiveRecord) } }
@@ -58,7 +57,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

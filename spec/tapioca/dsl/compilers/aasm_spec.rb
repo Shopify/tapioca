@@ -50,7 +50,6 @@ module Tapioca
               add_ruby_file("content.rb", <<~RUBY)
                 class StateMachine
                   include AASM
-                  extend T::Sig
 
                   aasm do
                     state :sleeping, initial: true
@@ -184,7 +183,6 @@ module Tapioca
               add_ruby_file("content.rb", <<~RUBY)
                 class StateMachine
                   include AASM
-                  extend T::Sig
 
                   aasm(:status) do
                     state :sleeping, initial: true
@@ -326,7 +324,6 @@ module Tapioca
               add_ruby_file("content.rb", <<~RUBY)
                 class StateMachine
                   include AASM
-                  extend T::Sig
 
                   aasm(namespace: :foo) do
                     state :sleeping, initial: true

@@ -56,7 +56,6 @@ module Tapioca
       # end
       # ~~~
       class IdentityCache < Compiler
-        extend T::Sig
 
         COLLECTION_TYPE = T.let(
           ->(type) { "T::Array[::#{type}]" },
@@ -96,7 +95,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

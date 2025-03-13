@@ -186,7 +186,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "correctly compiles abstract methods" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
-          extend T::Sig
           extend T::Helpers
 
           abstract!
@@ -211,7 +210,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "correctly compiles abstract singleton methods" do
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
-          extend T::Sig
           extend T::Helpers
 
           abstract!
@@ -243,7 +241,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           abstract!
 
           class << self
-            extend T::Sig
 
             sig { abstract.void }
             def foo; end
@@ -269,7 +266,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       add_ruby_file("bar.rb", <<~RUBY)
         class Bar
           class << self
-            extend T::Sig
             extend T::Helpers
 
             abstract!
@@ -1236,7 +1232,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Bar; end
 
         class Foo
-          extend T::Sig
 
           class Bar; end
           class String; end
@@ -2996,7 +2991,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "compiles constants and methods marked as final properly" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
-          extend T::Sig
           extend T::Helpers
 
           final!
@@ -3211,7 +3205,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
 
           class SimpleGenericType
-            extend T::Sig
             extend T::Generic
 
             Template = type_template
@@ -3232,7 +3225,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           end
 
           module ForwardDeclaration
-            extend T::Sig
             extend T::Generic
 
             Elem = type_member { { fixed: LateDeclaredModule }}
@@ -3414,7 +3406,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "compiles fixed hashes in params properly" do
       add_ruby_file("sigs_with_fixed_hash_with_symbols_and_string.rb", <<~RUBY)
         class Foo
-          extend T::Sig
 
           sig { params(params: { "foo" => Integer, bar: String, :"foo bar" => Class }).void }
           def foo(params)
@@ -3435,7 +3426,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "can compile sealed generics" do
       add_ruby_file("sealed_generic.rb", <<~RUBY)
         class Foo
-          extend T::Sig
           extend T::Helpers
           extend T::Generic
 
@@ -3636,7 +3626,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "compiles nested generic interfaces" do
       add_ruby_file("generic.rb", <<~RUBY)
         module Root
-          extend T::Sig
           extend T::Generic
           Elem = type_member
           abstract!
@@ -3659,7 +3648,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         end
 
         module Node
-          extend T::Sig
           extend T::Helpers
           extend T::Generic
           Elem = type_member
@@ -3667,7 +3655,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
         class OtherRoot
           include ::Root
-          extend T::Sig
           extend T::Generic
           Elem = type_member { { fixed: Integer } }
 
@@ -3775,7 +3762,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "compiles structs with default values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo < T::Struct
-          extend T::Sig
 
           prop :a, T.nilable(Integer), default: nil
           prop :b, T::Boolean, default: true
@@ -4090,7 +4076,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           #
           # The Foo class is in the core of our application
           class Foo
-            extend T::Sig
 
             # This secret constant unlocks the magic behind Foo
             CONSTANT = "SECRET"
@@ -4139,7 +4124,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             def self.baz(t); end
 
             class << self
-              extend T::Sig
               # Method something
               #
               # This is another singleton method
@@ -4227,7 +4211,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           #
           # The Foo class is in the core of our application
           class Foo
-            extend T::Sig
 
             # This secret constant unlocks the magic behind Foo
             CONSTANT = "SECRET"
@@ -4267,7 +4250,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             def self.baz(t); end
 
             class << self
-              extend T::Sig
               # Method something
               #
               # This is another singleton method
@@ -4389,7 +4371,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "compiles proc bindings" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
-          extend T::Sig
 
           sig { params(block: T.proc.bind(String).void).void }
           def bar(&block); end
@@ -4415,7 +4396,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
     it "compile RBIs with location from gem source" do
       add_ruby_file("bar.rb", <<~RB)
         module Bar
-          extend T::Sig
 
           # Some documentation
           sig { void }

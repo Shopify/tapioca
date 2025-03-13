@@ -92,7 +92,6 @@ module Tapioca
             it "generates helper module and helper proxy class if helper_method target does not exist" do
               add_ruby_file("controller.rb", <<~RUBY)
                 class BaseController < ActionController::Base
-                  extend T::Sig
 
                   helper_method :current_user_name
                   helper_method "notify_user"
@@ -143,7 +142,6 @@ module Tapioca
             it "generates helper module and helper proxy class when defining helper using helper_method" do
               add_ruby_file("controller.rb", <<~RUBY)
                 class UserController < ActionController::Base
-                  extend T::Sig
 
                   helper_method :current_user_name
                   helper_method "notify_user"
@@ -190,7 +188,6 @@ module Tapioca
                 class UserController < ActionController::Base
                   helper { def greet(user) "Hello" end }
                   helper do
-                    extend T::Sig
 
                     sig { params(user_id: Integer).void }
                     def notify_user(user_id)

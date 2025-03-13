@@ -54,7 +54,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveModelSecurePassword < Compiler
-        extend T::Sig
 
         ConstantType = type_member do
           { fixed: T.all(T::Class[::ActiveModel::SecurePassword], ::ActiveModel::SecurePassword::ClassMethods) }
@@ -93,7 +92,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

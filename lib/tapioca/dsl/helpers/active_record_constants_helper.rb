@@ -5,7 +5,6 @@ module Tapioca
   module Dsl
     module Helpers
       module ActiveRecordConstantsHelper
-        extend T::Sig
 
         ReflectionType = T.type_alias do
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)

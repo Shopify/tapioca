@@ -3,7 +3,6 @@
 
 module Tapioca
   class Executor
-    extend T::Sig
 
     MINIMUM_ITEMS_PER_WORKER = T.let(2, Integer)
 

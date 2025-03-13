@@ -5,7 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class Base
-        extend T::Sig
         extend T::Helpers
 
         abstract!

@@ -18,7 +18,6 @@ require "ruby_lsp/tapioca/run_gem_rbi_check"
 module RubyLsp
   module Tapioca
     class Addon < ::RubyLsp::Addon
-      extend T::Sig
 
       #: -> void
       def initialize

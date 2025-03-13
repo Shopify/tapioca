@@ -72,8 +72,6 @@ module Tapioca
           prop :default, String
         end
 
-        extend T::Sig
-
         ConstantType = type_member { { fixed: T::Class[T.anything] } }
 
         FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
@@ -154,7 +152,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

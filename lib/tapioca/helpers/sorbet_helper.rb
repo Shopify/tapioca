@@ -3,7 +3,6 @@
 
 module Tapioca
   module SorbetHelper
-    extend T::Sig
 
     SORBET_GEM_SPEC = T.let(
       ::Gem::Specification.find_by_name("sorbet-static"),

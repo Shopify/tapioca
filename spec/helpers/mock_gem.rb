@@ -4,7 +4,6 @@
 module Tapioca
   # A mock gem used for testing purposes
   class MockGem < Spoom::Context
-    extend T::Sig
 
     # The gem's name
     #: String

@@ -8,7 +8,6 @@ module Tapioca
     # available, it implements finding the attached class of a singleton
     # class by iterating through ObjectSpace.
     module AttachedClassOf
-      extend T::Sig
       extend T::Helpers
 
       requires_ancestor { Tapioca::Runtime::Reflection }

@@ -120,7 +120,6 @@ module Tapioca
   # need to do any matching of constants to type variables to bind their names, Ruby will
   # do that automatically for us and we get the `name` method for free from `Module`.
   class TypeVariableModule < Module
-    extend T::Sig
 
     class Type < T::Enum
       enums do

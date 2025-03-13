@@ -12,7 +12,6 @@ module Tapioca
         before do
           add_ruby_file("post_compiler.rb", <<~RUBY)
             class PostCompiler < Tapioca::Dsl::Compiler
-              extend T::Sig
 
               ConstantType = type_member { { fixed: T.class_of(Post) } }
 
@@ -28,7 +27,6 @@ module Tapioca
               end
 
               class << self
-                extend T::Sig
 
                 sig { override.returns(T::Enumerable[Module]) }
                 def gather_constants
@@ -82,7 +80,6 @@ module Tapioca
         it "compiles a class with methods that have signatures" do
           add_ruby_file("post.rb", <<~RUBY)
             class Post
-              extend T::Sig
 
               sig { params(a: String, b: Integer, c: Integer).void }
               def bar(a, b = 42, *c)
@@ -142,7 +139,6 @@ module Tapioca
         before do
           add_ruby_file("post_compiler.rb", <<~RUBY)
             class PostCompiler < Tapioca::Dsl::Compiler
-              extend T::Sig
 
               ConstantType = type_member { { fixed: T.class_of(Post) } }
 
@@ -163,7 +159,6 @@ module Tapioca
               end
 
               class << self
-                extend T::Sig
 
                 sig { override.returns(T::Enumerable[Module]) }
                 def gather_constants

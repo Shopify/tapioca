@@ -44,7 +44,6 @@ module Tapioca
       # end
       # ~~~
       class ActionText < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
@@ -74,7 +73,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           #: (singleton(::ActiveRecord::Base) constant) -> Array[String]
           def action_text_associations(constant)

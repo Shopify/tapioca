@@ -84,7 +84,6 @@ module Tapioca
             it "generates an empty RBI file if there is an inline signature" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class CreateComment < GraphQL::Schema::Mutation
-                  extend T::Sig
 
                   argument :body, String, required: true
                   argument :post_id, ID, required: true
@@ -182,10 +181,8 @@ module Tapioca
               # but we don't raise anything and default to the input type
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class CreateComment < GraphQL::Schema::Mutation
-                  extend T::Sig
 
                   class << self
-                    extend T::Sig
                     sig { params(min: Date).returns(T::Range[Date]) }
                     def prepare_dates(min)
                       min..(min + 1.day)
@@ -227,10 +224,8 @@ module Tapioca
             it "generates correct RBI arguments with a prepare method on the argument class" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class CommentInput < GraphQL::Schema::InputObject
-                  extend T::Sig
 
                   class << self
-                    extend T::Sig
                     sig { params(min: Date).returns(T::Range[Date]) }
                     def prepare_dates(min)
                       min..(min + 1.day)
@@ -275,7 +270,6 @@ module Tapioca
             it "generates correct RBI for Inputs with a prepare method" do
               add_ruby_file("create_comment.rb", <<~RUBY)
                 class DateRangeInput < GraphQL::Schema::InputObject
-                  extend T::Sig
 
                   description "Range of dates"
                   argument :min, GraphQL::Types::ISO8601Date, "Minimum value of the range"
@@ -288,7 +282,6 @@ module Tapioca
                 end
 
                 class VoidInput < GraphQL::Schema::InputObject
-                  extend T::Sig
 
                   argument :void, String, "Not a real input"
 
@@ -305,7 +298,6 @@ module Tapioca
                 end
 
                 class CreateComment < GraphQL::Schema::Mutation
-                  extend T::Sig
 
 
                   argument :date_range, DateRangeInput, required: true
@@ -367,7 +359,6 @@ module Tapioca
 
                 class CustomScalarType < GraphQL::Schema::Scalar
                   class << self
-                    extend T::Sig
 
                     sig { params(value: T.untyped, context: GraphQL::Query::Context).returns(CustomScalar) }
                     def coerce_input(value, context)
@@ -378,7 +369,6 @@ module Tapioca
 
                 class BrokenScalarType < GraphQL::Schema::Scalar
                   class << self
-                    extend T::Sig
 
                     sig { params(value: T.untyped, context: GraphQL::Query::Context).void }
                     def coerce_input(value, context)

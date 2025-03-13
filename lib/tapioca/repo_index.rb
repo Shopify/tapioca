@@ -3,11 +3,9 @@
 
 module Tapioca
   class RepoIndex
-    extend T::Sig
     extend T::Generic
 
     class << self
-      extend T::Sig
 
       #: (String json) -> RepoIndex
       def from_json(json)

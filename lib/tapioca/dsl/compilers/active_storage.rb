@@ -39,7 +39,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveStorage < Compiler
-        extend T::Sig
 
         ConstantType = type_member do
           {
@@ -73,7 +72,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

@@ -30,7 +30,6 @@ module Tapioca
       # end
       # ~~~
       class ActionMailer < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(::ActionMailer::Base) } }
 
@@ -52,7 +51,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

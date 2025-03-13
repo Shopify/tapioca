@@ -92,7 +92,6 @@ module Tapioca
             it "generates correct RBI file for subclass with method signatures" do
               add_ruby_file("job.rb", <<~RUBY)
                 class NotifyJob < ActiveJob::Base
-                  extend T::Sig
                   sig { params(user_id: Integer).void }
                   def perform(user_id)
                     # ...

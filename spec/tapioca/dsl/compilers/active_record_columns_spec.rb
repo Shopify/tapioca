@@ -279,7 +279,6 @@ module Tapioca
 
                 add_ruby_file("custom_type.rb", <<~RUBY)
                   class CustomType < ActiveRecord::Encryption::EncryptedAttributeType
-                    extend T::Sig
 
                     sig { params(value: T.untyped).returns(T.nilable(CustomType)) }
                     def deserialize(value)
@@ -322,7 +321,6 @@ module Tapioca
 
                 add_ruby_file("custom_type.rb", <<~RUBY)
                   class CustomType < ActiveRecord::Encryption::EncryptedAttributeType
-                    extend T::Sig
 
                     sig { params(value: T.untyped).returns(T.nilable(CustomType)) }
                     def deserialize(value)

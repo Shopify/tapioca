@@ -80,7 +80,6 @@ module Tapioca
       # end
       # ~~~
       class JsonApiClientResource < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(::JsonApiClient::Resource) } }
 
@@ -107,7 +106,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

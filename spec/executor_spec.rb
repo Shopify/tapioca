@@ -5,6 +5,8 @@ require "spec_helper"
 
 module Tapioca
   class ExecutorSpec < Minitest::Spec
+    extend T::Sig
+
     describe "Tapioca::Executor" do
       before do
         @queue = T.let((0...8).to_a, T::Array[Integer])

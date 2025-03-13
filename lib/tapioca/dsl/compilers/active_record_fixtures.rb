@@ -34,7 +34,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveRecordFixtures < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(ActiveSupport::TestCase) } }
         MISSING = Object.new
@@ -59,7 +58,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

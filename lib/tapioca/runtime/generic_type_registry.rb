@@ -32,7 +32,6 @@ module Tapioca
       )
 
       class GenericType < T::Types::Simple
-        extend T::Sig
 
         #: (Module raw_type, Module underlying_type) -> void
         def initialize(raw_type, underlying_type)
@@ -49,7 +48,6 @@ module Tapioca
       end
 
       class << self
-        extend T::Sig
 
         # This method is responsible for building the name of the instantiated concrete type
         # and cloning the given constant so that we can return a type that is the same

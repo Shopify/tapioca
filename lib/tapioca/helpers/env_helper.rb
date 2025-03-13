@@ -3,7 +3,6 @@
 
 module Tapioca
   module EnvHelper
-    extend T::Sig
     extend T::Helpers
 
     requires_ancestor { Thor }

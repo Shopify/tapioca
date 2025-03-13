@@ -59,7 +59,6 @@ module Tapioca
 
               add_ruby_file("custom_id.rb", <<~RUBY)
                 class CustomId < ActiveRecord::Type::Value
-                  extend T::Sig
 
                   sig { params(value: T.untyped).returns(T.nilable(CustomId)) }
                   def deserialize(value)

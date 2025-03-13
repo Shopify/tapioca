@@ -3,7 +3,6 @@
 
 module Tapioca
   module CliHelper
-    extend T::Sig
     extend T::Helpers
 
     requires_ancestor { Thor::Shell }

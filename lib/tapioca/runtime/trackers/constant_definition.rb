@@ -11,7 +11,6 @@ module Tapioca
       module ConstantDefinition
         extend Tracker
         extend Reflection
-        extend T::Sig
 
         class ConstantLocation < T::Struct
           const :lineno, Integer

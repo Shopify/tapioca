@@ -39,7 +39,6 @@ module Tapioca
       # end
       # ~~~
       class ActiveRecordScope < Compiler
-        extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
 
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }

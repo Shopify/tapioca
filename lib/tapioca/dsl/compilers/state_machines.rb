@@ -110,7 +110,6 @@ module Tapioca
       # end
       # ~~~
       class StateMachines < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.all(Module, ::StateMachines::ClassMethods) } }
 
@@ -156,7 +155,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

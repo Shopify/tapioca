@@ -33,7 +33,6 @@ module Tapioca
       #   run, run!, run_without_validation!, may_run?
       #
       class AASM < Compiler
-        extend T::Sig
 
         # Taken directly from the AASM::Core::Event class, here:
         # https://github.com/aasm/aasm/blob/0e03746/lib/aasm/core/event.rb#L21-L29
@@ -213,7 +212,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

@@ -6,7 +6,6 @@ module Tapioca
     module Trackers
       module Mixin
         extend Tracker
-        extend T::Sig
 
         @constants_to_mixin_locations = {}.compare_by_identity
         @mixins_to_constants = {}.compare_by_identity
@@ -20,7 +19,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           #: [Result] { -> Result } -> Result
           def with_disabled_registration(&block)

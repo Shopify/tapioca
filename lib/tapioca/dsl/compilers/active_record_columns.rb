@@ -121,7 +121,6 @@ module Tapioca
       #     def title; end
       # ~~~
       class ActiveRecordColumns < Compiler
-        extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
 
         ConstantType = type_member { { fixed: T.class_of(ActiveRecord::Base) } }
@@ -164,7 +163,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

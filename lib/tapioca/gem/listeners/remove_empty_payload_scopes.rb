@@ -5,7 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class RemoveEmptyPayloadScopes < Base
-        extend T::Sig
 
         include Runtime::Reflection
 

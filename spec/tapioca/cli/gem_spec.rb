@@ -1077,7 +1077,6 @@ module Tapioca
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", <<~RBI)
               module Foo
-                extend T::Sig
 
                 sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
                 def bar(a, b, c, d, e, f, g); end
@@ -1129,7 +1128,6 @@ module Tapioca
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", <<~RBI)
               module Foo
-                extend T::Sig
 
                 sig { params(a: T.untyped, b: T.untyped, c: T.untyped, d: T.untyped, e: T.untyped, f: T.untyped, g: T.untyped).void }
                 def bar(a, b, c, d, e, f, g); end

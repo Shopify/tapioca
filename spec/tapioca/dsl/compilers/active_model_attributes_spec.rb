@@ -161,7 +161,6 @@ module Tapioca
             it "generates method sigs for attribute with custom type" do
               add_ruby_file("shop.rb", <<~RUBY)
                 class CustomWithCastSig < ActiveModel::Type::Value
-                  extend T::Sig
 
                   sig { params(value: T.untyped).returns(String) }
                   def cast(value)

@@ -95,7 +95,6 @@ module Tapioca
             it "only generates a class method definition for non current attribute methods" do
               add_ruby_file("current.rb", <<~RUBY)
                 class Current < ActiveSupport::CurrentAttributes
-                  extend T::Sig
 
                   attribute :account
 

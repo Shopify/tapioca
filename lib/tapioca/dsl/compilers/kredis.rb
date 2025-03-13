@@ -64,7 +64,6 @@ module Tapioca
       # end
       # ~~~
       class Kredis < Compiler
-        extend T::Sig
 
         ConstantType = type_member do
           { fixed: T.all(T::Class[::Kredis::Attributes], ::Kredis::Attributes::ClassMethods, Extensions::Kredis) }
@@ -88,7 +87,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

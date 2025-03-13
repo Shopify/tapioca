@@ -36,7 +36,6 @@ module Tapioca
       # end
       # ~~~
       class GraphqlMutation < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::Mutation) } }
 
@@ -72,7 +71,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

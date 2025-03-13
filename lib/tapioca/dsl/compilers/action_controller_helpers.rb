@@ -62,7 +62,6 @@ module Tapioca
       # end
       # ~~~
       class ActionControllerHelpers < Compiler
-        extend T::Sig
 
         ConstantType = type_member { { fixed: T.class_of(::ActionController::Base) } }
 
@@ -119,7 +118,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

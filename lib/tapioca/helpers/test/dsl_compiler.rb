@@ -11,7 +11,6 @@ module Tapioca
   module Helpers
     module Test
       module DslCompiler
-        extend T::Sig
         extend T::Helpers
 
         include Isolation
@@ -53,7 +52,6 @@ module Tapioca
         end
 
         class CompilerContext
-          extend T::Sig
 
           include SorbetHelper
 

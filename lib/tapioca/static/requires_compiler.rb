@@ -4,7 +4,6 @@
 module Tapioca
   module Static
     class RequiresCompiler
-      extend T::Sig
 
       #: (String sorbet_path) -> void
       def initialize(sorbet_path)

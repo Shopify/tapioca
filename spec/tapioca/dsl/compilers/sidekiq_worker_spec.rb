@@ -129,7 +129,6 @@ module Tapioca
               add_ruby_file("mailer.rb", <<~RUBY)
                 class NotifierWorker
                   include Sidekiq::Worker
-                  extend T::Sig
                   sig { params(customer_id: Integer).void }
                   def perform(customer_id)
                     # ...

@@ -41,7 +41,6 @@ module Tapioca
       # end
       # ```
       class Config < Compiler
-        extend T::Sig
 
         CONFIG_OPTIONS_SUFFIX = "ConfigOptions"
 
@@ -94,7 +93,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
 
           # @override
           #: -> T::Enumerable[Module]

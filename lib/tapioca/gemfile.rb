@@ -107,7 +107,6 @@ module Tapioca
       include GemHelper
 
       class << self
-        extend T::Sig
 
         #: -> Hash[String, Gemfile::GemSpec]
         def spec_lookup_by_file_path
