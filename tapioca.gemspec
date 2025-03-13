@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("rbi", ">= 0.3.1")
   spec.add_dependency("ruby-next", "~> 1.0")
   spec.add_dependency("sorbet-static-and-runtime", ">= 0.5.11087")
-  spec.add_dependency("spoom", ">= 1.2.0")
+  spec.add_dependency("spoom", ">= 1.6.1")
   spec.add_dependency("thor", ">= 1.2.0")
   spec.add_dependency("yard-sorbet")
 
