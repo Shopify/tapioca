@@ -7,6 +7,11 @@ require "tapioca"
 require "tapioca/runtime/reflection"
 require "tapioca/runtime/trackers"
 
+# The rewriter needs to be loaded very early so RBS comments within Tapioca itself are rewritten
+require "spoom"
+require "tapioca/rbs/rewriter"
+# ^ Do not change the order of these requires
+
 require "benchmark"
 require "bundler"
 require "erb"
@@ -32,7 +37,6 @@ require "tapioca/sorbet_ext/generic_name_patch"
 require "tapioca/sorbet_ext/proc_bind_patch"
 require "tapioca/runtime/generic_type_registry"
 
-require "spoom"
 require "tapioca/helpers/gem_helper"
 require "tapioca/helpers/git_attributes"
 require "tapioca/helpers/sorbet_helper"
@@ -61,5 +65,3 @@ require "tapioca/gem"
 require "tapioca/dsl"
 require "tapioca/commands"
 require "tapioca/cli"
-
-require "tapioca/rbs/rewriter"
