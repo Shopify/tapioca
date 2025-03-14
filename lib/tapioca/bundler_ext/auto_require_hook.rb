@@ -37,7 +37,7 @@ module Tapioca
         end
       end
 
-      #: -> untyped
+      sig { returns(T.untyped).checked(:never) }
       def autorequire
         value = super
 

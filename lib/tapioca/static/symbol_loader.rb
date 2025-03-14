@@ -67,7 +67,7 @@ module Tapioca
 
         private
 
-        #: -> Array[singleton(Rails::Engine)]
+        T::Sig::WithoutRuntime.sig { returns(T::Array[T.class_of(Rails::Engine)]) }
         def engines
           @engines ||= T.let(
             if Object.const_defined?("Rails::Engine")
