@@ -34,19 +34,19 @@ module Tapioca
 
       REQUIRED_FROM_LABELS = T.let(["<top (required)>", "<main>", "<compiled>"].freeze, T::Array[String])
 
-      #: (BasicObject constant) -> bool
+      T::Sig::WithoutRuntime.sig { params(constant: BasicObject).returns(T::Boolean) }
       def constant_defined?(constant)
         !UNDEFINED_CONSTANT.eql?(constant)
       end
 
-      #: (String symbol, ?inherit: bool, ?namespace: Module) -> BasicObject
+      sig { params(symbol: String, inherit: T::Boolean, namespace: Module).returns(BasicObject).checked(:never) }
       def constantize(symbol, inherit: false, namespace: Object)
         namespace.const_get(symbol, inherit)
       rescue NameError, LoadError, RuntimeError, ArgumentError, TypeError
         UNDEFINED_CONSTANT
       end
 
-      #: (BasicObject object) -> Class[top]
+      sig { params(object: BasicObject).returns(T::Class[T.anything]).checked(:never) }
       def class_of(object)
         CLASS_METHOD.bind_call(object)
       end
@@ -77,12 +77,12 @@ module Tapioca
         SUPERCLASS_METHOD.bind_call(constant)
       end
 
-      #: (BasicObject object) -> Integer
+      sig { params(object: BasicObject).returns(Integer).checked(:never) }
       def object_id_of(object)
         OBJECT_ID_METHOD.bind_call(object)
       end
 
-      #: (BasicObject object, BasicObject other) -> bool
+      sig { params(object: BasicObject, other: BasicObject).returns(T::Boolean).checked(:never) }
       def are_equal?(object, other)
         EQUAL_METHOD.bind_call(object, other)
       end

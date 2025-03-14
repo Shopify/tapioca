@@ -66,32 +66,41 @@ module Tapioca
         @events << Gem::SymbolFound.new(symbol)
       end
 
-      #: (String symbol, BasicObject constant) -> void
+      sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def push_constant(symbol, constant)
         @events << Gem::ConstantFound.new(symbol, constant)
       end
 
-      #: (String symbol, Module constant) -> void
+      sig { params(symbol: String, constant: Module).void.checked(:never) }
       def push_foreign_constant(symbol, constant)
         @events << Gem::ForeignConstantFound.new(symbol, constant)
       end
 
-      #: (String symbol, Module constant, RBI::Const node) -> void
+      sig { params(symbol: String, constant: Module, node: RBI::Const).void.checked(:never) }
       def push_const(symbol, constant, node)
         @events << Gem::ConstNodeAdded.new(symbol, constant, node)
       end
 
-      #: (String symbol, Module constant, RBI::Scope node) -> void
+      sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
       def push_scope(symbol, constant, node)
         @events << Gem::ScopeNodeAdded.new(symbol, constant, node)
       end
 
-      #: (String symbol, Module constant, RBI::Scope node) -> void
+      sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
       def push_foreign_scope(symbol, constant, node)
         @events << Gem::ForeignScopeNodeAdded.new(symbol, constant, node)
       end
 
-      #: (String symbol, Module constant, UnboundMethod method, RBI::Method node, untyped signature, Array[[Symbol, String]] parameters) -> void
+      sig do
+        params(
+          symbol: String,
+          constant: Module,
+          method: UnboundMethod,
+          node: RBI::Method,
+          signature: T.untyped,
+          parameters: T::Array[[Symbol, String]],
+        ).void.checked(:never)
+      end
       def push_method(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
         @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end
@@ -222,7 +231,7 @@ module Tapioca
         push_foreign_scope(symbol, constant, scope)
       end
 
-      #: (String symbol, BasicObject constant) -> void
+      sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def compile_constant(symbol, constant)
         case constant
         when Module
@@ -257,7 +266,7 @@ module Tapioca
         @root << node
       end
 
-      #: (String name, BasicObject value) -> void
+      sig { params(name: String, value: BasicObject).void.checked(:never) }
       def compile_object(name, value)
         return if seen?(name)
 
@@ -371,7 +380,7 @@ module Tapioca
         symbol_in_payload?(name) && !@bootstrap_symbols.include?(name)
       end
 
-      #: (String name, top constant) -> bool
+      sig { params(name: String, constant: T.untyped).returns(T::Boolean).checked(:never) }
       def skip_constant?(name, constant)
         return true if name.strip.empty?
         return true if name.start_with?("#<")
@@ -392,7 +401,7 @@ module Tapioca
         false
       end
 
-      #: (String name, BasicObject constant) -> bool
+      sig { params(name: String, constant: BasicObject).returns(T::Boolean).checked(:never) }
       def skip_object?(name, constant)
         return true if symbol_in_payload?(name)
         return true unless constant_in_gem?(name)

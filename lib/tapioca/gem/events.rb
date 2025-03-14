@@ -29,10 +29,10 @@ module Tapioca
       #: String
       attr_reader :symbol
 
-      #: BasicObject
+      sig { returns(BasicObject).checked(:never) }
       attr_reader :constant
 
-      #: (String symbol, BasicObject constant) -> void
+      sig { params(symbol: String, constant: BasicObject).void.checked(:never) }
       def initialize(symbol, constant)
         super()
         @symbol = symbol
@@ -64,10 +64,10 @@ module Tapioca
       #: String
       attr_reader :symbol
 
-      #: Module
+      sig { returns(Module).checked(:never) }
       attr_reader :constant
 
-      #: (String symbol, Module constant) -> void
+      sig { params(symbol: String, constant: Module).void.checked(:never) }
       def initialize(symbol, constant)
         super()
         @symbol = symbol
@@ -81,7 +81,7 @@ module Tapioca
       #: RBI::Const
       attr_reader :node
 
-      #: (String symbol, Module constant, RBI::Const node) -> void
+      sig { params(symbol: String, constant: Module, node: RBI::Const).void.checked(:never) }
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -94,7 +94,7 @@ module Tapioca
       #: RBI::Scope
       attr_reader :node
 
-      #: (String symbol, Module constant, RBI::Scope node) -> void
+      sig { params(symbol: String, constant: Module, node: RBI::Scope).void.checked(:never) }
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -118,7 +118,16 @@ module Tapioca
       #: Array[[Symbol, String]]
       attr_reader :parameters
 
-      #: (String symbol, Module constant, UnboundMethod method, RBI::Method node, untyped signature, Array[[Symbol, String]] parameters) -> void
+      sig do
+        params(
+          symbol: String,
+          constant: Module,
+          method: UnboundMethod,
+          node: RBI::Method,
+          signature: T.untyped,
+          parameters: T::Array[[Symbol, String]],
+        ).void.checked(:never)
+      end
       def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
         super(symbol, constant)
         @node = node
