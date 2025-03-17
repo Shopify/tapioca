@@ -1181,7 +1181,7 @@ end
 # source://minitest//lib/minitest.rb#592
 Minitest::Reportable::BASE_DIR = T.let(T.unsafe(nil), String)
 
-# source://minitest//lib/minitest.rb#735
+# source://minitest//lib/minitest.rb#733
 class Minitest::Reporter < ::Minitest::AbstractReporter
   # @return [Reporter] a new instance of Reporter
   #
@@ -1857,8 +1857,8 @@ end
 #
 # source://minitest//lib/minitest/test.rb#10
 class Minitest::Test < ::Minitest::Runnable
-  include ::Minitest::Assertions
   include ::Minitest::Reportable
+  include ::Minitest::Assertions
   include ::Minitest::Test::LifecycleHooks
   include ::Minitest::Guard
   extend ::Minitest::Guard

@@ -17742,16 +17742,16 @@ module GraphQL::Tracing::NewRelicTrace
 
   private
 
-  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#193
+  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#195
   def fallback_transaction_name(context); end
 
-  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#172
+  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#174
   def finish_segment; end
 
-  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#168
+  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#170
   def start_segment(*_arg0, **_arg1, &_arg2); end
 
-  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#181
+  # source://graphql//lib/graphql/tracing/new_relic_trace.rb#183
   def transaction_name(query); end
 end
 
