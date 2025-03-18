@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("netrc", ">= 0.11.0")
   spec.add_dependency("parallel", ">= 1.21.0")
   spec.add_dependency("rbi", "~> 0.2")
+  spec.add_dependency("rbs", "~> 3.8")
   spec.add_dependency("sorbet-static-and-runtime", ">= 0.5.11087")
   spec.add_dependency("spoom", ">= 1.2.0")
   spec.add_dependency("thor", ">= 1.2.0")

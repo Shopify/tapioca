@@ -4542,6 +4542,92 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compiled)
     end
 
+    it "compiles RBS signatures" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          #: -> String
+          def foo; end
+
+          #: -> Integer
+          def self.bar; end
+
+          #: Integer
+          attr_accessor :baz
+
+          #: (^(Integer) -> String) -> void
+          attr_reader :qux
+
+          #: (^(Integer) -> String proc) -> void
+          def quux(proc); end
+
+          #: ((^(Integer) -> String proc) -> void) -> void
+          def corge(nested_proc); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#1
+        class Foo
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#9
+          #: -> Integer
+          def baz; end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#9
+          #: (Integer _arg0) -> Integer
+          def baz=(_arg0); end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#18
+          #: ((^(Integer) -> String proc) -> void) -> void
+          def corge(nested_proc); end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#3
+          #: -> String
+          def foo; end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#15
+          #: (^(Integer) -> String proc) -> void
+          def quux(proc); end
+
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#12
+          #: (^(Integer) -> String) -> void
+          def qux; end
+
+          class << self
+            # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#6
+            #: -> Integer
+            def bar; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile(include_doc: true, include_loc: true))
+    end
+
+    it "compiles RBS signatures with fully qualified names" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        module Foo
+          class Bar
+            #: -> Bar
+            def bar; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        # source://the-default-gem//lib/foo.rb#1
+        module Foo; end
+
+        # source://the-default-gem//lib/foo.rb#2
+        class Foo::Bar
+          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#4
+          # -> Foo::Bar
+          def bar; end
+        end
+      RBI
+
+      assert_equal(output, compile(include_doc: true, include_loc: true))
+    end
+
     it "compiles constants with nil values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
