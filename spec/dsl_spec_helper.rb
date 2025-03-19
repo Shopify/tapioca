@@ -68,6 +68,6 @@ class DslSpec < Minitest::Spec
 
   #: -> bool?
   def expect_dsl_compiler_errors!
-    @expecting_errors = T.let(true, T.nilable(T::Boolean))
+    @expecting_errors = true #: bool?
   end
 end

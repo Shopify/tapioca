@@ -25,7 +25,7 @@ module Tapioca
       #: Hash[String, untyped]
       attr_reader :options
 
-      @@requested_constants = T.let([], T::Array[Module]) # rubocop:disable Style/ClassVars
+      @@requested_constants = [] #: Array[Module] # rubocop:disable Style/ClassVars
 
       class << self
         extend T::Sig
@@ -40,10 +40,7 @@ module Tapioca
 
         #: -> Set[Module]
         def processable_constants
-          @processable_constants ||= T.let(
-            T::Set[Module].new.compare_by_identity.merge(gather_constants),
-            T.nilable(T::Set[Module]),
-          )
+          @processable_constants ||= T::Set[Module].new.compare_by_identity.merge(gather_constants) #: Set[Module]?
         end
 
         #: (Array[Module] constants) -> void
@@ -76,22 +73,16 @@ module Tapioca
 
         #: -> T::Enumerable[Class[top]]
         def all_classes
-          @all_classes ||= T.let(
-            all_modules.grep(Class).freeze,
-            T.nilable(T::Enumerable[T::Class[T.anything]]),
-          )
+          @all_classes ||= all_modules.grep(Class).freeze #: T::Enumerable[Class[top]]?
         end
 
         #: -> T::Enumerable[Module]
         def all_modules
-          @all_modules ||= T.let(
-            if @@requested_constants.any?
-              @@requested_constants.grep(Module)
-            else
-              ObjectSpace.each_object(Module).to_a
-            end.freeze,
-            T.nilable(T::Enumerable[Module]),
-          )
+          @all_modules ||= if @@requested_constants.any?
+            @@requested_constants.grep(Module)
+          else
+            ObjectSpace.each_object(Module).to_a
+          end.freeze #: T::Enumerable[Module]?
         end
       end
 
@@ -101,7 +92,7 @@ module Tapioca
         @root = root
         @constant = constant
         @options = options
-        @errors = T.let([], T::Array[String])
+        @errors = [] #: Array[String]
       end
 
       #: (String compiler_name) -> bool
@@ -123,7 +114,7 @@ module Tapioca
       # Get the types of each parameter from a method signature
       #: ((Method | UnboundMethod) method_def, untyped signature) -> Array[String]
       def parameters_types_from_signature(method_def, signature)
-        params = T.let([], T::Array[String])
+        params = [] #: Array[String]
 
         return method_def.parameters.map { "T.untyped" } unless signature
 
@@ -163,7 +154,7 @@ module Tapioca
         method_def = signature.nil? ? method_def : signature.method
         method_types = parameters_types_from_signature(method_def, signature)
 
-        parameters = T.let(method_def.parameters, T::Array[[Symbol, T.nilable(Symbol)]])
+        parameters = method_def.parameters #: Array[[Symbol, Symbol?]]
 
         parameters.each_with_index.map do |(type, name), index|
           fallback_arg_name = "_arg#{index}"

@@ -8,7 +8,7 @@ module Tapioca
       include Runtime::Reflection
       include RBIHelper
 
-      IGNORED_SYMBOLS = T.let(["YAML", "MiniTest", "Mutex"], T::Array[String])
+      IGNORED_SYMBOLS = ["YAML", "MiniTest", "Mutex"] #: Array[String]
 
       #: Gemfile::GemSpec
       attr_reader :gem
@@ -23,20 +23,20 @@ module Tapioca
         include_doc: false,
         include_loc: false
       )
-        @root = T.let(RBI::Tree.new, RBI::Tree)
+        @root = RBI::Tree.new #: RBI::Tree
         @gem = gem
-        @seen = T.let(Set.new, T::Set[String])
-        @alias_namespace = T.let(Set.new, T::Set[String])
+        @seen = Set.new #: Set[String]
+        @alias_namespace = Set.new #: Set[String]
         @error_handler = error_handler
 
-        @events = T.let([], T::Array[Gem::Event])
+        @events = [] #: Array[Gem::Event]
 
-        @payload_symbols = T.let(Static::SymbolLoader.payload_symbols, T::Set[String])
-        @bootstrap_symbols = T.let(load_bootstrap_symbols(@gem), T::Set[String])
+        @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
+        @bootstrap_symbols = load_bootstrap_symbols(@gem) #: Set[String]
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
-        @node_listeners = T.let([], T::Array[Gem::Listeners::Base])
+        @node_listeners = [] #: Array[Gem::Listeners::Base]
         @node_listeners << Gem::Listeners::SorbetTypeVariables.new(self)
         @node_listeners << Gem::Listeners::Mixins.new(self)
         @node_listeners << Gem::Listeners::DynamicMixins.new(self)
@@ -109,7 +109,7 @@ module Tapioca
       # this looks something like:
       # "(eval at /path/to/file.rb:123)"
       # and we are just interested in the "/path/to/file.rb" part
-      EVAL_SOURCE_FILE_PATTERN = T.let(/\(eval at (.+):\d+\)/, Regexp)
+      EVAL_SOURCE_FILE_PATTERN = /\(eval at (.+):\d+\)/ #: Regexp
 
       #: ((String | Symbol) name) -> bool
       def constant_in_gem?(name)
@@ -317,7 +317,7 @@ module Tapioca
 
       #: (Class[top] constant) -> String?
       def compile_superclass(constant)
-        superclass = T.let(nil, T.nilable(T::Class[T.anything])) # rubocop:disable Lint/UselessAssignment
+        superclass = nil #: Class[top]? # rubocop:disable Lint/UselessAssignment
 
         while (superclass = superclass_of(constant))
           constant_name = name_of(constant)

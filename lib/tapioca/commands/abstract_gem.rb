@@ -45,11 +45,11 @@ module Tapioca
 
         super()
 
-        @bundle = T.let(Gemfile.new(exclude), Gemfile)
-        @existing_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
-        @expected_rbis = T.let(nil, T.nilable(T::Hash[String, String]))
-        @include_doc = T.let(include_doc, T::Boolean)
-        @include_loc = T.let(include_loc, T::Boolean)
+        @bundle = Gemfile.new(exclude) #: Gemfile
+        @existing_rbis = nil #: Hash[String, String]?
+        @expected_rbis = nil #: Hash[String, String]?
+        @include_doc = include_doc #: bool
+        @include_loc = include_loc #: bool
         @include_exported_rbis = include_exported_rbis
         @halt_upon_load_error = halt_upon_load_error
       end
@@ -101,7 +101,7 @@ module Tapioca
         say("Removing RBI files of gems that have been removed:", [:blue, :bold])
         puts
 
-        anything_done = T.let(false, T::Boolean)
+        anything_done = false #: bool
 
         gems = removed_rbis
 
@@ -128,7 +128,7 @@ module Tapioca
         say("Generating RBI files of gems that are added or updated:", [:blue, :bold])
         puts
 
-        anything_done = T.let(false, T::Boolean)
+        anything_done = false #: bool
 
         gems = added_rbis
 

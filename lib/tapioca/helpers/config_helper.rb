@@ -19,9 +19,9 @@ module Tapioca
       # Store current command
       command = config[:current_command]
       command_options = config[:command_options]
-      @command_name = T.let(command.name, String)
-      @merged_options = T.let(nil, T.nilable(Thor::CoreExt::HashWithIndifferentAccess))
-      @defaults = T.let(Thor::CoreExt::HashWithIndifferentAccess.new, Thor::CoreExt::HashWithIndifferentAccess)
+      @command_name = command.name #: String
+      @merged_options = nil #: Thor::CoreExt::HashWithIndifferentAccess?
+      @defaults = Thor::CoreExt::HashWithIndifferentAccess.new #: Thor::CoreExt::HashWithIndifferentAccess
 
       # Filter command options unless we are handling the help command.
       # This is so that the defaults are printed
@@ -71,7 +71,7 @@ module Tapioca
       # To ensure that this is not re-entered, we mark during validation
       return if @validating_config
 
-      @validating_config = T.let(true, T.nilable(T::Boolean))
+      @validating_config = true #: bool?
 
       commands = T.cast(self, Thor).class.commands
 

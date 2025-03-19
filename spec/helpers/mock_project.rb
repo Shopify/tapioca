@@ -10,7 +10,7 @@ module Tapioca
     extend T::Sig
 
     # Path to Tapioca's source files
-    TAPIOCA_PATH = T.let((Pathname.new(__FILE__) / ".." / ".." / "..").to_s, String)
+    TAPIOCA_PATH = (Pathname.new(__FILE__) / ".." / ".." / "..").to_s #: String
 
     # Add a gem requirement to this project's gemfile from a `MockGem`
     #: (MockGem gem, ?require: (FalseClass | String)?) -> void
@@ -63,7 +63,7 @@ module Tapioca
     # @override(allow_incompatible: true)
     #: (?version: String?) -> Spoom::ExecResult
     def bundle_install!(version: nil)
-      @bundler_version = T.let(version, T.nilable(String))
+      @bundler_version = version #: String?
 
       opts = {}
       opts[:chdir] = absolute_path
@@ -133,10 +133,8 @@ module Tapioca
 
     #: -> Array[String]
     def tapioca_dependencies
-      @tapioca_dependencies ||= T.let(
-        transitive_runtime_deps(::Gem.loaded_specs["tapioca"]).map(&:name).uniq,
-        T.nilable(T::Array[String]),
-      )
+      @tapioca_dependencies ||=
+        transitive_runtime_deps(::Gem.loaded_specs["tapioca"]).map(&:name).uniq #: Array[String]?
     end
   end
 end

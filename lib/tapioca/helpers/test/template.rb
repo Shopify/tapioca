@@ -10,9 +10,7 @@ module Tapioca
 
         requires_ancestor { Kernel }
 
-        ERB_SUPPORTS_KVARGS = T.let(
-          ::ERB.instance_method(:initialize).parameters.assoc(:key), T.nilable([Symbol, Symbol])
-        )
+        ERB_SUPPORTS_KVARGS = ::ERB.instance_method(:initialize).parameters.assoc(:key) #: [Symbol, Symbol]?
 
         #: (String selector) -> bool
         def ruby_version(selector)

@@ -41,7 +41,7 @@ module Tapioca
           return
         end
 
-        payload_path = T.let(nil, T.nilable(String))
+        payload_path = nil #: String?
 
         if @payload
           Dir.mktmpdir do |dir|

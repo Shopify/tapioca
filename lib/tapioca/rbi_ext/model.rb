@@ -91,7 +91,7 @@ module RBI
 
     #: -> Hash[String, RBI::Node]
     def nodes_cache
-      @nodes_cache ||= T.let({}, T.nilable(T::Hash[String, Node]))
+      @nodes_cache ||= {} #: Hash[String, Node]?
     end
 
     #: (RBI::Node node) -> RBI::Node

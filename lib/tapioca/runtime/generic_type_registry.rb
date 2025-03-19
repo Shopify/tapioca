@@ -21,15 +21,9 @@ module Tapioca
     # variable to type variable serializers. This allows us to associate type variables
     # to the constant names that represent them, easily.
     module GenericTypeRegistry
-      @generic_instances = T.let(
-        {},
-        T::Hash[String, Module],
-      )
+      @generic_instances = {} #: Hash[String, Module]
 
-      @type_variables = T.let(
-        {}.compare_by_identity,
-        T::Hash[Module, T::Array[TypeVariableModule]],
-      )
+      @type_variables = {}.compare_by_identity #: Hash[Module, Array[TypeVariableModule]]
 
       class GenericType < T::Types::Simple
         extend T::Sig
@@ -38,7 +32,7 @@ module Tapioca
         def initialize(raw_type, underlying_type)
           super(raw_type)
 
-          @underlying_type = T.let(underlying_type, Module)
+          @underlying_type = underlying_type #: Module
         end
 
         # @override

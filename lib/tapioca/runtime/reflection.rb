@@ -18,21 +18,21 @@ module Tapioca
       extend T::Sig
       extend self
 
-      CLASS_METHOD = T.let(Kernel.instance_method(:class), UnboundMethod)
-      CONSTANTS_METHOD = T.let(Module.instance_method(:constants), UnboundMethod)
-      NAME_METHOD = T.let(Module.instance_method(:name), UnboundMethod)
-      SINGLETON_CLASS_METHOD = T.let(Object.instance_method(:singleton_class), UnboundMethod)
-      ANCESTORS_METHOD = T.let(Module.instance_method(:ancestors), UnboundMethod)
-      SUPERCLASS_METHOD = T.let(Class.instance_method(:superclass), UnboundMethod)
-      OBJECT_ID_METHOD = T.let(BasicObject.instance_method(:__id__), UnboundMethod)
-      EQUAL_METHOD = T.let(BasicObject.instance_method(:equal?), UnboundMethod)
-      PUBLIC_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:public_instance_methods), UnboundMethod)
-      PROTECTED_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:protected_instance_methods), UnboundMethod)
-      PRIVATE_INSTANCE_METHODS_METHOD = T.let(Module.instance_method(:private_instance_methods), UnboundMethod)
-      METHOD_METHOD = T.let(Kernel.instance_method(:method), UnboundMethod)
-      UNDEFINED_CONSTANT = T.let(Module.new.freeze, Module)
+      CLASS_METHOD = Kernel.instance_method(:class) #: UnboundMethod
+      CONSTANTS_METHOD = Module.instance_method(:constants) #: UnboundMethod
+      NAME_METHOD = Module.instance_method(:name) #: UnboundMethod
+      SINGLETON_CLASS_METHOD = Object.instance_method(:singleton_class) #: UnboundMethod
+      ANCESTORS_METHOD = Module.instance_method(:ancestors) #: UnboundMethod
+      SUPERCLASS_METHOD = Class.instance_method(:superclass) #: UnboundMethod
+      OBJECT_ID_METHOD = BasicObject.instance_method(:__id__) #: UnboundMethod
+      EQUAL_METHOD = BasicObject.instance_method(:equal?) #: UnboundMethod
+      PUBLIC_INSTANCE_METHODS_METHOD = Module.instance_method(:public_instance_methods) #: UnboundMethod
+      PROTECTED_INSTANCE_METHODS_METHOD = Module.instance_method(:protected_instance_methods) #: UnboundMethod
+      PRIVATE_INSTANCE_METHODS_METHOD = Module.instance_method(:private_instance_methods) #: UnboundMethod
+      METHOD_METHOD = Kernel.instance_method(:method) #: UnboundMethod
+      UNDEFINED_CONSTANT = Module.new.freeze #: Module
 
-      REQUIRED_FROM_LABELS = T.let(["<top (required)>", "<main>"].freeze, T::Array[String])
+      REQUIRED_FROM_LABELS = ["<top (required)>", "<main>"].freeze #: Array[String]
 
       #: (BasicObject constant) -> bool
       def constant_defined?(constant)

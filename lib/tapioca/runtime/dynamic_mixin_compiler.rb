@@ -20,13 +20,13 @@ module Tapioca
       def initialize(constant)
         @constant = constant
         mixins_from_modules = {}.compare_by_identity
-        class_attribute_readers = T.let([], T::Array[Symbol])
-        class_attribute_writers = T.let([], T::Array[Symbol])
-        class_attribute_predicates = T.let([], T::Array[Symbol])
+        class_attribute_readers = [] #: Array[Symbol]
+        class_attribute_writers = [] #: Array[Symbol]
+        class_attribute_predicates = [] #: Array[Symbol]
 
-        instance_attribute_readers = T.let([], T::Array[Symbol])
-        instance_attribute_writers = T.let([], T::Array[Symbol])
-        instance_attribute_predicates = T.let([], T::Array[Symbol])
+        instance_attribute_readers = [] #: Array[Symbol]
+        instance_attribute_writers = [] #: Array[Symbol]
+        instance_attribute_predicates = [] #: Array[Symbol]
 
         Class.new do
           # Override the `self.include` method
@@ -112,20 +112,20 @@ module Tapioca
         # is the list of all dynamically extended modules because of that
         # constant. We grab that value by deleting the key for the original
         # constant.
-        @dynamic_extends = T.let(mixins_from_modules.delete(constant) || [], T::Array[Module])
+        @dynamic_extends = mixins_from_modules.delete(constant) || [] #: Array[Module]
 
         # Since we deleted the original constant from the list of keys, all
         # the keys that remain are the ones that are dynamically included modules
         # during the include of the original constant.
-        @dynamic_includes = T.let(mixins_from_modules.keys, T::Array[Module])
+        @dynamic_includes = mixins_from_modules.keys #: Array[Module]
 
-        @class_attribute_readers = T.let(class_attribute_readers, T::Array[Symbol])
-        @class_attribute_writers = T.let(class_attribute_writers, T::Array[Symbol])
-        @class_attribute_predicates = T.let(class_attribute_predicates, T::Array[Symbol])
+        @class_attribute_readers = class_attribute_readers #: Array[Symbol]
+        @class_attribute_writers = class_attribute_writers #: Array[Symbol]
+        @class_attribute_predicates = class_attribute_predicates #: Array[Symbol]
 
-        @instance_attribute_readers = T.let(instance_attribute_readers, T::Array[Symbol])
-        @instance_attribute_writers = T.let(instance_attribute_writers, T::Array[Symbol])
-        @instance_attribute_predicates = T.let(instance_attribute_predicates, T::Array[Symbol])
+        @instance_attribute_readers = instance_attribute_readers #: Array[Symbol]
+        @instance_attribute_writers = instance_attribute_writers #: Array[Symbol]
+        @instance_attribute_predicates = instance_attribute_predicates #: Array[Symbol]
       end
 
       #: -> bool

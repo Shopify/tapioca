@@ -24,7 +24,7 @@ module Tapioca
 
     #: -> void
     def initialize
-      @entries = T.let(Set.new, T::Set[String])
+      @entries = Set.new #: Set[String]
     end
 
     #: (String gem_name) -> void

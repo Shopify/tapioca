@@ -24,12 +24,12 @@ module RubyLsp
       def initialize
         super
 
-        @global_state = T.let(nil, T.nilable(RubyLsp::GlobalState))
-        @rails_runner_client = T.let(Rails::NullClient.new, RubyLsp::Rails::RunnerClient)
-        @index = T.let(nil, T.nilable(RubyIndexer::Index))
-        @file_checksums = T.let({}, T::Hash[String, String])
-        @lockfile_diff = T.let(nil, T.nilable(String))
-        @outgoing_queue = T.let(nil, T.nilable(Thread::Queue))
+        @global_state = nil #: RubyLsp::GlobalState?
+        @rails_runner_client = Rails::NullClient.new #: RubyLsp::Rails::RunnerClient
+        @index = nil #: RubyIndexer::Index?
+        @file_checksums = {} #: Hash[String, String]
+        @lockfile_diff = nil #: String?
+        @outgoing_queue = nil #: Thread::Queue?
       end
 
       # @override
@@ -90,9 +90,9 @@ module RubyLsp
         return unless @global_state&.enabled_feature?(:tapiocaAddon)
         return unless @rails_runner_client.connected?
 
-        has_route_change = T.let(false, T::Boolean)
-        has_fixtures_change = T.let(false, T::Boolean)
-        needs_compiler_reload = T.let(false, T::Boolean)
+        has_route_change = false #: bool
+        has_fixtures_change = false #: bool
+        needs_compiler_reload = false #: bool
 
         constants = changes.flat_map do |change|
           path = URI(change[:uri]).to_standardized_path

@@ -7,8 +7,8 @@ module Tapioca
   class ExecutorSpec < Minitest::Spec
     describe "Tapioca::Executor" do
       before do
-        @queue = T.let((0...8).to_a, T::Array[Integer])
-        @executor = T.let(Executor.new(@queue), Executor)
+        @queue = (0...8).to_a #: Array[Integer]
+        @executor = Executor.new(@queue) #: Executor
       end
 
       it "runs sequentially when the number of workers is one" do

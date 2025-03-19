@@ -8,7 +8,7 @@ module T
         super(arg_types, returns)
 
         unless bind == T::Private::Methods::ARG_NOT_PROVIDED
-          @bind = T.let(T::Utils.coerce(bind), T::Types::Base)
+          @bind = T::Utils.coerce(bind) #: T::Types::Base
         end
       end
 

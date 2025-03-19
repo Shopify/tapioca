@@ -66,7 +66,7 @@ module Tapioca
 
         private
 
-        HANDLED_METHOD_TARGETS = T.let(["attribute", "attribute="], T::Array[String])
+        HANDLED_METHOD_TARGETS = ["attribute", "attribute="] #: Array[String]
 
         #: -> Array[[::String, ::String]]
         def attribute_methods_for_constant

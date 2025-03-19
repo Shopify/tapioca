@@ -70,7 +70,7 @@ module Tapioca
         @eager_load = eager_load
         @app_root = app_root
         @halt_upon_load_error = halt_upon_load_error
-        @custom_compiler_paths = T.let([], T::Array[String])
+        @custom_compiler_paths = [] #: Array[String]
       end
 
       #: -> void

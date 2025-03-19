@@ -64,10 +64,8 @@ module Tapioca
 
         #: -> String?
         def graphql_input_object_argument_source_file
-          @graphql_input_object_argument_source_file ||= T.let(
-            GraphQL::Schema::InputObject.method(:argument).source_location&.first,
-            T.nilable(String),
-          )
+          @graphql_input_object_argument_source_file ||=
+            GraphQL::Schema::InputObject.method(:argument).source_location&.first #: String?
         end
 
         #: (String method_name) -> bool

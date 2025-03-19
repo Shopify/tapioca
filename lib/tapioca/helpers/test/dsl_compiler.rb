@@ -22,7 +22,7 @@ module Tapioca
 
         #: (singleton(Tapioca::Dsl::Compiler) compiler_class) -> void
         def use_dsl_compiler(compiler_class)
-          @context = T.let(CompilerContext.new(compiler_class), T.nilable(CompilerContext))
+          @context = CompilerContext.new(compiler_class) #: CompilerContext?
         end
 
         #: (*singleton(Tapioca::Dsl::Compiler) compiler_classes) -> void
@@ -66,9 +66,9 @@ module Tapioca
           #: (singleton(Tapioca::Dsl::Compiler) compiler_class) -> void
           def initialize(compiler_class)
             @compiler_class = compiler_class
-            @other_compiler_classes = T.let([], T::Array[T.class_of(Tapioca::Dsl::Compiler)])
-            @pipeline = T.let(nil, T.nilable(Tapioca::Dsl::Pipeline))
-            @errors = T.let([], T::Array[String])
+            @other_compiler_classes = [] #: Array[singleton(Tapioca::Dsl::Compiler)]
+            @pipeline = nil #: Tapioca::Dsl::Pipeline?
+            @errors = [] #: Array[String]
           end
 
           #: (Array[singleton(Tapioca::Dsl::Compiler)] compiler_classes) -> void

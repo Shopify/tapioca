@@ -74,25 +74,22 @@ module Tapioca
 
         #: -> Class[ActiveRecord::TestFixtures]
         def fixture_loader
-          @fixture_loader ||= T.let(
-            Class.new do
-              T.unsafe(self).include(ActiveRecord::TestFixtures)
+          @fixture_loader ||= Class.new do
+            T.unsafe(self).include(ActiveRecord::TestFixtures)
 
-              if respond_to?(:fixture_paths=)
-                T.unsafe(self).fixture_paths = [Rails.root.join("test", "fixtures")]
-              else
-                T.unsafe(self).fixture_path = Rails.root.join("test", "fixtures")
-              end
+            if respond_to?(:fixture_paths=)
+              T.unsafe(self).fixture_paths = [Rails.root.join("test", "fixtures")]
+            else
+              T.unsafe(self).fixture_path = Rails.root.join("test", "fixtures")
+            end
 
-              # https://github.com/rails/rails/blob/7c70791470fc517deb7c640bead9f1b47efb5539/activerecord/lib/active_record/test_fixtures.rb#L46
-              singleton_class.define_method(:file_fixture_path) do
-                Rails.root.join("test", "fixtures", "files")
-              end
+            # https://github.com/rails/rails/blob/7c70791470fc517deb7c640bead9f1b47efb5539/activerecord/lib/active_record/test_fixtures.rb#L46
+            singleton_class.define_method(:file_fixture_path) do
+              Rails.root.join("test", "fixtures", "files")
+            end
 
-              T.unsafe(self).fixtures(:all)
-            end,
-            T.nilable(T::Class[ActiveRecord::TestFixtures]),
-          )
+            T.unsafe(self).fixtures(:all)
+          end #: Class[ActiveRecord::TestFixtures]?
         end
 
         #: -> Array[String]
@@ -161,52 +158,45 @@ module Tapioca
 
         #: -> Hash[String, String]
         def fixture_class_from_active_record_base_class_mapping
-          @fixture_class_mapping ||= T.let(
-            begin
-              ActiveRecord::Base.descendants.each_with_object({}) do |model_class, mapping|
-                class_name = model_class.name
+          @fixture_class_mapping ||=
+            ActiveRecord::Base.descendants.each_with_object({}) do |model_class, mapping|
+              class_name = model_class.name
 
-                fixture_name = class_name.underscore.gsub("/", "_")
-                fixture_name = fixture_name.pluralize if ActiveRecord::Base.pluralize_table_names
+              fixture_name = class_name.underscore.gsub("/", "_")
+              fixture_name = fixture_name.pluralize if ActiveRecord::Base.pluralize_table_names
 
-                mapping[fixture_name] = class_name
+              mapping[fixture_name] = class_name
 
-                mapping
-              end
-            end,
-            T.nilable(T::Hash[String, String]),
-          )
+              mapping
+            end #: Hash[String, String]?
         end
 
         #: -> Hash[String, String]
         def fixture_class_mapping_from_fixture_files
-          @fixture_file_class_mapping ||= T.let(
-            begin
-              fixture_paths = if T.unsafe(fixture_loader).respond_to?(:fixture_paths)
-                T.unsafe(fixture_loader).fixture_paths
-              else
-                T.unsafe(fixture_loader).fixture_path
-              end
+          @fixture_file_class_mapping ||= begin
+            fixture_paths = if T.unsafe(fixture_loader).respond_to?(:fixture_paths)
+              T.unsafe(fixture_loader).fixture_paths
+            else
+              T.unsafe(fixture_loader).fixture_path
+            end
 
-              Array(fixture_paths).each_with_object({}) do |path, mapping|
-                Dir["#{path}{.yml,/{**,*}/*.yml}"].select do |file|
-                  next unless ::File.file?(file)
+            Array(fixture_paths).each_with_object({}) do |path, mapping|
+              Dir["#{path}{.yml,/{**,*}/*.yml}"].select do |file|
+                next unless ::File.file?(file)
 
-                  ActiveRecord::FixtureSet::File.open(file) do |fh|
-                    fixture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
-                    next unless fh.model_class
+                ActiveRecord::FixtureSet::File.open(file) do |fh|
+                  fixture_name = file.delete_prefix(path.to_s).delete_prefix("/").delete_suffix(".yml")
+                  next unless fh.model_class
 
-                    mapping[fixture_name] = fh.model_class
-                  rescue ActiveRecord::Fixture::FormatError
-                    # For fixtures that are not associated to any models and just contain raw data or fixtures that
-                    # contain invalid formatting, we want to skip them and avoid crashing
-                    mapping[fixture_name] = MISSING
-                  end
+                  mapping[fixture_name] = fh.model_class
+                rescue ActiveRecord::Fixture::FormatError
+                  # For fixtures that are not associated to any models and just contain raw data or fixtures that
+                  # contain invalid formatting, we want to skip them and avoid crashing
+                  mapping[fixture_name] = MISSING
                 end
               end
-            end,
-            T.nilable(T::Hash[String, String]),
-          )
+            end
+          end #: Hash[String, String]?
         end
       end
     end

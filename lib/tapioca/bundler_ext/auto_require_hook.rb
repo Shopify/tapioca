@@ -12,8 +12,8 @@ module Tapioca
 
       requires_ancestor { ::Bundler::Dependency }
 
-      @exclude = T.let([], T::Array[String])
-      @enabled = T.let(false, T::Boolean)
+      @exclude = [] #: Array[String]
+      @enabled = false #: bool
 
       class << self
         extend T::Sig

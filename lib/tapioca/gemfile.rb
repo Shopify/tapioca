@@ -25,15 +25,15 @@ module Tapioca
 
     #: (Array[String] excluded_gems) -> void
     def initialize(excluded_gems)
-      @gemfile = T.let(File.new(Bundler.default_gemfile), File)
-      @lockfile = T.let(File.new(Bundler.default_lockfile), File)
-      @definition = T.let(Bundler::Dsl.evaluate(gemfile, lockfile, {}), Bundler::Definition)
+      @gemfile = File.new(Bundler.default_gemfile) #: File
+      @lockfile = File.new(Bundler.default_lockfile) #: File
+      @definition = Bundler::Dsl.evaluate(gemfile, lockfile, {}) #: Bundler::Definition
       @excluded_gems = excluded_gems
 
       dependencies, missing_specs = load_dependencies
 
-      @dependencies = T.let(dependencies, T::Array[GemSpec])
-      @missing_specs = T.let(missing_specs, T::Array[String])
+      @dependencies = dependencies #: Array[GemSpec]
+      @missing_specs = missing_specs #: Array[String]
     end
 
     #: (String gem_name) -> GemSpec?
@@ -111,29 +111,23 @@ module Tapioca
 
         #: -> Hash[String, Gemfile::GemSpec]
         def spec_lookup_by_file_path
-          @lookup ||= T.let(
-            [*::Gem::Specification.default_stubs, *::Gem::Specification.stubs]
-              .map! { |spec| new(spec.to_spec) }
-              .flat_map do |spec|
-                spec.files.filter_map { |file| [file.realpath.to_s, spec] if file.exist? }
-              end.to_h,
-            T.nilable(T::Hash[String, Gemfile::GemSpec]),
-          )
+          @lookup ||= [*::Gem::Specification.default_stubs, *::Gem::Specification.stubs]
+            .map! { |spec| new(spec.to_spec) }
+            .flat_map do |spec|
+              spec.files.filter_map { |file| [file.realpath.to_s, spec] if file.exist? }
+            end.to_h #: Hash[String, Gemfile::GemSpec]?
         end
       end
 
-      IGNORED_GEMS = T.let(
-        [
-          "sorbet",
-          "sorbet-static",
-          "sorbet-runtime",
-          "sorbet-static-and-runtime",
-          "debug",
-          "irb",
-          "fakefs",
-        ].freeze,
-        T::Array[String],
-      )
+      IGNORED_GEMS = [
+        "sorbet",
+        "sorbet-static",
+        "sorbet-runtime",
+        "sorbet-static-and-runtime",
+        "debug",
+        "irb",
+        "fakefs",
+      ].freeze #: Array[String]
 
       #: String
       attr_reader :full_gem_path, :version
@@ -143,12 +137,12 @@ module Tapioca
 
       #: (Spec spec) -> void
       def initialize(spec)
-        @spec = T.let(spec, Tapioca::Gemfile::Spec)
+        @spec = spec #: Tapioca::Gemfile::Spec
         real_gem_path = to_realpath(@spec.full_gem_path)
-        @full_gem_path = T.let(real_gem_path, String)
-        @version = T.let(version_string, String)
-        @exported_rbi_files = T.let(nil, T.nilable(T::Array[String]))
-        @files = T.let(collect_files, T::Array[Pathname])
+        @full_gem_path = real_gem_path #: String
+        @version = version_string #: String
+        @exported_rbi_files = nil #: Array[String]?
+        @files = collect_files #: Array[Pathname]
       end
 
       #: (BasicObject other) -> bool
@@ -256,14 +250,11 @@ module Tapioca
 
       #: -> Regexp
       def require_paths_prefix_matcher
-        @require_paths_prefix_matcher ||= T.let(
-          begin
-            require_paths = T.unsafe(@spec).require_paths
-            prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
-            Regexp.union(prefix_matchers)
-          end,
-          T.nilable(Regexp),
-        )
+        @require_paths_prefix_matcher ||= begin
+          require_paths = T.unsafe(@spec).require_paths
+          prefix_matchers = require_paths.map { |rp| Regexp.new("^#{rp}/") }
+          Regexp.union(prefix_matchers)
+        end #: Regexp?
       end
 
       #: (String file) -> Pathname
