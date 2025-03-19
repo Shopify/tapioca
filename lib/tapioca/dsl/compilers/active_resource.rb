@@ -83,21 +83,18 @@ module Tapioca
 
         private
 
-        TYPES = T.let(
-          {
-            boolean: "T::Boolean",
-            integer: "Integer",
-            string: "String",
-            float: "Float",
-            date: "Date",
-            time: "Time",
-            datetime: "DateTime",
-            decimal: "BigDecimal",
-            binary: "String",
-            text: "String",
-          }.freeze,
-          T::Hash[Symbol, String],
-        )
+        TYPES = {
+          boolean: "T::Boolean",
+          integer: "Integer",
+          string: "String",
+          float: "Float",
+          date: "Date",
+          time: "Time",
+          datetime: "DateTime",
+          decimal: "BigDecimal",
+          binary: "String",
+          text: "String",
+        }.freeze #: Hash[Symbol, String]
 
         #: (Symbol attr_type) -> String
         def type_for(attr_type)

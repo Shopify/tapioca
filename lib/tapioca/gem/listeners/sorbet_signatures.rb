@@ -25,7 +25,7 @@ module Tapioca
 
         #: (untyped signature, Array[[Symbol, String]] parameters) -> RBI::Sig
         def compile_signature(signature, parameters)
-          parameter_types = T.let(signature.arg_types.to_h, T::Hash[Symbol, T::Types::Base])
+          parameter_types = signature.arg_types.to_h #: Hash[Symbol, T::Types::Base]
           parameter_types.merge!(signature.kwarg_types)
           parameter_types[signature.rest_name] = signature.rest_type if signature.has_rest
           parameter_types[signature.keyrest_name] = signature.keyrest_type if signature.has_keyrest

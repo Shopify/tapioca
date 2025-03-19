@@ -84,15 +84,12 @@ module Tapioca
 
       #: -> Array[String]
       def all_requested_constants
-        @all_requested_constants ||= T.let(
-          @requested_constants + constants_from_requested_paths,
-          T.nilable(T::Array[String]),
-        )
+        @all_requested_constants ||= @requested_constants + constants_from_requested_paths #: Array[String]?
       end
 
       #: -> Tapioca::Dsl::Pipeline
       def pipeline
-        @pipeline ||= T.let(create_pipeline, T.nilable(Tapioca::Dsl::Pipeline))
+        @pipeline ||= create_pipeline #: Tapioca::Dsl::Pipeline?
       end
 
       #: -> void
@@ -343,10 +340,7 @@ module Tapioca
 
       #: -> Array[String]
       def constants_from_requested_paths
-        @constants_from_requested_paths ||= T.let(
-          Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a,
-          T.nilable(T::Array[String]),
-        )
+        @constants_from_requested_paths ||= Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a #: Array[String]?
       end
     end
   end

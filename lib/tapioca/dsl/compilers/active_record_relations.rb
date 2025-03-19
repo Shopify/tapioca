@@ -156,23 +156,20 @@ module Tapioca
         ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
         # From ActiveRecord::ConnectionAdapter::Quoting#quote, minus nil
-        ID_TYPES = T.let(
-          [
-            "String",
-            "Symbol",
-            "::ActiveSupport::Multibyte::Chars",
-            "T::Boolean",
-            "BigDecimal",
-            "Numeric",
-            "::ActiveRecord::Type::Binary::Data",
-            "::ActiveRecord::Type::Time::Value",
-            "Date",
-            "Time",
-            "::ActiveSupport::Duration",
-            "T::Class[T.anything]",
-          ].to_set.freeze,
-          T::Set[String],
-        )
+        ID_TYPES = [
+          "String",
+          "Symbol",
+          "::ActiveSupport::Multibyte::Chars",
+          "T::Boolean",
+          "BigDecimal",
+          "Numeric",
+          "::ActiveRecord::Type::Binary::Data",
+          "::ActiveRecord::Type::Time::Value",
+          "Date",
+          "Time",
+          "::ActiveSupport::Duration",
+          "T::Class[T.anything]",
+        ].to_set.freeze #: Set[String]
 
         # @override
         #: -> void
@@ -193,90 +190,60 @@ module Tapioca
           end
         end
 
-        ASSOCIATION_METHODS = T.let(
-          ::ActiveRecord::AssociationRelation.instance_methods -
-            ::ActiveRecord::Relation.instance_methods,
-          T::Array[Symbol],
-        )
-        COLLECTION_PROXY_METHODS = T.let(
-          ::ActiveRecord::Associations::CollectionProxy.instance_methods -
-            ::ActiveRecord::AssociationRelation.instance_methods,
-          T::Array[Symbol],
-        )
+        ASSOCIATION_METHODS = ::ActiveRecord::AssociationRelation.instance_methods -
+          ::ActiveRecord::Relation.instance_methods #: Array[Symbol]
+        COLLECTION_PROXY_METHODS = ::ActiveRecord::Associations::CollectionProxy.instance_methods -
+          ::ActiveRecord::AssociationRelation.instance_methods #: Array[Symbol]
 
-        QUERY_METHODS = T.let(
-          begin
-            # Grab all Query methods
-            query_methods = ActiveRecord::QueryMethods.instance_methods(false)
-            # Grab all Spawn methods
-            query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
-            # Remove the ones we know are private API
-            query_methods -= [:all, :arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
-            # Remove the methods that ...
-            query_methods
-              .grep_v(/_clause$/) # end with "_clause"
-              .grep_v(/_values?$/) # end with "_value" or "_values"
-              .grep_v(/=$/) # end with "=""
-              .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
-          end,
-          T::Array[Symbol],
-        )
-        WHERE_CHAIN_QUERY_METHODS = T.let(
-          ActiveRecord::QueryMethods::WhereChain.instance_methods(false),
-          T::Array[Symbol],
-        )
-        FINDER_METHODS = T.let(ActiveRecord::FinderMethods.instance_methods(false), T::Array[Symbol])
-        SIGNED_FINDER_METHODS = T.let(
-          defined?(ActiveRecord::SignedId) ? ActiveRecord::SignedId::ClassMethods.instance_methods(false) : [],
-          T::Array[Symbol],
-        )
-        BATCHES_METHODS = T.let(ActiveRecord::Batches.instance_methods(false), T::Array[Symbol])
-        CALCULATION_METHODS = T.let(ActiveRecord::Calculations.instance_methods(false), T::Array[Symbol])
-        ENUMERABLE_QUERY_METHODS = T.let([:any?, :many?, :none?, :one?], T::Array[Symbol])
-        FIND_OR_CREATE_METHODS = T.let(
-          [:find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :create_or_find_by, :create_or_find_by!],
-          T::Array[Symbol],
-        )
-        BUILDER_METHODS = T.let([:new, :create, :create!, :build], T::Array[Symbol])
-        TO_ARRAY_METHODS = T.let([:to_ary, :to_a], T::Array[Symbol])
+        QUERY_METHODS = begin
+          # Grab all Query methods
+          query_methods = ActiveRecord::QueryMethods.instance_methods(false)
+          # Grab all Spawn methods
+          query_methods |= ActiveRecord::SpawnMethods.instance_methods(false)
+          # Remove the ones we know are private API
+          query_methods -= [:all, :arel, :build_subquery, :construct_join_dependency, :extensions, :spawn]
+          # Remove the methods that ...
+          query_methods
+            .grep_v(/_clause$/) # end with "_clause"
+            .grep_v(/_values?$/) # end with "_value" or "_values"
+            .grep_v(/=$/) # end with "=""
+            .grep_v(/(?<!uniq)!$/) # end with "!" except for "uniq!"
+        end #: Array[Symbol]
+        WHERE_CHAIN_QUERY_METHODS = ActiveRecord::QueryMethods::WhereChain.instance_methods(false) #: Array[Symbol]
+        FINDER_METHODS = ActiveRecord::FinderMethods.instance_methods(false) #: Array[Symbol]
+        SIGNED_FINDER_METHODS = defined?(ActiveRecord::SignedId) ? ActiveRecord::SignedId::ClassMethods.instance_methods(false) : [] #: Array[Symbol]
+        BATCHES_METHODS = ActiveRecord::Batches.instance_methods(false) #: Array[Symbol]
+        CALCULATION_METHODS = ActiveRecord::Calculations.instance_methods(false) #: Array[Symbol]
+        ENUMERABLE_QUERY_METHODS = [:any?, :many?, :none?, :one?] #: Array[Symbol]
+        FIND_OR_CREATE_METHODS = [:find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :create_or_find_by, :create_or_find_by!] #: Array[Symbol]
+        BUILDER_METHODS = [:new, :create, :create!, :build] #: Array[Symbol]
+        TO_ARRAY_METHODS = [:to_ary, :to_a] #: Array[Symbol]
 
         private
 
         #: -> RBI::Scope
         def model
-          @model ||= T.let(
-            root.create_path(constant),
-            T.nilable(RBI::Scope),
-          )
+          @model ||= root.create_path(constant) #: RBI::Scope?
         end
 
         #: -> RBI::Scope
         def relation_methods_module
-          @relation_methods_module ||= T.let(
-            model.create_module(RelationMethodsModuleName),
-            T.nilable(RBI::Scope),
-          )
+          @relation_methods_module ||= model.create_module(RelationMethodsModuleName) #: RBI::Scope?
         end
 
         #: -> RBI::Scope
         def association_relation_methods_module
-          @association_relation_methods_module ||= T.let(
-            model.create_module(AssociationRelationMethodsModuleName),
-            T.nilable(RBI::Scope),
-          )
+          @association_relation_methods_module ||= model.create_module(AssociationRelationMethodsModuleName) #: RBI::Scope?
         end
 
         #: -> RBI::Scope
         def common_relation_methods_module
-          @common_relation_methods_module ||= T.let(
-            model.create_module(CommonRelationMethodsModuleName),
-            T.nilable(RBI::Scope),
-          )
+          @common_relation_methods_module ||= model.create_module(CommonRelationMethodsModuleName) #: RBI::Scope?
         end
 
         #: -> String
         def constant_name
-          @constant_name ||= T.let(T.must(qualified_name_of(constant)), T.nilable(String))
+          @constant_name ||= T.must(qualified_name_of(constant)) #: String?
         end
 
         #: (Symbol method_name) -> bool

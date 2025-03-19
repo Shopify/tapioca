@@ -11,23 +11,23 @@ module Tapioca
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
         end
 
-        AttributeMethodsModuleName = T.let("GeneratedAttributeMethods", String)
-        AssociationMethodsModuleName = T.let("GeneratedAssociationMethods", String)
-        DelegatedTypesModuleName = T.let("GeneratedDelegatedTypeMethods", String)
-        SecureTokensModuleName = T.let("GeneratedSecureTokenMethods", String)
-        StoredAttributesModuleName = T.let("GeneratedStoredAttributesMethods", String)
+        AttributeMethodsModuleName = "GeneratedAttributeMethods" #: String
+        AssociationMethodsModuleName = "GeneratedAssociationMethods" #: String
+        DelegatedTypesModuleName = "GeneratedDelegatedTypeMethods" #: String
+        SecureTokensModuleName = "GeneratedSecureTokenMethods" #: String
+        StoredAttributesModuleName = "GeneratedStoredAttributesMethods" #: String
 
-        RelationMethodsModuleName = T.let("GeneratedRelationMethods", String)
-        AssociationRelationMethodsModuleName = T.let("GeneratedAssociationRelationMethods", String)
-        CommonRelationMethodsModuleName = T.let("CommonRelationMethods", String)
+        RelationMethodsModuleName = "GeneratedRelationMethods" #: String
+        AssociationRelationMethodsModuleName = "GeneratedAssociationRelationMethods" #: String
+        CommonRelationMethodsModuleName = "CommonRelationMethods" #: String
 
-        RelationClassName = T.let("PrivateRelation", String)
-        RelationGroupChainClassName = T.let("PrivateRelationGroupChain", String)
-        RelationWhereChainClassName = T.let("PrivateRelationWhereChain", String)
-        AssociationRelationClassName = T.let("PrivateAssociationRelation", String)
-        AssociationRelationGroupChainClassName = T.let("PrivateAssociationRelationGroupChain", String)
-        AssociationRelationWhereChainClassName = T.let("PrivateAssociationRelationWhereChain", String)
-        AssociationsCollectionProxyClassName = T.let("PrivateCollectionProxy", String)
+        RelationClassName = "PrivateRelation" #: String
+        RelationGroupChainClassName = "PrivateRelationGroupChain" #: String
+        RelationWhereChainClassName = "PrivateRelationWhereChain" #: String
+        AssociationRelationClassName = "PrivateAssociationRelation" #: String
+        AssociationRelationGroupChainClassName = "PrivateAssociationRelationGroupChain" #: String
+        AssociationRelationWhereChainClassName = "PrivateAssociationRelationWhereChain" #: String
+        AssociationsCollectionProxyClassName = "PrivateCollectionProxy" #: String
       end
     end
   end

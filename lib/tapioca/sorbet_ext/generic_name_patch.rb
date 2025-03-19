@@ -130,7 +130,7 @@ module Tapioca
       end
     end
 
-    DEFAULT_BOUNDS_PROC = T.let(-> { {} }, T.proc.returns(T::Hash[Symbol, T.untyped]))
+    DEFAULT_BOUNDS_PROC = -> { {} } #: ^-> Hash[Symbol, untyped]
 
     #: Type
     attr_reader :type

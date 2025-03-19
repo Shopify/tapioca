@@ -18,7 +18,7 @@ module Tapioca
 
         #: (*String args) -> String
         def tmp_path(*args)
-          @tmp_path = T.let(@tmp_path, T.nilable(String))
+          @tmp_path = @tmp_path #: String?
           @tmp_path ||= Dir.mktmpdir
           T.unsafe(File).join(@tmp_path, *args)
         end

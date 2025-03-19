@@ -18,7 +18,7 @@ module Tapioca
 
       #: -> void
       def initialize
-        @file_writer = T.let(FileWriter.new, Thor::Actions)
+        @file_writer = FileWriter.new #: Thor::Actions
       end
 
       # @final

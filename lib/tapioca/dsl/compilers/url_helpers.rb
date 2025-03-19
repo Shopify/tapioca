@@ -162,7 +162,7 @@ module Tapioca
           end
         end
 
-        NON_DISCOVERABLE_INCLUDERS = T.let(gather_non_discoverable_includers, T::Array[Module])
+        NON_DISCOVERABLE_INCLUDERS = gather_non_discoverable_includers #: Array[Module]
 
         private
 

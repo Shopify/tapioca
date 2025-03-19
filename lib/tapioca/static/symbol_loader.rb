@@ -13,7 +13,7 @@ module Tapioca
         def payload_symbols
           unless @payload_symbols
             output = symbol_table_json_from("-e ''", table_type: "symbol-table-full-json")
-            @payload_symbols = T.let(SymbolTableParser.parse_json(output), T.nilable(T::Set[String]))
+            @payload_symbols = SymbolTableParser.parse_json(output) #: Set[String]?
           end
 
           T.must(@payload_symbols)
@@ -69,15 +69,12 @@ module Tapioca
 
         #: -> Array[singleton(Rails::Engine)]
         def engines
-          @engines ||= T.let(
-            if Object.const_defined?("Rails::Engine")
-              descendants_of(Object.const_get("Rails::Engine"))
-                .reject(&:abstract_railtie?)
-            else
-              []
-            end,
-            T.nilable(T::Array[T.class_of(Rails::Engine)]),
-          )
+          @engines ||= if Object.const_defined?("Rails::Engine")
+            descendants_of(Object.const_get("Rails::Engine"))
+              .reject(&:abstract_railtie?)
+          else
+            []
+          end #: Array[singleton(Rails::Engine)]?
         end
 
         #: (String input, ?table_type: String) -> String

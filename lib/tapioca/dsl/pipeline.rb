@@ -36,10 +36,7 @@ module Tapioca
         compiler_options: {},
         lsp_addon: false
       )
-        @active_compilers = T.let(
-          gather_active_compilers(requested_compilers, excluded_compilers),
-          T::Enumerable[T.class_of(Compiler)],
-        )
+        @active_compilers = gather_active_compilers(requested_compilers, excluded_compilers) #: T::Enumerable[singleton(Compiler)]
         @requested_constants = requested_constants
         @requested_paths = requested_paths
         @error_handler = error_handler
@@ -47,7 +44,7 @@ module Tapioca
         @number_of_workers = number_of_workers
         @compiler_options = compiler_options
         @lsp_addon = lsp_addon
-        @errors = T.let([], T::Array[String])
+        @errors = [] #: Array[String]
       end
 
       #: [T] { (Module constant, RBI::File rbi) -> T } -> Array[T]
@@ -106,12 +103,9 @@ module Tapioca
 
       #: -> Array[singleton(Compiler)]
       def compilers
-        @compilers ||= T.let(
-          Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
-            T.must(compiler.name)
-          end,
-          T.nilable(T::Array[T.class_of(Compiler)]),
-        )
+        @compilers ||= Runtime::Reflection.descendants_of(Compiler).sort_by do |compiler|
+          T.must(compiler.name)
+        end #: Array[singleton(Compiler)]?
       end
 
       private

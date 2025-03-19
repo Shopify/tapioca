@@ -16,9 +16,9 @@ module RubyLsp
       #: (String project_path) -> void
       def initialize(project_path)
         @project_path = project_path
-        @stdout = T.let("", String)
-        @stderr = T.let("", String)
-        @status = T.let(nil, T.nilable(Process::Status))
+        @stdout = "" #: String
+        @stderr = "" #: String
+        @status = nil #: Process::Status?
       end
 
       #: -> void
@@ -49,12 +49,12 @@ module RubyLsp
 
       #: -> Pathname
       def lockfile
-        @lockfile ||= T.let(Pathname(project_path).join("Gemfile.lock"), T.nilable(Pathname))
+        @lockfile ||= Pathname(project_path).join("Gemfile.lock") #: Pathname?
       end
 
       #: -> String
       def lockfile_diff
-        @lockfile_diff ||= T.let(read_lockfile_diff, T.nilable(String))
+        @lockfile_diff ||= read_lockfile_diff #: String?
       end
 
       #: -> String
