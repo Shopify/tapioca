@@ -11,6 +11,8 @@ module Tapioca
           T.any(::ActiveRecord::Reflection::ThroughReflection, ::ActiveRecord::Reflection::AssociationReflection)
         end
 
+        # rubocop:disable Naming/ConstantName
+
         AttributeMethodsModuleName = "GeneratedAttributeMethods" #: String
         AssociationMethodsModuleName = "GeneratedAssociationMethods" #: String
         DelegatedTypesModuleName = "GeneratedDelegatedTypeMethods" #: String
@@ -28,6 +30,8 @@ module Tapioca
         AssociationRelationGroupChainClassName = "PrivateAssociationRelationGroupChain" #: String
         AssociationRelationWhereChainClassName = "PrivateAssociationRelationWhereChain" #: String
         AssociationsCollectionProxyClassName = "PrivateCollectionProxy" #: String
+
+        # rubocop:enable Naming/ConstantName
       end
     end
   end
