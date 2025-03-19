@@ -340,7 +340,8 @@ module Tapioca
 
       #: -> Array[String]
       def constants_from_requested_paths
-        @constants_from_requested_paths ||= Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a #: Array[String]?
+        @constants_from_requested_paths ||=
+          Static::SymbolLoader.symbols_from_paths(@requested_paths).to_a #: Array[String]?
       end
     end
   end

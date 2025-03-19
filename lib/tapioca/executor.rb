@@ -14,7 +14,8 @@ module Tapioca
       # Forking workers is expensive and not worth it for a low number of gems. Here we assign the number of workers to
       # be the minimum between the number of available processors (max) or the number of workers to make sure that each
       # one has at least 4 items to process
-      @number_of_workers = number_of_workers || [max_processors, (queue.length.to_f / MINIMUM_ITEMS_PER_WORKER).ceil].min #: Integer
+      @number_of_workers = number_of_workers ||
+        [max_processors, (queue.length.to_f / MINIMUM_ITEMS_PER_WORKER).ceil].min #: Integer
     end
 
     #: [T] { (untyped item) -> T } -> Array[T]

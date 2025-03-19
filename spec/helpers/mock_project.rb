@@ -133,7 +133,8 @@ module Tapioca
 
     #: -> Array[String]
     def tapioca_dependencies
-      @tapioca_dependencies ||= transitive_runtime_deps(::Gem.loaded_specs["tapioca"]).map(&:name).uniq #: Array[String]?
+      @tapioca_dependencies ||=
+        transitive_runtime_deps(::Gem.loaded_specs["tapioca"]).map(&:name).uniq #: Array[String]?
     end
   end
 end

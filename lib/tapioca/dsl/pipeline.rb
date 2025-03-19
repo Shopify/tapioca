@@ -36,7 +36,8 @@ module Tapioca
         compiler_options: {},
         lsp_addon: false
       )
-        @active_compilers = gather_active_compilers(requested_compilers, excluded_compilers) #: T::Enumerable[singleton(Compiler)]
+        @active_compilers =
+          gather_active_compilers(requested_compilers, excluded_compilers) #: Enumerable[singleton(Compiler)]
         @requested_constants = requested_constants
         @requested_paths = requested_paths
         @error_handler = error_handler

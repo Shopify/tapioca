@@ -211,11 +211,21 @@ module Tapioca
         end #: Array[Symbol]
         WHERE_CHAIN_QUERY_METHODS = ActiveRecord::QueryMethods::WhereChain.instance_methods(false) #: Array[Symbol]
         FINDER_METHODS = ActiveRecord::FinderMethods.instance_methods(false) #: Array[Symbol]
-        SIGNED_FINDER_METHODS = defined?(ActiveRecord::SignedId) ? ActiveRecord::SignedId::ClassMethods.instance_methods(false) : [] #: Array[Symbol]
+        SIGNED_FINDER_METHODS = if defined?(ActiveRecord::SignedId)
+          ActiveRecord::SignedId::ClassMethods.instance_methods(false)
+        else
+          []
+        end #: Array[Symbol]
         BATCHES_METHODS = ActiveRecord::Batches.instance_methods(false) #: Array[Symbol]
         CALCULATION_METHODS = ActiveRecord::Calculations.instance_methods(false) #: Array[Symbol]
         ENUMERABLE_QUERY_METHODS = [:any?, :many?, :none?, :one?] #: Array[Symbol]
-        FIND_OR_CREATE_METHODS = [:find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :create_or_find_by, :create_or_find_by!] #: Array[Symbol]
+        FIND_OR_CREATE_METHODS = [
+          :find_or_create_by,
+          :find_or_create_by!,
+          :find_or_initialize_by,
+          :create_or_find_by,
+          :create_or_find_by!,
+        ] #: Array[Symbol]
         BUILDER_METHODS = [:new, :create, :create!, :build] #: Array[Symbol]
         TO_ARRAY_METHODS = [:to_ary, :to_a] #: Array[Symbol]
 
@@ -233,7 +243,8 @@ module Tapioca
 
         #: -> RBI::Scope
         def association_relation_methods_module
-          @association_relation_methods_module ||= model.create_module(AssociationRelationMethodsModuleName) #: RBI::Scope?
+          @association_relation_methods_module ||=
+            model.create_module(AssociationRelationMethodsModuleName) #: RBI::Scope?
         end
 
         #: -> RBI::Scope
