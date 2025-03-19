@@ -158,7 +158,7 @@ module Tapioca
 
         #: -> Hash[String, String]
         def fixture_class_from_active_record_base_class_mapping
-          @fixture_class_mapping ||= begin
+          @fixture_class_mapping ||=
             ActiveRecord::Base.descendants.each_with_object({}) do |model_class, mapping|
               class_name = model_class.name
 
@@ -168,8 +168,7 @@ module Tapioca
               mapping[fixture_name] = class_name
 
               mapping
-            end
-          end #: Hash[String, String]?
+            end #: Hash[String, String]?
         end
 
         #: -> Hash[String, String]
