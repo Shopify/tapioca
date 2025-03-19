@@ -25,7 +25,7 @@ module Tapioca
       #: Hash[String, untyped]
       attr_reader :options
 
-      @@requested_constants = T.let([], T::Array[Module]) # rubocop:disable Style/ClassVars
+      @@requested_constants = [] #: Array[Module] # rubocop:disable Style/ClassVars
 
       class << self
         extend T::Sig
