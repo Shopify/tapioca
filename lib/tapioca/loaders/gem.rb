@@ -19,6 +19,7 @@ module Tapioca
             halt_upon_load_error: halt_upon_load_error,
           )
           loader.load
+          $gem_loader = loader
         end
       end
 
@@ -26,6 +27,11 @@ module Tapioca
       #: -> void
       def load
         require_gem_file
+      end
+
+      def unload
+        puts "Unloading"
+        $autoloader.unload if $autoloader
       end
 
       protected
