@@ -5,28 +5,19 @@ module Tapioca
   module SorbetHelper
     extend T::Sig
 
-    SORBET_GEM_SPEC = T.let(
-      ::Gem::Specification.find_by_name("sorbet-static"),
-      ::Gem::Specification,
-    )
+    SORBET_GEM_SPEC = ::Gem::Specification.find_by_name("sorbet-static") #: ::Gem::Specification
 
-    SORBET_BIN = T.let(
-      Pathname.new(SORBET_GEM_SPEC.full_gem_path) / "libexec" / "sorbet",
-      Pathname,
-    )
+    SORBET_BIN = Pathname.new(SORBET_GEM_SPEC.full_gem_path) / "libexec" / "sorbet" #: Pathname
 
     SORBET_EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"
 
     SORBET_PAYLOAD_URL = "https://github.com/sorbet/sorbet/tree/master/rbi"
 
-    SPOOM_CONTEXT = T.let(Spoom::Context.new("."), Spoom::Context)
+    SPOOM_CONTEXT = Spoom::Context.new(".") #: Spoom::Context
 
-    FEATURE_REQUIREMENTS = T.let(
-      {
-        # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
-      }.freeze,
-      T::Hash[Symbol, ::Gem::Requirement],
-    )
+    FEATURE_REQUIREMENTS = {
+      # feature_name: ::Gem::Requirement.new(">= ___"), # https://github.com/sorbet/sorbet/pull/___
+    }.freeze #: Hash[Symbol, ::Gem::Requirement]
 
     #: (*String sorbet_args) -> Spoom::ExecResult
     def sorbet(*sorbet_args)

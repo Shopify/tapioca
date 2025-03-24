@@ -36,10 +36,7 @@ module Tapioca
       class RailsGenerators < Compiler
         extend T::Sig
 
-        BUILT_IN_MATCHER = T.let(
-          /::(ActionMailbox|ActionText|ActiveRecord|Rails)::Generators/,
-          Regexp,
-        )
+        BUILT_IN_MATCHER = /::(ActionMailbox|ActionText|ActiveRecord|Rails)::Generators/
 
         ConstantType = type_member { { fixed: T.class_of(::Rails::Generators::Base) } }
 

@@ -62,10 +62,7 @@ module Tapioca
         # @override
         #: -> void
         def decorate
-          properties = T.let(
-            T.unsafe(constant).properties,
-            ::SmartProperties::PropertyCollection,
-          )
+          properties = T.unsafe(constant).properties #: ::SmartProperties::PropertyCollection
           return if properties.keys.empty?
 
           root.create_path(constant) do |k|
@@ -111,13 +108,10 @@ module Tapioca
           mod.create_method(property.reader.to_s, return_type: type)
         end
 
-        BOOLEANS = T.let(
-          [
-            [true, false],
-            [false, true],
-          ].freeze,
-          T::Array[[T::Boolean, T::Boolean]],
-        )
+        BOOLEANS = [
+          [true, false],
+          [false, true],
+        ].freeze #: Array[[bool, bool]]
 
         #: (::SmartProperties::Property property) -> String
         def type_for(property)

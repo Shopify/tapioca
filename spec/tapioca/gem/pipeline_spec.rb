@@ -12,7 +12,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
   include Tapioca::Helpers::Test::Isolation
   include Tapioca::SorbetHelper
 
-  DEFAULT_GEM_NAME = T.let("the-default-gem", String)
+  DEFAULT_GEM_NAME = "the-default-gem" #: String
   NO_UNHANDLED_PIPELINE_COMPILATION_ERRORS_MESSAGE = <<~MSG
     Tapioca::Gem::Pipeline#compile should not have any unhandled errors reported.
     Please either fix your changes to ensure no errors are reported, or explicity pass
@@ -75,14 +75,14 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
   #: -> Hash[String, String]
   def mock_gems
-    @gems ||= T.let({}, T.nilable(T::Hash[String, String]))
+    @gems ||= {} #: Hash[String, String]?
     @gems[DEFAULT_GEM_NAME] = tmp_path if @gems.empty?
     @gems
   end
 
   #: -> Array[String]
   def reported_errors
-    @reported_errors ||= T.let([], T.nilable(T::Array[String]))
+    @reported_errors ||= [] #: Array[String]?
   end
 
   describe Tapioca::Gem::Pipeline do

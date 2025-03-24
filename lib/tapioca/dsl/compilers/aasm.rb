@@ -37,48 +37,36 @@ module Tapioca
 
         # Taken directly from the AASM::Core::Event class, here:
         # https://github.com/aasm/aasm/blob/0e03746/lib/aasm/core/event.rb#L21-L29
-        EVENT_CALLBACKS =
-          T.let(
-            [
-              "after",
-              "after_commit",
-              "after_transaction",
-              "before",
-              "before_transaction",
-              "ensure",
-              "error",
-              "before_success",
-              "success",
-            ].freeze,
-            T::Array[String],
-          )
+        EVENT_CALLBACKS = [
+          "after",
+          "after_commit",
+          "after_transaction",
+          "before",
+          "before_transaction",
+          "ensure",
+          "error",
+          "before_success",
+          "success",
+        ].freeze #: Array[String]
 
         # Taken directly from the AASM::Base class, here:
         # https://github.com/aasm/aasm/blob/0e03746a2b86558ee1bf7bd7db873938cbb3b29b/lib/aasm/base.rb#L145-L171
-        GLOBAL_CALLBACKS =
-          T.let(
-            [
-              "after_all_transitions",
-              "after_all_transactions",
-              "before_all_transactions",
-              "before_all_events",
-              "after_all_events",
-              "error_on_all_events",
-              "ensure_on_all_events",
-            ].freeze,
-            T::Array[String],
-          )
+        GLOBAL_CALLBACKS = [
+          "after_all_transitions",
+          "after_all_transactions",
+          "before_all_transactions",
+          "before_all_events",
+          "after_all_events",
+          "error_on_all_events",
+          "ensure_on_all_events",
+        ].freeze #: Array[String]
 
-        TRANSITION_CALLBACKS =
-          T.let(
-            [
-              "on_transition",
-              "guard",
-              "after",
-              "success",
-            ].freeze,
-            T::Array[String],
-          )
+        TRANSITION_CALLBACKS = [
+          "on_transition",
+          "guard",
+          "after",
+          "success",
+        ].freeze #: Array[String]
 
         ConstantType = type_member { { fixed: T.all(T::Class[::AASM], ::AASM::ClassMethods) } }
 

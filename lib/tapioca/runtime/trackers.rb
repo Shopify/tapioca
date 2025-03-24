@@ -8,7 +8,7 @@ module Tapioca
     module Trackers
       extend T::Sig
 
-      @trackers = T.let([], T::Array[Tracker])
+      @trackers = [] #: Array[Tracker]
 
       class << self
         extend T::Sig

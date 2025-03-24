@@ -15,13 +15,13 @@ module Tapioca
         typed_overrides: {}
       )
         super()
-        @outpath = T.let(Pathname.new(DEFAULT_ANNOTATIONS_DIR), Pathname)
+        @outpath = Pathname.new(DEFAULT_ANNOTATIONS_DIR) #: Pathname
         @central_repo_root_uris = central_repo_root_uris
         @auth = auth
         @netrc_file = netrc_file
-        @netrc_info = T.let(nil, T.nilable(Netrc))
-        @tokens = T.let(repo_tokens, T::Hash[String, T.nilable(String)])
-        @indexes = T.let({}, T::Hash[String, RepoIndex])
+        @netrc_info = nil #: Netrc?
+        @tokens = repo_tokens #: Hash[String, String?]
+        @indexes = {} #: Hash[String, RepoIndex]
         @typed_overrides = typed_overrides
       end
 
@@ -74,7 +74,7 @@ module Tapioca
       def fetch_indexes
         multiple_repos = @central_repo_root_uris.size > 1
         repo_number = 1
-        indexes = T.let({}, T::Hash[String, RepoIndex])
+        indexes = {} #: Hash[String, RepoIndex]
 
         @central_repo_root_uris.each do |uri|
           index = fetch_index(uri, repo_number: multiple_repos ? repo_number : nil)
@@ -105,7 +105,7 @@ module Tapioca
       #: (Array[GemInfo] project_gems) -> Array[String]
       def fetch_annotations(project_gems)
         say("Fetching gem annotations from central repository... ", [:blue, :bold])
-        fetchable_gems = T.let(Hash.new { |h, k| h[k] = [] }, T::Hash[GemInfo, T::Array[String]])
+        fetchable_gems = Hash.new { |h, k| h[k] = [] } #: Hash[GemInfo, Array[String]]
 
         project_gems.each_with_object(fetchable_gems) do |gem_info, hash|
           @indexes.each do |uri, index|

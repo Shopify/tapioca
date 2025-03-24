@@ -89,7 +89,7 @@ module Tapioca
 
         #: -> Array[Symbol]
         def scope_method_names
-          scope_methods = T.let([], T::Array[Symbol])
+          scope_methods = [] #: Array[Symbol]
           constant = self.constant
 
           # Keep gathering scope methods until we hit "ActiveRecord::Base"
