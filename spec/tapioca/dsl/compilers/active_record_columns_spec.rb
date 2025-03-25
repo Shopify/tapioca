@@ -182,24 +182,24 @@ module Tapioca
                       sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id; end
 
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                     <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id_value; end
 
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id_value?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id_value?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                     <%- else -%>
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id?; end
+                      sig { params(from: ::Integer, to: ::Integer).returns(T::Boolean) }
+                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                     <%- end -%>
                     end
                   end
@@ -795,14 +795,14 @@ module Tapioca
                   sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
                   def saved_change_to_author; end
 
-                  sig { returns(T::Boolean) }
-                  def saved_change_to_author?; end
+                  sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                  def saved_change_to_author?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T::Boolean) }
-                  def will_save_change_to_author?; end
+                  sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                  def will_save_change_to_author?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
               end
@@ -885,14 +885,14 @@ module Tapioca
                   sig { returns(T.nilable([T.nilable(::String), T.nilable(::String)])) }
                   def saved_change_to_body; end
 
-                  sig { returns(T::Boolean) }
-                  def saved_change_to_body?; end
+                  sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                  def saved_change_to_body?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T::Boolean) }
-                  def will_save_change_to_body?; end
+                  sig { params(from: T.nilable(::String), to: T.nilable(::String)).returns(T::Boolean) }
+                  def will_save_change_to_body?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
               end
@@ -973,14 +973,14 @@ module Tapioca
                   sig { returns(T.nilable([::Date, ::Date])) }
                   def saved_change_to_publication_date; end
 
-                  sig { returns(T::Boolean) }
-                  def saved_change_to_publication_date?; end
+                  sig { params(from: ::Date, to: ::Date).returns(T::Boolean) }
+                  def saved_change_to_publication_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
 
                 expected = indented(<<~RBI, 4)
-                  sig { returns(T::Boolean) }
-                  def will_save_change_to_publication_date?; end
+                  sig { params(from: ::Date, to: ::Date).returns(T::Boolean) }
+                  def will_save_change_to_publication_date?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                 RBI
                 assert_includes(output, expected)
               end
@@ -1296,21 +1296,21 @@ module Tapioca
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def saved_change_to_id; end
 
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id?; end
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                     <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def saved_change_to_id_value; end
 
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id_value?; end
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id?; end
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id_value?; end
+                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
+                      def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                     <%- else -%>
                       sig { returns(T::Boolean) }
                       def will_save_change_to_id?; end
@@ -1482,24 +1482,24 @@ module Tapioca
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id; end
 
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id?; end
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
                     <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id_value; end
 
-                      sig { returns(T::Boolean) }
-                      def saved_change_to_id_value?; end
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def saved_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id?; end
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id_value?; end
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                     <%- else -%>
-                      sig { returns(T::Boolean) }
-                      def will_save_change_to_id?; end
+                      sig { params(from: T.nilable(::Integer), to: T.nilable(::Integer)).returns(T::Boolean) }
+                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
                     <%- end -%>
                     end
                   end
