@@ -294,8 +294,8 @@ module Tapioca
             methods_to_add,
             return_type: "T::Boolean",
             parameters: [
-              create_kw_opt_param("from", type: setter_type, default: "T.unsafe(nil)"),
-              create_kw_opt_param("to", type: setter_type, default: "T.unsafe(nil)"),
+              create_kw_opt_param("from", type: "T.untyped", default: "T.unsafe(nil)"),
+              create_kw_opt_param("to", type: "T.untyped", default: "T.unsafe(nil)"),
             ],
           )
           add_method(
@@ -321,8 +321,8 @@ module Tapioca
             methods_to_add,
             return_type: "T::Boolean",
             parameters: [
-              create_kw_opt_param("from", type: setter_type, default: "T.unsafe(nil)"),
-              create_kw_opt_param("to", type: setter_type, default: "T.unsafe(nil)"),
+              create_kw_opt_param("from", type: "T.untyped", default: "T.unsafe(nil)"),
+              create_kw_opt_param("to", type: "T.untyped", default: "T.unsafe(nil)"),
             ],
           )
           add_method(
