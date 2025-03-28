@@ -199,13 +199,24 @@ module Tapioca
       shims_or_todos_props = extract_methods_and_attrs(shims_or_todos)
       if shims_or_todos_props.any?
         shims_or_todos_props.each do |shim_or_todo_prop|
-          # If the node doesn't have a signature, we have a duplicate
-          return true if shim_or_todo_prop.sigs.empty?
+          other_nodes = extract_methods_and_attrs(nodes) - [shim_or_todo_prop]
+
+          if shim_or_todo_prop.sigs.empty?
+            # If the node doesn't have a signature and is an attribute accessor, we have a duplicate
+            return true if shim_or_todo_prop.is_a?(RBI::Attr)
+
+            # Now we know it's a method
+
+            # If the node has no parameters and we compare it against an attribute of the same name, it's a duplicate
+            return true if shim_or_todo_prop.params.empty? && other_nodes.grep(RBI::Attr).any?
+
+            # If the node has parameters, we compare them against all the other methods
+            # If at least one of them has the same parameters, it's a duplicate
+            return true if other_nodes.grep(RBI::Method).any? { |other| shim_or_todo_prop.params == other.params }
+          end
 
           # We compare the shim or todo prop with all the other props of the same name
-          extract_methods_and_attrs(nodes).each do |node|
-            next if node.equal?(shim_or_todo_prop) # We don't want to compare a node with itself
-
+          other_nodes.each do |node|
             # Another prop has the same sig, we have a duplicate
             return true if shim_or_todo_prop.sigs.any? { |sig| node.sigs.include?(sig) }
           end

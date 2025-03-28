@@ -719,6 +719,23 @@ module Tapioca
         assert_success_status(result)
       end
 
+      it "ignores duplicated methods with different parameters" do
+        @project.write!("sorbet/rbi/gems/foo@1.0.0.rbi", <<~RBI)
+          class Foo
+            def foo(a, b); end
+          end
+        RBI
+
+        @project.write!("sorbet/rbi/shims/foo.rbi", <<~RBI)
+          class Foo
+            def foo(*args); end
+          end
+        RBI
+
+        result = @project.tapioca("check-shims --no-payload")
+        assert_success_status(result)
+      end
+
       sig { params(string: String).returns(String) }
       def strip_timer(string)
         string.gsub(/ \(\d+\.\d+s\)/, "")
