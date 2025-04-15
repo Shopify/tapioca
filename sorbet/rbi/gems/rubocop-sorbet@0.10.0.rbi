@@ -1824,50 +1824,24 @@ end
 # source://rubocop-sorbet//lib/rubocop/sorbet/version.rb#4
 module RuboCop::Sorbet; end
 
-# source://rubocop-sorbet//lib/rubocop/sorbet.rb#16
-RuboCop::Sorbet::CONFIG = T.let(T.unsafe(nil), Hash)
-
-# source://rubocop-sorbet//lib/rubocop/sorbet.rb#15
-RuboCop::Sorbet::CONFIG_DEFAULT = T.let(T.unsafe(nil), Pathname)
-
 # source://rubocop-sorbet//lib/rubocop/sorbet.rb#11
 class RuboCop::Sorbet::Error < ::StandardError; end
 
-# Because RuboCop doesn't yet support plugins, we have to monkey patch in a
-# bit of our configuration.
-#
-# source://rubocop-sorbet//lib/rubocop/sorbet/inject.rb#9
-module RuboCop::Sorbet::Inject
-  class << self
-    # source://rubocop-sorbet//lib/rubocop/sorbet/inject.rb#11
-    def defaults!; end
-  end
-end
-
-# source://rubocop-sorbet//lib/rubocop/sorbet.rb#14
-RuboCop::Sorbet::PROJECT_ROOT = T.let(T.unsafe(nil), Pathname)
-
 # A plugin that integrates RuboCop Sorbet with RuboCop's plugin system.
 #
-# source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#10
+# source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#15
 class RuboCop::Sorbet::Plugin < ::LintRoller::Plugin
-  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#14
+  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#16
   def about; end
 
-  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#27
+  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#29
   def rules(_context); end
 
   # @return [Boolean]
   #
-  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#23
+  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#25
   def supported?(context); end
 end
-
-# source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#11
-RuboCop::Sorbet::Plugin::RUBOCOP_MIN_VERSION = T.let(T.unsafe(nil), String)
-
-# source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#12
-RuboCop::Sorbet::Plugin::SUPPORTED = T.let(T.unsafe(nil), FalseClass)
 
 # source://rubocop-sorbet//lib/rubocop/sorbet/version.rb#5
 RuboCop::Sorbet::VERSION = T.let(T.unsafe(nil), String)
