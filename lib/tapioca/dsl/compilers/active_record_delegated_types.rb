@@ -117,7 +117,7 @@ module Tapioca
           mod.create_method(
             "build_#{role}",
             parameters: [create_rest_param("args", type: "T.untyped")],
-            return_type: "T.any(#{types.join(", ")})",
+            return_type: types.size > 1 ? "T.any(#{types.join(", ")})" : types[0],
           )
         end
 
