@@ -78,7 +78,7 @@ module Tapioca
 
           requires_ancestor { Kernel }
 
-          ORIG_ARGV = ARGV.dup unless defined?(ORIG_ARGV) #: Array[untyped]
+          ORIG_ARGV = ARGV.dup unless defined?(ORIG_ARGV) #: as !nil
 
           # Crazy H4X to get this working in windows / jruby with
           # no forking.
