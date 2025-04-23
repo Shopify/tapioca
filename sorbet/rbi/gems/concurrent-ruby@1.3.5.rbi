@@ -11,7 +11,6 @@
 module Concurrent
   extend ::Concurrent::Utility::EngineDetector
   extend ::Concurrent::Utility::NativeExtensionLoader
-  extend ::Logger::Severity
   extend ::Concurrent::Concern::Logging
   extend ::Concurrent::Concern::Deprecation
 
@@ -189,15 +188,17 @@ module Concurrent
     # source://concurrent-ruby//lib/concurrent-ruby/concurrent/utility/processor_counter.rb#217
     def cpu_shares; end
 
-    # @return [Logger] Logger with provided level and output.
+    # Create a simple logger with provided level and output.
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#37
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#38
     def create_simple_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
 
-    # @deprecated
-    # @return [Logger] Logger with provided level and output.
+    # Create a stdlib logger with provided level and output.
+    # If you use this deprecated method you might need to add logger to your Gemfile to avoid warnings from Ruby 3.3.5+.
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#69
+    # @deprecated
+    #
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#73
     def create_stdlib_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
 
     # Dataflow allows you to create a task that will be scheduled when all of its data dependencies are available.
@@ -269,10 +270,10 @@ module Concurrent
     # source://concurrent-ruby//lib/concurrent-ruby/concurrent/configuration.rb#62
     def global_io_executor; end
 
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#109
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#114
     def global_logger; end
 
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#113
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#118
     def global_logger=(value); end
 
     # Global thread pool user for global *timers*.
@@ -354,14 +355,14 @@ module Concurrent
 
     # Use logger created by #create_simple_logger to log concurrent-ruby messages.
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#63
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#66
     def use_simple_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
 
     # Use logger created by #create_stdlib_logger to log concurrent-ruby messages.
     #
     # @deprecated
     #
-    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#96
+    # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#101
     def use_stdlib_logger(level = T.unsafe(nil), output = T.unsafe(nil)); end
   end
 end
@@ -466,7 +467,6 @@ Concurrent::AbstractExchanger::CANCEL = T.let(T.unsafe(nil), Object)
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/abstract_executor_service.rb#10
 class Concurrent::AbstractExecutorService < ::Concurrent::Synchronization::LockableObject
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
   include ::Concurrent::ExecutorService
   include ::Concurrent::Concern::Deprecation
@@ -884,7 +884,7 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
   # hopelessly deadlock the Agent with no possibility of recovery.
   #
   # @param timeout [Float] the maximum number of seconds to wait
-  # @raise [Concurrent::TimeoutError] when timout is reached
+  # @raise [Concurrent::TimeoutError] when timeout is reached
   # @return [Boolean] true if all actions complete before timeout
   #
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/agent.rb#377
@@ -1286,7 +1286,7 @@ class Concurrent::Agent < ::Concurrent::Synchronization::LockableObject
     #
     # @param timeout [Float] the maximum number of seconds to wait
     # @param agents [Array<Concurrent::Agent>] the Agents on which to wait
-    # @raise [Concurrent::TimeoutError] when timout is reached
+    # @raise [Concurrent::TimeoutError] when timeout is reached
     # @return [Boolean] true if all actions complete before timeout
     #
     # source://concurrent-ruby//lib/concurrent-ruby/concurrent/agent.rb#482
@@ -3163,9 +3163,7 @@ module Concurrent::Concern; end
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/deprecation.rb#8
 module Concurrent::Concern::Deprecation
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
-  extend ::Logger::Severity
   extend ::Concurrent::Concern::Logging
   extend ::Concurrent::Concern::Deprecation
 
@@ -3243,20 +3241,39 @@ end
 
 # Include where logging is needed
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#10
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#9
 module Concurrent::Concern::Logging
-  include ::Logger::Severity
-
   # Logs through {Concurrent.global_logger}, it can be overridden by setting @logger
   #
-  # @param level [Integer] one of Logger::Severity constants
+  # @param level [Integer] one of Concurrent::Concern::Logging constants
   # @param progname [String] e.g. a path of an Actor
   # @param message [String, nil] when nil block is used to generate the message
   # @yieldreturn [String] a message
   #
-  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#18
+  # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#19
   def log(level, progname, message = T.unsafe(nil), &block); end
 end
+
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#11
+Concurrent::Concern::Logging::DEBUG = T.let(T.unsafe(nil), Integer)
+
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#11
+Concurrent::Concern::Logging::ERROR = T.let(T.unsafe(nil), Integer)
+
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#11
+Concurrent::Concern::Logging::FATAL = T.let(T.unsafe(nil), Integer)
+
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#11
+Concurrent::Concern::Logging::INFO = T.let(T.unsafe(nil), Integer)
+
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#12
+Concurrent::Concern::Logging::SEV_LABEL = T.let(T.unsafe(nil), Array)
+
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#11
+Concurrent::Concern::Logging::UNKNOWN = T.let(T.unsafe(nil), Integer)
+
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#11
+Concurrent::Concern::Logging::WARN = T.let(T.unsafe(nil), Integer)
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/obligation.rb#10
 module Concurrent::Concern::Obligation
@@ -3710,7 +3727,7 @@ end
 #
 # When a `Delay` is created its state is set to `pending`. The value and
 # reason are both `nil`. The first time the `#value` method is called the
-# enclosed opration will be run and the calling thread will block. Other
+# enclosed operation will be run and the calling thread will block. Other
 # threads attempting to call `#value` will block as well. Once the operation
 # is complete the *value* will be set to the result of the operation or the
 # *reason* will be set to the raised exception, as appropriate. All threads
@@ -3976,7 +3993,6 @@ Concurrent::ExchangerImplementation = Concurrent::RubyExchanger
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/executor_service.rb#157
 module Concurrent::ExecutorService
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
   # Submit a task to the executor for asynchronous processing.
@@ -4281,7 +4297,7 @@ Concurrent::GLOBAL_IMMEDIATE_EXECUTOR = T.let(T.unsafe(nil), Concurrent::Immedia
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/configuration.rb#22
 Concurrent::GLOBAL_IO_EXECUTOR = T.let(T.unsafe(nil), Concurrent::Delay)
 
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#106
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#111
 Concurrent::GLOBAL_LOGGER = T.let(T.unsafe(nil), Concurrent::AtomicReference)
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/configuration.rb#26
@@ -6043,7 +6059,7 @@ Concurrent::NULL = T.let(T.unsafe(nil), Object)
 
 # Suppresses all output when used for logging.
 #
-# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#103
+# source://concurrent-ruby//lib/concurrent-ruby/concurrent/concern/logging.rb#108
 Concurrent::NULL_LOGGER = T.let(T.unsafe(nil), Proc)
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/options.rb#6
@@ -6154,7 +6170,7 @@ end
 # - if parent is *rejected* the child will be *pending* (but will ultimately be *rejected*)
 #
 # Promises are executed asynchronously from the main thread. By the time a
-# child Promise finishes intialization it may be in a different state than its
+# child Promise finishes initialization it may be in a different state than its
 # parent (by the time a child is created its parent may have completed
 # execution and changed state). Despite being asynchronous, however, the order
 # of execution of Promise objects in a chain (or tree) is strictly defined.
@@ -9037,7 +9053,7 @@ class Concurrent::RubyThreadPoolExecutor < ::Concurrent::RubyExecutorService
   #
   # This is a no-op on some pool implementation (e.g. the Java one).  The Ruby
   # pool will auto-prune each time a new job is posted. You will need to call
-  # this method explicitely in case your application post jobs in bursts (a
+  # this method explicitly in case your application post jobs in bursts (a
   # lot of jobs and then nothing for long periods)
   #
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb#118
@@ -9177,7 +9193,6 @@ Concurrent::RubyThreadPoolExecutor::DEFAULT_THREAD_IDLETIMEOUT = T.let(T.unsafe(
 
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/ruby_thread_pool_executor.rb#310
 class Concurrent::RubyThreadPoolExecutor::Worker
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
   # @return [Worker] a new instance of Worker
@@ -9410,7 +9425,7 @@ class Concurrent::ScheduledTask < ::Concurrent::IVar
   # source://concurrent-ruby//lib/concurrent-ruby/concurrent/scheduled_task.rb#163
   def executor; end
 
-  # The `delay` value given at instanciation.
+  # The `delay` value given at instantiation.
   #
   # @return [Float] the initial delay.
   #
@@ -9575,7 +9590,6 @@ Concurrent::SemaphoreImplementation = Concurrent::MutexSemaphore
 #
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/serial_executor_service.rb#24
 module Concurrent::SerialExecutorService
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
   include ::Concurrent::ExecutorService
 
@@ -9594,7 +9608,6 @@ end
 #
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/serialized_execution.rb#8
 class Concurrent::SerializedExecution < ::Concurrent::Synchronization::LockableObject
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
 
   # @return [SerializedExecution] a new instance of SerializedExecution
@@ -9692,7 +9705,6 @@ end
 #
 # source://concurrent-ruby//lib/concurrent-ruby/concurrent/executor/serialized_execution_delegator.rb#12
 class Concurrent::SerializedExecutionDelegator < ::SimpleDelegator
-  include ::Logger::Severity
   include ::Concurrent::Concern::Logging
   include ::Concurrent::ExecutorService
   include ::Concurrent::SerialExecutorService
@@ -10030,7 +10042,7 @@ end
 # is received. This pattern has several issues. The thread itself is highly
 # susceptible to errors during processing. Also, the thread itself must be
 # constantly monitored and restarted should it die. `SingleThreadExecutor`
-# encapsulates all these bahaviors. The task processor is highly resilient
+# encapsulates all these behaviors. The task processor is highly resilient
 # to errors from within tasks. Also, should the thread die it will
 # automatically be restarted.
 #
@@ -10492,7 +10504,7 @@ class Concurrent::Synchronization::Object < ::Concurrent::Synchronization::Abstr
 
     # Creates methods for reading and writing to a instance variable with
     # volatile (Java) semantic as {.attr_volatile} does.
-    # The instance variable should be accessed oly through generated methods.
+    # The instance variable should be accessed only through generated methods.
     # This method generates following methods: `value`, `value=(new_value) #=> new_value`,
     # `swap_value(new_value) #=> old_value`,
     # `compare_and_set_value(expected, value) #=> true || false`, `update_value(&block)`.

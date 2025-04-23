@@ -2038,7 +2038,7 @@ Sprockets::EjsProcessor::VERSION = T.let(T.unsafe(nil), String)
 # Internal: HTTP transport encoding and charset detecting related functions.
 # Mixed into Environment.
 #
-# source://sprockets//lib/sprockets/encoding_utils.rb#9
+# source://sprockets//lib/sprockets/encoding_utils.rb#8
 module Sprockets::EncodingUtils
   extend ::Sprockets::EncodingUtils
 
@@ -2048,7 +2048,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#73
+  # source://sprockets//lib/sprockets/encoding_utils.rb#72
   def base64(str); end
 
   # Internal: Use Charlock Holmes to detect encoding.
@@ -2057,7 +2057,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#122
+  # source://sprockets//lib/sprockets/encoding_utils.rb#121
   def charlock_detect(str); end
 
   # Public: Use deflate to compress data.
@@ -2066,7 +2066,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a compressed String
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#19
+  # source://sprockets//lib/sprockets/encoding_utils.rb#18
   def deflate(str); end
 
   # Public: Basic string detecter.
@@ -2078,7 +2078,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#100
+  # source://sprockets//lib/sprockets/encoding_utils.rb#99
   def detect(str); end
 
   # Public: Detect and strip @charset from CSS style sheet.
@@ -2087,7 +2087,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#178
+  # source://sprockets//lib/sprockets/encoding_utils.rb#177
   def detect_css(str); end
 
   # Public: Detect charset from HTML document.
@@ -2099,7 +2099,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a encoded String.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#245
+  # source://sprockets//lib/sprockets/encoding_utils.rb#244
   def detect_html(str); end
 
   # Public: Detect Unicode string.
@@ -2110,7 +2110,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoded String.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#139
+  # source://sprockets//lib/sprockets/encoding_utils.rb#138
   def detect_unicode(str); end
 
   # Public: Detect and strip BOM from possible unicode string.
@@ -2120,7 +2120,7 @@ module Sprockets::EncodingUtils
   # Returns UTF 8/16/32 encoded String without BOM or the original String if
   # no BOM was present.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#157
+  # source://sprockets//lib/sprockets/encoding_utils.rb#156
   def detect_unicode_bom(str); end
 
   # Public: Use gzip to compress data.
@@ -2129,7 +2129,7 @@ module Sprockets::EncodingUtils
   #
   # Returns a compressed String
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#59
+  # source://sprockets//lib/sprockets/encoding_utils.rb#58
   def gzip(str); end
 
   # Internal: Scan binary CSS string for @charset encoding name.
@@ -2138,7 +2138,7 @@ module Sprockets::EncodingUtils
   #
   # Returns encoding String name or nil.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#208
+  # source://sprockets//lib/sprockets/encoding_utils.rb#207
   def scan_css_charset(str); end
 
   # Internal: Unmarshal optionally deflated data.
@@ -2151,26 +2151,26 @@ module Sprockets::EncodingUtils
   #
   # Returns unmarshaled Object or raises an Exception.
   #
-  # source://sprockets//lib/sprockets/encoding_utils.rb#39
+  # source://sprockets//lib/sprockets/encoding_utils.rb#38
   def unmarshaled_deflated(str, window_bits = T.unsafe(nil)); end
 end
 
 # Internal: Mapping unicode encodings to byte order markers.
 #
-# source://sprockets//lib/sprockets/encoding_utils.rb#84
+# source://sprockets//lib/sprockets/encoding_utils.rb#83
 Sprockets::EncodingUtils::BOM = T.let(T.unsafe(nil), Hash)
 
 # Internal: Shorthand aliases for detecter functions.
 #
-# source://sprockets//lib/sprockets/encoding_utils.rb#81
+# source://sprockets//lib/sprockets/encoding_utils.rb#80
 Sprockets::EncodingUtils::CHARSET_DETECT = T.let(T.unsafe(nil), Hash)
 
-# source://sprockets//lib/sprockets/encoding_utils.rb#201
+# source://sprockets//lib/sprockets/encoding_utils.rb#200
 Sprockets::EncodingUtils::CHARSET_SIZE = T.let(T.unsafe(nil), Integer)
 
 # Internal: @charset bytes
 #
-# source://sprockets//lib/sprockets/encoding_utils.rb#200
+# source://sprockets//lib/sprockets/encoding_utils.rb#199
 Sprockets::EncodingUtils::CHARSET_START = T.let(T.unsafe(nil), Array)
 
 # source://sprockets//lib/sprockets/environment.rb#7
@@ -4859,7 +4859,7 @@ module Sprockets::URIUtils
   #
   # Returns String URI.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#114
+  # source://sprockets//lib/sprockets/uri_utils.rb#117
   def build_asset_uri(path, params = T.unsafe(nil)); end
 
   # Internal: Build file-digest dependency URI.
@@ -4873,7 +4873,7 @@ module Sprockets::URIUtils
   #
   # Returns String URI.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#148
+  # source://sprockets//lib/sprockets/uri_utils.rb#151
   def build_file_digest_uri(path); end
 
   # Internal: Serialize hash of params into query string.
@@ -4882,21 +4882,21 @@ module Sprockets::URIUtils
   #
   # Returns String query or nil if empty.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#157
+  # source://sprockets//lib/sprockets/uri_utils.rb#160
   def encode_uri_query_params(params); end
 
   # Internal: Join file: URI component parts into String.
   #
   # Returns String.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#62
+  # source://sprockets//lib/sprockets/uri_utils.rb#65
   def join_file_uri(scheme, host, path, query); end
 
   # Internal: Join URI component parts into String.
   #
   # Returns String.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#36
+  # source://sprockets//lib/sprockets/uri_utils.rb#39
   def join_uri(scheme, userinfo, host, port, registry, path, opaque, query, fragment); end
 
   # Internal: Parse Asset URI.
@@ -4910,7 +4910,7 @@ module Sprockets::URIUtils
   #
   # Returns String path and Hash of symbolized parameters.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#93
+  # source://sprockets//lib/sprockets/uri_utils.rb#96
   def parse_asset_uri(uri); end
 
   # Internal: Parse file-digest dependency URI.
@@ -4924,7 +4924,7 @@ module Sprockets::URIUtils
   #
   # Returns String path.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#128
+  # source://sprockets//lib/sprockets/uri_utils.rb#131
   def parse_file_digest_uri(uri); end
 
   # Internal: Parse query string into hash of params
@@ -4933,7 +4933,7 @@ module Sprockets::URIUtils
   #
   # Return Hash of params.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#182
+  # source://sprockets//lib/sprockets/uri_utils.rb#185
   def parse_uri_query_params(query); end
 
   # Internal: Parse file: URI into component parts.
@@ -4942,7 +4942,7 @@ module Sprockets::URIUtils
   #
   # Returns [scheme, host, path, query].
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#45
+  # source://sprockets//lib/sprockets/uri_utils.rb#48
   def split_file_uri(uri); end
 
   # Internal: Parse URI into component parts.
@@ -4951,7 +4951,7 @@ module Sprockets::URIUtils
   #
   # Returns Array of components.
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#29
+  # source://sprockets//lib/sprockets/uri_utils.rb#32
   def split_uri(uri); end
 
   # Internal: Check if String is a valid Asset URI.
@@ -4962,9 +4962,12 @@ module Sprockets::URIUtils
   #
   # @return [Boolean]
   #
-  # source://sprockets//lib/sprockets/uri_utils.rb#76
+  # source://sprockets//lib/sprockets/uri_utils.rb#79
   def valid_asset_uri?(str); end
 end
+
+# source://sprockets//lib/sprockets/uri_utils.rb#24
+Sprockets::URIUtils::URI_PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
 
 # source://sprockets//lib/sprockets/uglifier_compressor.rb#19
 class Sprockets::UglifierCompressor

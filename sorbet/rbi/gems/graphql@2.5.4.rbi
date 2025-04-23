@@ -1021,11 +1021,16 @@ class GraphQL::Dataloader::ActiveRecordAssociationSource < ::GraphQL::Dataloader
   # source://graphql//lib/graphql/dataloader/active_record_association_source.rb#10
   def initialize(association, scope = T.unsafe(nil)); end
 
-  # source://graphql//lib/graphql/dataloader/active_record_association_source.rb#23
+  # source://graphql//lib/graphql/dataloader/active_record_association_source.rb#31
   def fetch(records); end
 
-  # source://graphql//lib/graphql/dataloader/active_record_association_source.rb#15
+  # source://graphql//lib/graphql/dataloader/active_record_association_source.rb#23
   def load(record); end
+
+  class << self
+    # source://graphql//lib/graphql/dataloader/active_record_association_source.rb#15
+    def batch_key_for(association, scope = T.unsafe(nil)); end
+  end
 end
 
 # source://graphql//lib/graphql/dataloader/active_record_association_source.rb#8
@@ -1038,11 +1043,14 @@ class GraphQL::Dataloader::ActiveRecordSource < ::GraphQL::Dataloader::Source
   # source://graphql//lib/graphql/dataloader/active_record_source.rb#7
   def initialize(model_class, find_by: T.unsafe(nil)); end
 
-  # source://graphql//lib/graphql/dataloader/active_record_source.rb#18
+  # source://graphql//lib/graphql/dataloader/active_record_source.rb#32
   def fetch(record_ids); end
 
-  # source://graphql//lib/graphql/dataloader/active_record_source.rb#13
-  def load(requested_key); end
+  # source://graphql//lib/graphql/dataloader/active_record_source.rb#22
+  def normalize_fetch_key(requested_key); end
+
+  # source://graphql//lib/graphql/dataloader/active_record_source.rb#18
+  def result_key_for(requested_key); end
 end
 
 # source://graphql//lib/graphql/dataloader/async_dataloader.rb#4
@@ -1127,7 +1135,7 @@ class GraphQL::Dataloader::Source
   #
   # @return [void]
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#167
+  # source://graphql//lib/graphql/dataloader/source.rb#179
   def clear_cache; end
 
   # Returns the value of attribute dataloader.
@@ -1140,19 +1148,19 @@ class GraphQL::Dataloader::Source
   # @param keys [Array<Object>] keys passed to {#load}, {#load_all}, {#request}, or {#request_all}
   # @return [Array<Object>] A loaded value for each of `keys`. The array must match one-for-one to the list of `keys`.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#86
+  # source://graphql//lib/graphql/dataloader/source.rb#98
   def fetch(keys); end
 
   # @param value [Object] A loading value which will be passed to {#fetch} if it isn't already in the internal cache.
   # @return [Object] The result from {#fetch} for `key`. If `key` hasn't been loaded yet, the Fiber will yield until it's loaded.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#51
+  # source://graphql//lib/graphql/dataloader/source.rb#63
   def load(value); end
 
   # @param values [Array<Object>] Loading keys which will be passed to `#fetch` (or read from the internal cache).
   # @return [Object] The result from {#fetch} for `keys`. If `keys` haven't been loaded yet, the Fiber will yield until they're loaded.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#64
+  # source://graphql//lib/graphql/dataloader/source.rb#76
   def load_all(values); end
 
   # Add these key-value pairs to this source's cache
@@ -1161,17 +1169,29 @@ class GraphQL::Dataloader::Source
   # @param new_results [Hash<Object => Object>] key-value pairs to cache in this source
   # @return [void]
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#117
+  # source://graphql//lib/graphql/dataloader/source.rb#129
   def merge(new_results); end
+
+  # Implement this method if varying values given to {load} (etc) should be consolidated
+  # or normalized before being handed off to your {fetch} implementation.
+  #
+  # This is different than {result_key_for} because _that_ method handles unification inside Dataloader's cache,
+  # but this method changes the value passed into {fetch}.
+  #
+  # @param value [Object] The value passed to {load}, {load_all}, {request}, or {request_all}
+  # @return [Object] The value given to {fetch}
+  #
+  # source://graphql//lib/graphql/dataloader/source.rb#46
+  def normalize_fetch_key(value); end
 
   # Returns the value of attribute pending.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#172
+  # source://graphql//lib/graphql/dataloader/source.rb#184
   def pending; end
 
   # @return [Boolean] True if this source has any pending requests for data.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#109
+  # source://graphql//lib/graphql/dataloader/source.rb#121
   def pending?; end
 
   # @return [Dataloader::Request] a pending request for a value from `key`. Call `.load` on that object to wait for the result.
@@ -1181,7 +1201,7 @@ class GraphQL::Dataloader::Source
 
   # @return [Dataloader::Request] a pending request for a values from `keys`. Call `.load` on that object to wait for the results.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#39
+  # source://graphql//lib/graphql/dataloader/source.rb#51
   def request_all(values); end
 
   # Implement this method to return a stable identifier if different
@@ -1195,7 +1215,7 @@ class GraphQL::Dataloader::Source
 
   # Returns the value of attribute results.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#172
+  # source://graphql//lib/graphql/dataloader/source.rb#184
   def results; end
 
   # Called by {GraphQL::Dataloader} to resolve and pending requests to this source.
@@ -1203,7 +1223,7 @@ class GraphQL::Dataloader::Source
   # @api private
   # @return [void]
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#128
+  # source://graphql//lib/graphql/dataloader/source.rb#140
   def run_pending_keys; end
 
   # Called by {Dataloader} to prepare the {Source}'s internal state
@@ -1218,7 +1238,7 @@ class GraphQL::Dataloader::Source
   #
   # @return [void]
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#95
+  # source://graphql//lib/graphql/dataloader/source.rb#107
   def sync(pending_result_keys); end
 
   private
@@ -1229,7 +1249,7 @@ class GraphQL::Dataloader::Source
   # @param key [Object] key passed to {#load} or {#load_all}
   # @return [Object] The result from {#fetch} for `key`.
   #
-  # source://graphql//lib/graphql/dataloader/source.rb#180
+  # source://graphql//lib/graphql/dataloader/source.rb#192
   def result_for(key); end
 
   class << self
@@ -1248,12 +1268,12 @@ class GraphQL::Dataloader::Source
     # @param batch_kwargs [Hash]
     # @return [Object]
     #
-    # source://graphql//lib/graphql/dataloader/source.rb#161
+    # source://graphql//lib/graphql/dataloader/source.rb#173
     def batch_key_for(*batch_args, **batch_kwargs); end
   end
 end
 
-# source://graphql//lib/graphql/dataloader/source.rb#91
+# source://graphql//lib/graphql/dataloader/source.rb#103
 GraphQL::Dataloader::Source::MAX_ITERATIONS = T.let(T.unsafe(nil), Integer)
 
 # This error is raised when `Types::ISO8601Date` is asked to return a value
@@ -1545,11 +1565,11 @@ class GraphQL::Execution::Interpreter::ExecutionErrors
   def add(err_or_msg); end
 end
 
-# source://graphql//lib/graphql/execution/interpreter.rb#161
+# source://graphql//lib/graphql/execution/interpreter.rb#154
 class GraphQL::Execution::Interpreter::ListResultFailedError < ::GraphQL::Error
   # @return [ListResultFailedError] a new instance of ListResultFailedError
   #
-  # source://graphql//lib/graphql/execution/interpreter.rb#162
+  # source://graphql//lib/graphql/execution/interpreter.rb#155
   def initialize(value:, path:, field:); end
 end
 
@@ -7115,17 +7135,17 @@ class GraphQL::Query::Context
   # @param values [Hash] A hash of arbitrary values which will be accessible at query-time
   # @return [Context] a new instance of Context
   #
-  # source://graphql//lib/graphql/query/context.rb#48
+  # source://graphql//lib/graphql/query/context.rb#45
   def initialize(query:, values:, schema: T.unsafe(nil)); end
 
   # Lookup `key` from the hash passed to {Schema#execute} as `context:`
   #
-  # source://graphql//lib/graphql/query/context.rb#98
+  # source://graphql//lib/graphql/query/context.rb#92
   def [](key); end
 
   # Reassign `key` to the hash passed to {Schema#execute} as `context:`
   #
-  # source://graphql//lib/graphql/query/context.rb#81
+  # source://graphql//lib/graphql/query/context.rb#75
   def []=(key, value); end
 
   # Add error at query-level.
@@ -7133,26 +7153,26 @@ class GraphQL::Query::Context
   # @param error [GraphQL::ExecutionError] an execution error
   # @return [void]
   #
-  # source://graphql//lib/graphql/query/context.rb#126
+  # source://graphql//lib/graphql/query/context.rb#120
   def add_error(error); end
 
   # @example Print the GraphQL backtrace during field resolution
   #   puts ctx.backtrace
   # @return [GraphQL::Backtrace] The backtrace for this point in query execution
   #
-  # source://graphql//lib/graphql/query/context.rb#138
+  # source://graphql//lib/graphql/query/context.rb#132
   def backtrace; end
 
-  # source://graphql//lib/graphql/query/context.rb#146
+  # source://graphql//lib/graphql/query/context.rb#140
   def current_path; end
 
-  # source://graphql//lib/graphql/query/context.rb#68
+  # source://graphql//lib/graphql/query/context.rb#62
   def dataloader; end
 
-  # source://graphql//lib/graphql/query/context.rb#160
+  # source://graphql//lib/graphql/query/context.rb#154
   def delete(key); end
 
-  # source://graphql//lib/graphql/query/context.rb#188
+  # source://graphql//lib/graphql/query/context.rb#182
   def dig(key, *other_keys); end
 
   # @return [Array<GraphQL::ExecutionError>] errors returned during execution
@@ -7160,26 +7180,26 @@ class GraphQL::Query::Context
   # source://graphql//lib/graphql/query/context.rb#34
   def errors; end
 
-  # source://graphql//lib/graphql/query/context.rb#142
+  # source://graphql//lib/graphql/query/context.rb#136
   def execution_errors; end
 
-  # source://graphql//lib/graphql/query/context.rb#170
+  # source://graphql//lib/graphql/query/context.rb#164
   def fetch(key, default = T.unsafe(nil)); end
 
-  # source://graphql//lib/graphql/query/context.rb#247
+  # source://graphql//lib/graphql/query/context.rb#241
   def inspect; end
 
   # @api private
   #
-  # source://graphql//lib/graphql/query/context.rb#73
+  # source://graphql//lib/graphql/query/context.rb#67
   def interpreter=(_arg0); end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/query/context.rb#215
+  # source://graphql//lib/graphql/query/context.rb#209
   def key?(key); end
 
-  # source://graphql//lib/graphql/query/context.rb#243
+  # source://graphql//lib/graphql/query/context.rb#237
   def logger; end
 
   # Get an isolated hash for `ns`. Doesn't affect user-provided storage.
@@ -7187,18 +7207,13 @@ class GraphQL::Query::Context
   # @param ns [Object] a usage-specific namespace identifier
   # @return [Hash] namespaced storage
   #
-  # source://graphql//lib/graphql/query/context.rb#230
+  # source://graphql//lib/graphql/query/context.rb#224
   def namespace(ns); end
 
   # @return [Boolean] true if this namespace was accessed before
   #
-  # source://graphql//lib/graphql/query/context.rb#239
+  # source://graphql//lib/graphql/query/context.rb#233
   def namespace?(ns); end
-
-  # @return [Array<String, Integer>] The current position in the result
-  #
-  # source://graphql//lib/graphql/query/context.rb#43
-  def path; end
 
   # @return [GraphQL::Query] The query whose context this is
   #
@@ -7209,7 +7224,7 @@ class GraphQL::Query::Context
   #
   # @return [Hash] A hash that will be added verbatim to the result hash, as `"extensions" => { ... }`
   #
-  # source://graphql//lib/graphql/query/context.rb#64
+  # source://graphql//lib/graphql/query/context.rb#58
   def response_extensions; end
 
   # @return [GraphQL::Schema]
@@ -7228,58 +7243,58 @@ class GraphQL::Query::Context
   #   end
   # @return [Context::Scoped]
   #
-  # source://graphql//lib/graphql/query/context.rb#270
+  # source://graphql//lib/graphql/query/context.rb#264
   def scoped; end
 
   # @api private
   #
-  # source://graphql//lib/graphql/query/context.rb#79
+  # source://graphql//lib/graphql/query/context.rb#73
   def scoped_context; end
 
-  # source://graphql//lib/graphql/query/context.rb#251
+  # source://graphql//lib/graphql/query/context.rb#245
   def scoped_merge!(hash); end
 
-  # source://graphql//lib/graphql/query/context.rb#255
+  # source://graphql//lib/graphql/query/context.rb#249
   def scoped_set!(key, value); end
 
   # Return this value to tell the runtime
   # to exclude this field from the response altogether
   #
-  # source://graphql//lib/graphql/query/context.rb#119
+  # source://graphql//lib/graphql/query/context.rb#113
   def skip; end
 
-  # source://graphql//lib/graphql/query/context.rb#205
+  # source://graphql//lib/graphql/query/context.rb#199
   def to_h; end
 
-  # source://graphql//lib/graphql/query/context.rb#205
+  # source://graphql//lib/graphql/query/context.rb#199
   def to_hash; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def trace(*args, **_arg1, &block); end
 
-  # source://graphql//lib/graphql/query/context.rb#87
+  # source://graphql//lib/graphql/query/context.rb#81
   def types; end
 
   # Sets the attribute types
   #
   # @param value the value to set the attribute types to.
   #
-  # source://graphql//lib/graphql/query/context.rb#91
+  # source://graphql//lib/graphql/query/context.rb#85
   def types=(_arg0); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/query/context.rb#76
+  # source://graphql//lib/graphql/query/context.rb#70
   def value=(_arg0); end
 
   # @return [GraphQL::Schema::Warden]
   #
-  # source://graphql//lib/graphql/query/context.rb#220
+  # source://graphql//lib/graphql/query/context.rb#214
   def warden; end
 
   # @api private
   #
-  # source://graphql//lib/graphql/query/context.rb#225
+  # source://graphql//lib/graphql/query/context.rb#219
   def warden=(_arg0); end
 end
 
@@ -7300,20 +7315,20 @@ class GraphQL::Query::Context::ExecutionErrors
   def push(err_or_msg); end
 end
 
-# source://graphql//lib/graphql/query/context.rb#93
+# source://graphql//lib/graphql/query/context.rb#87
 GraphQL::Query::Context::RUNTIME_METADATA_KEYS = T.let(T.unsafe(nil), Set)
 
-# source://graphql//lib/graphql/query/context.rb#274
+# source://graphql//lib/graphql/query/context.rb#268
 class GraphQL::Query::Context::Scoped
   # @return [Scoped] a new instance of Scoped
   #
-  # source://graphql//lib/graphql/query/context.rb#275
+  # source://graphql//lib/graphql/query/context.rb#269
   def initialize(scoped_context, path); end
 
-  # source://graphql//lib/graphql/query/context.rb#280
+  # source://graphql//lib/graphql/query/context.rb#274
   def merge!(hash); end
 
-  # source://graphql//lib/graphql/query/context.rb#284
+  # source://graphql//lib/graphql/query/context.rb#278
   def set!(key, value); end
 end
 
@@ -7353,7 +7368,7 @@ class GraphQL::Query::Context::ScopedContext
   def each_present_path_ctx; end
 end
 
-# source://graphql//lib/graphql/query/context.rb#168
+# source://graphql//lib/graphql/query/context.rb#162
 GraphQL::Query::Context::UNSPECIFIED_FETCH_DEFAULT = T.let(T.unsafe(nil), Object)
 
 # @api private
