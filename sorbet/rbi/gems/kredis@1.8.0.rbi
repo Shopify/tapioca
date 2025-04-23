@@ -246,14 +246,34 @@ Kredis::Migration::SCAN_BATCH_SIZE = T.let(T.unsafe(nil), Integer)
 
 # source://kredis//lib/kredis/namespace.rb#3
 module Kredis::Namespace
-  # source://kredis//lib/kredis/namespace.rb#8
+  # Returns the value of attribute global_namespace.
+  #
+  # source://kredis//lib/kredis/namespace.rb#4
+  def global_namespace; end
+
+  # Sets the attribute global_namespace
+  #
+  # @param value the value to set the attribute global_namespace to.
+  #
+  # source://kredis//lib/kredis/namespace.rb#4
+  def global_namespace=(_arg0); end
+
+  # source://kredis//lib/kredis/namespace.rb#6
   def namespace; end
 
-  # source://kredis//lib/kredis/namespace.rb#4
-  def namespace=(namespace); end
+  # Backward compatibility
+  #
+  # source://kredis//lib/kredis/namespace.rb#22
+  def namespace=(value); end
 
-  # source://kredis//lib/kredis/namespace.rb#12
+  # source://kredis//lib/kredis/namespace.rb#29
   def namespaced_key(key); end
+
+  # source://kredis//lib/kredis/namespace.rb#18
+  def thread_namespace; end
+
+  # source://kredis//lib/kredis/namespace.rb#22
+  def thread_namespace=(value); end
 end
 
 # source://kredis//lib/kredis/railtie.rb#3
@@ -1159,13 +1179,13 @@ end
 class Kredis::Types::Set < ::Kredis::Types::Proxying
   include ::Kredis::DefaultValues
 
-  # source://kredis//lib/kredis/types/set.rb#15
+  # source://kredis//lib/kredis/types/set.rb#18
   def <<(*members); end
 
-  # source://kredis//lib/kredis/types/set.rb#15
+  # source://kredis//lib/kredis/types/set.rb#18
   def add(*members); end
 
-  # source://kredis//lib/kredis/types/set.rb#43
+  # source://kredis//lib/kredis/types/set.rb#46
   def clear; end
 
   # source://kredis//lib/kredis/default_values.rb#11
@@ -1182,25 +1202,28 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
 
   # @return [Boolean]
   #
-  # source://kredis//lib/kredis/types/set.rb#31
+  # source://kredis//lib/kredis/types/set.rb#34
   def include?(member); end
 
-  # source://kredis//lib/kredis/types/set.rb#10
+  # source://kredis//lib/kredis/types/set.rb#13
   def members; end
+
+  # source://kredis//lib/kredis/types/set.rb#9
+  def move(set, member); end
 
   # source://kredis//lib/kredis/types/proxying.rb#9
   def multi(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/set.rb#20
+  # source://kredis//lib/kredis/types/set.rb#23
   def remove(*members); end
 
-  # source://kredis//lib/kredis/types/set.rb#24
+  # source://kredis//lib/kredis/types/set.rb#27
   def replace(*members); end
 
   # source://kredis//lib/kredis/types/proxying.rb#9
   def sadd(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/set.rb#47
+  # source://kredis//lib/kredis/types/set.rb#50
   def sample(count = T.unsafe(nil)); end
 
   # source://kredis//lib/kredis/types/proxying.rb#9
@@ -1209,11 +1232,14 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/proxying.rb#9
   def sismember(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/set.rb#35
+  # source://kredis//lib/kredis/types/set.rb#38
   def size; end
 
   # source://kredis//lib/kredis/types/proxying.rb#9
   def smembers(*_arg0, **_arg1, &_arg2); end
+
+  # source://kredis//lib/kredis/types/proxying.rb#9
+  def smove(*_arg0, **_arg1, &_arg2); end
 
   # source://kredis//lib/kredis/types/proxying.rb#9
   def spop(*_arg0, **_arg1, &_arg2); end
@@ -1224,10 +1250,10 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
   # source://kredis//lib/kredis/types/proxying.rb#9
   def srem(*_arg0, **_arg1, &_arg2); end
 
-  # source://kredis//lib/kredis/types/set.rb#39
+  # source://kredis//lib/kredis/types/set.rb#42
   def take; end
 
-  # source://kredis//lib/kredis/types/set.rb#10
+  # source://kredis//lib/kredis/types/set.rb#13
   def to_a; end
 
   # Returns the value of attribute typed.
@@ -1250,7 +1276,7 @@ class Kredis::Types::Set < ::Kredis::Types::Proxying
 
   private
 
-  # source://kredis//lib/kredis/types/set.rb#56
+  # source://kredis//lib/kredis/types/set.rb#59
   def set_default; end
 end
 

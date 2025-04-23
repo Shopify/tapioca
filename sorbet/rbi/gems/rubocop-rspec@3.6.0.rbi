@@ -489,39 +489,39 @@ class RuboCop::Cop::RSpec::ChangeByZero < ::RuboCop::Cop::RSpec::Base
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#132
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#133
   def autocorrect(corrector, node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#139
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#140
   def autocorrect_compound(corrector, node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#118
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#120
   def compound_expectations?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#149
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#150
   def insert_operator(corrector, node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#123
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#124
   def message(change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#127
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#128
   def message_compound(change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#173
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#174
   def negated_matcher; end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#177
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#178
   def preferred_method; end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#104
   def register_offense(node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#162
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#163
   def remove_by_zero(corrector, node, change_node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#158
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/change_by_zero.rb#159
   def replace_node(node, change_node); end
 end
 
@@ -1033,7 +1033,7 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   # @param const [Array<Symbol>]
   # @return [Array<Symbol>]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#200
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#202
   def collapse_namespace(namespace, const); end
 
   # @example
@@ -1043,7 +1043,7 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   # @param node [RuboCop::AST::Node]
   # @return [Array<Symbol>]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#217
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#219
   def const_name(node); end
 
   # @yield [node]
@@ -1051,7 +1051,7 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#127
   def find_usage(node, &block); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#185
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#187
   def full_const_name(node); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#140
@@ -1059,17 +1059,17 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#163
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#165
   def offensive?(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#171
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#173
   def offensive_described_class?(node); end
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#159
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#161
   def only_static_constants?; end
 
   # @return [Boolean]
@@ -2113,8 +2113,8 @@ RuboCop::Cop::RSpec::ExpectActual::SKIPPED_MATCHERS = T.let(T.unsafe(nil), Array
 
 # Checks for consistent style of change matcher.
 #
-# Enforces either passing object and attribute as arguments to the matcher
-# or passing a block that reads the attribute value.
+# Enforces either passing a receiver and message as method arguments,
+# or a block.
 #
 # This cop can be configured using the `EnforcedStyle` option.
 #
@@ -2136,31 +2136,31 @@ RuboCop::Cop::RSpec::ExpectActual::SKIPPED_MATCHERS = T.let(T.unsafe(nil), Array
 #   # good
 #   expect { run }.to change { Foo.bar }
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#32
+# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#51
 class RuboCop::Cop::RSpec::ExpectChange < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::ConfigurableEnforcedStyle
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#41
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#60
   def expect_change_with_arguments(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#46
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#65
   def expect_change_with_block(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#72
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#91
   def on_block(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#60
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#79
   def on_send(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#36
+# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#55
 RuboCop::Cop::RSpec::ExpectChange::MSG_BLOCK = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#37
+# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#56
 RuboCop::Cop::RSpec::ExpectChange::MSG_CALL = T.let(T.unsafe(nil), String)
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#38
+# source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#57
 RuboCop::Cop::RSpec::ExpectChange::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Do not use `expect` in hooks such as `before`.
@@ -2821,6 +2821,36 @@ RuboCop::Cop::RSpec::ImplicitSubject::MSG_REQUIRE_IMPLICIT = T.let(T.unsafe(nil)
 
 # source://rubocop-rspec//lib/rubocop/cop/rspec/implicit_subject.rb#73
 RuboCop::Cop::RSpec::ImplicitSubject::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Checks for usage of `include_examples`.
+#
+# `include_examples`, unlike `it_behaves_like`, does not create its
+# own context. As such, using `subject`, `let`, `before`/`after`, etc.
+# within shared examples included with `include_examples` can have
+# unexpected behavior and side effects.
+#
+# Prefer using `it_behaves_like` instead.
+#
+# @example
+#   # bad
+#   include_examples 'examples'
+#
+#   # good
+#   it_behaves_like 'examples'
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/include_examples.rb#22
+class RuboCop::Cop::RSpec::IncludeExamples < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/include_examples.rb#29
+  def on_send(node); end
+end
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/include_examples.rb#25
+RuboCop::Cop::RSpec::IncludeExamples::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-rspec//lib/rubocop/cop/rspec/include_examples.rb#27
+RuboCop::Cop::RSpec::IncludeExamples::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Do not set up test data using indexes (e.g., `item_1`, `item_2`).
 #
@@ -4016,7 +4046,7 @@ class RuboCop::Cop::RSpec::MultipleExpectations < ::RuboCop::Cop::RSpec::Base
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#86
   def expect?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop/1.72.2/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.75.3/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_expectations.rb#93
@@ -4131,7 +4161,7 @@ RuboCop::Cop::RSpec::MultipleExpectations::TRUE_NODE = T.let(T.unsafe(nil), Proc
 class RuboCop::Cop::RSpec::MultipleMemoizedHelpers < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::Variable
 
-  # source://rubocop/1.72.2/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.75.3/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/multiple_memoized_helpers.rb#91
@@ -4473,7 +4503,7 @@ end
 class RuboCop::Cop::RSpec::NestedGroups < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::TopLevelGroup
 
-  # source://rubocop/1.72.2/lib/rubocop/cop/exclude_limit.rb#11
+  # source://rubocop/1.75.3/lib/rubocop/cop/exclude_limit.rb#11
   def max=(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/nested_groups.rb#107
@@ -4807,19 +4837,19 @@ RuboCop::Cop::RSpec::Pending::MSG = T.let(T.unsafe(nil), String)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#59
 class RuboCop::Cop::RSpec::PendingWithoutReason < ::RuboCop::Cop::RSpec::Base
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#82
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#81
   def metadata_without_reason?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#97
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#96
   def on_send(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#93
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#92
   def skipped_by_example_group_method?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#72
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#71
   def skipped_by_example_method?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#77
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#76
   def skipped_by_example_method_with_block?(param0 = T.unsafe(nil)); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#63
@@ -4829,22 +4859,22 @@ class RuboCop::Cop::RSpec::PendingWithoutReason < ::RuboCop::Cop::RSpec::Base
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#118
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#117
   def block_node_example_group?(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#130
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#129
   def on_pending_by_metadata(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#146
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#145
   def on_skipped_by_example_group_method(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#136
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#135
   def on_skipped_by_example_method(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#124
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#123
   def on_skipped_by_in_example_method(node); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#111
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/pending_without_reason.rb#110
   def parent_node(node); end
 end
 
@@ -5046,7 +5076,7 @@ class RuboCop::Cop::RSpec::ReceiveMessages < ::RuboCop::Cop::RSpec::Base
 
   # @return [Boolean]
   #
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#155
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#154
   def requires_quotes?(value); end
 
   # source://rubocop-rspec//lib/rubocop/cop/rspec/receive_messages.rb#91
@@ -5778,7 +5808,9 @@ RuboCop::Cop::RSpec::ScatteredLet::MSG = T.let(T.unsafe(nil), String)
 
 # Checks for setup scattered across multiple hooks in an example group.
 #
-# Unify `before`, `after`, and `around` hooks when possible.
+# Unify `before` and `after` hooks when possible.
+# However, `around` hooks are allowed to be defined multiple times,
+# as unifying them would typically make the code harder to read.
 #
 # @example
 #   # bad
@@ -5795,31 +5827,37 @@ RuboCop::Cop::RSpec::ScatteredLet::MSG = T.let(T.unsafe(nil), String)
 #   end
 #   end
 #
-# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#25
+#   # good
+#   describe Foo do
+#   around { |example| before1; example.call; after1 }
+#   around { |example| before2; example.call; after2 }
+#   end
+#
+# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#33
 class RuboCop::Cop::RSpec::ScatteredSetup < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::FinalEndLocation
   include ::RuboCop::Cop::RangeHelp
   extend ::RuboCop::Cop::AutoCorrector
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#33
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#41
   def on_block(node); end
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#76
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#84
   def autocorrect(corrector, first_occurrence, occurrence); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#61
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#69
   def lines_msg(numbers); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#69
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#77
   def message(occurrences, occurrence); end
 
-  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#48
+  # source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#56
   def repeated_hooks(node); end
 end
 
-# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#30
+# source://rubocop-rspec//lib/rubocop/cop/rspec/scattered_setup.rb#38
 RuboCop::Cop::RSpec::ScatteredSetup::MSG = T.let(T.unsafe(nil), String)
 
 # Checks for proper shared_context and shared_examples usage.
@@ -7236,10 +7274,10 @@ class RuboCop::RSpec::Hook < ::RuboCop::RSpec::Concept
 
   private
 
-  # source://rubocop-rspec//lib/rubocop/rspec/hook.rb#74
+  # source://rubocop-rspec//lib/rubocop/rspec/hook.rb#76
   def scope_argument; end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/hook.rb#70
+  # source://rubocop-rspec//lib/rubocop/rspec/hook.rb#72
   def scope_name; end
 
   # source://rubocop-rspec//lib/rubocop/rspec/hook.rb#51
@@ -7283,10 +7321,10 @@ module RuboCop::RSpec::Language
   # source://rubocop-rspec//lib/rubocop/rspec/language.rb#52
   def hook?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/language.rb#68
+  # source://rubocop-rspec//lib/rubocop/rspec/language.rb#65
   def include?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/language.rb#60
+  # source://rubocop-rspec//lib/rubocop/rspec/language.rb#57
   def let?(param0 = T.unsafe(nil)); end
 
   # source://rubocop-rspec//lib/rubocop/rspec/language.rb#22
@@ -7298,7 +7336,7 @@ module RuboCop::RSpec::Language
   # source://rubocop-rspec//lib/rubocop/rspec/language.rb#37
   def spec_group?(param0 = T.unsafe(nil)); end
 
-  # source://rubocop-rspec//lib/rubocop/rspec/language.rb#76
+  # source://rubocop-rspec//lib/rubocop/rspec/language.rb#73
   def subject?(param0 = T.unsafe(nil)); end
 
   class << self
@@ -7318,129 +7356,129 @@ end
 
 # This is used in Dialect and DescribeClass cops to detect RSpec blocks.
 #
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#204
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#201
 module RuboCop::RSpec::Language::ALL
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#205
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#202
     def all(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#78
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#75
 module RuboCop::RSpec::Language::ExampleGroups
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#80
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#77
     def all(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#90
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#87
     def focused(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#86
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#83
     def regular(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#94
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#91
     def skipped(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#100
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#97
 module RuboCop::RSpec::Language::Examples
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#102
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#99
     def all(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#113
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#110
     def focused(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#121
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#118
     def pending(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#109
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#106
     def regular(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#117
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#114
     def skipped(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#127
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#124
 module RuboCop::RSpec::Language::Expectations
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#128
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#125
     def all(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#133
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#130
 module RuboCop::RSpec::Language::Helpers
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#134
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#131
     def all(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#145
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#142
 module RuboCop::RSpec::Language::HookScopes
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#147
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#144
     def all(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#146
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#143
 RuboCop::RSpec::Language::HookScopes::ALL = T.let(T.unsafe(nil), Array)
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#139
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#136
 module RuboCop::RSpec::Language::Hooks
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#140
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#137
     def all(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#152
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#149
 module RuboCop::RSpec::Language::Includes
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#154
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#151
     def all(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#163
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#160
     def context(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#159
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#156
     def examples(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#169
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#166
 module RuboCop::RSpec::Language::Runners
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#172
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#169
     def all(element = T.unsafe(nil)); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#170
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#167
 RuboCop::RSpec::Language::Runners::ALL = T.let(T.unsafe(nil), Array)
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#180
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#177
 module RuboCop::RSpec::Language::SharedGroups
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#182
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#179
     def all(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#191
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#188
     def context(element); end
 
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#187
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#184
     def examples(element); end
   end
 end
 
-# source://rubocop-rspec//lib/rubocop/rspec/language.rb#197
+# source://rubocop-rspec//lib/rubocop/rspec/language.rb#194
 module RuboCop::RSpec::Language::Subjects
   class << self
-    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#198
+    # source://rubocop-rspec//lib/rubocop/rspec/language.rb#195
     def all(element); end
   end
 end

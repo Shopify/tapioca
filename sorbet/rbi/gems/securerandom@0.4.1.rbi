@@ -52,19 +52,19 @@ module SecureRandom
     # source://securerandom//lib/securerandom.rb#50
     def bytes(n); end
 
-    # source://securerandom//lib/securerandom.rb#64
+    # source://securerandom//lib/securerandom.rb#70
     def gen_random(n); end
 
     private
 
     # Implementation using OpenSSL
     #
-    # source://securerandom//lib/securerandom.rb#59
+    # source://securerandom//lib/securerandom.rb#65
     def gen_random_openssl(n); end
 
     # Implementation using system random device
     #
-    # source://securerandom//lib/securerandom.rb#64
+    # source://securerandom//lib/securerandom.rb#70
     def gen_random_urandom(n); end
   end
 end

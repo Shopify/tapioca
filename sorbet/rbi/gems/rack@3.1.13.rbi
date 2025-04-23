@@ -877,17 +877,17 @@ class Rack::ETag
 
   private
 
-  # source://rack//lib/rack/etag.rb#58
+  # source://rack//lib/rack/etag.rb#61
   def digest_body(body); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/etag.rb#50
+  # source://rack//lib/rack/etag.rb#53
   def etag_status?(status); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/etag.rb#54
+  # source://rack//lib/rack/etag.rb#57
   def skip_caching?(headers); end
 end
 
