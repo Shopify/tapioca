@@ -52,7 +52,7 @@ module Tapioca
         ::String
       end
 
-      def __id__
+      def __id__ # rubocop:disable Naming/MethodName
         1
       end
 
