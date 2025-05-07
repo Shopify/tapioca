@@ -2351,22 +2351,22 @@ class RubyLsp::Document
 
   # : (Document[untyped] other) -> bool
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#65
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#70
   def ==(other); end
 
   # : [T] (String request_name) { (Document[ParseResultType] document) -> T } -> T
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#73
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#78
   def cache_fetch(request_name, &block); end
 
   # : (String request_name) -> untyped
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#88
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#93
   def cache_get(request_name); end
 
   # : [T] (String request_name, T value) -> T
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#83
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#88
   def cache_set(request_name, value); end
 
   # : Encoding
@@ -2376,12 +2376,12 @@ class RubyLsp::Document
 
   # : (Hash[Symbol, untyped] start_pos, ?Hash[Symbol, untyped]? end_pos) -> [Integer, Integer?]
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#135
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#140
   def find_index_by_position(start_pos, end_pos = T.unsafe(nil)); end
 
   # @abstract
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#70
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#75
   sig { abstract.returns(::RubyLsp::Document::LanguageId) }
   def language_id; end
 
@@ -2394,7 +2394,7 @@ class RubyLsp::Document
   #
   # @abstract
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#124
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#129
   sig { abstract.returns(T::Boolean) }
   def parse!; end
 
@@ -2407,12 +2407,12 @@ class RubyLsp::Document
   #
   # @return [Boolean]
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#130
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#135
   def past_expensive_limit?; end
 
   # : (Array[Hash[Symbol, untyped]] edits, version: Integer) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#93
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#98
   def push_edits(edits, version:); end
 
   # : (Interface::SemanticTokens | Object)
@@ -2432,7 +2432,7 @@ class RubyLsp::Document
 
   # @abstract
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#127
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#132
   sig { abstract.returns(T::Boolean) }
   def syntax_error?; end
 
@@ -2450,11 +2450,11 @@ class RubyLsp::Document
 
   # : -> Scanner
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#147
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#152
   def create_scanner; end
 end
 
-# source://ruby-lsp//lib/ruby_lsp/document.rb#168
+# source://ruby-lsp//lib/ruby_lsp/document.rb#173
 class RubyLsp::Document::Delete < ::RubyLsp::Document::Edit; end
 
 # : Object
@@ -2464,7 +2464,7 @@ RubyLsp::Document::EMPTY_CACHE = T.let(T.unsafe(nil), Object)
 
 # @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
 #
-# source://ruby-lsp//lib/ruby_lsp/document.rb#151
+# source://ruby-lsp//lib/ruby_lsp/document.rb#156
 class RubyLsp::Document::Edit
   abstract!
 
@@ -2472,16 +2472,16 @@ class RubyLsp::Document::Edit
   #
   # @return [Edit] a new instance of Edit
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#161
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#166
   def initialize(range); end
 
   # : Hash[Symbol, untyped]
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#158
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#163
   def range; end
 end
 
-# source://ruby-lsp//lib/ruby_lsp/document.rb#166
+# source://ruby-lsp//lib/ruby_lsp/document.rb#171
 class RubyLsp::Document::Insert < ::RubyLsp::Document::Edit; end
 
 # source://ruby-lsp//lib/ruby_lsp/document.rb#6
@@ -2502,40 +2502,40 @@ class RubyLsp::Document::LocationNotFoundError < ::StandardError; end
 # source://ruby-lsp//lib/ruby_lsp/document.rb#23
 RubyLsp::Document::MAXIMUM_CHARACTERS_FOR_EXPENSIVE_FEATURES = T.let(T.unsafe(nil), Integer)
 
-# source://ruby-lsp//lib/ruby_lsp/document.rb#167
+# source://ruby-lsp//lib/ruby_lsp/document.rb#172
 class RubyLsp::Document::Replace < ::RubyLsp::Document::Edit; end
 
-# source://ruby-lsp//lib/ruby_lsp/document.rb#170
+# source://ruby-lsp//lib/ruby_lsp/document.rb#175
 class RubyLsp::Document::Scanner
   # : (String source, Encoding encoding) -> void
   #
   # @return [Scanner] a new instance of Scanner
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#178
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#183
   def initialize(source, encoding); end
 
   # Finds the character index inside the source string for a given line and column
   # : (Hash[Symbol, untyped] position) -> Integer
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#187
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#192
   def find_char_position(position); end
 
   # Subtract 1 for each character after 0xFFFF in the current line from the column position, so that we hit the
   # right character in the UTF-8 representation
   # : (Integer current_position, Integer requested_position) -> Integer
   #
-  # source://ruby-lsp//lib/ruby_lsp/document.rb#217
+  # source://ruby-lsp//lib/ruby_lsp/document.rb#222
   def utf_16_character_position_correction(current_position, requested_position); end
 end
 
 # : Integer
 #
-# source://ruby-lsp//lib/ruby_lsp/document.rb#173
+# source://ruby-lsp//lib/ruby_lsp/document.rb#178
 RubyLsp::Document::Scanner::LINE_BREAK = T.let(T.unsafe(nil), Integer)
 
 # After character 0xFFFF, UTF-16 considers characters to have length 2 and we have to account for that
 #
-# source://ruby-lsp//lib/ruby_lsp/document.rb#175
+# source://ruby-lsp//lib/ruby_lsp/document.rb#180
 RubyLsp::Document::Scanner::SURROGATE_PAIR_START = T.let(T.unsafe(nil), Integer)
 
 # source://ruby-lsp//lib/ruby_lsp/erb_document.rb#5
@@ -2633,28 +2633,28 @@ class RubyLsp::ERBDocument::ERBScanner
   def scan_char; end
 end
 
-# source://ruby-lsp//lib/ruby_lsp/utils.rb#189
+# source://ruby-lsp//lib/ruby_lsp/utils.rb#199
 class RubyLsp::Error
   # : (id: Integer, code: Integer, message: String, ?data: Hash[Symbol, untyped]?) -> void
   #
   # @return [Error] a new instance of Error
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#197
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#207
   def initialize(id:, code:, message:, data: T.unsafe(nil)); end
 
   # : Integer
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#194
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#204
   def code; end
 
   # : String
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#191
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#201
   def message; end
 
   # : -> Hash[Symbol, untyped]
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#205
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#215
   def to_hash; end
 end
 
@@ -4868,54 +4868,54 @@ class RubyLsp::RBSDocument < ::RubyLsp::Document
   def syntax_error?; end
 end
 
-# source://ruby-lsp//lib/ruby_lsp/utils.rb#145
+# source://ruby-lsp//lib/ruby_lsp/utils.rb#150
 class RubyLsp::Request < ::RubyLsp::Message
   # : (id: (Integer | String), method: String, params: Object) -> void
   #
   # @return [Request] a new instance of Request
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#175
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#180
   def initialize(id:, method:, params:); end
 
   # : -> Hash[Symbol, untyped]
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#182
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#187
   def to_hash; end
 
   class << self
     # : (Integer id, (Interface::RelativePattern | String) pattern, ?kind: Integer, ?registration_id: String?) -> Request
     #
-    # source://ruby-lsp//lib/ruby_lsp/utils.rb#148
+    # source://ruby-lsp//lib/ruby_lsp/utils.rb#153
     def register_watched_files(id, pattern, kind: T.unsafe(nil), registration_id: T.unsafe(nil)); end
   end
 end
 
 # A request configuration, to turn on/off features
 #
-# source://ruby-lsp//lib/ruby_lsp/utils.rb#238
+# source://ruby-lsp//lib/ruby_lsp/utils.rb#248
 class RubyLsp::RequestConfig
   # : (Hash[Symbol, bool] configuration) -> void
   #
   # @return [RequestConfig] a new instance of RequestConfig
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#243
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#253
   def initialize(configuration); end
 
   # : Hash[Symbol, bool]
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#240
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#250
   def configuration; end
 
   # : Hash[Symbol, bool]
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#240
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#250
   def configuration=(_arg0); end
 
   # : (Symbol feature) -> bool?
   #
   # @return [Boolean]
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#248
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#258
   def enabled?(feature); end
 end
 
@@ -6680,28 +6680,28 @@ end
 
 # The final result of running a request before its IO is finalized
 #
-# source://ruby-lsp//lib/ruby_lsp/utils.rb#218
+# source://ruby-lsp//lib/ruby_lsp/utils.rb#228
 class RubyLsp::Result
   # : (id: Integer, response: untyped) -> void
   #
   # @return [Result] a new instance of Result
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#226
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#236
   def initialize(id:, response:); end
 
   # : Integer
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#223
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#233
   def id; end
 
   # : untyped
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#220
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#230
   def response; end
 
   # : -> Hash[Symbol, untyped]
   #
-  # source://ruby-lsp//lib/ruby_lsp/utils.rb#232
+  # source://ruby-lsp//lib/ruby_lsp/utils.rb#242
   def to_hash; end
 end
 
@@ -6874,12 +6874,12 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   # : (String id, String title, ?percentage: Integer) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1274
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1275
   def begin_progress(id, title, percentage: T.unsafe(nil)); end
 
   # : -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1304
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1305
   def check_formatter_is_available; end
 
   # : (Hash[Symbol, untyped] message) -> void
@@ -6892,60 +6892,60 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
   # not supposed to rely on the return of this method
   # : (Hash[Symbol, untyped] message) -> Thread?
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1378
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1379
   def compose_bundle(message); end
 
   # Returns internal state information for debugging purposes
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1427
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1428
   def diagnose_state(message); end
 
   # Discovers all available test groups and examples in a given file taking into consideration the merged response of
   # all add-ons
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1447
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1448
   def discover_tests(message); end
 
   # : (String id) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1294
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1295
   def end_progress(id); end
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1154
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1155
   def experimental_go_to_relevant_file(message); end
 
   # : (URI::Generic uri) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1102
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1103
   def handle_rubocop_config_change(uri); end
 
   # : (RubyIndexer::Index index, String file_path, Integer change_type) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1075
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1076
   def handle_ruby_file_change(index, file_path, change_type); end
 
   # : -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1242
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1243
   def perform_initial_indexing; end
 
   # : (Hash[Symbol, untyped]? indexing_options) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1322
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1323
   def process_indexing_configuration(indexing_options); end
 
   # : (String id, Integer percentage) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1287
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1288
   def progress(id, percentage); end
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1468
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1469
   def resolve_test_commands(message); end
 
   # : (Hash[Symbol, untyped] message) -> void
@@ -6965,7 +6965,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   # : -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1237
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1238
   def shutdown; end
 
   # : (Document[untyped] document) -> RubyDocument::SorbetLevel
@@ -7065,7 +7065,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1173
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1174
   def text_document_prepare_type_hierarchy(message); end
 
   # : (Hash[Symbol, untyped] message) -> void
@@ -7105,7 +7105,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1135
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1136
   def text_document_show_syntax_tree(message); end
 
   # : (Hash[Symbol, untyped] message) -> void
@@ -7115,22 +7115,22 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1201
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1202
   def type_hierarchy_subtypes(message); end
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1192
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1193
   def type_hierarchy_supertypes(message); end
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1363
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1364
   def window_show_message_request(message); end
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1208
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1209
   def workspace_dependencies(message); end
 
   # : (Hash[Symbol, untyped] message) -> void
@@ -7140,7 +7140,7 @@ class RubyLsp::Server < ::RubyLsp::BaseServer
 
   # : (Hash[Symbol, untyped] message) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/server.rb#1122
+  # source://ruby-lsp//lib/ruby_lsp/server.rb#1123
   def workspace_symbol(message); end
 end
 
@@ -7372,7 +7372,7 @@ URI::Generic::PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
 class URI::Source < ::URI::File
   # : (String? v) -> bool
   #
-  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#55
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#57
   def check_host(v); end
 
   # source://uri/0.13.2/lib/uri/generic.rb#243
@@ -7380,7 +7380,7 @@ class URI::Source < ::URI::File
 
   # : String?
   #
-  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#28
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#30
   def gem_version; end
 
   # source://uri/0.13.2/lib/uri/generic.rb#283
@@ -7388,18 +7388,18 @@ class URI::Source < ::URI::File
 
   # : (String? v) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#45
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#47
   def set_path(v); end
 
   # : -> String
   #
-  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#67
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#69
   def to_s; end
 
   class << self
     # : (gem_name: String, gem_version: String?, path: String, line_number: String?) -> URI::Source
     #
-    # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#32
+    # source://ruby-lsp//lib/ruby_lsp/requests/support/source_uri.rb#34
     def build(gem_name:, gem_version:, path:, line_number:); end
   end
 end
