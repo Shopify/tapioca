@@ -91,7 +91,7 @@ module Tapioca
         indexes
       end
 
-      #: (String repo_uri, Integer? repo_number) -> RepoIndex?
+      #: (String repo_uri, repo_number: Integer?) -> RepoIndex?
       def fetch_index(repo_uri, repo_number:)
         say("Retrieving index from central repository#{repo_number ? " ##{repo_number}" : ""}... ", [:blue, :bold])
         content = fetch_file(repo_uri, CENTRAL_REPO_INDEX_PATH)
@@ -282,7 +282,7 @@ module Tapioca
         "token #{token}"
       end
 
-      #: (String path, String repo_uri, String message) -> void
+      #: (String path, String repo_uri, message: String) -> void
       def say_http_error(path, repo_uri, message:)
         say_error("\nCan't fetch file `#{path}` from #{repo_uri} (#{message})\n\n", :bold, :red)
         say_error(<<~ERROR)
