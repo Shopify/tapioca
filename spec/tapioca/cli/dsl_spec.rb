@@ -2636,7 +2636,7 @@ module Tapioca
           OUT
 
           err = %r{
-            tapioca/tests/dsl_spec/project/sorbet/tapioca/extensions/test\.rb:2:in\s['`]<top\s\(required\)>':\s
+            tapioca/tests/dsl_spec/project/sorbet/tapioca/extensions/test\.rb:2:in\s['`]<main>':\s
             Raising\sfrom\stest\sextension\s\(RuntimeError\)
           }x
           assert_stderr_includes_pattern(result, err)
