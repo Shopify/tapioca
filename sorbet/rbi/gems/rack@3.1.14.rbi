@@ -2526,13 +2526,13 @@ Rack::QUERY_STRING = T.let(T.unsafe(nil), String)
 class Rack::QueryParser
   # @return [QueryParser] a new instance of QueryParser
   #
-  # source://rack//lib/rack/query_parser.rb#36
-  def initialize(params_class, param_depth_limit); end
+  # source://rack//lib/rack/query_parser.rb#60
+  def initialize(params_class, param_depth_limit, bytesize_limit: T.unsafe(nil), params_limit: T.unsafe(nil)); end
 
-  # source://rack//lib/rack/query_parser.rb#166
+  # source://rack//lib/rack/query_parser.rb#192
   def make_params; end
 
-  # source://rack//lib/rack/query_parser.rb#170
+  # source://rack//lib/rack/query_parser.rb#196
   def new_depth_limit(param_depth_limit); end
 
   # normalize_params recursively expands parameters into structural types. If
@@ -2541,12 +2541,12 @@ class Rack::QueryParser
   # and should no longer be used, it is kept for backwards compatibility with
   # earlier versions of rack.
   #
-  # source://rack//lib/rack/query_parser.rb#94
+  # source://rack//lib/rack/query_parser.rb#120
   def normalize_params(params, name, v, _depth = T.unsafe(nil)); end
 
   # Returns the value of attribute param_depth_limit.
   #
-  # source://rack//lib/rack/query_parser.rb#34
+  # source://rack//lib/rack/query_parser.rb#40
   def param_depth_limit; end
 
   # parse_nested_query expands a query string into structural types. Supported
@@ -2555,7 +2555,7 @@ class Rack::QueryParser
   # ParameterTypeError is raised. Users are encouraged to return a 400 in this
   # case.
   #
-  # source://rack//lib/rack/query_parser.rb#73
+  # source://rack//lib/rack/query_parser.rb#99
   def parse_nested_query(qs, separator = T.unsafe(nil)); end
 
   # Stolen from Mongrel, with some small modifications:
@@ -2563,34 +2563,40 @@ class Rack::QueryParser
   # to parse cookies by changing the characters used in the second parameter
   # (which defaults to '&').
   #
-  # source://rack//lib/rack/query_parser.rb#45
+  # source://rack//lib/rack/query_parser.rb#71
   def parse_query(qs, separator = T.unsafe(nil), &unescaper); end
 
   private
 
   # @raise [ParamsTooDeepError]
   #
-  # source://rack//lib/rack/query_parser.rb#98
+  # source://rack//lib/rack/query_parser.rb#124
   def _normalize_params(params, name, v, depth); end
+
+  # source://rack//lib/rack/query_parser.rb#218
+  def check_query_string(qs, sep); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/query_parser.rb#180
+  # source://rack//lib/rack/query_parser.rb#206
   def params_hash_has_key?(hash, key); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/query_parser.rb#176
+  # source://rack//lib/rack/query_parser.rb#202
   def params_hash_type?(obj); end
 
-  # source://rack//lib/rack/query_parser.rb#192
+  # source://rack//lib/rack/query_parser.rb#234
   def unescape(string, encoding = T.unsafe(nil)); end
 
   class << self
-    # source://rack//lib/rack/query_parser.rb#30
-    def make_default(param_depth_limit); end
+    # source://rack//lib/rack/query_parser.rb#36
+    def make_default(param_depth_limit, **options); end
   end
 end
+
+# source://rack//lib/rack/query_parser.rb#54
+Rack::QueryParser::BYTESIZE_LIMIT = T.let(T.unsafe(nil), Integer)
 
 # source://rack//lib/rack/query_parser.rb#9
 Rack::QueryParser::COMMON_SEP = T.let(T.unsafe(nil), Hash)
@@ -2607,6 +2613,9 @@ class Rack::QueryParser::InvalidParameterError < ::ArgumentError
   include ::Rack::BadRequest
 end
 
+# source://rack//lib/rack/query_parser.rb#57
+Rack::QueryParser::PARAMS_LIMIT = T.let(T.unsafe(nil), Integer)
+
 # ParameterTypeError is the error that is raised when incoming structural
 # parameters (parsed by parse_nested_query) contain conflicting types.
 #
@@ -2615,16 +2624,24 @@ class Rack::QueryParser::ParameterTypeError < ::TypeError
   include ::Rack::BadRequest
 end
 
-# source://rack//lib/rack/query_parser.rb#196
+# source://rack//lib/rack/query_parser.rb#238
 class Rack::QueryParser::Params < ::Hash
   def to_params_hash; end
 end
 
-# ParamsTooDeepError is the error that is raised when params are recursively
-# nested over the specified limit.
+# ParamsTooDeepError is the old name for the error that is raised when params
+# are recursively nested over the specified limit. Make it the same as
+# as QueryLimitError, so that code that rescues ParamsTooDeepError error
+# to handle bad query strings also now handles other limits.
+#
+# source://rack//lib/rack/query_parser.rb#34
+Rack::QueryParser::ParamsTooDeepError = Rack::QueryParser::QueryLimitError
+
+# QueryLimitError is for errors raised when the query provided exceeds one
+# of the query parser limits.
 #
 # source://rack//lib/rack/query_parser.rb#26
-class Rack::QueryParser::ParamsTooDeepError < ::RangeError
+class Rack::QueryParser::QueryLimitError < ::RangeError
   include ::Rack::BadRequest
 end
 
@@ -4890,7 +4907,7 @@ Rack::Utils::PATH_SEPS = T.let(T.unsafe(nil), Regexp)
 Rack::Utils::ParameterTypeError = Rack::QueryParser::ParameterTypeError
 
 # source://rack//lib/rack/utils.rb#23
-Rack::Utils::ParamsTooDeepError = Rack::QueryParser::ParamsTooDeepError
+Rack::Utils::ParamsTooDeepError = Rack::QueryParser::QueryLimitError
 
 # Responses with HTTP status codes that should not have an entity body
 #
