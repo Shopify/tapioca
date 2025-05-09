@@ -493,11 +493,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module SomeEngine::SomeController::HelperMethods
           include ::ActionController::Base::HelperMethods
 
-        <% if ruby_version(">= 3.1") %>
           def foo(*args, **_arg1, &block); end
-        <% else %>
-          def foo(*args, &block); end
-        <% end %>
         end
       RBI
 
@@ -1673,9 +1669,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             def [](*_arg0); end
             def inspect; end
-        <% if ruby_version(">= 3.1") %>
             def keyword_init?; end
-        <% end %>
             def members; end
             def new(*_arg0); end
           end
@@ -1688,9 +1682,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           class << self
             def [](*_arg0); end
             def inspect; end
-        <% if ruby_version(">= 3.1") %>
             def keyword_init?; end
-        <% end %>
             def members; end
             def new(*_arg0); end
           end
