@@ -66,6 +66,7 @@ module Tapioca
         @events << Gem::SymbolFound.new(symbol)
       end
 
+      # @without_runtime
       #: (String symbol, BasicObject constant) -> void
       def push_constant(symbol, constant)
         @events << Gem::ConstantFound.new(symbol, constant)
@@ -222,6 +223,7 @@ module Tapioca
         push_foreign_scope(symbol, constant, scope)
       end
 
+      # @without_runtime
       #: (String symbol, BasicObject constant) -> void
       def compile_constant(symbol, constant)
         case constant
@@ -257,6 +259,7 @@ module Tapioca
         @root << node
       end
 
+      # @without_runtime
       #: (String name, BasicObject value) -> void
       def compile_object(name, value)
         return if seen?(name)
@@ -371,6 +374,7 @@ module Tapioca
         symbol_in_payload?(name) && !@bootstrap_symbols.include?(name)
       end
 
+      # @without_runtime
       #: (String name, top constant) -> bool
       def skip_constant?(name, constant)
         return true if name.strip.empty?
@@ -392,6 +396,7 @@ module Tapioca
         false
       end
 
+      # @without_runtime
       #: (String name, BasicObject constant) -> bool
       def skip_object?(name, constant)
         return true if symbol_in_payload?(name)

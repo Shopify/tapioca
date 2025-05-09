@@ -34,11 +34,13 @@ module Tapioca
 
       REQUIRED_FROM_LABELS = ["<top (required)>", "<main>", "<compiled>"].freeze #: Array[String]
 
+      # @without_runtime
       #: (BasicObject constant) -> bool
       def constant_defined?(constant)
         !UNDEFINED_CONSTANT.eql?(constant)
       end
 
+      # @without_runtime
       #: (String symbol, ?inherit: bool, ?namespace: Module) -> BasicObject
       def constantize(symbol, inherit: false, namespace: Object)
         namespace.const_get(symbol, inherit)

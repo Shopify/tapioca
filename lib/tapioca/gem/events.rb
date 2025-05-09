@@ -32,6 +32,7 @@ module Tapioca
       #: BasicObject
       attr_reader :constant
 
+      # @without_runtime
       #: (String symbol, BasicObject constant) -> void
       def initialize(symbol, constant)
         super()
