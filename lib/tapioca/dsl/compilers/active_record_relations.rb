@@ -826,7 +826,16 @@ module Tapioca
                 end
               end
             when :ids
-              create_common_method("ids", return_type: "Array")
+              if constant.table_exists?
+                primary_key_type = constant.type_for_attribute(constant.primary_key)
+                type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(primary_key_type)
+                type = RBIHelper.as_non_nilable_type(type)
+                puts type
+                create_common_method("ids", return_type: "T::Array[#{type}]")
+              else
+                create_common_method("ids", return_type: "Array")
+              end
+
             when :pick, :pluck
               create_common_method(
                 method_name,
