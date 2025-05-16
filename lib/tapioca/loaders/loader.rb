@@ -160,6 +160,7 @@ module Tapioca
         Rails.app_class = Rails.application = rails_application
       end
 
+      # @without_runtime
       #: -> Array[singleton(Rails::Engine)]
       def engines
         return [] unless defined?(Rails::Engine)
@@ -216,6 +217,7 @@ module Tapioca
       # The `eager_load_paths` method still exists, but doesn't return all paths anymore and causes Tapioca to miss some
       # engine paths. The following commit is the change:
       # https://github.com/rails/rails/commit/ebfca905db14020589c22e6937382e6f8f687664
+      # @without_runtime
       #: (singleton(Rails::Engine) engine) -> Array[String]
       def eager_load_paths(engine)
         config = engine.config

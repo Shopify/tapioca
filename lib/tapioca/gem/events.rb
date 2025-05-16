@@ -29,9 +29,11 @@ module Tapioca
       #: String
       attr_reader :symbol
 
-      #: BasicObject
+      # @without_runtime
+      sig { returns(BasicObject).checked(:never) }
       attr_reader :constant
 
+      # @without_runtime
       #: (String symbol, BasicObject constant) -> void
       def initialize(symbol, constant)
         super()

@@ -67,6 +67,7 @@ module Tapioca
 
         private
 
+        # @without_runtime
         #: -> Array[singleton(Rails::Engine)]
         def engines
           @engines ||= if Object.const_defined?("Rails::Engine")
