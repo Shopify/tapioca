@@ -30,110 +30,110 @@ class RubyLsp::Rails::Addon < ::RubyLsp::Addon
 
   # : (GlobalState global_state, Thread::Queue outgoing_queue) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#62
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#63
   def activate(global_state, outgoing_queue); end
 
   # Creates a new CodeLens listener. This method is invoked on every CodeLens request
   # : (ResponseBuilders::CollectionResponseBuilder[Interface::CodeLens] response_builder, URI::Generic uri, Prism::Dispatcher dispatcher) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#105
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#106
   def create_code_lens_listener(response_builder, uri, dispatcher); end
 
   # : (ResponseBuilders::CollectionResponseBuilder[Interface::CompletionItem] response_builder, NodeContext node_context, Prism::Dispatcher dispatcher, URI::Generic uri) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#135
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#136
   def create_completion_listener(response_builder, node_context, dispatcher, uri); end
 
   # : (ResponseBuilders::CollectionResponseBuilder[(Interface::Location | Interface::LocationLink)] response_builder, URI::Generic uri, NodeContext node_context, Prism::Dispatcher dispatcher) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#127
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#128
   def create_definition_listener(response_builder, uri, node_context, dispatcher); end
 
   # : (ResponseBuilders::TestCollection response_builder, Prism::Dispatcher dispatcher, URI::Generic uri) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#90
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#91
   def create_discover_tests_listener(response_builder, dispatcher, uri); end
 
   # : (ResponseBuilders::DocumentSymbol response_builder, Prism::Dispatcher dispatcher) -> Object
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#121
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#122
   def create_document_symbol_listener(response_builder, dispatcher); end
 
   # : (ResponseBuilders::Hover response_builder, NodeContext node_context, Prism::Dispatcher dispatcher) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#113
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#114
   def create_hover_listener(response_builder, node_context, dispatcher); end
 
   # : -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#78
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#79
   def deactivate; end
 
   # : (String title) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#161
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#162
   def handle_window_show_message_response(title); end
 
   # : -> String
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#155
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#156
   def name; end
 
   # : -> RunnerClient
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#56
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#57
   def rails_runner_client; end
 
   # : (Array[Hash[Symbol, untyped]]) -> Array[String]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#98
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#99
   def resolve_test_commands(items); end
 
   # : -> String
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#84
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#85
   def version; end
 
   # : (Array[{uri: String, type: Integer}] changes) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#140
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#141
   def workspace_did_change_watched_files(changes); end
 
   private
 
   # : (String id, String title, ?percentage: Integer?, ?message: String?) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#188
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#189
   def begin_progress(id, title, percentage: T.unsafe(nil), message: T.unsafe(nil)); end
 
   # : (String id) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#213
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#214
   def end_progress(id); end
 
   # : -> Interface::FileSystemWatcher
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#249
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#250
   def fixture_file_watcher; end
 
   # : -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#257
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#258
   def offer_to_run_pending_migrations; end
 
   # : (global_state: GlobalState, outgoing_queue: Thread::Queue) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#220
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#221
   def register_additional_file_watchers(global_state:, outgoing_queue:); end
 
   # : (String id, ?percentage: Integer?, ?message: String?) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#206
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#207
   def report_progress(id, percentage: T.unsafe(nil), message: T.unsafe(nil)); end
 
   # : -> Interface::FileSystemWatcher
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#241
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/addon.rb#242
   def structure_sql_file_watcher; end
 end
 
@@ -213,7 +213,7 @@ class RubyLsp::Rails::CodeLens
   include ::RubyLsp::Requests::Support::Common
   include ::RubyLsp::Rails::ActiveSupportTestCaseHelper
 
-  # : (RunnerClient client, GlobalState global_state, ResponseBuilders::CollectionResponseBuilder[Interface::CodeLens] response_builder, URI::Generic uri, Prism::Dispatcher dispatcher) -> void
+  # : (RunnerClient, GlobalState, ResponseBuilders::CollectionResponseBuilder[Interface::CodeLens], URI::Generic, Prism::Dispatcher) -> void
   #
   # @return [CodeLens] a new instance of CodeLens
   #
@@ -227,139 +227,160 @@ class RubyLsp::Rails::CodeLens
 
   # : (Prism::ClassNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#128
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#133
   def on_class_node_enter(node); end
 
   # : (Prism::ClassNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#152
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#158
   def on_class_node_leave(node); end
 
   # Although uncommon, Rails tests can be written with the classic "def test_name" syntax.
   # : (Prism::DefNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#112
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#114
   def on_def_node_enter(node); end
 
   # : (Prism::ModuleNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#163
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#171
   def on_module_node_enter(node); end
 
   # : (Prism::ModuleNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#168
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#176
   def on_module_node_leave(node); end
 
   private
 
   # : (Prism::DefNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#183
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#191
   def add_jump_to_view(node); end
 
   # : (Prism::Node node, name: String, command: String) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#243
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#253
   def add_migrate_code_lens(node, name:, command:); end
 
   # : (Prism::DefNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#211
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#219
   def add_route_code_lens_to_action(node); end
 
   # : (Prism::Node node, name: String, command: String, kind: Symbol) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#256
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#266
   def add_test_code_lens(node, name:, command:, kind:); end
 
   # : -> bool?
   #
   # @return [Boolean]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#175
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#183
   def controller?; end
 
   # : -> String
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#233
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#241
   def migrate_command; end
 
   # : -> String?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#238
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#246
   def migration_version; end
 
   # : -> String
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#228
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/code_lens.rb#236
   def test_command; end
 end
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#10
+# @requires_ancestor: ServerComponent
+#
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#11
 module RubyLsp::Rails::Common
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#81
+  # : (String, String, ?percentage: Integer?, ?message: String?) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#90
   def begin_progress(id, title, percentage: T.unsafe(nil), message: T.unsafe(nil)); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#122
+  # : (String) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#133
   def end_progress(id); end
 
   # Log a message to the editor's output panel. The type is the number of the message type, which can be found in
   # the specification https://microsoft.github.io/language-server-protocol/specification/#messageType
+  # : (String, ?type: Integer) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#40
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#44
   def log_message(message, type: T.unsafe(nil)); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#106
+  # : (String, ?percentage: Integer?, ?message: String?) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#116
   def report_progress(id, percentage: T.unsafe(nil), message: T.unsafe(nil)); end
 
   # Sends an error result to a request, if the request failed. DO NOT INVOKE THIS METHOD FOR NOTIFICATIONS! Use
   # `log_message` instead, otherwise the client/server communication will go out of sync
+  # : (String) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#46
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#51
   def send_error_response(message); end
 
   # Sends a result back to the client
+  # : (Hash[Symbol | String, untyped]?) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#51
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#57
   def send_result(result); end
 
   # Handle possible errors for a notification. This should only be used for notifications, which means messages that
   # do not return a response back to the client. Errors are logged to the editor's output panel
+  # : (String) { () -> void } -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#70
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#78
   def with_notification_error_handling(notification_name, &block); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#134
+  # : (String, String, ?percentage: Integer?, ?message: String?) { (Progress) -> void } -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#146
   def with_progress(id, title, percentage: T.unsafe(nil), message: T.unsafe(nil), &block); end
 
   # Handle possible errors for a request. This should only be used for requests, which means messages that return a
   # response back to the client. Errors are returned as an error object back to the client
+  # : (String) { () -> void } -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#57
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#64
   def with_request_error_handling(request_name, &block); end
 
   private
 
   # Write a response message back to the client
+  # : (Hash[String | Symbol, untyped]) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#146
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#159
   def send_message(message); end
 
   # Write a notification to the client to be transmitted to the editor
+  # : (Hash[String | Symbol, untyped]) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#152
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#166
   def send_notification(message); end
 end
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#11
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#12
 class RubyLsp::Rails::Common::Progress
+  # : (IO | StringIO, String, bool) -> void
+  #
   # @return [Progress] a new instance of Progress
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#12
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#14
   def initialize(stderr, id, supports_progress); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#18
+  # : (?percentage: Integer?, ?message: String?) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#21
   def report(percentage: T.unsafe(nil), message: T.unsafe(nil)); end
 end
 
@@ -452,7 +473,7 @@ class RubyLsp::Rails::Definition
 
   # : (String name) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/definition.rb#131
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/definition.rb#133
   def collect_definitions(name); end
 
   # : (Prism::CallNode node) -> void
@@ -496,54 +517,54 @@ class RubyLsp::Rails::DocumentSymbol
 
   # : (Prism::ClassNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#60
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#62
   def on_class_node_enter(node); end
 
   # : (Prism::ClassNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#65
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#67
   def on_class_node_leave(node); end
 
   # : (Prism::ModuleNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#70
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#72
   def on_module_node_enter(node); end
 
   # : (Prism::ModuleNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#75
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#77
   def on_module_node_leave(node); end
 
   private
 
   # : ((Prism::ClassNode | Prism::ModuleNode) node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#82
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#84
   def add_to_namespace_stack(node); end
 
   # : (name: String, range: RubyLsp::Interface::Range, selection_range: RubyLsp::Interface::Range) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#211
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#217
   def append_document_symbol(name:, range:, selection_range:); end
 
   # : (Prism::CallNode node, String message) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#92
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#94
   def handle_all_arg_types(node, message); end
 
   # : (Prism::CallNode node, String message) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#191
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#197
   def handle_class_arg_types(node, message); end
 
   # : (Prism::CallNode node, String message) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#162
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#166
   def handle_symbol_and_string_arg_types(node, message); end
 
   # : ((Prism::ClassNode | Prism::ModuleNode) node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#87
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/document_symbol.rb#89
   def remove_from_namespace_stack(node); end
 end
 
@@ -593,17 +614,23 @@ class RubyLsp::Rails::Hover
   def generate_column_content(name); end
 end
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#201
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#233
 class RubyLsp::Rails::IOWrapper < ::SimpleDelegator
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#206
+  # : (*untyped) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#240
   def print(*args); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#202
+  # : (*untyped) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#235
   def puts(*args); end
 
   private
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#212
+  # : (untyped) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#247
   def log(message); end
 end
 
@@ -699,7 +726,7 @@ class RubyLsp::Rails::RailsTestStyle < ::RubyLsp::Listeners::TestDiscovery
 
   # : (Prism::CallNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#83
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#84
   def on_call_node_enter(node); end
 
   # : (Prism::ClassNode node) -> void
@@ -709,26 +736,26 @@ class RubyLsp::Rails::RailsTestStyle < ::RubyLsp::Listeners::TestDiscovery
 
   # : (Prism::DefNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#103
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#104
   def on_def_node_enter(node); end
 
   private
 
   # : (Prism::Node node, String test_name) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#126
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#127
   def add_test_item(node, test_name); end
 
   # : (Array[String] attached_ancestors, String fully_qualified_name) -> bool
   #
   # @return [Boolean]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#115
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#116
   def declarative_minitest?(attached_ancestors, fully_qualified_name); end
 
   # : -> Requests::Support::TestItem?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#140
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#143
   def group_test_item; end
 
   class << self
@@ -755,36 +782,36 @@ class RubyLsp::Rails::RunnerClient
 
   # : (model_name: String, association_name: String) -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#150
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#147
   def association_target_location(model_name:, association_name:); end
 
   # : -> bool
   #
   # @return [Boolean]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#262
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#259
   def connected?; end
 
   # Delegates a notification to a server add-on
   # : (server_addon_name: String, request_name: String, **untyped params) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#188
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#185
   def delegate_notification(server_addon_name:, request_name:, **params); end
 
   # Delegates a request to a server add-on
   # : (server_addon_name: String, request_name: String, **untyped params) -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#222
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#219
   def delegate_request(server_addon_name:, request_name:, **params); end
 
   # : (String name) -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#139
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#136
   def model(name); end
 
   # : -> String?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#198
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#195
   def pending_migrations_message; end
 
   # : String
@@ -794,46 +821,46 @@ class RubyLsp::Rails::RunnerClient
 
   # : (String server_addon_path) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#128
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#125
   def register_server_addon(server_addon_path); end
 
   # : (controller: String, action: String) -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#176
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#173
   def route(controller:, action:); end
 
   # : (String name) -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#165
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#162
   def route_location(name); end
 
   # : -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#210
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#207
   def run_migrations; end
 
   # : -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#246
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#243
   def shutdown; end
 
   # : -> bool
   #
   # @return [Boolean]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#257
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#254
   def stopped?; end
 
   # : -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#234
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#231
   def trigger_reload; end
 
   private
 
   # : -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#320
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#317
   def force_kill; end
 
   # : (::String message, ?type: ::Integer) -> void
@@ -843,7 +870,7 @@ class RubyLsp::Rails::RunnerClient
 
   # : (String request, **untyped params) -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#269
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#266
   def make_request(request, **params); end
 
   # : -> Integer?
@@ -859,18 +886,18 @@ class RubyLsp::Rails::RunnerClient
 
   # : -> Hash[Symbol, untyped]?
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#294
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#291
   def read_response; end
 
   # : (String request, **untyped params) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#280
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#277
   def send_message(request, **params); end
 
   # Notifications are like messages, but one-way, with no response sent back.
   # : (String request, **untyped params) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#276
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#273
   def send_notification(request, **params); end
 
   # : (GlobalState global_state) -> String
@@ -895,105 +922,161 @@ class RubyLsp::Rails::RunnerClient::InitializationError < ::StandardError; end
 # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/runner_client.rb#44
 class RubyLsp::Rails::RunnerClient::MessageError < ::StandardError; end
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#218
-class RubyLsp::Rails::Server
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#255
+class RubyLsp::Rails::Server < ::RubyLsp::Rails::ServerComponent
   include ::RubyLsp::Rails::Common
 
+  # : (?stdout: IO | StringIO, ?stderr: IO | StringIO, ?override_default_output_device: bool, ?capabilities: Hash[Symbol | String, untyped]) -> void
+  #
   # @return [Server] a new instance of Server
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#221
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#259
   def initialize(stdout: T.unsafe(nil), stderr: T.unsafe(nil), override_default_output_device: T.unsafe(nil), capabilities: T.unsafe(nil)); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#258
+  # : (String, Hash[Symbol | String, untyped]) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#297
   def execute(request, params); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#244
+  # : -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#282
   def start; end
 
   private
 
+  # : (Module?) -> bool
+  #
   # @return [Boolean]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#390
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#436
   def active_record_model?(const); end
 
   # File system resolver hooks spawn file watcher threads which introduce unnecessary overhead since the LSP already
   # watches files. Since the Rails application is already booted by the time we reach this script, we can't no-op
   # the file watcher implementation. Instead, we clear the hooks to prevent the registered file watchers from being
   # instantiated
+  # : -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#433
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#484
   def clear_file_system_resolver_hooks; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#441
+  # : (singleton(ActiveRecord::Base)) -> Array[String]
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#493
   def collect_model_foreign_keys(model); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#450
+  # : (singleton(ActiveRecord::Base)) -> Array[Hash[Symbol, untyped]]
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#503
   def collect_model_indexes(model); end
 
+  # : (singleton(ActiveRecord::Base)) -> bool
+  #
   # @return [Boolean]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#462
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#516
   def database_supports_indexing?(model); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#421
+  # : -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#471
   def load_routes; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#400
+  # : -> String?
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#448
   def pending_migrations_message; end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#378
+  # : (Hash[Symbol | String, untyped]) -> Hash[Symbol | String, untyped]?
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#422
   def resolve_association_target(params); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#360
+  # : (String) -> Hash[Symbol | String, untyped]?
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#403
   def resolve_database_info_from_model(model_name); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#309
+  # : (Hash[Symbol | String, untyped]) -> Hash[Symbol | String, untyped]?
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#349
   def resolve_route_info(requirements); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#355
+  # : (String) -> Hash[Symbol | String, untyped]?
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#397
   def route_location(name); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#410
+  # : -> Hash[Symbol | String, untyped]
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#459
   def run_migrations; end
 end
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#158
-class RubyLsp::Rails::ServerAddon
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#190
+class RubyLsp::Rails::ServerAddon < ::RubyLsp::Rails::ServerComponent
   include ::RubyLsp::Rails::Common
 
-  # @return [ServerAddon] a new instance of ServerAddon
+  # : (String, Hash[String | Symbol, untyped]) -> untyped
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#186
-  def initialize(stdout, stderr, capabilities); end
-
   # @raise [NotImplementedError]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#196
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#228
   def execute(request, params); end
 
+  # : -> String
+  #
   # @raise [NotImplementedError]
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#192
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#223
   def name; end
 
   class << self
     # Delegate `request` with `params` to the server add-on with the given `name`
+    # : (String, String, Hash[Symbol | String, untyped]) -> void
     #
-    # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#173
+    # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#207
     def delegate(name, request, params); end
 
     # Instantiate all server addons and store them in a hash for easy access after we have discovered the classes
+    # : (IO | StringIO, IO | StringIO, Hash[Symbol | String, untyped]) -> void
     #
-    # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#178
+    # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#213
     def finalize_registrations!(stdout, stderr, capabilities); end
 
     # We keep track of runtime server add-ons the same way we track other add-ons, by storing classes that inherit
     # from the base one
+    # : (singleton(ServerAddon)) -> void
     #
-    # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#167
+    # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#200
     def inherited(child); end
   end
+end
+
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#172
+class RubyLsp::Rails::ServerComponent
+  # : (IO | StringIO, IO | StringIO, Hash[Symbol | String, untyped]) -> void
+  #
+  # @return [ServerComponent] a new instance of ServerComponent
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#183
+  def initialize(stdout, stderr, capabilities); end
+
+  # : Hash[Symbol | String, untyped]
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#180
+  def capabilities; end
+
+  # : IO | StringIO
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#177
+  def stderr; end
+
+  # : IO | StringIO
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/server.rb#174
+  def stdout; end
 end
 
 # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/associations.rb#6
@@ -1008,13 +1091,15 @@ RubyLsp::Rails::Support::Associations::ALL = T.let(T.unsafe(nil), Array)
 # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#7
 module RubyLsp::Rails::Support::Callbacks; end
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#67
+# : Array[String]
+#
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#58
 RubyLsp::Rails::Support::Callbacks::ALL = T.let(T.unsafe(nil), Array)
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#37
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#34
 RubyLsp::Rails::Support::Callbacks::CONTROLLERS = T.let(T.unsafe(nil), Array)
 
-# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#55
+# source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#49
 RubyLsp::Rails::Support::Callbacks::JOBS = T.let(T.unsafe(nil), Array)
 
 # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/support/callbacks.rb#8
