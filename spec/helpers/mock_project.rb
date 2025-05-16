@@ -44,6 +44,8 @@ module Tapioca
         source("https://rubygems.org")
 
         gemspec name: "tapioca", path: "#{TAPIOCA_PATH}"
+        gem "spoom", github: "Shopify/spoom", branch: "at-rbs-rewriter"
+        gem "rbs", github: "Shopify/rbs", branch: "master"
       GEMFILE
     end
 

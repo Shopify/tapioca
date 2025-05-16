@@ -62,3 +62,6 @@ group :test do
 end
 
 gem "kramdown", "~> 2.5"
+
+gem "spoom", github: "Shopify/spoom", branch: "at-rbs-rewriter"
+gem "rbs", github: "Shopify/rbs", branch: "master"
