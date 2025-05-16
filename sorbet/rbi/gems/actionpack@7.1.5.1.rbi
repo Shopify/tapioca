@@ -4190,17 +4190,17 @@ ActionController::Live::SSE::PERMITTED_OPTIONS = T.let(T.unsafe(nil), Array)
 class ActionController::LiveTestResponse < ::ActionController::Live::Response
   # Was there a server-side error?
   #
-  # source://rack/3.1.10/lib/rack/response.rb#187
+  # source://rack/3.1.14/lib/rack/response.rb#187
   def error?; end
 
   # Was the URL not found?
   #
-  # source://rack/3.1.10/lib/rack/response.rb#197
+  # source://rack/3.1.14/lib/rack/response.rb#197
   def missing?; end
 
   # Was the response successful?
   #
-  # source://rack/3.1.10/lib/rack/response.rb#184
+  # source://rack/3.1.14/lib/rack/response.rb#184
   def success?; end
 end
 
@@ -14533,7 +14533,7 @@ class ActionDispatch::Request
   # source://actionpack//lib/action_dispatch/http/request.rb#340
   def raw_post; end
 
-  # source://rack/3.1.10/lib/rack/request.rb#197
+  # source://rack/3.1.14/lib/rack/request.rb#197
   def raw_request_method; end
 
   # source://actionpack//lib/action_dispatch/http/request.rb#50
@@ -15288,10 +15288,10 @@ class ActionDispatch::Response
 
   # Aliasing these off because AD::Http::Cache::Response defines them.
   #
-  # source://rack/3.1.10/lib/rack/response.rb#290
+  # source://rack/3.1.14/lib/rack/response.rb#290
   def _cache_control; end
 
-  # source://rack/3.1.10/lib/rack/response.rb#294
+  # source://rack/3.1.14/lib/rack/response.rb#294
   def _cache_control=(value); end
 
   # source://actionpack//lib/action_dispatch/http/response.rb#382
@@ -15458,7 +15458,7 @@ class ActionDispatch::Response
 
   # The location header we'll be responding with.
   #
-  # source://rack/3.1.10/lib/rack/response.rb#262
+  # source://rack/3.1.14/lib/rack/response.rb#262
   def redirect_url; end
 
   # The request that the response is responding to.
@@ -19242,6 +19242,7 @@ end
 
 # source://actionpack//lib/action_dispatch/middleware/server_timing.rb#7
 class ActionDispatch::ServerTiming::Subscriber
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -19788,6 +19789,7 @@ Mime::ALL = T.let(T.unsafe(nil), Mime::AllType)
 
 # source://actionpack//lib/action_dispatch/http/mime_type.rb#345
 class Mime::AllType < ::Mime::Type
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -19853,6 +19855,7 @@ end
 
 # source://actionpack//lib/action_dispatch/http/mime_type.rb#361
 class Mime::NullType
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -20096,7 +20099,7 @@ Mime::Type::MIME_REGEXP = T.let(T.unsafe(nil), Regexp)
 # source://actionpack//lib/action_dispatch.rb#35
 module Rack
   class << self
-    # source://rack/3.1.10/lib/rack/version.rb#18
+    # source://rack/3.1.14/lib/rack/version.rb#18
     def release; end
   end
 end

@@ -2233,6 +2233,9 @@ class ActiveResource::Collection
   def fetch(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource//lib/active_resource/collection.rb#10
+  def fetch_values(*_arg0, **_arg1, &_arg2); end
+
+  # source://activeresource//lib/active_resource/collection.rb#10
   def fifth(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource//lib/active_resource/collection.rb#10
@@ -2267,6 +2270,9 @@ class ActiveResource::Collection
 
   # source://activeresource//lib/active_resource/collection.rb#10
   def fourth(*_arg0, **_arg1, &_arg2); end
+
+  # source://activeresource//lib/active_resource/collection.rb#10
+  def freeze(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource//lib/active_resource/collection.rb#10
   def from(*_arg0, **_arg1, &_arg2); end

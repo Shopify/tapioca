@@ -55,6 +55,7 @@ module StateMachines; end
 #
 # source://state_machines//lib/state_machines/matcher.rb#23
 class StateMachines::AllMatcher < ::StateMachines::Matcher
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -1344,6 +1345,7 @@ end
 #
 # source://state_machines//lib/state_machines/matcher.rb#101
 class StateMachines::LoopbackMatcher < ::StateMachines::Matcher
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
