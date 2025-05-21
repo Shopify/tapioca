@@ -283,7 +283,7 @@ module PP::PPMethods
 
   # A pretty print for a pair of Hash
   #
-  # source://pp//lib/pp.rb#322
+  # source://pp//lib/pp.rb#303
   def pp_hash_pair(k, v); end
 
   # A present standard failsafe for pretty printing any given Object

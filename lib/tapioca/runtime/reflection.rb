@@ -32,13 +32,15 @@ module Tapioca
       METHOD_METHOD = Kernel.instance_method(:method) #: UnboundMethod
       UNDEFINED_CONSTANT = Module.new.freeze #: Module
 
-      REQUIRED_FROM_LABELS = ["<top (required)>", "<main>"].freeze #: Array[String]
+      REQUIRED_FROM_LABELS = ["<top (required)>", "<main>", "<compiled>"].freeze #: Array[String]
 
+      # @without_runtime
       #: (BasicObject constant) -> bool
       def constant_defined?(constant)
         !UNDEFINED_CONSTANT.eql?(constant)
       end
 
+      # @without_runtime
       #: (String symbol, ?inherit: bool, ?namespace: Module) -> BasicObject
       def constantize(symbol, inherit: false, namespace: Object)
         namespace.const_get(symbol, inherit)
