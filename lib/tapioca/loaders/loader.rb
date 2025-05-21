@@ -98,20 +98,16 @@ module Tapioca
 
       #: -> void
       def load_engines_in_zeitwerk_mode
-        # Collect all the directories that are already managed by all existing Zeitwerk loaders.
-        managed_dirs = Zeitwerk::Loader.all_dirs.to_set
         # We use a fresh loader to load the engine directories, so that we don't interfere with
         # any of the existing loaders.
         autoloader = Zeitwerk::Loader.new
 
         engines.each do |engine|
           eager_load_paths(engine).each do |path|
-            # Zeitwerk only accepts existing directories in `push_dir`.
-            next unless File.directory?(path)
-            # We should not add directories that are already managed by a Zeitwerk loader.
-            next if managed_dirs.member?(path)
-
             autoloader.push_dir(path)
+          rescue Zeitwerk::Error
+            # The path is not an existing directory, or it is managed by
+            # some other loader, ..., it is fine, just skip it.
           end
         end
 
