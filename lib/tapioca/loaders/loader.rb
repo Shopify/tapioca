@@ -99,7 +99,7 @@ module Tapioca
       #: -> void
       def load_engines_in_zeitwerk_mode
         # Collect all the directories that are already managed by all existing Zeitwerk loaders.
-        managed_dirs = Zeitwerk::Registry.loaders.flat_map(&:dirs).to_set
+        managed_dirs = Zeitwerk::Loader.all_dirs.to_set
         # We use a fresh loader to load the engine directories, so that we don't interfere with
         # any of the existing loaders.
         autoloader = Zeitwerk::Loader.new

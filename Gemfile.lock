@@ -386,7 +386,7 @@ GEM
     yard-sorbet (0.9.0)
       sorbet-runtime
       yard
-    zeitwerk (2.6.18)
+    zeitwerk (2.7.3)
     zlib (3.1.0)
 
 PLATFORMS
