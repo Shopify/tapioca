@@ -7,6 +7,13 @@ require "tapioca"
 require "tapioca/runtime/reflection"
 require "tapioca/runtime/trackers"
 
+require "tapioca/runtime/dynamic_mixin_compiler"
+require "tapioca/sorbet_ext/backcompat_patches"
+require "tapioca/sorbet_ext/name_patch"
+require "tapioca/sorbet_ext/generic_name_patch"
+require "tapioca/sorbet_ext/proc_bind_patch"
+require "tapioca/runtime/generic_type_registry"
+
 # The rewriter needs to be loaded very early so RBS comments within Tapioca itself are rewritten
 require "spoom"
 require "tapioca/rbs/rewriter"
@@ -29,13 +36,6 @@ require "thor"
 require "yaml"
 require "yard-sorbet"
 require "prism"
-
-require "tapioca/runtime/dynamic_mixin_compiler"
-require "tapioca/sorbet_ext/backcompat_patches"
-require "tapioca/sorbet_ext/name_patch"
-require "tapioca/sorbet_ext/generic_name_patch"
-require "tapioca/sorbet_ext/proc_bind_patch"
-require "tapioca/runtime/generic_type_registry"
 
 require "tapioca/helpers/gem_helper"
 require "tapioca/helpers/git_attributes"
