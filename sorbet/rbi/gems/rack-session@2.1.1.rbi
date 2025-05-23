@@ -19,12 +19,12 @@ module Rack::Session; end
 # source://rack-session//lib/rack/session/abstract/id.rb#47
 module Rack::Session::Abstract; end
 
-# source://rack-session//lib/rack/session/abstract/id.rb#497
+# source://rack-session//lib/rack/session/abstract/id.rb#499
 class Rack::Session::Abstract::ID < ::Rack::Session::Abstract::Persisted
   # All thread safety and session destroy procedures should occur here.
   # Should return a new session id or nil if options[:drop]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#527
+  # source://rack-session//lib/rack/session/abstract/id.rb#529
   def delete_session(req, sid, options); end
 
   # All thread safety and session retrieval procedures should occur here.
@@ -32,20 +32,20 @@ class Rack::Session::Abstract::ID < ::Rack::Session::Abstract::Persisted
   # If nil is provided as the session id, generation of a new valid id
   # should occur within.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#512
+  # source://rack-session//lib/rack/session/abstract/id.rb#514
   def find_session(req, sid); end
 
   # All thread safety and session storage procedures should occur here.
   # Must return the session id if the session was saved successfully, or
   # false if the session could not be saved.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#520
+  # source://rack-session//lib/rack/session/abstract/id.rb#522
   def write_session(req, sid, session, options); end
 
   class << self
     # @private
     #
-    # source://rack-session//lib/rack/session/abstract/id.rb#498
+    # source://rack-session//lib/rack/session/abstract/id.rb#500
     def inherited(klass); end
   end
 end
@@ -58,7 +58,7 @@ end
 # All parameters are optional.
 # * :key determines the name of the cookie, by default it is
 #   'rack.session'
-# * :path, :domain, :expire_after, :secure, :httponly, and :same_site set
+# * :path, :domain, :expire_after, :secure, :httponly, :partitioned and :same_site set
 #   the related cookie options as by Rack::Response#set_cookie
 # * :skip will not a set a cookie in the response nor update the session state
 # * :defer will not set a cookie in the response but still update the session
@@ -83,10 +83,10 @@ end
 class Rack::Session::Abstract::Persisted
   # @return [Persisted] a new instance of Persisted
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#256
+  # source://rack-session//lib/rack/session/abstract/id.rb#257
   def initialize(app, options = T.unsafe(nil)); end
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#265
+  # source://rack-session//lib/rack/session/abstract/id.rb#267
   def call(env); end
 
   # Acquires the session from the environment and the session id from
@@ -94,30 +94,30 @@ class Rack::Session::Abstract::Persisted
   # and the :defer option is not true, a cookie will be added to the
   # response with the session's id.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#379
+  # source://rack-session//lib/rack/session/abstract/id.rb#381
   def commit_session(req, res); end
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#269
+  # source://rack-session//lib/rack/session/abstract/id.rb#271
   def context(env, app = T.unsafe(nil)); end
 
   # Returns the value of attribute default_options.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#254
+  # source://rack-session//lib/rack/session/abstract/id.rb#255
   def default_options; end
 
   # Returns the value of attribute key.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#254
+  # source://rack-session//lib/rack/session/abstract/id.rb#255
   def key; end
 
   # Returns the value of attribute same_site.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#254
+  # source://rack-session//lib/rack/session/abstract/id.rb#255
   def same_site; end
 
   # Returns the value of attribute sid_secure.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#254
+  # source://rack-session//lib/rack/session/abstract/id.rb#255
   def sid_secure; end
 
   private
@@ -127,26 +127,26 @@ class Rack::Session::Abstract::Persisted
   #
   # @return [Boolean]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#348
+  # source://rack-session//lib/rack/session/abstract/id.rb#350
   def commit_session?(req, session, options); end
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#414
+  # source://rack-session//lib/rack/session/abstract/id.rb#416
   def cookie_value(data); end
 
   # Returns the current session id from the SessionHash.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#334
+  # source://rack-session//lib/rack/session/abstract/id.rb#336
   def current_session_id(req); end
 
   # All thread safety and session destroy procedures should occur here.
   # Should return a new session id or nil if options[:drop]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#453
+  # source://rack-session//lib/rack/session/abstract/id.rb#455
   def delete_session(req, sid, options); end
 
   # Extract session id from request object.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#326
+  # source://rack-session//lib/rack/session/abstract/id.rb#328
   def extract_session_id(request); end
 
   # All thread safety and session retrieval procedures should occur here.
@@ -154,103 +154,103 @@ class Rack::Session::Abstract::Persisted
   # If nil is provided as the session id, generation of a new valid id
   # should occur within.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#438
+  # source://rack-session//lib/rack/session/abstract/id.rb#440
   def find_session(env, sid); end
 
   # @return [Boolean]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#365
+  # source://rack-session//lib/rack/session/abstract/id.rb#367
   def force_options?(options); end
 
   # @return [Boolean]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#361
+  # source://rack-session//lib/rack/session/abstract/id.rb#363
   def forced_session_update?(session, options); end
 
   # Generate a new session id using Ruby #rand.  The size of the
   # session id is controlled by the :sidbits option.
   # Monkey patch this to use custom methods for session id generation.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#294
+  # source://rack-session//lib/rack/session/abstract/id.rb#296
   def generate_sid(secure = T.unsafe(nil)); end
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#284
+  # source://rack-session//lib/rack/session/abstract/id.rb#286
   def initialize_sid; end
 
   # Extracts the session id from provided cookies and passes it and the
   # environment to #find_session.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#318
+  # source://rack-session//lib/rack/session/abstract/id.rb#320
   def load_session(req); end
 
   # @return [Boolean]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#357
+  # source://rack-session//lib/rack/session/abstract/id.rb#359
   def loaded_session?(session); end
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#280
+  # source://rack-session//lib/rack/session/abstract/id.rb#282
   def make_request(env); end
 
   # Sets the lazy session at 'rack.session' and places options and session
   # metadata into 'rack.session.options'.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#307
+  # source://rack-session//lib/rack/session/abstract/id.rb#309
   def prepare_session(req); end
 
   # @return [Boolean]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#369
+  # source://rack-session//lib/rack/session/abstract/id.rb#371
   def security_matches?(request, options); end
 
   # Allow subclasses to prepare_session for different Session classes
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#429
+  # source://rack-session//lib/rack/session/abstract/id.rb#431
   def session_class; end
 
   # Check if the session exists or not.
   #
   # @return [Boolean]
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#340
+  # source://rack-session//lib/rack/session/abstract/id.rb#342
   def session_exists?(req); end
 
   # Sets the cookie back to the client with session id. We skip the cookie
   # setting if the value didn't change (sid is the same) or expires was given.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#421
+  # source://rack-session//lib/rack/session/abstract/id.rb#423
   def set_cookie(request, response, cookie); end
 
   # All thread safety and session storage procedures should occur here.
   # Must return the session id if the session was saved successfully, or
   # false if the session could not be saved.
   #
-  # source://rack-session//lib/rack/session/abstract/id.rb#446
+  # source://rack-session//lib/rack/session/abstract/id.rb#448
   def write_session(req, sid, session, options); end
 end
 
 # source://rack-session//lib/rack/session/abstract/id.rb#240
 Rack::Session::Abstract::Persisted::DEFAULT_OPTIONS = T.let(T.unsafe(nil), Hash)
 
-# source://rack-session//lib/rack/session/abstract/id.rb#458
+# source://rack-session//lib/rack/session/abstract/id.rb#460
 class Rack::Session::Abstract::PersistedSecure < ::Rack::Session::Abstract::Persisted
-  # source://rack-session//lib/rack/session/abstract/id.rb#481
+  # source://rack-session//lib/rack/session/abstract/id.rb#483
   def extract_session_id(*_arg0); end
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#475
+  # source://rack-session//lib/rack/session/abstract/id.rb#477
   def generate_sid(*_arg0); end
 
   private
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#492
+  # source://rack-session//lib/rack/session/abstract/id.rb#494
   def cookie_value(data); end
 
-  # source://rack-session//lib/rack/session/abstract/id.rb#488
+  # source://rack-session//lib/rack/session/abstract/id.rb#490
   def session_class; end
 end
 
-# source://rack-session//lib/rack/session/abstract/id.rb#459
+# source://rack-session//lib/rack/session/abstract/id.rb#461
 class Rack::Session::Abstract::PersistedSecure::SecureSessionHash < ::Rack::Session::Abstract::SessionHash
-  # source://rack-session//lib/rack/session/abstract/id.rb#460
+  # source://rack-session//lib/rack/session/abstract/id.rb#462
   def [](key); end
 end
 
