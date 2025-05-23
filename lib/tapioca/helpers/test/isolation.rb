@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 module Tapioca
@@ -19,6 +19,7 @@ module Tapioca
           end
         end
 
+        #: -> Object
         def run
           serialized = T.unsafe(self).run_in_isolation do
             super
@@ -67,8 +68,8 @@ module Tapioca
             result = read.read
             read.close
 
-            Process.wait2(T.must(pid))
-            T.must(result).unpack1("m")
+            Process.wait2(pid)
+            result.unpack1("m")
           end
         end
 
@@ -78,7 +79,7 @@ module Tapioca
 
           requires_ancestor { Kernel }
 
-          ORIG_ARGV = ARGV.dup unless defined?(ORIG_ARGV) #: as !nil
+          ORIG_ARGV = ARGV.dup #: Array[String]
 
           # Crazy H4X to get this working in windows / jruby with
           # no forking.
