@@ -1638,17 +1638,17 @@ class GraphQL::Execution::Interpreter::Runtime
   # @param trace [Boolean] If `false`, don't wrap this with field tracing
   # @return [GraphQL::Execution::Lazy, Object] If loading `object` will be deferred, it's a wrapper over it.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#793
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#882
   def after_lazy(lazy_obj, field:, owner_object:, arguments:, ast_node:, result:, result_name:, runtime_state:, eager: T.unsafe(nil), trace: T.unsafe(nil), &block); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#853
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#942
   def arguments(graphql_object, arg_owner, ast_node); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#728
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#817
   def call_method_on_directives(method_name, object, directives, &block); end
 
   # @api private
@@ -1667,22 +1667,22 @@ class GraphQL::Execution::Interpreter::Runtime
   # @api private
   # @return [Lazy, Array, Hash, Object] Lazy, Array, and Hash are all traversed to resolve lazy values later
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#579
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#668
   def continue_field(value, owner_type, field, current_type, ast_node, next_selections, is_non_null, owner_object, arguments, result_name, selection_result, was_scoped, runtime_state); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#472
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#561
   def continue_value(value, field, is_non_null, ast_node, result_name, selection_result); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#460
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#549
   def current_path; end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#862
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#951
   def delete_all_interpreter_context; end
 
   # Check {Schema::Directive.include?} for each directive that's present
@@ -1690,34 +1690,34 @@ class GraphQL::Execution::Interpreter::Runtime
   # @api private
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#760
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#849
   def directives_include?(node, graphql_object, parent_type); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#111
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#200
   def each_gathered_selections(response_hash); end
 
   # @api private
   # @return [void]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#251
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#340
   def evaluate_selection(result_name, field_ast_nodes_or_ast_node, selections_result); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#295
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#384
   def evaluate_selection_with_args(arguments, field_defn, ast_node, field_ast_nodes, object, result_name, selection_result, runtime_state); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#353
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#442
   def evaluate_selection_with_resolved_keyword_args(kwarg_arguments, resolved_arguments, field_defn, ast_node, field_ast_nodes, object, result_name, selection_result, runtime_state); end
 
   # @api private
   # @return [void]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#202
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#291
   def evaluate_selections(gathered_selections, selections_result, target_result, runtime_state); end
 
   # @api private
@@ -1727,12 +1727,12 @@ class GraphQL::Execution::Interpreter::Runtime
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#124
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#213
   def gather_selections(owner_object, owner_type, selections, selections_to_run, selections_by_name, ordered_result_keys); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#771
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#860
   def get_current_runtime_state; end
 
   # @api private
@@ -1743,12 +1743,12 @@ class GraphQL::Execution::Interpreter::Runtime
   # @api private
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#894
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#983
   def lazy?(object); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#776
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#865
   def minimal_after_lazy(value, &block); end
 
   # @api private
@@ -1759,26 +1759,23 @@ class GraphQL::Execution::Interpreter::Runtime
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#714
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#803
   def resolve_list_item(inner_value, inner_type, inner_type_non_null, ast_node, field, owner_object, arguments, this_idx, response_list, owner_type, was_scoped, runtime_state); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#873
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#962
   def resolve_type(type, value); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#733
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#822
   def run_directive(method_name, object, directives, idx, &block); end
 
-  # This _begins_ the execution. Some deferred work
-  # might be stored up in lazies.
-  #
   # @api private
   # @return [void]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#70
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#68
   def run_eager; end
 
   # @api private
@@ -1792,12 +1789,12 @@ class GraphQL::Execution::Interpreter::Runtime
   #
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#447
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#536
   def set_graphql_dead(selection_result); end
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#417
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#506
   def set_result(selection_result, result_name, value, is_child_result, is_non_null); end
 end
 
@@ -1874,179 +1871,184 @@ module GraphQL::Execution::Interpreter::Runtime::GraphQLResult
 
   # Returns the value of attribute ast_node.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def ast_node; end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#30
+  # TODO test full path in Partial
+  #
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#28
+  def base_path=(_arg0); end
+
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#34
   def build_path(path_array); end
 
   # Returns the value of attribute graphql_application_value.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_application_value; end
 
   # Returns the value of attribute graphql_arguments.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_arguments; end
 
   # Returns the value of attribute graphql_dead.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#35
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#45
   def graphql_dead; end
 
   # Sets the attribute graphql_dead
   #
   # @param value the value to set the attribute graphql_dead to.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#35
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#45
   def graphql_dead=(_arg0); end
 
   # Returns the value of attribute graphql_field.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_field; end
 
   # Returns the value of attribute graphql_is_eager.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_is_eager; end
 
   # Returns the value of attribute graphql_is_non_null_in_parent.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_is_non_null_in_parent; end
 
   # Returns the value of attribute graphql_parent.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_parent; end
 
   # @return [Hash] Plain-Ruby result data (`@graphql_metadata` contains Result wrapper objects)
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#40
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#50
   def graphql_result_data; end
 
   # @return [Hash] Plain-Ruby result data (`@graphql_metadata` contains Result wrapper objects)
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#40
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#50
   def graphql_result_data=(_arg0); end
 
   # Returns the value of attribute graphql_result_name.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_result_name; end
 
   # Returns the value of attribute graphql_result_type.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_result_type; end
 
   # Returns the value of attribute graphql_selections.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#36
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
   def graphql_selections; end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#26
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#30
   def path; end
 end
 
-# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#152
+# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#162
 class GraphQL::Execution::Interpreter::Runtime::GraphQLResultArray
   include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
 
   # @return [GraphQLResultArray] a new instance of GraphQLResultArray
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#155
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#165
   def initialize(_result_name, _result_type, _application_value, _parent_result, _is_non_null_in_parent, _selections, _is_eager, _ast_node, _graphql_arguments, graphql_field); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#198
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#208
   def [](idx); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#160
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#170
   def graphql_skip_at(index); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#182
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#192
   def set_child_result(idx, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#172
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#182
   def set_leaf(idx, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#194
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#204
   def values; end
 end
 
-# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#43
+# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#53
 class GraphQL::Execution::Interpreter::Runtime::GraphQLResultHash
   include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
 
   # @return [GraphQLResultHash] a new instance of GraphQLResultHash
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#44
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def initialize(_result_name, _result_type, _application_value, _parent_result, _is_non_null_in_parent, _selections, _is_eager, _ast_node, _graphql_arguments, graphql_field); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#116
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#126
   def [](k); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#99
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#109
   def delete(key); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#104
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#114
   def each; end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#143
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#153
   def fix_result_order; end
 
   # Returns the value of attribute graphql_merged_into.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#64
   def graphql_merged_into; end
 
   # Sets the attribute graphql_merged_into
   #
   # @param value the value to set the attribute graphql_merged_into to.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#64
   def graphql_merged_into=(_arg0); end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#112
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#122
   def key?(k); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#120
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#130
   def merge_into(into_result); end
 
   # Returns the value of attribute ordered_result_keys.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#50
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#60
   def ordered_result_keys; end
 
   # Sets the attribute ordered_result_keys
   #
   # @param value the value to set the attribute ordered_result_keys to.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#50
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#60
   def ordered_result_keys=(_arg0); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#82
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#92
   def set_child_result(key, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#56
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#66
   def set_leaf(key, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#108
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#118
   def values; end
 end
 
 # @api private
 #
-# source://graphql//lib/graphql/execution/interpreter/runtime.rb#471
+# source://graphql//lib/graphql/execution/interpreter/runtime.rb#560
 GraphQL::Execution::Interpreter::Runtime::HALT = T.let(T.unsafe(nil), Object)
 
 # @api private
 #
-# source://graphql//lib/graphql/execution/interpreter/runtime.rb#199
+# source://graphql//lib/graphql/execution/interpreter/runtime.rb#288
 GraphQL::Execution::Interpreter::Runtime::NO_ARGS = T.let(T.unsafe(nil), Hash)
 
 # This wraps a value which is available, but not yet calculated, like a promise or future.
@@ -6775,6 +6777,7 @@ end
 # source://graphql//lib/graphql/query.rb#5
 class GraphQL::Query
   include ::GraphQL::Tracing::Traceable
+  include ::GraphQL::Query::Runnable
   extend ::GraphQL::Autoload
   extend ::Forwardable
 
@@ -6791,61 +6794,45 @@ class GraphQL::Query
   # @param visibility_profile [Symbol] Another way to assign `context[:visibility_profile]`
   # @return [Query] a new instance of Query
   #
-  # source://graphql//lib/graphql/query.rb#101
+  # source://graphql//lib/graphql/query.rb#136
   def initialize(schema, query_string = T.unsafe(nil), query: T.unsafe(nil), document: T.unsafe(nil), context: T.unsafe(nil), variables: T.unsafe(nil), multiplex: T.unsafe(nil), validate: T.unsafe(nil), static_validator: T.unsafe(nil), visibility_profile: T.unsafe(nil), subscription_topic: T.unsafe(nil), operation_name: T.unsafe(nil), root_value: T.unsafe(nil), max_depth: T.unsafe(nil), max_complexity: T.unsafe(nil), warden: T.unsafe(nil), use_visibility_profile: T.unsafe(nil)); end
-
-  # source://graphql//lib/graphql/query.rb#408
-  def after_lazy(value, &block); end
 
   # Returns the value of attribute analysis_errors.
   #
-  # source://graphql//lib/graphql/query.rb#337
+  # source://graphql//lib/graphql/query.rb#362
   def analysis_errors; end
 
   # Sets the attribute analysis_errors
   #
   # @param value the value to set the attribute analysis_errors to.
   #
-  # source://graphql//lib/graphql/query.rb#337
+  # source://graphql//lib/graphql/query.rb#362
   def analysis_errors=(_arg0); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def analyzers(*args, **_arg1, &block); end
-
-  # source://graphql//lib/graphql/query.rb#290
-  def arguments_cache; end
-
-  # Node-level cache for calculating arguments. Used during execution and query analysis.
-  #
-  # @param ast_node [GraphQL::Language::Nodes::AbstractNode]
-  # @param definition [GraphQL::Schema::Field]
-  # @param parent_object [GraphQL::Schema::Object]
-  # @return [Hash{Symbol => Object}]
-  #
-  # source://graphql//lib/graphql/query.rb#286
-  def arguments_for(ast_node, definition, parent_object: T.unsafe(nil)); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
   def ast_analyzers(*args, **_arg1, &block); end
 
   # Returns the value of attribute context.
   #
-  # source://graphql//lib/graphql/query.rb#30
+  # source://graphql//lib/graphql/query.rb#65
   def context; end
 
   # @return [GraphQL::Tracing::Trace]
   #
-  # source://graphql//lib/graphql/query.rb#189
+  # source://graphql//lib/graphql/query.rb#224
   def current_trace; end
 
   # @return [GraphQL::Language::Nodes::Document]
   #
-  # source://graphql//lib/graphql/query.rb#67
+  # source://graphql//lib/graphql/query.rb#102
   def document; end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/query.rb#248
+  # source://graphql//lib/graphql/query.rb#286
   def executed?; end
 
   # This contains a few components:
@@ -6861,36 +6848,31 @@ class GraphQL::Query
   # @see operation_fingerprint
   # @see variables_fingerprint
   #
-  # source://graphql//lib/graphql/query.rb#316
+  # source://graphql//lib/graphql/query.rb#341
   def fingerprint; end
 
-  # source://graphql//lib/graphql/query.rb#231
+  # source://graphql//lib/graphql/query.rb#257
   def fragments; end
 
-  # source://graphql//lib/graphql/query.rb#350
+  # source://graphql//lib/graphql/query.rb#375
   def get_field(owner, field_name); end
 
-  # source://graphql//lib/graphql/query.rb#346
+  # source://graphql//lib/graphql/query.rb#371
   def get_type(type_name); end
 
-  # @api private
-  #
-  # source://graphql//lib/graphql/query.rb#404
-  def handle_or_reraise(err); end
-
-  # source://graphql//lib/graphql/query.rb#76
+  # source://graphql//lib/graphql/query.rb#111
   def inspect; end
 
   # Returns the value of attribute logger.
   #
-  # source://graphql//lib/graphql/query.rb#420
+  # source://graphql//lib/graphql/query.rb#432
   def logger; end
 
   # A lookahead for the root selections of this query
   #
   # @return [GraphQL::Execution::Lookahead]
   #
-  # source://graphql//lib/graphql/query.rb#199
+  # source://graphql//lib/graphql/query.rb#234
   def lookahead; end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -6901,62 +6883,62 @@ class GraphQL::Query
 
   # Returns the value of attribute multiplex.
   #
-  # source://graphql//lib/graphql/query.rb#186
+  # source://graphql//lib/graphql/query.rb#221
   def multiplex; end
 
   # Sets the attribute multiplex
   #
   # @param value the value to set the attribute multiplex to.
   #
-  # source://graphql//lib/graphql/query.rb#186
+  # source://graphql//lib/graphql/query.rb#221
   def multiplex=(_arg0); end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/query.rb#391
+  # source://graphql//lib/graphql/query.rb#420
   def mutation?; end
 
   # @return [String] An opaque hash for identifying this query's given query string and selected operation
   #
-  # source://graphql//lib/graphql/query.rb#321
+  # source://graphql//lib/graphql/query.rb#346
   def operation_fingerprint; end
 
   # @return [nil, String] The operation name provided by client or the one inferred from the document. Used to determine which operation to run.
   #
-  # source://graphql//lib/graphql/query.rb#36
+  # source://graphql//lib/graphql/query.rb#71
   def operation_name; end
 
   # @return [nil, String] The operation name provided by client or the one inferred from the document. Used to determine which operation to run.
   #
-  # source://graphql//lib/graphql/query.rb#36
+  # source://graphql//lib/graphql/query.rb#71
   def operation_name=(_arg0); end
 
-  # source://graphql//lib/graphql/query.rb#235
+  # source://graphql//lib/graphql/query.rb#261
   def operations; end
 
-  # source://graphql//lib/graphql/query.rb#354
+  # source://graphql//lib/graphql/query.rb#379
   def possible_types(type); end
 
   # Returns the value of attribute provided_variables.
   #
-  # source://graphql//lib/graphql/query.rb#30
+  # source://graphql//lib/graphql/query.rb#65
   def provided_variables; end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/query.rb#395
+  # source://graphql//lib/graphql/query.rb#424
   def query?; end
 
   # If a document was provided to `GraphQL::Schema#execute` instead of the raw query string, we will need to get it from the document
   #
-  # source://graphql//lib/graphql/query.rb#179
+  # source://graphql//lib/graphql/query.rb#214
   def query_string; end
 
   # Sets the attribute query_string
   #
   # @param value the value to set the attribute query_string to.
   #
-  # source://graphql//lib/graphql/query.rb#64
+  # source://graphql//lib/graphql/query.rb#99
   def query_string=(_arg0); end
 
   # @param abstract_type [GraphQL::UnionType, GraphQL::InterfaceType]
@@ -6964,38 +6946,53 @@ class GraphQL::Query
   # @return [GraphQL::ObjectType, nil] The runtime type of `value` from {Schema#resolve_type}
   # @see {#possible_types} to apply filtering from `only` / `except`
   #
-  # source://graphql//lib/graphql/query.rb#379
+  # source://graphql//lib/graphql/query.rb#408
   def resolve_type(abstract_type, value = T.unsafe(nil)); end
 
   # Get the result for this query, executing it once
   #
   # @return [GraphQL::Query::Result] A Hash-like GraphQL response, with `"data"` and/or `"errors"` keys
   #
-  # source://graphql//lib/graphql/query.rb#241
+  # source://graphql//lib/graphql/query.rb#279
   def result; end
 
   # @api private
   #
-  # source://graphql//lib/graphql/query.rb#229
+  # source://graphql//lib/graphql/query.rb#255
   def result_values; end
 
   # @api private
   #
-  # source://graphql//lib/graphql/query.rb#219
+  # source://graphql//lib/graphql/query.rb#245
   def result_values=(result_hash); end
 
-  # source://graphql//lib/graphql/query.rb#358
+  # source://graphql//lib/graphql/query.rb#396
+  def root_type; end
+
+  # source://graphql//lib/graphql/query.rb#383
   def root_type_for_operation(op_type); end
 
   # The value for root types
   #
-  # source://graphql//lib/graphql/query.rb#33
+  # source://graphql//lib/graphql/query.rb#68
   def root_value; end
 
   # The value for root types
   #
-  # source://graphql//lib/graphql/query.rb#33
+  # source://graphql//lib/graphql/query.rb#68
   def root_value=(_arg0); end
+
+  # Run subtree partials of this query and return their results.
+  # Each partial is identified with a `path:` and `object:`
+  # where the path references a field in the AST and the object will be treated
+  # as the return value from that field. Subfields of the field named by `path`
+  # will be executed with `object` as the starting point
+  #
+  # @param partials_hashes [Array<Hash{Symbol => Object}>] Hashes with `path:` and `object:` keys
+  # @return [Array<GraphQL::Query::Result>]
+  #
+  # source://graphql//lib/graphql/query.rb#272
+  def run_partials(partials_hashes); end
 
   # A version of the given query string, with:
   # - Variables inlined to the query
@@ -7003,12 +7000,12 @@ class GraphQL::Query
   #
   # @return [String, nil] Returns nil if the query is invalid.
   #
-  # source://graphql//lib/graphql/query.rb#298
+  # source://graphql//lib/graphql/query.rb#323
   def sanitized_query_string(inline_variables: T.unsafe(nil)); end
 
   # Returns the value of attribute schema.
   #
-  # source://graphql//lib/graphql/query.rb#30
+  # source://graphql//lib/graphql/query.rb#65
   def schema; end
 
   # This is the operation to run for this query.
@@ -7016,63 +7013,63 @@ class GraphQL::Query
   #
   # @return [GraphQL::Language::Nodes::OperationDefinition, nil]
   #
-  # source://graphql//lib/graphql/query.rb#259
+  # source://graphql//lib/graphql/query.rb#297
   def selected_operation; end
 
   # @return [String, nil] The name of the operation to run (may be inferred)
   #
-  # source://graphql//lib/graphql/query.rb#81
+  # source://graphql//lib/graphql/query.rb#116
   def selected_operation_name; end
 
-  # source://graphql//lib/graphql/query.rb#252
+  # source://graphql//lib/graphql/query.rb#290
   def static_errors; end
 
   # @return [GraphQL::StaticValidation::Validator] if present, the query will validate with these rules.
   #
-  # source://graphql//lib/graphql/query.rb#51
+  # source://graphql//lib/graphql/query.rb#86
   def static_validator; end
 
   # @param new_validator [GraphQL::StaticValidation::Validator] if present, the query will validate with these rules. This can't be reasssigned after validation.
   #
-  # source://graphql//lib/graphql/query.rb#54
+  # source://graphql//lib/graphql/query.rb#89
   def static_validator=(new_validator); end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/query.rb#399
+  # source://graphql//lib/graphql/query.rb#428
   def subscription?; end
 
   # @return [String, nil] the triggered event, if this query is a subscription update
   #
-  # source://graphql//lib/graphql/query.rb#87
+  # source://graphql//lib/graphql/query.rb#122
   def subscription_topic; end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/query.rb#193
+  # source://graphql//lib/graphql/query.rb#228
   def subscription_update?; end
 
   # Returns the value of attribute tracers.
   #
-  # source://graphql//lib/graphql/query.rb#89
+  # source://graphql//lib/graphql/query.rb#124
   def tracers; end
 
-  # source://graphql//lib/graphql/query.rb#371
+  # source://graphql//lib/graphql/query.rb#400
   def types; end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/query.rb#338
+  # source://graphql//lib/graphql/query.rb#363
   def valid?; end
 
   # @return [Boolean] if false, static validation is skipped (execution behavior for invalid queries is undefined)
   #
-  # source://graphql//lib/graphql/query.rb#39
+  # source://graphql//lib/graphql/query.rb#74
   def validate; end
 
   # @param new_validate [Boolean] if false, static validation is skipped. This can't be reasssigned after validation.
   #
-  # source://graphql//lib/graphql/query.rb#42
+  # source://graphql//lib/graphql/query.rb#77
   def validate=(new_validate); end
 
   # source://forwardable/1.3.3/forwardable.rb#231
@@ -7081,7 +7078,7 @@ class GraphQL::Query
   # source://forwardable/1.3.3/forwardable.rb#231
   def validation_errors(*args, **_arg1, &block); end
 
-  # source://graphql//lib/graphql/query.rb#330
+  # source://graphql//lib/graphql/query.rb#355
   def validation_pipeline; end
 
   # Determine the values for variables of this query, using default values
@@ -7091,34 +7088,34 @@ class GraphQL::Query
   #
   # @return [GraphQL::Query::Variables] Variables to apply to this query
   #
-  # source://graphql//lib/graphql/query.rb#269
+  # source://graphql//lib/graphql/query.rb#307
   def variables; end
 
   # @return [String] An opaque hash for identifying this query's given a variable values (not including defaults)
   #
-  # source://graphql//lib/graphql/query.rb#326
+  # source://graphql//lib/graphql/query.rb#351
   def variables_fingerprint; end
 
   # @return [Symbol, nil]
   #
-  # source://graphql//lib/graphql/query.rb#184
+  # source://graphql//lib/graphql/query.rb#219
   def visibility_profile; end
 
-  # source://graphql//lib/graphql/query.rb#342
+  # source://graphql//lib/graphql/query.rb#367
   def warden; end
 
   private
 
-  # source://graphql//lib/graphql/query.rb#424
+  # source://graphql//lib/graphql/query.rb#436
   def find_operation(operations, operation_name); end
 
-  # source://graphql//lib/graphql/query.rb#434
+  # source://graphql//lib/graphql/query.rb#446
   def prepare_ast; end
 
   # Since the query string is processed at the last possible moment,
   # any internal values which depend on it should be accessed within this wrapper.
   #
-  # source://graphql//lib/graphql/query.rb#498
+  # source://graphql//lib/graphql/query.rb#510
   def with_prepared_ast; end
 end
 
@@ -7496,12 +7493,165 @@ end
 # source://graphql//lib/graphql/query/null_context.rb#15
 class GraphQL::Query::NullContext::NullSchema < ::GraphQL::Schema; end
 
-# source://graphql//lib/graphql/query.rb#19
+# source://graphql//lib/graphql/query.rb#54
 class GraphQL::Query::OperationNameMissingError < ::GraphQL::ExecutionError
   # @return [OperationNameMissingError] a new instance of OperationNameMissingError
   #
-  # source://graphql//lib/graphql/query.rb#20
+  # source://graphql//lib/graphql/query.rb#55
   def initialize(name); end
+end
+
+# This class is _like_ a {GraphQL::Query}, except it can run on an arbitrary path within a query string.
+#
+# It depends on a "parent" {Query}.
+#
+# During execution, it calls query-related tracing hooks but passes itself as `query:`.
+#
+# The {Partial} will use your {Schema.resolve_type} hook to find the right GraphQL type to use for
+# `object` in some cases.
+#
+# @see Query#run_partials Run via {Query#run_partials}
+#
+# source://graphql//lib/graphql/query/partial.rb#14
+class GraphQL::Query::Partial
+  include ::GraphQL::Query::Runnable
+
+  # @param path [Array<String, Integer>] A path in `query.query_string` to start executing from
+  # @param object [Object] A starting object for execution
+  # @param query [GraphQL::Query] A full query instance that this partial is based on. Caches are shared.
+  # @param context [Hash] Extra context values to merge into `query.context`, if provided
+  # @return [Partial] a new instance of Partial
+  #
+  # source://graphql//lib/graphql/query/partial.rb#21
+  def initialize(path:, object:, query:, context: T.unsafe(nil)); end
+
+  # source://graphql//lib/graphql/query/partial.rb#139
+  def analysis_errors=(_ignored); end
+
+  # source://graphql//lib/graphql/query/partial.rb#135
+  def analyzers; end
+
+  # Returns the value of attribute ast_nodes.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def ast_nodes; end
+
+  # Returns the value of attribute context.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def context; end
+
+  # source://graphql//lib/graphql/query/partial.rb#111
+  def current_trace; end
+
+  # Returns the value of attribute field_definition.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def field_definition; end
+
+  # source://graphql//lib/graphql/query/partial.rb#127
+  def fragments; end
+
+  # @return [Boolean]
+  #
+  # source://graphql//lib/graphql/query/partial.rb#88
+  def leaf?; end
+
+  # Returns the value of attribute multiplex.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#94
+  def multiplex; end
+
+  # Sets the attribute multiplex
+  #
+  # @param value the value to set the attribute multiplex to.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#94
+  def multiplex=(_arg0); end
+
+  # Returns the value of attribute object.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def object; end
+
+  # Returns the value of attribute parent_type.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def parent_type; end
+
+  # Returns the value of attribute path.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def path; end
+
+  # Returns the value of attribute query.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def query; end
+
+  # source://graphql//lib/graphql/query/partial.rb#119
+  def resolve_type(*_arg0, **_arg1, &_arg2); end
+
+  # source://graphql//lib/graphql/query/partial.rb#107
+  def result; end
+
+  # Returns the value of attribute result_values.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#94
+  def result_values; end
+
+  # Sets the attribute result_values
+  #
+  # @param value the value to set the attribute result_values to.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#94
+  def result_values=(_arg0); end
+
+  # Returns the value of attribute root_type.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def root_type; end
+
+  # Returns the value of attribute schema.
+  #
+  # source://graphql//lib/graphql/query/partial.rb#92
+  def schema; end
+
+  # source://graphql//lib/graphql/query/partial.rb#147
+  def selected_operation; end
+
+  # source://graphql//lib/graphql/query/partial.rb#155
+  def selected_operation_name; end
+
+  # source://graphql//lib/graphql/query/partial.rb#151
+  def static_errors; end
+
+  # @return [Boolean]
+  #
+  # source://graphql//lib/graphql/query/partial.rb#143
+  def subscription?; end
+
+  # source://graphql//lib/graphql/query/partial.rb#115
+  def types; end
+
+  # @return [Boolean]
+  #
+  # source://graphql//lib/graphql/query/partial.rb#131
+  def valid?; end
+
+  # source://graphql//lib/graphql/query/partial.rb#123
+  def variables; end
+end
+
+# source://graphql//lib/graphql/query/partial.rb#96
+class GraphQL::Query::Partial::Result < ::GraphQL::Query::Result
+  # @return [GraphQL::Query::Partial]
+  #
+  # source://graphql//lib/graphql/query/partial.rb#102
+  def partial; end
+
+  # source://graphql//lib/graphql/query/partial.rb#97
+  def path; end
 end
 
 # A result from {Schema#execute}.
@@ -7580,6 +7730,32 @@ class GraphQL::Query::Result
   #
   # source://graphql//lib/graphql/query/result.rb#35
   def respond_to_missing?(method_name, include_private = T.unsafe(nil)); end
+end
+
+# Code shared with {Partial}
+#
+# source://graphql//lib/graphql/query.rb#21
+module GraphQL::Query::Runnable
+  # source://graphql//lib/graphql/query.rb#22
+  def after_lazy(value, &block); end
+
+  # source://graphql//lib/graphql/query.rb#43
+  def arguments_cache; end
+
+  # Node-level cache for calculating arguments. Used during execution and query analysis.
+  #
+  # @param ast_node [GraphQL::Language::Nodes::AbstractNode]
+  # @param definition [GraphQL::Schema::Field]
+  # @param parent_object [GraphQL::Schema::Object]
+  # @return [Hash{Symbol => Object}]
+  #
+  # source://graphql//lib/graphql/query.rb#39
+  def arguments_for(ast_node, definition, parent_object: T.unsafe(nil)); end
+
+  # @api private
+  #
+  # source://graphql//lib/graphql/query.rb#48
+  def handle_or_reraise(err); end
 end
 
 # Contain the validation pipeline and expose the results.
@@ -10747,14 +10923,14 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
 
   private
 
-  # source://graphql//lib/graphql/schema/input_object.rb#300
+  # source://graphql//lib/graphql/schema/input_object.rb#303
   def overwrite_argument(key, value); end
 
   class << self
     # source://graphql//lib/graphql/schema/input_object.rb#143
     def argument(*args, **kwargs, &block); end
 
-    # source://graphql//lib/graphql/schema/input_object.rb#274
+    # source://graphql//lib/graphql/schema/input_object.rb#277
     def arguments(context = T.unsafe(nil), require_defined_arguments = T.unsafe(nil)); end
 
     # @return [Boolean]
@@ -10762,24 +10938,24 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
     # source://graphql//lib/graphql/schema/input_object.rb#116
     def authorized?(obj, value, ctx); end
 
-    # source://graphql//lib/graphql/schema/input_object.rb#224
+    # source://graphql//lib/graphql/schema/input_object.rb#227
     def coerce_input(value, ctx); end
 
     # It's funny to think of a _result_ of an input object.
     # This is used for rendering the default value in introspection responses.
     #
-    # source://graphql//lib/graphql/schema/input_object.rb#242
+    # source://graphql//lib/graphql/schema/input_object.rb#245
     def coerce_result(value, ctx); end
 
     # @param new_has_no_arguments [Boolean] Call with `true` to make this InputObject type ignore the requirement to have any defined arguments.
     # @return [void]
     #
-    # source://graphql//lib/graphql/schema/input_object.rb#264
+    # source://graphql//lib/graphql/schema/input_object.rb#267
     def has_no_arguments(new_has_no_arguments); end
 
     # @return [Boolean] `true` if `has_no_arguments(true)` was configued
     #
-    # source://graphql//lib/graphql/schema/input_object.rb#270
+    # source://graphql//lib/graphql/schema/input_object.rb#273
     def has_no_arguments?; end
 
     # source://graphql//lib/graphql/schema/input_object.rb#160
@@ -10798,12 +10974,12 @@ class GraphQL::Schema::InputObject < ::GraphQL::Schema::Member
 
     private
 
-    # source://graphql//lib/graphql/schema/input_object.rb#292
+    # source://graphql//lib/graphql/schema/input_object.rb#295
     def define_accessor_method(method_name); end
 
     # Suppress redefinition warning for objectId arguments
     #
-    # source://graphql//lib/graphql/schema/input_object.rb#284
+    # source://graphql//lib/graphql/schema/input_object.rb#287
     def suppress_redefinition_warning; end
   end
 end
@@ -18230,16 +18406,16 @@ module GraphQL::Tracing::NotificationsTrace
   # source://graphql//lib/graphql/tracing/notifications_trace.rb#107
   def begin_analyze_multiplex(multiplex, analyzers); end
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#144
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#146
   def begin_authorized(type, object, context); end
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#164
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#166
   def begin_dataloader_source(source); end
 
   # source://graphql//lib/graphql/tracing/notifications_trace.rb#123
   def begin_execute_field(field, object, arguments, query); end
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#154
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#156
   def begin_resolve_type(type, object, context); end
 
   # source://graphql//lib/graphql/tracing/notifications_trace.rb#138
@@ -18251,16 +18427,16 @@ module GraphQL::Tracing::NotificationsTrace
   # source://graphql//lib/graphql/tracing/notifications_trace.rb#112
   def end_analyze_multiplex(_multiplex, _analyzers); end
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#149
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#151
   def end_authorized(type, object, context, result); end
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#169
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#171
   def end_dataloader_source(source); end
 
   # source://graphql//lib/graphql/tracing/notifications_trace.rb#128
   def end_execute_field(_field, _object, _arguments, _query, _result); end
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#159
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#161
   def end_resolve_type(type, object, context, resolved_type); end
 
   # source://graphql//lib/graphql/tracing/notifications_trace.rb#117
@@ -18277,10 +18453,10 @@ module GraphQL::Tracing::NotificationsTrace
 
   private
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#179
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#181
   def begin_notifications_event(name, payload); end
 
-  # source://graphql//lib/graphql/tracing/notifications_trace.rb#183
+  # source://graphql//lib/graphql/tracing/notifications_trace.rb#185
   def finish_notifications_event; end
 end
 
@@ -18355,7 +18531,7 @@ class GraphQL::Tracing::NotificationsTrace::Adapter::Event
   def start; end
 end
 
-# source://graphql//lib/graphql/tracing/notifications_trace.rb#174
+# source://graphql//lib/graphql/tracing/notifications_trace.rb#176
 GraphQL::Tracing::NotificationsTrace::CURRENT_EV_KEY = T.let(T.unsafe(nil), Symbol)
 
 # @api private
@@ -18383,7 +18559,7 @@ class GraphQL::Tracing::NotificationsTrace::DryMonitorAdapter::Event < ::GraphQL
   def start; end
 end
 
-# source://graphql//lib/graphql/tracing/notifications_trace.rb#175
+# source://graphql//lib/graphql/tracing/notifications_trace.rb#177
 GraphQL::Tracing::NotificationsTrace::PREVIOUS_EV_KEY = T.let(T.unsafe(nil), Symbol)
 
 # This implementation forwards events to a notification handler (i.e.
