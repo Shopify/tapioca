@@ -33,7 +33,7 @@ module Google::Protobuf
   end
 end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#29
+# source://google-protobuf//lib/google/protobuf/message_exts.rb#33
 class Google::Protobuf::AbstractMessage
   include ::Google::Protobuf::MessageExts
   extend ::Google::Protobuf::MessageExts::ClassMethods
@@ -151,10 +151,19 @@ class Google::Protobuf::FieldDescriptor
   def is_packed?; end
 
   def json_name; end
+
+  # DEPRECATED: Use required? or repeated? instead.
   def label; end
+
   def name; end
   def number; end
   def options; end
+
+  # @return [Boolean]
+  def repeated?; end
+
+  # @return [Boolean]
+  def required?; end
 
   # call-seq:
   #     FieldDescriptor.set(message, value)
@@ -361,6 +370,9 @@ end
 # source://google-protobuf//lib/google/protobuf/message_exts.rb#10
 module Google::Protobuf::MessageExts
   mixes_in_class_methods ::Google::Protobuf::MessageExts::ClassMethods
+
+  # source://google-protobuf//lib/google/protobuf/message_exts.rb#28
+  def to_hash; end
 
   # source://google-protobuf//lib/google/protobuf/message_exts.rb#20
   def to_json(options = T.unsafe(nil)); end

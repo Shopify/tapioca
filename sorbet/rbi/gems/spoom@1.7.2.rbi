@@ -335,7 +335,7 @@ class Spoom::Cli::Srb::LSP < ::Thor
   def types(file, line, col); end
 end
 
-# source://spoom//lib/spoom/cli/srb.rb#14
+# source://spoom//lib/spoom/cli/srb.rb#15
 class Spoom::Cli::Srb::Main < ::Thor
   # source://thor/1.3.2/lib/thor.rb#334
   def assertions(*args); end
@@ -352,10 +352,24 @@ class Spoom::Cli::Srb::Main < ::Thor
   def lsp(*args); end
 
   # source://thor/1.3.2/lib/thor.rb#334
+  def metrics(*args); end
+
+  # source://thor/1.3.2/lib/thor.rb#334
   def sigs(*args); end
 
   # source://thor/1.3.2/lib/thor.rb#334
   def tc(*args); end
+end
+
+# source://spoom//lib/spoom/cli/srb/metrics.rb#7
+class Spoom::Cli::Srb::Metrics < ::Thor
+  include ::Spoom::Colorize
+  include ::Spoom::Cli::Helper
+
+  def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
+
+  # source://spoom//lib/spoom/cli/srb/metrics.rb#14
+  def show(*paths); end
 end
 
 # source://spoom//lib/spoom/cli/srb/sigs.rb#7
@@ -880,6 +894,31 @@ module Spoom::Context::Sorbet
   def write_sorbet_config!(contents, append: T.unsafe(nil)); end
 end
 
+# : [K = String, V = Integer, Elem = [String, Integer]]
+#
+# source://spoom//lib/spoom/counters.rb#6
+class Spoom::Counters < ::Hash
+  # : -> void
+  #
+  # @return [Counters] a new instance of Counters
+  #
+  # source://spoom//lib/spoom/counters.rb#8
+  sig { void }
+  def initialize; end
+
+  # : (String) -> Integer
+  #
+  # source://spoom//lib/spoom/counters.rb#18
+  sig { params(key: ::String).returns(::Integer) }
+  def [](key); end
+
+  # : (String) -> void
+  #
+  # source://spoom//lib/spoom/counters.rb#13
+  sig { params(key: ::String).void }
+  def increment(key); end
+end
+
 # source://spoom//lib/spoom/coverage/snapshot.rb#5
 module Spoom::Coverage
   class << self
@@ -1265,7 +1304,7 @@ class Spoom::Coverage::D3::ColorPalette < ::T::Struct
   prop :strong, ::String
 
   class << self
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1745,7 +1784,7 @@ class Spoom::Coverage::Snapshot < ::T::Struct
     sig { params(obj: T::Hash[::String, T.untyped]).returns(::Spoom::Coverage::Snapshot) }
     def from_obj(obj); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1936,7 +1975,7 @@ class Spoom::Deadcode::Definition < ::T::Struct
   def to_json(*args); end
 
   class << self
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3096,7 +3135,7 @@ class Spoom::Deadcode::Send < ::T::Struct
   def each_arg_assoc(&block); end
 
   class << self
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3118,7 +3157,7 @@ class Spoom::ExecResult < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3383,7 +3422,7 @@ class Spoom::FileTree::Node < ::T::Struct
   def path; end
 
   class << self
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3465,7 +3504,7 @@ class Spoom::Git::Commit < ::T::Struct
   def timestamp; end
 
   class << self
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
 
     # Parse a line formatted as `%h %at` into a `Commit`
@@ -3614,7 +3653,7 @@ class Spoom::LSP::Diagnostic < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Diagnostic) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3655,7 +3694,7 @@ class Spoom::LSP::DocumentSymbol < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::DocumentSymbol) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3729,7 +3768,7 @@ class Spoom::LSP::Hover < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Hover) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3760,7 +3799,7 @@ class Spoom::LSP::Location < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Location) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3845,7 +3884,7 @@ class Spoom::LSP::Position < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Position) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3889,7 +3928,7 @@ class Spoom::LSP::Range < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Range) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3979,7 +4018,7 @@ class Spoom::LSP::SignatureHelp < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::SignatureHelp) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -4558,7 +4597,7 @@ class Spoom::Model::Reference < ::T::Struct
     sig { params(name: ::String, location: ::Spoom::Location).returns(::Spoom::Model::Reference) }
     def constant(name, location); end
 
-    # source://sorbet-runtime/0.5.12119/lib/types/struct.rb#13
+    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
 
     # : (String name, Spoom::Location location) -> Reference
@@ -4931,7 +4970,7 @@ class Spoom::Poset
   # @raise [Error]
   #
   # source://spoom//lib/spoom/poset.rb#25
-  sig { params(value: E).returns(Spoom::Poset::Element[E]) }
+  sig { params(value: T.untyped).returns(Spoom::Poset::Element[T.untyped]) }
   def [](value); end
 
   # Add a direct edge from one element to another
@@ -4942,14 +4981,14 @@ class Spoom::Poset
   # : (E from, E to) -> void
   #
   # source://spoom//lib/spoom/poset.rb#53
-  sig { params(from: E, to: E).void }
+  sig { params(from: T.untyped, to: T.untyped).void }
   def add_direct_edge(from, to); end
 
   # Add an element to the POSet
   # : (E value) -> Element[E]
   #
   # source://spoom//lib/spoom/poset.rb#34
-  sig { params(value: E).returns(Spoom::Poset::Element[E]) }
+  sig { params(value: T.untyped).returns(Spoom::Poset::Element[T.untyped]) }
   def add_element(value); end
 
   # Is there a direct edge from `from` to `to`?
@@ -4958,7 +4997,7 @@ class Spoom::Poset
   # @return [Boolean]
   #
   # source://spoom//lib/spoom/poset.rb#100
-  sig { params(from: E, to: E).returns(T::Boolean) }
+  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
   def direct_edge?(from, to); end
 
   # Is there an edge (direct or indirect) from `from` to `to`?
@@ -4967,7 +5006,7 @@ class Spoom::Poset
   # @return [Boolean]
   #
   # source://spoom//lib/spoom/poset.rb#91
-  sig { params(from: E, to: E).returns(T::Boolean) }
+  sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
   def edge?(from, to); end
 
   # Is the given value a element in the POSet?
@@ -4976,7 +5015,7 @@ class Spoom::Poset
   # @return [Boolean]
   #
   # source://spoom//lib/spoom/poset.rb#43
-  sig { params(value: E).returns(T::Boolean) }
+  sig { params(value: T.untyped).returns(T::Boolean) }
   def element?(value); end
 
   # Show the POSet as a DOT graph using xdot (used for debugging)
@@ -4998,8 +5037,8 @@ end
 #
 # source://spoom//lib/spoom/poset.rb#135
 class Spoom::Poset::Element
-  include ::Comparable
   extend T::Generic
+  include ::Comparable
 
   E = type_member { { upper: Object } }
 
@@ -5008,7 +5047,7 @@ class Spoom::Poset::Element
   # @return [Element] a new instance of Element
   #
   # source://spoom//lib/spoom/poset.rb#150
-  sig { params(value: E).void }
+  sig { params(value: T.untyped).void }
   def initialize(value); end
 
   # : (untyped other) -> Integer?
@@ -5021,21 +5060,21 @@ class Spoom::Poset::Element
   # : -> Array[E]
   #
   # source://spoom//lib/spoom/poset.rb#178
-  sig { returns(T::Array[E]) }
+  sig { returns(T::Array[T.untyped]) }
   def ancestors; end
 
   # Direct children of this element
   # : -> Array[E]
   #
   # source://spoom//lib/spoom/poset.rb#184
-  sig { returns(T::Array[E]) }
+  sig { returns(T::Array[T.untyped]) }
   def children; end
 
   # Direct and indirect descendants of this element
   # : -> Array[E]
   #
   # source://spoom//lib/spoom/poset.rb#190
-  sig { returns(T::Array[E]) }
+  sig { returns(T::Array[T.untyped]) }
   def descendants; end
 
   # Edges (direct and indirect) from this element to other elements in the same POSet
@@ -5048,7 +5087,7 @@ class Spoom::Poset::Element
   # : Set[Element[E]]
   #
   # source://spoom//lib/spoom/poset.rb#147
-  sig { returns(T::Set[Spoom::Poset::Element[E]]) }
+  sig { returns(T::Set[Spoom::Poset::Element[T.untyped]]) }
   def dtos; end
 
   # Edges (direct and indirect) from this element to other elements in the same POSet
@@ -5061,7 +5100,7 @@ class Spoom::Poset::Element
   # : -> Array[E]
   #
   # source://spoom//lib/spoom/poset.rb#172
-  sig { returns(T::Array[E]) }
+  sig { returns(T::Array[T.untyped]) }
   def parents; end
 
   # Edges (direct and indirect) from this element to other elements in the same POSet
@@ -5074,7 +5113,7 @@ class Spoom::Poset::Element
   # : E
   #
   # source://spoom//lib/spoom/poset.rb#143
-  sig { returns(E) }
+  sig { returns(T.untyped) }
   def value; end
 end
 
@@ -5578,31 +5617,150 @@ Spoom::Sorbet::GEM_VERSION = T.let(T.unsafe(nil), String)
 # source://spoom//lib/spoom/sorbet.rb#35
 Spoom::Sorbet::KILLED_CODE = T.let(T.unsafe(nil), Integer)
 
-# source://spoom//lib/spoom/sorbet/metrics.rb#8
-module Spoom::Sorbet::MetricsParser
+# source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#6
+module Spoom::Sorbet::Metrics
+  class << self
+    # : (Array[String]) -> Spoom::Counters
+    #
+    # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#9
+    sig { params(files: T::Array[::String]).returns(Spoom::Counters) }
+    def collect_code_metrics(files); end
+  end
+end
+
+# Collects metrics about how Sorbet is used in the codebase.
+#
+# This approach is different from the metrics file we get directly from Sorbet.
+#
+# This visitor actually visits the codebase and collects metrics about the amount of signatures, `T.` calls,
+# and other metrics. It also knows about RBS comments.
+#
+# On the other hand, the metrics file is a snapshot of the metrics at type checking time and knows about
+# is calls are typed, how many assertions are done, etc.
+#
+# source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#34
+class Spoom::Sorbet::Metrics::CodeMetricsVisitor < ::Spoom::Visitor
+  include ::Spoom::RBS::ExtractRBSComments
+
+  # : (Spoom::Counters) -> void
+  #
+  # @return [CodeMetricsVisitor] a new instance of CodeMetricsVisitor
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#41
+  sig { params(counters: Spoom::Counters).void }
+  def initialize(counters); end
+
+  # : Counters
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#38
+  sig { returns(Spoom::Counters) }
+  def counters; end
+
+  # : (Prism::Node?) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#52
+  sig { override.params(node: T.nilable(::Prism::Node)).void }
+  def visit(node); end
+
+  # : (Prism::CallNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#127
+  sig { override.params(node: ::Prism::CallNode).void }
+  def visit_call_node(node); end
+
+  # : (Prism::ClassNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#78
+  sig { override.params(node: ::Prism::ClassNode).void }
+  def visit_class_node(node); end
+
+  # : (Prism::DefNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#102
+  sig { override.params(node: ::Prism::DefNode).void }
+  def visit_def_node(node); end
+
+  # : (Prism::ModuleNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#86
+  sig { override.params(node: ::Prism::ModuleNode).void }
+  def visit_module_node(node); end
+
+  # : (Prism::SingletonClassNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#94
+  sig { override.params(node: ::Prism::SingletonClassNode).void }
+  def visit_singleton_class_node(node); end
+
+  private
+
+  # : -> Array[Prism::CallNode]
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#216
+  sig { returns(T::Array[::Prism::CallNode]) }
+  def collect_last_srb_sigs; end
+
+  # : (Prism::ClassNode | Prism::ModuleNode | Prism::SingletonClassNode) -> String
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#223
+  sig { params(node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode)).returns(::String) }
+  def node_key(node); end
+
+  # : (Prism::CallNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#170
+  sig { params(node: ::Prism::CallNode).void }
+  def visit_attr_accessor(node); end
+
+  # : (Prism::ClassNode | Prism::ModuleNode | Prism::SingletonClassNode) { -> void } -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#154
+  sig do
+    params(
+      node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode),
+      block: T.proc.void
+    ).void
+  end
+  def visit_scope(node, &block); end
+
+  # : (Prism::CallNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#190
+  sig { params(node: ::Prism::CallNode).void }
+  def visit_sig(node); end
+
+  # : (Prism::CallNode) -> void
+  #
+  # source://spoom//lib/spoom/sorbet/metrics/code_metrics_visitor.rb#200
+  sig { params(node: ::Prism::CallNode).void }
+  def visit_type_member(node); end
+end
+
+# source://spoom//lib/spoom/sorbet/metrics/metrics_file_parser.rb#9
+module Spoom::Sorbet::Metrics::MetricsFileParser
   class << self
     # : (String path, ?String prefix) -> Hash[String, Integer]
     #
-    # source://spoom//lib/spoom/sorbet/metrics.rb#13
+    # source://spoom//lib/spoom/sorbet/metrics/metrics_file_parser.rb#14
     sig { params(path: ::String, prefix: ::String).returns(T::Hash[::String, ::Integer]) }
     def parse_file(path, prefix = T.unsafe(nil)); end
 
-    # : (Hash[String, untyped] obj, ?String prefix) -> Hash[String, Integer]
+    # : (Hash[String, untyped] obj, ?String prefix) -> Counters
     #
-    # source://spoom//lib/spoom/sorbet/metrics.rb#23
-    sig { params(obj: T::Hash[::String, T.untyped], prefix: ::String).returns(T::Hash[::String, ::Integer]) }
+    # source://spoom//lib/spoom/sorbet/metrics/metrics_file_parser.rb#24
+    sig { params(obj: T::Hash[::String, T.untyped], prefix: ::String).returns(Spoom::Counters) }
     def parse_hash(obj, prefix = T.unsafe(nil)); end
 
     # : (String string, ?String prefix) -> Hash[String, Integer]
     #
-    # source://spoom//lib/spoom/sorbet/metrics.rb#18
+    # source://spoom//lib/spoom/sorbet/metrics/metrics_file_parser.rb#19
     sig { params(string: ::String, prefix: ::String).returns(T::Hash[::String, ::Integer]) }
     def parse_string(string, prefix = T.unsafe(nil)); end
   end
 end
 
-# source://spoom//lib/spoom/sorbet/metrics.rb#9
-Spoom::Sorbet::MetricsParser::DEFAULT_PREFIX = T.let(T.unsafe(nil), String)
+# source://spoom//lib/spoom/sorbet/metrics/metrics_file_parser.rb#10
+Spoom::Sorbet::Metrics::MetricsFileParser::DEFAULT_PREFIX = T.let(T.unsafe(nil), String)
 
 # source://spoom//lib/spoom/sorbet.rb#36
 Spoom::Sorbet::SEGFAULT_CODE = T.let(T.unsafe(nil), Integer)
@@ -5770,7 +5928,7 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs < ::Spoom::Sorbet::Trans
   #
   # @return [Boolean]
   #
-  # source://spoom//lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb#222
+  # source://spoom//lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb#225
   sig do
     params(
       node: T.any(::Prism::ClassNode, ::Prism::ModuleNode, ::Prism::SingletonClassNode),
@@ -5787,7 +5945,7 @@ class Spoom::Sorbet::Translate::RBSCommentsToSorbetSigs < ::Spoom::Sorbet::Trans
 
   # : (Array[RBS::Annotations], RBI::Sig) -> void
   #
-  # source://spoom//lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb#201
+  # source://spoom//lib/spoom/sorbet/translate/rbs_comments_to_sorbet_sigs.rb#204
   sig { params(annotations: T::Array[::Spoom::RBS::Annotations], sig: ::RBI::Sig).void }
   def apply_member_annotations(annotations, sig); end
 

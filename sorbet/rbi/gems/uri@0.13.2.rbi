@@ -2313,30 +2313,30 @@ URI::Schemes::WS = URI::WS
 URI::Schemes::WSS = URI::WSS
 
 class URI::Source < ::URI::File
-  # source://ruby-lsp/0.23.15/lib/ruby_lsp/requests/support/source_uri.rb#55
+  # source://ruby-lsp/0.23.22/lib/ruby_lsp/requests/support/source_uri.rb#57
   sig { params(v: T.nilable(::String)).returns(T::Boolean) }
   def check_host(v); end
 
   # source://uri//lib/uri/generic.rb#243
   def gem_name; end
 
-  # source://ruby-lsp/0.23.15/lib/ruby_lsp/requests/support/source_uri.rb#28
+  # source://ruby-lsp/0.23.22/lib/ruby_lsp/requests/support/source_uri.rb#30
   sig { returns(T.nilable(::String)) }
   def gem_version; end
 
   # source://uri//lib/uri/generic.rb#283
   def line_number; end
 
-  # source://ruby-lsp/0.23.15/lib/ruby_lsp/requests/support/source_uri.rb#45
+  # source://ruby-lsp/0.23.22/lib/ruby_lsp/requests/support/source_uri.rb#47
   sig { params(v: T.nilable(::String)).void }
   def set_path(v); end
 
-  # source://ruby-lsp/0.23.15/lib/ruby_lsp/requests/support/source_uri.rb#67
+  # source://ruby-lsp/0.23.22/lib/ruby_lsp/requests/support/source_uri.rb#69
   sig { returns(::String) }
   def to_s; end
 
   class << self
-    # source://ruby-lsp/0.23.15/lib/ruby_lsp/requests/support/source_uri.rb#32
+    # source://ruby-lsp/0.23.22/lib/ruby_lsp/requests/support/source_uri.rb#34
     sig do
       params(
         gem_name: ::String,
