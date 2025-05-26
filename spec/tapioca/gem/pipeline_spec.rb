@@ -4652,6 +4652,23 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "does not compile RBS comments as yard documentation" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        # typed: true
+
+        # @requires_ancestor: Kernel
+        class Foo; end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          requires_ancestor { Kernel }
+        end
+      RBI
+
+      assert_equal(output, compile(include_doc: true))
+    end
+
     it "ignores RBS signatures that contain errors" do
       add_ruby_file("foo.rb", <<~RUBY)
         # typed: true

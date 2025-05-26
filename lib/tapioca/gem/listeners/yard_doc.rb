@@ -16,6 +16,7 @@ module Tapioca
           "warn_indent:",
           "shareable_constant_value:",
           "rubocop:",
+          "@requires_ancestor:",
         ] #: Array[String]
 
         IGNORED_SIG_TAGS = ["param", "return"] #: Array[String]
