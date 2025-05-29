@@ -102,10 +102,6 @@ task :readme do
       @stdout = StringIO.new
       self
     end
-
-    def terminal_width
-      DEFAULT_TERMINAL_WIDTH
-    end
   end
 
   def print_help(contents)
