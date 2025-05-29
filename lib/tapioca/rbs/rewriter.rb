@@ -24,10 +24,6 @@ begin
     module CompileCache
       module ISeq
         module InstructionSequenceMixin
-          #: (String) -> RubyVM::InstructionSequence
-          def load_iseq(path)
-            super
-          end
         end
       end
     end
