@@ -36,6 +36,7 @@ class Spoom::Cli::Deadcode < ::Thor
   sig { params(paths: ::String).void }
   def deadcode(*paths); end
 
+  # source://spoom//lib/spoom/cli.rb#71
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/deadcode.rb#153
@@ -177,13 +178,13 @@ class Spoom::Cli::Main < ::Thor
   # source://spoom//lib/spoom/cli.rb#64
   def coverage(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli.rb#71
   def deadcode(*args); end
 
   # source://spoom//lib/spoom/cli.rb#74
   def lsp(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli.rb#21
   def srb(*args); end
 
   # source://spoom//lib/spoom/cli.rb#93
@@ -214,6 +215,7 @@ class Spoom::Cli::Srb::Assertions < ::Thor
   include ::Spoom::Colorize
   include ::Spoom::Cli::Helper
 
+  # source://spoom//lib/spoom/cli/srb.rb#17
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/assertions.rb#29
@@ -234,6 +236,7 @@ class Spoom::Cli::Srb::Bump < ::Thor
   sig { params(directory: ::String).void }
   def bump(directory = T.unsafe(nil)); end
 
+  # source://spoom//lib/spoom/cli/srb.rb#20
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/bump.rb#170
@@ -251,6 +254,7 @@ class Spoom::Cli::Srb::Coverage < ::Thor
   # source://spoom//lib/spoom/cli/srb/coverage.rb#199
   def bundle_install(path, sha); end
 
+  # source://spoom//lib/spoom/cli/srb.rb#23
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/coverage.rb#211
@@ -290,6 +294,7 @@ class Spoom::Cli::Srb::LSP < ::Thor
   # source://spoom//lib/spoom/cli/srb/lsp.rb#55
   def find(query); end
 
+  # source://spoom//lib/spoom/cli/srb.rb#26
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # TODO: options, filter, limit, kind etc.. filter rbi
@@ -337,27 +342,28 @@ end
 
 # source://spoom//lib/spoom/cli/srb.rb#15
 class Spoom::Cli::Srb::Main < ::Thor
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli/srb.rb#17
   def assertions(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli/srb.rb#20
   def bump(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli/srb.rb#23
   def coverage(*args); end
 
+  # source://spoom//lib/spoom/cli.rb#21
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli/srb.rb#26
   def lsp(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli/srb.rb#29
   def metrics(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli/srb.rb#32
   def sigs(*args); end
 
-  # source://thor/1.3.2/lib/thor.rb#334
+  # source://spoom//lib/spoom/cli/srb.rb#35
   def tc(*args); end
 end
 
@@ -366,6 +372,7 @@ class Spoom::Cli::Srb::Metrics < ::Thor
   include ::Spoom::Colorize
   include ::Spoom::Cli::Helper
 
+  # source://spoom//lib/spoom/cli/srb.rb#29
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/metrics.rb#14
@@ -383,6 +390,7 @@ class Spoom::Cli::Srb::Sigs < ::Thor
   # source://spoom//lib/spoom/cli/srb/sigs.rb#67
   def export(output_path = T.unsafe(nil)); end
 
+  # source://spoom//lib/spoom/cli/srb.rb#32
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/sigs.rb#48
@@ -406,6 +414,7 @@ class Spoom::Cli::Srb::Tc < ::Thor
   # source://spoom//lib/spoom/cli/srb/tc.rb#138
   def format_error(error, format); end
 
+  # source://spoom//lib/spoom/cli/srb.rb#35
   def help(command = T.unsafe(nil), subcommand = T.unsafe(nil)); end
 
   # source://spoom//lib/spoom/cli/srb/tc.rb#28
@@ -1304,7 +1313,6 @@ class Spoom::Coverage::D3::ColorPalette < ::T::Struct
   prop :strong, ::String
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1784,7 +1792,6 @@ class Spoom::Coverage::Snapshot < ::T::Struct
     sig { params(obj: T::Hash[::String, T.untyped]).returns(::Spoom::Coverage::Snapshot) }
     def from_obj(obj); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -1975,7 +1982,6 @@ class Spoom::Deadcode::Definition < ::T::Struct
   def to_json(*args); end
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3135,7 +3141,6 @@ class Spoom::Deadcode::Send < ::T::Struct
   def each_arg_assoc(&block); end
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3157,7 +3162,6 @@ class Spoom::ExecResult < ::T::Struct
   def to_s; end
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3422,7 +3426,6 @@ class Spoom::FileTree::Node < ::T::Struct
   def path; end
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3504,7 +3507,6 @@ class Spoom::Git::Commit < ::T::Struct
   def timestamp; end
 
   class << self
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
 
     # Parse a line formatted as `%h %at` into a `Commit`
@@ -3653,7 +3655,6 @@ class Spoom::LSP::Diagnostic < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Diagnostic) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3694,7 +3695,6 @@ class Spoom::LSP::DocumentSymbol < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::DocumentSymbol) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3768,7 +3768,6 @@ class Spoom::LSP::Hover < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Hover) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3799,7 +3798,6 @@ class Spoom::LSP::Location < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Location) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3884,7 +3882,6 @@ class Spoom::LSP::Position < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Position) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -3928,7 +3925,6 @@ class Spoom::LSP::Range < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::Range) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -4018,7 +4014,6 @@ class Spoom::LSP::SignatureHelp < ::T::Struct
     sig { params(json: T::Hash[T.untyped, T.untyped]).returns(::Spoom::LSP::SignatureHelp) }
     def from_json(json); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
   end
 end
@@ -4597,7 +4592,6 @@ class Spoom::Model::Reference < ::T::Struct
     sig { params(name: ::String, location: ::Spoom::Location).returns(::Spoom::Model::Reference) }
     def constant(name, location); end
 
-    # source://sorbet-runtime/0.5.12130/lib/types/struct.rb#13
     def inherited(s); end
 
     # : (String name, Spoom::Location location) -> Reference

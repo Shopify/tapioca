@@ -580,6 +580,41 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile("foo"))
     end
 
+    it "properly attributes dynamically-generated methods" do
+      mock_gem("bar") do
+        add_ruby_file("lib/bar.rb", <<~RUBY)
+          module ModuleFromBar
+            def add_method_to_me(method_name)
+              define_method(method_name) { 42 }
+            end
+          end
+        RUBY
+      end
+
+      mock_gem("foo") do
+        add_ruby_file("lib/foo.rb", <<~RUBY)
+          class Foo
+            extend ModuleFromBar
+
+            def foo; end
+
+            add_method_to_me :bar
+          end
+        RUBY
+      end
+
+      output = <<~RBI
+        class Foo
+          extend ::ModuleFromBar
+
+          def bar; end
+          def foo; end
+        end
+      RBI
+
+      assert_equal(output, compile("foo"))
+    end
+
     it "must generate RBIs for foreign constants whose singleton class overrides #inspect" do
       mock_gem("bar") do
         add_ruby_file("lib/bar.rb", <<~RBI)
@@ -3257,10 +3292,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           const :quuz, ::Integer, default: T.unsafe(nil)
           prop :fuzz, T.proc.returns(::String), default: T.unsafe(nil)
           prop :buzz, T.proc.void, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
 
         class Baz
@@ -3801,10 +3832,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           prop :l, T::Array[::Foo], default: T.unsafe(nil)
           prop :m, T::Hash[::Foo, ::Foo], default: T.unsafe(nil)
           prop :n, ::Foo, default: T.unsafe(nil)
-
-          class << self
-            def inherited(s); end
-          end
         end
       RBI
 
@@ -4065,6 +4092,50 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class Container::Baz; end
         class Container::FooClass; end
         module Container::FooModule; end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
+    it "handles class_eval created methods" do
+      add_ruby_file("container.rb", <<~'RUBY')
+        class Foo
+          class_eval <<~EOF
+            def foo; end
+            def bar; end
+          EOF
+
+          class_eval <<~EOF, __FILE__, __LINE__ + 1
+            def baz; end
+            def qux; end
+          EOF
+
+          # Somehow defining methods in a loop triggers a different behavior
+          # in backtrace locations where the absolute path ends up being `nil`.
+          %w[string integer float boolean date datetime decimal money].each do |attr_type|
+            class_eval <<-EOV, __FILE__, __LINE__ + 1
+              def #{attr_type}
+              end
+            EOV
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          def bar; end
+          def baz; end
+          def boolean; end
+          def date; end
+          def datetime; end
+          def decimal; end
+          def float; end
+          def foo; end
+          def integer; end
+          def money; end
+          def qux; end
+          def string; end
+        end
       RBI
 
       assert_equal(output, compile)
@@ -4457,8 +4528,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         NewClass = Class.new
       RB
 
-      sorbet_runtime_spec = ::Gem::Specification.find_by_name("sorbet-runtime")
-
       output = template(<<~RBI)
         # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#1
         module Bar
@@ -4468,6 +4537,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           sig { void }
           def bar; end
 
+          # source://the-default-gem//lib/bar.rb#14
           def foo1; end
 
           # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#15
@@ -4511,12 +4581,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         class NewClass; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
-        class Quux < ::T::Struct
-          class << self
-            # source://sorbet-runtime/#{sorbet_runtime_spec.version}/lib/types/struct.rb#13
-            def inherited(s); end
-          end
-        end
+        class Quux < ::T::Struct; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#19
         class String

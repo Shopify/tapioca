@@ -87,7 +87,10 @@ class BCrypt::Engine
 
     private
 
+    # source://bcrypt//lib/bcrypt.rb#12
     def __bc_crypt(_arg0, _arg1); end
+
+    # source://bcrypt//lib/bcrypt.rb#12
     def __bc_salt(_arg0, _arg1, _arg2); end
   end
 end
@@ -218,7 +221,7 @@ class BCrypt::Password < ::String
   #    @password.to_s == @password      # => True
   #    @password.to_s == @password.to_s # => True
   #
-  # source://bcrypt//lib/bcrypt/password.rb#76
+  # source://bcrypt//lib/bcrypt/password.rb#79
   def is_password?(secret); end
 
   # The salt of the store password hash (including version and cost).

@@ -32,8 +32,9 @@ module Tapioca
             return unless enabled?
 
             location = Reflection.resolve_loc(caller_locations)
+            return unless location
 
-            register_with_location(constant, mixin, mixin_type, location)
+            register_with_location(constant, mixin, mixin_type, location.file)
           end
 
           def resolve_to_attached_class(constant, mixin, mixin_type)

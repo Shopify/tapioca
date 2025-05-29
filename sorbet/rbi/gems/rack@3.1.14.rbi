@@ -464,7 +464,7 @@ class Rack::Cascade
   # Append an app to the list of apps to cascade.  This app will
   # be tried last.
   #
-  # source://rack//lib/rack/cascade.rb#56
+  # source://rack//lib/rack/cascade.rb#65
   def <<(app); end
 
   # Append an app to the list of apps to cascade.  This app will
@@ -1135,7 +1135,7 @@ end
 
 # source://rack//lib/rack/files.rb#184
 class Rack::Files::Iterator < ::Rack::Files::BaseIterator
-  # source://rack//lib/rack/files.rb#122
+  # source://rack//lib/rack/files.rb#185
   def to_path; end
 end
 
@@ -1246,7 +1246,7 @@ class Rack::Headers < ::Hash
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/headers.rb#144
+  # source://rack//lib/rack/headers.rb#147
   def include?(key); end
 
   # source://rack//lib/rack/headers.rb#151
@@ -1254,18 +1254,18 @@ class Rack::Headers < ::Hash
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/headers.rb#144
+  # source://rack//lib/rack/headers.rb#148
   def key?(key); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/headers.rb#144
+  # source://rack//lib/rack/headers.rb#149
   def member?(key); end
 
   # source://rack//lib/rack/headers.rb#157
   def merge(hash, &block); end
 
-  # source://rack//lib/rack/headers.rb#186
+  # source://rack//lib/rack/headers.rb#196
   def merge!(hash, &block); end
 
   # source://rack//lib/rack/headers.rb#161
@@ -1282,7 +1282,7 @@ class Rack::Headers < ::Hash
   # source://rack//lib/rack/headers.rb#205
   def slice(*a); end
 
-  # source://rack//lib/rack/headers.rb#114
+  # source://rack//lib/rack/headers.rb#117
   def store(key, value); end
 
   # source://rack//lib/rack/headers.rb#178
@@ -1640,28 +1640,28 @@ class Rack::Lint::Wrapper::StreamWrapper
   # source://rack//lib/rack/lint.rb#974
   def initialize(stream); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def <<(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def close(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def close_read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def close_write(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def closed?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def flush(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def write(*args, **_arg1, &block); end
 end
 
@@ -1821,7 +1821,7 @@ module Rack::Mime
     #
     # @return [Boolean]
     #
-    # source://rack//lib/rack/mime.rb#30
+    # source://rack//lib/rack/mime.rb#36
     def match?(value, matcher); end
 
     # Returns String with mime type if found, otherwise use +fallback+.
@@ -1837,7 +1837,7 @@ module Rack::Mime
     # This is a shortcut for:
     #     Rack::Mime::MIME_TYPES.fetch('.foo', 'application/octet-stream')
     #
-    # source://rack//lib/rack/mime.rb#18
+    # source://rack//lib/rack/mime.rb#21
     def mime_type(ext, fallback = T.unsafe(nil)); end
   end
 end
@@ -2021,6 +2021,7 @@ class Rack::MockResponse < ::Rack::Response
   def parse_cookies_from_header; end
 
   class << self
+    # source://rack//lib/rack/mock_response.rb#15
     def [](*_arg0); end
   end
 end
@@ -2319,30 +2320,47 @@ class Rack::Multipart::Parser::MultipartInfo < ::Struct
   # Returns the value of attribute params
   #
   # @return [Object] the current value of params
+  #
+  # source://rack//lib/rack/multipart/parser.rb#77
   def params; end
 
   # Sets the attribute params
   #
   # @param value [Object] the value to set the attribute params to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/multipart/parser.rb#77
   def params=(_); end
 
   # Returns the value of attribute tmp_files
   #
   # @return [Object] the current value of tmp_files
+  #
+  # source://rack//lib/rack/multipart/parser.rb#77
   def tmp_files; end
 
   # Sets the attribute tmp_files
   #
   # @param value [Object] the value to set the attribute tmp_files to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/multipart/parser.rb#77
   def tmp_files=(_); end
 
   class << self
+    # source://rack//lib/rack/multipart/parser.rb#77
     def [](*_arg0); end
+
+    # source://rack//lib/rack/multipart/parser.rb#77
     def inspect; end
+
+    # source://rack//lib/rack/multipart/parser.rb#77
     def keyword_init?; end
+
+    # source://rack//lib/rack/multipart/parser.rb#77
     def members; end
+
+    # source://rack//lib/rack/multipart/parser.rb#77
     def new(*_arg0); end
   end
 end
@@ -2370,7 +2388,7 @@ class Rack::Multipart::UploadedFile
   # source://rack//lib/rack/multipart/uploaded_file.rb#14
   def content_type=(_arg0); end
 
-  # source://rack//lib/rack/multipart/uploaded_file.rb#31
+  # source://rack//lib/rack/multipart/uploaded_file.rb#34
   def local_path; end
 
   # source://rack//lib/rack/multipart/uploaded_file.rb#40
@@ -2626,6 +2644,7 @@ end
 
 # source://rack//lib/rack/query_parser.rb#238
 class Rack::QueryParser::Params < ::Hash
+  # source://rack//lib/rack/query_parser.rb#239
   def to_params_hash; end
 end
 
@@ -2829,20 +2848,8 @@ class Rack::Request
   # source://rack//lib/rack/request.rb#67
   def params; end
 
-  # source://rack//lib/rack/request.rb#67
-  def query; end
-
   # source://rack//lib/rack/request.rb#71
   def update_param(k, v); end
-
-  # source://yard/0.9.37/lib/yard/server/rack_adapter.rb#94
-  def version_supplied; end
-
-  # source://yard/0.9.37/lib/yard/server/rack_adapter.rb#94
-  def version_supplied=(_arg0); end
-
-  # source://yard/0.9.37/lib/yard/server/rack_adapter.rb#96
-  def xhr?; end
 
   class << self
     # The priority when checking forwarded headers. The default
@@ -3204,7 +3211,7 @@ module Rack::Request::Helpers
 
   # the referer of the client
   #
-  # source://rack//lib/rack/request.rb#204
+  # source://rack//lib/rack/request.rb#205
   def referrer; end
 
   # source://rack//lib/rack/request.rb#197
@@ -3446,12 +3453,12 @@ class Rack::Response
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#164
+  # source://rack//lib/rack/response.rb#177
   def [](key); end
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#168
+  # source://rack//lib/rack/response.rb#178
   def []=(key, value); end
 
   # Returns the value of attribute body.
@@ -3554,7 +3561,7 @@ class Rack::Response
   #
   # @return [Array] a 3-tuple suitable of `[status, headers, body]`
   #
-  # source://rack//lib/rack/response.rb#107
+  # source://rack//lib/rack/response.rb#128
   def to_a(&block); end
 
   # Append a chunk to the response body.
@@ -4094,96 +4101,137 @@ class Rack::ShowExceptions::Frame < ::Struct
   # Returns the value of attribute context_line
   #
   # @return [Object] the current value of context_line
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def context_line; end
 
   # Sets the attribute context_line
   #
   # @param value [Object] the value to set the attribute context_line to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def context_line=(_); end
 
   # Returns the value of attribute filename
   #
   # @return [Object] the current value of filename
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def filename; end
 
   # Sets the attribute filename
   #
   # @param value [Object] the value to set the attribute filename to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def filename=(_); end
 
   # Returns the value of attribute function
   #
   # @return [Object] the current value of function
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def function; end
 
   # Sets the attribute function
   #
   # @param value [Object] the value to set the attribute function to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def function=(_); end
 
   # Returns the value of attribute lineno
   #
   # @return [Object] the current value of lineno
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def lineno; end
 
   # Sets the attribute lineno
   #
   # @param value [Object] the value to set the attribute lineno to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def lineno=(_); end
 
   # Returns the value of attribute post_context
   #
   # @return [Object] the current value of post_context
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context; end
 
   # Sets the attribute post_context
   #
   # @param value [Object] the value to set the attribute post_context to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context=(_); end
 
   # Returns the value of attribute post_context_lineno
   #
   # @return [Object] the current value of post_context_lineno
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context_lineno; end
 
   # Sets the attribute post_context_lineno
   #
   # @param value [Object] the value to set the attribute post_context_lineno to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context_lineno=(_); end
 
   # Returns the value of attribute pre_context
   #
   # @return [Object] the current value of pre_context
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context; end
 
   # Sets the attribute pre_context
   #
   # @param value [Object] the value to set the attribute pre_context to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context=(_); end
 
   # Returns the value of attribute pre_context_lineno
   #
   # @return [Object] the current value of pre_context_lineno
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context_lineno; end
 
   # Sets the attribute pre_context_lineno
   #
   # @param value [Object] the value to set the attribute pre_context_lineno to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context_lineno=(_); end
 
   class << self
+    # source://rack//lib/rack/show_exceptions.rb#21
     def [](*_arg0); end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def inspect; end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def keyword_init?; end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def members; end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def new(*_arg0); end
   end
 end
@@ -4471,6 +4519,8 @@ module Rack::Utils
   def escape_cookie_key(key); end
 
   # Escape ampersands, brackets and quotes to their HTML/XML entities.
+  #
+  # source://rack//lib/rack/utils.rb#183
   def escape_html(_arg0); end
 
   # Like URI escaping, but with %20 instead of +. Strictly speaking this is
@@ -4675,6 +4725,7 @@ module Rack::Utils
     # source://rack//lib/rack/utils.rb#262
     def escape_cookie_key(key); end
 
+    # source://rack//lib/rack/utils.rb#183
     def escape_html(_arg0); end
 
     # Like URI escaping, but with %20 instead of +. Strictly speaking this is
@@ -4705,14 +4756,14 @@ module Rack::Utils
     # multipart_part_limit is the original name of multipart_file_limit, but
     # the limit only counts parts with filenames.
     #
-    # source://rack//lib/rack/utils.rb#65
+    # source://rack//lib/rack/utils.rb#69
     def multipart_part_limit; end
 
     # Sets the attribute multipart_file_limit
     #
     # @param value the value to set the attribute multipart_file_limit to.
     #
-    # source://rack//lib/rack/utils.rb#65
+    # source://rack//lib/rack/utils.rb#70
     def multipart_part_limit=(_arg0); end
 
     # Returns the value of attribute multipart_total_part_limit.

@@ -56,10 +56,30 @@ module Tapioca
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
           return unless method_owned_by_constant?(method, constant)
-          return if @pipeline.symbol_in_payload?(symbol_name) && !@pipeline.method_in_gem?(method)
 
-          signature = lookup_signature_of(method)
-          method = signature.method if signature #: UnboundMethod
+          begin
+            signature = signature_of!(method)
+            method = signature.method if signature #: UnboundMethod
+
+            case @pipeline.method_definition_in_gem(method.name, constant)
+            when Pipeline::MethodUnknown
+              # This means that this is a C-method. Thus, we want to
+              # skip it only if the constant is an ignored one, since
+              # that probably means that we've hit a C-method for a
+              # core type.
+              return if @pipeline.symbol_in_payload?(symbol_name)
+            when Pipeline::MethodNotInGem
+              # Do not process this method, if it is not defined by the current gem
+              return
+            end
+          rescue SignatureBlockError => error
+            @pipeline.error_handler.call(<<~MSG)
+              Unable to compile signature for method: #{method.owner}##{method.name}
+                Exception raised when loading signature: #{error.cause.inspect}
+            MSG
+
+            signature = nil
+          end
 
           method_name = method.name.to_s
           return unless valid_method_name?(method_name)
@@ -191,18 +211,6 @@ module Tapioca
         #: (NodeAdded event) -> bool
         def ignore?(event)
           event.is_a?(Tapioca::Gem::ForeignScopeNodeAdded)
-        end
-
-        #: (UnboundMethod method) -> untyped
-        def lookup_signature_of(method)
-          signature_of!(method)
-        rescue LoadError, StandardError => error
-          @pipeline.error_handler.call(<<~MSG)
-            Unable to compile signature for method: #{method.owner}##{method.name}
-              Exception raised when loading signature: #{error.inspect}
-          MSG
-
-          nil
         end
       end
     end

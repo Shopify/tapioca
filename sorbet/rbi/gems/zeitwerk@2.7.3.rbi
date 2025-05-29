@@ -14,11 +14,41 @@ module Kernel
   # source://zeitwerk//lib/zeitwerk/core_ext/kernel.rb#23
   def require(path); end
 
+  # Zeitwerk's main idea is to define autoloads for project constants, and then
+  # intercept them when triggered in this thin `Kernel#require` wrapper.
+  #
+  # That allows us to complete the circle, invoke callbacks, autovivify modules,
+  # define autoloads for just autoloaded namespaces, update internal state, etc.
+  #
+  # On the other hand, if you publish a new version of a gem that is now managed
+  # by Zeitwerk, client code can reference directly your classes and modules and
+  # should not require anything. But if someone has legacy require calls around,
+  # they will work as expected, and in a compatible way. This feature is by now
+  # EXPERIMENTAL and UNDOCUMENTED.
+  #
+  # source://zeitwerk//lib/zeitwerk/core_ext/kernel.rb#17
+  def zeitwerk_original_require(name); end
+
   class << self
     # : (String) -> bool
     #
     # source://zeitwerk//lib/zeitwerk/core_ext/kernel.rb#23
     def require(path); end
+
+    # Zeitwerk's main idea is to define autoloads for project constants, and then
+    # intercept them when triggered in this thin `Kernel#require` wrapper.
+    #
+    # That allows us to complete the circle, invoke callbacks, autovivify modules,
+    # define autoloads for just autoloaded namespaces, update internal state, etc.
+    #
+    # On the other hand, if you publish a new version of a gem that is now managed
+    # by Zeitwerk, client code can reference directly your classes and modules and
+    # should not require anything. But if someone has legacy require calls around,
+    # they will work as expected, and in a compatible way. This feature is by now
+    # EXPERIMENTAL and UNDOCUMENTED.
+    #
+    # source://zeitwerk//lib/zeitwerk/core_ext/kernel.rb#19
+    def zeitwerk_original_require(name); end
   end
 end
 
@@ -122,7 +152,7 @@ class Zeitwerk::Cref
 
   # : () -> String
   #
-  # source://zeitwerk//lib/zeitwerk/cref.rb#35
+  # source://zeitwerk//lib/zeitwerk/cref.rb#38
   def to_s; end
 end
 
@@ -241,6 +271,7 @@ class Zeitwerk::GemLoader < ::Zeitwerk::Loader
 
     private
 
+    # source://zeitwerk//lib/zeitwerk/gem_loader.rb#10
     def new(*_arg0); end
   end
 end
@@ -314,25 +345,25 @@ class Zeitwerk::Loader
   # source://zeitwerk//lib/zeitwerk/loader.rb#107
   def initialize; end
 
-  # source://zeitwerk//lib/zeitwerk/loader.rb#66
+  # source://zeitwerk//lib/zeitwerk/loader.rb#67
   def __autoloaded_dirs; end
 
-  # source://zeitwerk//lib/zeitwerk/loader.rb#32
+  # source://zeitwerk//lib/zeitwerk/loader.rb#33
   def __autoloads; end
 
-  # source://zeitwerk//lib/zeitwerk/loader.rb#56
+  # source://zeitwerk//lib/zeitwerk/loader.rb#57
   def __inceptions; end
 
-  # source://zeitwerk//lib/zeitwerk/loader.rb#85
+  # source://zeitwerk//lib/zeitwerk/loader.rb#86
   def __namespace_dirs; end
 
   # source://zeitwerk//lib/zeitwerk/loader.rb#362
   def __shadowed_file?(file); end
 
-  # source://zeitwerk//lib/zeitwerk/loader.rb#96
+  # source://zeitwerk//lib/zeitwerk/loader.rb#97
   def __shadowed_files; end
 
-  # source://zeitwerk//lib/zeitwerk/loader.rb#76
+  # source://zeitwerk//lib/zeitwerk/loader.rb#77
   def __to_unload; end
 
   # Returns a hash that maps the absolute paths of the managed files and
@@ -706,6 +737,7 @@ module Zeitwerk::Loader::Config
   # source://zeitwerk//lib/zeitwerk/loader/config.rb#289
   def __ignores?(abspath); end
 
+  # source://zeitwerk//lib/zeitwerk/loader/config.rb#30
   def __roots; end
 
   # Configure directories or glob patterns to be collapsed.

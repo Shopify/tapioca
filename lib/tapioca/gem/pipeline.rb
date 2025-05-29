@@ -107,35 +107,66 @@ module Tapioca
         @payload_symbols.include?(symbol_name)
       end
 
-      # this looks something like:
-      # "(eval at /path/to/file.rb:123)"
-      # and we are just interested in the "/path/to/file.rb" part
-      EVAL_SOURCE_FILE_PATTERN = /\(eval at (.+):\d+\)/ #: Regexp
-
       #: ((String | Symbol) name) -> bool
       def constant_in_gem?(name)
-        return true unless Object.respond_to?(:const_source_location)
+        loc = const_source_location(name)
 
-        source_file, _ = Object.const_source_location(name)
-        return true unless source_file
-        # If the source location of the constant is "(eval)", all bets are off.
-        return true if source_file == "(eval)"
+        # If the source location of the constant isn't available or is "(eval)", all bets are off.
+        return true if loc.nil? || loc.file.nil? || loc.file == "(eval)"
 
-        # Ruby 3.3 adds automatic definition of source location for evals if
-        # `file` and `line` arguments are not provided. This results in the source
-        # file being something like `(eval at /path/to/file.rb:123)`. We try to parse
-        # this string to get the actual source file.
-        source_file = source_file.sub(EVAL_SOURCE_FILE_PATTERN, "\\1")
-
-        gem.contains_path?(source_file)
+        gem.contains_path?(loc.file)
       end
 
-      #: (UnboundMethod method) -> bool
-      def method_in_gem?(method)
-        source_location = method.source_location&.first
-        return false if source_location.nil?
+      class MethodDefinitionLookupResult
+        extend T::Helpers
+        abstract!
+      end
 
-        @gem.contains_path?(source_location)
+      # The method doesn't seem to exist
+      class MethodUnknown < MethodDefinitionLookupResult; end
+
+      # The method is not defined in the gem
+      class MethodNotInGem < MethodDefinitionLookupResult; end
+
+      # The method probably defined in the gem but doesn't have a source location
+      class MethodInGemWithoutLocation < MethodDefinitionLookupResult; end
+
+      # The method defined in gem and has a source location
+      class MethodInGemWithLocation < MethodDefinitionLookupResult
+        extend T::Sig
+
+        #: Runtime::SourceLocation
+        attr_reader :location
+
+        #: (Runtime::SourceLocation location) -> void
+        def initialize(location)
+          @location = location
+          super()
+        end
+      end
+
+      #: (Symbol method_name, Module owner) -> MethodDefinitionLookupResult
+      def method_definition_in_gem(method_name, owner)
+        definitions = Tapioca::Runtime::Trackers::MethodDefinition.method_definitions_for(method_name, owner)
+
+        # If the source location of the method isn't available, signal that by returning nil.
+        return MethodUnknown.new if definitions.empty?
+
+        # Look up the first entry that matches a file in the gem.
+        found = definitions.find { |loc| @gem.contains_path?(loc.file) }
+
+        unless found
+          # If the source location of the method is "(eval)", err on the side of caution and include the method.
+          found = definitions.find { |loc| loc.file == "(eval)" }
+          # However, we can just return true to signal that the method should be included.
+          # We can't provide a source location for it, but we want it to be included in the gem RBI.
+          return MethodInGemWithoutLocation.new if found
+        end
+
+        # If we searched but couldn't find a source location in the gem, return false to signal that.
+        return MethodNotInGem.new unless found
+
+        MethodInGemWithLocation.new(found)
       end
 
       # Helpers

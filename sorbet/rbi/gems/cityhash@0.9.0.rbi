@@ -30,11 +30,22 @@ CityHash::HIGH64_MASK = T.let(T.unsafe(nil), Integer)
 
 module CityHash::Internal
   class << self
+    # source://cityhash//lib/cityhash.rb#2
     def hash128(_arg0); end
+
+    # source://cityhash//lib/cityhash.rb#2
     def hash128_with_seed(_arg0, _arg1); end
+
+    # source://cityhash//lib/cityhash.rb#2
     def hash32(_arg0); end
+
+    # source://cityhash//lib/cityhash.rb#2
     def hash64(_arg0); end
+
+    # source://cityhash//lib/cityhash.rb#2
     def hash64_with_seed(_arg0, _arg1); end
+
+    # source://cityhash//lib/cityhash.rb#2
     def hash64_with_seeds(_arg0, _arg1, _arg2); end
   end
 end
