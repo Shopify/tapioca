@@ -43,18 +43,6 @@ module T
           Tapioca::Runtime::GenericTypeRegistry.register_type_variable(self, type_variable)
         end
       end
-
-      def has_attached_class!(variance = :invariant, &bounds_proc)
-        Tapioca::Runtime::GenericTypeRegistry.register_type_variable(
-          self,
-          Tapioca::TypeVariableModule.new(
-            T.cast(self, Module),
-            Tapioca::TypeVariableModule::Type::HasAttachedClass,
-            variance,
-            bounds_proc,
-          ),
-        )
-      end
     end
 
     prepend TypeStoragePatch
