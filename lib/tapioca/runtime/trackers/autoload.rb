@@ -43,7 +43,9 @@ module Tapioca
               Kernel.define_method(:abort, NOOP_METHOD)
               Kernel.define_method(:exit, NOOP_METHOD)
 
-              block.call
+              Tapioca.silence_warnings do
+                block.call
+              end
             ensure
               Kernel.define_method(:exit, original_exit)
               Kernel.define_method(:abort, original_abort)
