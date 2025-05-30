@@ -27,11 +27,6 @@ module T
   module Private
     module Methods
       module ProcBindPatch
-        def finalize_proc(decl)
-          super
-
-          T.unsafe(T::Types::Proc).new(decl.params, decl.returns, decl.bind)
-        end
       end
 
       singleton_class.prepend(ProcBindPatch)
