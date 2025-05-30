@@ -16,6 +16,12 @@ require "tapioca/runtime/generic_type_registry"
 
 # The rewriter needs to be loaded very early so RBS comments within Tapioca itself are rewritten
 require "spoom"
+# Eager load all the autoloads at this point, so that we don't enter into
+# a weird loop when the autoloads get triggered and we try to require the file.
+# This is especially important since Prism has a few autoloaded constants that
+# should NOT be rewritten (since they are needed for the rewriting itself), so
+# should be loaded as early as possible.
+Tapioca::Runtime::Trackers::Autoload.eager_load_all!
 require "tapioca/rbs/rewriter"
 # ^ Do not change the order of these requires
 

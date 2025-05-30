@@ -49,7 +49,7 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
     Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
   end
-rescue RBI::RBS::MethodTypeTranslator::Error
+rescue Spoom::Sorbet::Translate::Error
   # If we can't translate the RBS comments back into Sorbet's signatures, we just skip the file.
   source
 end
