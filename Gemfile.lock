@@ -331,7 +331,7 @@ GEM
       rubocop (~> 1.62)
     rubocop-sorbet (0.10.0)
       rubocop (>= 1)
-    ruby-lsp (0.23.22)
+    ruby-lsp (0.23.23)
       language_server-protocol (~> 3.17.0)
       prism (>= 1.2, < 2.0)
       rbs (>= 3, < 5)
