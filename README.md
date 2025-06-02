@@ -395,6 +395,12 @@ Tapioca also supports pulling annotations from multiple sources:
 $ bin/tapioca annotations --sources https://raw.githubusercontent.com/$USER/$REPO1/$BRANCH https://raw.githubusercontent.com/$USER/$REPO2/$BRANCH
 ```
 
+You can also specify a local directory path to pull annotations from
+
+```shell
+$ bin/tapioca annotations --sources path/to/folder
+```
+
 #### Basic authentication
 
 Private repositories can be used as sources by passing the option `--auth` with an authentication string. For Github, this string is `token $TOKEN` where `$TOKEN` is a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token):
