@@ -2,7 +2,6 @@
 # frozen_string_literal: true
 
 require "spec_helper"
-require "language_server-protocol"
 require "ruby_lsp/internal"
 require "ruby_lsp/ruby_lsp_rails/addon"
 require "ruby_lsp/tapioca/addon"
