@@ -1,4 +1,4 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "open3"
@@ -7,10 +7,10 @@ require "ruby_lsp/tapioca/lockfile_diff_parser"
 module RubyLsp
   module Tapioca
     class RunGemRbiCheck
-      extend T::Sig
+      #: String
+      attr_reader :stdout, :stderr
 
-      attr_reader :stdout
-      attr_reader :stderr
+      #: Process::Status?
       attr_reader :status
 
       #: (String project_path) -> void
@@ -34,11 +34,9 @@ module RubyLsp
 
       private
 
-      attr_reader :project_path
-
       #: -> bool?
       def git_repo?
-        _, status = Open3.capture2e("git", "rev-parse", "--is-inside-work-tree", chdir: project_path)
+        _, status = Open3.capture2e("git", "rev-parse", "--is-inside-work-tree", chdir: @project_path)
         status.success?
       end
 
@@ -49,7 +47,7 @@ module RubyLsp
 
       #: -> Pathname
       def lockfile
-        @lockfile ||= Pathname(project_path).join("Gemfile.lock") #: Pathname?
+        @lockfile ||= Pathname(@project_path).join("Gemfile.lock") #: Pathname?
       end
 
       #: -> String
@@ -81,15 +79,16 @@ module RubyLsp
       #: (Array[String] gems) -> void
       def execute_tapioca_gem_command(gems)
         Bundler.with_unbundled_env do
-          stdout, stderr, status = T.unsafe(Open3).capture3(
-            "bundle",
-            "exec",
-            "tapioca",
-            "gem",
-            "--lsp_addon",
-            *gems,
-            chdir: project_path,
-          )
+          stdout, stderr, status = Open3 #: as untyped
+            .capture3(
+              "bundle",
+              "exec",
+              "tapioca",
+              "gem",
+              "--lsp_addon",
+              *gems,
+              chdir: @project_path,
+            )
 
           log_message(stdout) unless stdout.empty?
           @stderr = stderr unless stderr.empty?
@@ -101,7 +100,7 @@ module RubyLsp
       def remove_rbis(gems)
         files = Dir.glob(
           "sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi",
-          base: project_path,
+          base: @project_path,
         )
         delete_files(files, "Removed RBIs for")
       end
@@ -117,16 +116,15 @@ module RubyLsp
 
       #: (*untyped flags) -> Array[String]
       def git_ls_gem_rbis(*flags)
-        flags = T.unsafe(["git", "ls-files", *flags, "sorbet/rbi/gems/"])
-
-        execute_in_project_path(*flags)
+        self #: as untyped # rubocop:disable Style/RedundantSelf
+          .execute_in_project_path("git", "ls-files", *flags, "sorbet/rbi/gems/")
           .lines
           .map(&:strip)
       end
 
       #: (Array[String] files, String message) -> void
       def delete_files(files, message)
-        files_to_remove = files.map { |file| File.join(project_path, file) }
+        files_to_remove = files.map { |file| File.join(@project_path, file) }
         FileUtils.rm(files_to_remove)
         log_message("#{message}: #{files.join(", ")}") unless files.empty?
       end
@@ -142,10 +140,12 @@ module RubyLsp
         @stdout += "#{message}\n"
       end
 
+      #: (*String, ?stdin: String?) -> String
       def execute_in_project_path(*parts, stdin: nil)
-        options = { chdir: project_path }
+        options = { chdir: @project_path }
         options[:stdin_data] = stdin if stdin
-        stdout_and_stderr, _status = T.unsafe(Open3).capture2e(*parts, options)
+        stdout_and_stderr, _status = Open3 #: as untyped
+          .capture2e(*parts, options)
         stdout_and_stderr
       end
     end

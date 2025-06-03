@@ -18,8 +18,6 @@ require "ruby_lsp/tapioca/run_gem_rbi_check"
 module RubyLsp
   module Tapioca
     class Addon < ::RubyLsp::Addon
-      extend T::Sig
-
       #: -> void
       def initialize
         super
@@ -44,7 +42,7 @@ module RubyLsp
           # Get a handle to the Rails add-on's runtime client. The call to `rails_runner_client` will block this thread
           # until the server has finished booting, but it will not block the main LSP. This has to happen inside of a
           # thread
-          addon = T.cast(::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.4.0", "< 0.5"), ::RubyLsp::Rails::Addon)
+          addon = ::RubyLsp::Addon.get("Ruby LSP Rails", ">= 0.4.0", "< 0.5") #: as ::RubyLsp::Rails::Addon
           @rails_runner_client = addon.rails_runner_client
           @outgoing_queue << Notification.window_log_message("Activating Tapioca add-on v#{version}")
           @rails_runner_client.register_server_addon(File.expand_path("server_addon.rb", __dir__))
@@ -93,10 +91,11 @@ module RubyLsp
         has_route_change = false #: bool
         has_fixtures_change = false #: bool
         needs_compiler_reload = false #: bool
+        index = @index #: as !nil
 
         constants = changes.flat_map do |change|
-          path = URI(change[:uri]).to_standardized_path
-          next unless file_updated?(change, path)
+          path = URI(change[:uri]).to_standardized_path #: String?
+          next unless path && file_updated?(change, path)
 
           if File.fnmatch("**/fixtures/**/*.yml{,.erb}", path, File::FNM_PATHNAME | File::FNM_EXTGLOB)
             has_fixtures_change = true
@@ -115,7 +114,7 @@ module RubyLsp
             next
           end
 
-          entries = T.must(@index).entries_for(change[:uri])
+          entries = index.entries_for(change[:uri])
           next unless entries
 
           entries.filter_map do |entry|
@@ -178,6 +177,8 @@ module RubyLsp
 
       #: (Hash[Symbol, untyped] change, String path) -> bool
       def file_updated?(change, path)
+        queue = @outgoing_queue #: as !nil
+
         case change[:type]
         when Constant::FileChangeType::CREATED
           @file_checksums[path] = Zlib.crc32(File.read(path)).to_s
@@ -185,7 +186,7 @@ module RubyLsp
         when Constant::FileChangeType::CHANGED
           current_checksum = Zlib.crc32(File.read(path)).to_s
           if @file_checksums[path] == current_checksum
-            T.must(@outgoing_queue) << Notification.window_log_message(
+            queue << Notification.window_log_message(
               "File has not changed. Skipping #{path}",
               type: Constant::MessageType::INFO,
             )
@@ -196,7 +197,7 @@ module RubyLsp
         when Constant::FileChangeType::DELETED
           @file_checksums.delete(path)
         else
-          T.must(@outgoing_queue) << Notification.window_log_message(
+          queue << Notification.window_log_message(
             "Unexpected file change type: #{change[:type]}",
             type: Constant::MessageType::WARNING,
           )
@@ -207,16 +208,16 @@ module RubyLsp
 
       #: -> void
       def run_gem_rbi_check
-        gem_rbi_check = RunGemRbiCheck.new(T.must(@global_state).workspace_path)
+        state = @global_state #: as !nil
+        gem_rbi_check = RunGemRbiCheck.new(state.workspace_path)
         gem_rbi_check.run
 
-        T.must(@outgoing_queue) << Notification.window_log_message(
-          gem_rbi_check.stdout,
-        ) unless gem_rbi_check.stdout.empty?
-        T.must(@outgoing_queue) << Notification.window_log_message(
-          gem_rbi_check.stderr,
-          type: Constant::MessageType::WARNING,
-        ) unless gem_rbi_check.stderr.empty?
+        queue = @outgoing_queue #: as !nil
+        queue << Notification.window_log_message(gem_rbi_check.stdout) unless gem_rbi_check.stdout.empty?
+
+        unless gem_rbi_check.stderr.empty?
+          queue << Notification.window_log_message(gem_rbi_check.stderr, type: Constant::MessageType::WARNING)
+        end
       end
     end
   end
