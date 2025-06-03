@@ -52,6 +52,9 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
     * [Writing custom DSL extensions](#writing-custom-dsl-extensions)
   * [RBI files for missing constants and methods](#rbi-files-for-missing-constants-and-methods)
   * [Configuration](#configuration)
+* [Editor Integration](#editor-integration)
+  * [Setup](#setup)
+  * [Features](#features)
 * [Contributing](#contributing)
   * [DSL compilers](#dsl-compilers)
 * [License](#license)
@@ -998,6 +1001,18 @@ annotations:
   typed_overrides: {}
 ```
 <!-- END_CONFIG_TEMPLATE -->
+
+## Editor Integration
+
+### Setup
+
+Tapioca supports generating RBIs upon file changes through the [Ruby LSP's add-on system](https://shopify.github.io/ruby-lsp/#add-ons). It's enabled by default on VS Code using [Ruby LSP](https://shopify.github.io/ruby-lsp/#usage), and you can enable it for other editors by supplying the `enabledFeatureFlags` option in LSP configuration with a hash value of `"tapiocaAddon": true`.
+
+If you'd like to disable the Tapioca add-on you can set `tapiocaAddon` to `false` in your LSP configuration. For VS Code this looks like `"rubyLsp.featureFlags": { "tapiocaAddon": false }` in your `settings.json`.
+
+### Features
+- DSL RBI generation: When editing a Ruby file, Tapioca will execute `bin/tapioca dsl` with the constants found in your file, e.g. `bin/tapioca dsl MyClass`
+- Gem RBI generation: When changes are made to `Gemfile.lock`, Tapioca will execute `bin/tapioca gem` with the updated gem names, e.g. `bin/tapioca gem my_gem`
 
 ## Contributing
 
