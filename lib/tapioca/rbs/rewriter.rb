@@ -45,8 +45,8 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   # The source is most likely nil since no `source_transform` hook was triggered before this one.
   source ||= File.read(path)
 
-  # For performance reasons, we only rewrite files that use Sorbet.
-  if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+  # For performance reasons, we only rewrite files that use RBS comments or annotations.
+  if source =~ /#(?: @|:)/
     Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
   end
 rescue Spoom::Sorbet::Translate::Error
