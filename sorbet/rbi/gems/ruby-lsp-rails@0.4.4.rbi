@@ -882,57 +882,74 @@ end
 
 # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#6
 class RubyLsp::Rails::RailsTestStyle < ::RubyLsp::Listeners::TestDiscovery
-  # : (RunnerClient client, ResponseBuilders::TestCollection response_builder, GlobalState global_state, Prism::Dispatcher dispatcher, URI::Generic uri) -> void
+  # : (ResponseBuilders::TestCollection response_builder, GlobalState global_state, Prism::Dispatcher dispatcher, URI::Generic uri) -> void
   #
   # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#54
   sig do
     params(
-      client: ::RubyLsp::Rails::RunnerClient,
       response_builder: RubyLsp::ResponseBuilders::TestCollection,
       global_state: ::RubyLsp::GlobalState,
       dispatcher: ::Prism::Dispatcher,
       uri: ::URI::Generic
     ).void
   end
-  def initialize(client, response_builder, global_state, dispatcher, uri); end
+  def initialize(response_builder, global_state, dispatcher, uri); end
 
   # : (Prism::CallNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#84
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#107
   sig { params(node: ::Prism::CallNode).void }
   def on_call_node_enter(node); end
 
   # : (Prism::ClassNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#66
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#68
   sig { params(node: ::Prism::ClassNode).void }
   def on_class_node_enter(node); end
 
+  # : (Prism::ClassNode node) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#89
+  sig { params(node: ::Prism::ClassNode).void }
+  def on_class_node_leave(node); end
+
   # : (Prism::DefNode node) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#104
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#127
   sig { params(node: ::Prism::DefNode).void }
   def on_def_node_enter(node); end
+
+  # : (Prism::ModuleNode node) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#95
+  sig { params(node: ::Prism::ModuleNode).void }
+  def on_module_node_enter(node); end
+
+  # : (Prism::ModuleNode node) -> void
+  #
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#101
+  sig { params(node: ::Prism::ModuleNode).void }
+  def on_module_node_leave(node); end
 
   private
 
   # : (Prism::Node node, String test_name) -> void
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#127
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#150
   sig { params(node: ::Prism::Node, test_name: ::String).void }
   def add_test_item(node, test_name); end
 
   # : (Array[String] attached_ancestors, String fully_qualified_name) -> bool
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#116
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#139
   sig { params(attached_ancestors: T::Array[::String], fully_qualified_name: ::String).returns(T::Boolean) }
   def declarative_minitest?(attached_ancestors, fully_qualified_name); end
 
-  # : -> Requests::Support::TestItem?
+  # : -> (Requests::Support::TestItem | ResponseBuilders::TestCollection)
   #
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#143
-  sig { returns(T.nilable(::RubyLsp::Requests::Support::TestItem)) }
-  def group_test_item; end
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#166
+  sig { returns(T.any(::RubyLsp::Requests::Support::TestItem, RubyLsp::ResponseBuilders::TestCollection)) }
+  def last_test_group; end
 
   class << self
     # : (Array[Hash[Symbol, untyped]]) -> Array[String]
