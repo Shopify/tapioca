@@ -1968,56 +1968,56 @@ class Rack::MockRequest::FatalWarning < ::RuntimeError; end
 # Usually, you don't create the MockResponse on your own, but use
 # MockRequest.
 #
-# source://rack//lib/rack/mock_response.rb#13
+# source://rack//lib/rack/mock_response.rb#12
 class Rack::MockResponse < ::Rack::Response
   # @return [MockResponse] a new instance of MockResponse
   #
-  # source://rack//lib/rack/mock_response.rb#24
+  # source://rack//lib/rack/mock_response.rb#53
   def initialize(status, headers, body, errors = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/mock_response.rb#39
+  # source://rack//lib/rack/mock_response.rb#68
   def =~(other); end
 
-  # source://rack//lib/rack/mock_response.rb#47
+  # source://rack//lib/rack/mock_response.rb#76
   def body; end
 
-  # source://rack//lib/rack/mock_response.rb#73
+  # source://rack//lib/rack/mock_response.rb#102
   def cookie(name); end
 
   # Headers
   #
-  # source://rack//lib/rack/mock_response.rb#19
+  # source://rack//lib/rack/mock_response.rb#48
   def cookies; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/mock_response.rb#69
+  # source://rack//lib/rack/mock_response.rb#98
   def empty?; end
 
   # Errors
   #
-  # source://rack//lib/rack/mock_response.rb#22
+  # source://rack//lib/rack/mock_response.rb#51
   def errors; end
 
   # Errors
   #
-  # source://rack//lib/rack/mock_response.rb#22
+  # source://rack//lib/rack/mock_response.rb#51
   def errors=(_arg0); end
 
-  # source://rack//lib/rack/mock_response.rb#43
+  # source://rack//lib/rack/mock_response.rb#72
   def match(other); end
 
   # Headers
   #
-  # source://rack//lib/rack/mock_response.rb#19
+  # source://rack//lib/rack/mock_response.rb#48
   def original_headers; end
 
   private
 
-  # source://rack//lib/rack/mock_response.rb#100
+  # source://rack//lib/rack/mock_response.rb#129
   def identify_cookie_attributes(cookie_filling); end
 
-  # source://rack//lib/rack/mock_response.rb#79
+  # source://rack//lib/rack/mock_response.rb#108
   def parse_cookies_from_header; end
 
   class << self
@@ -2025,6 +2025,9 @@ class Rack::MockResponse < ::Rack::Response
     def [](*_arg0); end
   end
 end
+
+# source://rack//lib/rack/mock_response.rb#16
+Rack::MockResponse::Cookie = CGI::Cookie
 
 # A multipart form data parser, adapted from IOWA.
 #
