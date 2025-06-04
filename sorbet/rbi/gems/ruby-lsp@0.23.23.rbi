@@ -5566,13 +5566,13 @@ class RubyLsp::Listeners::SpecStyle < ::RubyLsp::Listeners::TestDiscovery
 
   # : (Prism::CallNode) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#49
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#61
   sig { params(node: ::Prism::CallNode).void }
   def on_call_node_enter(node); end
 
   # : (Prism::CallNode) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#61
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#73
   sig { params(node: ::Prism::CallNode).void }
   def on_call_node_leave(node); end
 
@@ -5588,36 +5588,48 @@ class RubyLsp::Listeners::SpecStyle < ::RubyLsp::Listeners::TestDiscovery
   sig { params(node: ::Prism::ClassNode).void }
   def on_class_node_leave(node); end
 
+  # : (Prism::ModuleNode) -> void
+  #
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#49
+  sig { params(node: ::Prism::ModuleNode).void }
+  def on_module_node_enter(node); end
+
+  # : (Prism::ModuleNode) -> void
+  #
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#55
+  sig { params(node: ::Prism::ModuleNode).void }
+  def on_module_node_leave(node); end
+
   private
 
   # : (Prism::CallNode) -> String?
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#124
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#144
   sig { params(node: ::Prism::CallNode).returns(T.nilable(::String)) }
   def extract_description(node); end
 
   # : (Prism::CallNode) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#70
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#88
   sig { params(node: ::Prism::CallNode).void }
   def handle_describe(node); end
 
   # : (Prism::CallNode) -> void
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#100
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#120
   sig { params(node: ::Prism::CallNode).void }
   def handle_example(node); end
 
   # : -> bool
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#166
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#210
   sig { returns(T::Boolean) }
   def in_spec_context?; end
 
-  # : -> (Requests::Support::TestItem | ResponseBuilders::TestCollection)
+  # : -> (Requests::Support::TestItem | ResponseBuilders::TestCollection)?
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#139
-  sig { returns(T.any(::RubyLsp::Requests::Support::TestItem, RubyLsp::ResponseBuilders::TestCollection)) }
+  # source://ruby-lsp//lib/ruby_lsp/listeners/spec_style.rb#159
+  sig { returns(T.nilable(T.any(::RubyLsp::Requests::Support::TestItem, RubyLsp::ResponseBuilders::TestCollection))) }
   def latest_group; end
 end
 
@@ -6288,15 +6300,21 @@ RubyLsp::Requests::CodeActions::TOGGLE_BLOCK_STYLE_TITLE = T.let(T.unsafe(nil), 
 #
 # source://ruby-lsp//lib/ruby_lsp/requests/code_lens.rb#13
 class RubyLsp::Requests::CodeLens < ::RubyLsp::Requests::Request
-  # : (GlobalState global_state, URI::Generic uri, Prism::Dispatcher dispatcher) -> void
+  # : (GlobalState, RubyDocument | ERBDocument, Prism::Dispatcher) -> void
   #
   # source://ruby-lsp//lib/ruby_lsp/requests/code_lens.rb#22
-  sig { params(global_state: ::RubyLsp::GlobalState, uri: ::URI::Generic, dispatcher: ::Prism::Dispatcher).void }
-  def initialize(global_state, uri, dispatcher); end
+  sig do
+    params(
+      global_state: ::RubyLsp::GlobalState,
+      document: T.any(RubyLsp::ERBDocument, RubyLsp::RubyDocument),
+      dispatcher: ::Prism::Dispatcher
+    ).void
+  end
+  def initialize(global_state, document, dispatcher); end
 
   # : -> Array[Interface::CodeLens]
   #
-  # source://ruby-lsp//lib/ruby_lsp/requests/code_lens.rb#47
+  # source://ruby-lsp//lib/ruby_lsp/requests/code_lens.rb#49
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::CodeLens]) }
   def perform; end
 
