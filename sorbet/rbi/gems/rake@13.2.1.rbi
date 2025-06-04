@@ -1329,9 +1329,6 @@ class Rake::FileList
   def permutation(*args, &block); end
 
   # source://rake//lib/rake/file_list.rb#76
-  def place(*args, &block); end
-
-  # source://rake//lib/rake/file_list.rb#76
   def pop(*args, &block); end
 
   # source://rake//lib/rake/file_list.rb#76

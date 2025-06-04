@@ -18072,8 +18072,6 @@ class Integer < ::Numeric
   def years; end
 end
 
-Integer::GMP_VERSION = T.let(T.unsafe(nil), String)
-
 # source://activesupport//lib/active_support/core_ext/kernel/reporting.rb#3
 module Kernel
   # class_eval on an object acts like +singleton_class.class_eval+.
