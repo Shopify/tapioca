@@ -26,7 +26,7 @@ begin
         module InstructionSequenceMixin
           #: (String) -> RubyVM::InstructionSequence
           def load_iseq(path)
-            super
+            super if defined?(super)
           end
         end
       end
