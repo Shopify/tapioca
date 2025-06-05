@@ -168,19 +168,13 @@ class OpenStruct
   def __send__!(*_arg0); end
 
   # source://ostruct//lib/ostruct.rb#478
-  def as_json!(options = T.unsafe(nil)); end
+  def abort!(*_args, **_kwargs, &_block); end
 
   # source://ostruct//lib/ostruct.rb#478
   def class!; end
 
   # source://ostruct//lib/ostruct.rb#478
   def clone!(freeze: T.unsafe(nil)); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def debugger!(*a, up_level: T.unsafe(nil), **kw); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def deep_dup!; end
 
   # source://ostruct//lib/ostruct.rb#478
   def define_singleton_method!(*_arg0); end
@@ -277,6 +271,9 @@ class OpenStruct
   def eql?(other); end
 
   # source://ostruct//lib/ostruct.rb#478
+  def exit!(*_args, **_kwargs, &_block); end
+
+  # source://ostruct//lib/ostruct.rb#478
   def extend!(*_arg0); end
 
   # source://ostruct//lib/ostruct.rb#269
@@ -319,13 +316,7 @@ class OpenStruct
   def instance_exec!(*_arg0); end
 
   # source://ostruct//lib/ostruct.rb#478
-  def instance_values!; end
-
-  # source://ostruct//lib/ostruct.rb#478
   def instance_variable_get!(_arg0); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def instance_variable_names!; end
 
   # source://ostruct//lib/ostruct.rb#478
   def instance_variable_set!(_arg0, _arg1); end
@@ -351,73 +342,7 @@ class OpenStruct
   def methods!(*_arg0); end
 
   # source://ostruct//lib/ostruct.rb#478
-  def must_be!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_close_to!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_empty!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_instance_of!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_kind_of!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_nil!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_same_as!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_silent!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_within_delta!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_be_within_epsilon!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_equal!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_include!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_match!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_output!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_pattern_match!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_raise!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_respond_to!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def must_throw!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
   def object_id!; end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def path_must_exist!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def path_wont_exist!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def presence!; end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def presence_in!(another_object); end
 
   # source://ostruct//lib/ostruct.rb#478
   def pretty_inspect!; end
@@ -483,13 +408,7 @@ class OpenStruct
   def to_h!(&block); end
 
   # source://ostruct//lib/ostruct.rb#478
-  def to_json!(options = T.unsafe(nil)); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def to_param!; end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def to_query!(key); end
+  def to_json!(*_arg0); end
 
   # Returns a string containing a detailed summary of the keys and values.
   #
@@ -501,57 +420,6 @@ class OpenStruct
 
   # source://ostruct//lib/ostruct.rb#478
   def to_yaml!(options = T.unsafe(nil)); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def try!(*args, **_arg1, &block); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def with!(**attributes); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def with_options!(options, &block); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_close_to!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_empty!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_instance_of!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_kind_of!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_nil!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_same_as!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_within_delta!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_be_within_epsilon!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_equal!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_include!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_match!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_pattern_match!(*args, **_arg1); end
-
-  # source://ostruct//lib/ostruct.rb#478
-  def wont_respond_to!(*args, **_arg1); end
 
   # source://ostruct//lib/ostruct.rb#478
   def yield_self!; end

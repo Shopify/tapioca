@@ -4722,12 +4722,28 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         # typed: true
 
         # @requires_ancestor: Kernel
-        class Foo; end
+        class Foo
+          #: -> void
+          #:comment:
+          def foo; end
+
+          #: -> Array[
+          #| String
+          #| ]
+          def bar; end
+        end
       RUBY
 
       output = template(<<~RBI)
         class Foo
           requires_ancestor { Kernel }
+
+          sig { returns(T::Array[::String]) }
+          def bar; end
+
+          # :comment:
+          sig { void }
+          def foo; end
         end
       RBI
 

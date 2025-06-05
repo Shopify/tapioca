@@ -30,6 +30,11 @@ module Tapioca
 
         private
 
+        #: (String line) -> bool
+        def rbs_comment?(line)
+          line.strip.start_with?(": ", "| ")
+        end
+
         # @override
         #: (ConstNodeAdded event) -> void
         def on_const(event)
@@ -61,7 +66,7 @@ module Tapioca
           return [] if /(copyright|license)/i.match?(docstring)
 
           comments = docstring.lines
-            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
+            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
             .map! { |line| RBI::Comment.new(line) }
 
           tags = yard_docs.tags
