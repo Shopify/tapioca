@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tapioca (0.17.1)
+    tapioca (0.17.2)
       benchmark
       bundler (>= 2.2.25)
       netrc (>= 0.11.0)
