@@ -28,46 +28,46 @@ class Money
   # @raise [ArgumentError]
   # @return [Money] a new instance of Money
   #
-  # source://shopify-money//lib/money/money.rb#150
+  # source://shopify-money//lib/money/money.rb#147
   def initialize(value, currency); end
 
   # @raise [ArgumentError]
   #
-  # source://shopify-money//lib/money/money.rb#207
+  # source://shopify-money//lib/money/money.rb#204
   def *(other); end
 
-  # source://shopify-money//lib/money/money.rb#193
+  # source://shopify-money//lib/money/money.rb#190
   def +(other); end
 
-  # source://shopify-money//lib/money/money.rb#200
+  # source://shopify-money//lib/money/money.rb#197
   def -(other); end
 
-  # source://shopify-money//lib/money/money.rb#182
+  # source://shopify-money//lib/money/money.rb#179
   def -@; end
 
-  # source://shopify-money//lib/money/money.rb#214
+  # source://shopify-money//lib/money/money.rb#211
   def /(other); end
 
-  # source://shopify-money//lib/money/money.rb#186
+  # source://shopify-money//lib/money/money.rb#183
   def <=>(other); end
 
-  # source://shopify-money//lib/money/money.rb#222
+  # source://shopify-money//lib/money/money.rb#219
   def ==(other); end
 
-  # source://shopify-money//lib/money/money.rb#305
+  # source://shopify-money//lib/money/money.rb#302
   def abs; end
 
   # @see Money::Allocator#allocate
   #
-  # source://shopify-money//lib/money/money.rb#331
+  # source://shopify-money//lib/money/money.rb#328
   def allocate(splits, strategy = T.unsafe(nil)); end
 
   # @see Money::Allocator#allocate_max_amounts
   #
-  # source://shopify-money//lib/money/money.rb#336
+  # source://shopify-money//lib/money/money.rb#333
   def allocate_max_amounts(maximums); end
 
-  # source://shopify-money//lib/money/money.rb#296
+  # source://shopify-money//lib/money/money.rb#293
   def as_json(options = T.unsafe(nil)); end
 
   # Calculate the splits evenly without losing pennies.
@@ -80,7 +80,7 @@ class Money
   # @param number [2] of parties.
   # @return [Hash<Money, Integer>]
   #
-  # source://shopify-money//lib/money/money.rb#363
+  # source://shopify-money//lib/money/money.rb#360
   def calculate_splits(num); end
 
   # Clamps the value to be within the specified minimum and maximum. Returns
@@ -93,15 +93,15 @@ class Money
   #   Money.new(120, "CAD").clamp(0, 100) #=> Money.new(100, "CAD")
   # @raise [ArgumentError]
   #
-  # source://shopify-money//lib/money/money.rb#375
+  # source://shopify-money//lib/money/money.rb#372
   def clamp(min, max); end
 
   # @raise [TypeError]
   #
-  # source://shopify-money//lib/money/money.rb#233
+  # source://shopify-money//lib/money/money.rb#230
   def coerce(other); end
 
-  # source://shopify-money//lib/money/money.rb#238
+  # source://shopify-money//lib/money/money.rb#235
   def convert_currency(exchange_rate, new_currency); end
 
   # Returns the value of attribute currency.
@@ -109,31 +109,31 @@ class Money
   # source://shopify-money//lib/money/money.rb#12
   def currency; end
 
-  # source://shopify-money//lib/money/money.rb#161
+  # source://shopify-money//lib/money/money.rb#158
   def encode_with(coder); end
 
   # TODO: Remove once cross-currency mathematical operations are no longer allowed
   #
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/money.rb#227
+  # source://shopify-money//lib/money/money.rb#224
   def eql?(other); end
 
-  # source://shopify-money//lib/money/money.rb#311
+  # source://shopify-money//lib/money/money.rb#308
   def floor; end
 
   # @raise [ArgumentError]
   #
-  # source://shopify-money//lib/money/money.rb#323
+  # source://shopify-money//lib/money/money.rb#320
   def fraction(rate); end
 
   # source://shopify-money//lib/money/money.rb#14
   def hash(*args, **_arg1, &block); end
 
-  # source://shopify-money//lib/money/money.rb#157
+  # source://shopify-money//lib/money/money.rb#154
   def init_with(coder); end
 
-  # source://shopify-money//lib/money/money.rb#218
+  # source://shopify-money//lib/money/money.rb#215
   def inspect; end
 
   # source://shopify-money//lib/money/money.rb#14
@@ -141,7 +141,7 @@ class Money
 
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/money.rb#178
+  # source://shopify-money//lib/money/money.rb#175
   def no_currency?; end
 
   # source://shopify-money//lib/money/money.rb#14
@@ -150,7 +150,7 @@ class Money
   # source://shopify-money//lib/money/money.rb#14
   def positive?(*args, **_arg1, &block); end
 
-  # source://shopify-money//lib/money/money.rb#317
+  # source://shopify-money//lib/money/money.rb#314
   def round(ndigits = T.unsafe(nil)); end
 
   # Split money amongst parties evenly without losing pennies.
@@ -160,37 +160,37 @@ class Money
   # @param number [2] of parties.
   # @return [Enumerable<Money, Money, Money>]
   #
-  # source://shopify-money//lib/money/money.rb#348
+  # source://shopify-money//lib/money/money.rb#345
   def split(num); end
 
-  # source://shopify-money//lib/money/money.rb#166
+  # source://shopify-money//lib/money/money.rb#163
   def subunits(format: T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#259
+  # source://shopify-money//lib/money/money.rb#256
   def to_d; end
 
   # source://shopify-money//lib/money/money.rb#14
   def to_f(*args, **_arg1, &block); end
 
-  # source://shopify-money//lib/money/money.rb#286
+  # source://shopify-money//lib/money/money.rb#283
   def to_formatted_s(style = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#263
+  # source://shopify-money//lib/money/money.rb#260
   def to_fs(style = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#303
+  # source://shopify-money//lib/money/money.rb#300
   def to_h(options = T.unsafe(nil)); end
 
   # source://shopify-money//lib/money/money.rb#14
   def to_i(*args, **_arg1, &block); end
 
-  # source://shopify-money//lib/money/money.rb#288
+  # source://shopify-money//lib/money/money.rb#285
   def to_json(options = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#242
+  # source://shopify-money//lib/money/money.rb#239
   def to_money(new_currency = T.unsafe(nil)); end
 
-  # source://shopify-money//lib/money/money.rb#285
+  # source://shopify-money//lib/money/money.rb#282
   def to_s(style = T.unsafe(nil)); end
 
   # Returns the value of attribute value.
@@ -203,13 +203,13 @@ class Money
 
   private
 
-  # source://shopify-money//lib/money/money.rb#390
+  # source://shopify-money//lib/money/money.rb#387
   def arithmetic(other); end
 
-  # source://shopify-money//lib/money/money.rb#417
+  # source://shopify-money//lib/money/money.rb#414
   def calculated_currency(other); end
 
-  # source://shopify-money//lib/money/money.rb#407
+  # source://shopify-money//lib/money/money.rb#404
   def ensure_compatible_currency(other_currency, msg); end
 
   class << self
@@ -219,22 +219,17 @@ class Money
     # source://shopify-money//lib/money/deprecations.rb#24
     def caller_stack; end
 
-    # source://shopify-money//lib/money/money.rb#44
+    # source://shopify-money//lib/money/money.rb#52
     def config; end
 
-    # source://shopify-money//lib/money/money.rb#48
-    def config=(config); end
+    # source://shopify-money//lib/money/money.rb#56
+    def configure(&block); end
 
-    # @yield [@config]
-    #
-    # source://shopify-money//lib/money/money.rb#52
-    def configure; end
-
-    # source://shopify-money//lib/money/money.rb#104
+    # source://shopify-money//lib/money/money.rb#60
     def current_currency; end
 
-    # source://shopify-money//lib/money/money.rb#108
-    def current_currency=(currency); end
+    # source://shopify-money//lib/money/money.rb#64
+    def current_currency=(value); end
 
     # source://shopify-money//lib/money/money.rb#42
     def default_currency(*args, **_arg1, &block); end
@@ -245,38 +240,36 @@ class Money
     # source://shopify-money//lib/money/deprecations.rb#14
     def deprecate(message); end
 
-    # source://shopify-money//lib/money/money.rb#70
+    # source://shopify-money//lib/money/money.rb#88
     def from_amount(value = T.unsafe(nil), currency = T.unsafe(nil)); end
 
-    # source://shopify-money//lib/money/money.rb#92
+    # source://shopify-money//lib/money/money.rb#110
     def from_hash(hash); end
 
-    # source://shopify-money//lib/money/money.rb#87
+    # source://shopify-money//lib/money/money.rb#105
     def from_json(string); end
 
-    # source://shopify-money//lib/money/money.rb#72
+    # source://shopify-money//lib/money/money.rb#90
     def from_subunits(subunits, currency_iso, format: T.unsafe(nil)); end
 
-    # source://shopify-money//lib/money/money.rb#57
+    # source://shopify-money//lib/money/money.rb#75
     def new(value = T.unsafe(nil), currency = T.unsafe(nil)); end
 
-    # source://shopify-money//lib/money/money.rb#97
+    # source://shopify-money//lib/money/money.rb#115
     def rational(money1, money2); end
 
-    # Set Money.default_currency inside the supplied block, resets it to
-    # the previous value when done to prevent leaking state. Similar to
-    # I18n.with_locale and ActiveSupport's Time.use_zone. This won't affect
-    # instances being created with explicitly set currency.
-    #
-    # source://shopify-money//lib/money/money.rb#116
-    def with_currency(new_currency); end
+    # source://shopify-money//lib/money/money.rb#48
+    def with_config(**configs, &block); end
 
-    # source://shopify-money//lib/money/money.rb#42
-    def without_legacy_deprecations(*args, **_arg1, &block); end
+    # source://shopify-money//lib/money/money.rb#68
+    def with_currency(currency, &block); end
+
+    # source://shopify-money//lib/money/money.rb#44
+    def without_legacy_deprecations(&block); end
 
     private
 
-    # source://shopify-money//lib/money/money.rb#126
+    # source://shopify-money//lib/money/money.rb#124
     def new_from_money(amount, currency); end
   end
 end
@@ -346,152 +339,178 @@ Money::Allocator::ONE = T.let(T.unsafe(nil), BigDecimal)
 class Money::Config
   # @return [Config] a new instance of Config
   #
-  # source://shopify-money//lib/money/config.rb#23
+  # source://shopify-money//lib/money/config.rb#78
   def initialize; end
 
   # Returns the value of attribute default_currency.
   #
-  # source://shopify-money//lib/money/config.rb#5
+  # source://shopify-money//lib/money/config.rb#47
+  def currency; end
+
+  # source://shopify-money//lib/money/config.rb#60
+  def currency=(value); end
+
+  # Returns the value of attribute default_currency.
+  #
+  # source://shopify-money//lib/money/config.rb#46
   def default_currency; end
 
-  # Sets the attribute default_currency
-  #
-  # @param value the value to set the attribute default_currency to.
-  #
-  # source://shopify-money//lib/money/config.rb#5
-  def default_currency=(_arg0); end
+  # source://shopify-money//lib/money/config.rb#49
+  def default_currency=(value); end
 
   # Returns the value of attribute experimental_crypto_currencies.
   #
-  # source://shopify-money//lib/money/config.rb#5
+  # source://shopify-money//lib/money/config.rb#44
   def experimental_crypto_currencies; end
 
-  # source://shopify-money//lib/money/config.rb#19
+  # source://shopify-money//lib/money/config.rb#74
   def experimental_crypto_currencies!; end
 
   # Sets the attribute experimental_crypto_currencies
   #
   # @param value the value to set the attribute experimental_crypto_currencies to.
   #
-  # source://shopify-money//lib/money/config.rb#5
+  # source://shopify-money//lib/money/config.rb#44
   def experimental_crypto_currencies=(_arg0); end
 
-  # source://shopify-money//lib/money/config.rb#7
+  # source://shopify-money//lib/money/config.rb#62
   def legacy_default_currency!; end
 
   # Returns the value of attribute legacy_deprecations.
   #
-  # source://shopify-money//lib/money/config.rb#5
+  # source://shopify-money//lib/money/config.rb#44
   def legacy_deprecations; end
 
-  # source://shopify-money//lib/money/config.rb#11
+  # source://shopify-money//lib/money/config.rb#66
   def legacy_deprecations!; end
 
   # Sets the attribute legacy_deprecations
   #
   # @param value the value to set the attribute legacy_deprecations to.
   #
-  # source://shopify-money//lib/money/config.rb#5
+  # source://shopify-money//lib/money/config.rb#44
   def legacy_deprecations=(_arg0); end
 
   # Returns the value of attribute legacy_json_format.
   #
-  # source://shopify-money//lib/money/config.rb#5
+  # source://shopify-money//lib/money/config.rb#44
   def legacy_json_format; end
 
-  # source://shopify-money//lib/money/config.rb#15
+  # source://shopify-money//lib/money/config.rb#70
   def legacy_json_format!; end
 
   # Sets the attribute legacy_json_format
   #
   # @param value the value to set the attribute legacy_json_format to.
   #
-  # source://shopify-money//lib/money/config.rb#5
+  # source://shopify-money//lib/money/config.rb#44
   def legacy_json_format=(_arg0); end
 
-  # source://shopify-money//lib/money/config.rb#30
-  def without_legacy_deprecations(&block); end
+  class << self
+    # source://shopify-money//lib/money/config.rb#20
+    def configure_current(**configs, &block); end
+
+    # source://shopify-money//lib/money/config.rb#12
+    def current; end
+
+    # source://shopify-money//lib/money/config.rb#16
+    def current=(config); end
+
+    # source://shopify-money//lib/money/config.rb#8
+    def global; end
+
+    # source://shopify-money//lib/money/config.rb#32
+    def reset_current; end
+
+    private
+
+    # source://shopify-money//lib/money/config.rb#39
+    def thread_local_config; end
+  end
 end
+
+# source://shopify-money//lib/money/config.rb#5
+Money::Config::CONFIG_THREAD = T.let(T.unsafe(nil), Symbol)
 
 # source://shopify-money//lib/money/currency/loader.rb#6
 class Money::Currency
   # @raise [UnknownCurrency]
   # @return [Currency] a new instance of Currency
   #
-  # source://shopify-money//lib/money/currency.rb#46
+  # source://shopify-money//lib/money/currency.rb#50
   def initialize(currency_iso); end
 
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/currency.rb#75
+  # source://shopify-money//lib/money/currency.rb#82
   def ==(other); end
 
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/currency.rb#71
+  # source://shopify-money//lib/money/currency.rb#78
   def compatible?(other); end
 
   # Returns the value of attribute decimal_mark.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def decimal_mark; end
 
   # Returns the value of attribute disambiguate_symbol.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def disambiguate_symbol; end
 
   # @return [Boolean]
   #
-  # source://shopify-money//lib/money/currency.rb#63
+  # source://shopify-money//lib/money/currency.rb#70
   def eql?(other); end
 
-  # source://shopify-money//lib/money/currency.rb#67
+  # source://shopify-money//lib/money/currency.rb#74
   def hash; end
 
   # Returns the value of attribute iso_code.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def iso_code; end
 
   # Returns the value of attribute iso_numeric.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def iso_numeric; end
 
   # Returns the value of attribute minor_units.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def minor_units; end
 
   # Returns the value of attribute name.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def name; end
 
   # Returns the value of attribute smallest_denomination.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def smallest_denomination; end
 
   # Returns the value of attribute subunit_symbol.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def subunit_symbol; end
 
   # Returns the value of attribute subunit_to_unit.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def subunit_to_unit; end
 
   # Returns the value of attribute symbol.
   #
-  # source://shopify-money//lib/money/currency.rb#35
+  # source://shopify-money//lib/money/currency.rb#39
   def symbol; end
 
   # Returns the value of attribute iso_code.
   #
-  # source://shopify-money//lib/money/currency.rb#76
+  # source://shopify-money//lib/money/currency.rb#83
   def to_s; end
 
   class << self
@@ -513,6 +532,9 @@ class Money::Currency
     #
     # source://shopify-money//lib/money/currency.rb#13
     def new(currency_iso); end
+
+    # source://shopify-money//lib/money/currency.rb#34
+    def reset_loaded_currencies; end
   end
 end
 
