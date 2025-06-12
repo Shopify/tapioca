@@ -601,17 +601,17 @@ class RubyLsp::Rails::Hover
   sig { params(node: ::Prism::ConstantPathNode).void }
   def on_constant_path_node_enter(node); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/hover.rb#39
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/hover.rb#40
   sig { params(node: ::Prism::ConstantReadNode).void }
   def on_constant_read_node_enter(node); end
 
   private
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/hover.rb#95
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/hover.rb#97
   sig { params(default_value: ::String, type: ::String).returns(::String) }
   def format_default(default_value, type); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/hover.rb#49
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/hover.rb#51
   sig { params(name: ::String).void }
   def generate_column_content(name); end
 end
@@ -700,40 +700,51 @@ class RubyLsp::Rails::RailsTestStyle < ::RubyLsp::Listeners::TestDiscovery
   # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#54
   sig do
     params(
-      client: ::RubyLsp::Rails::RunnerClient,
       response_builder: RubyLsp::ResponseBuilders::TestCollection,
       global_state: ::RubyLsp::GlobalState,
       dispatcher: ::Prism::Dispatcher,
       uri: ::URI::Generic
     ).void
   end
-  def initialize(client, response_builder, global_state, dispatcher, uri); end
+  def initialize(response_builder, global_state, dispatcher, uri); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#84
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#106
   sig { params(node: ::Prism::CallNode).void }
   def on_call_node_enter(node); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#66
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#67
   sig { params(node: ::Prism::ClassNode).void }
   def on_class_node_enter(node); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#104
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#88
+  sig { params(node: ::Prism::ClassNode).void }
+  def on_class_node_leave(node); end
+
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#126
   sig { params(node: ::Prism::DefNode).void }
   def on_def_node_enter(node); end
 
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#94
+  sig { params(node: ::Prism::ModuleNode).void }
+  def on_module_node_enter(node); end
+
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#100
+  sig { params(node: ::Prism::ModuleNode).void }
+  def on_module_node_leave(node); end
+
   private
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#127
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#149
   sig { params(node: ::Prism::Node, test_name: ::String).void }
   def add_test_item(node, test_name); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#116
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#138
   sig { params(attached_ancestors: T::Array[::String], fully_qualified_name: ::String).returns(T::Boolean) }
   def declarative_minitest?(attached_ancestors, fully_qualified_name); end
 
-  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#143
-  sig { returns(T.nilable(::RubyLsp::Requests::Support::TestItem)) }
-  def group_test_item; end
+  # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#165
+  sig { returns(T.any(::RubyLsp::Requests::Support::TestItem, RubyLsp::ResponseBuilders::TestCollection)) }
+  def last_test_group; end
 
   class << self
     # source://ruby-lsp-rails//lib/ruby_lsp/ruby_lsp_rails/rails_test_style.rb#11
