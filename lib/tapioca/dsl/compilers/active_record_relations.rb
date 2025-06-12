@@ -225,6 +225,7 @@ module Tapioca
           of: ["Integer", "1000"],
           error_on_ignore: ["T.untyped", "nil"],
           order: ["Symbol", ":asc"],
+          cursor: ["T.untyped", "primary_key"],
           use_ranges: ["T.untyped", "nil"],
         } #: Hash[Symbol, [String, String]]
         CALCULATION_METHODS = ActiveRecord::Calculations.instance_methods(false) #: Array[Symbol]
