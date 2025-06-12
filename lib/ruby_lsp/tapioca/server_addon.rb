@@ -2,8 +2,6 @@
 # frozen_string_literal: true
 
 require "tapioca/internal"
-require "tapioca/dsl/compilers/url_helpers"
-require "tapioca/dsl/compilers/active_record_fixtures"
 
 module RubyLsp
   module Tapioca
