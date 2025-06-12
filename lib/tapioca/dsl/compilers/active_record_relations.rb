@@ -217,6 +217,16 @@ module Tapioca
           []
         end #: Array[Symbol]
         BATCHES_METHODS = ActiveRecord::Batches.instance_methods(false) #: Array[Symbol]
+        BATCHES_METHODS_PARAMETERS = {
+          start: ["T.untyped", "nil"],
+          finish: ["T.untyped", "nil"],
+          load: ["T.untyped", "false"],
+          batch_size: ["Integer", "1000"],
+          of: ["Integer", "1000"],
+          error_on_ignore: ["T.untyped", "nil"],
+          order: ["Symbol", ":asc"],
+          use_ranges: ["T.untyped", "nil"],
+        } #: Hash[Symbol, [String, String]]
         CALCULATION_METHODS = ActiveRecord::Calculations.instance_methods(false) #: Array[Symbol]
         ENUMERABLE_QUERY_METHODS = [:any?, :many?, :none?, :one?] #: Array[Symbol]
         FIND_OR_CREATE_METHODS = [
@@ -855,102 +865,31 @@ module Tapioca
           end
 
           BATCHES_METHODS.each do |method_name|
-            case method_name
-            when :find_each
-              order = ActiveRecord::Batches.instance_method(:find_each).parameters.include?([:key, :order])
+            block_param, return_type, parameters = batch_method_configs(method_name)
+            next if block_param.nil? || return_type.nil? || parameters.nil?
 
-              common_relation_methods_module.create_method("find_each") do |method|
-                method.add_kw_opt_param("start", "nil")
-                method.add_kw_opt_param("finish", "nil")
-                method.add_kw_opt_param("batch_size", "1000")
-                method.add_kw_opt_param("error_on_ignore", "nil")
-                method.add_kw_opt_param("order", ":asc") if order
-                method.add_block_param("block")
+            common_relation_methods_module.create_method(method_name.to_s) do |method|
+              parameters.each do |name, (style, _type, default)|
+                # The style is always "key", but this is a safeguard to prevent confusing errors in the future.
+                raise "Unexpected style #{style} for #{name}" unless style == :key
 
-                method.add_sig do |sig|
-                  sig.add_param("start", "T.untyped")
-                  sig.add_param("finish", "T.untyped")
-                  sig.add_param("batch_size", "Integer")
-                  sig.add_param("error_on_ignore", "T.untyped")
-                  sig.add_param("order", "Symbol") if order
-                  sig.add_param("block", "T.proc.params(object: #{constant_name}).void")
-                  sig.return_type = "void"
-                end
-
-                method.add_sig do |sig|
-                  sig.add_param("start", "T.untyped")
-                  sig.add_param("finish", "T.untyped")
-                  sig.add_param("batch_size", "Integer")
-                  sig.add_param("error_on_ignore", "T.untyped")
-                  sig.add_param("order", "Symbol") if order
-                  sig.return_type = "T::Enumerator[#{constant_name}]"
-                end
+                method.add_kw_opt_param(name, T.must(default))
               end
-            when :find_in_batches
-              order = ActiveRecord::Batches.instance_method(:find_in_batches).parameters.include?([:key, :order])
-              common_relation_methods_module.create_method("find_in_batches") do |method|
-                method.add_kw_opt_param("start", "nil")
-                method.add_kw_opt_param("finish", "nil")
-                method.add_kw_opt_param("batch_size", "1000")
-                method.add_kw_opt_param("error_on_ignore", "nil")
-                method.add_kw_opt_param("order", ":asc") if order
-                method.add_block_param("block")
+              method.add_block_param("block")
 
-                method.add_sig do |sig|
-                  sig.add_param("start", "T.untyped")
-                  sig.add_param("finish", "T.untyped")
-                  sig.add_param("batch_size", "Integer")
-                  sig.add_param("error_on_ignore", "T.untyped")
-                  sig.add_param("order", "Symbol") if order
-                  sig.add_param("block", "T.proc.params(object: T::Array[#{constant_name}]).void")
-                  sig.return_type = "void"
+              method.add_sig do |sig|
+                parameters.each do |name, (_style, type, _default)|
+                  sig.add_param(name, type)
                 end
-
-                method.add_sig do |sig|
-                  sig.add_param("start", "T.untyped")
-                  sig.add_param("finish", "T.untyped")
-                  sig.add_param("batch_size", "Integer")
-                  sig.add_param("error_on_ignore", "T.untyped")
-                  sig.add_param("order", "Symbol") if order
-                  sig.return_type = "T::Enumerator[T::Enumerator[#{constant_name}]]"
-                end
+                sig.add_param("block", "T.proc.params(object: #{block_param}).void")
+                sig.return_type = "void"
               end
-            when :in_batches
-              order = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :order])
-              use_ranges = ActiveRecord::Batches.instance_method(:in_batches).parameters.include?([:key, :use_ranges])
 
-              common_relation_methods_module.create_method("in_batches") do |method|
-                method.add_kw_opt_param("of", "1000")
-                method.add_kw_opt_param("start", "nil")
-                method.add_kw_opt_param("finish", "nil")
-                method.add_kw_opt_param("load", "false")
-                method.add_kw_opt_param("error_on_ignore", "nil")
-                method.add_kw_opt_param("order", ":asc") if order
-                method.add_kw_opt_param("use_ranges", "nil") if use_ranges
-                method.add_block_param("block")
-
-                method.add_sig do |sig|
-                  sig.add_param("of", "Integer")
-                  sig.add_param("start", "T.untyped")
-                  sig.add_param("finish", "T.untyped")
-                  sig.add_param("load", "T.untyped")
-                  sig.add_param("error_on_ignore", "T.untyped")
-                  sig.add_param("order", "Symbol") if order
-                  sig.add_param("use_ranges", "T.untyped") if use_ranges
-                  sig.add_param("block", "T.proc.params(object: #{RelationClassName}).void")
-                  sig.return_type = "void"
+              method.add_sig do |sig|
+                parameters.each do |name, (_style, type, _default)|
+                  sig.add_param(name, type)
                 end
-
-                method.add_sig do |sig|
-                  sig.add_param("of", "Integer")
-                  sig.add_param("start", "T.untyped")
-                  sig.add_param("finish", "T.untyped")
-                  sig.add_param("load", "T.untyped")
-                  sig.add_param("error_on_ignore", "T.untyped")
-                  sig.add_param("order", "Symbol") if order
-                  sig.add_param("use_ranges", "T.untyped") if use_ranges
-                  sig.return_type = "::ActiveRecord::Batches::BatchEnumerator"
-                end
+                sig.return_type = return_type
               end
             end
           end
@@ -1027,6 +966,31 @@ module Tapioca
               sig.return_type = constant_name
             end
           end
+        end
+
+        #: (Symbol) -> [String, String, Hash[String, [Symbol, String, String?]]]?
+        def batch_method_configs(method_name)
+          block_param, return_type = case method_name
+          when :find_each
+            [constant_name, "T::Enumerator[#{constant_name}]"]
+          when :find_in_batches
+            ["T::Array[#{constant_name}]", "T::Enumerator[T::Enumerator[#{constant_name}]]"]
+          when :in_batches
+            [RelationClassName, "::ActiveRecord::Batches::BatchEnumerator"]
+          else
+            return
+          end
+
+          parameters = {}
+
+          ActiveRecord::Batches.instance_method(method_name).parameters.each do |style, name|
+            type, default = BATCHES_METHODS_PARAMETERS[name]
+            next if type.nil?
+
+            parameters[name.to_s] = [style, type, default]
+          end
+
+          [block_param, return_type, parameters]
         end
 
         #: ((Symbol | String) name, ?parameters: Array[RBI::TypedParam], ?return_type: String?) -> void
