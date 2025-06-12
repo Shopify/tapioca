@@ -41,6 +41,8 @@ end
 class RBI::Attr < ::RBI::NodeWithComments
   include ::RBI::Indexable
 
+  abstract!
+
   # @return [Attr] a new instance of Attr
   #
   # source://rbi//lib/rbi/model.rb#303
@@ -95,7 +97,6 @@ class RBI::Attr < ::RBI::NodeWithComments
   def visibility; end
 
   # source://rbi//lib/rbi/model.rb#297
-  # @return [Visibility]
   def visibility=(_arg0); end
 
   private
@@ -309,7 +310,6 @@ class RBI::Class < ::RBI::Scope
   def name; end
 
   # source://rbi//lib/rbi/model.rb#197
-  # @return [String]
   def name=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#200
@@ -317,7 +317,6 @@ class RBI::Class < ::RBI::Scope
   def superclass_name; end
 
   # source://rbi//lib/rbi/model.rb#200
-  # @return [String, nil]
   def superclass_name=(_arg0); end
 end
 
@@ -338,7 +337,6 @@ class RBI::Comment < ::RBI::Node
   def text; end
 
   # source://rbi//lib/rbi/model.rb#53
-  # @return [String]
   def text=(_arg0); end
 end
 
@@ -358,18 +356,6 @@ end
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#555
-# A tree showing incompatibles nodes
-# Is rendered as a merge conflict between `left` and` right`:
-# ~~~rb
-# class Foo
-#   <<<<<<< left
-#   def m1; end
-#   def m2(a); end
-#   =======
-#   def m1(a); end
-#   def m2; end
-#   >>>>>>> right
-# end
 class RBI::ConflictTree < ::RBI::Tree
   # @return [ConflictTree] a new instance of ConflictTree
   #
@@ -386,11 +372,9 @@ class RBI::ConflictTree < ::RBI::Tree
   def left_name; end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#557
-  # @return [Tree]
   def right; end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#560
-  # @return [String]
   def right_name; end
 end
 
@@ -437,7 +421,6 @@ class RBI::Const < ::RBI::NodeWithComments
   def to_s; end
 
   # source://rbi//lib/rbi/model.rb#265
-  # @return [String]
   def value; end
 end
 
@@ -503,7 +486,6 @@ class RBI::File
   def comments; end
 
   # source://rbi//lib/rbi/model.rb#139
-  # @return [Array<Comment>]
   def comments=(_arg0); end
 
   # @return [Boolean]
@@ -536,7 +518,6 @@ class RBI::File
   def root; end
 
   # source://rbi//lib/rbi/model.rb#133
-  # @return [Tree]
   def root=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#136
@@ -544,7 +525,6 @@ class RBI::File
   def strictness; end
 
   # source://rbi//lib/rbi/model.rb#136
-  # @return [String, nil]
   def strictness=(_arg0); end
 
   # source://rbi//lib/rbi/printer.rb#823
@@ -583,7 +563,6 @@ class RBI::Formatter
   def max_line_length; end
 
   # source://rbi//lib/rbi/formatter.rb#7
-  # @return [Integer, nil]
   def max_line_length=(_arg0); end
 
   # source://rbi//lib/rbi/formatter.rb#29
@@ -615,55 +594,42 @@ class RBI::Group::Kind
 end
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#101
-# : Kind
 RBI::Group::Kind::Attrs = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#107
-# : Kind
 RBI::Group::Kind::Consts = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#97
-# : Kind
 RBI::Group::Kind::Helpers = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#104
-# : Kind
 RBI::Group::Kind::Inits = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#105
-# : Kind
 RBI::Group::Kind::Methods = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#99
-# : Kind
 RBI::Group::Kind::MixesInClassMethods = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#95
-# : Kind
 RBI::Group::Kind::Mixins = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#96
-# : Kind
 RBI::Group::Kind::RequiredAncestors = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#100
-# : Kind
 RBI::Group::Kind::Sends = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#106
-# : Kind
 RBI::Group::Kind::SingletonClasses = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#103
-# : Kind
 RBI::Group::Kind::TEnums = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#102
-# : Kind
 RBI::Group::Kind::TStructFields = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#98
-# : Kind
 RBI::Group::Kind::TypeMembers = T.let(T.unsafe(nil), RBI::Group::Kind)
 
 # source://rbi//lib/rbi/rewriters/group_nodes.rb#5
@@ -781,6 +747,8 @@ end
 #
 # source://rbi//lib/rbi/index.rb#69
 module RBI::Indexable
+  interface!
+
   # Unique IDs that refer to this node.
   #
   # Some nodes can have multiple ids, for example an attribute accessor matches the ID of the
@@ -789,9 +757,6 @@ module RBI::Indexable
   # @abstract
   #
   # source://rbi//lib/rbi/index.rb#76
-  # Unique IDs that refer to this node.
-  # Some nodes can have multiple ids, for example an attribute accessor matches the ID of the
-  # getter and the setter.
   sig { abstract.returns(T::Array[::String]) }
   def index_ids; end
 end
@@ -911,7 +876,6 @@ class RBI::Loc
   def initialize(file: T.unsafe(nil), begin_line: T.unsafe(nil), end_line: T.unsafe(nil), begin_column: T.unsafe(nil), end_column: T.unsafe(nil)); end
 
   # source://rbi//lib/rbi/loc.rb#23
-  # @return [Integer, nil]
   def begin_column; end
 
   # source://rbi//lib/rbi/loc.rb#23
@@ -919,11 +883,9 @@ class RBI::Loc
   def begin_line; end
 
   # source://rbi//lib/rbi/loc.rb#23
-  # @return [Integer, nil]
   def end_column; end
 
   # source://rbi//lib/rbi/loc.rb#23
-  # @return [Integer, nil]
   def end_line; end
 
   # source://rbi//lib/rbi/loc.rb#20
@@ -1061,7 +1023,6 @@ class RBI::Method < ::RBI::NodeWithComments
   def is_singleton; end
 
   # source://rbi//lib/rbi/model.rb#391
-  # @return [Boolean]
   def is_singleton=(_arg0); end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#459
@@ -1073,7 +1034,6 @@ class RBI::Method < ::RBI::NodeWithComments
   def name; end
 
   # source://rbi//lib/rbi/model.rb#385
-  # @return [String]
   def name=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#388
@@ -1085,7 +1045,6 @@ class RBI::Method < ::RBI::NodeWithComments
   def sigs; end
 
   # source://rbi//lib/rbi/model.rb#397
-  # @return [Array<Sig>]
   def sigs=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#496
@@ -1097,7 +1056,6 @@ class RBI::Method < ::RBI::NodeWithComments
   def visibility; end
 
   # source://rbi//lib/rbi/model.rb#394
-  # @return [Visibility]
   def visibility=(_arg0); end
 end
 
@@ -1138,6 +1096,8 @@ end
 #
 # source://rbi//lib/rbi/model.rb#651
 class RBI::Mixin < ::RBI::NodeWithComments
+  abstract!
+
   # @return [Mixin] a new instance of Mixin
   #
   # source://rbi//lib/rbi/model.rb#656
@@ -1192,7 +1152,6 @@ class RBI::Module < ::RBI::Scope
   def name; end
 
   # source://rbi//lib/rbi/model.rb#177
-  # @return [String]
   def name=(_arg0); end
 end
 
@@ -1200,6 +1159,8 @@ end
 #
 # source://rbi//lib/rbi/model.rb#8
 class RBI::Node
+  abstract!
+
   # @return [Node] a new instance of Node
   #
   # source://rbi//lib/rbi/model.rb#16
@@ -1211,7 +1172,6 @@ class RBI::Node
   # @return [Boolean]
   #
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#289
-  # Can `self` and `_other` be merged into a single definition?
   sig { params(_other: ::RBI::Node).returns(T::Boolean) }
   def compatible_with?(_other); end
 
@@ -1224,13 +1184,11 @@ class RBI::Node
   def loc; end
 
   # source://rbi//lib/rbi/model.rb#13
-  # @return [Loc, nil]
   def loc=(_arg0); end
 
   # Merge `self` and `other` into a single definition
   #
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#295
-  # Merge `self` and `other` into a single definition
   sig { params(other: ::RBI::Node).void }
   def merge_with(other); end
 
@@ -1247,7 +1205,6 @@ class RBI::Node
   def parent_tree; end
 
   # source://rbi//lib/rbi/model.rb#10
-  # @return [Tree, nil]
   def parent_tree=(_arg0); end
 
   # source://rbi//lib/rbi/printer.rb#832
@@ -1297,6 +1254,8 @@ end
 #
 # source://rbi//lib/rbi/model.rb#88
 class RBI::NodeWithComments < ::RBI::Node
+  abstract!
+
   # @return [NodeWithComments] a new instance of NodeWithComments
   #
   # source://rbi//lib/rbi/model.rb#93
@@ -1312,7 +1271,6 @@ class RBI::NodeWithComments < ::RBI::Node
   def comments; end
 
   # source://rbi//lib/rbi/model.rb#90
-  # @return [Array<Comment>]
   def comments=(_arg0); end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#312
@@ -1353,6 +1311,8 @@ end
 #
 # source://rbi//lib/rbi/model.rb#502
 class RBI::Param < ::RBI::NodeWithComments
+  abstract!
+
   # @return [Param] a new instance of Param
   #
   # source://rbi//lib/rbi/model.rb#507
@@ -1521,14 +1481,12 @@ class RBI::Parser::TreeBuilder < ::RBI::Parser::Visitor
   # Collect all the remaining comments within a node
   #
   # source://rbi//lib/rbi/parser.rb#539
-  # Collect all the remaining comments within a node
   sig { params(node: ::Prism::Node).void }
   def collect_dangling_comments(node); end
 
   # Collect all the remaining comments after visiting the tree
   #
   # source://rbi//lib/rbi/parser.rb#557
-  # Collect all the remaining comments after visiting the tree
   sig { void }
   def collect_orphan_comments; end
 
@@ -1664,15 +1622,12 @@ class RBI::Printer < ::RBI::Visitor
   def dedent; end
 
   # source://rbi//lib/rbi/printer.rb#9
-  # @return [Boolean]
   def in_visibility_group; end
 
   # source://rbi//lib/rbi/printer.rb#9
-  # @return [Boolean]
   def in_visibility_group=(_arg0); end
 
   # source://rbi//lib/rbi/printer.rb#34
-  # Printing
   sig { void }
   def indent; end
 
@@ -1687,7 +1642,6 @@ class RBI::Printer < ::RBI::Visitor
   # Print a string without indentation nor `\n` at the end.
   #
   # source://rbi//lib/rbi/printer.rb#45
-  # Print a string without indentation nor `\n` at the end.
   sig { params(string: ::String).void }
   def print(string); end
 
@@ -1696,27 +1650,23 @@ class RBI::Printer < ::RBI::Visitor
   def print_locs; end
 
   # source://rbi//lib/rbi/printer.rb#9
-  # @return [Boolean]
   def print_locs=(_arg0); end
 
   # Print a string with indentation and `\n` at the end.
   #
   # source://rbi//lib/rbi/printer.rb#65
-  # Print a string with indentation and `\n` at the end.
   sig { params(string: ::String).void }
   def printl(string); end
 
   # Print a string without indentation but with a `\n` at the end.
   #
   # source://rbi//lib/rbi/printer.rb#51
-  # Print a string without indentation but with a `\n` at the end.
   sig { params(string: T.nilable(::String)).void }
   def printn(string = T.unsafe(nil)); end
 
   # Print a string with indentation but without a `\n` at the end.
   #
   # source://rbi//lib/rbi/printer.rb#58
-  # Print a string with indentation but without a `\n` at the end.
   sig { params(string: T.nilable(::String)).void }
   def printt(string = T.unsafe(nil)); end
 
@@ -2127,15 +2077,12 @@ class RBI::RBSPrinter < ::RBI::Visitor
   def dedent; end
 
   # source://rbi//lib/rbi/rbs_printer.rb#9
-  # @return [Boolean]
   def in_visibility_group; end
 
   # source://rbi//lib/rbi/rbs_printer.rb#9
-  # @return [Boolean]
   def in_visibility_group=(_arg0); end
 
   # source://rbi//lib/rbi/rbs_printer.rb#44
-  # Printing
   sig { void }
   def indent; end
 
@@ -2148,7 +2095,6 @@ class RBI::RBSPrinter < ::RBI::Visitor
   def positional_names; end
 
   # source://rbi//lib/rbi/rbs_printer.rb#18
-  # @return [Boolean]
   def positional_names=(_arg0); end
 
   # source://rbi//lib/rbi/rbs_printer.rb#12
@@ -2158,7 +2104,6 @@ class RBI::RBSPrinter < ::RBI::Visitor
   # Print a string without indentation nor `\n` at the end.
   #
   # source://rbi//lib/rbi/rbs_printer.rb#55
-  # Print a string without indentation nor `\n` at the end.
   sig { params(string: ::String).void }
   def print(string); end
 
@@ -2171,7 +2116,6 @@ class RBI::RBSPrinter < ::RBI::Visitor
   def print_locs; end
 
   # source://rbi//lib/rbi/rbs_printer.rb#9
-  # @return [Boolean]
   def print_locs=(_arg0); end
 
   # source://rbi//lib/rbi/rbs_printer.rb#398
@@ -2189,21 +2133,18 @@ class RBI::RBSPrinter < ::RBI::Visitor
   # Print a string with indentation and `\n` at the end.
   #
   # source://rbi//lib/rbi/rbs_printer.rb#75
-  # Print a string with indentation and `\n` at the end.
   sig { params(string: ::String).void }
   def printl(string); end
 
   # Print a string without indentation but with a `\n` at the end.
   #
   # source://rbi//lib/rbi/rbs_printer.rb#61
-  # Print a string without indentation but with a `\n` at the end.
   sig { params(string: T.nilable(::String)).void }
   def printn(string = T.unsafe(nil)); end
 
   # Print a string with indentation but without a `\n` at the end.
   #
   # source://rbi//lib/rbi/rbs_printer.rb#68
-  # Print a string with indentation but without a `\n` at the end.
   sig { params(string: T.nilable(::String)).void }
   def printt(string = T.unsafe(nil)); end
 
@@ -2424,8 +2365,6 @@ class RBI::RBSPrinter < ::RBI::Visitor
   # Returns `nil` is the string is not a `T.let`.
   #
   # source://rbi//lib/rbi/rbs_printer.rb#961
-  # Parse a string containing a `T.let(x, X)` and extract the type
-  # Returns `nil` is the string is not a `T.let`.
   sig { params(code: T.nilable(::String)).returns(T.nilable(::String)) }
   def parse_t_let(code); end
 
@@ -2669,41 +2608,6 @@ end
 # - RBI with no version annotations are automatically counted towards ALL versions
 #
 # source://rbi//lib/rbi/rewriters/filter_versions.rb#57
-# Take a gem version and filter out all RBI that is not relevant to that version based on @version annotations
-# in comments. As an example:
-# ~~~rb
-# tree = Parser.parse_string(<<~RBI)
-#   class Foo
-#     # @version > 0.3.0
-#     def bar
-#     end
-#     # @version <= 0.3.0
-#     def bar(arg1)
-#   end
-# RBI
-# Rewriters::FilterVersions.filter(tree, Gem::Version.new("0.3.1"))
-# assert_equal(<<~RBI, tree.string)
-# ~~~
-# Supported operators:
-# - equals `=`
-# - not equals `!=`
-# - greater than `>`
-# - greater than or equal to `>=`
-# - less than `<`
-# - less than or equal to `<=`
-# - pessimistic or twiddle-wakka`~>`
-# And/or logic:
-# - "And" logic: put multiple versions on the same line
-#   - e.g. `@version > 0.3.0, <1.0.0` means version must be greater than 0.3.0 AND less than 1.0.0
-# - "Or" logic: put multiple versions on subsequent lines
-#   - e.g. the following means version must be less than 0.3.0 OR greater than 1.0.0
-#       ```
-#       # @version < 0.3.0
-#       # @version > 1.0.0
-# Prerelease versions:
-# - Prerelease versions are considered less than their non-prerelease counterparts
-#   - e.g. `0.4.0-prerelease` is less than `0.4.0`
-# RBI with no versions:
 class RBI::Rewriters::FilterVersions < ::RBI::Visitor
   # @return [FilterVersions] a new instance of FilterVersions
   #
@@ -2751,20 +2655,6 @@ RBI::Rewriters::FilterVersions::VERSION_PREFIX = T.let(T.unsafe(nil), String)
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/flatten_singleton_methods.rb#30
-# Rewrite non-singleton methods inside singleton classes to singleton methods
-# Example:
-# ~~~rb
-# class << self
-#  def m1; end
-#  def self.m2; end
-#  class << self
-#    def m3; end
-#  end
-# end
-# will be rewritten to:
-# def self.m1; end
-#   def self.m2; end
-#   def self.m3; end
 class RBI::Rewriters::FlattenSingletonMethods < ::RBI::Visitor
   # source://rbi//lib/rbi/rewriters/flatten_singleton_methods.rb#33
   sig { override.params(node: T.nilable(::RBI::Node)).void }
@@ -2794,18 +2684,6 @@ end
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/flatten_visibilities.rb#27
-# Flattens visibility nodes into method nodes
-# Example:
-# ~~~rb
-# class A
-#   def m1; end
-#   private
-#   def m2; end
-#   def m3; end
-# end
-# will be transformed into:
-#   private def m2; end
-#   private def m3; end
 class RBI::Rewriters::FlattenVisibilities < ::RBI::Visitor
   # @return [FlattenVisibilities] a new instance of FlattenVisibilities
   #
@@ -2866,21 +2744,6 @@ end
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#39
-# Merge two RBI trees together
-# Be this `Tree`:
-# ~~~rb
-# class Foo
-#   attr_accessor :a
-#   def m; end
-#   C = 10
-# end
-# Merged with this one:
-#   attr_reader :a
-#   def m(x); end
-# Compatible definitions are merged together while incompatible definitions are moved into a `ConflictTree`:
-#   <<<<<<< left
-#   =======
-#   >>>>>>> right
 class RBI::Rewriters::Merge
   # @return [Merge] a new instance of Merge
   #
@@ -2930,11 +2793,9 @@ class RBI::Rewriters::Merge::Conflict
   def left_name; end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#84
-  # @return [Node]
   def right; end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#87
-  # @return [String]
   def right_name; end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#98
@@ -2974,19 +2835,6 @@ end
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#247
-# Merge adjacent conflict trees
-# Transform this:
-# ~~~rb
-# class Foo
-#   <<<<<<< left
-#   def m1; end
-#   =======
-#   def m1(a); end
-#   >>>>>>> right
-#   def m2(a); end
-#   def m2; end
-# end
-# Into this:
 class RBI::Rewriters::Merge::ConflictTreeMerger < ::RBI::Visitor
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#250
   sig { override.params(node: T.nilable(::RBI::Node)).void }
@@ -3014,15 +2862,12 @@ class RBI::Rewriters::Merge::Keep
 end
 
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#42
-# : Keep
 RBI::Rewriters::Merge::Keep::LEFT = T.let(T.unsafe(nil), RBI::Rewriters::Merge::Keep)
 
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#41
-# : Keep
 RBI::Rewriters::Merge::Keep::NONE = T.let(T.unsafe(nil), RBI::Rewriters::Merge::Keep)
 
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#43
-# : Keep
 RBI::Rewriters::Merge::Keep::RIGHT = T.let(T.unsafe(nil), RBI::Rewriters::Merge::Keep)
 
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#103
@@ -3103,16 +2948,6 @@ end
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/nest_top_level_members.rb#22
-# This rewriter moves top-level members into a top-level Object class
-# Example:
-# ~~~rb
-# def foo; end
-# attr_reader :bar
-# will be rewritten to:
-# class Object
-#  def foo; end
-#  attr_reader :bar
-# end
 class RBI::Rewriters::NestTopLevelMembers < ::RBI::Visitor
   # @return [NestTopLevelMembers] a new instance of NestTopLevelMembers
   #
@@ -3169,27 +3004,6 @@ end
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/remove_known_definitions.rb#48
-# Remove all definitions existing in the index from the current tree
-# Let's create an `Index` from two different `Tree`s:
-# ~~~rb
-# tree1 = Parse.parse_string(<<~RBI)
-#   class Foo
-#     def foo; end
-#   end
-# RBI
-# tree2 = Parse.parse_string(<<~RBI)
-#   FOO = 10
-# index = Index.index(tree1, tree2)
-# We can use `RemoveKnownDefinitions` to remove the definitions found in the `index` from the `Tree` to clean:
-# tree_to_clean = Parser.parse_string(<<~RBI)
-#     def bar; end
-#   BAR = 42
-# cleaned_tree, operations = RemoveKnownDefinitions.remove(tree_to_clean, index)
-# assert_equal(<<~RBI, cleaned_tree)
-# assert_equal(<<~OPERATIONS, operations.join("\n"))
-#   Deleted ::Foo#foo at -:2:2-2-16 (duplicate from -:2:2-2:16)
-#   Deleted ::FOO at -:5:0-5:8 (duplicate from -:1:0-1:8)
-# OPERATIONS
 class RBI::Rewriters::RemoveKnownDefinitions < ::RBI::Visitor
   # @return [RemoveKnownDefinitions] a new instance of RemoveKnownDefinitions
   #
@@ -3250,7 +3064,6 @@ class RBI::Rewriters::RemoveKnownDefinitions::Operation
   def deleted_node; end
 
   # source://rbi//lib/rbi/rewriters/remove_known_definitions.rb#128
-  # @return [Node]
   def duplicate_of; end
 
   # source://rbi//lib/rbi/rewriters/remove_known_definitions.rb#137
@@ -3315,10 +3128,11 @@ class RBI::Rewriters::TranslateRBSSigs::Error < ::RBI::Error; end
 class RBI::Scope < ::RBI::Tree
   include ::RBI::Indexable
 
+  abstract!
+
   # Duplicate `self` scope without its body
   #
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#346
-  # Duplicate `self` scope without its body
   sig { returns(T.self_type) }
   def dup_empty; end
 
@@ -3351,16 +3165,6 @@ end
 # ~~~
 #
 # source://rbi//lib/rbi/rewriters/merge_trees.rb#586
-# A conflict between two scope headers
-# Is rendered as a merge conflict between `left` and` right` for scope definitions:
-# ~~~rb
-# <<<<<<< left
-# class Foo
-# =======
-# module Foo
-# >>>>>>> right
-#   def m1; end
-# end
 class RBI::ScopeConflict < ::RBI::Tree
   # @return [ScopeConflict] a new instance of ScopeConflict
   #
@@ -3377,11 +3181,9 @@ class RBI::ScopeConflict < ::RBI::Tree
   def left_name; end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#588
-  # @return [Scope]
   def right; end
 
   # source://rbi//lib/rbi/rewriters/merge_trees.rb#591
-  # @return [String]
   def right_name; end
 end
 
@@ -3475,11 +3277,9 @@ class RBI::Sig < ::RBI::NodeWithComments
   def add_param(name, type); end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def allow_incompatible_override; end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def allow_incompatible_override=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#841
@@ -3487,7 +3287,6 @@ class RBI::Sig < ::RBI::NodeWithComments
   def checked; end
 
   # source://rbi//lib/rbi/model.rb#841
-  # @return [Symbol, nil]
   def checked=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#835
@@ -3495,31 +3294,24 @@ class RBI::Sig < ::RBI::NodeWithComments
   def is_abstract; end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def is_abstract=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def is_final; end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def is_final=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def is_overridable; end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def is_overridable=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def is_override; end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def is_override=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#829
@@ -3531,7 +3323,6 @@ class RBI::Sig < ::RBI::NodeWithComments
   def return_type; end
 
   # source://rbi//lib/rbi/model.rb#832
-  # @return [Type, String]
   def return_type=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#838
@@ -3539,11 +3330,9 @@ class RBI::Sig < ::RBI::NodeWithComments
   def type_params; end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def without_runtime; end
 
   # source://rbi//lib/rbi/model.rb#835
-  # @return [Boolean]
   def without_runtime=(_arg0); end
 end
 
@@ -3627,7 +3416,6 @@ class RBI::Struct < ::RBI::Scope
   def keyword_init; end
 
   # source://rbi//lib/rbi/model.rb#241
-  # @return [Boolean]
   def keyword_init=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#238
@@ -3635,7 +3423,6 @@ class RBI::Struct < ::RBI::Scope
   def members; end
 
   # source://rbi//lib/rbi/model.rb#238
-  # @return [Array<Symbol>]
   def members=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#235
@@ -3643,7 +3430,6 @@ class RBI::Struct < ::RBI::Scope
   def name; end
 
   # source://rbi//lib/rbi/model.rb#235
-  # @return [String]
   def name=(_arg0); end
 end
 
@@ -3786,6 +3572,8 @@ end
 #
 # source://rbi//lib/rbi/model.rb#925
 class RBI::TStructField < ::RBI::NodeWithComments
+  abstract!
+
   # @return [TStructField] a new instance of TStructField
   #
   # source://rbi//lib/rbi/model.rb#936
@@ -3811,7 +3599,6 @@ class RBI::TStructField < ::RBI::NodeWithComments
   def default; end
 
   # source://rbi//lib/rbi/model.rb#933
-  # @return [String, nil]
   def default=(_arg0); end
 
   # @abstract
@@ -3825,7 +3612,6 @@ class RBI::TStructField < ::RBI::NodeWithComments
   def name; end
 
   # source://rbi//lib/rbi/model.rb#927
-  # @return [String]
   def name=(_arg0); end
 
   # source://rbi//lib/rbi/model.rb#930
@@ -3833,7 +3619,6 @@ class RBI::TStructField < ::RBI::NodeWithComments
   def type; end
 
   # source://rbi//lib/rbi/model.rb#930
-  # @return [Type, String]
   def type=(_arg0); end
 end
 
@@ -4035,6 +3820,8 @@ end
 #
 # source://rbi//lib/rbi/type.rb#7
 class RBI::Type
+  abstract!
+
   # @return [Type] a new instance of Type
   #
   # source://rbi//lib/rbi/type.rb#905
@@ -4068,14 +3855,6 @@ class RBI::Type
   # ```
   #
   # source://rbi//lib/rbi/type.rb#919
-  # Returns a new type that is `nilable` if it is not already.
-  # If the type is already nilable, it returns itself.
-  # ```ruby
-  # type = RBI::Type.simple("String")
-  # type.to_rbi # => "String"
-  # type.nilable.to_rbi # => "T.nilable(String)"
-  # type.nilable.nilable.to_rbi # => "T.nilable(String)"
-  # ```
   sig { returns(::RBI::Type) }
   def nilable; end
 
@@ -4084,7 +3863,6 @@ class RBI::Type
   # @return [Boolean]
   #
   # source://rbi//lib/rbi/type.rb#946
-  # Returns whether the type is nilable.
   sig { returns(T::Boolean) }
   def nilable?; end
 
@@ -4100,15 +3878,6 @@ class RBI::Type
   # ```
   #
   # source://rbi//lib/rbi/type.rb#934
-  # Returns the non-nilable version of the type.
-  # If the type is already non-nilable, it returns itself.
-  # If the type is nilable, it returns the inner type.
-  # ```ruby
-  # type = RBI::Type.nilable(RBI::Type.simple("String"))
-  # type.to_rbi # => "T.nilable(String)"
-  # type.non_nilable.to_rbi # => "String"
-  # type.non_nilable.non_nilable.to_rbi # => "String"
-  # ```
   sig { returns(::RBI::Type) }
   def non_nilable; end
 
@@ -4124,11 +3893,6 @@ class RBI::Type
   # @abstract
   #
   # source://rbi//lib/rbi/type.rb#960
-  # Returns a normalized version of the type.
-  # Normalized types are meant to be easier to process, not to read.
-  # For example, `T.any(TrueClass, FalseClass)` instead of `T::Boolean` or
-  # `T.any(String, NilClass)` instead of `T.nilable(String)`.
-  # This is the inverse of `#simplify`.
   sig { abstract.returns(::RBI::Type) }
   def normalize; end
 
@@ -4148,11 +3912,6 @@ class RBI::Type
   # @abstract
   #
   # source://rbi//lib/rbi/type.rb#972
-  # Returns a simplified version of the type.
-  # Simplified types are meant to be easier to read, not to process.
-  # For example, `T::Boolean` instead of `T.any(TrueClass, FalseClass)` or
-  # `T.nilable(String)` instead of `T.any(String, NilClass)`.
-  # This is the inverse of `#normalize`.
   sig { abstract.returns(::RBI::Type) }
   def simplify; end
 
@@ -4173,9 +3932,6 @@ class RBI::Type
     # it may return something other than a `All`.
     #
     # source://rbi//lib/rbi/type.rb#847
-    # Builds a type that represents an intersection of multiple types like `T.all(String, Integer)`.
-    # Note that this method transforms types such as `T.all(String, String)` into `String`, so
-    # it may return something other than a `All`.
     sig { params(type1: ::RBI::Type, type2: ::RBI::Type, types: ::RBI::Type).returns(::RBI::Type) }
     def all(type1, type2, *types); end
 
@@ -4185,44 +3941,36 @@ class RBI::Type
     # it may return something other than a `Any`.
     #
     # source://rbi//lib/rbi/type.rb#856
-    # Builds a type that represents a union of multiple types like `T.any(String, Integer)`.
-    # Note that this method transforms types such as `T.any(String, NilClass)` into `T.nilable(String)`, so
-    # it may return something other than a `Any`.
     sig { params(type1: ::RBI::Type, type2: ::RBI::Type, types: ::RBI::Type).returns(::RBI::Type) }
     def any(type1, type2, *types); end
 
     # Builds a type that represents `T.anything`.
     #
     # source://rbi//lib/rbi/type.rb#778
-    # Builds a type that represents `T.anything`.
     sig { returns(::RBI::Type::Anything) }
     def anything; end
 
     # Builds a type that represents `T.attached_class`.
     #
     # source://rbi//lib/rbi/type.rb#784
-    # Builds a type that represents `T.attached_class`.
     sig { returns(::RBI::Type::AttachedClass) }
     def attached_class; end
 
     # Builds a type that represents `T::Boolean`.
     #
     # source://rbi//lib/rbi/type.rb#790
-    # Builds a type that represents `T::Boolean`.
     sig { returns(::RBI::Type::Boolean) }
     def boolean; end
 
     # Builds a type that represents the singleton class of another type like `T.class_of(Foo)`.
     #
     # source://rbi//lib/rbi/type.rb#828
-    # Builds a type that represents the singleton class of another type like `T.class_of(Foo)`.
     sig { params(type: ::RBI::Type::Simple, type_parameter: T.nilable(::RBI::Type)).returns(::RBI::Type::ClassOf) }
     def class_of(type, type_parameter = T.unsafe(nil)); end
 
     # Builds a type that represents a generic type like `T::Array[String]` or `T::Hash[Symbol, Integer]`.
     #
     # source://rbi//lib/rbi/type.rb#864
-    # Builds a type that represents a generic type like `T::Array[String]` or `T::Hash[Symbol, Integer]`.
     sig { params(name: ::String, params: T.any(::RBI::Type, T::Array[::RBI::Type])).returns(::RBI::Type::Generic) }
     def generic(name, *params); end
 
@@ -4232,16 +3980,12 @@ class RBI::Type
     # it may return something other than a `RBI::Type::Nilable`.
     #
     # source://rbi//lib/rbi/type.rb#837
-    # Builds a type that represents a nilable of another type like `T.nilable(String)`.
-    # Note that this method transforms types such as `T.nilable(T.untyped)` into `T.untyped`, so
-    # it may return something other than a `RBI::Type::Nilable`.
     sig { params(type: ::RBI::Type).returns(::RBI::Type) }
     def nilable(type); end
 
     # Builds a type that represents `T.noreturn`.
     #
     # source://rbi//lib/rbi/type.rb#796
-    # Builds a type that represents `T.noreturn`.
     sig { returns(::RBI::Type::NoReturn) }
     def noreturn; end
 
@@ -4258,21 +4002,18 @@ class RBI::Type
     # Builds a type that represents a proc type like `T.proc.void`.
     #
     # source://rbi//lib/rbi/type.rb#892
-    # Builds a type that represents a proc type like `T.proc.void`.
     sig { returns(::RBI::Type::Proc) }
     def proc; end
 
     # Builds a type that represents `T.self_type`.
     #
     # source://rbi//lib/rbi/type.rb#802
-    # Builds a type that represents `T.self_type`.
     sig { returns(::RBI::Type::SelfType) }
     def self_type; end
 
     # Builds a type that represents a shape type like `{name: String, age: Integer}`.
     #
     # source://rbi//lib/rbi/type.rb#884
-    # Builds a type that represents a shape type like `{name: String, age: Integer}`.
     sig { params(types: T::Hash[T.any(::String, ::Symbol), ::RBI::Type]).returns(::RBI::Type::Shape) }
     def shape(types = T.unsafe(nil)); end
 
@@ -4283,43 +4024,36 @@ class RBI::Type
     # @raise [NameError]
     #
     # source://rbi//lib/rbi/type.rb#767
-    # Builds a simple type like `String` or `::Foo::Bar`.
-    # It raises a `NameError` if the name is not a valid Ruby class identifier.
     sig { params(name: ::String).returns(::RBI::Type::Simple) }
     def simple(name); end
 
     # Builds a type that represents the class of another type like `T::Class[Foo]`.
     #
     # source://rbi//lib/rbi/type.rb#822
-    # Builds a type that represents the class of another type like `T::Class[Foo]`.
     sig { params(type: ::RBI::Type).returns(::RBI::Type::Class) }
     def t_class(type); end
 
     # Builds a type that represents a tuple type like `[String, Integer]`.
     #
     # source://rbi//lib/rbi/type.rb#878
-    # Builds a type that represents a tuple type like `[String, Integer]`.
     sig { params(types: T.any(::RBI::Type, T::Array[::RBI::Type])).returns(::RBI::Type::Tuple) }
     def tuple(*types); end
 
     # Builds a type that represents a type parameter like `T.type_parameter(:U)`.
     #
     # source://rbi//lib/rbi/type.rb#870
-    # Builds a type that represents a type parameter like `T.type_parameter(:U)`.
     sig { params(name: ::Symbol).returns(::RBI::Type::TypeParameter) }
     def type_parameter(name); end
 
     # Builds a type that represents `T.untyped`.
     #
     # source://rbi//lib/rbi/type.rb#808
-    # Builds a type that represents `T.untyped`.
     sig { returns(::RBI::Type::Untyped) }
     def untyped; end
 
     # Builds a type that represents `void`.
     #
     # source://rbi//lib/rbi/type.rb#814
-    # Builds a type that represents `void`.
     sig { returns(::RBI::Type::Void) }
     def void; end
 
@@ -4574,6 +4308,8 @@ end
 #
 # source://rbi//lib/rbi/type.rb#366
 class RBI::Type::Composite < ::RBI::Type
+  abstract!
+
   # @return [Composite] a new instance of Composite
   #
   # source://rbi//lib/rbi/type.rb#371
@@ -4791,7 +4527,6 @@ end
 # It can also be a qualified name like `::Foo` or `Foo::Bar`.
 #
 # source://rbi//lib/rbi/type.rb#13
-# A type that represents a simple class name like `String` or `Foo`.
 class RBI::Type::Simple < ::RBI::Type
   # @return [Simple] a new instance of Simple
   #
@@ -5043,7 +4778,6 @@ class RBI::TypeMember < ::RBI::NodeWithComments
   def to_s; end
 
   # source://rbi//lib/rbi/model.rb#1065
-  # @return [String]
   def value; end
 end
 
@@ -5179,6 +4913,8 @@ RBI::VERSION = T.let(T.unsafe(nil), String)
 #
 # source://rbi//lib/rbi/model.rb#693
 class RBI::Visibility < ::RBI::NodeWithComments
+  abstract!
+
   # @return [Visibility] a new instance of Visibility
   #
   # source://rbi//lib/rbi/model.rb#698
@@ -5229,6 +4965,8 @@ end
 #
 # source://rbi//lib/rbi/visitor.rb#8
 class RBI::Visitor
+  abstract!
+
   # source://rbi//lib/rbi/visitor.rb#10
   sig { params(node: T.nilable(::RBI::Node)).void }
   def visit(node); end

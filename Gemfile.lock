@@ -292,7 +292,7 @@ GEM
       zeitwerk (~> 2.6)
     rainbow (3.1.1)
     rake (13.3.0)
-    rbi (0.3.5)
+    rbi (0.3.6)
       prism (~> 1.0)
       rbs (>= 3.4.4)
     rbs (4.0.0.dev.4)
