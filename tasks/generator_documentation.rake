@@ -5,6 +5,8 @@ require "yard"
 require "tapioca"
 require "tapioca/runtime/reflection"
 
+YARD::Tags::Library.define_tag("@override", :override)
+
 YARD::Rake::YardocTask.new(:yard_for_generate_documentation) do |task|
   task.files = ["lib/tapioca/dsl/compilers/**/*.rb"]
   task.options = ["--no-output"]
