@@ -3,9 +3,9 @@
 
 module Tapioca
   module Dsl
+    # @abstract
     class Compiler
       extend T::Sig
-      extend T::Helpers
       extend T::Generic
 
       include RBIHelper
@@ -13,8 +13,6 @@ module Tapioca
       extend Runtime::Reflection
 
       ConstantType = type_member { { upper: Module } }
-
-      abstract!
 
       #: ConstantType
       attr_reader :constant

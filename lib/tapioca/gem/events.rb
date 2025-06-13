@@ -3,11 +3,9 @@
 
 module Tapioca
   module Gem
+    # @abstract
     class Event
       extend T::Sig
-      extend T::Helpers
-
-      abstract!
     end
 
     class SymbolFound < Event
@@ -57,11 +55,9 @@ module Tapioca
       end
     end
 
+    # @abstract
     class NodeAdded < Event
-      extend T::Helpers
       extend T::Sig
-
-      abstract!
 
       #: String
       attr_reader :symbol

@@ -3,18 +3,15 @@
 
 module Tapioca
   module Commands
+    # @abstract
     class Command
       extend T::Sig
-      extend T::Helpers
-
       class FileWriter < Thor
         include Thor::Actions
       end
 
       include Thor::Base
       include CliHelper
-
-      abstract!
 
       #: -> void
       def initialize

@@ -28,12 +28,9 @@ module Tapioca
           Marshal.load(serialized)
         end
 
+        # @requires_ancestor: Kernel
         module Forking
           extend T::Sig
-          extend T::Helpers
-
-          requires_ancestor { Kernel }
-
           #: ?{ (?) -> untyped } -> String
           def run_in_isolation(&_blk)
             read, write = IO.pipe
@@ -73,11 +70,9 @@ module Tapioca
           end
         end
 
+        # @requires_ancestor: Kernel
         module Subprocess
           extend T::Sig
-          extend T::Helpers
-
-          requires_ancestor { Kernel }
 
           ORIG_ARGV = ARGV.dup #: Array[String]
 
