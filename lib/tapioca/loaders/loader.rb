@@ -10,8 +10,9 @@ module Tapioca
       include CliHelper
       include Tapioca::GemHelper
 
-      sig { abstract.void }
-      def load; end
+      # @abstract
+      #: -> void
+      def load = raise NotImplementedError, "Abstract method called"
 
       private
 
