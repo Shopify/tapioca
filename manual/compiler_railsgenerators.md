@@ -27,3 +27,4 @@ class ServiceGenerator
   def skip_comments; end
 end
 ~~~
+: [ConstantType = singleton(::Rails::Generators::Base)]

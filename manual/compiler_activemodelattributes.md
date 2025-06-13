@@ -26,3 +26,4 @@ class Shop
   def name=(name); end
 end
 ~~~
+: [ConstantType = (Class[::ActiveModel::Attributes] & ::ActiveModel::Attributes::ClassMethods)]

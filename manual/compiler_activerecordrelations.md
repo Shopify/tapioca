@@ -139,3 +139,4 @@ class Post
   end
 end
 ~~~
+: [ConstantType = singleton(::ActiveRecord::Base)]
