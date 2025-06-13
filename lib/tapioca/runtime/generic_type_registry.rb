@@ -26,8 +26,6 @@ module Tapioca
       @type_variables = {}.compare_by_identity #: Hash[Module, Array[TypeVariableModule]]
 
       class GenericType < T::Types::Simple
-        extend T::Sig
-
         #: (Module raw_type, Module underlying_type) -> void
         def initialize(raw_type, underlying_type)
           super(raw_type)
@@ -43,8 +41,6 @@ module Tapioca
       end
 
       class << self
-        extend T::Sig
-
         # This method is responsible for building the name of the instantiated concrete type
         # and cloning the given constant so that we can return a type that is the same
         # as the current type but is a different instance and has a different name method.

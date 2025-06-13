@@ -6,7 +6,6 @@ module Tapioca
     module Test
       # @requires_ancestor: Kernel
       module Content
-        extend T::Sig
         #: -> void
         def teardown
           super

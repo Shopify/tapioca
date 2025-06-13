@@ -5,8 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class ForeignConstants < Base
-        extend T::Sig
-
         include Runtime::Reflection
 
         private
