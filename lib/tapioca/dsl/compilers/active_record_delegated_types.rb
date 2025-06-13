@@ -63,11 +63,10 @@ module Tapioca
       # end
       #
       # ~~~
+      #: [ConstantType = (singleton(ActiveRecord::Base) & Extensions::ActiveRecord)]
       class ActiveRecordDelegatedTypes < Compiler
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
-
-        ConstantType = type_member { { fixed: T.all(T.class_of(ActiveRecord::Base), Extensions::ActiveRecord) } }
 
         # @override
         #: -> void

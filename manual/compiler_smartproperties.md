@@ -48,3 +48,4 @@ class Post
   def enabled=(enabled); end
 end
 ~~~
+: [ConstantType = singleton(::SmartProperties)]

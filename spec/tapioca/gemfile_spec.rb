@@ -149,10 +149,8 @@ module Tapioca
   end
 
   class MockGemSpecification < ::Gem::Specification
-    extend T::Sig
-    extend T::Generic
-
-    Elem = type_template
+    #: [Elem]
+    class << self; end
 
     #: (String rel_path) -> void
     def initialize(rel_path) # rubocop:disable Lint/MissingSuper

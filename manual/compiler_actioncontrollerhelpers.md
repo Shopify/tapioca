@@ -55,3 +55,4 @@ class UserController
   def helpers; end
 end
 ~~~
+: [ConstantType = singleton(::ActionController::Base)]

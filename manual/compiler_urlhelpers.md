@@ -72,3 +72,4 @@ class Post
   include GeneratedUrlHelpersModule
 end
 ~~~
+: [ConstantType = Module]

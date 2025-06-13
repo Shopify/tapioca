@@ -59,10 +59,9 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActiveSupport::CurrentAttributes)]
       class ActiveSupportCurrentAttributes < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::ActiveSupport::CurrentAttributes) } }
 
         # @override
         #: -> void

@@ -148,12 +148,11 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActiveRecord::Base)]
       class ActiveRecordRelations < Compiler
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
         include SorbetHelper
-
-        ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
         # From ActiveRecord::ConnectionAdapter::Quoting#quote, minus nil
         ID_TYPES = [

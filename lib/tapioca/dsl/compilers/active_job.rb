@@ -38,10 +38,9 @@ module Tapioca
       #   def self.perform_now(user); end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActiveJob::Base)]
       class ActiveJob < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::ActiveJob::Base) } }
 
         # @override
         #: -> void

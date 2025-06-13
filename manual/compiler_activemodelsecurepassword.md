@@ -47,3 +47,4 @@ class User
   def token_confirmation=(unencrypted_password); end
 end
 ~~~
+: [ConstantType = (Class[::ActiveModel::SecurePassword] & ::ActiveModel::SecurePassword::ClassMethods)]

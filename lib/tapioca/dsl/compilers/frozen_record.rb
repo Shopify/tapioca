@@ -58,10 +58,9 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = (singleton(::FrozenRecord::Base) & Extensions::FrozenRecord)]
       class FrozenRecord < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.all(T.class_of(::FrozenRecord::Base), Extensions::FrozenRecord) } }
 
         # @override
         #: -> void

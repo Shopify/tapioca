@@ -41,10 +41,9 @@ module Tapioca
       # as accepted values for the `interval` parameter:
       # * `self.perform_at` will also accept a `ActiveSupport::TimeWithZone` value
       # * `self.perform_in` will also accept a `ActiveSupport::Duration` value
+      #: [ConstantType = singleton(::Sidekiq::Worker)]
       class SidekiqWorker < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::Sidekiq::Worker) } }
 
         # @override
         #: -> void

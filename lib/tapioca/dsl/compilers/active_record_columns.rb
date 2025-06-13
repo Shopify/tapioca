@@ -120,11 +120,10 @@ module Tapioca
       #     sig { returns(T.untyped) }
       #     def title; end
       # ~~~
+      #: [ConstantType = singleton(ActiveRecord::Base)]
       class ActiveRecordColumns < Compiler
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
-
-        ConstantType = type_member { { fixed: T.class_of(ActiveRecord::Base) } }
 
         # @override
         #: -> void

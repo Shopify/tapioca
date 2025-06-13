@@ -25,3 +25,5 @@ and the following methods being defined:
 
   sleeping?, running?, cleaning?
   run, run!, run_without_validation!, may_run?
+
+: [ConstantType = (Class[::AASM] & ::AASM::ClassMethods)]

@@ -32,11 +32,10 @@ module Tapioca
       #   def regenerate_auth_token; end
       # end
       # ~~~
+      #: [ConstantType = (singleton(ActiveRecord::Base) & Extensions::ActiveRecord)]
       class ActiveRecordSecureToken < Compiler
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
-
-        ConstantType = type_member { { fixed: T.all(T.class_of(ActiveRecord::Base), Extensions::ActiveRecord) } }
 
         # @override
         #: -> void

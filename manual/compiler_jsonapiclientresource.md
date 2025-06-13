@@ -73,3 +73,4 @@ class Post
   end
 end
 ~~~
+: [ConstantType = singleton(::JsonApiClient::Resource)]

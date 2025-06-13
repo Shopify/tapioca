@@ -34,3 +34,4 @@ class User
   def password_confirmation=(password_confirmation); end
 end
 ~~~
+: [ConstantType = (Class[ActiveModel::Validations] & ActiveModel::Validations::HelperMethods & ActiveModel::Validations::ClassMethods)]

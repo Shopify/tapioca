@@ -35,10 +35,9 @@ module Tapioca
       #   def resolve(body:, post_id:); end
       # end
       # ~~~
+      #: [ConstantType = singleton(GraphQL::Schema::Mutation)]
       class GraphqlMutation < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::Mutation) } }
 
         # @override
         #: -> void

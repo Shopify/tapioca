@@ -28,3 +28,4 @@ class Time
   end
 end
 ```
+: [ConstantType = singleton(::Time)]

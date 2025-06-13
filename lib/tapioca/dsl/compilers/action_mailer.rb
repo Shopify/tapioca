@@ -29,10 +29,9 @@ module Tapioca
       #   def self.notify_customer(customer_id); end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActionMailer::Base)]
       class ActionMailer < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::ActionMailer::Base) } }
 
         # @override
         #: -> void

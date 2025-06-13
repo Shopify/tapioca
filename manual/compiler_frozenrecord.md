@@ -52,3 +52,4 @@ class Student
   end
 end
 ~~~
+: [ConstantType = (singleton(::FrozenRecord::Base) & Extensions::FrozenRecord)]

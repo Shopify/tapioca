@@ -49,10 +49,9 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActiveRecord::Base)]
       class ActiveRecordEnum < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
         # @override
         #: -> void

@@ -34,10 +34,9 @@ module Tapioca
       #   end
       # end
       # ```
+      #: [ConstantType = singleton(::Time)]
       class ActiveSupportTimeExt < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::Time) } }
 
         # @override
         #: -> void

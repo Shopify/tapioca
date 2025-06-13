@@ -34,10 +34,9 @@ module Tapioca
       #   def post_id; end
       # end
       # ~~~
+      #: [ConstantType = singleton(GraphQL::Schema::InputObject)]
       class GraphqlInputObject < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(GraphQL::Schema::InputObject) } }
 
         # @override
         #: -> void

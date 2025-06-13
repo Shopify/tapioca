@@ -38,11 +38,10 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActiveRecord::Base)]
       class ActiveRecordScope < Compiler
         extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
-
-        ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
         # @override
         #: -> void

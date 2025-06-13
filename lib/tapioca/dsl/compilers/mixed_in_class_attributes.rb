@@ -44,10 +44,9 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = Module]
       class MixedInClassAttributes < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: Module } }
 
         # @override
         #: -> void

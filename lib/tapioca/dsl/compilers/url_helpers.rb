@@ -78,10 +78,9 @@ module Tapioca
       #   include GeneratedUrlHelpersModule
       # end
       # ~~~
+      #: [ConstantType = Module]
       class UrlHelpers < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: Module } }
 
         # @override
         #: -> void

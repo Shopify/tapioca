@@ -40,18 +40,9 @@ module Tapioca
       #   def password_confirmation=(password_confirmation); end
       # end
       # ~~~
+      #: [ConstantType = (Class[ActiveModel::Validations] & ActiveModel::Validations::HelperMethods & ActiveModel::Validations::ClassMethods)]
       class ActiveModelValidationsConfirmation < Compiler
         extend T::Sig
-
-        ConstantType = type_member do
-          {
-            fixed: T.all(
-              T::Class[ActiveModel::Validations],
-              ActiveModel::Validations::HelperMethods,
-              ActiveModel::Validations::ClassMethods,
-            ),
-          }
-        end
 
         class << self
           # @override
