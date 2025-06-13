@@ -109,10 +109,9 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = (Module & ::StateMachines::ClassMethods)]
       class StateMachines < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.all(Module, ::StateMachines::ClassMethods) } }
 
         # @override
         #: -> void

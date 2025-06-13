@@ -32,6 +32,7 @@ module Tapioca
       #   sleeping?, running?, cleaning?
       #   run, run!, run_without_validation!, may_run?
       #
+      #: [ConstantType = (Class[::AASM] & ::AASM::ClassMethods)]
       class AASM < Compiler
         extend T::Sig
 
@@ -67,8 +68,6 @@ module Tapioca
           "after",
           "success",
         ].freeze #: Array[String]
-
-        ConstantType = type_member { { fixed: T.all(T::Class[::AASM], ::AASM::ClassMethods) } }
 
         # @override
         #: -> void

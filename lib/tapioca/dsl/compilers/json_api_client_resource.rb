@@ -79,10 +79,9 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = singleton(::JsonApiClient::Resource)]
       class JsonApiClientResource < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::JsonApiClient::Resource) } }
 
         # @override
         #: -> void
