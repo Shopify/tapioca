@@ -111,7 +111,7 @@ GEM
     ar_transaction_changes (1.1.9)
       activerecord (>= 5.2.0)
     ast (2.4.3)
-    base64 (0.2.0)
+    base64 (0.3.0)
     bcrypt (3.1.20)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
@@ -121,7 +121,7 @@ GEM
     config (5.5.2)
       deep_merge (~> 1.2, >= 1.2.1)
       ostruct
-    connection_pool (2.5.1)
+    connection_pool (2.5.3)
     crack (1.0.0)
       bigdecimal
       rexml
@@ -341,12 +341,12 @@ GEM
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
     shopify-money (3.1.2)
-    sidekiq (7.3.9)
-      base64
-      connection_pool (>= 2.3.0)
-      logger
-      rack (>= 2.2.4)
-      redis-client (>= 0.22.2)
+    sidekiq (8.0.4)
+      connection_pool (>= 2.5.0)
+      json (>= 2.9.0)
+      logger (>= 1.6.2)
+      rack (>= 3.1.0)
+      redis-client (>= 0.23.2)
     smart_properties (1.17.0)
     sorbet (0.5.12130)
       sorbet-static (= 0.5.12130)
