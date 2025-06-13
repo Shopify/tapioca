@@ -33,8 +33,9 @@ module Tapioca
           processable_constants.include?(constant)
         end
 
-        sig { abstract.returns(T::Enumerable[Module]) }
-        def gather_constants; end
+        # @abstract
+        #: -> T::Enumerable[Module]
+        def gather_constants = raise NotImplementedError, "Abstract method called"
 
         #: -> Set[Module]
         def processable_constants
@@ -98,8 +99,9 @@ module Tapioca
         @pipeline.compiler_enabled?(compiler_name)
       end
 
-      sig { abstract.void }
-      def decorate; end
+      # @abstract
+      #: -> void
+      def decorate = raise NotImplementedError, "Abstract method called"
 
       # NOTE: This should eventually accept an `Error` object or `Exception` rather than simply a `String`.
       #: (String error) -> void

@@ -28,8 +28,9 @@ module Tapioca
 
       private
 
-      sig { abstract.void }
-      def execute; end
+      # @abstract
+      #: -> void
+      def execute = raise NotImplementedError, "Abstract method called"
 
       #: (Symbol command, *String args) -> String
       def default_command(command, *args)
