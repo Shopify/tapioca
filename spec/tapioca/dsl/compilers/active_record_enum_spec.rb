@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordEnumSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordEnum" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
           end

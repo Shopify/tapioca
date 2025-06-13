@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveSupportConcernSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveSupportConcern" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_support"
           end

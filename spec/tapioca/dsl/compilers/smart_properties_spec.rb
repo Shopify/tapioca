@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class SmartPropertiesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::SmartProperties" do
-          sig { void }
+          #: -> void
           def before_setup
             require "smart_properties"
           end

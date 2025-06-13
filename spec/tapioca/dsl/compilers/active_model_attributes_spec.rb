@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveModelAttributesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveModelAttributes" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_model"
           end

@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordFixturesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordFixtures" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
             require "active_record/fixtures"

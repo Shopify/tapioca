@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordStoreSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordStoreSpec" do
-          sig { void }
+          #: -> void
           def before_setup
             require "tapioca/dsl/extensions/active_record"
             require "active_record"

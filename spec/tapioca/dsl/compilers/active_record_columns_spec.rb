@@ -10,7 +10,7 @@ module Tapioca
         extend Tapioca::Helpers::Test::Template
 
         describe "Tapioca::Dsl::Compilers::ActiveRecordColumns" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
           end

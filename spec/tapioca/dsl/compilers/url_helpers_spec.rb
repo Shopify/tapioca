@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class UrlHelpersSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::UrlHelper" do
-          sig { void }
+          #: -> void
           def before_setup
             require "rails"
           end
@@ -292,7 +292,7 @@ module Tapioca
             end
 
             describe "when Action Controller is loaded" do
-              sig { void }
+              #: -> void
               def before_setup
                 require "rails"
                 require "action_controller"
@@ -318,7 +318,7 @@ module Tapioca
             end
 
             describe "when Action View is loaded" do
-              sig { void }
+              #: -> void
               def before_setup
                 require "rails"
                 require "action_view"

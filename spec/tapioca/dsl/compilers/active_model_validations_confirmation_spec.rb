@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveModelValidationsConfirmationSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveModelValidationsConfirmationSpec" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_model"
           end

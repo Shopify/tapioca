@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveResourceSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveResource" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_resource"
           end

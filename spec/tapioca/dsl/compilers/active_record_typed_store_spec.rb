@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordTypedStoreSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordTypedStore" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
             require "activerecord-typedstore"

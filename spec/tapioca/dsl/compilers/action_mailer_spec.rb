@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActionMailerSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActionMailer" do
-          sig { void }
+          #: -> void
           def before_setup
             require "action_mailer"
           end

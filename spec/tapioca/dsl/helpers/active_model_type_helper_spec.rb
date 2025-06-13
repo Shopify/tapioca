@@ -32,27 +32,27 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { returns(T.untyped) }
+              #: -> untyped
               def __tapioca_type
                 T.any(Integer, String)
               end
 
-              sig { params(value: T.untyped).returns(String) }
+              #: (untyped value) -> String
               def cast(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(Float) }
+              #: (untyped value) -> Float
               def deserialize(value)
                 super
               end
 
-              sig { params(value: Symbol).returns(T.untyped) }
+              #: (Symbol value) -> untyped
               def serialize(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(Integer) }
+              #: (untyped value) -> Integer
               def cast_value(value)
                 super
               end
@@ -69,22 +69,22 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { params(value: T.untyped).returns(String) }
+              #: (untyped value) -> String
               def cast(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(Float) }
+              #: (untyped value) -> Float
               def deserialize(value)
                 super
               end
 
-              sig { params(value: Symbol).returns(T.untyped) }
+              #: (Symbol value) -> untyped
               def serialize(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(Integer) }
+              #: (untyped value) -> Integer
               def cast_value(value)
                 super
               end
@@ -101,22 +101,22 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { params(value: T.untyped).returns(String) }
+              #: (untyped value) -> String
               def cast(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def deserialize(value)
                 super
               end
 
-              sig { params(value: Symbol).returns(T.untyped) }
+              #: (Symbol value) -> untyped
               def serialize(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(Integer) }
+              #: (untyped value) -> Integer
               def cast_value(value)
                 super
               end
@@ -133,22 +133,22 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def cast(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def deserialize(value)
                 super
               end
 
-              sig { params(value: Symbol).returns(T.untyped) }
+              #: (Symbol value) -> untyped
               def serialize(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(Integer) }
+              #: (untyped value) -> Integer
               def cast_value(value)
                 super
               end
@@ -165,22 +165,22 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def cast(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def deserialize(value)
                 super
               end
 
-              sig { params(value: Symbol).returns(T.untyped) }
+              #: (Symbol value) -> untyped
               def serialize(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def cast_value(value)
                 super
               end
@@ -197,7 +197,7 @@ module Tapioca
             klass = Class.new do
               extend T::Sig
 
-              sig { params(value: T.untyped).returns(Integer) }
+              #: (untyped value) -> Integer
               def cast(value)
               end
             end
@@ -212,7 +212,7 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { params(value: T.untyped).returns(ValueType[Integer]) }
+              #: (untyped value) -> ValueType[Integer]
               def cast(value)
               end
             end
@@ -234,22 +234,22 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def cast(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(T.noreturn) }
+              #: (untyped value) -> bot
               def deserialize(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def serialize(value)
                 super
               end
 
-              sig { params(value: T.untyped).returns(T.untyped) }
+              #: (untyped value) -> untyped
               def cast_value(value)
                 super
               end
@@ -310,7 +310,7 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              sig { returns(Module) }
+              #: -> Module
               def __tapioca_type = String
             end
 

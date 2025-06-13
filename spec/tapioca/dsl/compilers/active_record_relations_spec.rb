@@ -10,7 +10,7 @@ module Tapioca
         include Tapioca::SorbetHelper
 
         describe "Tapioca::Dsl::Compilers::ActiveRecordRelations" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
           end

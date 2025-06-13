@@ -382,12 +382,12 @@ module Tapioca
         # Indicates that we are running from the LSP, set using the `addon_mode!` method
         attr_reader :addon_mode
 
-        sig { void }
+        #: -> void
         def addon_mode!
           @addon_mode = true
         end
 
-        sig { returns(T::Boolean) }
+        #: -> bool
         def exit_on_failure?
           !@addon_mode
         end
