@@ -3,11 +3,8 @@
 
 module Tapioca
   module Commands
+    # @abstract
     class CommandWithoutTracker < Command
-      extend T::Helpers
-
-      abstract!
-
       #: -> void
       def initialize
         Tapioca::Runtime::Trackers.disable_all!

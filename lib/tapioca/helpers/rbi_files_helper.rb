@@ -2,13 +2,10 @@
 # frozen_string_literal: true
 
 module Tapioca
+  # @requires_ancestor: Thor::Shell
+  # @requires_ancestor: SorbetHelper
   module RBIFilesHelper
     extend T::Sig
-    extend T::Helpers
-
-    requires_ancestor { Thor::Shell }
-    requires_ancestor { SorbetHelper }
-
     #: (RBI::Index index, String kind, String file) -> void
     def index_rbi(index, kind, file)
       return unless File.exist?(file)

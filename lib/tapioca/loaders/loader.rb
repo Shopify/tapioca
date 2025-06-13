@@ -3,15 +3,12 @@
 
 module Tapioca
   module Loaders
+    # @abstract
     class Loader
       extend T::Sig
-      extend T::Helpers
-
       include Thor::Base
       include CliHelper
       include Tapioca::GemHelper
-
-      abstract!
 
       sig { abstract.void }
       def load; end

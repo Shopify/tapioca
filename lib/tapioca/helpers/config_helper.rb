@@ -2,12 +2,9 @@
 # frozen_string_literal: true
 
 module Tapioca
+  # @requires_ancestor: Thor
   module ConfigHelper
     extend T::Sig
-    extend T::Helpers
-
-    requires_ancestor { Thor }
-
     #: String
     attr_reader :command_name
 

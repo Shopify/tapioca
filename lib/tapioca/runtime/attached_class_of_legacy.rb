@@ -7,12 +7,9 @@ module Tapioca
     # older than 3.2. Because the Class#attached_object method is not
     # available, it implements finding the attached class of a singleton
     # class by iterating through ObjectSpace.
+    # @requires_ancestor: Tapioca::Runtime::Reflection
     module AttachedClassOf
       extend T::Sig
-      extend T::Helpers
-
-      requires_ancestor { Tapioca::Runtime::Reflection }
-
       #: (Class singleton_class) -> Module?
       def attached_class_of(singleton_class)
         # https://stackoverflow.com/a/36622320/98634
