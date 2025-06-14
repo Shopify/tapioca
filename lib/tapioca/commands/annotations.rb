@@ -85,7 +85,7 @@ module Tapioca
         end
 
         if indexes.empty?
-          raise Thor::Error, set_color("Can't fetch annotations without sources (no index fetched)", :bold, :red)
+          raise Tapioca::Error, set_color("Can't fetch annotations without sources (no index fetched)", :bold, :red)
         end
 
         indexes

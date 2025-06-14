@@ -128,7 +128,7 @@ module Tapioca
         update_gem_rbis_strictnesses(redef_errors, gem_dir)
       end
 
-      Kernel.raise Thor::Error, error_messages.join("\n") if parse_errors.any?
+      Kernel.raise Tapioca::Error, error_messages.join("\n") if parse_errors.any?
     end
 
     private

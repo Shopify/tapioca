@@ -27,4 +27,9 @@ end
 
 require_relative "../lib/tapioca/internal"
 
-Tapioca::Cli.start(ARGV)
+begin
+  Tapioca::Cli.start(ARGV)
+rescue Tapioca::Error => e
+  warn(e.message)
+  exit(1)
+end
