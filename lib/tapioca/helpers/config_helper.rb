@@ -83,7 +83,7 @@ module Tapioca
       end.compact
 
       unless errors.empty?
-        raise Thor::Error, build_error_message(config_file, errors)
+        raise Tapioca::Error, build_error_message(config_file, errors)
       end
     ensure
       @validating_config = false

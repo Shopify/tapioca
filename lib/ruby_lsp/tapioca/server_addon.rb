@@ -70,7 +70,6 @@ module RubyLsp
         arguments.concat(args)
         arguments.push("--workers=1")
         arguments.concat(constants)
-
         ::Tapioca::Cli.start(arguments)
       end
     end
