@@ -215,7 +215,7 @@ module Tapioca
             )
           end
 
-          it "returns a weak type if custom type cannot be discovered from signatures" do
+          it "returns a weak type if custom type cannot be discovered from signatures" do # rubocop:disable RSpec/RepeatedExample
             klass = Class.new(ActiveModel::Type::Value) do
               #: (untyped value) -> untyped
               def cast(value)
@@ -244,7 +244,7 @@ module Tapioca
             )
           end
 
-          it "returns a weak type if custom type does not have any signatures" do
+          it "returns a weak type if custom type does not have any signatures" do # rubocop:disable RSpec/RepeatedExample
             klass = Class.new(ActiveModel::Type::Value) do
               def cast(value)
                 super
