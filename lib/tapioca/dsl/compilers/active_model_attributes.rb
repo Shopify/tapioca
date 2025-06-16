@@ -34,12 +34,9 @@ module Tapioca
       #   def name=(name); end
       # end
       # ~~~
+      #: [ConstantType = (Class[::ActiveModel::Attributes] & ::ActiveModel::Attributes::ClassMethods)]
       class ActiveModelAttributes < Compiler
         extend T::Sig
-
-        ConstantType = type_member do
-          { fixed: T.all(T::Class[::ActiveModel::Attributes], ::ActiveModel::Attributes::ClassMethods) }
-        end
 
         # @override
         #: -> void

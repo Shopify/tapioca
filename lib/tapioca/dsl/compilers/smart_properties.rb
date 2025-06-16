@@ -54,10 +54,9 @@ module Tapioca
       #   def enabled=(enabled); end
       # end
       # ~~~
+      #: [ConstantType = singleton(::SmartProperties)]
       class SmartProperties < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::SmartProperties) } }
 
         # @override
         #: -> void

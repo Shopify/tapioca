@@ -63,12 +63,9 @@ module Tapioca
       #   end
       # end
       # ~~~
+      #: [ConstantType = (Class[::Kredis::Attributes] & ::Kredis::Attributes::ClassMethods & Extensions::Kredis)]
       class Kredis < Compiler
         extend T::Sig
-
-        ConstantType = type_member do
-          { fixed: T.all(T::Class[::Kredis::Attributes], ::Kredis::Attributes::ClassMethods, Extensions::Kredis) }
-        end
 
         # @override
         #: -> void

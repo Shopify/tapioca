@@ -53,3 +53,4 @@ class Current
   end
 end
 ~~~
+: [ConstantType = singleton(::ActiveSupport::CurrentAttributes)]

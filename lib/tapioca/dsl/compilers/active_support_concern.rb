@@ -37,10 +37,9 @@ module Tapioca
       #   mixes_in_class_methods(::Foo::ClassMethods)
       # end
       # ~~~
+      #: [ConstantType = Module]
       class ActiveSupportConcern < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: Module } }
 
         # @override
         #: -> void

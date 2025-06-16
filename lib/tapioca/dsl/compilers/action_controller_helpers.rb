@@ -61,10 +61,9 @@ module Tapioca
       #   def helpers; end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActionController::Base)]
       class ActionControllerHelpers < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::ActionController::Base) } }
 
         # @override
         #: -> void

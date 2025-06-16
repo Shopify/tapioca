@@ -33,10 +33,10 @@ module Tapioca
       #   def posts(fixture_name = nil, *other_fixtures); end
       # end
       # ~~~
+      #: [ConstantType = singleton(ActiveSupport::TestCase)]
       class ActiveRecordFixtures < Compiler
         extend T::Sig
 
-        ConstantType = type_member { { fixed: T.class_of(ActiveSupport::TestCase) } }
         MISSING = Object.new
 
         # @override

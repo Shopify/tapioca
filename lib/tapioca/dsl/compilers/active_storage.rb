@@ -38,17 +38,9 @@ module Tapioca
       #   def photo=(attachable); end
       # end
       # ~~~
+      #: [ConstantType = (Module & ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)]
       class ActiveStorage < Compiler
         extend T::Sig
-
-        ConstantType = type_member do
-          {
-            fixed: T.all(
-              Module,
-              ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods,
-            ),
-          }
-        end
 
         # @override
         #: -> void

@@ -986,6 +986,7 @@ module Tapioca
 
             class CompilerThatIncludesBarModuleInPost < Tapioca::Dsl::Compiler
               extend T::Sig
+              extend T::Generic
 
               ConstantType = type_member { { fixed: T.class_of(::Post) } }
 
@@ -1009,6 +1010,7 @@ module Tapioca
 
             class CompilerThatIncludesFooModuleInPost < Tapioca::Dsl::Compiler
               extend T::Sig
+              extend T::Generic
 
               ConstantType = type_member { { fixed: T.class_of(::Post) } }
 
@@ -1103,6 +1105,7 @@ module Tapioca
             module Foo
               class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
+                extend T::Generic
 
                 ConstantType = type_member { { fixed: Job } }
 
@@ -1232,6 +1235,7 @@ module Tapioca
             module Foo
               class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
+                extend T::Generic
 
                 ConstantType = type_member { { fixed: Job } }
 
@@ -1401,6 +1405,7 @@ module Tapioca
             module Foo
               class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
+                extend T::Generic
 
                 ConstantType = type_member { { fixed: Module } }
 
@@ -1463,6 +1468,7 @@ module Tapioca
             module Foo
               class Compiler < Tapioca::Dsl::Compiler
                 extend T::Sig
+                extend T::Generic
 
                 ConstantType = type_member { { fixed: Module } }
 
@@ -2127,6 +2133,7 @@ module Tapioca
 
               class PostCompiler < Tapioca::Dsl::Compiler
                 extend T::Sig
+                extend T::Generic
 
                 ConstantType = type_member { { fixed: T.class_of(::Post) } }
 
@@ -2201,6 +2208,7 @@ module Tapioca
 
             class PostCompiler < Tapioca::Dsl::Compiler
               extend T::Sig
+              extend T::Generic
 
               ConstantType = type_member { { fixed: T.class_of(::Post) } }
 
@@ -2386,6 +2394,7 @@ module Tapioca
                 module Compilers
                   class Encryptable < Tapioca::Dsl::Compiler
                     extend T::Sig
+                    extend T::Generic
 
                     ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
 
@@ -2540,6 +2549,7 @@ module Tapioca
               module Compilers
                 class Encryptable < Tapioca::Dsl::Compiler
                   extend T::Sig
+                  extend T::Generic
 
                   ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
 

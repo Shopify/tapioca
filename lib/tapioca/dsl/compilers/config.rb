@@ -40,12 +40,11 @@ module Tapioca
       #   def github=(value); end
       # end
       # ```
+      #: [ConstantType = Module]
       class Config < Compiler
         extend T::Sig
 
         CONFIG_OPTIONS_SUFFIX = "ConfigOptions"
-
-        ConstantType = type_member { { fixed: Module } }
 
         # @override
         #: -> void

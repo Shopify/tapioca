@@ -53,12 +53,9 @@ module Tapioca
       #   def token_confirmation=(unencrypted_password); end
       # end
       # ~~~
+      #: [ConstantType = (Class[::ActiveModel::SecurePassword] & ::ActiveModel::SecurePassword::ClassMethods)]
       class ActiveModelSecurePassword < Compiler
         extend T::Sig
-
-        ConstantType = type_member do
-          { fixed: T.all(T::Class[::ActiveModel::SecurePassword], ::ActiveModel::SecurePassword::ClassMethods) }
-        end
 
         # @override
         #: -> void

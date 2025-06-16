@@ -57,3 +57,4 @@ class Person
   end
 end
 ~~~
+: [ConstantType = (Class[::Kredis::Attributes] & ::Kredis::Attributes::ClassMethods & Extensions::Kredis)]

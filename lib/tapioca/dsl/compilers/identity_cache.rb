@@ -55,12 +55,11 @@ module Tapioca
       #   def fetch_by_title_and_review_date(title, review_date, includes: nil); end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActiveRecord::Base)]
       class IdentityCache < Compiler
         extend T::Sig
 
         COLLECTION_TYPE = ->(type) { "T::Array[::#{type}]" } #: ^((Module | String) type) -> String
-
-        ConstantType = type_member { { fixed: T.class_of(::ActiveRecord::Base) } }
 
         # @override
         #: -> void
