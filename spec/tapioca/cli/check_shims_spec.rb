@@ -731,7 +731,7 @@ module Tapioca
         assert_success_status(result)
       end
 
-      sig { params(string: String).returns(String) }
+      #: (String string) -> String
       def strip_timer(string)
         string.gsub(/ \(\d+\.\d+s\)/, "")
       end

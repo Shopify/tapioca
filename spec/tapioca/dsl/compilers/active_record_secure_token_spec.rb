@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordSecureTokenSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordSecureTokenSpec" do
-          sig { void }
+          #: -> void
           def before_setup
             require "tapioca/dsl/extensions/active_record"
             require "active_record"

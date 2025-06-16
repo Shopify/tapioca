@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class KredisSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::Kredis" do
-          sig { void }
+          #: -> void
           def before_setup
             require "tapioca/dsl/extensions/kredis"
             require "kredis"

@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class StateMachinesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::StateMachine" do
-          sig { void }
+          #: -> void
           def before_setup
             require "state_machines"
           end

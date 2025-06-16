@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class GraphqlMutationSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::GraphqlMutation" do
-          sig { void }
+          #: -> void
           def before_setup
             require "graphql"
           end

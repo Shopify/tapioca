@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class FrozenRecordSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::FrozenRecord" do
-          sig { void }
+          #: -> void
           def before_setup
             require "rails/railtie"
             require "tapioca/dsl/extensions/frozen_record"

@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordDelegatedTypesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordDelegatedTypesSpec" do
-          sig { void }
+          #: -> void
           def before_setup
             require "tapioca/dsl/extensions/active_record"
             require "active_record"

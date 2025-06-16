@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActionControllerHelpersSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActionControllerHelpers" do
-          sig { void }
+          #: -> void
           def before_setup
             require "action_controller"
           end

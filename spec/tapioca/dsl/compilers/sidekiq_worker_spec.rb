@@ -10,7 +10,7 @@ module Tapioca
         include Tapioca::Helpers::Test::Isolation
 
         describe "Tapioca::Dsl::Compilers::SidekiqWorker" do
-          sig { void }
+          #: -> void
           def before_setup
             require "sidekiq"
             # We need to undefine and unload `ActiveSupport` so that the test object

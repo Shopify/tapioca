@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordAssociationsSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordAssociationsSpec" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
           end

@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActionTextSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActionText" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
             require "action_text"

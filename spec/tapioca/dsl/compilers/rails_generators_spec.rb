@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class RailsGeneratorsSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::RailsGenerators" do
-          sig { void }
+          #: -> void
           def before_setup
             require "rails/generators"
             require "rails/generators/app_base"

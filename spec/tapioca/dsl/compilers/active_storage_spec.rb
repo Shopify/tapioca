@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveStorageSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveStorage" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_storage"
             require "active_storage/reflection"
