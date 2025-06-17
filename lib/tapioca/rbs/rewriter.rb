@@ -46,10 +46,11 @@ RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   source ||= File.read(path)
 
   # For performance reasons, we only rewrite files that use Sorbet.
-  if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
+  if source.force_encoding("utf-8") =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
     Spoom::Sorbet::Translate.rbs_comments_to_sorbet_sigs(source, file: path)
   end
-rescue Spoom::Sorbet::Translate::Error
-  # If we can't translate the RBS comments back into Sorbet's signatures, we just skip the file.
+rescue Spoom::Sorbet::Translate::Error, ArgumentError => _
+  # If we can't translate the RBS comments back into Sorbet's signatures or encounter an encoding error,
+  # we just skip the file.
   source
 end
