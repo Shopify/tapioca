@@ -638,6 +638,11 @@ class AASM::Core::Invokers::BaseInvoker
   # source://aasm//lib/aasm/core/invokers/base_invoker.rb#55
   def may_invoke?; end
 
+  # Parse arguments to separate keyword arguments from positional arguments
+  #
+  # source://aasm//lib/aasm/core/invokers/base_invoker.rb#75
+  def parse_arguments; end
+
   # Returns the value of attribute record.
   #
   # source://aasm//lib/aasm/core/invokers/base_invoker.rb#10
@@ -684,16 +689,27 @@ class AASM::Core::Invokers::ClassInvoker < ::AASM::Core::Invokers::BaseInvoker
   # source://aasm//lib/aasm/core/invokers/class_invoker.rb#33
   def instance; end
 
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#65
+  def instance_with_fixed_arity; end
+
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#55
+  def instance_with_keyword_args; end
+
+  # @return [Boolean]
+  #
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#50
+  def keyword_arguments?; end
+
   # source://aasm//lib/aasm/core/invokers/class_invoker.rb#29
   def log_method_info; end
 
   # source://aasm//lib/aasm/core/invokers/class_invoker.rb#25
   def log_source_location; end
 
-  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#38
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#37
   def retrieve_instance; end
 
-  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#46
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#69
   def subject_arity; end
 end
 
@@ -715,11 +731,34 @@ class AASM::Core::Invokers::LiteralInvoker < ::AASM::Core::Invokers::BaseInvoker
 
   private
 
-  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#29
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#34
+  def ensure_method_exists; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#28
   def exec_subject; end
 
-  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#39
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#57
+  def instance_with_keyword_args; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#42
+  def invoke_with_arguments; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#71
+  def invoke_with_fixed_arity; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#67
+  def invoke_with_variable_arity; end
+
+  # @return [Boolean]
+  #
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#52
+  def keyword_arguments?; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#80
   def record_error; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#38
+  def simple_invoke; end
 
   # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#24
   def subject_arity; end
