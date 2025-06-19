@@ -7,8 +7,6 @@ module Tapioca
       module GraphqlTypeHelper
         extend self
 
-        extend T::Sig
-
         #: (GraphQL::Schema::Argument argument, (singleton(GraphQL::Schema::Mutation) | singleton(GraphQL::Schema::InputObject)) constant) -> String
         def type_for_argument(argument, constant)
           type = if argument.loads

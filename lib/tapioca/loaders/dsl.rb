@@ -4,11 +4,7 @@
 module Tapioca
   module Loaders
     class Dsl < Loader
-      extend T::Sig
-
       class << self
-        extend T::Sig
-
         #: (tapioca_path: String, ?eager_load: bool, ?app_root: String, ?halt_upon_load_error: bool) -> void
         def load_application(
           tapioca_path:,
