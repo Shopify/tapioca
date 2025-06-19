@@ -386,11 +386,6 @@ module Tapioca
         def addon_mode!
           @addon_mode = true
         end
-
-        sig { returns(T::Boolean) }
-        def exit_on_failure?
-          !@addon_mode
-        end
       end
     end
 

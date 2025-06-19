@@ -68,13 +68,7 @@ module RubyLsp
         arguments.concat(args)
         arguments.push("--workers=1")
         arguments.concat(constants)
-
-        begin
-          ::Tapioca::Cli.start(arguments)
-        rescue ::Tapioca::Error
-          # terminate RBI generation if in addon mode
-          exit if ::Tapioca::Cli.exit_on_failure?
-        end
+        ::Tapioca::Cli.start(arguments)
       end
     end
   end
