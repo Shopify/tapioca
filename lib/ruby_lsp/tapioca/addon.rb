@@ -209,7 +209,11 @@ module RubyLsp
       #: -> void
       def run_gem_rbi_check
         state = @global_state #: as !nil
-        gem_rbi_check = RunGemRbiCheck.new(state.workspace_path)
+
+        gem_rbi_dir = gem_rbi_directory(state.workspace_path)
+        return unless File.exist?(gem_rbi_dir)
+
+        gem_rbi_check = RunGemRbiCheck.new(state.workspace_path, gem_rbi_dir)
         gem_rbi_check.run
 
         queue = @outgoing_queue #: as !nil
@@ -218,6 +222,24 @@ module RubyLsp
         unless gem_rbi_check.stderr.empty?
           queue << Notification.window_log_message(gem_rbi_check.stderr, type: Constant::MessageType::WARNING)
         end
+      end
+
+      #: (String) -> String
+      def gem_rbi_directory(workspace_path)
+        config_file_path = File.join(workspace_path, ::Tapioca::TAPIOCA_CONFIG_FILE)
+
+        if File.exist?(config_file_path)
+          begin
+            config = YAML.load_file(config_file_path, fallback: {})
+            outdir = config.dig("gem", "outdir") || ::Tapioca::DEFAULT_GEM_DIR
+
+            return File.expand_path(outdir, workspace_path)
+          rescue StandardError
+            # Invalid YAML or file read error
+          end
+        end
+
+        File.expand_path(::Tapioca::DEFAULT_GEM_DIR, workspace_path)
       end
     end
   end
