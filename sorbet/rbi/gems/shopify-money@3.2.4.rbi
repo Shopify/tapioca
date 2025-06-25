@@ -976,67 +976,74 @@ Money::VERSION = T.let(T.unsafe(nil), String)
 # source://shopify-money//lib/money_column/active_record_hooks.rb#3
 module MoneyColumn; end
 
-# source://shopify-money//lib/money_column/active_record_hooks.rb#6
+# source://shopify-money//lib/money_column/active_record_hooks.rb#8
 module MoneyColumn::ActiveRecordHooks
   mixes_in_class_methods ::MoneyColumn::ActiveRecordHooks::ClassMethods
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#11
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#13
   def reload(*_arg0); end
 
   private
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#84
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#116
   def _assign_attributes(new_attributes); end
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#23
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#25
   def clear_money_column_cache; end
 
-  # @return [Boolean]
-  #
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#75
-  def compatible_currency?(money, options); end
-
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#27
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#29
   def init_internals; end
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#16
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#18
   def initialize_dup(*_arg0); end
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#32
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#82
+  def read_currency_column(currency_column); end
+
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#34
   def read_money_attribute(column); end
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#45
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#102
+  def validate_currency_compatibility!(column, money, currency_column); end
+
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#91
+  def validate_hardcoded_currency_compatibility!(column, money, expected_currency); end
+
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#64
+  def write_currency(column, money, options); end
+
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#47
   def write_money_attribute(column, money); end
 
   class << self
     # @private
     #
-    # source://shopify-money//lib/money_column/active_record_hooks.rb#7
+    # source://shopify-money//lib/money_column/active_record_hooks.rb#9
     def included(base); end
   end
 end
 
-# source://shopify-money//lib/money_column/active_record_hooks.rb#91
+# source://shopify-money//lib/money_column/active_record_hooks.rb#123
 module MoneyColumn::ActiveRecordHooks::ClassMethods
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#94
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#126
   def money_column(*columns, currency_column: T.unsafe(nil), currency: T.unsafe(nil), currency_read_only: T.unsafe(nil), coerce_null: T.unsafe(nil)); end
 
   # Returns the value of attribute money_column_options.
   #
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#92
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#124
   def money_column_options; end
 
   private
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#144
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#176
   def clear_cache_on_currency_change(currency_column); end
 
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#153
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#185
   def inherited(subclass); end
 
   # @raise [ArgumentError]
   #
-  # source://shopify-money//lib/money_column/active_record_hooks.rb#127
+  # source://shopify-money//lib/money_column/active_record_hooks.rb#159
   def normalize_money_column_options(options); end
 end
 
@@ -1046,8 +1053,14 @@ class MoneyColumn::ActiveRecordType < ::ActiveModel::Type::Decimal
   def serialize(money); end
 end
 
+# source://shopify-money//lib/money_column/active_record_hooks.rb#6
+class MoneyColumn::CurrencyMismatchError < ::MoneyColumn::Error; end
+
+# source://shopify-money//lib/money_column/active_record_hooks.rb#5
+class MoneyColumn::CurrencyReadOnlyError < ::MoneyColumn::Error; end
+
 # source://shopify-money//lib/money_column/active_record_hooks.rb#4
-class MoneyColumn::CurrencyReadOnlyError < ::StandardError; end
+class MoneyColumn::Error < ::StandardError; end
 
 # source://shopify-money//lib/money_column/railtie.rb#4
 class MoneyColumn::Railtie < ::Rails::Railtie; end

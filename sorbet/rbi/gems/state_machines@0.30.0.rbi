@@ -9,40 +9,6 @@ class Class < ::Module
   include ::StateMachines::MacroMethods
 end
 
-# source://state_machines//lib/state_machines/assertions.rb#3
-class Hash
-  include ::Enumerable
-
-  # Validates that the given hash only includes at *most* one of a set of
-  # exclusive keys.  If more than one key is found, an ArgumentError will be
-  # raised.
-  #
-  # == Examples
-  #
-  #   options = {:only => :on, :except => :off}
-  #   options.assert_exclusive_keys(:only)                   # => nil
-  #   options.assert_exclusive_keys(:except)                 # => nil
-  #   options.assert_exclusive_keys(:only, :except)          # => ArgumentError: Conflicting keys: only, except
-  #   options.assert_exclusive_keys(:only, :except, :with)   # => ArgumentError: Conflicting keys: only, except
-  #
-  # @raise [ArgumentError]
-  #
-  # source://state_machines//lib/state_machines/assertions.rb#37
-  def assert_exclusive_keys(*exclusive_keys); end
-
-  # Validate all keys in a hash match <tt>*valid_keys</tt>, raising ArgumentError
-  # on a mismatch. Note that keys are NOT treated indifferently, meaning if you
-  # use strings for keys but assert symbols as keys, this will fail.
-  #
-  #   { name: 'Rob', years: '28' }.assert_valid_keys(:name, :age) # => raises "ArgumentError: Unknown key: :years. Valid keys are: :name, :age"
-  #   { name: 'Rob', age: '28' }.assert_valid_keys('name', 'age') # => raises "ArgumentError: Unknown key: :name. Valid keys are: 'name', 'age'"
-  #   { name: 'Rob', age: '28' }.assert_valid_keys(:name, :age)   # => passes, raises nothing
-  # Code from ActiveSupport
-  #
-  # source://state_machines//lib/state_machines/assertions.rb#16
-  def assert_valid_keys(*valid_keys); end
-end
-
 # A state machine is a model of behavior composed of states, events, and
 # transitions.  This helper adds support for defining this type of
 # functionality on any Ruby class.
@@ -68,7 +34,7 @@ class StateMachines::AllMatcher < ::StateMachines::Matcher
   #   matcher.matches?(:first_gear)   # => true
   #
   # source://state_machines//lib/state_machines/matcher.rb#35
-  def -(blacklist); end
+  def -(other); end
 
   # A human-readable description of this matcher.  Always "all".
   #
@@ -84,7 +50,7 @@ class StateMachines::AllMatcher < ::StateMachines::Matcher
   #   matcher.matches?(:first_gear)   # => true
   #
   # source://state_machines//lib/state_machines/matcher.rb#38
-  def except(blacklist); end
+  def except(other); end
 
   # Always returns the given set of values
   #
@@ -96,7 +62,7 @@ class StateMachines::AllMatcher < ::StateMachines::Matcher
   # @return [Boolean]
   #
   # source://state_machines//lib/state_machines/matcher.rb#41
-  def matches?(value, context = T.unsafe(nil)); end
+  def matches?(_value, _context = T.unsafe(nil)); end
 
   class << self
     private
@@ -112,34 +78,34 @@ end
 # Represents a collection of transitions that were generated from attribute-
 # based events
 #
-# source://state_machines//lib/state_machines/transition_collection.rb#196
+# source://state_machines//lib/state_machines/transition_collection.rb#195
 class StateMachines::AttributeTransitionCollection < ::StateMachines::TransitionCollection
   # @return [AttributeTransitionCollection] a new instance of AttributeTransitionCollection
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#197
+  # source://state_machines//lib/state_machines/transition_collection.rb#196
   def initialize(transitions = T.unsafe(nil), options = T.unsafe(nil)); end
 
   private
 
   # Tracks that before callbacks have now completed
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#233
+  # source://state_machines//lib/state_machines/transition_collection.rb#232
   def persist; end
 
   # Resets callback tracking
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#239
+  # source://state_machines//lib/state_machines/transition_collection.rb#238
   def reset; end
 
   # Resets the event attribute so it can be re-evaluated if attempted again
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#245
+  # source://state_machines//lib/state_machines/transition_collection.rb#244
   def rollback; end
 
   # Hooks into running transition callbacks so that event / event transition
   # attributes can be properly updated
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#205
+  # source://state_machines//lib/state_machines/transition_collection.rb#204
   def run_callbacks(index = T.unsafe(nil)); end
 end
 
@@ -170,7 +136,7 @@ class StateMachines::BlacklistMatcher < ::StateMachines::Matcher
   # @return [Boolean]
   #
   # source://state_machines//lib/state_machines/matcher.rb#86
-  def matches?(value, context = T.unsafe(nil)); end
+  def matches?(value, _context = T.unsafe(nil)); end
 end
 
 # Represents a set of requirements that must be met in order for a transition
@@ -178,7 +144,7 @@ end
 # state of the transition match, in addition to if/unless conditionals for
 # an object's state.
 #
-# source://state_machines//lib/state_machines/branch.rb#8
+# source://state_machines//lib/state_machines/branch.rb#10
 class StateMachines::Branch
   include ::StateMachines::EvalHelpers
 
@@ -186,20 +152,20 @@ class StateMachines::Branch
   #
   # @return [Branch] a new instance of Branch
   #
-  # source://state_machines//lib/state_machines/branch.rb#32
+  # source://state_machines//lib/state_machines/branch.rb#33
   def initialize(options = T.unsafe(nil)); end
 
-  # source://state_machines//lib/state_machines/branch.rb#124
+  # source://state_machines//lib/state_machines/branch.rb#125
   def draw(graph, event, valid_states, io = T.unsafe(nil)); end
 
   # The requirement for verifying the event being matched
   #
-  # source://state_machines//lib/state_machines/branch.rb#19
+  # source://state_machines//lib/state_machines/branch.rb#20
   def event_requirement; end
 
   # The condition that must be met on an object
   #
-  # source://state_machines//lib/state_machines/branch.rb#13
+  # source://state_machines//lib/state_machines/branch.rb#14
   def if_condition; end
 
   # A list of all of the states known to this branch.  This will pull states
@@ -207,7 +173,7 @@ class StateMachines::Branch
   # * +from+ / +except_from+
   # * +to+ / +except_to+
   #
-  # source://state_machines//lib/state_machines/branch.rb#29
+  # source://state_machines//lib/state_machines/branch.rb#30
   def known_states; end
 
   # Attempts to match the given object / query against the set of requirements
@@ -236,7 +202,7 @@ class StateMachines::Branch
   #   branch.match(object, :on => :ignite)  # => {:to => ..., :from => ..., :on => ...}
   #   branch.match(object, :on => :park)    # => nil
   #
-  # source://state_machines//lib/state_machines/branch.rb#116
+  # source://state_machines//lib/state_machines/branch.rb#117
   def match(object, query = T.unsafe(nil)); end
 
   # Determines whether the given object / query matches the requirements
@@ -265,18 +231,18 @@ class StateMachines::Branch
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/branch.rb#87
+  # source://state_machines//lib/state_machines/branch.rb#88
   def matches?(object, query = T.unsafe(nil)); end
 
   # One or more requirements for verifying the states being matched.  All
   # requirements contain a mapping of {:from => matcher, :to => matcher}.
   #
-  # source://state_machines//lib/state_machines/branch.rb#23
+  # source://state_machines//lib/state_machines/branch.rb#24
   def state_requirements; end
 
   # The condition that must *not* be met on an object
   #
-  # source://state_machines//lib/state_machines/branch.rb#16
+  # source://state_machines//lib/state_machines/branch.rb#17
   def unless_condition; end
 
   protected
@@ -285,25 +251,25 @@ class StateMachines::Branch
   # whitelist nor a blacklist option is specified, then an AllMatcher is
   # built.
   #
-  # source://state_machines//lib/state_machines/branch.rb#133
+  # source://state_machines//lib/state_machines/branch.rb#134
   def build_matcher(options, whitelist_option, blacklist_option); end
 
   # Verifies that the event requirement matches the given query
   #
-  # source://state_machines//lib/state_machines/branch.rb#161
+  # source://state_machines//lib/state_machines/branch.rb#162
   def match_event(query); end
 
   # Verifies that all configured requirements (event and state) match the
   # given query.  If a match is found, then a hash containing the
   # event/state requirements that passed will be returned; otherwise, nil.
   #
-  # source://state_machines//lib/state_machines/branch.rb#152
+  # source://state_machines//lib/state_machines/branch.rb#153
   def match_query(query); end
 
   # Verifies that the state requirements match the given query.  If a
   # matching requirement is found, then it is returned.
   #
-  # source://state_machines//lib/state_machines/branch.rb#167
+  # source://state_machines//lib/state_machines/branch.rb#168
   def match_states(query); end
 
   # Verifies that the conditionals for this branch evaluate to true for the
@@ -311,7 +277,7 @@ class StateMachines::Branch
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/branch.rb#181
+  # source://state_machines//lib/state_machines/branch.rb#182
   def matches_conditions?(object, query); end
 
   # Verifies that an option in the given query matches the values required
@@ -319,7 +285,7 @@ class StateMachines::Branch
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/branch.rb#175
+  # source://state_machines//lib/state_machines/branch.rb#176
   def matches_requirement?(query, option, requirement); end
 end
 
@@ -368,7 +334,7 @@ class StateMachines::Callback
   # evaluated method, then the callback chain should be halted.
   #
   # source://state_machines//lib/state_machines/callback.rb#159
-  def call(object, context = T.unsafe(nil), *args, &block); end
+  def call(object, context = T.unsafe(nil), *_arg2, &_arg3); end
 
   # Gets a list of the states known to this callback by looking at the
   # branch's known states
@@ -603,7 +569,7 @@ end
 # Provides a set of helper methods for evaluating methods within the context
 # of an object.
 #
-# source://state_machines//lib/state_machines/eval_helpers.rb#6
+# source://state_machines//lib/state_machines/eval_helpers.rb#8
 module StateMachines::EvalHelpers
   # Evaluates one of several different types of methods within the context
   # of the given object.  Methods can be one of the following types:
@@ -654,15 +620,23 @@ module StateMachines::EvalHelpers
   #   evaluate_method(person, lambda {|person, age| "#{person.name} is #{age}"}, 21)          # => "John Smith is 21"
   #   evaluate_method(person, lambda {|person, age| "#{person.name} is #{age}"}, 21, 'male')  # => ArgumentError: wrong number of arguments (3 for 2)
   #
-  # source://state_machines//lib/state_machines/eval_helpers.rb#55
-  def evaluate_method(object, method, *args, **kwargs, &block); end
+  # source://state_machines//lib/state_machines/eval_helpers.rb#57
+  def evaluate_method(object, method, *args, **_arg3, &block); end
+
+  private
+
+  # Validates string input before eval to prevent code injection
+  # This is a basic safety check - not foolproof security
+  #
+  # source://state_machines//lib/state_machines/eval_helpers.rb#126
+  def validate_eval_string(method_string); end
 end
 
 # An event defines an action that transitions an attribute from one state to
 # another.  The state that an attribute is transitioned to depends on the
 # branches configured for the event.
 #
-# source://state_machines//lib/state_machines/event.rb#7
+# source://state_machines//lib/state_machines/event.rb#9
 class StateMachines::Event
   include ::StateMachines::MatcherHelpers
 
@@ -673,13 +647,13 @@ class StateMachines::Event
   #
   # @return [Event] a new instance of Event
   #
-  # source://state_machines//lib/state_machines/event.rb#35
-  def initialize(machine, name, options = T.unsafe(nil)); end
+  # source://state_machines//lib/state_machines/event.rb#36
+  def initialize(machine, name, options = T.unsafe(nil), human_name: T.unsafe(nil), **extra_options); end
 
   # The list of branches that determine what state this event transitions
   # objects to when fired
   #
-  # source://state_machines//lib/state_machines/event.rb#25
+  # source://state_machines//lib/state_machines/event.rb#26
   def branches; end
 
   # Determines whether any transitions can be performed for this event based
@@ -693,16 +667,16 @@ class StateMachines::Event
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/event.rb#109
+  # source://state_machines//lib/state_machines/event.rb#120
   def can_fire?(object, requirements = T.unsafe(nil)); end
 
   # Evaluates the given block within the context of this event.  This simply
   # provides a DSL-like syntax for defining transitions.
   #
-  # source://state_machines//lib/state_machines/event.rb#69
-  def context(&block); end
+  # source://state_machines//lib/state_machines/event.rb#80
+  def context(&_arg0); end
 
-  # source://state_machines//lib/state_machines/event.rb#185
+  # source://state_machines//lib/state_machines/event.rb#195
   def draw(graph, options = T.unsafe(nil), io = T.unsafe(nil)); end
 
   # Attempts to perform the next available transition on the given object.
@@ -712,18 +686,18 @@ class StateMachines::Event
   # Any additional arguments are passed to the StateMachines::Transition#perform
   # instance method.
   #
-  # source://state_machines//lib/state_machines/event.rb#153
-  def fire(object, *args); end
+  # source://state_machines//lib/state_machines/event.rb#164
+  def fire(object, *_arg1); end
 
   # Transforms the event name into a more human-readable format, such as
   # "turn on" instead of "turn_on"
   #
-  # source://state_machines//lib/state_machines/event.rb#63
+  # source://state_machines//lib/state_machines/event.rb#74
   def human_name(klass = T.unsafe(nil)); end
 
   # The human-readable name for the event
   #
-  # source://state_machines//lib/state_machines/event.rb#21
+  # source://state_machines//lib/state_machines/event.rb#22
   def human_name=(_arg0); end
 
   # Generates a nicely formatted description of this event's contents.
@@ -734,39 +708,39 @@ class StateMachines::Event
   #   event.transition all - :idling => :parked, :idling => same
   #   event   # => #<StateMachines::Event name=:park transitions=[all - :idling => :parked, :idling => same]>
   #
-  # source://state_machines//lib/state_machines/event.rb#196
+  # source://state_machines//lib/state_machines/event.rb#206
   def inspect; end
 
   # A list of all of the states known to this event using the configured
   # branches/transitions as the source
   #
-  # source://state_machines//lib/state_machines/event.rb#29
+  # source://state_machines//lib/state_machines/event.rb#30
   def known_states; end
 
   # The state machine for which this event is defined
   #
-  # source://state_machines//lib/state_machines/event.rb#12
+  # source://state_machines//lib/state_machines/event.rb#13
   def machine; end
 
   # The state machine for which this event is defined
   #
-  # source://state_machines//lib/state_machines/event.rb#12
+  # source://state_machines//lib/state_machines/event.rb#13
   def machine=(_arg0); end
 
   # The name of the event
   #
-  # source://state_machines//lib/state_machines/event.rb#15
+  # source://state_machines//lib/state_machines/event.rb#16
   def name; end
 
   # Marks the object as invalid and runs any failure callbacks associated with
   # this event.  This should get called anytime this event fails to transition.
   #
-  # source://state_machines//lib/state_machines/event.rb#166
+  # source://state_machines//lib/state_machines/event.rb#177
   def on_failure(object, *args); end
 
   # The fully-qualified name of the event, scoped by the machine's namespace
   #
-  # source://state_machines//lib/state_machines/event.rb#18
+  # source://state_machines//lib/state_machines/event.rb#19
   def qualified_name; end
 
   # Resets back to the initial state of the event, with no branches / known
@@ -774,7 +748,7 @@ class StateMachines::Event
   # where you either are re-using an existing state machine implementation
   # or are subclassing machines.
   #
-  # source://state_machines//lib/state_machines/event.rb#179
+  # source://state_machines//lib/state_machines/event.rb#190
   def reset; end
 
   # Creates a new transition that determines what to change the current state
@@ -796,7 +770,7 @@ class StateMachines::Event
   #
   # @raise [ArgumentError]
   #
-  # source://state_machines//lib/state_machines/event.rb#89
+  # source://state_machines//lib/state_machines/event.rb#100
   def transition(options); end
 
   # Finds and builds the next transition that can be performed on the given
@@ -810,7 +784,7 @@ class StateMachines::Event
   # * <tt>:guard</tt> - Whether to guard transitions with the if/unless
   #   conditionals defined for each one.  Default is true.
   #
-  # source://state_machines//lib/state_machines/event.rb#123
+  # source://state_machines//lib/state_machines/event.rb#134
   def transition_for(object, requirements = T.unsafe(nil)); end
 
   protected
@@ -818,7 +792,7 @@ class StateMachines::Event
   # Add the various instance methods that can transition the object using
   # the current event
   #
-  # source://state_machines//lib/state_machines/event.rb#210
+  # source://state_machines//lib/state_machines/event.rb#220
   def add_actions; end
 
   private
@@ -826,7 +800,7 @@ class StateMachines::Event
   # Creates a copy of this event in addition to the list of associated
   # branches to prevent conflicts across events within a class hierarchy.
   #
-  # source://state_machines//lib/state_machines/event.rb#55
+  # source://state_machines//lib/state_machines/event.rb#66
   def initialize_copy(orig); end
 end
 
@@ -951,7 +925,7 @@ class StateMachines::EventCollection < ::StateMachines::NodeCollection
 
   private
 
-  # source://state_machines//lib/state_machines/event_collection.rb#138
+  # source://state_machines//lib/state_machines/event_collection.rb#137
   def match(requirements); end
 end
 
@@ -1094,7 +1068,7 @@ module StateMachines::InstanceMethods
   protected
 
   # source://state_machines//lib/state_machines/extensions.rb#146
-  def initialize_state_machines(options = T.unsafe(nil), &block); end
+  def initialize_state_machines(options = T.unsafe(nil), &_arg1); end
 end
 
 # An invalid integration was registered
@@ -1155,7 +1129,7 @@ module StateMachines::Integrations
     #   StateMachines::Integrations.find_by_name(:active_record) # => StateMachines::Integrations::ActiveRecord
     #   StateMachines::Integrations.find_by_name(:invalid)       # => StateMachines::IntegrationNotFound: :invalid is an invalid integration
     #
-    # source://state_machines//lib/state_machines/integrations.rb#101
+    # source://state_machines//lib/state_machines/integrations.rb#98
     def find_by_name(name); end
 
     # Gets a list of all of the available integrations for use.
@@ -1181,7 +1155,7 @@ module StateMachines::Integrations
     #   StateMachines::Integrations.integrations
     #   # => [StateMachines::Integrations::ActiveModel]
     #
-    # source://state_machines//lib/state_machines/integrations.rb#55
+    # source://state_machines//lib/state_machines/integrations.rb#52
     def list; end
 
     # Attempts to find an integration that matches the given class.  This will
@@ -1205,7 +1179,7 @@ module StateMachines::Integrations
     #   StateMachines::Integrations.match(ActiveModelVehicle)  # => StateMachines::Integrations::ActiveModel
     #   StateMachines::Integrations.match(ActiveRecordVehicle) # => StateMachines::Integrations::ActiveRecord
     #
-    # source://state_machines//lib/state_machines/integrations.rb#77
+    # source://state_machines//lib/state_machines/integrations.rb#74
     def match(klass); end
 
     # Attempts to find an integration that matches the given list of ancestors.
@@ -1217,7 +1191,7 @@ module StateMachines::Integrations
     #   StateMachines::Integrations.match_ancestors([])                    # => nil
     #   StateMachines::Integrations.match_ancestors([ActiveRecord::Base]) # => StateMachines::Integrations::ActiveModel
     #
-    # source://state_machines//lib/state_machines/integrations.rb#89
+    # source://state_machines//lib/state_machines/integrations.rb#86
     def match_ancestors(ancestors); end
 
     # Register integration
@@ -1230,7 +1204,7 @@ module StateMachines::Integrations
 
     private
 
-    # source://state_machines//lib/state_machines/integrations.rb#107
+    # source://state_machines//lib/state_machines/integrations.rb#104
     def add(integration); end
   end
 end
@@ -1281,7 +1255,7 @@ end
 
 # A method was called in an invalid state context
 #
-# source://state_machines//lib/state_machines/error.rb#112
+# source://state_machines//lib/state_machines/error.rb#113
 class StateMachines::InvalidContext < ::StateMachines::Error; end
 
 # An invalid event was specified
@@ -1301,56 +1275,56 @@ end
 
 # A set of transition failed to run in parallel
 #
-# source://state_machines//lib/state_machines/error.rb#100
+# source://state_machines//lib/state_machines/error.rb#101
 class StateMachines::InvalidParallelTransition < ::StateMachines::Error
   # @return [InvalidParallelTransition] a new instance of InvalidParallelTransition
   #
-  # source://state_machines//lib/state_machines/error.rb#104
+  # source://state_machines//lib/state_machines/error.rb#105
   def initialize(object, events); end
 
   # The set of events that failed the transition(s)
   #
-  # source://state_machines//lib/state_machines/error.rb#102
+  # source://state_machines//lib/state_machines/error.rb#103
   def events; end
 end
 
 # An invalid transition was attempted
 #
-# source://state_machines//lib/state_machines/error.rb#59
+# source://state_machines//lib/state_machines/error.rb#60
 class StateMachines::InvalidTransition < ::StateMachines::Error
   # @return [InvalidTransition] a new instance of InvalidTransition
   #
-  # source://state_machines//lib/state_machines/error.rb#66
+  # source://state_machines//lib/state_machines/error.rb#67
   def initialize(object, machine, event); end
 
   # The event that triggered the failed transition
   #
-  # source://state_machines//lib/state_machines/error.rb#79
+  # source://state_machines//lib/state_machines/error.rb#80
   def event; end
 
   # The current state value for the machine
   #
-  # source://state_machines//lib/state_machines/error.rb#64
+  # source://state_machines//lib/state_machines/error.rb#65
   def from; end
 
   # The name for the current state
   #
-  # source://state_machines//lib/state_machines/error.rb#89
+  # source://state_machines//lib/state_machines/error.rb#90
   def from_name; end
 
   # The machine attempting to be transitioned
   #
-  # source://state_machines//lib/state_machines/error.rb#61
+  # source://state_machines//lib/state_machines/error.rb#62
   def machine; end
 
   # The fully-qualified name of the event that triggered the failed transition
   #
-  # source://state_machines//lib/state_machines/error.rb#84
+  # source://state_machines//lib/state_machines/error.rb#85
   def qualified_event; end
 
   # The fully-qualified name for the current state
   #
-  # source://state_machines//lib/state_machines/error.rb#94
+  # source://state_machines//lib/state_machines/error.rb#95
   def qualified_from_name; end
 end
 
@@ -1796,18 +1770,23 @@ end
 class StateMachines::Machine
   include ::StateMachines::EvalHelpers
   include ::StateMachines::MatcherHelpers
+  include ::StateMachines::Machine::Utilities
+  include ::StateMachines::Machine::Parsing
+  include ::StateMachines::Machine::Validation
+  include ::StateMachines::Machine::HelperGenerators
+  include ::StateMachines::Machine::ActionHooks
+  include ::StateMachines::Machine::Scoping
+  include ::StateMachines::Machine::Configuration
+  include ::StateMachines::Machine::StateMethods
+  include ::StateMachines::Machine::EventMethods
+  include ::StateMachines::Machine::Callbacks
+  include ::StateMachines::Machine::Rendering
+  include ::StateMachines::Machine::Integration
   extend ::StateMachines::Machine::ClassMethods
-
-  # Creates a new state machine for the given attribute
-  #
-  # @return [Machine] a new instance of Machine
-  #
-  # source://state_machines//lib/state_machines/machine.rb#452
-  def initialize(owner_class, *args, &block); end
 
   # The action to invoke when an object transitions
   #
-  # source://state_machines//lib/state_machines/machine.rb#441
+  # source://state_machines//lib/state_machines/machine.rb#468
   def action; end
 
   # Determines whether an action hook was defined for firing attribute-based
@@ -1815,7 +1794,7 @@ class StateMachines::Machine
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/machine.rb#1836
+  # source://state_machines//lib/state_machines/machine.rb#1616
   def action_hook?(self_only = T.unsafe(nil)); end
 
   # Creates a callback that will be invoked *after* a transition failures to
@@ -1847,8 +1826,8 @@ class StateMachines::Machine
   #     end
   #   end
   #
-  # source://state_machines//lib/state_machines/machine.rb#1698
-  def after_failure(*args, &block); end
+  # source://state_machines//lib/state_machines/machine.rb#1484
+  def after_failure(*args, **options, &_arg2); end
 
   # Creates a callback that will be invoked *after* a transition is
   # performed so long as the given requirements match the transition.
@@ -1856,8 +1835,8 @@ class StateMachines::Machine
   # See +before_transition+ for a description of the possible configurations
   # for defining callbacks.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1603
-  def after_transition(*args, &block); end
+  # source://state_machines//lib/state_machines/machine.rb#1379
+  def after_transition(*args, **options, &_arg2); end
 
   # Creates a callback that will be invoked *around* a transition so long as
   # the given requirements match the transition.
@@ -1915,14 +1894,8 @@ class StateMachines::Machine
   # See +before_transition+ for a description of the possible configurations
   # for defining callbacks.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1664
-  def around_transition(*args, &block); end
-
-  # Gets the actual name of the attribute on the machine's owner class that
-  # stores data with the given name.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#627
-  def attribute(name = T.unsafe(nil)); end
+  # source://state_machines//lib/state_machines/machine.rb#1445
+  def around_transition(*args, **options, &_arg2); end
 
   # Creates a callback that will be invoked *before* a transition is
   # performed so long as the given requirements match the transition.
@@ -2130,14 +2103,14 @@ class StateMachines::Machine
   # As can be seen, any number of transitions can be created using various
   # combinations of configuration options.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1592
-  def before_transition(*args, &block); end
+  # source://state_machines//lib/state_machines/machine.rb#1363
+  def before_transition(*args, **options, &_arg2); end
 
   # The callbacks to invoke before/after a transition is performed
   #
   # Maps :before => callbacks and :after => callbacks
   #
-  # source://state_machines//lib/state_machines/machine.rb#438
+  # source://state_machines//lib/state_machines/machine.rb#465
   def callbacks; end
 
   # Defines a new helper method in an instance or class scope with the given
@@ -2177,1228 +2150,65 @@ class StateMachines::Machine
   #     end
   #   end_eval
   #
-  # source://state_machines//lib/state_machines/machine.rb#667
-  def define_helper(scope, method, *args, **kwargs, &block); end
+  # source://state_machines//lib/state_machines/machine.rb#551
+  def define_helper(scope, method, *_arg2, **_arg3, &block); end
 
-  # source://state_machines//lib/state_machines/machine.rb#1830
-  def draw(**options); end
-
-  # Whether a dynamic initial state is being used in the machine
-  #
-  # @return [Boolean]
-  #
-  # source://state_machines//lib/state_machines/machine.rb#600
-  def dynamic_initial_state?; end
+  # source://state_machines//lib/state_machines/machine.rb#1610
+  def draw(**_arg0); end
 
   # Gets a description of the errors for the given object.  This is used to
   # provide more detailed information when an InvalidTransition exception is
   # raised.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1788
+  # source://state_machines//lib/state_machines/machine.rb#1570
   def errors_for(_object); end
-
-  # Defines one or more events for the machine and the transitions that can
-  # be performed when those events are run.
-  #
-  # This method is also aliased as +on+ for improved compatibility with
-  # using a domain-specific language.
-  #
-  # Configuration options:
-  # * <tt>:human_name</tt> - The human-readable version of this event's name.
-  #   By default, this is either defined by the integration or stringifies the
-  #   name and converts underscores to spaces.
-  #
-  # == Instance methods
-  #
-  # The following instance methods are generated when a new event is defined
-  # (the "park" event is used as an example):
-  # * <tt>park(..., run_action = true)</tt> - Fires the "park" event,
-  #   transitioning from the current state to the next valid state.  If the
-  #   last argument is a boolean, it will control whether the machine's action
-  #   gets run.
-  # * <tt>park!(..., run_action = true)</tt> - Fires the "park" event,
-  #   transitioning from the current state to the next valid state.  If the
-  #   transition fails, then a StateMachines::InvalidTransition error will be
-  #   raised.  If the last argument is a boolean, it will control whether the
-  #   machine's action gets run.
-  # * <tt>can_park?(requirements = {})</tt> - Checks whether the "park" event
-  #   can be fired given the current state of the object.  This will *not* run
-  #   validations or callbacks in ORM integrations.  It will only determine if
-  #   the state machine defines a valid transition for the event.  To check
-  #   whether an event can fire *and* passes validations, use event attributes
-  #   (e.g. state_event) as described in the "Events" documentation of each
-  #   ORM integration.
-  # * <tt>park_transition(requirements = {})</tt> -  Gets the next transition
-  #   that would be performed if the "park" event were to be fired now on the
-  #   object or nil if no transitions can be performed.  Like <tt>can_park?</tt>
-  #   this will also *not* run validations or callbacks.  It will only
-  #   determine if the state machine defines a valid transition for the event.
-  #
-  # With a namespace of "car", the above names map to the following methods:
-  # * <tt>can_park_car?</tt>
-  # * <tt>park_car_transition</tt>
-  # * <tt>park_car</tt>
-  # * <tt>park_car!</tt>
-  #
-  # The <tt>can_park?</tt> and <tt>park_transition</tt> helpers both take an
-  # optional set of requirements for determining what transitions are available
-  # for the current object.  These requirements include:
-  # * <tt>:from</tt> - One or more states to transition from.  If none are
-  #   specified, then this will be the object's current state.
-  # * <tt>:to</tt> - One or more states to transition to.  If none are
-  #   specified, then this will match any to state.
-  # * <tt>:guard</tt> - Whether to guard transitions with the if/unless
-  #   conditionals defined for each one.  Default is true.
-  #
-  # == Defining transitions
-  #
-  # +event+ requires a block which allows you to define the possible
-  # transitions that can happen as a result of that event.  For example,
-  #
-  #   event :park, :stop do
-  #     transition :idling => :parked
-  #   end
-  #
-  #   event :first_gear do
-  #     transition :parked => :first_gear, :if => :seatbelt_on?
-  #     transition :parked => same # Allow to loopback if seatbelt is off
-  #   end
-  #
-  # See StateMachines::Event#transition for more information on
-  # the possible options that can be passed in.
-  #
-  # *Note* that this block is executed within the context of the actual event
-  # object.  As a result, you will not be able to reference any class methods
-  # on the model without referencing the class itself.  For example,
-  #
-  #   class Vehicle
-  #     def self.safe_states
-  #       [:parked, :idling, :stalled]
-  #     end
-  #
-  #     state_machine do
-  #       event :park do
-  #         transition Vehicle.safe_states => :parked
-  #       end
-  #     end
-  #   end
-  #
-  # == Overriding the event method
-  #
-  # By default, this will define an instance method (with the same name as the
-  # event) that will fire the next possible transition for that.  Although the
-  # +before_transition+, +after_transition+, and +around_transition+ hooks
-  # allow you to define behavior that gets executed as a result of the event's
-  # transition, you can also override the event method in order to have a
-  # little more fine-grained control.
-  #
-  # For example:
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       event :park do
-  #         ...
-  #       end
-  #     end
-  #
-  #     def park(*)
-  #       take_deep_breath  # Executes before the transition (and before_transition hooks) even if no transition is possible
-  #       if result = super # Runs the transition and all before/after/around hooks
-  #         applaud         # Executes after the transition (and after_transition hooks)
-  #       end
-  #       result
-  #     end
-  #   end
-  #
-  # There are a few important things to note here.  First, the method
-  # signature is defined with an unlimited argument list in order to allow
-  # callers to continue passing arguments that are expected by state_machine.
-  # For example, it will still allow calls to +park+ with a single parameter
-  # for skipping the configured action.
-  #
-  # Second, the overridden event method must call +super+ in order to run the
-  # logic for running the next possible transition.  In order to remain
-  # consistent with other events, the result of +super+ is returned.
-  #
-  # Third, any behavior defined in this method will *not* get executed if
-  # you're taking advantage of attribute-based event transitions.  For example:
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.state_event = 'park'
-  #   vehicle.save
-  #
-  # In this case, the +park+ event will run the before/after/around transition
-  # hooks and transition the state, but the behavior defined in the overriden
-  # +park+ method will *not* be executed.
-  #
-  # == Defining additional arguments
-  #
-  # Additional arguments can be passed into events and accessed by transition
-  # hooks like so:
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       after_transition :on => :park do |vehicle, transition|
-  #         kind = *transition.args # :parallel
-  #         ...
-  #       end
-  #       after_transition :on => :park, :do => :take_deep_breath
-  #
-  #       event :park do
-  #         ...
-  #       end
-  #
-  #       def take_deep_breath(transition)
-  #         kind = *transition.args # :parallel
-  #         ...
-  #       end
-  #     end
-  #   end
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.park(:parallel)
-  #
-  # *Remember* that if the last argument is a boolean, it will be used as the
-  # +run_action+ parameter to the event action.  Using the +park+ action
-  # example from above, you can might call it like so:
-  #
-  #   vehicle.park                    # => Uses default args and runs machine action
-  #   vehicle.park(:parallel)         # => Specifies the +kind+ argument and runs the machine action
-  #   vehicle.park(:parallel, false)  # => Specifies the +kind+ argument and *skips* the machine action
-  #
-  # If you decide to override the +park+ event method *and* define additional
-  # arguments, you can do so as shown below:
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       event :park do
-  #         ...
-  #       end
-  #     end
-  #
-  #     def park(kind = :parallel, *args)
-  #       take_deep_breath if kind == :parallel
-  #       super
-  #     end
-  #   end
-  #
-  # Note that +super+ is called instead of <tt>super(*args)</tt>.  This allow
-  # the entire arguments list to be accessed by transition callbacks through
-  # StateMachines::Transition#args.
-  #
-  # === Using matchers
-  #
-  # The +all+ / +any+ matchers can be used to easily execute blocks for a
-  # group of events.  Note, however, that you cannot use these matchers to
-  # set configurations for events.  Blocks using these matchers can be
-  # defined at any point in the state machine and will always get applied to
-  # the proper events.
-  #
-  # For example:
-  #
-  #   state_machine :initial => :parked do
-  #     ...
-  #
-  #     event all - [:crash] do
-  #       transition :stalled => :parked
-  #     end
-  #   end
-  #
-  # == Example
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       # The park, stop, and halt events will all share the given transitions
-  #       event :park, :stop, :halt do
-  #         transition [:idling, :backing_up] => :parked
-  #       end
-  #
-  #       event :stop do
-  #         transition :first_gear => :idling
-  #       end
-  #
-  #       event :ignite do
-  #         transition :parked => :idling
-  #         transition :idling => same # Allow ignite while still idling
-  #       end
-  #     end
-  #   end
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1257
-  def event(*names, &block); end
 
   # The events that trigger transitions.  These are sorted, by default, in
   # the order in which they were defined.
   #
-  # source://state_machines//lib/state_machines/machine.rb#422
+  # source://state_machines//lib/state_machines/machine.rb#449
   def events; end
 
   # Generates the message to use when invalidating the given object after
   # failing to transition on a specific event
   #
-  # source://state_machines//lib/state_machines/machine.rb#1800
+  # source://state_machines//lib/state_machines/machine.rb#1581
   def generate_message(name, values = T.unsafe(nil)); end
-
-  # Gets the initial state of the machine for the given object. If a dynamic
-  # initial state was configured for this machine, then the object will be
-  # passed into the lambda block to help determine the actual state.
-  #
-  # == Examples
-  #
-  # With a static initial state:
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       ...
-  #     end
-  #   end
-  #
-  #   vehicle = Vehicle.new
-  #   Vehicle.state_machine.initial_state(vehicle)  # => #<StateMachines::State name=:parked value="parked" initial=true>
-  #
-  # With a dynamic initial state:
-  #
-  #   class Vehicle
-  #     attr_accessor :force_idle
-  #
-  #     state_machine :initial => lambda {|vehicle| vehicle.force_idle ? :idling : :parked} do
-  #       ...
-  #     end
-  #   end
-  #
-  #   vehicle = Vehicle.new
-  #
-  #   vehicle.force_idle = true
-  #   Vehicle.state_machine.initial_state(vehicle)  # => #<StateMachines::State name=:idling value="idling" initial=false>
-  #
-  #   vehicle.force_idle = false
-  #   Vehicle.state_machine.initial_state(vehicle)  # => #<StateMachines::State name=:parked value="parked" initial=false>
-  #
-  # source://state_machines//lib/state_machines/machine.rb#595
-  def initial_state(object); end
-
-  # Sets the initial state of the machine.  This can be either the static name
-  # of a state or a lambda block which determines the initial state at
-  # creation time.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#542
-  def initial_state=(new_initial_state); end
-
-  # Initializes the state on the given object.  Initial values are only set if
-  # the machine's attribute hasn't been previously initialized.
-  #
-  # Configuration options:
-  # * <tt>:force</tt> - Whether to initialize the state regardless of its
-  #   current value
-  # * <tt>:to</tt> - A hash to set the initial value in instead of writing
-  #   directly to the object
-  #
-  # source://state_machines//lib/state_machines/machine.rb#612
-  def initialize_state(object, options = T.unsafe(nil)); end
 
   # Marks the given object as invalid with the given message.
   #
   # By default, this is a no-op.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1782
+  # source://state_machines//lib/state_machines/machine.rb#1565
   def invalidate(_object, _attribute, _message, _values = T.unsafe(nil)); end
 
   # The name of the machine, used for scoping methods generated for the
   # machine as a whole (not states or events)
   #
-  # source://state_machines//lib/state_machines/machine.rb#418
+  # source://state_machines//lib/state_machines/machine.rb#445
   def name; end
 
   # An identifier that forces all methods (including state predicates and
   # event methods) to be generated with the value prefixed or suffixed,
   # depending on the context.
   #
-  # source://state_machines//lib/state_machines/machine.rb#446
+  # source://state_machines//lib/state_machines/machine.rb#473
   def namespace; end
-
-  # Defines one or more events for the machine and the transitions that can
-  # be performed when those events are run.
-  #
-  # This method is also aliased as +on+ for improved compatibility with
-  # using a domain-specific language.
-  #
-  # Configuration options:
-  # * <tt>:human_name</tt> - The human-readable version of this event's name.
-  #   By default, this is either defined by the integration or stringifies the
-  #   name and converts underscores to spaces.
-  #
-  # == Instance methods
-  #
-  # The following instance methods are generated when a new event is defined
-  # (the "park" event is used as an example):
-  # * <tt>park(..., run_action = true)</tt> - Fires the "park" event,
-  #   transitioning from the current state to the next valid state.  If the
-  #   last argument is a boolean, it will control whether the machine's action
-  #   gets run.
-  # * <tt>park!(..., run_action = true)</tt> - Fires the "park" event,
-  #   transitioning from the current state to the next valid state.  If the
-  #   transition fails, then a StateMachines::InvalidTransition error will be
-  #   raised.  If the last argument is a boolean, it will control whether the
-  #   machine's action gets run.
-  # * <tt>can_park?(requirements = {})</tt> - Checks whether the "park" event
-  #   can be fired given the current state of the object.  This will *not* run
-  #   validations or callbacks in ORM integrations.  It will only determine if
-  #   the state machine defines a valid transition for the event.  To check
-  #   whether an event can fire *and* passes validations, use event attributes
-  #   (e.g. state_event) as described in the "Events" documentation of each
-  #   ORM integration.
-  # * <tt>park_transition(requirements = {})</tt> -  Gets the next transition
-  #   that would be performed if the "park" event were to be fired now on the
-  #   object or nil if no transitions can be performed.  Like <tt>can_park?</tt>
-  #   this will also *not* run validations or callbacks.  It will only
-  #   determine if the state machine defines a valid transition for the event.
-  #
-  # With a namespace of "car", the above names map to the following methods:
-  # * <tt>can_park_car?</tt>
-  # * <tt>park_car_transition</tt>
-  # * <tt>park_car</tt>
-  # * <tt>park_car!</tt>
-  #
-  # The <tt>can_park?</tt> and <tt>park_transition</tt> helpers both take an
-  # optional set of requirements for determining what transitions are available
-  # for the current object.  These requirements include:
-  # * <tt>:from</tt> - One or more states to transition from.  If none are
-  #   specified, then this will be the object's current state.
-  # * <tt>:to</tt> - One or more states to transition to.  If none are
-  #   specified, then this will match any to state.
-  # * <tt>:guard</tt> - Whether to guard transitions with the if/unless
-  #   conditionals defined for each one.  Default is true.
-  #
-  # == Defining transitions
-  #
-  # +event+ requires a block which allows you to define the possible
-  # transitions that can happen as a result of that event.  For example,
-  #
-  #   event :park, :stop do
-  #     transition :idling => :parked
-  #   end
-  #
-  #   event :first_gear do
-  #     transition :parked => :first_gear, :if => :seatbelt_on?
-  #     transition :parked => same # Allow to loopback if seatbelt is off
-  #   end
-  #
-  # See StateMachines::Event#transition for more information on
-  # the possible options that can be passed in.
-  #
-  # *Note* that this block is executed within the context of the actual event
-  # object.  As a result, you will not be able to reference any class methods
-  # on the model without referencing the class itself.  For example,
-  #
-  #   class Vehicle
-  #     def self.safe_states
-  #       [:parked, :idling, :stalled]
-  #     end
-  #
-  #     state_machine do
-  #       event :park do
-  #         transition Vehicle.safe_states => :parked
-  #       end
-  #     end
-  #   end
-  #
-  # == Overriding the event method
-  #
-  # By default, this will define an instance method (with the same name as the
-  # event) that will fire the next possible transition for that.  Although the
-  # +before_transition+, +after_transition+, and +around_transition+ hooks
-  # allow you to define behavior that gets executed as a result of the event's
-  # transition, you can also override the event method in order to have a
-  # little more fine-grained control.
-  #
-  # For example:
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       event :park do
-  #         ...
-  #       end
-  #     end
-  #
-  #     def park(*)
-  #       take_deep_breath  # Executes before the transition (and before_transition hooks) even if no transition is possible
-  #       if result = super # Runs the transition and all before/after/around hooks
-  #         applaud         # Executes after the transition (and after_transition hooks)
-  #       end
-  #       result
-  #     end
-  #   end
-  #
-  # There are a few important things to note here.  First, the method
-  # signature is defined with an unlimited argument list in order to allow
-  # callers to continue passing arguments that are expected by state_machine.
-  # For example, it will still allow calls to +park+ with a single parameter
-  # for skipping the configured action.
-  #
-  # Second, the overridden event method must call +super+ in order to run the
-  # logic for running the next possible transition.  In order to remain
-  # consistent with other events, the result of +super+ is returned.
-  #
-  # Third, any behavior defined in this method will *not* get executed if
-  # you're taking advantage of attribute-based event transitions.  For example:
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.state_event = 'park'
-  #   vehicle.save
-  #
-  # In this case, the +park+ event will run the before/after/around transition
-  # hooks and transition the state, but the behavior defined in the overriden
-  # +park+ method will *not* be executed.
-  #
-  # == Defining additional arguments
-  #
-  # Additional arguments can be passed into events and accessed by transition
-  # hooks like so:
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       after_transition :on => :park do |vehicle, transition|
-  #         kind = *transition.args # :parallel
-  #         ...
-  #       end
-  #       after_transition :on => :park, :do => :take_deep_breath
-  #
-  #       event :park do
-  #         ...
-  #       end
-  #
-  #       def take_deep_breath(transition)
-  #         kind = *transition.args # :parallel
-  #         ...
-  #       end
-  #     end
-  #   end
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.park(:parallel)
-  #
-  # *Remember* that if the last argument is a boolean, it will be used as the
-  # +run_action+ parameter to the event action.  Using the +park+ action
-  # example from above, you can might call it like so:
-  #
-  #   vehicle.park                    # => Uses default args and runs machine action
-  #   vehicle.park(:parallel)         # => Specifies the +kind+ argument and runs the machine action
-  #   vehicle.park(:parallel, false)  # => Specifies the +kind+ argument and *skips* the machine action
-  #
-  # If you decide to override the +park+ event method *and* define additional
-  # arguments, you can do so as shown below:
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       event :park do
-  #         ...
-  #       end
-  #     end
-  #
-  #     def park(kind = :parallel, *args)
-  #       take_deep_breath if kind == :parallel
-  #       super
-  #     end
-  #   end
-  #
-  # Note that +super+ is called instead of <tt>super(*args)</tt>.  This allow
-  # the entire arguments list to be accessed by transition callbacks through
-  # StateMachines::Transition#args.
-  #
-  # === Using matchers
-  #
-  # The +all+ / +any+ matchers can be used to easily execute blocks for a
-  # group of events.  Note, however, that you cannot use these matchers to
-  # set configurations for events.  Blocks using these matchers can be
-  # defined at any point in the state machine and will always get applied to
-  # the proper events.
-  #
-  # For example:
-  #
-  #   state_machine :initial => :parked do
-  #     ...
-  #
-  #     event all - [:crash] do
-  #       transition :stalled => :parked
-  #     end
-  #   end
-  #
-  # == Example
-  #
-  #   class Vehicle
-  #     state_machine do
-  #       # The park, stop, and halt events will all share the given transitions
-  #       event :park, :stop, :halt do
-  #         transition [:idling, :backing_up] => :parked
-  #       end
-  #
-  #       event :stop do
-  #         transition :first_gear => :idling
-  #       end
-  #
-  #       event :ignite do
-  #         transition :parked => :idling
-  #         transition :idling => same # Allow ignite while still idling
-  #       end
-  #     end
-  #   end
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1286
-  def on(*names, &block); end
-
-  # Customizes the definition of one or more states in the machine.
-  #
-  # Configuration options:
-  # * <tt>:value</tt> - The actual value to store when an object transitions
-  #   to the state.  Default is the name (stringified).
-  # * <tt>:cache</tt> - If a dynamic value (via a lambda block) is being used,
-  #   then setting this to true will cache the evaluated result
-  # * <tt>:if</tt> - Determines whether an object's value matches the state
-  #   (e.g. :value => lambda {Time.now}, :if => lambda {|state| !state.nil?}).
-  #   By default, the configured value is matched.
-  # * <tt>:human_name</tt> - The human-readable version of this state's name.
-  #   By default, this is either defined by the integration or stringifies the
-  #   name and converts underscores to spaces.
-  #
-  # == Customizing the stored value
-  #
-  # Whenever a state is automatically discovered in the state machine, its
-  # default value is assumed to be the stringified version of the name.  For
-  # example,
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #     end
-  #   end
-  #
-  # In the above state machine, there are two states automatically discovered:
-  # :parked and :idling.  These states, by default, will store their stringified
-  # equivalents when an object moves into that state (e.g. "parked" / "idling").
-  #
-  # For legacy systems or when tying state machines into existing frameworks,
-  # it's oftentimes necessary to need to store a different value for a state
-  # than the default.  In order to continue taking advantage of an expressive
-  # state machine and helper methods, every defined state can be re-configured
-  # with a custom stored value.  For example,
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #
-  #       state :idling, :value => 'IDLING'
-  #       state :parked, :value => 'PARKED
-  #     end
-  #   end
-  #
-  # This is also useful if being used in association with a database and,
-  # instead of storing the state name in a column, you want to store the
-  # state's foreign key:
-  #
-  #   class VehicleState < ActiveRecord::Base
-  #   end
-  #
-  #   class Vehicle < ActiveRecord::Base
-  #     state_machine :attribute => :state_id, :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #
-  #       states.each do |state|
-  #         self.state(state.name, :value => lambda { VehicleState.find_by_name(state.name.to_s).id }, :cache => true)
-  #       end
-  #     end
-  #   end
-  #
-  # In the above example, each known state is configured to store it's
-  # associated database id in the +state_id+ attribute.  Also, notice that a
-  # lambda block is used to define the state's value.  This is required in
-  # situations (like testing) where the model is loaded without any existing
-  # data (i.e. no VehicleState records available).
-  #
-  # One caveat to the above example is to keep performance in mind.  To avoid
-  # constant db hits for looking up the VehicleState ids, the value is cached
-  # by specifying the <tt>:cache</tt> option.  Alternatively, a custom
-  # caching strategy can be used like so:
-  #
-  #   class VehicleState < ActiveRecord::Base
-  #     cattr_accessor :cache_store
-  #     self.cache_store = ActiveSupport::Cache::MemoryStore.new
-  #
-  #     def self.find_by_name(name)
-  #       cache_store.fetch(name) { find(:first, :conditions => {:name => name}) }
-  #     end
-  #   end
-  #
-  # === Dynamic values
-  #
-  # In addition to customizing states with other value types, lambda blocks
-  # can also be specified to allow for a state's value to be determined
-  # dynamically at runtime.  For example,
-  #
-  #   class Vehicle
-  #     state_machine :purchased_at, :initial => :available do
-  #       event :purchase do
-  #         transition all => :purchased
-  #       end
-  #
-  #       event :restock do
-  #         transition all => :available
-  #       end
-  #
-  #       state :available, :value => nil
-  #       state :purchased, :if => lambda {|value| !value.nil?}, :value => lambda {Time.now}
-  #     end
-  #   end
-  #
-  # In the above definition, the <tt>:purchased</tt> state is customized with
-  # both a dynamic value *and* a value matcher.
-  #
-  # When an object transitions to the purchased state, the value's lambda
-  # block will be called.  This will get the current time and store it in the
-  # object's +purchased_at+ attribute.
-  #
-  # *Note* that the custom matcher is very important here.  Since there's no
-  # way for the state machine to figure out an object's state when it's set to
-  # a runtime value, it must be explicitly defined.  If the <tt>:if</tt> option
-  # were not configured for the state, then an ArgumentError exception would
-  # be raised at runtime, indicating that the state machine could not figure
-  # out what the current state of the object was.
-  #
-  # == Behaviors
-  #
-  # Behaviors define a series of methods to mixin with objects when the current
-  # state matches the given one(s).  This allows instance methods to behave
-  # a specific way depending on what the value of the object's state is.
-  #
-  # For example,
-  #
-  #   class Vehicle
-  #     attr_accessor :driver
-  #     attr_accessor :passenger
-  #
-  #     state_machine :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #
-  #       state :parked do
-  #         def speed
-  #           0
-  #         end
-  #
-  #         def rotate_driver
-  #           driver = self.driver
-  #           self.driver = passenger
-  #           self.passenger = driver
-  #           true
-  #         end
-  #       end
-  #
-  #       state :idling, :first_gear do
-  #         def speed
-  #           20
-  #         end
-  #
-  #         def rotate_driver
-  #           self.state = 'parked'
-  #           rotate_driver
-  #         end
-  #       end
-  #
-  #       other_states :backing_up
-  #     end
-  #   end
-  #
-  # In the above example, there are two dynamic behaviors defined for the
-  # class:
-  # * +speed+
-  # * +rotate_driver+
-  #
-  # Each of these behaviors are instance methods on the Vehicle class.  However,
-  # which method actually gets invoked is based on the current state of the
-  # object.  Using the above class as the example:
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.driver = 'John'
-  #   vehicle.passenger = 'Jane'
-  #
-  #   # Behaviors in the "parked" state
-  #   vehicle.state             # => "parked"
-  #   vehicle.speed             # => 0
-  #   vehicle.rotate_driver     # => true
-  #   vehicle.driver            # => "Jane"
-  #   vehicle.passenger         # => "John"
-  #
-  #   vehicle.ignite            # => true
-  #
-  #   # Behaviors in the "idling" state
-  #   vehicle.state             # => "idling"
-  #   vehicle.speed             # => 20
-  #   vehicle.rotate_driver     # => true
-  #   vehicle.driver            # => "John"
-  #   vehicle.passenger         # => "Jane"
-  #
-  # As can be seen, both the +speed+ and +rotate_driver+ instance method
-  # implementations changed how they behave based on what the current state
-  # of the vehicle was.
-  #
-  # === Invalid behaviors
-  #
-  # If a specific behavior has not been defined for a state, then a
-  # NoMethodError exception will be raised, indicating that that method would
-  # not normally exist for an object with that state.
-  #
-  # Using the example from before:
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.state = 'backing_up'
-  #   vehicle.speed               # => NoMethodError: undefined method 'speed' for #<Vehicle:0xb7d296ac> in state "backing_up"
-  #
-  # === Using matchers
-  #
-  # The +all+ / +any+ matchers can be used to easily define behaviors for a
-  # group of states.  Note, however, that you cannot use these matchers to
-  # set configurations for states.  Behaviors using these matchers can be
-  # defined at any point in the state machine and will always get applied to
-  # the proper states.
-  #
-  # For example:
-  #
-  #   state_machine :initial => :parked do
-  #     ...
-  #
-  #     state all - [:parked, :idling, :stalled] do
-  #       validates_presence_of :speed
-  #
-  #       def speed
-  #         gear * 10
-  #       end
-  #     end
-  #   end
-  #
-  # == State-aware class methods
-  #
-  # In addition to defining scopes for instance methods that are state-aware,
-  # the same can be done for certain types of class methods.
-  #
-  # Some libraries have support for class-level methods that only run certain
-  # behaviors based on a conditions hash passed in.  For example:
-  #
-  #   class Vehicle < ActiveRecord::Base
-  #     state_machine do
-  #       ...
-  #       state :first_gear, :second_gear, :third_gear do
-  #         validates_presence_of   :speed
-  #         validates_inclusion_of  :speed, :in => 0..25, :if => :in_school_zone?
-  #       end
-  #     end
-  #   end
-  #
-  # In the above ActiveRecord model, two validations have been defined which
-  # will *only* run when the Vehicle object is in one of the three states:
-  # +first_gear+, +second_gear+, or +third_gear.  Notice, also, that if/unless
-  # conditions can continue to be used.
-  #
-  # This functionality is not library-specific and can work for any class-level
-  # method that is defined like so:
-  #
-  #   def validates_presence_of(attribute, options = {})
-  #     ...
-  #   end
-  #
-  # The minimum requirement is that the last argument in the method be an
-  # options hash which contains at least <tt>:if</tt> condition support.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#987
-  def other_states(*names, &block); end
 
   # The class that the machine is defined in
   #
-  # source://state_machines//lib/state_machines/machine.rb#414
+  # source://state_machines//lib/state_machines/machine.rb#441
   def owner_class; end
 
-  # Sets the class which is the owner of this state machine.  Any methods
-  # generated by states, events, or other parts of the machine will be defined
-  # on the given owner class.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#514
-  def owner_class=(klass); end
-
-  # Generates a list of the possible transition sequences that can be run on
-  # the given object.  These paths can reveal all of the possible states and
-  # events that can be encountered in the object's state machine based on the
-  # object's current state.
-  #
-  # Configuration options:
-  # * +from+ - The initial state to start all paths from.  By default, this
-  #   is the object's current state.
-  # * +to+ - The target state to end all paths on.  By default, paths will
-  #   end when they loop back to the first transition on the path.
-  # * +deep+ - Whether to allow the target state to be crossed more than once
-  #   in a path.  By default, paths will immediately stop when the target
-  #   state (if specified) is reached.  If this is enabled, then paths can
-  #   continue even after reaching the target state; they will stop when
-  #   reaching the target state a second time.
-  #
-  # *Note* that the object is never modified when the list of paths is
-  # generated.
-  #
-  # == Examples
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #
-  #       event :shift_up do
-  #         transition :idling => :first_gear, :first_gear => :second_gear
-  #       end
-  #
-  #       event :shift_down do
-  #         transition :second_gear => :first_gear, :first_gear => :idling
-  #       end
-  #     end
-  #   end
-  #
-  #   vehicle = Vehicle.new   # => #<Vehicle:0xb7c27024 @state="parked">
-  #   vehicle.state           # => "parked"
-  #
-  #   vehicle.state_paths
-  #   # => [
-  #   #     [#<StateMachines::Transition attribute=:state event=:ignite from="parked" from_name=:parked to="idling" to_name=:idling>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_up from="idling" from_name=:idling to="first_gear" to_name=:first_gear>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_up from="first_gear" from_name=:first_gear to="second_gear" to_name=:second_gear>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_down from="second_gear" from_name=:second_gear to="first_gear" to_name=:first_gear>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_down from="first_gear" from_name=:first_gear to="idling" to_name=:idling>],
-  #   #
-  #   #     [#<StateMachines::Transition attribute=:state event=:ignite from="parked" from_name=:parked to="idling" to_name=:idling>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_up from="idling" from_name=:idling to="first_gear" to_name=:first_gear>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_down from="first_gear" from_name=:first_gear to="idling" to_name=:idling>]
-  #   #    ]
-  #
-  #   vehicle.state_paths(:from => :parked, :to => :second_gear)
-  #   # => [
-  #   #     [#<StateMachines::Transition attribute=:state event=:ignite from="parked" from_name=:parked to="idling" to_name=:idling>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_up from="idling" from_name=:idling to="first_gear" to_name=:first_gear>,
-  #   #      #<StateMachines::Transition attribute=:state event=:shift_up from="first_gear" from_name=:first_gear to="second_gear" to_name=:second_gear>]
-  #   #    ]
-  #
-  # In addition to getting the possible paths that can be accessed, you can
-  # also get summary information about the states / events that can be
-  # accessed at some point along one of the paths.  For example:
-  #
-  #   # Get the list of states that can be accessed from the current state
-  #   vehicle.state_paths.to_states # => [:idling, :first_gear, :second_gear]
-  #
-  #   # Get the list of events that can be accessed from the current state
-  #   vehicle.state_paths.events    # => [:ignite, :shift_up, :shift_down]
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1775
-  def paths_for(object, requirements = T.unsafe(nil)); end
-
-  # Gets the current value stored in the given object's attribute.
-  #
-  # For example,
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       ...
-  #     end
-  #   end
-  #
-  #   vehicle = Vehicle.new                           # => #<Vehicle:0xb7d94ab0 @state="parked">
-  #   Vehicle.state_machine.read(vehicle, :state)     # => "parked" # Equivalent to vehicle.state
-  #   Vehicle.state_machine.read(vehicle, :event)     # => nil      # Equivalent to vehicle.state_event
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1002
-  def read(object, attribute, ivar = T.unsafe(nil)); end
-
-  # source://state_machines//lib/state_machines/machine.rb#1826
+  # source://state_machines//lib/state_machines/machine.rb#1606
   def renderer; end
 
   # Resets any errors previously added when invalidating the given object.
   #
   # By default, this is a no-op.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1795
+  # source://state_machines//lib/state_machines/machine.rb#1577
   def reset(_object); end
-
-  # Customizes the definition of one or more states in the machine.
-  #
-  # Configuration options:
-  # * <tt>:value</tt> - The actual value to store when an object transitions
-  #   to the state.  Default is the name (stringified).
-  # * <tt>:cache</tt> - If a dynamic value (via a lambda block) is being used,
-  #   then setting this to true will cache the evaluated result
-  # * <tt>:if</tt> - Determines whether an object's value matches the state
-  #   (e.g. :value => lambda {Time.now}, :if => lambda {|state| !state.nil?}).
-  #   By default, the configured value is matched.
-  # * <tt>:human_name</tt> - The human-readable version of this state's name.
-  #   By default, this is either defined by the integration or stringifies the
-  #   name and converts underscores to spaces.
-  #
-  # == Customizing the stored value
-  #
-  # Whenever a state is automatically discovered in the state machine, its
-  # default value is assumed to be the stringified version of the name.  For
-  # example,
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #     end
-  #   end
-  #
-  # In the above state machine, there are two states automatically discovered:
-  # :parked and :idling.  These states, by default, will store their stringified
-  # equivalents when an object moves into that state (e.g. "parked" / "idling").
-  #
-  # For legacy systems or when tying state machines into existing frameworks,
-  # it's oftentimes necessary to need to store a different value for a state
-  # than the default.  In order to continue taking advantage of an expressive
-  # state machine and helper methods, every defined state can be re-configured
-  # with a custom stored value.  For example,
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #
-  #       state :idling, :value => 'IDLING'
-  #       state :parked, :value => 'PARKED
-  #     end
-  #   end
-  #
-  # This is also useful if being used in association with a database and,
-  # instead of storing the state name in a column, you want to store the
-  # state's foreign key:
-  #
-  #   class VehicleState < ActiveRecord::Base
-  #   end
-  #
-  #   class Vehicle < ActiveRecord::Base
-  #     state_machine :attribute => :state_id, :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #
-  #       states.each do |state|
-  #         self.state(state.name, :value => lambda { VehicleState.find_by_name(state.name.to_s).id }, :cache => true)
-  #       end
-  #     end
-  #   end
-  #
-  # In the above example, each known state is configured to store it's
-  # associated database id in the +state_id+ attribute.  Also, notice that a
-  # lambda block is used to define the state's value.  This is required in
-  # situations (like testing) where the model is loaded without any existing
-  # data (i.e. no VehicleState records available).
-  #
-  # One caveat to the above example is to keep performance in mind.  To avoid
-  # constant db hits for looking up the VehicleState ids, the value is cached
-  # by specifying the <tt>:cache</tt> option.  Alternatively, a custom
-  # caching strategy can be used like so:
-  #
-  #   class VehicleState < ActiveRecord::Base
-  #     cattr_accessor :cache_store
-  #     self.cache_store = ActiveSupport::Cache::MemoryStore.new
-  #
-  #     def self.find_by_name(name)
-  #       cache_store.fetch(name) { find(:first, :conditions => {:name => name}) }
-  #     end
-  #   end
-  #
-  # === Dynamic values
-  #
-  # In addition to customizing states with other value types, lambda blocks
-  # can also be specified to allow for a state's value to be determined
-  # dynamically at runtime.  For example,
-  #
-  #   class Vehicle
-  #     state_machine :purchased_at, :initial => :available do
-  #       event :purchase do
-  #         transition all => :purchased
-  #       end
-  #
-  #       event :restock do
-  #         transition all => :available
-  #       end
-  #
-  #       state :available, :value => nil
-  #       state :purchased, :if => lambda {|value| !value.nil?}, :value => lambda {Time.now}
-  #     end
-  #   end
-  #
-  # In the above definition, the <tt>:purchased</tt> state is customized with
-  # both a dynamic value *and* a value matcher.
-  #
-  # When an object transitions to the purchased state, the value's lambda
-  # block will be called.  This will get the current time and store it in the
-  # object's +purchased_at+ attribute.
-  #
-  # *Note* that the custom matcher is very important here.  Since there's no
-  # way for the state machine to figure out an object's state when it's set to
-  # a runtime value, it must be explicitly defined.  If the <tt>:if</tt> option
-  # were not configured for the state, then an ArgumentError exception would
-  # be raised at runtime, indicating that the state machine could not figure
-  # out what the current state of the object was.
-  #
-  # == Behaviors
-  #
-  # Behaviors define a series of methods to mixin with objects when the current
-  # state matches the given one(s).  This allows instance methods to behave
-  # a specific way depending on what the value of the object's state is.
-  #
-  # For example,
-  #
-  #   class Vehicle
-  #     attr_accessor :driver
-  #     attr_accessor :passenger
-  #
-  #     state_machine :initial => :parked do
-  #       event :ignite do
-  #         transition :parked => :idling
-  #       end
-  #
-  #       state :parked do
-  #         def speed
-  #           0
-  #         end
-  #
-  #         def rotate_driver
-  #           driver = self.driver
-  #           self.driver = passenger
-  #           self.passenger = driver
-  #           true
-  #         end
-  #       end
-  #
-  #       state :idling, :first_gear do
-  #         def speed
-  #           20
-  #         end
-  #
-  #         def rotate_driver
-  #           self.state = 'parked'
-  #           rotate_driver
-  #         end
-  #       end
-  #
-  #       other_states :backing_up
-  #     end
-  #   end
-  #
-  # In the above example, there are two dynamic behaviors defined for the
-  # class:
-  # * +speed+
-  # * +rotate_driver+
-  #
-  # Each of these behaviors are instance methods on the Vehicle class.  However,
-  # which method actually gets invoked is based on the current state of the
-  # object.  Using the above class as the example:
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.driver = 'John'
-  #   vehicle.passenger = 'Jane'
-  #
-  #   # Behaviors in the "parked" state
-  #   vehicle.state             # => "parked"
-  #   vehicle.speed             # => 0
-  #   vehicle.rotate_driver     # => true
-  #   vehicle.driver            # => "Jane"
-  #   vehicle.passenger         # => "John"
-  #
-  #   vehicle.ignite            # => true
-  #
-  #   # Behaviors in the "idling" state
-  #   vehicle.state             # => "idling"
-  #   vehicle.speed             # => 20
-  #   vehicle.rotate_driver     # => true
-  #   vehicle.driver            # => "John"
-  #   vehicle.passenger         # => "Jane"
-  #
-  # As can be seen, both the +speed+ and +rotate_driver+ instance method
-  # implementations changed how they behave based on what the current state
-  # of the vehicle was.
-  #
-  # === Invalid behaviors
-  #
-  # If a specific behavior has not been defined for a state, then a
-  # NoMethodError exception will be raised, indicating that that method would
-  # not normally exist for an object with that state.
-  #
-  # Using the example from before:
-  #
-  #   vehicle = Vehicle.new
-  #   vehicle.state = 'backing_up'
-  #   vehicle.speed               # => NoMethodError: undefined method 'speed' for #<Vehicle:0xb7d296ac> in state "backing_up"
-  #
-  # === Using matchers
-  #
-  # The +all+ / +any+ matchers can be used to easily define behaviors for a
-  # group of states.  Note, however, that you cannot use these matchers to
-  # set configurations for states.  Behaviors using these matchers can be
-  # defined at any point in the state machine and will always get applied to
-  # the proper states.
-  #
-  # For example:
-  #
-  #   state_machine :initial => :parked do
-  #     ...
-  #
-  #     state all - [:parked, :idling, :stalled] do
-  #       validates_presence_of :speed
-  #
-  #       def speed
-  #         gear * 10
-  #       end
-  #     end
-  #   end
-  #
-  # == State-aware class methods
-  #
-  # In addition to defining scopes for instance methods that are state-aware,
-  # the same can be done for certain types of class methods.
-  #
-  # Some libraries have support for class-level methods that only run certain
-  # behaviors based on a conditions hash passed in.  For example:
-  #
-  #   class Vehicle < ActiveRecord::Base
-  #     state_machine do
-  #       ...
-  #       state :first_gear, :second_gear, :third_gear do
-  #         validates_presence_of   :speed
-  #         validates_inclusion_of  :speed, :in => 0..25, :if => :in_school_zone?
-  #       end
-  #     end
-  #   end
-  #
-  # In the above ActiveRecord model, two validations have been defined which
-  # will *only* run when the Vehicle object is in one of the three states:
-  # +first_gear+, +second_gear+, or +third_gear.  Notice, also, that if/unless
-  # conditions can continue to be used.
-  #
-  # This functionality is not library-specific and can work for any class-level
-  # method that is defined like so:
-  #
-  #   def validates_presence_of(attribute, options = {})
-  #     ...
-  #   end
-  #
-  # The minimum requirement is that the last argument in the method be an
-  # options hash which contains at least <tt>:if</tt> condition support.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#954
-  def state(*names, &block); end
 
   # A list of all of the states known to this state machine.  This will pull
   # states from the following sources:
@@ -3410,107 +2220,12 @@ class StateMachines::Machine
   #
   # These are sorted, by default, in the order in which they were referenced.
   #
-  # source://state_machines//lib/state_machines/machine.rb#433
+  # source://state_machines//lib/state_machines/machine.rb#460
   def states; end
-
-  # Creates a new transition that determines what to change the current state
-  # to when an event fires.
-  #
-  # == Defining transitions
-  #
-  # The options for a new transition uses the Hash syntax to map beginning
-  # states to ending states.  For example,
-  #
-  #   transition :parked => :idling, :idling => :first_gear, :on => :ignite
-  #
-  # In this case, when the +ignite+ event is fired, this transition will cause
-  # the state to be +idling+ if it's current state is +parked+ or +first_gear+
-  # if it's current state is +idling+.
-  #
-  # To help define these implicit transitions, a set of helpers are available
-  # for slightly more complex matching:
-  # * <tt>all</tt> - Matches every state in the machine
-  # * <tt>all - [:parked, :idling, ...]</tt> - Matches every state except those specified
-  # * <tt>any</tt> - An alias for +all+ (matches every state in the machine)
-  # * <tt>same</tt> - Matches the same state being transitioned from
-  #
-  # See StateMachines::MatcherHelpers for more information.
-  #
-  # Examples:
-  #
-  #   transition all => nil, :on => :ignite                               # Transitions to nil regardless of the current state
-  #   transition all => :idling, :on => :ignite                           # Transitions to :idling regardless of the current state
-  #   transition all - [:idling, :first_gear] => :idling, :on => :ignite  # Transitions every state but :idling and :first_gear to :idling
-  #   transition nil => :idling, :on => :ignite                           # Transitions to :idling from the nil state
-  #   transition :parked => :idling, :on => :ignite                       # Transitions to :idling if :parked
-  #   transition [:parked, :stalled] => :idling, :on => :ignite           # Transitions to :idling if :parked or :stalled
-  #
-  #   transition :parked => same, :on => :park                            # Loops :parked back to :parked
-  #   transition [:parked, :stalled] => same, :on => [:park, :stall]      # Loops either :parked or :stalled back to the same state on the park and stall events
-  #   transition all - :parked => same, :on => :noop                      # Loops every state but :parked back to the same state
-  #
-  #   # Transitions to :idling if :parked, :first_gear if :idling, or :second_gear if :first_gear
-  #   transition :parked => :idling, :idling => :first_gear, :first_gear => :second_gear, :on => :shift_up
-  #
-  # == Verbose transitions
-  #
-  # Transitions can also be defined use an explicit set of configuration
-  # options:
-  # * <tt>:from</tt> - A state or array of states that can be transitioned from.
-  #   If not specified, then the transition can occur for *any* state.
-  # * <tt>:to</tt> - The state that's being transitioned to.  If not specified,
-  #   then the transition will simply loop back (i.e. the state will not change).
-  # * <tt>:except_from</tt> - A state or array of states that *cannot* be
-  #   transitioned from.
-  #
-  # These options must be used when defining transitions within the context
-  # of a state.
-  #
-  # Examples:
-  #
-  #   transition :to => nil, :on => :park
-  #   transition :to => :idling, :on => :ignite
-  #   transition :except_from => [:idling, :first_gear], :to => :idling, :on => :ignite
-  #   transition :from => nil, :to => :idling, :on => :ignite
-  #   transition :from => [:parked, :stalled], :to => :idling, :on => :ignite
-  #
-  # == Conditions
-  #
-  # In addition to the state requirements for each transition, a condition
-  # can also be defined to help determine whether that transition is
-  # available.  These options will work on both the normal and verbose syntax.
-  #
-  # Configuration options:
-  # * <tt>:if</tt> - A method, proc or string to call to determine if the
-  #   transition should occur (e.g. :if => :moving?, or :if => lambda {|vehicle| vehicle.speed > 60}).
-  #   The condition should return or evaluate to true or false.
-  # * <tt>:unless</tt> - A method, proc or string to call to determine if the
-  #   transition should not occur (e.g. :unless => :stopped?, or :unless => lambda {|vehicle| vehicle.speed <= 60}).
-  #   The condition should return or evaluate to true or false.
-  #
-  # Examples:
-  #
-  #   transition :parked => :idling, :on => :ignite, :if => :moving?
-  #   transition :parked => :idling, :on => :ignite, :unless => :stopped?
-  #   transition :idling => :first_gear, :first_gear => :second_gear, :on => :shift_up, :if => :seatbelt_on?
-  #
-  #   transition :from => :parked, :to => :idling, :on => ignite, :if => :moving?
-  #   transition :from => :parked, :to => :idling, :on => ignite, :unless => :stopped?
-  #
-  # == Order of operations
-  #
-  # Transitions are evaluated in the order in which they're defined.  As a
-  # result, if more than one transition applies to a given object, then the
-  # first transition that matches will be performed.
-  #
-  # @raise [ArgumentError]
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1377
-  def transition(options); end
 
   # Whether the machine will use transactions when firing events
   #
-  # source://state_machines//lib/state_machines/machine.rb#449
+  # source://state_machines//lib/state_machines/machine.rb#476
   def use_transactions; end
 
   # Runs a transaction, rolling back any changes if the yielded block fails.
@@ -3519,28 +2234,38 @@ class StateMachines::Machine
   # default, this will not run any transactions since the changes aren't
   # taking place within the context of a database.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1817
-  def within_transaction(object); end
+  # source://state_machines//lib/state_machines/machine.rb#1598
+  def within_transaction(object, &_arg1); end
 
-  # Sets a new value in the given object's attribute.
-  #
-  # For example,
-  #
-  #   class Vehicle
-  #     state_machine :initial => :parked do
-  #       ...
-  #     end
-  #   end
-  #
-  #   vehicle = Vehicle.new                                   # => #<Vehicle:0xb7d94ab0 @state="parked">
-  #   Vehicle.state_machine.write(vehicle, :state, 'idling')  # => Equivalent to vehicle.state = 'idling'
-  #   Vehicle.state_machine.write(vehicle, :event, 'park')    # => Equivalent to vehicle.state_event = 'park'
-  #   vehicle.state                                           # => "idling"
-  #   vehicle.event                                           # => "park"
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1026
-  def write(object, attribute, value, ivar = T.unsafe(nil)); end
+  protected
 
+  # Runs additional initialization hooks.  By default, this is a no-op.
+  #
+  # source://state_machines//lib/state_machines/machine.rb#1623
+  def after_initialize; end
+
+  # Gets the initial attribute value defined by the owner class (outside of
+  # the machine's definition). By default, this is always nil.
+  #
+  # source://state_machines//lib/state_machines/machine.rb#1637
+  def owner_class_attribute_default; end
+
+  # Checks whether the given state matches the attribute default specified
+  # by the owner class
+  #
+  # @return [Boolean]
+  #
+  # source://state_machines//lib/state_machines/machine.rb#1643
+  def owner_class_attribute_default_matches?(state); end
+
+  # Always yields
+  #
+  # source://state_machines//lib/state_machines/machine.rb#1631
+  def transaction(_object); end
+end
+
+# source://state_machines//lib/state_machines/machine/action_hooks.rb#5
+module StateMachines::Machine::ActionHooks
   protected
 
   # The method to hook into for triggering transitions when invoked.  By
@@ -3550,57 +2275,13 @@ class StateMachines::Machine
   # action must be defined in an ancestor of the owner classs in order for
   # it to be the action hook.
   #
-  # source://state_machines//lib/state_machines/machine.rb#2000
+  # source://state_machines//lib/state_machines/machine/action_hooks.rb#48
   def action_hook; end
-
-  # Adds a new transition callback of the given type.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2145
-  def add_callback(type, options, &block); end
-
-  # Tracks the given set of events in the list of all known events for
-  # this machine
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2174
-  def add_events(new_events); end
-
-  # Updates this machine based on the configuration of other machines in the
-  # owner class that share the same target attribute.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2137
-  def add_sibling_machine_configs; end
-
-  # Tracks the given set of states in the list of all known states for
-  # this machine
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2153
-  def add_states(new_states); end
-
-  # Runs additional initialization hooks.  By default, this is a no-op.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1843
-  def after_initialize; end
-
-  # Creates a scope for finding objects *with* a particular value or values
-  # for the attribute.
-  #
-  # By default, this is a no-op.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2108
-  def create_with_scope(name); end
-
-  # Creates a scope for finding objects *without* a particular value or
-  # values for the attribute.
-  #
-  # By default, this is a no-op.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2115
-  def create_without_scope(name); end
 
   # Adds helper methods for automatically firing events when an action
   # is invoked
   #
-  # source://state_machines//lib/state_machines/machine.rb#1969
+  # source://state_machines//lib/state_machines/machine/action_hooks.rb#17
   def define_action_helpers; end
 
   # Determines whether action helpers should be defined for this machine.
@@ -3609,147 +2290,50 @@ class StateMachines::Machine
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/machine.rb#1963
+  # source://state_machines//lib/state_machines/machine/action_hooks.rb#11
   def define_action_helpers?; end
 
   # Hooks directly into actions by defining the same method in an included
   # module.  As a result, when the action gets invoked, any state events
   # defined for the object will get run.  Method visibility is preserved.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1979
+  # source://state_machines//lib/state_machines/machine/action_hooks.rb#27
   def define_action_hook; end
+end
 
-  # Adds helper methods for getting information about this state machine's
-  # events
+# source://state_machines//lib/state_machines/machine/callbacks.rb#5
+module StateMachines::Machine::Callbacks
+  # Creates a callback that will be invoked after a transition has failed
+  # to be performed.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1911
-  def define_event_helpers; end
+  # source://state_machines//lib/state_machines/machine/callbacks.rb#47
+  def after_failure(*args, **options, &_arg2); end
 
-  # Adds helper methods for interacting with the state machine, including
-  # for states, events, and transitions
+  # Creates a callback that will be invoked *after* a transition is
+  # performed so long as the given requirements match the transition.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1870
-  def define_helpers; end
+  # source://state_machines//lib/state_machines/machine/callbacks.rb#21
+  def after_transition(*args, **options, &_arg2); end
 
-  # Adds helper methods for accessing naming information about states and
-  # events on the owner class
+  # Creates a callback that will be invoked *around* a transition so long
+  # as the given requirements match the transition.
   #
-  # source://state_machines//lib/state_machines/machine.rb#2041
-  def define_name_helpers; end
+  # source://state_machines//lib/state_machines/machine/callbacks.rb#34
+  def around_transition(*args, **options, &_arg2); end
 
-  # Adds helper methods for getting information about this state machine's
-  # available transition paths
+  # Creates a callback that will be invoked *before* a transition is
+  # performed so long as the given requirements match the transition.
   #
-  # source://state_machines//lib/state_machines/machine.rb#1953
-  def define_path_helpers; end
-
-  # Defines the with/without scope helpers for this attribute.  Both the
-  # singular and plural versions of the attribute are defined for each
-  # scope helper.  A custom plural can be specified if it cannot be
-  # automatically determined by either calling +pluralize+ on the attribute
-  # name or adding an "s" to the end of the name.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2068
-  def define_scopes(custom_plural = T.unsafe(nil)); end
-
-  # Adds reader/writer methods for accessing the state attribute
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1891
-  def define_state_accessor; end
-
-  # Defines the initial values for state machine attributes.  Static values
-  # are set prior to the original initialize method and dynamic values are
-  # set *after* the initialize method in case it is dependent on it.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1882
-  def define_state_initializer; end
-
-  # Adds predicate method to the owner class for determining the name of the
-  # current state
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1900
-  def define_state_predicate; end
-
-  # Determines if the machine's attribute needs to be initialized.  This
-  # will only be true if the machine's attribute is blank.
-  #
-  # @return [Boolean]
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1863
-  def initialize_state?(object); end
-
-  # Determines whether there's already a helper method defined within the
-  # given scope.  This is true only if one of the owner's ancestors defines
-  # the method and is further along in the ancestor chain than this
-  # machine's helper module.
-  #
-  # @return [Boolean]
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2008
-  def owner_class_ancestor_has_method?(scope, method); end
-
-  # Gets the initial attribute value defined by the owner class (outside of
-  # the machine's definition). By default, this is always nil.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2125
-  def owner_class_attribute_default; end
-
-  # Checks whether the given state matches the attribute default specified
-  # by the owner class
-  #
-  # @return [Boolean]
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2131
-  def owner_class_attribute_default_matches?(state); end
-
-  # @return [Boolean]
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2034
-  def owner_class_has_method?(scope, method); end
-
-  # Pluralizes the given word using #pluralize (if available) or simply
-  # adding an "s" to the end of the word
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2095
-  def pluralize(word); end
-
-  # Generates the results for the given scope based on one or more states to
-  # filter by
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2088
-  def run_scope(scope, machine, klass, states); end
-
-  # Looks up other machines that have been defined in the owner class and
-  # are targeting the same attribute as this machine.  When accessing
-  # sibling machines, they will be automatically copied for the current
-  # class if they haven't been already.  This ensures that any configuration
-  # changes made to the sibling machines only affect this class and not any
-  # base class that may have originally defined the machine.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#1852
-  def sibling_machines; end
-
-  # Always yields
-  #
-  # source://state_machines//lib/state_machines/machine.rb#2119
-  def transaction(object); end
-
-  private
-
-  # Creates a copy of this machine in addition to copies of each associated
-  # event/states/callback, so that the modifications to those collections do
-  # not affect the original machine.
-  #
-  # source://state_machines//lib/state_machines/machine.rb#501
-  def initialize_copy(orig); end
+  # source://state_machines//lib/state_machines/machine/callbacks.rb#8
+  def before_transition(*args, **options, &_arg2); end
 end
 
 # source://state_machines//lib/state_machines/machine/class_methods.rb#5
 module StateMachines::Machine::ClassMethods
-  # source://state_machines//lib/state_machines/machine/class_methods.rb#52
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#53
   def default_messages; end
 
-  # source://state_machines//lib/state_machines/machine/class_methods.rb#60
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#61
   def default_messages=(messages); end
 
   # @raise [NotImplementedError]
@@ -3770,40 +2354,429 @@ module StateMachines::Machine::ClassMethods
   # in the new owner class (the original will remain unchanged).
   #
   # source://state_machines//lib/state_machines/machine/class_methods.rb#17
-  def find_or_create(owner_class, *args, &block); end
+  def find_or_create(owner_class, *args, &_arg2); end
 
   # Default messages to use for validation errors in ORM integrations
+  # Thread-safe access via atomic operations on simple values
   #
-  # source://state_machines//lib/state_machines/machine/class_methods.rb#50
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#51
   def ignore_method_conflicts; end
 
   # Default messages to use for validation errors in ORM integrations
+  # Thread-safe access via atomic operations on simple values
   #
-  # source://state_machines//lib/state_machines/machine/class_methods.rb#50
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#51
   def ignore_method_conflicts=(_arg0); end
 
-  # source://state_machines//lib/state_machines/machine/class_methods.rb#72
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#75
   def renderer; end
 
   # Sets the attribute renderer
   #
   # @param value the value to set the attribute renderer to.
   #
-  # source://state_machines//lib/state_machines/machine/class_methods.rb#70
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#73
   def renderer=(_arg0); end
 
-  # source://state_machines//lib/state_machines/machine/class_methods.rb#64
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#66
   def replace_messages(message_hash); end
+
+  private
+
+  # Deep freezes a hash and all its string values for thread safety
+  #
+  # source://state_machines//lib/state_machines/machine/class_methods.rb#84
+  def deep_freeze_hash(hash); end
 end
+
+# source://state_machines//lib/state_machines/machine/configuration.rb#5
+module StateMachines::Machine::Configuration
+  # Initializes a new state machine with the given configuration.
+  #
+  # source://state_machines//lib/state_machines/machine/configuration.rb#7
+  def initialize(owner_class, *args, &_arg2); end
+
+  # Gets the attribute name for the given machine scope.
+  #
+  # source://state_machines//lib/state_machines/machine/configuration.rb#119
+  def attribute(name = T.unsafe(nil)); end
+
+  # Sets the initial state of the machine.  This can be either the static name
+  # of a state or a lambda block which determines the initial state at
+  # creation time.
+  #
+  # source://state_machines//lib/state_machines/machine/configuration.rb#97
+  def initial_state=(new_initial_state); end
+
+  # Sets the class which is the owner of this state machine.  Any methods
+  # generated by states, events, or other parts of the machine will be defined
+  # on the given owner class.
+  #
+  # source://state_machines//lib/state_machines/machine/configuration.rb#69
+  def owner_class=(klass); end
+
+  private
+
+  # Creates a copy of this machine in addition to copies of each associated
+  # event/states/callback, so that the modifications to those collections do
+  # not affect the original machine.
+  #
+  # source://state_machines//lib/state_machines/machine/configuration.rb#56
+  def initialize_copy(orig); end
+end
+
+# source://state_machines//lib/state_machines/machine/event_methods.rb#5
+module StateMachines::Machine::EventMethods
+  # Defines one or more events for the machine and the transitions that can
+  # be performed when those events are run.
+  #
+  # source://state_machines//lib/state_machines/machine/event_methods.rb#8
+  def event(*names, &_arg1); end
+
+  # Defines one or more events for the machine and the transitions that can
+  # be performed when those events are run.
+  #
+  # source://state_machines//lib/state_machines/machine/event_methods.rb#37
+  def on(*names, &_arg1); end
+
+  # Gets the list of all possible transition paths from the current state to
+  # the given target state.  If multiple target states are provided, then
+  # this will return all possible paths to those states.
+  #
+  # source://state_machines//lib/state_machines/machine/event_methods.rb#54
+  def paths_for(object, requirements = T.unsafe(nil)); end
+
+  # Creates a new transition that determines what to change the current state
+  # to when an event fires.
+  #
+  # @raise [ArgumentError]
+  #
+  # source://state_machines//lib/state_machines/machine/event_methods.rb#41
+  def transition(options); end
+end
+
+# source://state_machines//lib/state_machines/machine/helper_generators.rb#5
+module StateMachines::Machine::HelperGenerators
+  protected
+
+  # Adds helper methods for getting information about this state machine's
+  # events
+  #
+  # source://state_machines//lib/state_machines/machine/helper_generators.rb#51
+  def define_event_helpers; end
+
+  # Adds helper methods for interacting with the state machine, including
+  # for states, events, and transitions
+  #
+  # source://state_machines//lib/state_machines/machine/helper_generators.rb#10
+  def define_helpers; end
+
+  # Adds helper methods for accessing naming information about states and
+  # events on the owner class
+  #
+  # source://state_machines//lib/state_machines/machine/helper_generators.rb#102
+  def define_name_helpers; end
+
+  # Adds helper methods for getting information about this state machine's
+  # available transition paths
+  #
+  # source://state_machines//lib/state_machines/machine/helper_generators.rb#93
+  def define_path_helpers; end
+
+  # Adds reader/writer methods for accessing the state attribute
+  #
+  # source://state_machines//lib/state_machines/machine/helper_generators.rb#31
+  def define_state_accessor; end
+
+  # Defines the initial values for state machine attributes.  Static values
+  # are set prior to the original initialize method and dynamic values are
+  # set *after* the initialize method in case it is dependent on it.
+  #
+  # source://state_machines//lib/state_machines/machine/helper_generators.rb#22
+  def define_state_initializer; end
+
+  # Adds predicate method to the owner class for determining the name of the
+  # current state
+  #
+  # source://state_machines//lib/state_machines/machine/helper_generators.rb#40
+  def define_state_predicate; end
+end
+
+# source://state_machines//lib/state_machines/machine/integration.rb#5
+module StateMachines::Machine::Integration
+  # Gets a description of the errors for the given object.  This is used to
+  # provide more detailed information when an InvalidTransition exception is
+  # raised.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#14
+  def errors_for(_object); end
+
+  # Generates a user-friendly name for the given message.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#24
+  def generate_message(name, values = T.unsafe(nil)); end
+
+  # Marks the given object as invalid with the given message.
+  #
+  # By default, this is a no-op.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#9
+  def invalidate(_object, _attribute, _message, _values = T.unsafe(nil)); end
+
+  # Resets any errors previously added when invalidating the given object.
+  #
+  # By default, this is a no-op.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#21
+  def reset(_object); end
+
+  # Runs a transaction, yielding the given block.
+  #
+  # By default, this is a no-op.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#31
+  def within_transaction(object, &_arg1); end
+
+  protected
+
+  # Runs additional initialization hooks.  By default, this is a no-op.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#42
+  def after_initialize; end
+
+  # Gets the initial attribute value defined by the owner class (outside of
+  # the machine's definition). By default, this is always nil.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#51
+  def owner_class_attribute_default; end
+
+  # Checks whether the given state matches the attribute default specified
+  # by the owner class
+  #
+  # @return [Boolean]
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#57
+  def owner_class_attribute_default_matches?(state); end
+
+  # Always yields
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#45
+  def transaction(_object); end
+
+  private
+
+  # Gets the default messages that can be used in the machine for invalid
+  # transitions.
+  #
+  # source://state_machines//lib/state_machines/machine/integration.rb#65
+  def default_messages; end
+end
+
+# source://state_machines//lib/state_machines/machine/parsing.rb#5
+module StateMachines::Machine::Parsing
+  private
+
+  # Adds a new transition callback of the given type.
+  #
+  # source://state_machines//lib/state_machines/machine/parsing.rb#31
+  def add_callback(type, options, &_arg2); end
+
+  # Tracks the given set of events in the list of all known events for
+  # this machine
+  #
+  # source://state_machines//lib/state_machines/machine/parsing.rb#60
+  def add_events(new_events); end
+
+  # Tracks the given set of states in the list of all known states for
+  # this machine
+  #
+  # source://state_machines//lib/state_machines/machine/parsing.rb#39
+  def add_states(new_states); end
+
+  # Parses callback arguments for backward compatibility with both positional
+  # and keyword argument styles. Supports Ruby 3.2+ keyword arguments while
+  # maintaining full backward compatibility with the legacy API.
+  #
+  # source://state_machines//lib/state_machines/machine/parsing.rb#11
+  def parse_callback_arguments(args, options); end
+end
+
+# source://state_machines//lib/state_machines/machine/rendering.rb#5
+module StateMachines::Machine::Rendering
+  # Generates a visual representation of this machine for a given format.
+  #
+  # source://state_machines//lib/state_machines/machine/rendering.rb#12
+  def draw(**_arg0); end
+
+  # Gets the renderer for this machine.
+  #
+  # source://state_machines//lib/state_machines/machine/rendering.rb#7
+  def renderer; end
+end
+
+# source://state_machines//lib/state_machines/machine/scoping.rb#5
+module StateMachines::Machine::Scoping
+  protected
+
+  # Creates a scope for finding objects *with* a particular value or values
+  # for the attribute.
+  #
+  # By default, this is a no-op.
+  #
+  # source://state_machines//lib/state_machines/machine/scoping.rb#35
+  def create_with_scope(name); end
+
+  # Creates a scope for finding objects *without* a particular value or
+  # values for the attribute.
+  #
+  # By default, this is a no-op.
+  #
+  # source://state_machines//lib/state_machines/machine/scoping.rb#41
+  def create_without_scope(name); end
+
+  # Defines the with/without scope helpers for this attribute.  Both the
+  # singular and plural versions of the attribute are defined for each
+  # scope helper.  A custom plural can be specified if it cannot be
+  # automatically determined by either calling +pluralize+ on the attribute
+  # name or adding an "s" to the end of the name.
+  #
+  # source://state_machines//lib/state_machines/machine/scoping.rb#13
+  def define_scopes(custom_plural = T.unsafe(nil)); end
+end
+
+# source://state_machines//lib/state_machines/machine/state_methods.rb#5
+module StateMachines::Machine::StateMethods
+  # Whether a dynamic initial state is being used in the machine
+  #
+  # @return [Boolean]
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#14
+  def dynamic_initial_state?; end
+
+  # Gets the initial state of the machine for the given object. If a dynamic
+  # initial state was configured for this machine, then the object will be
+  # passed into the lambda block to help determine the actual state.
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#9
+  def initial_state(object); end
+
+  # Initializes the state on the given object.  Initial values are only set if
+  # the machine's attribute hasn't been previously initialized.
+  #
+  # Configuration options:
+  # * <tt>:force</tt> - Whether to initialize the state regardless of its
+  #   current value
+  # * <tt>:to</tt> - A hash to set the initial value in instead of writing
+  #   directly to the object
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#26
+  def initialize_state(object, options = T.unsafe(nil)); end
+
+  # Customizes the definition of one or more states in the machine.
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#73
+  def other_states(*names, &_arg1); end
+
+  # Gets the current value stored in the given object's attribute.
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#76
+  def read(object, attribute, ivar = T.unsafe(nil)); end
+
+  # Customizes the definition of one or more states in the machine.
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#40
+  def state(*names, &_arg1); end
+
+  # Sets a new value in the given object's attribute.
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#86
+  def write(object, attribute, value, ivar = T.unsafe(nil)); end
+
+  protected
+
+  # Determines if the machine's attribute needs to be initialized.  This
+  # will only be true if the machine's attribute is blank.
+  #
+  # @return [Boolean]
+  #
+  # source://state_machines//lib/state_machines/machine/state_methods.rb#95
+  def initialize_state?(object); end
+end
+
+# source://state_machines//lib/state_machines/machine/utilities.rb#5
+module StateMachines::Machine::Utilities
+  protected
+
+  # Adds sibling machine configurations to the current machine.  This
+  # will add states from other machines that have the same attribute.
+  #
+  # source://state_machines//lib/state_machines/machine/utilities.rb#77
+  def add_sibling_machine_configs; end
+
+  # Looks up the ancestor class that has the given method defined.  This
+  # is used to find the method owner which is used to determine where to
+  # define new methods.
+  #
+  # @return [Boolean]
+  #
+  # source://state_machines//lib/state_machines/machine/utilities.rb#23
+  def owner_class_ancestor_has_method?(scope, method); end
+
+  # Determines whether the given method is defined in the owner class or
+  # in a superclass.
+  #
+  # @return [Boolean]
+  #
+  # source://state_machines//lib/state_machines/machine/utilities.rb#52
+  def owner_class_has_method?(scope, method); end
+
+  # Pluralizes the given word using #pluralize (if available) or simply
+  # adding an "s" to the end of the word
+  #
+  # source://state_machines//lib/state_machines/machine/utilities.rb#59
+  def pluralize(word); end
+
+  # Generates the results for the given scope based on one or more states to
+  # filter by
+  #
+  # source://state_machines//lib/state_machines/machine/utilities.rb#70
+  def run_scope(scope, machine, klass, states); end
+
+  # Looks up other machines that have been defined in the owner class and
+  # are targeting the same attribute as this machine.  When accessing
+  # sibling machines, they will be automatically copied for the current
+  # class if they haven't been already.  This ensures that any configuration
+  # changes made to the sibling machines only affect this class and not any
+  # base class that may have originally defined the machine.
+  #
+  # source://state_machines//lib/state_machines/machine/utilities.rb#14
+  def sibling_machines; end
+end
+
+# source://state_machines//lib/state_machines/machine/validation.rb#5
+module StateMachines::Machine::Validation
+  private
+
+  # Validates string input before eval to prevent code injection
+  # This is a basic safety check - not foolproof security
+  #
+  # source://state_machines//lib/state_machines/machine/validation.rb#24
+  def validate_eval_string(method_string); end
+end
+
+# Frozen constant to avoid repeated array allocations
+#
+# source://state_machines//lib/state_machines/machine/validation.rb#7
+StateMachines::Machine::Validation::DANGEROUS_PATTERNS = T.let(T.unsafe(nil), Array)
 
 # Represents a collection of state machines for a class
 #
-# source://state_machines//lib/state_machines/machine_collection.rb#5
+# source://state_machines//lib/state_machines/machine_collection.rb#7
 class StateMachines::MachineCollection < ::Hash
   # Runs one or more events in parallel on the given object.  See
   # StateMachines::InstanceMethods#fire_events for more information.
   #
-  # source://state_machines//lib/state_machines/machine_collection.rb#46
+  # source://state_machines//lib/state_machines/machine_collection.rb#52
   def fire_events(object, *events); end
 
   # Initializes the state of each machine in the given object.  This can allow
@@ -3825,7 +2798,7 @@ class StateMachines::MachineCollection < ::Hash
   # * <tt>:to</tt> - A hash to write the initialized state to instead of
   #   writing to the object.  Default is to write directly to the object.
   #
-  # source://state_machines//lib/state_machines/machine_collection.rb#24
+  # source://state_machines//lib/state_machines/machine_collection.rb#26
   def initialize_states(object, options = T.unsafe(nil), attributes = T.unsafe(nil)); end
 
   # Builds the collection of transitions for all event attributes defined on
@@ -3834,12 +2807,12 @@ class StateMachines::MachineCollection < ::Hash
   #
   # These should only be fired as a result of the action being run.
   #
-  # source://state_machines//lib/state_machines/machine_collection.rb#78
+  # source://state_machines//lib/state_machines/machine_collection.rb#84
   def transitions(object, action, options = T.unsafe(nil)); end
 
   protected
 
-  # source://state_machines//lib/state_machines/machine_collection.rb#88
+  # source://state_machines//lib/state_machines/machine_collection.rb#94
   def resolve_use_transactions; end
 end
 
@@ -4357,7 +3330,7 @@ module StateMachines::MacroMethods
   # scopes that are generated.
   #
   # source://state_machines//lib/state_machines/macro_methods.rb#518
-  def state_machine(*args, &block); end
+  def state_machine(*_arg0, &_arg1); end
 end
 
 # Provides a general strategy pattern for determining whether a match is found
@@ -4471,7 +3444,7 @@ end
 # Nodes will not differentiate between the String and Symbol versions of the
 # values being indexed.
 #
-# source://state_machines//lib/state_machines/node_collection.rb#7
+# source://state_machines//lib/state_machines/node_collection.rb#9
 class StateMachines::NodeCollection
   include ::Enumerable
 
@@ -4485,14 +3458,14 @@ class StateMachines::NodeCollection
   #
   # @return [NodeCollection] a new instance of NodeCollection
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#20
+  # source://state_machines//lib/state_machines/node_collection.rb#22
   def initialize(machine, options = T.unsafe(nil)); end
 
   # Adds a new node to the collection.  By doing so, this will also add it to
   # the configured indices.  This will also evaluate any existings contexts
   # that match the new node.
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#87
+  # source://state_machines//lib/state_machines/node_collection.rb#90
   def <<(node); end
 
   # Gets the node indexed by the given key.  By default, this will look up the
@@ -4506,7 +3479,7 @@ class StateMachines::NodeCollection
   #
   # If the key cannot be found, then nil will be returned.
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#144
+  # source://state_machines//lib/state_machines/node_collection.rb#147
   def [](key, index_name = T.unsafe(nil)); end
 
   # Gets the node at the given index.
@@ -4518,19 +3491,19 @@ class StateMachines::NodeCollection
   #   states.at(0).name    # => :parked
   #   states.at(1).name    # => :idling
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#130
+  # source://state_machines//lib/state_machines/node_collection.rb#133
   def at(index); end
 
   # Appends a group of nodes to the collection
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#95
+  # source://state_machines//lib/state_machines/node_collection.rb#98
   def concat(nodes); end
 
   # Tracks a context that should be evaluated for any nodes that get added
   # which match the given set of nodes.  Matchers can be used so that the
   # context can get added once and evaluated after multiple adds.
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#74
+  # source://state_machines//lib/state_machines/node_collection.rb#77
   def context(nodes, &block); end
 
   # Calls the block once for each element in self, passing that element as a
@@ -4545,8 +3518,8 @@ class StateMachines::NodeCollection
   #
   #   parked -- idling --
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#117
-  def each; end
+  # source://state_machines//lib/state_machines/node_collection.rb#120
+  def each(&_arg0); end
 
   # Gets the node indexed by the given key.  By default, this will look up the
   # key in the first index configured for the collection.  A custom index can
@@ -4561,35 +3534,35 @@ class StateMachines::NodeCollection
   #
   #   collection['invalid', :value]   # => IndexError: "invalid" is an invalid value
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#163
+  # source://state_machines//lib/state_machines/node_collection.rb#166
   def fetch(key, index_name = T.unsafe(nil)); end
 
   # Gets the set of unique keys for the given index
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#67
+  # source://state_machines//lib/state_machines/node_collection.rb#70
   def keys(index_name = T.unsafe(nil)); end
 
   # Gets the number of nodes in this collection
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#62
+  # source://state_machines//lib/state_machines/node_collection.rb#65
   def length; end
 
   # The machine associated with the nodes
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#11
+  # source://state_machines//lib/state_machines/node_collection.rb#13
   def machine; end
 
   # Changes the current machine associated with the collection.  In turn, this
   # will change the state machine associated with each node in the collection.
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#56
+  # source://state_machines//lib/state_machines/node_collection.rb#59
   def machine=(new_machine); end
 
   # Updates the indexed keys for the given node.  If the node's attribute
   # has changed since it was added to the collection, the old indexed keys
   # will be replaced with the updated ones.
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#102
+  # source://state_machines//lib/state_machines/node_collection.rb#105
   def update(node); end
 
   protected
@@ -4597,43 +3570,45 @@ class StateMachines::NodeCollection
   # Adds the given key / node combination to an index, including the string
   # and symbol versions of the index
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#184
+  # source://state_machines//lib/state_machines/node_collection.rb#187
   def add_to_index(name, key, node); end
 
   # Evaluates the given context for a particular node.  This will only
   # evaluate the context if the node matches.
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#219
+  # source://state_machines//lib/state_machines/node_collection.rb#222
   def eval_context(context, node); end
 
   # Gets the given index.  If the index does not exist, then an ArgumentError
   # is raised.
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#171
+  # @raise [ArgumentError]
+  #
+  # source://state_machines//lib/state_machines/node_collection.rb#174
   def index(name); end
 
   # Removes the given key from an index, including the string and symbol
   # versions of the index
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#192
+  # source://state_machines//lib/state_machines/node_collection.rb#195
   def remove_from_index(name, key); end
 
   # Determines whether the given value can be converted to a symbol
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#213
+  # source://state_machines//lib/state_machines/node_collection.rb#216
   def to_sym?(value); end
 
   # Updates the node for the given index, including the string and symbol
   # versions of the index
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#200
+  # source://state_machines//lib/state_machines/node_collection.rb#203
   def update_index(name, node); end
 
   # Gets the value for the given attribute on the node
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#178
+  # source://state_machines//lib/state_machines/node_collection.rb#181
   def value(node, attribute); end
 
   private
@@ -4641,15 +3616,65 @@ class StateMachines::NodeCollection
   # Creates a copy of this collection such that modifications don't affect
   # the original collection
   #
-  # source://state_machines//lib/state_machines/node_collection.rb#39
+  # source://state_machines//lib/state_machines/node_collection.rb#40
   def initialize_copy(orig); end
+end
+
+# Define the module if it doesn't exist yet
+# Module for validating options without monkey-patching Hash
+# Provides the same functionality as the Hash monkey patch but in a cleaner way
+#
+# source://state_machines//lib/state_machines/options_validator.rb#7
+module StateMachines::OptionsValidator
+  class << self
+    # Validates that at most one of the exclusive keys is present in the options hash
+    #
+    # @param options [Hash] The options hash to validate
+    # @param exclusive_keys [Array<Symbol>] List of mutually exclusive keys
+    # @param caller_info [String] Information about the calling method for better error messages
+    # @raise [ArgumentError] If more than one exclusive key is found
+    #
+    # source://state_machines//lib/state_machines/options_validator.rb#33
+    def assert_exclusive_keys!(options, *exclusive_keys, caller_info: T.unsafe(nil)); end
+
+    # Validates that all keys in the options hash are in the list of valid keys
+    #
+    # @param options [Hash] The options hash to validate
+    # @param valid_keys [Array<Symbol>] List of valid key names
+    # @param caller_info [String] Information about the calling method for better error messages
+    # @raise [ArgumentError] If any invalid keys are found
+    #
+    # source://state_machines//lib/state_machines/options_validator.rb#15
+    def assert_valid_keys!(options, *valid_keys, caller_info: T.unsafe(nil)); end
+
+    # Helper method for backwards compatibility - allows gradual migration
+    # from Hash monkey patch to this module
+    #
+    # @param options [Hash] The options to validate
+    # @param valid_keys [Array<Symbol>] Valid keys
+    # @return [Hash] The same options hash (for chaining)
+    #
+    # source://state_machines//lib/state_machines/options_validator.rb#66
+    def validate_and_return(options, *valid_keys); end
+
+    # Validates options using a more convenient interface that works with both
+    # hash-style and kwargs-style method definitions
+    #
+    # @param valid_keys [Array<Symbol>] List of valid key names
+    # @param exclusive_key_groups [Array<Array<Symbol>>] Groups of mutually exclusive keys
+    # @param caller_info [String] Information about the calling method
+    # @return [Proc] A validation proc that can be called with options
+    #
+    # source://state_machines//lib/state_machines/options_validator.rb#50
+    def validator(valid_keys: T.unsafe(nil), exclusive_key_groups: T.unsafe(nil), caller_info: T.unsafe(nil)); end
+  end
 end
 
 # A path represents a sequence of transitions that can be run for a particular
 # object.  Paths can walk to new transitions, revealing all of the possible
 # branches that can be encountered in the object's state machine.
 #
-# source://state_machines//lib/state_machines/path.rb#7
+# source://state_machines//lib/state_machines/path.rb#9
 class StateMachines::Path < ::Array
   # Creates a new transition path for the given object.  Initially this is an
   # empty path.  In order to start walking the path, it must be populated with
@@ -4769,7 +3794,7 @@ end
 # Represents a collection of paths that are generated based on a set of
 # requirements regarding what states to start and end on
 #
-# source://state_machines//lib/state_machines/path_collection.rb#6
+# source://state_machines//lib/state_machines/path_collection.rb#8
 class StateMachines::PathCollection < ::Array
   # Creates a new collection of paths with the given requirements.
   #
@@ -4782,7 +3807,7 @@ class StateMachines::PathCollection < ::Array
   #
   # @return [PathCollection] a new instance of PathCollection
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#28
+  # source://state_machines//lib/state_machines/path_collection.rb#29
   def initialize(object, machine, options = T.unsafe(nil)); end
 
   # Lists all of the events that can be fired through the paths in this
@@ -4792,12 +3817,12 @@ class StateMachines::PathCollection < ::Array
   #
   #   paths.events  # => [:park, :ignite, :shift_up, ...]
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#68
+  # source://state_machines//lib/state_machines/path_collection.rb#69
   def events; end
 
   # The initial state to start each path from
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#15
+  # source://state_machines//lib/state_machines/path_collection.rb#16
   def from_name; end
 
   # Lists all of the states that can be transitioned from through the paths in
@@ -4807,22 +3832,22 @@ class StateMachines::PathCollection < ::Array
   #
   #   paths.from_states # => [:parked, :idling, :first_gear, ...]
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#48
+  # source://state_machines//lib/state_machines/path_collection.rb#49
   def from_states; end
 
   # The state machine these path are walking
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#12
+  # source://state_machines//lib/state_machines/path_collection.rb#13
   def machine; end
 
   # The object whose state machine is being walked
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#9
+  # source://state_machines//lib/state_machines/path_collection.rb#10
   def object; end
 
   # The target state for each path
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#18
+  # source://state_machines//lib/state_machines/path_collection.rb#19
   def to_name; end
 
   # Lists all of the states that can be transitioned to through the paths in
@@ -4832,20 +3857,20 @@ class StateMachines::PathCollection < ::Array
   #
   #   paths.to_states # => [:idling, :first_gear, :second_gear, ...]
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#58
+  # source://state_machines//lib/state_machines/path_collection.rb#59
   def to_states; end
 
   private
 
   # Gets the initial set of paths to walk
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#75
+  # source://state_machines//lib/state_machines/path_collection.rb#76
   def initial_paths; end
 
   # Walks down the given path.  Each new path that matches the configured
   # requirements will be added to this collection.
   #
-  # source://state_machines//lib/state_machines/path_collection.rb#85
+  # source://state_machines//lib/state_machines/path_collection.rb#86
   def walk(path); end
 end
 
@@ -4854,13 +3879,13 @@ module StateMachines::STDIORenderer
   private
 
   # source://state_machines//lib/state_machines/stdio_renderer.rb#31
-  def draw_branch(branch, graph, event, options: T.unsafe(nil), io: T.unsafe(nil)); end
+  def draw_branch(branch, _graph, _event, options: T.unsafe(nil), io: T.unsafe(nil)); end
 
   # source://state_machines//lib/state_machines/stdio_renderer.rb#11
   def draw_class(machine:, io: T.unsafe(nil)); end
 
   # source://state_machines//lib/state_machines/stdio_renderer.rb#26
-  def draw_event(event, graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
+  def draw_event(event, _graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
 
   # source://state_machines//lib/state_machines/stdio_renderer.rb#41
   def draw_events(machine:, io: T.unsafe(nil)); end
@@ -4872,20 +3897,20 @@ module StateMachines::STDIORenderer
   def draw_requirement(requirement); end
 
   # source://state_machines//lib/state_machines/stdio_renderer.rb#36
-  def draw_state(state, graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
+  def draw_state(state, _graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
 
   # source://state_machines//lib/state_machines/stdio_renderer.rb#15
   def draw_states(machine:, io: T.unsafe(nil)); end
 
   class << self
     # source://state_machines//lib/state_machines/stdio_renderer.rb#31
-    def draw_branch(branch, graph, event, options: T.unsafe(nil), io: T.unsafe(nil)); end
+    def draw_branch(branch, _graph, _event, options: T.unsafe(nil), io: T.unsafe(nil)); end
 
     # source://state_machines//lib/state_machines/stdio_renderer.rb#11
     def draw_class(machine:, io: T.unsafe(nil)); end
 
     # source://state_machines//lib/state_machines/stdio_renderer.rb#26
-    def draw_event(event, graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
+    def draw_event(event, _graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
 
     # source://state_machines//lib/state_machines/stdio_renderer.rb#41
     def draw_events(machine:, io: T.unsafe(nil)); end
@@ -4897,7 +3922,7 @@ module StateMachines::STDIORenderer
     def draw_requirement(requirement); end
 
     # source://state_machines//lib/state_machines/stdio_renderer.rb#36
-    def draw_state(state, graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
+    def draw_state(state, _graph, options: T.unsafe(nil), io: T.unsafe(nil)); end
 
     # source://state_machines//lib/state_machines/stdio_renderer.rb#15
     def draw_states(machine:, io: T.unsafe(nil)); end
@@ -4913,7 +3938,7 @@ end
 # StateMachines::Machine#state for more information about how state-driven
 # behavior can be utilized.
 #
-# source://state_machines//lib/state_machines/state.rb#12
+# source://state_machines//lib/state_machines/state.rb#14
 class StateMachines::State
   # Creates a new state within the context of the given machine.
   #
@@ -4931,17 +3956,17 @@ class StateMachines::State
   #
   # @return [State] a new instance of State
   #
-  # source://state_machines//lib/state_machines/state.rb#54
-  def initialize(machine, name, options = T.unsafe(nil)); end
+  # source://state_machines//lib/state_machines/state.rb#56
+  def initialize(machine, name, options = T.unsafe(nil), initial: T.unsafe(nil), value: T.unsafe(nil), cache: T.unsafe(nil), if: T.unsafe(nil), human_name: T.unsafe(nil), **extra_options); end
 
   # Whether this state's value should be cached after being evaluated
   #
-  # source://state_machines//lib/state_machines/state.rb#31
+  # source://state_machines//lib/state_machines/state.rb#33
   def cache; end
 
   # Whether this state's value should be cached after being evaluated
   #
-  # source://state_machines//lib/state_machines/state.rb#31
+  # source://state_machines//lib/state_machines/state.rb#33
   def cache=(_arg0); end
 
   # Calls a method defined in this state's context on the given object.  All
@@ -4950,8 +3975,8 @@ class StateMachines::State
   # If the method has never been defined for this state, then a NoMethodError
   # will be raised.
   #
-  # source://state_machines//lib/state_machines/state.rb#224
-  def call(object, method, *args, &block); end
+  # source://state_machines//lib/state_machines/state.rb#242
+  def call(object, method, *args, &_arg3); end
 
   # Defines a context for the state which will be enabled on instances of
   # the owner class when the machine is in this state.
@@ -4959,12 +3984,12 @@ class StateMachines::State
   # This can be called multiple times.  Each time a new context is created,
   # a new module will be included in the owner class.
   #
-  # source://state_machines//lib/state_machines/state.rb#186
-  def context(&block); end
+  # source://state_machines//lib/state_machines/state.rb#204
+  def context(&_arg0); end
 
   # The list of methods that have been defined in this state's context
   #
-  # source://state_machines//lib/state_machines/state.rb#213
+  # source://state_machines//lib/state_machines/state.rb#231
   def context_methods; end
 
   # Generates a human-readable description of this state's name / value:
@@ -4981,10 +4006,10 @@ class StateMachines::State
   # * <tt>:human_name</tt> - Whether to use this state's human name in the
   #   description or just the internal name
   #
-  # source://state_machines//lib/state_machines/state.rb#132
+  # source://state_machines//lib/state_machines/state.rb#150
   def description(options = T.unsafe(nil)); end
 
-  # source://state_machines//lib/state_machines/state.rb#246
+  # source://state_machines//lib/state_machines/state.rb#264
   def draw(graph, options = T.unsafe(nil), io = T.unsafe(nil)); end
 
   # Determines whether there are any states that can be transitioned to from
@@ -4994,33 +4019,33 @@ class StateMachines::State
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/state.rb#103
+  # source://state_machines//lib/state_machines/state.rb#121
   def final?; end
 
   # Transforms the state name into a more human-readable format, such as
   # "first gear" instead of "first_gear"
   #
-  # source://state_machines//lib/state_machines/state.rb#115
+  # source://state_machines//lib/state_machines/state.rb#133
   def human_name(klass = T.unsafe(nil)); end
 
   # The human-readable name for the state
   #
-  # source://state_machines//lib/state_machines/state.rb#24
+  # source://state_machines//lib/state_machines/state.rb#26
   def human_name=(_arg0); end
 
   # Whether or not this state is the initial state to use for new objects
   #
-  # source://state_machines//lib/state_machines/state.rb#34
+  # source://state_machines//lib/state_machines/state.rb#36
   def initial; end
 
   # Whether or not this state is the initial state to use for new objects
   #
-  # source://state_machines//lib/state_machines/state.rb#34
+  # source://state_machines//lib/state_machines/state.rb#36
   def initial=(_arg0); end
 
   # Whether or not this state is the initial state to use for new objects
   #
-  # source://state_machines//lib/state_machines/state.rb#35
+  # source://state_machines//lib/state_machines/state.rb#37
   def initial?; end
 
   # Generates a nicely formatted description of this state's contents.
@@ -5030,27 +4055,27 @@ class StateMachines::State
   #   state = StateMachines::State.new(machine, :parked, :value => 1, :initial => true)
   #   state   # => #<StateMachines::State name=:parked value=1 initial=true context=[]>
   #
-  # source://state_machines//lib/state_machines/state.rb#256
+  # source://state_machines//lib/state_machines/state.rb#274
   def inspect; end
 
   # The state machine for which this state is defined
   #
-  # source://state_machines//lib/state_machines/state.rb#14
+  # source://state_machines//lib/state_machines/state.rb#16
   def machine; end
 
-  # source://state_machines//lib/state_machines/state.rb#94
+  # source://state_machines//lib/state_machines/state.rb#112
   def machine=(machine); end
 
   # A custom lambda block for determining whether a given value matches this
   # state
   #
-  # source://state_machines//lib/state_machines/state.rb#39
+  # source://state_machines//lib/state_machines/state.rb#41
   def matcher; end
 
   # A custom lambda block for determining whether a given value matches this
   # state
   #
-  # source://state_machines//lib/state_machines/state.rb#39
+  # source://state_machines//lib/state_machines/state.rb#41
   def matcher=(_arg0); end
 
   # Determines whether this state matches the given value.  If no matcher is
@@ -5071,18 +4096,18 @@ class StateMachines::State
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/state.rb#177
+  # source://state_machines//lib/state_machines/state.rb#195
   def matches?(other_value); end
 
   # The unique identifier for the state used in event and callback definitions
   #
-  # source://state_machines//lib/state_machines/state.rb#17
+  # source://state_machines//lib/state_machines/state.rb#19
   def name; end
 
   # The fully-qualified identifier for the state, scoped by the machine's
   # namespace
   #
-  # source://state_machines//lib/state_machines/state.rb#21
+  # source://state_machines//lib/state_machines/state.rb#23
   def qualified_name; end
 
   # The value that represents this state.  This will optionally evaluate the
@@ -5095,13 +4120,13 @@ class StateMachines::State
   #   State.new(machine, :parked, :value => lambda {Time.now}).value        # => Tue Jan 01 00:00:00 UTC 2008
   #   State.new(machine, :parked, :value => lambda {Time.now}).value(false) # => <Proc:0xb6ea7ca0@...>
   #
-  # source://state_machines//lib/state_machines/state.rb#148
+  # source://state_machines//lib/state_machines/state.rb#166
   def value(eval = T.unsafe(nil)); end
 
   # The value that is written to a machine's attribute when an object
   # transitions into this state
   #
-  # source://state_machines//lib/state_machines/state.rb#28
+  # source://state_machines//lib/state_machines/state.rb#30
   def value=(_arg0); end
 
   private
@@ -5109,25 +4134,25 @@ class StateMachines::State
   # Adds a predicate method to the owner class so long as a name has
   # actually been configured for the state
   #
-  # source://state_machines//lib/state_machines/state.rb#270
+  # source://state_machines//lib/state_machines/state.rb#288
   def add_predicate; end
 
   # Should the value be cached after it's evaluated for the first time?
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/state.rb#264
+  # source://state_machines//lib/state_machines/state.rb#282
   def cache_value?; end
 
   # Generates the name of the method containing the actual implementation
   #
-  # source://state_machines//lib/state_machines/state.rb#285
+  # source://state_machines//lib/state_machines/state.rb#303
   def context_name_for(method); end
 
   # Creates a copy of this state, excluding the context to prevent conflicts
   # across different machines.
   #
-  # source://state_machines//lib/state_machines/state.rb#89
+  # source://state_machines//lib/state_machines/state.rb#107
   def initialize_copy(orig); end
 end
 
@@ -5287,7 +4312,7 @@ end
 #   vehicle.simulate = true
 #   vehicle.moving?           # => false
 #
-# source://state_machines//lib/state_machines/state_context.rb#54
+# source://state_machines//lib/state_machines/state_context.rb#56
 class StateMachines::StateContext < ::Module
   include ::StateMachines::EvalHelpers
 
@@ -5295,22 +4320,22 @@ class StateMachines::StateContext < ::Module
   #
   # @return [StateContext] a new instance of StateContext
   #
-  # source://state_machines//lib/state_machines/state_context.rb#65
+  # source://state_machines//lib/state_machines/state_context.rb#66
   def initialize(state); end
 
   # The state machine for which this context's state is defined
   #
-  # source://state_machines//lib/state_machines/state_context.rb#59
+  # source://state_machines//lib/state_machines/state_context.rb#60
   def machine; end
 
   # Hooks in condition-merging to methods that don't exist in this module
   #
-  # source://state_machines//lib/state_machines/state_context.rb#99
-  def method_missing(*args, &block); end
+  # source://state_machines//lib/state_machines/state_context.rb#100
+  def method_missing(*args, &_arg1); end
 
   # The state that must be present in an object for this context to be active
   #
-  # source://state_machines//lib/state_machines/state_context.rb#62
+  # source://state_machines//lib/state_machines/state_context.rb#63
   def state; end
 
   # Creates a new transition that determines what to change the current state
@@ -5332,8 +4357,80 @@ class StateMachines::StateContext < ::Module
   #
   # @raise [ArgumentError]
   #
-  # source://state_machines//lib/state_machines/state_context.rb#90
+  # source://state_machines//lib/state_machines/state_context.rb#91
   def transition(options); end
+end
+
+# Cross-platform syntax validation for eval strings
+# Supports CRuby, JRuby, TruffleRuby via pluggable backends
+#
+# source://state_machines//lib/state_machines/syntax_validator.rb#8
+module StateMachines::SyntaxValidator
+  private
+
+  # Lazily pick the best backend for this platform
+  # Prefer RubyVM for performance on CRuby, fallback to Ripper for compatibility
+  #
+  # source://state_machines//lib/state_machines/syntax_validator.rb#19
+  def backend; end
+
+  # Public API: raises SyntaxError if code is invalid
+  #
+  # source://state_machines//lib/state_machines/syntax_validator.rb#10
+  def validate!(code, filename = T.unsafe(nil)); end
+
+  class << self
+    # Lazily pick the best backend for this platform
+    # Prefer RubyVM for performance on CRuby, fallback to Ripper for compatibility
+    #
+    # source://state_machines//lib/state_machines/syntax_validator.rb#26
+    def backend; end
+
+    # Public API: raises SyntaxError if code is invalid
+    #
+    # source://state_machines//lib/state_machines/syntax_validator.rb#13
+    def validate!(code, filename = T.unsafe(nil)); end
+  end
+end
+
+# Universal Ruby backend via Ripper
+#
+# source://state_machines//lib/state_machines/syntax_validator.rb#44
+module StateMachines::SyntaxValidator::RipperBackend
+  private
+
+  # source://state_machines//lib/state_machines/syntax_validator.rb#45
+  def validate!(code, filename); end
+
+  class << self
+    # source://state_machines//lib/state_machines/syntax_validator.rb#54
+    def validate!(code, filename); end
+  end
+end
+
+# MRI backend using RubyVM::InstructionSequence
+#
+# source://state_machines//lib/state_machines/syntax_validator.rb#29
+module StateMachines::SyntaxValidator::RubyVmBackend
+  private
+
+  # @return [Boolean]
+  #
+  # source://state_machines//lib/state_machines/syntax_validator.rb#30
+  def available?; end
+
+  # source://state_machines//lib/state_machines/syntax_validator.rb#35
+  def validate!(code, filename); end
+
+  class << self
+    # @return [Boolean]
+    #
+    # source://state_machines//lib/state_machines/syntax_validator.rb#33
+    def available?; end
+
+    # source://state_machines//lib/state_machines/syntax_validator.rb#40
+    def validate!(code, filename); end
+  end
 end
 
 # A transition represents a state change for a specific attribute.
@@ -5355,7 +4452,7 @@ class StateMachines::Transition
   # Determines equality of transitions by testing whether the object, states,
   # and event involved in the transition are equal
   #
-  # source://state_machines//lib/state_machines/transition.rb#266
+  # source://state_machines//lib/state_machines/transition.rb#264
   def ==(other); end
 
   # The action that will be run when this transition is performed
@@ -5429,7 +4526,7 @@ class StateMachines::Transition
   #   transition = StateMachines::Transition.new(object, machine, :ignite, :parked, :idling)
   #   transition   # => #<StateMachines::Transition attribute=:state event=:ignite from="parked" from_name=:parked to="idling" to_name=:idling>
   #
-  # source://state_machines//lib/state_machines/transition.rb#281
+  # source://state_machines//lib/state_machines/transition.rb#279
   def inspect; end
 
   # Does this transition represent a loopback (i.e. the from and to state
@@ -5498,7 +4595,7 @@ class StateMachines::Transition
   #
   #   vehicle.state   # => 'idling'
   #
-  # source://state_machines//lib/state_machines/transition.rb#221
+  # source://state_machines//lib/state_machines/transition.rb#219
   def persist; end
 
   # The fully-qualified name of the event that triggered the transition
@@ -5519,7 +4616,7 @@ class StateMachines::Transition
   # Resets any tracking of which callbacks have already been run and whether
   # the state has already been persisted
   #
-  # source://state_machines//lib/state_machines/transition.rb#259
+  # source://state_machines//lib/state_machines/transition.rb#257
   def reset; end
 
   # The result of invoking the action associated with the machine
@@ -5552,7 +4649,7 @@ class StateMachines::Transition
   #   transition.rollback
   #   vehicle.state             # => "parked"
   #
-  # source://state_machines//lib/state_machines/transition.rb#252
+  # source://state_machines//lib/state_machines/transition.rb#250
   def rollback; end
 
   # Runs the before / after callbacks for this transition.  If a block is
@@ -5567,7 +4664,7 @@ class StateMachines::Transition
   # This will return true if all before callbacks gets executed.  After
   # callbacks will not have an effect on the result.
   #
-  # source://state_machines//lib/state_machines/transition.rb#188
+  # source://state_machines//lib/state_machines/transition.rb#186
   def run_callbacks(options = T.unsafe(nil), &block); end
 
   # The new state value *after* the transition
@@ -5599,7 +4696,7 @@ class StateMachines::Transition
   # machine's integration.
   #
   # source://state_machines//lib/state_machines/transition.rb#171
-  def within_transaction; end
+  def within_transaction(&_arg0); end
 
   private
 
@@ -5617,7 +4714,7 @@ class StateMachines::Transition
   # exception will not bubble up to the caller since +after+ callbacks
   # should never halt the execution of a +perform+.
   #
-  # source://state_machines//lib/state_machines/transition.rb#392
+  # source://state_machines//lib/state_machines/transition.rb#394
   def after; end
 
   # Runs the machine's +before+ callbacks for this transition.  Only
@@ -5627,7 +4724,7 @@ class StateMachines::Transition
   # Once the callbacks are run, they cannot be run again until this transition
   # is reset.
   #
-  # source://state_machines//lib/state_machines/transition.rb#347
+  # source://state_machines//lib/state_machines/transition.rb#348
   def before(complete = T.unsafe(nil), index = T.unsafe(nil), &block); end
 
   # Gets a hash of the context defining this unique transition (including
@@ -5639,7 +4736,7 @@ class StateMachines::Transition
   #   transition = StateMachines::Transition.new(Vehicle.new, machine, :ignite, :parked, :idling)
   #   transition.context    # => {:on => :ignite, :from => :parked, :to => :idling}
   #
-  # source://state_machines//lib/state_machines/transition.rb#414
+  # source://state_machines//lib/state_machines/transition.rb#416
   def context; end
 
   # Runs a block that may get paused.  If the block doesn't pause, then
@@ -5649,7 +4746,7 @@ class StateMachines::Transition
   # This will return true if the given block halts for a reason other than
   # getting paused.
   #
-  # source://state_machines//lib/state_machines/transition.rb#293
+  # source://state_machines//lib/state_machines/transition.rb#291
   def pausable; end
 
   # Pauses the current callback execution.  This should only occur within
@@ -5658,13 +4755,13 @@ class StateMachines::Transition
   #
   # @raise [ArgumentError]
   #
-  # source://state_machines//lib/state_machines/transition.rb#310
+  # source://state_machines//lib/state_machines/transition.rb#311
   def pause; end
 
   # Resumes the execution of a previously paused callback execution.  Once
   # the paused callbacks complete, the current execution will continue.
   #
-  # source://state_machines//lib/state_machines/transition.rb#324
+  # source://state_machines//lib/state_machines/transition.rb#325
   def resume; end
 
   class << self
@@ -5680,7 +4777,7 @@ end
 
 # Represents a collection of transitions in a state machine
 #
-# source://state_machines//lib/state_machines/transition_collection.rb#5
+# source://state_machines//lib/state_machines/transition_collection.rb#7
 class StateMachines::TransitionCollection < ::Array
   # Creates a new collection of transitions that can be run in parallel.  Each
   # transition *must* be for a different attribute.
@@ -5690,9 +4787,10 @@ class StateMachines::TransitionCollection < ::Array
   # * <tt>:after</tt> - Whether to run after callbacks
   # * <tt>:transaction</tt> - Whether to wrap transitions within a transaction
   #
+  # @raise [ArgumentError]
   # @return [TransitionCollection] a new instance of TransitionCollection
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#23
+  # source://state_machines//lib/state_machines/transition_collection.rb#24
   def initialize(transitions = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Runs each of the collection's transitions in parallel.
@@ -5707,27 +4805,27 @@ class StateMachines::TransitionCollection < ::Array
   # If a block is passed to this method, that block will be called instead
   # of invoking each transition's action.
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#51
+  # source://state_machines//lib/state_machines/transition_collection.rb#52
   def perform(&block); end
 
   # Whether to skip running the action for each transition's machine
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#8
+  # source://state_machines//lib/state_machines/transition_collection.rb#9
   def skip_actions; end
 
   # Whether to skip running the after callbacks
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#11
+  # source://state_machines//lib/state_machines/transition_collection.rb#12
   def skip_after; end
 
   # Whether transitions should wrapped around a transaction block
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#14
+  # source://state_machines//lib/state_machines/transition_collection.rb#15
   def use_transactions; end
 
   protected
 
-  # source://state_machines//lib/state_machines/transition_collection.rb#79
+  # source://state_machines//lib/state_machines/transition_collection.rb#80
   def results; end
 
   private
@@ -5735,36 +4833,36 @@ class StateMachines::TransitionCollection < ::Array
   # Gets the list of actions to run.  If configured to skip actions, then
   # this will return an empty collection.
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#105
+  # source://state_machines//lib/state_machines/transition_collection.rb#106
   def actions; end
 
   # Wraps the given block with a rescue handler so that any exceptions that
   # occur will automatically result in the transition rolling back any changes
   # that were made to the object involved.
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#171
+  # source://state_machines//lib/state_machines/transition_collection.rb#172
   def catch_exceptions; end
 
   # Gets the object being transitioned
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#99
+  # source://state_machines//lib/state_machines/transition_collection.rb#100
   def object; end
 
   # Transitions the current value of the object's states to those specified by
   # each transition
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#142
+  # source://state_machines//lib/state_machines/transition_collection.rb#143
   def persist; end
 
   # Resets any information tracked from previous attempts to perform the
   # collection
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#118
+  # source://state_machines//lib/state_machines/transition_collection.rb#119
   def reset; end
 
   # Rolls back changes made to the object's states via each transition
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#164
+  # source://state_machines//lib/state_machines/transition_collection.rb#165
   def rollback; end
 
   # Runs the actions for each transition.  If a block is given method, then it
@@ -5772,7 +4870,7 @@ class StateMachines::TransitionCollection < ::Array
   #
   # The results of the actions will be used to determine #success?.
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#150
+  # source://state_machines//lib/state_machines/transition_collection.rb#151
   def run_actions; end
 
   # Runs each transition's callbacks recursively.  Once all before callbacks
@@ -5781,7 +4879,7 @@ class StateMachines::TransitionCollection < ::Array
   #
   # If any transition fails to run its callbacks, :halt will be thrown.
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#128
+  # source://state_machines//lib/state_machines/transition_collection.rb#129
   def run_callbacks(index = T.unsafe(nil), &block); end
 
   # Did each transition perform successfully?  This will only be true if the
@@ -5791,7 +4889,7 @@ class StateMachines::TransitionCollection < ::Array
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#94
+  # source://state_machines//lib/state_machines/transition_collection.rb#95
   def success?; end
 
   # Determines whether an event attribute be used to trigger the transitions
@@ -5800,7 +4898,7 @@ class StateMachines::TransitionCollection < ::Array
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#112
+  # source://state_machines//lib/state_machines/transition_collection.rb#113
   def use_event_attributes?; end
 
   # Is this a valid set of transitions?  If the collection was creating with
@@ -5809,13 +4907,13 @@ class StateMachines::TransitionCollection < ::Array
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#86
+  # source://state_machines//lib/state_machines/transition_collection.rb#87
   def valid?; end
 
   # Runs a block within a transaction for the object being transitioned.  If
   # transactions are disabled, then this is a no-op.
   #
-  # source://state_machines//lib/state_machines/transition_collection.rb#182
+  # source://state_machines//lib/state_machines/transition_collection.rb#181
   def within_transaction; end
 end
 
@@ -5843,5 +4941,5 @@ class StateMachines::WhitelistMatcher < ::StateMachines::Matcher
   # @return [Boolean]
   #
   # source://state_machines//lib/state_machines/matcher.rb#66
-  def matches?(value, context = T.unsafe(nil)); end
+  def matches?(value, _context = T.unsafe(nil)); end
 end
