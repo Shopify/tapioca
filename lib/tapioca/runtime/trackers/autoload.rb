@@ -6,15 +6,12 @@ module Tapioca
     module Trackers
       module Autoload
         extend Tracker
-        extend T::Sig
 
         NOOP_METHOD = ->(*_args, **_kwargs, &_block) {}
 
         @constant_names_registered_for_autoload = [] #: Array[String]
 
         class << self
-          extend T::Sig
-
           #: -> void
           def eager_load_all!
             with_disabled_exits do

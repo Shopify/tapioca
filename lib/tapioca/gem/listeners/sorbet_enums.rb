@@ -5,8 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class SorbetEnums < Base
-        extend T::Sig
-
         private
 
         # @override

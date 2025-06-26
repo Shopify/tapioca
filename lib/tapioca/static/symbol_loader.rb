@@ -5,7 +5,6 @@ module Tapioca
   module Static
     module SymbolLoader
       class << self
-        extend T::Sig
         include SorbetHelper
         include Runtime::Reflection
 
