@@ -160,7 +160,7 @@ module Tapioca
             remove_file(filename) if File.file?(filename)
           end
 
-          raise Thor::Error, ""
+          raise Tapioca::Error, ""
         end
 
         processable_constants
@@ -295,7 +295,7 @@ module Tapioca
             build_error_for_files(cause, diff_for_cause.map(&:first))
           end.join("\n")
 
-          raise Thor::Error, <<~ERROR
+          raise Tapioca::Error, <<~ERROR
             #{set_color("RBI files are out-of-date. In your development environment, please run:", :green)}
               #{set_color("`#{default_command(command)}`", :green, :bold)}
             #{set_color("Once it is complete, be sure to commit and push any changes", :green)}
