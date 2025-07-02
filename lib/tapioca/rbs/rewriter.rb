@@ -43,7 +43,7 @@ Module.include(T::Sig)
 # Trigger the source transformation for each Ruby file being loaded.
 RequireHooks.source_transform(patterns: ["**/*.rb"]) do |path, source|
   # The source is most likely nil since no `source_transform` hook was triggered before this one.
-  source ||= File.read(path)
+  source ||= File.read(path, encoding: "UTF-8")
 
   # For performance reasons, we only rewrite files that use Sorbet.
   if source =~ /^\s*#\s*typed: (ignore|false|true|strict|strong|__STDLIB_INTERNAL)/
