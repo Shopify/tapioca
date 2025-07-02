@@ -16,7 +16,7 @@ module T
         def qualified_name_of(constant)
           name = NAME_METHOD.bind_call(constant)
           name = nil if name&.start_with?("#<")
-          return if name.nil?
+          return "::T.untyped" if name.nil?
 
           if name.start_with?("::")
             name
