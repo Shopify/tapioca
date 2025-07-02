@@ -21,43 +21,43 @@ end
 
 # source://xpath//lib/xpath/dsl.rb#4
 module XPath::DSL
-  # source://xpath//lib/xpath/dsl.rb#90
+  # source://xpath//lib/xpath/dsl.rb#101
   def !(*args); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def !=(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def %(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def &(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def *(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#62
+  # source://xpath//lib/xpath/dsl.rb#65
   def +(*expressions); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def /(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def <(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def <=(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def ==(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def >(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def >=(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#45
+  # source://xpath//lib/xpath/dsl.rb#52
   def [](expression); end
 
   # source://xpath//lib/xpath/dsl.rb#136
@@ -150,7 +150,7 @@ module XPath::DSL
   # source://xpath//lib/xpath/dsl.rb#90
   def id(*args); end
 
-  # source://xpath//lib/xpath/dsl.rb#90
+  # source://xpath//lib/xpath/dsl.rb#99
   def inverse(*args); end
 
   # source://xpath//lib/xpath/dsl.rb#54
@@ -186,7 +186,7 @@ module XPath::DSL
   # source://xpath//lib/xpath/dsl.rb#122
   def multiply(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#90
+  # source://xpath//lib/xpath/dsl.rb#103
   def n(*args); end
 
   # source://xpath//lib/xpath/dsl.rb#136
@@ -198,7 +198,7 @@ module XPath::DSL
   # source://xpath//lib/xpath/dsl.rb#166
   def next_sibling(*expressions); end
 
-  # source://xpath//lib/xpath/dsl.rb#90
+  # source://xpath//lib/xpath/dsl.rb#102
   def normalize(*args); end
 
   # source://xpath//lib/xpath/dsl.rb#90
@@ -246,7 +246,7 @@ module XPath::DSL
   # source://xpath//lib/xpath/dsl.rb#136
   def self(*element_names); end
 
-  # source://xpath//lib/xpath/dsl.rb#136
+  # source://xpath//lib/xpath/dsl.rb#141
   def self_axis(*element_names); end
 
   # source://xpath//lib/xpath/dsl.rb#90
@@ -288,10 +288,10 @@ module XPath::DSL
   # source://xpath//lib/xpath/dsl.rb#45
   def where(expression); end
 
-  # source://xpath//lib/xpath/dsl.rb#122
+  # source://xpath//lib/xpath/dsl.rb#125
   def |(rhs); end
 
-  # source://xpath//lib/xpath/dsl.rb#90
+  # source://xpath//lib/xpath/dsl.rb#100
   def ~(*args); end
 end
 
@@ -346,7 +346,7 @@ class XPath::Expression
   # source://xpath//lib/xpath/expression.rb#5
   def expression=(_arg0); end
 
-  # source://xpath//lib/xpath/expression.rb#17
+  # source://xpath//lib/xpath/expression.rb#20
   def to_s(type = T.unsafe(nil)); end
 
   # source://xpath//lib/xpath/expression.rb#17
@@ -454,7 +454,7 @@ class XPath::Union
 
   # Returns the value of attribute expressions.
   #
-  # source://xpath//lib/xpath/union.rb#7
+  # source://xpath//lib/xpath/union.rb#8
   def arguments; end
 
   # source://xpath//lib/xpath/union.rb#18
@@ -471,7 +471,7 @@ class XPath::Union
   # source://xpath//lib/xpath/union.rb#22
   def method_missing(*args); end
 
-  # source://xpath//lib/xpath/union.rb#26
+  # source://xpath//lib/xpath/union.rb#29
   def to_s(type = T.unsafe(nil)); end
 
   # source://xpath//lib/xpath/union.rb#26

@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class AASMSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::AASM" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
             require "aasm"

@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class JsonApiClientResourceSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::JsonApiClientResource" do
-          sig { void }
+          #: -> void
           def before_setup
             require "json_api_client"
           end

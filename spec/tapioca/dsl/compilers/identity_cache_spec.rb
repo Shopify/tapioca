@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class IdentityCacheSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::IdentityCache" do
-          sig { void }
+          #: -> void
           def before_setup
             require "rails/railtie"
             require "identity_cache"

@@ -64,6 +64,7 @@ module Tapioca
       # ~~~
       # --ignore=/path/to/proto/cart_pb.rb
       # ~~~
+      #: [ConstantType = Class[top]]
       class Protobuf < Compiler
         class Field < T::Struct
           prop :name, String
@@ -73,8 +74,6 @@ module Tapioca
         end
 
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T::Class[T.anything] } }
 
         FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
 

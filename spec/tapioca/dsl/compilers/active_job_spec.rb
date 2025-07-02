@@ -10,7 +10,7 @@ module Tapioca
         extend Tapioca::Helpers::Test::Template
 
         describe "Tapioca::Dsl::Compilers::ActiveJob" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_job"
           end
@@ -144,6 +144,39 @@ module Tapioca
                 <% end %>
 
                     sig { params(user_id: T.untyped).returns(T.untyped) }
+                    def perform_now(user_id); end
+                  end
+                end
+              RBI
+              assert_equal(expected, rbi_for(:NotifyJob))
+            end
+
+            it "generates correct RBI file for subclass with method signatures from RBS comments" do
+              add_ruby_file("job.rb", <<~RUBY)
+                # typed: strict
+
+                class NotifyJob < ActiveJob::Base
+                  #: (Integer) -> void
+                  def perform(user_id)
+                    # ...
+                  end
+                end
+              RUBY
+
+              expected = template(<<~RBI)
+                # typed: strong
+
+                class NotifyJob
+                  class << self
+                <% if rails_version(">= 7.0") %>
+                    sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
+                    def perform_later(user_id, &block); end
+                <% else %>
+                    sig { params(user_id: ::Integer).returns(T.any(NotifyJob, FalseClass)) }
+                    def perform_later(user_id); end
+                <% end %>
+
+                    sig { params(user_id: ::Integer).void }
                     def perform_now(user_id); end
                   end
                 end

@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ConfigSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::Config" do
-          sig { void }
+          #: -> void
           def before_setup
             require "config"
             Object.send(:remove_const, :Rails) # rubocop:disable RSpec/RemoveConst

@@ -4,12 +4,9 @@
 module Tapioca
   module Runtime
     module Trackers
+      # @abstract
       module Tracker
         extend T::Sig
-        extend T::Helpers
-
-        abstract!
-
         class << self
           extend T::Sig
 

@@ -3,11 +3,9 @@
 
 module Tapioca
   module Gem
+    # @abstract
     class Event
       extend T::Sig
-      extend T::Helpers
-
-      abstract!
     end
 
     class SymbolFound < Event
@@ -29,9 +27,11 @@ module Tapioca
       #: String
       attr_reader :symbol
 
+      # @without_runtime
       #: BasicObject
       attr_reader :constant
 
+      # @without_runtime
       #: (String symbol, BasicObject constant) -> void
       def initialize(symbol, constant)
         super()
@@ -55,11 +55,9 @@ module Tapioca
       end
     end
 
+    # @abstract
     class NodeAdded < Event
-      extend T::Helpers
       extend T::Sig
-
-      abstract!
 
       #: String
       attr_reader :symbol

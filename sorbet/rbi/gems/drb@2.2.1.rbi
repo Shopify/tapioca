@@ -175,7 +175,7 @@ module DRb
     # If there is no current server, this returns the default configuration.
     # See #current_server and DRbServer::make_config.
     #
-    # source://drb//lib/drb/drb.rb#1832
+    # source://drb//lib/drb/drb.rb#1837
     def config; end
 
     # Get the 'current' server.
@@ -191,14 +191,14 @@ module DRb
     #
     # @raise [DRbServerNotFound]
     #
-    # source://drb//lib/drb/drb.rb#1789
+    # source://drb//lib/drb/drb.rb#1795
     def current_server; end
 
     # Retrieves the server with the given +uri+.
     #
     # See also regist_server and remove_server.
     #
-    # source://drb//lib/drb/drb.rb#1934
+    # source://drb//lib/drb/drb.rb#1937
     def fetch_server(uri); end
 
     # Get the front object of the current server.
@@ -206,21 +206,21 @@ module DRb
     # This raises a DRbServerNotFound error if there is no current server.
     # See #current_server.
     #
-    # source://drb//lib/drb/drb.rb#1843
+    # source://drb//lib/drb/drb.rb#1846
     def front; end
 
     # Is +uri+ the URI for the current local server?
     #
     # @return [Boolean]
     #
-    # source://drb//lib/drb/drb.rb#1822
+    # source://drb//lib/drb/drb.rb#1826
     def here?(uri); end
 
     # Set the default ACL to +acl+.
     #
     # See DRb::DRbServer.default_acl.
     #
-    # source://drb//lib/drb/drb.rb#1888
+    # source://drb//lib/drb/drb.rb#1891
     def install_acl(acl); end
 
     # Set the default id conversion object.
@@ -230,24 +230,24 @@ module DRb
     #
     # See DRbServer#default_id_conv.
     #
-    # source://drb//lib/drb/drb.rb#1880
+    # source://drb//lib/drb/drb.rb#1883
     def install_id_conv(idconv); end
 
-    # source://drb//lib/drb/drb.rb#1894
+    # source://drb//lib/drb/drb.rb#1897
     def mutex; end
 
     # The primary local dRuby server.
     #
     # This is the server created by the #start_service call.
     #
-    # source://drb//lib/drb/drb.rb#1776
+    # source://drb//lib/drb/drb.rb#1777
     def primary_server; end
 
     # The primary local dRuby server.
     #
     # This is the server created by the #start_service call.
     #
-    # source://drb//lib/drb/drb.rb#1776
+    # source://drb//lib/drb/drb.rb#1777
     def primary_server=(_arg0); end
 
     # Registers +server+ with DRb.
@@ -263,12 +263,12 @@ module DRb
     #  s = DRb::DRbServer.new # automatically calls regist_server
     #  DRb.fetch_server s.uri #=> #<DRb::DRbServer:0x...>
     #
-    # source://drb//lib/drb/drb.rb#1912
+    # source://drb//lib/drb/drb.rb#1918
     def regist_server(server); end
 
     # Removes +server+ from the list of registered servers.
     #
-    # source://drb//lib/drb/drb.rb#1921
+    # source://drb//lib/drb/drb.rb#1929
     def remove_server(server); end
 
     # Start a dRuby server locally.
@@ -287,7 +287,7 @@ module DRb
     #
     # See DRbServer::new.
     #
-    # source://drb//lib/drb/drb.rb#1768
+    # source://drb//lib/drb/drb.rb#1771
     def start_service(uri = T.unsafe(nil), front = T.unsafe(nil), config = T.unsafe(nil)); end
 
     # Stop the local dRuby server.
@@ -295,14 +295,14 @@ module DRb
     # This operates on the primary server.  If there is no primary
     # server currently running, it is a noop.
     #
-    # source://drb//lib/drb/drb.rb#1801
+    # source://drb//lib/drb/drb.rb#1805
     def stop_service; end
 
     # Get the thread of the primary server.
     #
     # This returns nil if there is no primary server.  See #primary_server.
     #
-    # source://drb//lib/drb/drb.rb#1869
+    # source://drb//lib/drb/drb.rb#1872
     def thread; end
 
     # Get a reference id for an object using the current server.
@@ -310,7 +310,7 @@ module DRb
     # This raises a DRbServerNotFound error if there is no current server.
     # See #current_server.
     #
-    # source://drb//lib/drb/drb.rb#1860
+    # source://drb//lib/drb/drb.rb#1863
     def to_id(obj); end
 
     # Convert a reference into an object using the current server.
@@ -318,14 +318,14 @@ module DRb
     # This raises a DRbServerNotFound error if there is no current server.
     # See #current_server.
     #
-    # source://drb//lib/drb/drb.rb#1852
+    # source://drb//lib/drb/drb.rb#1864
     def to_obj(ref); end
 
     # Get the URI defining the local dRuby space.
     #
     # This is the URI of the current server.  See #current_server.
     #
-    # source://drb//lib/drb/drb.rb#1810
+    # source://drb//lib/drb/drb.rb#1819
     def uri; end
   end
 end
@@ -504,7 +504,7 @@ class DRb::DRbObject
   # source://drb//lib/drb/drb.rb#1080
   def _dump(lv); end
 
-  # source://drb//lib/drb/eq.rb#4
+  # source://drb//lib/drb/eq.rb#13
   def eql?(other); end
 
   # source://drb//lib/drb/eq.rb#9
@@ -682,10 +682,10 @@ module DRb::DRbProtocol
   class << self
     # Add a new protocol to the DRbProtocol module.
     #
-    # source://drb//lib/drb/drb.rb#724
+    # source://drb//lib/drb/drb.rb#727
     def add_protocol(prot); end
 
-    # source://drb//lib/drb/drb.rb#802
+    # source://drb//lib/drb/drb.rb#807
     def auto_load(uri); end
 
     # Open a client connection to +uri+ with the configuration +config+.
@@ -698,7 +698,7 @@ module DRb::DRbProtocol
     #
     # @raise [DRbBadURI]
     #
-    # source://drb//lib/drb/drb.rb#736
+    # source://drb//lib/drb/drb.rb#753
     def open(uri, config, first = T.unsafe(nil)); end
 
     # Open a server listening for connections at +uri+ with
@@ -713,7 +713,7 @@ module DRb::DRbProtocol
     #
     # @raise [DRbBadURI]
     #
-    # source://drb//lib/drb/drb.rb#764
+    # source://drb//lib/drb/drb.rb#777
     def open_server(uri, config, first = T.unsafe(nil)); end
 
     # Parse +uri+ into a [uri, option] pair.
@@ -725,7 +725,7 @@ module DRb::DRbProtocol
     #
     # @raise [DRbBadURI]
     #
-    # source://drb//lib/drb/drb.rb#785
+    # source://drb//lib/drb/drb.rb#800
     def uri_option(uri, config, first = T.unsafe(nil)); end
   end
 end
@@ -1189,7 +1189,7 @@ class DRb::DRbURIOption
   # source://drb//lib/drb/drb.rb#1028
   def ==(other); end
 
-  # source://drb//lib/drb/drb.rb#1028
+  # source://drb//lib/drb/drb.rb#1037
   def eql?(other); end
 
   # source://drb//lib/drb/drb.rb#1033

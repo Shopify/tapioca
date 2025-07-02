@@ -2,8 +2,6 @@
 # frozen_string_literal: true
 
 require "tapioca/internal"
-require "tapioca/dsl/compilers/url_helpers"
-require "tapioca/dsl/compilers/active_record_fixtures"
 
 module RubyLsp
   module Tapioca
@@ -21,13 +19,15 @@ module RubyLsp
         when "load_compilers_and_extensions"
           # Load DSL extensions and compilers ahead of time, so that we don't have to pay the price of invoking
           # `Gem.find_files` on every execution, which is quite expensive
-          @loader = ::Tapioca::Loaders::Dsl.new(
-            tapioca_path: ::Tapioca::TAPIOCA_DIR,
-            eager_load: false,
-            app_root: params[:workspace_path],
-            halt_upon_load_error: false,
-          )
-          @loader.load_dsl_extensions_and_compilers
+          with_notification_wrapper("load_compilers_and_extensions", "Loading DSL compilers") do
+            @loader = ::Tapioca::Loaders::Dsl.new(
+              tapioca_path: ::Tapioca::TAPIOCA_DIR,
+              eager_load: false,
+              app_root: params[:workspace_path],
+              halt_upon_load_error: false,
+            )
+            @loader.load_dsl_extensions_and_compilers
+          end
         when "dsl"
           fork do
             with_notification_wrapper("dsl", "Generating DSL RBIs") do

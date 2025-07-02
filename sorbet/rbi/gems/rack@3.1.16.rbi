@@ -464,7 +464,7 @@ class Rack::Cascade
   # Append an app to the list of apps to cascade.  This app will
   # be tried last.
   #
-  # source://rack//lib/rack/cascade.rb#56
+  # source://rack//lib/rack/cascade.rb#65
   def <<(app); end
 
   # Append an app to the list of apps to cascade.  This app will
@@ -1135,7 +1135,7 @@ end
 
 # source://rack//lib/rack/files.rb#184
 class Rack::Files::Iterator < ::Rack::Files::BaseIterator
-  # source://rack//lib/rack/files.rb#122
+  # source://rack//lib/rack/files.rb#185
   def to_path; end
 end
 
@@ -1246,7 +1246,7 @@ class Rack::Headers < ::Hash
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/headers.rb#144
+  # source://rack//lib/rack/headers.rb#147
   def include?(key); end
 
   # source://rack//lib/rack/headers.rb#151
@@ -1254,18 +1254,18 @@ class Rack::Headers < ::Hash
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/headers.rb#144
+  # source://rack//lib/rack/headers.rb#148
   def key?(key); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/headers.rb#144
+  # source://rack//lib/rack/headers.rb#149
   def member?(key); end
 
   # source://rack//lib/rack/headers.rb#157
   def merge(hash, &block); end
 
-  # source://rack//lib/rack/headers.rb#186
+  # source://rack//lib/rack/headers.rb#196
   def merge!(hash, &block); end
 
   # source://rack//lib/rack/headers.rb#161
@@ -1282,7 +1282,7 @@ class Rack::Headers < ::Hash
   # source://rack//lib/rack/headers.rb#205
   def slice(*a); end
 
-  # source://rack//lib/rack/headers.rb#114
+  # source://rack//lib/rack/headers.rb#117
   def store(key, value); end
 
   # source://rack//lib/rack/headers.rb#178
@@ -1640,28 +1640,28 @@ class Rack::Lint::Wrapper::StreamWrapper
   # source://rack//lib/rack/lint.rb#974
   def initialize(stream); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def <<(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def close(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def close_read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def close_write(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def closed?(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def flush(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def read(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack//lib/rack/lint.rb#972
   def write(*args, **_arg1, &block); end
 end
 
@@ -1821,7 +1821,7 @@ module Rack::Mime
     #
     # @return [Boolean]
     #
-    # source://rack//lib/rack/mime.rb#30
+    # source://rack//lib/rack/mime.rb#36
     def match?(value, matcher); end
 
     # Returns String with mime type if found, otherwise use +fallback+.
@@ -1837,7 +1837,7 @@ module Rack::Mime
     # This is a shortcut for:
     #     Rack::Mime::MIME_TYPES.fetch('.foo', 'application/octet-stream')
     #
-    # source://rack//lib/rack/mime.rb#18
+    # source://rack//lib/rack/mime.rb#21
     def mime_type(ext, fallback = T.unsafe(nil)); end
   end
 end
@@ -1968,62 +1968,66 @@ class Rack::MockRequest::FatalWarning < ::RuntimeError; end
 # Usually, you don't create the MockResponse on your own, but use
 # MockRequest.
 #
-# source://rack//lib/rack/mock_response.rb#13
+# source://rack//lib/rack/mock_response.rb#12
 class Rack::MockResponse < ::Rack::Response
   # @return [MockResponse] a new instance of MockResponse
   #
-  # source://rack//lib/rack/mock_response.rb#24
+  # source://rack//lib/rack/mock_response.rb#53
   def initialize(status, headers, body, errors = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/mock_response.rb#39
+  # source://rack//lib/rack/mock_response.rb#68
   def =~(other); end
 
-  # source://rack//lib/rack/mock_response.rb#47
+  # source://rack//lib/rack/mock_response.rb#76
   def body; end
 
-  # source://rack//lib/rack/mock_response.rb#73
+  # source://rack//lib/rack/mock_response.rb#102
   def cookie(name); end
 
   # Headers
   #
-  # source://rack//lib/rack/mock_response.rb#19
+  # source://rack//lib/rack/mock_response.rb#48
   def cookies; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/mock_response.rb#69
+  # source://rack//lib/rack/mock_response.rb#98
   def empty?; end
 
   # Errors
   #
-  # source://rack//lib/rack/mock_response.rb#22
+  # source://rack//lib/rack/mock_response.rb#51
   def errors; end
 
   # Errors
   #
-  # source://rack//lib/rack/mock_response.rb#22
+  # source://rack//lib/rack/mock_response.rb#51
   def errors=(_arg0); end
 
-  # source://rack//lib/rack/mock_response.rb#43
+  # source://rack//lib/rack/mock_response.rb#72
   def match(other); end
 
   # Headers
   #
-  # source://rack//lib/rack/mock_response.rb#19
+  # source://rack//lib/rack/mock_response.rb#48
   def original_headers; end
 
   private
 
-  # source://rack//lib/rack/mock_response.rb#100
+  # source://rack//lib/rack/mock_response.rb#129
   def identify_cookie_attributes(cookie_filling); end
 
-  # source://rack//lib/rack/mock_response.rb#79
+  # source://rack//lib/rack/mock_response.rb#108
   def parse_cookies_from_header; end
 
   class << self
+    # source://rack//lib/rack/mock_response.rb#44
     def [](*_arg0); end
   end
 end
+
+# source://rack//lib/rack/mock_response.rb#16
+Rack::MockResponse::Cookie = CGI::Cookie
 
 # A multipart form data parser, adapted from IOWA.
 #
@@ -2067,6 +2071,11 @@ end
 # source://rack//lib/rack/multipart/parser.rb#31
 Rack::Multipart::Error = Rack::Multipart::BoundaryTooLongError
 
+# whitespace with optional folding
+#
+# source://rack//lib/rack/multipart/parser.rb#34
+Rack::Multipart::FWS = T.let(T.unsafe(nil), Regexp)
+
 # source://rack//lib/rack/multipart/generator.rb#7
 class Rack::Multipart::Generator
   # @return [Generator] a new instance of Generator
@@ -2094,19 +2103,24 @@ class Rack::Multipart::Generator
   def multipart?; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#34
+# anything but a non-folding CRLF
+#
+# source://rack//lib/rack/multipart/parser.rb#35
+Rack::Multipart::HEADER_VALUE = T.let(T.unsafe(nil), String)
+
+# source://rack//lib/rack/multipart/parser.rb#36
 Rack::Multipart::MULTIPART = T.let(T.unsafe(nil), Regexp)
 
 # source://rack//lib/rack/multipart.rb#16
 Rack::Multipart::MULTIPART_BOUNDARY = T.let(T.unsafe(nil), String)
 
-# source://rack//lib/rack/multipart/parser.rb#36
+# source://rack//lib/rack/multipart/parser.rb#38
 Rack::Multipart::MULTIPART_CONTENT_DISPOSITION = T.let(T.unsafe(nil), Regexp)
 
-# source://rack//lib/rack/multipart/parser.rb#37
+# source://rack//lib/rack/multipart/parser.rb#39
 Rack::Multipart::MULTIPART_CONTENT_ID = T.let(T.unsafe(nil), Regexp)
 
-# source://rack//lib/rack/multipart/parser.rb#35
+# source://rack//lib/rack/multipart/parser.rb#37
 Rack::Multipart::MULTIPART_CONTENT_TYPE = T.let(T.unsafe(nil), Regexp)
 
 # source://rack//lib/rack/multipart.rb#18
@@ -2150,22 +2164,22 @@ class Rack::Multipart::ParamList
   end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#39
+# source://rack//lib/rack/multipart/parser.rb#41
 class Rack::Multipart::Parser
   # @return [Parser] a new instance of Parser
   #
-  # source://rack//lib/rack/multipart/parser.rb#200
+  # source://rack//lib/rack/multipart/parser.rb#202
   def initialize(boundary, tempfile, bufsize, query_parser); end
 
-  # source://rack//lib/rack/multipart/parser.rb#217
+  # source://rack//lib/rack/multipart/parser.rb#219
   def parse(io); end
 
-  # source://rack//lib/rack/multipart/parser.rb#240
+  # source://rack//lib/rack/multipart/parser.rb#242
   def result; end
 
   # Returns the value of attribute state.
   #
-  # source://rack//lib/rack/multipart/parser.rb#198
+  # source://rack//lib/rack/multipart/parser.rb#200
   def state; end
 
   private
@@ -2175,25 +2189,25 @@ class Rack::Multipart::Parser
   # end of the boundary.  If we don't find the start or end of the
   # boundary, clear the buffer and return nil.
   #
-  # source://rack//lib/rack/multipart/parser.rb#434
+  # source://rack//lib/rack/multipart/parser.rb#436
   def consume_boundary; end
 
   # From WEBrick::HTTPUtils
   #
-  # source://rack//lib/rack/multipart/parser.rb#252
+  # source://rack//lib/rack/multipart/parser.rb#254
   def dequote(str); end
 
   # Return the related Encoding object. However, because
   # enc is submitted by the user, it may be invalid, so
   # use a binary encoding in that case.
   #
-  # source://rack//lib/rack/multipart/parser.rb#489
+  # source://rack//lib/rack/multipart/parser.rb#491
   def find_encoding(enc); end
 
-  # source://rack//lib/rack/multipart/parser.rb#294
+  # source://rack//lib/rack/multipart/parser.rb#296
   def handle_consume_token; end
 
-  # source://rack//lib/rack/multipart/parser.rb#495
+  # source://rack//lib/rack/multipart/parser.rb#497
   def handle_empty_content!(content); end
 
   # This handles the initial parser state.  We read until we find the starting
@@ -2204,153 +2218,170 @@ class Rack::Multipart::Parser
   # boundary.  The client would have to deliberately craft a response
   # with the opening boundary beyond the buffer size for that to happen.
   #
-  # source://rack//lib/rack/multipart/parser.rb#271
+  # source://rack//lib/rack/multipart/parser.rb#273
   def handle_fast_forward; end
 
-  # source://rack//lib/rack/multipart/parser.rb#411
+  # source://rack//lib/rack/multipart/parser.rb#413
   def handle_mime_body; end
 
-  # source://rack//lib/rack/multipart/parser.rb#306
+  # source://rack//lib/rack/multipart/parser.rb#308
   def handle_mime_head; end
 
-  # source://rack//lib/rack/multipart/parser.rb#443
+  # source://rack//lib/rack/multipart/parser.rb#445
   def normalize_filename(filename); end
 
-  # source://rack//lib/rack/multipart/parser.rb#258
+  # source://rack//lib/rack/multipart/parser.rb#260
   def read_data(io, outbuf); end
 
-  # source://rack//lib/rack/multipart/parser.rb#456
+  # source://rack//lib/rack/multipart/parser.rb#458
   def tag_multipart_encoding(filename, content_type, name, body); end
 
   class << self
-    # source://rack//lib/rack/multipart/parser.rb#87
+    # source://rack//lib/rack/multipart/parser.rb#89
     def parse(io, content_length, content_type, tmpfile, bufsize, qp); end
 
-    # source://rack//lib/rack/multipart/parser.rb#80
+    # source://rack//lib/rack/multipart/parser.rb#82
     def parse_boundary(content_type); end
   end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#40
+# source://rack//lib/rack/multipart/parser.rb#42
 Rack::Multipart::Parser::BUFSIZE = T.let(T.unsafe(nil), Integer)
 
-# source://rack//lib/rack/multipart/parser.rb#48
+# source://rack//lib/rack/multipart/parser.rb#50
 class Rack::Multipart::Parser::BoundedIO
   # @return [BoundedIO] a new instance of BoundedIO
   #
-  # source://rack//lib/rack/multipart/parser.rb#49
+  # source://rack//lib/rack/multipart/parser.rb#51
   def initialize(io, content_length); end
 
-  # source://rack//lib/rack/multipart/parser.rb#55
+  # source://rack//lib/rack/multipart/parser.rb#57
   def read(size, outbuf = T.unsafe(nil)); end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#453
+# source://rack//lib/rack/multipart/parser.rb#455
 Rack::Multipart::Parser::CHARSET = T.let(T.unsafe(nil), String)
 
-# source://rack//lib/rack/multipart/parser.rb#305
+# source://rack//lib/rack/multipart/parser.rb#307
 Rack::Multipart::Parser::CONTENT_DISPOSITION_MAX_BYTES = T.let(T.unsafe(nil), Integer)
 
-# source://rack//lib/rack/multipart/parser.rb#304
+# source://rack//lib/rack/multipart/parser.rb#306
 Rack::Multipart::Parser::CONTENT_DISPOSITION_MAX_PARAMS = T.let(T.unsafe(nil), Integer)
 
-# source://rack//lib/rack/multipart/parser.rb#107
+# source://rack//lib/rack/multipart/parser.rb#109
 class Rack::Multipart::Parser::Collector
   include ::Enumerable
 
   # @return [Collector] a new instance of Collector
   #
-  # source://rack//lib/rack/multipart/parser.rb#143
+  # source://rack//lib/rack/multipart/parser.rb#145
   def initialize(tempfile); end
 
-  # source://rack//lib/rack/multipart/parser.rb#149
+  # source://rack//lib/rack/multipart/parser.rb#151
   def each; end
 
-  # source://rack//lib/rack/multipart/parser.rb#169
+  # source://rack//lib/rack/multipart/parser.rb#171
   def on_mime_body(mime_index, content); end
 
-  # source://rack//lib/rack/multipart/parser.rb#173
+  # source://rack//lib/rack/multipart/parser.rb#175
   def on_mime_finish(mime_index); end
 
-  # source://rack//lib/rack/multipart/parser.rb#153
+  # source://rack//lib/rack/multipart/parser.rb#155
   def on_mime_head(mime_index, head, filename, content_type, name); end
 
   private
 
-  # source://rack//lib/rack/multipart/parser.rb#178
+  # source://rack//lib/rack/multipart/parser.rb#180
   def check_part_limits; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#131
+# source://rack//lib/rack/multipart/parser.rb#133
 class Rack::Multipart::Parser::Collector::BufferPart < ::Rack::Multipart::Parser::Collector::MimePart
-  # source://rack//lib/rack/multipart/parser.rb#133
+  # source://rack//lib/rack/multipart/parser.rb#135
   def close; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/multipart/parser.rb#132
+  # source://rack//lib/rack/multipart/parser.rb#134
   def file?; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#108
+# source://rack//lib/rack/multipart/parser.rb#110
 class Rack::Multipart::Parser::Collector::MimePart < ::Struct
   # @yield [data]
   #
-  # source://rack//lib/rack/multipart/parser.rb#109
+  # source://rack//lib/rack/multipart/parser.rb#111
   def get_data; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#136
+# source://rack//lib/rack/multipart/parser.rb#138
 class Rack::Multipart::Parser::Collector::TempfilePart < ::Rack::Multipart::Parser::Collector::MimePart
-  # source://rack//lib/rack/multipart/parser.rb#138
+  # source://rack//lib/rack/multipart/parser.rb#140
   def close; end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/multipart/parser.rb#137
+  # source://rack//lib/rack/multipart/parser.rb#139
   def file?; end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#78
+# source://rack//lib/rack/multipart/parser.rb#80
 Rack::Multipart::Parser::EMPTY = T.let(T.unsafe(nil), Rack::Multipart::Parser::MultipartInfo)
 
-# source://rack//lib/rack/multipart/parser.rb#77
+# source://rack//lib/rack/multipart/parser.rb#79
 class Rack::Multipart::Parser::MultipartInfo < ::Struct
   # Returns the value of attribute params
   #
   # @return [Object] the current value of params
+  #
+  # source://rack//lib/rack/multipart/parser.rb#79
   def params; end
 
   # Sets the attribute params
   #
   # @param value [Object] the value to set the attribute params to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/multipart/parser.rb#79
   def params=(_); end
 
   # Returns the value of attribute tmp_files
   #
   # @return [Object] the current value of tmp_files
+  #
+  # source://rack//lib/rack/multipart/parser.rb#79
   def tmp_files; end
 
   # Sets the attribute tmp_files
   #
   # @param value [Object] the value to set the attribute tmp_files to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/multipart/parser.rb#79
   def tmp_files=(_); end
 
   class << self
+    # source://rack//lib/rack/multipart/parser.rb#79
     def [](*_arg0); end
+
+    # source://rack//lib/rack/multipart/parser.rb#79
     def inspect; end
+
+    # source://rack//lib/rack/multipart/parser.rb#79
     def keyword_init?; end
+
+    # source://rack//lib/rack/multipart/parser.rb#79
     def members; end
+
+    # source://rack//lib/rack/multipart/parser.rb#79
     def new(*_arg0); end
   end
 end
 
-# source://rack//lib/rack/multipart/parser.rb#42
+# source://rack//lib/rack/multipart/parser.rb#44
 Rack::Multipart::Parser::TEMPFILE_FACTORY = T.let(T.unsafe(nil), Proc)
 
-# source://rack//lib/rack/multipart/parser.rb#41
+# source://rack//lib/rack/multipart/parser.rb#43
 Rack::Multipart::Parser::TEXT_PLAIN = T.let(T.unsafe(nil), String)
 
 # source://rack//lib/rack/multipart/uploaded_file.rb#8
@@ -2370,7 +2401,7 @@ class Rack::Multipart::UploadedFile
   # source://rack//lib/rack/multipart/uploaded_file.rb#14
   def content_type=(_arg0); end
 
-  # source://rack//lib/rack/multipart/uploaded_file.rb#31
+  # source://rack//lib/rack/multipart/uploaded_file.rb#34
   def local_path; end
 
   # source://rack//lib/rack/multipart/uploaded_file.rb#40
@@ -2626,6 +2657,7 @@ end
 
 # source://rack//lib/rack/query_parser.rb#238
 class Rack::QueryParser::Params < ::Hash
+  # source://rack//lib/rack/query_parser.rb#239
   def to_params_hash; end
 end
 
@@ -2829,20 +2861,8 @@ class Rack::Request
   # source://rack//lib/rack/request.rb#67
   def params; end
 
-  # source://rack//lib/rack/request.rb#67
-  def query; end
-
   # source://rack//lib/rack/request.rb#71
   def update_param(k, v); end
-
-  # source://yard/0.9.37/lib/yard/server/rack_adapter.rb#94
-  def version_supplied; end
-
-  # source://yard/0.9.37/lib/yard/server/rack_adapter.rb#94
-  def version_supplied=(_arg0); end
-
-  # source://yard/0.9.37/lib/yard/server/rack_adapter.rb#96
-  def xhr?; end
 
   class << self
     # The priority when checking forwarded headers. The default
@@ -3204,7 +3224,7 @@ module Rack::Request::Helpers
 
   # the referer of the client
   #
-  # source://rack//lib/rack/request.rb#204
+  # source://rack//lib/rack/request.rb#205
   def referrer; end
 
   # source://rack//lib/rack/request.rb#197
@@ -3446,12 +3466,12 @@ class Rack::Response
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#164
+  # source://rack//lib/rack/response.rb#177
   def [](key); end
 
   # @raise [ArgumentError]
   #
-  # source://rack//lib/rack/response.rb#168
+  # source://rack//lib/rack/response.rb#178
   def []=(key, value); end
 
   # Returns the value of attribute body.
@@ -3554,7 +3574,7 @@ class Rack::Response
   #
   # @return [Array] a 3-tuple suitable of `[status, headers, body]`
   #
-  # source://rack//lib/rack/response.rb#107
+  # source://rack//lib/rack/response.rb#128
   def to_a(&block); end
 
   # Append a chunk to the response body.
@@ -4094,96 +4114,137 @@ class Rack::ShowExceptions::Frame < ::Struct
   # Returns the value of attribute context_line
   #
   # @return [Object] the current value of context_line
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def context_line; end
 
   # Sets the attribute context_line
   #
   # @param value [Object] the value to set the attribute context_line to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def context_line=(_); end
 
   # Returns the value of attribute filename
   #
   # @return [Object] the current value of filename
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def filename; end
 
   # Sets the attribute filename
   #
   # @param value [Object] the value to set the attribute filename to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def filename=(_); end
 
   # Returns the value of attribute function
   #
   # @return [Object] the current value of function
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def function; end
 
   # Sets the attribute function
   #
   # @param value [Object] the value to set the attribute function to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def function=(_); end
 
   # Returns the value of attribute lineno
   #
   # @return [Object] the current value of lineno
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def lineno; end
 
   # Sets the attribute lineno
   #
   # @param value [Object] the value to set the attribute lineno to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def lineno=(_); end
 
   # Returns the value of attribute post_context
   #
   # @return [Object] the current value of post_context
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context; end
 
   # Sets the attribute post_context
   #
   # @param value [Object] the value to set the attribute post_context to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context=(_); end
 
   # Returns the value of attribute post_context_lineno
   #
   # @return [Object] the current value of post_context_lineno
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context_lineno; end
 
   # Sets the attribute post_context_lineno
   #
   # @param value [Object] the value to set the attribute post_context_lineno to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def post_context_lineno=(_); end
 
   # Returns the value of attribute pre_context
   #
   # @return [Object] the current value of pre_context
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context; end
 
   # Sets the attribute pre_context
   #
   # @param value [Object] the value to set the attribute pre_context to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context=(_); end
 
   # Returns the value of attribute pre_context_lineno
   #
   # @return [Object] the current value of pre_context_lineno
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context_lineno; end
 
   # Sets the attribute pre_context_lineno
   #
   # @param value [Object] the value to set the attribute pre_context_lineno to.
   # @return [Object] the newly set value
+  #
+  # source://rack//lib/rack/show_exceptions.rb#21
   def pre_context_lineno=(_); end
 
   class << self
+    # source://rack//lib/rack/show_exceptions.rb#21
     def [](*_arg0); end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def inspect; end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def keyword_init?; end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def members; end
+
+    # source://rack//lib/rack/show_exceptions.rb#21
     def new(*_arg0); end
   end
 end
@@ -4471,6 +4532,8 @@ module Rack::Utils
   def escape_cookie_key(key); end
 
   # Escape ampersands, brackets and quotes to their HTML/XML entities.
+  #
+  # source://rack//lib/rack/utils.rb#183
   def escape_html(_arg0); end
 
   # Like URI escaping, but with %20 instead of +. Strictly speaking this is
@@ -4675,6 +4738,7 @@ module Rack::Utils
     # source://rack//lib/rack/utils.rb#262
     def escape_cookie_key(key); end
 
+    # source://rack//lib/rack/utils.rb#183
     def escape_html(_arg0); end
 
     # Like URI escaping, but with %20 instead of +. Strictly speaking this is
@@ -4705,14 +4769,14 @@ module Rack::Utils
     # multipart_part_limit is the original name of multipart_file_limit, but
     # the limit only counts parts with filenames.
     #
-    # source://rack//lib/rack/utils.rb#65
+    # source://rack//lib/rack/utils.rb#69
     def multipart_part_limit; end
 
     # Sets the attribute multipart_file_limit
     #
     # @param value the value to set the attribute multipart_file_limit to.
     #
-    # source://rack//lib/rack/utils.rb#65
+    # source://rack//lib/rack/utils.rb#70
     def multipart_part_limit=(_arg0); end
 
     # Returns the value of attribute multipart_total_part_limit.

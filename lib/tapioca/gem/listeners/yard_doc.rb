@@ -16,6 +16,7 @@ module Tapioca
           "warn_indent:",
           "shareable_constant_value:",
           "rubocop:",
+          "@requires_ancestor:",
         ] #: Array[String]
 
         IGNORED_SIG_TAGS = ["param", "return"] #: Array[String]
@@ -28,6 +29,11 @@ module Tapioca
         end
 
         private
+
+        #: (String line) -> bool
+        def rbs_comment?(line)
+          line.strip.start_with?(": ", "| ")
+        end
 
         # @override
         #: (ConstNodeAdded event) -> void
@@ -60,7 +66,7 @@ module Tapioca
           return [] if /(copyright|license)/i.match?(docstring)
 
           comments = docstring.lines
-            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } }
+            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
             .map! { |line| RBI::Comment.new(line) }
 
           tags = yard_docs.tags

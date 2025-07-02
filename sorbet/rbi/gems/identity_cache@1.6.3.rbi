@@ -406,7 +406,7 @@ IdentityCache::CacheFetcher::FillLock::FILL_LOCKED = T.let(T.unsafe(nil), Symbol
 
 # source://identity_cache//lib/identity_cache/cache_hash.rb#23
 module IdentityCache::CacheHash
-  # source://identity_cache//lib/identity_cache/cache_hash.rb#31
+  # source://identity_cache//lib/identity_cache/cache_hash.rb#26
   def memcache_hash(key); end
 end
 
@@ -608,7 +608,7 @@ class IdentityCache::Cached::Attribute
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#21
   def attribute; end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#115
+  # source://identity_cache//lib/identity_cache/cached/attribute.rb#118
   def cache_decode(db_value); end
 
   # source://identity_cache//lib/identity_cache/cached/attribute.rb#115
@@ -700,7 +700,7 @@ class IdentityCache::Cached::AttributeByMulti < ::IdentityCache::Cached::Attribu
   # source://identity_cache//lib/identity_cache/cached/attribute_by_multi.rb#6
   def build; end
 
-  # source://identity_cache//lib/identity_cache/cached/attribute.rb#66
+  # source://identity_cache//lib/identity_cache/cached/attribute_by_multi.rb#53
   def cache_key_from_key_values(index_key); end
 
   private

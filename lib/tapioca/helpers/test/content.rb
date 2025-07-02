@@ -4,12 +4,9 @@
 module Tapioca
   module Helpers
     module Test
+      # @requires_ancestor: Kernel
       module Content
         extend T::Sig
-        extend T::Helpers
-
-        requires_ancestor { Kernel }
-
         #: -> void
         def teardown
           super

@@ -6,12 +6,9 @@ module Tapioca
     # This is a module that gets prepended to `Bundler::Dependency` and
     # makes sure even gems marked as `require: false` are required during
     # `Bundler.require`.
+    # @requires_ancestor: ::Bundler::Dependency
     module AutoRequireHook
       extend T::Sig
-      extend T::Helpers
-
-      requires_ancestor { ::Bundler::Dependency }
-
       @exclude = [] #: Array[String]
       @enabled = false #: bool
 

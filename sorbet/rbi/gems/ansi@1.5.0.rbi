@@ -59,7 +59,7 @@ module ANSI::Code
 
   # Move cursor left a specified number of spaces.
   #
-  # source://ansi//lib/ansi/code.rb#149
+  # source://ansi//lib/ansi/code.rb#152
   def back(spaces = T.unsafe(nil)); end
 
   # source://ansi//lib/ansi/code.rb#70
@@ -131,7 +131,7 @@ module ANSI::Code
   #   ansi(:red, :on_white){ "Valentine" }
   # @return [String] String wrapped ANSI code.
   #
-  # source://ansi//lib/ansi/code.rb#176
+  # source://ansi//lib/ansi/code.rb#226
   def color(*codes); end
 
   # source://ansi//lib/ansi/code.rb#70
@@ -171,7 +171,7 @@ module ANSI::Code
 
   # Move cursor right a specified number of spaces.
   #
-  # source://ansi//lib/ansi/code.rb#155
+  # source://ansi//lib/ansi/code.rb#158
   def forward(spaces = T.unsafe(nil)); end
 
   # source://ansi//lib/ansi/code.rb#70
@@ -317,7 +317,7 @@ module ANSI::Code
   #   ansi(:red, :on_white){ "Valentine" }
   # @return [String] String wrapped ANSI code.
   #
-  # source://ansi//lib/ansi/code.rb#176
+  # source://ansi//lib/ansi/code.rb#214
   def style(*codes); end
 
   # Remove ANSI codes from string or block value.
@@ -335,7 +335,7 @@ module ANSI::Code
   # @param string [String] String from which to remove ANSI codes.
   # @return [String] String wrapped ANSI code.
   #
-  # source://ansi//lib/ansi/code.rb#201
+  # source://ansi//lib/ansi/code.rb#232
   def uncolor(string = T.unsafe(nil)); end
 
   # Remove ANSI codes from string or block value.
@@ -345,7 +345,7 @@ module ANSI::Code
   # @param string [String] String from which to remove ANSI codes.
   # @return [String] String wrapped ANSI code.
   #
-  # source://ansi//lib/ansi/code.rb#201
+  # source://ansi//lib/ansi/code.rb#220
   def unstyle(string = T.unsafe(nil)); end
 
   # Move cursor up a specified number of spaces.

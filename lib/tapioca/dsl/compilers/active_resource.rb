@@ -54,10 +54,9 @@ module Tapioca
       #   def year?; end
       # end
       # ~~~
+      #: [ConstantType = singleton(::ActiveResource::Base)]
       class ActiveResource < Compiler
         extend T::Sig
-
-        ConstantType = type_member { { fixed: T.class_of(::ActiveResource::Base) } }
 
         # @override
         #: -> void

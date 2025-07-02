@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ProtobufSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::Protobuf" do
-          sig { void }
+          #: -> void
           def before_setup
             require "google/protobuf"
           end

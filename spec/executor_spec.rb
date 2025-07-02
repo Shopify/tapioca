@@ -61,12 +61,7 @@ module Tapioca
         end
       end
 
-      sig do
-        params(expected_count: Integer).returns(T.proc.params(
-          _arg1: T.untyped,
-          _arg2: T.untyped,
-        ).returns(T::Array[Integer]))
-      end
+      #: (Integer expected_count) -> ^(untyped _arg1, untyped _arg2) -> Array[Integer]
       def assert_parallel_count(expected_count)
         ->(_, options) {
           assert_equal(expected_count, options[:in_processes])

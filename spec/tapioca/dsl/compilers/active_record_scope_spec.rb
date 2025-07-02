@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveRecordScopeSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveRecordScope" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_record"
           end

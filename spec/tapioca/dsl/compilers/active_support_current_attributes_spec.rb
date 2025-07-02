@@ -9,7 +9,7 @@ module Tapioca
     module Compilers
       class ActiveSupportCurrentAttributesSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_support"
           end

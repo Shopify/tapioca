@@ -4,12 +4,9 @@
 module Tapioca
   module Gem
     module Listeners
+      # @abstract
       class Base
         extend T::Sig
-        extend T::Helpers
-
-        abstract!
-
         #: (Pipeline pipeline) -> void
         def initialize(pipeline)
           @pipeline = pipeline

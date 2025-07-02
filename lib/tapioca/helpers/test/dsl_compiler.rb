@@ -10,15 +10,12 @@ require "tapioca/helpers/sorbet_helper"
 module Tapioca
   module Helpers
     module Test
+      # @requires_ancestor: Kernel
       module DslCompiler
         extend T::Sig
-        extend T::Helpers
-
         include Isolation
         include Content
         include Template
-
-        requires_ancestor { Kernel }
 
         #: (singleton(Tapioca::Dsl::Compiler) compiler_class) -> void
         def use_dsl_compiler(compiler_class)

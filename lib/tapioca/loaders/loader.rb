@@ -3,18 +3,16 @@
 
 module Tapioca
   module Loaders
+    # @abstract
     class Loader
       extend T::Sig
-      extend T::Helpers
-
       include Thor::Base
       include CliHelper
       include Tapioca::GemHelper
 
-      abstract!
-
-      sig { abstract.void }
-      def load; end
+      # @abstract
+      #: -> void
+      def load = raise NotImplementedError, "Abstract method called"
 
       private
 
@@ -98,20 +96,16 @@ module Tapioca
 
       #: -> void
       def load_engines_in_zeitwerk_mode
-        # Collect all the directories that are already managed by all existing Zeitwerk loaders.
-        managed_dirs = Zeitwerk::Registry.loaders.flat_map(&:dirs).to_set
         # We use a fresh loader to load the engine directories, so that we don't interfere with
         # any of the existing loaders.
         autoloader = Zeitwerk::Loader.new
 
         engines.each do |engine|
           eager_load_paths(engine).each do |path|
-            # Zeitwerk only accepts existing directories in `push_dir`.
-            next unless File.directory?(path)
-            # We should not add directories that are already managed by a Zeitwerk loader.
-            next if managed_dirs.member?(path)
-
             autoloader.push_dir(path)
+          rescue Zeitwerk::Error
+            # The path is not an existing directory, or it is managed by
+            # some other loader, ..., it is fine, just skip it.
           end
         end
 
@@ -160,6 +154,7 @@ module Tapioca
         Rails.app_class = Rails.application = rails_application
       end
 
+      # @without_runtime
       #: -> Array[singleton(Rails::Engine)]
       def engines
         return [] unless defined?(Rails::Engine)
@@ -216,6 +211,7 @@ module Tapioca
       # The `eager_load_paths` method still exists, but doesn't return all paths anymore and causes Tapioca to miss some
       # engine paths. The following commit is the change:
       # https://github.com/rails/rails/commit/ebfca905db14020589c22e6937382e6f8f687664
+      # @without_runtime
       #: (singleton(Rails::Engine) engine) -> Array[String]
       def eager_load_paths(engine)
         config = engine.config

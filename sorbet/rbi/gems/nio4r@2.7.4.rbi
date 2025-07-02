@@ -35,6 +35,8 @@ class NIO::ByteBuffer
   # @param capacity [Integer] size of buffer in bytes
   # @raise [TypeError]
   # @return [NIO::ByteBuffer]
+  #
+  # source://nio4r//lib/nio.rb#51
   def initialize(_arg0); end
 
   # Add a String to the buffer
@@ -43,35 +45,51 @@ class NIO::ByteBuffer
   # @raise [TypeError] given a non-string type
   # @raise [NIO::ByteBuffer::OverflowError] buffer is full
   # @return [self]
+  #
+  # source://nio4r//lib/nio.rb#51
   def <<(_arg0); end
 
   # Obtain the byte at a given index in the buffer as an Integer
   #
   # @raise [ArgumentError] index is invalid (either negative or larger than limit)
   # @return [Integer] byte at the given index
+  #
+  # source://nio4r//lib/nio.rb#51
   def [](_arg0); end
 
   # Returns the value of attribute capacity.
+  #
+  # source://nio4r//lib/nio.rb#51
   def capacity; end
 
   # Clear the buffer, resetting it to the default state
+  #
+  # source://nio4r//lib/nio.rb#51
   def clear; end
 
   # Move data between the position and limit to the beginning of the buffer
   # Sets the position to the end of the moved data, and the limit to the capacity
+  #
+  # source://nio4r//lib/nio.rb#51
   def compact; end
 
   # Iterate over the bytes in the buffer (as Integers)
   #
   # @return [self]
+  #
+  # source://nio4r//lib/nio.rb#51
   def each; end
 
   # Set the buffer's current position as the limit and set the position to 0
+  #
+  # source://nio4r//lib/nio.rb#51
   def flip; end
 
   # Does the ByteBuffer have any space remaining?
   #
   # @return [true, false]
+  #
+  # source://nio4r//lib/nio.rb#51
   def full?; end
 
   # Obtain the requested number of bytes from the buffer, advancing the position.
@@ -79,14 +97,20 @@ class NIO::ByteBuffer
   #
   # @raise [NIO::ByteBuffer::UnderflowError] not enough data remaining in buffer
   # @return [String] bytes read from buffer
+  #
+  # source://nio4r//lib/nio.rb#51
   def get(*_arg0); end
 
   # Inspect the state of the buffer
   #
   # @return [String] string describing the state of the buffer
+  #
+  # source://nio4r//lib/nio.rb#51
   def inspect; end
 
   # Returns the value of attribute limit.
+  #
+  # source://nio4r//lib/nio.rb#51
   def limit; end
 
   # Set the limit to the given value. New limit must be less than capacity.
@@ -95,12 +119,18 @@ class NIO::ByteBuffer
   #
   # @param new_limit [Integer] position in the buffer
   # @raise [ArgumentError] new limit was invalid
+  #
+  # source://nio4r//lib/nio.rb#51
   def limit=(_arg0); end
 
   # Mark a position to return to using the `#reset` method
+  #
+  # source://nio4r//lib/nio.rb#51
   def mark; end
 
   # Returns the value of attribute position.
+  #
+  # source://nio4r//lib/nio.rb#51
   def position; end
 
   # Set the position to the given value. New position must be less than limit.
@@ -108,6 +138,8 @@ class NIO::ByteBuffer
   #
   # @param new_position [Integer] position in the buffer
   # @raise [ArgumentError] new position was invalid
+  #
+  # source://nio4r//lib/nio.rb#51
   def position=(_arg0); end
 
   # Perform a non-blocking read from the given IO object into the buffer
@@ -116,21 +148,30 @@ class NIO::ByteBuffer
   # @param Ruby [IO] IO object to read from
   # @raise [OverflowError]
   # @return [Integer] number of bytes read (0 if none were available)
+  #
+  # source://nio4r//lib/nio.rb#51
   def read_from(_arg0); end
 
   # Number of bytes remaining in the buffer before the limit
   #
   # @return [Integer] number of bytes remaining
+  #
+  # source://nio4r//lib/nio.rb#51
   def remaining; end
 
   # Reset position to the previously marked location
   #
   # @raise [NIO::ByteBuffer::MarkUnsetError] mark has not been set (call `#mark` first)
+  #
+  # source://nio4r//lib/nio.rb#51
   def reset; end
 
   # Set the buffer's current position to 0, leaving the limit unchanged
+  #
+  # source://nio4r//lib/nio.rb#51
   def rewind; end
 
+  # source://nio4r//lib/nio.rb#51
   def size; end
 
   # Perform a non-blocking write of the buffer's contents to the given I/O object
@@ -139,6 +180,8 @@ class NIO::ByteBuffer
   # @param Ruby [IO] IO object to write to
   # @raise [UnderflowError]
   # @return [Integer] number of bytes written (0 if the write would block)
+  #
+  # source://nio4r//lib/nio.rb#51
   def write_to(_arg0); end
 end
 
@@ -157,23 +200,33 @@ NIO::ENGINE = T.let(T.unsafe(nil), String)
 # Monitors watch IO objects for specific events
 class NIO::Monitor
   # @return [Monitor] a new instance of Monitor
+  #
+  # source://nio4r//lib/nio.rb#51
   def initialize(_arg0, _arg1, _arg2); end
 
   # Add new interests to the existing interest set
   #
   # @param interests [:r, :w, :rw] new I/O interests (read/write/readwrite)
   # @return [self]
+  #
+  # source://nio4r//lib/nio.rb#51
   def add_interest(_arg0); end
 
   # Deactivate this monitor
+  #
+  # source://nio4r//lib/nio.rb#51
   def close(*_arg0); end
 
   # Is this monitor closed?
   #
   # @return [Boolean]
+  #
+  # source://nio4r//lib/nio.rb#51
   def closed?; end
 
   # Returns the value of attribute interests.
+  #
+  # source://nio4r//lib/nio.rb#51
   def interests; end
 
   # Replace the existing interest set with a new one
@@ -181,44 +234,64 @@ class NIO::Monitor
   # @param interests [:r, :w, :rw, nil] I/O readiness we're interested in (read/write/readwrite)
   # @raise [EOFError]
   # @return [Symbol] new interests
+  #
+  # source://nio4r//lib/nio.rb#51
   def interests=(_arg0); end
 
   # Returns the value of attribute io.
+  #
+  # source://nio4r//lib/nio.rb#51
   def io; end
 
   # Is the IO object readable?
   #
   # @return [Boolean]
+  #
+  # source://nio4r//lib/nio.rb#51
   def readable?; end
 
   # Returns the value of attribute readiness.
+  #
+  # source://nio4r//lib/nio.rb#51
   def readiness; end
 
   # Remove interests from the existing interest set
   #
   # @param interests [:r, :w, :rw] I/O interests to remove (read/write/readwrite)
   # @return [self]
+  #
+  # source://nio4r//lib/nio.rb#51
   def remove_interest(_arg0); end
 
   # Returns the value of attribute selector.
+  #
+  # source://nio4r//lib/nio.rb#51
   def selector; end
 
   # Returns the value of attribute value.
+  #
+  # source://nio4r//lib/nio.rb#51
   def value; end
 
   # Sets the attribute value
   #
   # @param value the value to set the attribute value to.
+  #
+  # source://nio4r//lib/nio.rb#51
   def value=(_arg0); end
 
   # Is the IO object writable?
   #
   # @return [Boolean]
+  #
+  # source://nio4r//lib/nio.rb#51
   def writable?; end
 
   # Is the IO object writable?
   #
   # @return [Boolean]
+  #
+  # source://nio4r//lib/nio.rb#51
   def writeable?; end
 end
 
@@ -228,6 +301,8 @@ class NIO::Selector
   #
   # @raise [ArgumentError]
   # @return [Selector] a new instance of Selector
+  #
+  # source://nio4r//lib/nio.rb#51
   def initialize(*_arg0); end
 
   # Return a symbol representing the backend I/O multiplexing mechanism used.
@@ -242,20 +317,30 @@ class NIO::Selector
   # * :linuxaio - libev w\ Linux AIO io_submit (experimental)
   # * :io_uring - libev w\ Linux io_uring (experimental)
   # * :unknown  - libev w\ unknown backend
+  #
+  # source://nio4r//lib/nio.rb#51
   def backend; end
 
   # Close this selector and free its resources
+  #
+  # source://nio4r//lib/nio.rb#51
   def close; end
 
   # Is this selector closed?
   #
   # @return [Boolean]
+  #
+  # source://nio4r//lib/nio.rb#51
   def closed?; end
 
   # Deregister the given IO object from the selector
+  #
+  # source://nio4r//lib/nio.rb#51
   def deregister(_arg0); end
 
   # @return [Boolean]
+  #
+  # source://nio4r//lib/nio.rb#51
   def empty?; end
 
   # Register interest in an IO object with the selector for the given types
@@ -263,14 +348,20 @@ class NIO::Selector
   # * :r - is the IO readable?
   # * :w - is the IO writeable?
   # * :rw - is the IO either readable or writeable?
+  #
+  # source://nio4r//lib/nio.rb#51
   def register(_arg0, _arg1); end
 
   # Is the given IO object registered with the selector?
   #
   # @return [Boolean]
+  #
+  # source://nio4r//lib/nio.rb#51
   def registered?(_arg0); end
 
   # Select which monitors are ready
+  #
+  # source://nio4r//lib/nio.rb#51
   def select(*_arg0); end
 
   # Wake up a thread that's in the middle of selecting on this selector, if
@@ -279,12 +370,16 @@ class NIO::Selector
   # Invoking this method more than once between two successive select calls
   # has the same effect as invoking it just once. In other words, it provides
   # level-triggered behavior.
+  #
+  # source://nio4r//lib/nio.rb#51
   def wakeup; end
 
   class << self
     # Return supported backends as symbols
     #
     # See `#backend` method definition for all possible backends
+    #
+    # source://nio4r//lib/nio.rb#51
     def backends; end
   end
 end

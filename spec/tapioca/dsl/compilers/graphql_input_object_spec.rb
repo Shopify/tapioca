@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class GraphqlInputObjectSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::GraphqlInputObject" do
-          sig { void }
+          #: -> void
           def before_setup
             require "graphql"
           end

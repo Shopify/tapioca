@@ -3,7 +3,7 @@
 inherit_gem:
   rubocop-shopify: rubocop.yml
 
-require:
+plugins:
  - rubocop-sorbet
  - rubocop-rspec # useful even though we use minitest/spec
 

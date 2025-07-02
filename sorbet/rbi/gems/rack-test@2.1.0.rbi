@@ -6,12 +6,7 @@
 
 
 # source://rack-test//lib/rack/test/cookie_jar.rb#6
-module Rack
-  class << self
-    # source://rack/3.1.10/lib/rack/version.rb#18
-    def release; end
-  end
-end
+module Rack; end
 
 # For backwards compatibility with 1.1.0 and below
 #
@@ -124,7 +119,7 @@ class Rack::Test::Cookie
 
   # A hash of cookie options, including the cookie value, but excluding the cookie name.
   #
-  # source://rack-test//lib/rack/test/cookie_jar.rb#112
+  # source://rack-test//lib/rack/test/cookie_jar.rb#119
   def to_hash; end
 
   # Whether the cookie is valid for the given URI.
@@ -275,10 +270,10 @@ module Rack::Test::Methods
   # source://rack-test//lib/rack/test/methods.rb#90
   def _rack_test_current_session=(_arg0); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def authorize(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def basic_authorize(*args, **_arg1, &block); end
 
   # Create a new Rack::Test::Session for #app.
@@ -286,7 +281,7 @@ module Rack::Test::Methods
   # source://rack-test//lib/rack/test/methods.rb#40
   def build_rack_test_session(_name); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def clear_cookies(*args, **_arg1, &block); end
 
   # Return the currently actively session.  This is the session to
@@ -295,50 +290,50 @@ module Rack::Test::Methods
   # source://rack-test//lib/rack/test/methods.rb#55
   def current_session; end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def custom_request(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def delete(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def env(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def follow_redirect!(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def get(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def head(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def header(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def last_request(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def last_response(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def options(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def patch(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def post(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def put(*args, **_arg1, &block); end
 
   # Return the existing session with the given name, or a new
   # rack session.  Always use a new session if name is nil.
   # For backwards compatibility with older rack-test versions.
   #
-  # source://rack-test//lib/rack/test/methods.rb#29
+  # source://rack-test//lib/rack/test/methods.rb#37
   def rack_mock_session(name = T.unsafe(nil)); end
 
   # Return the existing session with the given name, or a new
@@ -347,10 +342,10 @@ module Rack::Test::Methods
   # source://rack-test//lib/rack/test/methods.rb#29
   def rack_test_session(name = T.unsafe(nil)); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def request(*args, **_arg1, &block); end
 
-  # source://forwardable/1.3.3/forwardable.rb#231
+  # source://rack-test//lib/rack/test/methods.rb#68
   def set_cookie(*args, **_arg1, &block); end
 
   # Create a new session (or reuse an existing session with the given name),
@@ -429,7 +424,7 @@ class Rack::Test::Session
   # Example:
   #   basic_authorize "bryan", "secret"
   #
-  # source://rack-test//lib/rack/test.rb#198
+  # source://rack-test//lib/rack/test.rb#203
   def authorize(username, password); end
 
   # Set the username and password for HTTP Basic authorization, to be
@@ -469,7 +464,7 @@ class Rack::Test::Session
   # source://rack-test//lib/rack/test.rb#70
   def default_host; end
 
-  # source://rack-test//lib/rack/test.rb#111
+  # source://rack-test//lib/rack/test.rb#110
   def delete(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
 
   # Set an entry in the rack environment to be included on all subsequent
@@ -489,10 +484,10 @@ class Rack::Test::Session
   # source://rack-test//lib/rack/test.rb#209
   def follow_redirect!; end
 
-  # source://rack-test//lib/rack/test.rb#111
+  # source://rack-test//lib/rack/test.rb#110
   def get(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
 
-  # source://rack-test//lib/rack/test.rb#111
+  # source://rack-test//lib/rack/test.rb#110
   def head(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
 
   # Set a header to be included on all subsequent requests through the
@@ -522,16 +517,16 @@ class Rack::Test::Session
   # source://rack-test//lib/rack/test.rb#141
   def last_response; end
 
-  # source://rack-test//lib/rack/test.rb#111
+  # source://rack-test//lib/rack/test.rb#110
   def options(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
 
-  # source://rack-test//lib/rack/test.rb#111
+  # source://rack-test//lib/rack/test.rb#110
   def patch(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
 
-  # source://rack-test//lib/rack/test.rb#111
+  # source://rack-test//lib/rack/test.rb#110
   def post(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
 
-  # source://rack-test//lib/rack/test.rb#111
+  # source://rack-test//lib/rack/test.rb#110
   def put(uri, params = T.unsafe(nil), env = T.unsafe(nil), &block); end
 
   # Issue a request to the Rack app for the given URI and optional Rack
@@ -639,7 +634,7 @@ class Rack::Test::UploadedFile
 
   # The path to the tempfile. Will not work if the receiver's content is from a StringIO.
   #
-  # source://rack-test//lib/rack/test/uploaded_file.rb#46
+  # source://rack-test//lib/rack/test/uploaded_file.rb#49
   def local_path; end
 
   # Delegate all methods not handled to the tempfile.

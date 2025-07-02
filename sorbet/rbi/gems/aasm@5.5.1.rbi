@@ -114,7 +114,7 @@ class AASM::Base
 
   # make sure to create a (named) scope for each state
   #
-  # source://aasm//lib/aasm/persistence/base.rb#60
+  # source://aasm//lib/aasm/base.rb#90
   def state(*args); end
 
   # Returns the value of attribute state_machine.
@@ -135,7 +135,7 @@ class AASM::Base
   # [0] state
   # [1..] state
   #
-  # source://aasm//lib/aasm/base.rb#90
+  # source://aasm//lib/aasm/persistence/base.rb#66
   def state_without_scope(*args); end
 
   # source://aasm//lib/aasm/base.rb#173
@@ -638,6 +638,11 @@ class AASM::Core::Invokers::BaseInvoker
   # source://aasm//lib/aasm/core/invokers/base_invoker.rb#55
   def may_invoke?; end
 
+  # Parse arguments to separate keyword arguments from positional arguments
+  #
+  # source://aasm//lib/aasm/core/invokers/base_invoker.rb#75
+  def parse_arguments; end
+
   # Returns the value of attribute record.
   #
   # source://aasm//lib/aasm/core/invokers/base_invoker.rb#10
@@ -684,16 +689,27 @@ class AASM::Core::Invokers::ClassInvoker < ::AASM::Core::Invokers::BaseInvoker
   # source://aasm//lib/aasm/core/invokers/class_invoker.rb#33
   def instance; end
 
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#65
+  def instance_with_fixed_arity; end
+
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#55
+  def instance_with_keyword_args; end
+
+  # @return [Boolean]
+  #
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#50
+  def keyword_arguments?; end
+
   # source://aasm//lib/aasm/core/invokers/class_invoker.rb#29
   def log_method_info; end
 
   # source://aasm//lib/aasm/core/invokers/class_invoker.rb#25
   def log_source_location; end
 
-  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#38
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#37
   def retrieve_instance; end
 
-  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#46
+  # source://aasm//lib/aasm/core/invokers/class_invoker.rb#69
   def subject_arity; end
 end
 
@@ -715,11 +731,34 @@ class AASM::Core::Invokers::LiteralInvoker < ::AASM::Core::Invokers::BaseInvoker
 
   private
 
-  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#29
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#34
+  def ensure_method_exists; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#28
   def exec_subject; end
 
-  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#39
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#57
+  def instance_with_keyword_args; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#42
+  def invoke_with_arguments; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#71
+  def invoke_with_fixed_arity; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#67
+  def invoke_with_variable_arity; end
+
+  # @return [Boolean]
+  #
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#52
+  def keyword_arguments?; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#80
   def record_error; end
+
+  # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#38
+  def simple_invoke; end
 
   # source://aasm//lib/aasm/core/invokers/literal_invoker.rb#24
   def subject_arity; end
@@ -788,7 +827,7 @@ class AASM::Core::State
   # source://aasm//lib/aasm/core/state.rb#72
   def for_select; end
 
-  # source://aasm//lib/aasm/core/state.rb#67
+  # source://aasm//lib/aasm/core/state.rb#70
   def human_name; end
 
   # source://aasm//lib/aasm/core/state.rb#67
@@ -871,7 +910,7 @@ class AASM::Core::Transition
 
   # Returns the value of attribute opts.
   #
-  # source://aasm//lib/aasm/core/transition.rb#7
+  # source://aasm//lib/aasm/core/transition.rb#8
   def options; end
 
   # Returns the value of attribute opts.
@@ -1288,13 +1327,13 @@ class AASM::StateMachineStore
   # source://aasm//lib/aasm/state_machine_store.rb#43
   def initialize; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#55
+  # source://aasm//lib/aasm/state_machine_store.rb#58
   def [](name); end
 
   # source://aasm//lib/aasm/state_machine_store.rb#47
   def clone; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#60
+  # source://aasm//lib/aasm/state_machine_store.rb#63
   def keys; end
 
   # source://aasm//lib/aasm/state_machine_store.rb#55
@@ -1307,13 +1346,13 @@ class AASM::StateMachineStore
   def register(name, machine, force = T.unsafe(nil)); end
 
   class << self
-    # source://aasm//lib/aasm/state_machine_store.rb#27
+    # source://aasm//lib/aasm/state_machine_store.rb#36
     def [](klass, fallback = T.unsafe(nil)); end
 
     # do not overwrite existing state machines, which could have been created by
     # inheritance, see AASM::ClassMethods method inherited
     #
-    # source://aasm//lib/aasm/state_machine_store.rb#13
+    # source://aasm//lib/aasm/state_machine_store.rb#25
     def []=(klass, overwrite = T.unsafe(nil), state_machine = T.unsafe(nil)); end
 
     # source://aasm//lib/aasm/state_machine_store.rb#27

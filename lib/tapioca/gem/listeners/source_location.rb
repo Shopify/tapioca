@@ -24,20 +24,24 @@ module Tapioca
           # constants that are defined by multiple gems.
           locations = Runtime::Trackers::ConstantDefinition.locations_for(event.constant)
           location = locations.find do |loc|
-            Pathname.new(loc.path).realpath.to_s.include?(@pipeline.gem.full_gem_path)
+            Pathname.new(loc.file).realpath.to_s.include?(@pipeline.gem.full_gem_path)
           end
 
           # The location may still be nil in some situations, like constant aliases (e.g.: MyAlias = OtherConst). These
           # are quite difficult to attribute a correct location, given that the source location points to the original
           # constants and not the alias
-          add_source_location_comment(event.node, location.path, location.lineno) unless location.nil?
+          add_source_location_comment(event.node, location.file, location.line) unless location.nil?
         end
 
         # @override
         #: (MethodNodeAdded event) -> void
         def on_method(event)
-          file, line = event.method.source_location
-          add_source_location_comment(event.node, file, line)
+          definition = @pipeline.method_definition_in_gem(event.method.name, event.constant)
+
+          if Pipeline::MethodInGemWithLocation === definition
+            loc = definition.location
+            add_source_location_comment(event.node, loc.file, loc.line)
+          end
         end
 
         #: (RBI::NodeWithComments node, String? file, Integer? line) -> void

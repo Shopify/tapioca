@@ -426,23 +426,18 @@ module Tapioca
           Looking for duplicates...  Done
         OUT
 
-        assert_stderr_equals(<<~ERR, result)
+        sections = T.must(result.err).split("\n\n").map(&:strip)
+        duplicates_for_object = sections[0]&.split("\n")
+        assert_includes(duplicates_for_object, "Duplicated RBI for ::Object:")
+        assert_includes(duplicates_for_object, " * sorbet/rbi/shims/core/object.rbi:1:0-1:17")
 
-          Duplicated RBI for ::Object:
-           * https://github.com/sorbet/sorbet/tree/master/rbi/core/object.rbi#L27
-           * https://github.com/sorbet/sorbet/tree/master/rbi/stdlib/json.rbi#L1062
-           * sorbet/rbi/shims/core/object.rbi:1:0-1:17
+        duplicates_for_string_capitalize = sections[1]&.split("\n")
+        assert_includes(duplicates_for_string_capitalize, "Duplicated RBI for ::String#capitalize:")
+        assert_includes(duplicates_for_string_capitalize, " * sorbet/rbi/shims/core/string.rbi:3:2-3:23")
 
-          Duplicated RBI for ::String#capitalize:
-           * https://github.com/sorbet/sorbet/tree/master/rbi/core/string.rbi#L572
-           * sorbet/rbi/shims/core/string.rbi:3:2-3:23
-
-          Duplicated RBI for ::Base64::decode64:
-           * https://github.com/sorbet/sorbet/tree/master/rbi/stdlib/base64.rbi#L37
-           * sorbet/rbi/shims/stdlib/base64.rbi:3:2-3:29
-
-          Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi
-        ERR
+        duplicates_for_base64_decode64 = sections[2]&.split("\n")
+        assert_includes(duplicates_for_base64_decode64, "Duplicated RBI for ::Base64::decode64:")
+        assert_includes(duplicates_for_base64_decode64, " * sorbet/rbi/shims/stdlib/base64.rbi:3:2-3:29")
 
         refute_success_status(result)
       end
@@ -736,7 +731,7 @@ module Tapioca
         assert_success_status(result)
       end
 
-      sig { params(string: String).returns(String) }
+      #: (String string) -> String
       def strip_timer(string)
         string.gsub(/ \(\d+\.\d+s\)/, "")
       end

@@ -23,28 +23,33 @@ this compiler will produce the RBI file `post.rbi` with the following content:
 # post.rbi
 # typed: true
 class Post
-  sig { returns(T.nilable(::String)) }
-  def title; end
+  include SmartPropertiesGeneratedMethods
 
-  sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
-  def title=(title); end
+  module SmartPropertiesGeneratedMethods
+    sig { returns(T.nilable(::String)) }
+    def title; end
 
-  sig { returns(::String) }
-  def description; end
+    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+    def title=(title); end
 
-  sig { params(description: ::String).returns(::String) }
-  def description=(description); end
+    sig { returns(::String) }
+    def description; end
 
-  sig { returns(T.nilable(T::Boolean)) }
-  def published?; end
+    sig { params(description: ::String).returns(::String) }
+    def description=(description); end
 
-  sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-  def published=(published); end
+    sig { returns(T.nilable(T::Boolean)) }
+    def published?; end
 
-  sig { returns(T.nilable(T::Boolean)) }
-  def enabled; end
+    sig { params(published: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def published=(published); end
 
-  sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-  def enabled=(enabled); end
+    sig { returns(T.nilable(T::Boolean)) }
+    def enabled; end
+
+    sig { params(enabled: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+    def enabled=(enabled); end
+  end
 end
 ~~~
+: [ConstantType = singleton(::SmartProperties)]

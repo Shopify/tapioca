@@ -8,7 +8,7 @@ module Tapioca
     module Compilers
       class ActiveModelSecurePasswordSpec < ::DslSpec
         describe "Tapioca::Dsl::Compilers::ActiveModelSecurePasswordSpec" do
-          sig { void }
+          #: -> void
           def before_setup
             require "active_model"
           end

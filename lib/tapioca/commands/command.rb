@@ -3,18 +3,15 @@
 
 module Tapioca
   module Commands
+    # @abstract
     class Command
       extend T::Sig
-      extend T::Helpers
-
       class FileWriter < Thor
         include Thor::Actions
       end
 
       include Thor::Base
       include CliHelper
-
-      abstract!
 
       #: -> void
       def initialize
@@ -31,8 +28,9 @@ module Tapioca
 
       private
 
-      sig { abstract.void }
-      def execute; end
+      # @abstract
+      #: -> void
+      def execute = raise NotImplementedError, "Abstract method called"
 
       #: (Symbol command, *String args) -> String
       def default_command(command, *args)

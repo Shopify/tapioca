@@ -24,3 +24,4 @@ class User
   def regenerate_auth_token; end
 end
 ~~~
+: [ConstantType = (singleton(ActiveRecord::Base) & Extensions::ActiveRecord)]

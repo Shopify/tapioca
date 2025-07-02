@@ -13,12 +13,7 @@ module Tapioca
         extend Reflection
         extend T::Sig
 
-        class ConstantLocation < T::Struct
-          const :lineno, Integer
-          const :path, String
-        end
-
-        @class_files = {}.compare_by_identity
+        @class_files = {}.compare_by_identity #: Hash[Module, Set[SourceLocation]]
 
         # Immediately activated upon load. Observes class/module definition.
         @class_tracepoint = TracePoint.trace(:class) do |tp|
@@ -28,14 +23,17 @@ module Tapioca
 
           path = tp.path
           if File.exist?(path)
-            loc = build_constant_location(tp, caller_locations)
+            loc = build_source_location(tp, caller_locations)
           else
             caller_location = T.must(caller_locations)
               .find { |loc| loc.path && File.exist?(loc.path) }
 
             next unless caller_location
 
-            loc = ConstantLocation.new(path: caller_location.absolute_path || "", lineno: caller_location.lineno)
+            loc = SourceLocation.from_loc([
+              caller_location.absolute_path || "",
+              caller_location.lineno,
+            ])
           end
 
           (@class_files[key] ||= Set.new) << loc
@@ -47,31 +45,37 @@ module Tapioca
           key = tp.return_value
           next unless Module === key
 
-          loc = build_constant_location(tp, caller_locations)
+          loc = build_source_location(tp, caller_locations)
           (@class_files[key] ||= Set.new) << loc
         end
 
         class << self
+          extend T::Sig
+
           def disable!
             @class_tracepoint.disable
             @creturn_tracepoint.disable
             super
           end
 
-          def build_constant_location(tp, locations)
-            file = resolve_loc(locations)
-            lineno = File.identical?(file, tp.path) ? tp.lineno : 0
+          def build_source_location(tp, locations)
+            loc = resolve_loc(locations)
+            file = loc&.file
+            line = loc&.line
+            lineno = file && File.identical?(file, tp.path) ? tp.lineno : (line || 0)
 
-            ConstantLocation.new(path: file, lineno: lineno)
+            SourceLocation.from_loc([file || "", lineno])
           end
 
           # Returns the files in which this class or module was opened. Doesn't know
           # about situations where the class was opened prior to +require+ing,
           # or where metaprogramming was used via +eval+, etc.
+          #: (Module klass) -> Set[String]
           def files_for(klass)
-            locations_for(klass).map(&:path).to_set
+            locations_for(klass).map(&:file).to_set
           end
 
+          #: (Module klass) -> Set[SourceLocation]
           def locations_for(klass)
             @class_files.fetch(klass, Set.new)
           end
