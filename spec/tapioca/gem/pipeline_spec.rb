@@ -3795,6 +3795,32 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
+    it "compiles generics with anonymous type arguments" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          class << self
+            extend T::Sig
+
+            class Bar; end
+
+            sig { returns(T::Array[Bar]) }
+            def foo; end
+          end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          class << self
+            sig { returns(T::Array[::T.untyped]) }
+            def foo; end
+          end
+        end
+      RBI
+
+      assert_equal(output, compile)
+    end
+
     it "compiles structs with default values" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo < T::Struct
