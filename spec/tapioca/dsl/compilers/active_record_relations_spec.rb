@@ -217,7 +217,7 @@ module Tapioca
                     sig { returns(::Post) }
                     def fourth!; end
 
-                    sig { returns(Array) }
+                    sig { returns(T::Array[::CustomId]) }
                     def ids; end
 
                 <% if rails_version(">= 8.0") %>
