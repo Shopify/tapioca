@@ -60,7 +60,7 @@ module Tapioca
             No classes/modules can be matched for RBI generation.
             Please check that the requested classes/modules include processable DSL methods.
           ERROR
-          raise Thor::Error, ""
+          raise Tapioca::Error, ""
         end
 
         if defined?(::ActiveRecord::Base) && constants_to_process.any? { |c| ::ActiveRecord::Base > c }
@@ -82,7 +82,7 @@ module Tapioca
             report_error(msg)
           end
 
-          raise Thor::Error, ""
+          raise Tapioca::Error, ""
         end
 
         result.compact
