@@ -6,10 +6,7 @@ module Tapioca
     module Trackers
       # @abstract
       module Tracker
-        extend T::Sig
         class << self
-          extend T::Sig
-
           #: ((Tracker & Module) base) -> void
           def extended(base)
             Trackers.register_tracker(base)

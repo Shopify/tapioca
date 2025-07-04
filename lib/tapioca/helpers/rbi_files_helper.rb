@@ -5,7 +5,6 @@ module Tapioca
   # @requires_ancestor: Thor::Shell
   # @requires_ancestor: SorbetHelper
   module RBIFilesHelper
-    extend T::Sig
     #: (RBI::Index index, String kind, String file) -> void
     def index_rbi(index, kind, file)
       return unless File.exist?(file)

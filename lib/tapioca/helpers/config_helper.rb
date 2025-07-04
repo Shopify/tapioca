@@ -4,7 +4,6 @@
 module Tapioca
   # @requires_ancestor: Thor
   module ConfigHelper
-    extend T::Sig
     #: String
     attr_reader :command_name
 
