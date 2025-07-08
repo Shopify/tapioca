@@ -527,7 +527,7 @@ module Tapioca
             end
 
             it "handles map types regardless of their name" do
-              # This is test is based on this definition from `google-cloud-bigtable` gem that was causing issues:
+              # This test is based on this definition from `google-cloud-bigtable` gem that was causing issues:
               # https://github.com/googleapis/google-cloud-ruby/blob/9de1ce5bf74105383fc46060600d5293f8692035/google-cloud-bigtable-admin-v2/lib/google/bigtable/admin/v2/bigtable_instance_admin_pb.rb#L20
               add_ruby_file("protobuf.rb", <<~RUBY)
                 require "base64"

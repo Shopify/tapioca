@@ -49,7 +49,7 @@ module Tapioca
             result = sorbet("--no-config --print=payload-sources:#{payload_path}")
 
             unless result.status
-              raise Thor::Error, <<~ERROR
+              raise Tapioca::Error, <<~ERROR
                 "Sorbet failed to dump payload"
                 #{result.err}
               ERROR
@@ -87,7 +87,7 @@ module Tapioca
             "\nPlease remove the duplicated definitions from #{@shim_rbi_dir} and #{@todo_rbi_file}", :red
           )
 
-          raise Thor::Error, messages.join("\n")
+          raise Tapioca::Error, messages.join("\n")
         end
 
         say("\nNo duplicates found in shim RBIs", :green)

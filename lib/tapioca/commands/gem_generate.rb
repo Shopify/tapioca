@@ -58,7 +58,7 @@ module Tapioca
           if gem.nil?
             next if @lsp_addon
 
-            raise Thor::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
           end
 
           gems.concat(gem_dependencies(gem)) if @include_dependencies
