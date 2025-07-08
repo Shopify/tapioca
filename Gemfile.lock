@@ -164,7 +164,7 @@ GEM
     google-protobuf (4.31.1-x86_64-linux-musl)
       bigdecimal
       rake (>= 13)
-    graphql (2.5.9)
+    graphql (2.5.10)
       base64
       fiber-storage
       logger
@@ -351,15 +351,15 @@ GEM
       rack (>= 3.1.0)
       redis-client (>= 0.23.2)
     smart_properties (1.17.0)
-    sorbet (0.5.12210)
-      sorbet-static (= 0.5.12210)
-    sorbet-runtime (0.5.12210)
-    sorbet-static (0.5.12210-aarch64-linux)
-    sorbet-static (0.5.12210-universal-darwin)
-    sorbet-static (0.5.12210-x86_64-linux)
-    sorbet-static-and-runtime (0.5.12210)
-      sorbet (= 0.5.12210)
-      sorbet-runtime (= 0.5.12210)
+    sorbet (0.5.12219)
+      sorbet-static (= 0.5.12219)
+    sorbet-runtime (0.5.12219)
+    sorbet-static (0.5.12219-aarch64-linux)
+    sorbet-static (0.5.12219-universal-darwin)
+    sorbet-static (0.5.12219-x86_64-linux)
+    sorbet-static-and-runtime (0.5.12219)
+      sorbet (= 0.5.12219)
+      sorbet-runtime (= 0.5.12219)
     spoom (1.7.4)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
