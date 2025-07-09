@@ -20,6 +20,7 @@ module RubyLsp
           # Load DSL extensions and compilers ahead of time, so that we don't have to pay the price of invoking
           # `Gem.find_files` on every execution, which is quite expensive
           with_notification_wrapper("load_compilers_and_extensions", "Loading DSL compilers") do
+            ::Tapioca::Dsl::Compiler.extend(T::Generic)
             @loader = ::Tapioca::Loaders::Dsl.new(
               tapioca_path: ::Tapioca::TAPIOCA_DIR,
               eager_load: false,
