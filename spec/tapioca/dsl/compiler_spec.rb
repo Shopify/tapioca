@@ -136,6 +136,30 @@ module Tapioca
 
           assert_equal(expected, rbi_for(:Post))
         end
+
+        it "compiles a class that overrides caller_locations" do
+          add_ruby_file("post.rb", <<~RUBY)
+            class Post
+              class << self
+                def self.caller_locations(...)
+                  wrapper_caller_locations(...)
+                end
+
+                def self.wrapper_caller_locations(...)
+                  Kernel.caller_locations(...)
+                end
+              end
+            end
+          RUBY
+
+          expected = <<~RBI
+            # typed: strong
+
+            class Post; end
+          RBI
+
+          assert_equal(expected, rbi_for(:Post))
+        end
       end
 
       describe "Tapioca::Dsl::Compiler with invalid syntax" do
