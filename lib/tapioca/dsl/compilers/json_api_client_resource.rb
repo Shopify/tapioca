@@ -81,8 +81,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(::JsonApiClient::Resource)]
       class JsonApiClientResource < Compiler
-        extend T::Sig
-
         # @override
         #: -> void
         def decorate
@@ -106,8 +104,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> T::Enumerable[Module]
           def gather_constants
