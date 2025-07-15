@@ -1,7 +1,7 @@
 # typed: strict
 # frozen_string_literal: true
 
-RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.23.10", "< 0.26")
+RubyLsp::Addon.depend_on_ruby_lsp!(">= 0.23.10", "< 0.27")
 
 begin
   # The Tapioca add-on depends on the Rails add-on to add a runtime component to the runtime server. We can allow the
