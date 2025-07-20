@@ -22,6 +22,7 @@ module Tapioca
           perform_removals,
           gem_queue.any?,
         ].any?
+        anything_excluded = @skipped_gems
 
         Executor.new(gem_queue, number_of_workers: @number_of_workers).run_in_parallel do |gem|
           shell.indent do
@@ -44,6 +45,10 @@ module Tapioca
         else
           say("No operations performed, all RBIs are up-to-date.", [:green, :bold])
         end
+        unless anything_excluded.empty?
+          say("\nNote, the following gems have been excluded from Tapioca:",[:yellow, :bold])
+          say(@skipped_gems.join(", "), [:yellow, :bold])
+        end
       ensure
         GitAttributes.create_generated_attribute_file(@outpath)
       end
@@ -56,11 +61,15 @@ module Tapioca
           gem = @bundle.gem(gem_name)
 
           if gem.nil?
-            next if @lsp_addon
-
-            raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            if @lsp_addon
+              next
+            elsif Gemfile::GemSpec::IGNORED_GEMS.include?(gem_name)
+              @skipped_gems << gem_name
+              next
+            else
+              raise Tapioca::Error, set_color("Error: Cannot find gem '#{gem_name}'", :red)
+            end
           end
-
           gems.concat(gem_dependencies(gem)) if @include_dependencies
           gems << gem
         end
