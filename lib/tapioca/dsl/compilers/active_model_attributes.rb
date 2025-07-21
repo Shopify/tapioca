@@ -26,12 +26,16 @@ module Tapioca
       # # typed: true
       #
       # class Shop
+      #   include GeneratedAttributeMethods
       #
-      #   sig { returns(T.nilable(::String)) }
-      #   def name; end
+      #   module GeneratedAttributeMethods
+      #     sig { returns(T.nilable(::String)) }
+      #     def name; end
       #
-      #   sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
-      #   def name=(name); end
+      #     sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
+      #     def name=(name); end
+      #   end
+      #
       # end
       # ~~~
       #: [ConstantType = (Class[::ActiveModel::Attributes] & ::ActiveModel::Attributes::ClassMethods)]
@@ -45,9 +49,13 @@ module Tapioca
           return if attribute_methods.empty?
 
           root.create_path(constant) do |klass|
-            attribute_methods.each do |method, attribute_type|
-              generate_method(klass, method, attribute_type)
+            klass.create_module("GeneratedAttributeMethods") do |mod|
+              attribute_methods.each do |method, attribute_type|
+                generate_method(mod, method, attribute_type)
+              end
             end
+
+            klass.create_include("GeneratedAttributeMethods")
           end
         end
 

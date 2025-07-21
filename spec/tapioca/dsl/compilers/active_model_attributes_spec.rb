@@ -70,11 +70,15 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.untyped) }
-                  def name; end
+                  include GeneratedAttributeMethods
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
-                  def name=(value); end
+                  module GeneratedAttributeMethods
+                    sig { returns(T.untyped) }
+                    def name; end
+
+                    sig { params(value: T.untyped).returns(T.untyped) }
+                    def name=(value); end
+                  end
                 end
               RBI
 
@@ -95,11 +99,15 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.untyped) }
-                  def name; end
+                  include GeneratedAttributeMethods
 
-                  sig { params(value: T.untyped).returns(T.untyped) }
-                  def name=(value); end
+                  module GeneratedAttributeMethods
+                    sig { returns(T.untyped) }
+                    def name; end
+
+                    sig { params(value: T.untyped).returns(T.untyped) }
+                    def name=(value); end
+                  end
                 end
               RBI
 
@@ -123,35 +131,39 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.nilable(::Time)) }
-                  def created_at; end
+                  include GeneratedAttributeMethods
 
-                  sig { params(value: T.nilable(::Time)).returns(T.nilable(::Time)) }
-                  def created_at=(value); end
+                  module GeneratedAttributeMethods
+                    sig { returns(T.nilable(::Time)) }
+                    def created_at; end
 
-                  sig { returns(T.nilable(::Integer)) }
-                  def id; end
+                    sig { params(value: T.nilable(::Time)).returns(T.nilable(::Time)) }
+                    def created_at=(value); end
 
-                  sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
-                  def id=(value); end
+                    sig { returns(T.nilable(::Integer)) }
+                    def id; end
 
-                  sig { returns(T.nilable(::Float)) }
-                  def latitude; end
+                    sig { params(value: T.nilable(::Integer)).returns(T.nilable(::Integer)) }
+                    def id=(value); end
 
-                  sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
-                  def latitude=(value); end
+                    sig { returns(T.nilable(::Float)) }
+                    def latitude; end
 
-                  sig { returns(T.nilable(::String)) }
-                  def name; end
+                    sig { params(value: T.nilable(::Float)).returns(T.nilable(::Float)) }
+                    def latitude=(value); end
 
-                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-                  def name=(value); end
+                    sig { returns(T.nilable(::String)) }
+                    def name; end
 
-                  sig { returns(T.nilable(T::Boolean)) }
-                  def test_shop; end
+                    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                    def name=(value); end
 
-                  sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
-                  def test_shop=(value); end
+                    sig { returns(T.nilable(T::Boolean)) }
+                    def test_shop; end
+
+                    sig { params(value: T.nilable(T::Boolean)).returns(T.nilable(T::Boolean)) }
+                    def test_shop=(value); end
+                  end
                 end
               RBI
 
@@ -179,11 +191,15 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.nilable(::String)) }
-                  def custom_with_cast_sig_attr; end
+                  include GeneratedAttributeMethods
 
-                  sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
-                  def custom_with_cast_sig_attr=(value); end
+                  module GeneratedAttributeMethods
+                    sig { returns(T.nilable(::String)) }
+                    def custom_with_cast_sig_attr; end
+
+                    sig { params(value: T.nilable(::String)).returns(T.nilable(::String)) }
+                    def custom_with_cast_sig_attr=(value); end
+                  end
                 end
               RBI
 
@@ -221,17 +237,21 @@ module Tapioca
                 # typed: strong
 
                 class Shop
-                  sig { returns(T.nilable(::Post)) }
-                  def post; end
+                  include GeneratedAttributeMethods
 
-                  sig { params(value: T.nilable(::Post)).returns(T.nilable(::Post)) }
-                  def post=(value); end
+                  module GeneratedAttributeMethods
+                    sig { returns(T.nilable(::Post)) }
+                    def post; end
 
-                  sig { returns(::User) }
-                  def user; end
+                    sig { params(value: T.nilable(::Post)).returns(T.nilable(::Post)) }
+                    def post=(value); end
 
-                  sig { params(value: ::User).returns(::User) }
-                  def user=(value); end
+                    sig { returns(::User) }
+                    def user; end
+
+                    sig { params(value: ::User).returns(::User) }
+                    def user=(value); end
+                  end
                 end
               RBI
 
