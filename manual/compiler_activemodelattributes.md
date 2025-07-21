@@ -18,12 +18,16 @@ this compiler will produce an RBI file with the following content:
 # typed: true
 
 class Shop
+  include GeneratedAttributeMethods
 
-  sig { returns(T.nilable(::String)) }
-  def name; end
+  module GeneratedAttributeMethods
+    sig { returns(T.nilable(::String)) }
+    def name; end
 
-  sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
-  def name=(name); end
+    sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
+    def name=(name); end
+  end
+
 end
 ~~~
 : [ConstantType = (Class[::ActiveModel::Attributes] & ::ActiveModel::Attributes::ClassMethods)]
