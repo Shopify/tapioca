@@ -22,7 +22,7 @@ module Tapioca
 
         assert_stdout_equals(<<~OUT, result)
           Retrieving index from central repository... Done
-          Listing gems from Gemfile.lock... Done
+          Listing gems from bundle... Done
           Removing annotations for gems that have been removed...  Nothing to do
           Fetching gem annotations from central repository...  Nothing to do
         OUT

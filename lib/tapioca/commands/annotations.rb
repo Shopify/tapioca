@@ -41,10 +41,11 @@ module Tapioca
 
       #: -> Array[GemInfo]
       def list_gemfile_gems
-        say("Listing gems from Gemfile.lock... ", [:blue, :bold])
-        gemfile = Bundler.read_file("Gemfile.lock")
-        parser = Bundler::LockfileParser.new(gemfile)
-        gem_info = parser.specs.map { |spec| GemInfo.from_spec(spec) }
+        lockfile_path = Bundler.definition.lockfile.basename
+        say("Listing gems from #{lockfile_path}... ", [:blue, :bold])
+
+        specs = Bundler.definition.specs
+        gem_info = specs.map { |spec| GemInfo.from_spec(spec) }
         say("Done", :green)
         gem_info
       end
