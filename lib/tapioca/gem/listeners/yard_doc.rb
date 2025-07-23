@@ -32,7 +32,7 @@ module Tapioca
 
         #: (String line) -> bool
         def rbs_comment?(line)
-          line.strip.start_with?(": ", "| ")
+          line.start_with?(": ", "| ")
         end
 
         # @override
