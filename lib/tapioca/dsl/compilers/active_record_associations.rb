@@ -103,15 +103,12 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(ActiveRecord::Base)]
       class ActiveRecordAssociations < Compiler
-        extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
 
         class SourceReflectionError < StandardError
         end
 
         class MissingConstantError < StandardError
-          extend T::Sig
-
           #: String
           attr_reader :class_name
 
@@ -138,8 +135,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> T::Enumerable[Module]
           def gather_constants

@@ -4,11 +4,7 @@
 module Tapioca
   module Loaders
     class Gem < Loader
-      extend T::Sig
-
       class << self
-        extend T::Sig
-
         #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool) -> void
         def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
           loader = new(
