@@ -39,14 +39,14 @@ module RubyLsp
           fork do
             with_notification_wrapper("route_dsl", "Generating route DSL RBIs") do
               constants = ::Tapioca::Dsl::Compilers::UrlHelpers.gather_constants
-              dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::UrlHelpers", "ActiveSupportConcern")
+              dsl(constants.map(&:name))
             end
           end
         when "fixtures_dsl"
           fork do
             with_notification_wrapper("fixture_dsl", "Generating fixture DSL RBIs") do
               constants = ::Tapioca::Dsl::Compilers::ActiveRecordFixtures.gather_constants
-              dsl(constants.map(&:name), "--only=Tapioca::Dsl::Compilers::ActiveRecordFixtures")
+              dsl(constants.map(&:name))
             end
           end
         end
@@ -60,7 +60,7 @@ module RubyLsp
         end
       end
 
-      def dsl(constants, *args)
+      def dsl(constants)
         load("tapioca/cli.rb") # Reload the CLI to reset thor defaults between requests
 
         ::Tapioca::Cli.addon_mode!
@@ -68,7 +68,6 @@ module RubyLsp
         # Order here is important to avoid having Thor confuse arguments. Do not put an array argument at the end before
         # the list of constants
         arguments = ["dsl"]
-        arguments.concat(args)
         arguments.push("--workers=1")
         arguments.concat(constants)
 
