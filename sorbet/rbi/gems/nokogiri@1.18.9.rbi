@@ -7241,13 +7241,7 @@ module Nokogiri::XML::SAX; end
 # 💡 For more information on entity types, see [Wikipedia's page on
 # DTDs](https://en.wikipedia.org/wiki/Document_type_definition#Entity_declarations).
 #
-# | Entity type                          | #characters                        | #reference                          |
 # |--------------------------------------|------------------------------------|-------------------------------------|
-# | Char ref (e.g., <tt>&#146;</tt>)     | always                             | never                               |
-# | Predefined (e.g., <tt>&amp;</tt>)    | always                             | never                               |
-# | Undeclared †                         | never                              | <tt>#replace_entities == false</tt> |
-# | Internal                             | always                             | <tt>#replace_entities == false</tt> |
-# | External †                           | <tt>#replace_entities == true</tt> | <tt>#replace_entities == false</tt> |
 #
 # &nbsp;
 #
