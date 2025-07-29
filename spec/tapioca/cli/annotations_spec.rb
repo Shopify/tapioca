@@ -398,6 +398,51 @@ module Tapioca
 
         repo.destroy!
       end
+
+      it "gets annotations if application uses a gems.rb" do
+        gemfile_content = @project.read("Gemfile")
+        gemfile_lock = @project.read("Gemfile.lock")
+        repo = nil
+
+        @project.remove!("Gemfile")
+        @project.remove!("Gemfile.lock")
+
+        @project.write!("gems.rb", <<~RBI)
+          source("https://rubygems.org")
+
+          gemspec name: "tapioca", path: "#{MockProject::TAPIOCA_PATH}"
+        RBI
+        @project.bundle_install!
+
+        repo = create_repo({
+          rbi: <<~RBI,
+            # typed: true
+
+            class AnnotationForRBI; end
+          RBI
+        })
+
+        result = @project.tapioca("annotations --sources #{repo.absolute_path}")
+        assert_stdout_includes(result, "create  sorbet/rbi/annotations/rbi.rbi")
+        assert_project_annotation_equal("sorbet/rbi/annotations/rbi.rbi", <<~RBI)
+          # typed: true
+
+          # DO NOT EDIT MANUALLY
+          # This file was pulled from a central RBI files repository.
+          # Please run `bin/tapioca annotations` to update it.
+
+          class AnnotationForRBI; end
+        RBI
+
+        assert_success_status(result)
+      ensure
+        repo&.destroy!
+        @project.remove!("gems.rb")
+        @project.remove!("gems.lock")
+        @project.write!("Gemfile", T.must(gemfile_content))
+        @project.write!("Gemfile.lock", T.must(gemfile_lock))
+        @project.bundle_install!
+      end
     end
 
     private

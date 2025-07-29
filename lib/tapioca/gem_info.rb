@@ -9,7 +9,7 @@ module Tapioca
     class << self
       extend(T::Sig)
 
-      #: (Bundler::LazySpecification spec) -> GemInfo
+      #: (::Bundler::StubSpecification | ::Gem::Specification spec) -> GemInfo
       def from_spec(spec)
         new(name: spec.name, version: spec.version)
       end
