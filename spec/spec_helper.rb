@@ -25,7 +25,6 @@ Minitest::Reporters.use!(SpecReporter.new(color: true), ENV, backtrace_filter)
 
 module Minitest
   class Test
-    extend T::Sig
     extend Rails::LineFiltering
   end
 end
