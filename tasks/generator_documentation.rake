@@ -7,6 +7,20 @@ require "tapioca/runtime/reflection"
 
 YARD::Tags::Library.define_tag("@override", :override)
 
+# A custom docstring parser that ignores RBS signature comments
+class IgnoreRBSDocstringParser < YARD::DocstringParser
+  def parse_content(content)
+    # Remove RBS signature comments (lines starting with `#:` or `#|`)
+    #
+    # At this point, `content` represents each line of the docstring where
+    # the `#` has already been stripped.
+    super(content.sub(/^[:|].*$/, ""))
+  end
+end
+
+# Use our custom docstring parser for all docstrings
+YARD::Docstring.default_parser = IgnoreRBSDocstringParser
+
 YARD::Rake::YardocTask.new(:yard_for_generate_documentation) do |task|
   task.files = ["lib/tapioca/dsl/compilers/**/*.rb"]
   task.options = ["--no-output"]
