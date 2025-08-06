@@ -111,4 +111,3 @@ and if the option is set to `untyped`, the `title` method will be generated as:
     sig { returns(T.untyped) }
     def title; end
 ~~~
-: [ConstantType = singleton(ActiveRecord::Base)]

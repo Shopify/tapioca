@@ -23,4 +23,3 @@ class NotifierMailer
   def self.notify_customer(customer_id); end
 end
 ~~~
-: [ConstantType = singleton(::ActionMailer::Base)]

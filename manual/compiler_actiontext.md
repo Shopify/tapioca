@@ -37,4 +37,3 @@ class Post
  def title?; end
 end
 ~~~
-: [ConstantType = singleton(::ActiveRecord::Base)]

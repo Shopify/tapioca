@@ -31,4 +31,3 @@ module Bar
   mixes_in_class_methods(::Foo::ClassMethods)
 end
 ~~~
-: [ConstantType = Module]

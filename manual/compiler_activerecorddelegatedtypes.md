@@ -54,4 +54,3 @@ class Entry
 end
 
 ~~~
-: [ConstantType = (singleton(ActiveRecord::Base) & Extensions::ActiveRecord)]

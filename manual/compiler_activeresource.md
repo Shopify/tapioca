@@ -48,4 +48,3 @@ class Post
   def year?; end
 end
 ~~~
-: [ConstantType = singleton(::ActiveResource::Base)]

@@ -25,4 +25,3 @@ class ActiveSupport::TestCase
   def posts(fixture_name = nil, *other_fixtures); end
 end
 ~~~
-: [ConstantType = singleton(ActiveSupport::TestCase)]

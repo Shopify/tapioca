@@ -32,4 +32,3 @@ class NotifyUserJob
   def self.perform_now(user); end
 end
 ~~~
-: [ConstantType = singleton(::ActiveJob::Base)]
