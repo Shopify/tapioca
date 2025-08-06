@@ -5,7 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class SorbetProps < Base
-        extend T::Sig
         include RBIHelper
 
         private

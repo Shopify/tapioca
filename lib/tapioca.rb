@@ -5,13 +5,9 @@ require "sorbet-runtime"
 require "rubygems/user_interaction"
 
 module Tapioca
-  extend T::Sig
-
   @traces = [] #: Array[TracePoint]
 
   class << self
-    extend T::Sig
-
     #: [Result] { -> Result } -> Result
     def silence_warnings(&blk)
       original_verbosity = $VERBOSE

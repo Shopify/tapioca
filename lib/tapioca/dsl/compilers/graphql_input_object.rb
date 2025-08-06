@@ -36,8 +36,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(GraphQL::Schema::InputObject)]
       class GraphqlInputObject < Compiler
-        extend T::Sig
-
         # @override
         #: -> void
         def decorate
@@ -74,8 +72,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> T::Enumerable[Module]
           def gather_constants

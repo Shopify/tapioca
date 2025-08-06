@@ -65,8 +65,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = (Class[::Kredis::Attributes] & ::Kredis::Attributes::ClassMethods & Extensions::Kredis)]
       class Kredis < Compiler
-        extend T::Sig
-
         # @override
         #: -> void
         def decorate
@@ -85,8 +83,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> T::Enumerable[Module]
           def gather_constants

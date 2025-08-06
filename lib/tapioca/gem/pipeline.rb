@@ -4,7 +4,6 @@
 module Tapioca
   module Gem
     class Pipeline
-      extend T::Sig
       include Runtime::Reflection
       include RBIHelper
 
