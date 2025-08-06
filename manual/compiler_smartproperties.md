@@ -52,4 +52,3 @@ class Post
   end
 end
 ~~~
-: [ConstantType = singleton(::SmartProperties)]

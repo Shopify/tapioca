@@ -25,4 +25,3 @@ class CreateCommentInput
   def post_id; end
 end
 ~~~
-: [ConstantType = singleton(GraphQL::Schema::InputObject)]

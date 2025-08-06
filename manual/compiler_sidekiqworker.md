@@ -35,4 +35,3 @@ If your project uses `ActiveSupport` as well, then the compiler will automatical
 as accepted values for the `interval` parameter:
 * `self.perform_at` will also accept a `ActiveSupport::TimeWithZone` value
 * `self.perform_in` will also accept a `ActiveSupport::Duration` value
-: [ConstantType = singleton(::Sidekiq::Worker)]

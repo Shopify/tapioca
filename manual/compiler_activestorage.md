@@ -32,4 +32,3 @@ class Post
   def photo=(attachable); end
 end
 ~~~
-: [ConstantType = (Module & ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)]

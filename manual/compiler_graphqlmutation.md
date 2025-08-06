@@ -26,4 +26,3 @@ class CreateComment
   def resolve(body:, post_id:); end
 end
 ~~~
-: [ConstantType = singleton(GraphQL::Schema::Mutation)]

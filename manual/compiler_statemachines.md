@@ -103,4 +103,3 @@ class Vehicle
   end
 end
 ~~~
-: [ConstantType = (Module & ::StateMachines::ClassMethods)]

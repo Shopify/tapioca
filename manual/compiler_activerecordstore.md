@@ -70,4 +70,3 @@ class User
   end
 end
 ~~~
-: [ConstantType = (singleton(ActiveRecord::Base) & Extensions::ActiveRecord)]

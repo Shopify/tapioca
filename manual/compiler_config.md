@@ -34,4 +34,3 @@ class AppSettingsConfigOptions < ::Config::Options
   def github=(value); end
 end
 ```
-: [ConstantType = Module]

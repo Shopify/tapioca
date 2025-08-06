@@ -58,4 +58,3 @@ Do this by extending your Sorbet config file:
 ~~~
 --ignore=/path/to/proto/cart_pb.rb
 ~~~
-: [ConstantType = Class[top]]

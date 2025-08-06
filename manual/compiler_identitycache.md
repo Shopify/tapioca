@@ -47,4 +47,3 @@ class Post
   def fetch_by_title_and_review_date(title, review_date, includes: nil); end
 end
 ~~~
-: [ConstantType = singleton(::ActiveRecord::Base)]

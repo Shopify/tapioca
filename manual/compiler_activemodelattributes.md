@@ -30,4 +30,3 @@ class Shop
 
 end
 ~~~
-: [ConstantType = (Class[::ActiveModel::Attributes] & ::ActiveModel::Attributes::ClassMethods)]

@@ -38,4 +38,3 @@ module Taggeable
   end
 end
 ~~~
-: [ConstantType = Module]
