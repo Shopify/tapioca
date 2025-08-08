@@ -4,8 +4,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "Shopify/sorbet"
     labels:
       - "dependencies"
       - "ruby"
@@ -21,8 +19,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "Shopify/sorbet"
     labels:
       - "dependencies"
       - "gh-actions"
