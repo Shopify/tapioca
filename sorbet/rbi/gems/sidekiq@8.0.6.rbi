@@ -8,80 +8,31 @@
 # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#36
 module ActiveJob; end
 
-class ActiveJob::Base
-  include ::Sidekiq::Job::Options
-  extend ::Sidekiq::Job::Options::ClassMethods
-
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-  def sidekiq_options_hash; end
-
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-  def sidekiq_options_hash=(_arg0); end
-
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-  def sidekiq_retries_exhausted_block; end
-
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-  def sidekiq_retries_exhausted_block=(_arg0); end
-
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-  def sidekiq_retry_in_block; end
-
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-  def sidekiq_retry_in_block=(_arg0); end
-
-  class << self
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def sidekiq_options_hash; end
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def sidekiq_options_hash=(val); end
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def sidekiq_retries_exhausted_block; end
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def sidekiq_retries_exhausted_block=(val); end
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def sidekiq_retry_in_block; end
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def sidekiq_retry_in_block=(val); end
-
-    private
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def __synchronized_sidekiq_options_hash; end
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def __synchronized_sidekiq_retries_exhausted_block; end
-
-    # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#32
-    def __synchronized_sidekiq_retry_in_block; end
-  end
-end
+class ActiveJob::Base; end
 
 # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#37
 module ActiveJob::QueueAdapters; end
 
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#46
+# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#47
 class ActiveJob::QueueAdapters::SidekiqAdapter
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#55
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#63
   def enqueue(job); end
 
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#50
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#58
   def enqueue_after_transaction_commit?; end
 
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#71
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#79
   def enqueue_all(jobs); end
 
-  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#63
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#71
   def enqueue_at(job, timestamp); end
+
+  # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#111
+  def stopping?; end
 end
 
-# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#104
-class ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper < ::Sidekiq::ActiveJob::Wrapper; end
+# source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#115
+ActiveJob::QueueAdapters::SidekiqAdapter::JobWrapper = Sidekiq::ActiveJob::Wrapper
 
 # Use `Sidekiq.transactional_push!` in your sidekiq.rb initializer
 #
@@ -168,7 +119,7 @@ module Sidekiq
     # source://sidekiq//lib/sidekiq.rb#77
     def strict_args!(mode = T.unsafe(nil)); end
 
-    # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#40
+    # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#46
     def transactional_push!; end
 
     # source://sidekiq//lib/sidekiq.rb#45
@@ -1581,21 +1532,21 @@ end
 # source://sidekiq//lib/sidekiq.rb#42
 Sidekiq::NAME = T.let(T.unsafe(nil), String)
 
-# source://sidekiq//lib/sidekiq/rails.rb#11
+# source://sidekiq//lib/sidekiq/rails.rb#10
 class Sidekiq::Rails < ::Rails::Engine; end
 
-# source://sidekiq//lib/sidekiq/rails.rb#12
+# source://sidekiq//lib/sidekiq/rails.rb#11
 class Sidekiq::Rails::Reloader
-  # source://sidekiq//lib/sidekiq/rails.rb#13
+  # source://sidekiq//lib/sidekiq/rails.rb#12
   def initialize(app = T.unsafe(nil)); end
 
-  # source://sidekiq//lib/sidekiq/rails.rb#17
+  # source://sidekiq//lib/sidekiq/rails.rb#16
   def call; end
 
-  # source://sidekiq//lib/sidekiq/rails.rb#24
+  # source://sidekiq//lib/sidekiq/rails.rb#23
   def inspect; end
 
-  # source://sidekiq//lib/sidekiq/rails.rb#28
+  # source://sidekiq//lib/sidekiq/rails.rb#27
   def to_hash; end
 end
 
@@ -1882,17 +1833,17 @@ class Sidekiq::TransactionAwareClient
 
   # @return [Boolean]
   #
-  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#12
+  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#18
   def batching?; end
 
-  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#16
+  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#22
   def push(item); end
 
   # We don't provide transactionality for push_bulk because we don't want
   # to hold potentially hundreds of thousands of job records in memory due to
   # a long running enqueue process.
   #
-  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#31
+  # source://sidekiq//lib/sidekiq/transaction_aware_client.rb#37
   def push_bulk(items); end
 end
 
