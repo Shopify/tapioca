@@ -21427,53 +21427,53 @@ module ActiveRecord::FinderMethods
 
   private
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#634
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#635
   def _order_columns; end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#445
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#446
   def apply_join_dependency(eager_loading: T.unsafe(nil)); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#426
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#427
   def construct_relation_for_exists(conditions); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#622
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#623
   def find_last(limit); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#584
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#585
   def find_nth(index); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#608
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#609
   def find_nth_from_last(index); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#589
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#590
   def find_nth_with_limit(index, limit); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#506
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#507
   def find_one(id); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#527
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#528
   def find_some(ids); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#553
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#554
   def find_some_ordered(ids); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#568
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#569
   def find_take; end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#576
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#577
   def find_take_with_limit(limit); end
 
   # @raise [UnknownPrimaryKey]
   #
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#477
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#478
   def find_with_ids(*ids); end
 
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#626
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#627
   def ordered_relation; end
 
   # @return [Boolean]
   #
-  # source://activerecord//lib/active_record/relation/finder_methods.rb#473
+  # source://activerecord//lib/active_record/relation/finder_methods.rb#474
   def using_limitable_reflections?(reflections); end
 end
 

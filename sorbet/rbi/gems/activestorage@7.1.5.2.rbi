@@ -54,10 +54,10 @@ module ActiveStorage
   # source://activestorage//lib/active_storage.rb#62
   def content_types_to_serve_as_binary=(val); end
 
-  # source://activestorage//lib/active_storage.rb#360
+  # source://activestorage//lib/active_storage.rb#357
   def draw_routes; end
 
-  # source://activestorage//lib/active_storage.rb#360
+  # source://activestorage//lib/active_storage.rb#357
   def draw_routes=(val); end
 
   # source://activestorage//lib/active_storage.rb#48
@@ -84,22 +84,22 @@ module ActiveStorage
   # source://activestorage//lib/active_storage.rb#52
   def queues=(val); end
 
-  # source://activestorage//lib/active_storage.rb#361
+  # source://activestorage//lib/active_storage.rb#358
   def resolve_model_to_route; end
 
-  # source://activestorage//lib/active_storage.rb#361
+  # source://activestorage//lib/active_storage.rb#358
   def resolve_model_to_route=(val); end
 
-  # source://activestorage//lib/active_storage.rb#359
+  # source://activestorage//lib/active_storage.rb#356
   def routes_prefix; end
 
-  # source://activestorage//lib/active_storage.rb#359
+  # source://activestorage//lib/active_storage.rb#356
   def routes_prefix=(val); end
 
-  # source://activestorage//lib/active_storage.rb#356
+  # source://activestorage//lib/active_storage.rb#353
   def service_urls_expire_in; end
 
-  # source://activestorage//lib/active_storage.rb#356
+  # source://activestorage//lib/active_storage.rb#353
   def service_urls_expire_in=(val); end
 
   # source://activestorage//lib/active_storage.rb#65
@@ -108,22 +108,22 @@ module ActiveStorage
   # source://activestorage//lib/active_storage.rb#65
   def supported_image_processing_methods=(val); end
 
-  # source://activestorage//lib/active_storage.rb#363
+  # source://activestorage//lib/active_storage.rb#360
   def track_variants; end
 
-  # source://activestorage//lib/active_storage.rb#363
+  # source://activestorage//lib/active_storage.rb#360
   def track_variants=(val); end
 
-  # source://activestorage//lib/active_storage.rb#354
+  # source://activestorage//lib/active_storage.rb#351
   def unsupported_image_processing_arguments; end
 
-  # source://activestorage//lib/active_storage.rb#354
+  # source://activestorage//lib/active_storage.rb#351
   def unsupported_image_processing_arguments=(val); end
 
-  # source://activestorage//lib/active_storage.rb#357
+  # source://activestorage//lib/active_storage.rb#354
   def urls_expire_in; end
 
-  # source://activestorage//lib/active_storage.rb#357
+  # source://activestorage//lib/active_storage.rb#354
   def urls_expire_in=(val); end
 
   # source://activestorage//lib/active_storage.rb#59
@@ -144,10 +144,10 @@ module ActiveStorage
   # source://activestorage//lib/active_storage.rb#49
   def verifier=(val); end
 
-  # source://activestorage//lib/active_storage.rb#365
+  # source://activestorage//lib/active_storage.rb#362
   def video_preview_arguments; end
 
-  # source://activestorage//lib/active_storage.rb#365
+  # source://activestorage//lib/active_storage.rb#362
   def video_preview_arguments=(val); end
 
   # source://activestorage//lib/active_storage.rb#60
@@ -184,10 +184,10 @@ module ActiveStorage
     # source://activestorage//lib/active_storage/deprecator.rb#4
     def deprecator; end
 
-    # source://activestorage//lib/active_storage.rb#360
+    # source://activestorage//lib/active_storage.rb#357
     def draw_routes; end
 
-    # source://activestorage//lib/active_storage.rb#360
+    # source://activestorage//lib/active_storage.rb#357
     def draw_routes=(val); end
 
     # Returns the currently loaded version of Active Storage as a +Gem::Version+.
@@ -228,34 +228,34 @@ module ActiveStorage
     # source://activestorage//lib/active_storage/engine.rb#26
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
 
-    # source://activestorage//lib/active_storage.rb#367
+    # source://activestorage//lib/active_storage.rb#364
     def replace_on_assign_to_many; end
 
-    # source://activestorage//lib/active_storage.rb#371
+    # source://activestorage//lib/active_storage.rb#368
     def replace_on_assign_to_many=(value); end
 
-    # source://activestorage//lib/active_storage.rb#361
+    # source://activestorage//lib/active_storage.rb#358
     def resolve_model_to_route; end
 
-    # source://activestorage//lib/active_storage.rb#361
+    # source://activestorage//lib/active_storage.rb#358
     def resolve_model_to_route=(val); end
 
-    # source://activestorage//lib/active_storage.rb#359
+    # source://activestorage//lib/active_storage.rb#356
     def routes_prefix; end
 
-    # source://activestorage//lib/active_storage.rb#359
+    # source://activestorage//lib/active_storage.rb#356
     def routes_prefix=(val); end
 
-    # source://activestorage//lib/active_storage.rb#356
+    # source://activestorage//lib/active_storage.rb#353
     def service_urls_expire_in; end
 
-    # source://activestorage//lib/active_storage.rb#356
+    # source://activestorage//lib/active_storage.rb#353
     def service_urls_expire_in=(val); end
 
-    # source://activestorage//lib/active_storage.rb#375
+    # source://activestorage//lib/active_storage.rb#372
     def silence_invalid_content_types_warning; end
 
-    # source://activestorage//lib/active_storage.rb#379
+    # source://activestorage//lib/active_storage.rb#376
     def silence_invalid_content_types_warning=(value); end
 
     # source://activestorage//lib/active_storage.rb#65
@@ -267,22 +267,22 @@ module ActiveStorage
     # source://activestorage//lib/active_storage/engine.rb#26
     def table_name_prefix; end
 
-    # source://activestorage//lib/active_storage.rb#363
+    # source://activestorage//lib/active_storage.rb#360
     def track_variants; end
 
-    # source://activestorage//lib/active_storage.rb#363
+    # source://activestorage//lib/active_storage.rb#360
     def track_variants=(val); end
 
-    # source://activestorage//lib/active_storage.rb#354
+    # source://activestorage//lib/active_storage.rb#351
     def unsupported_image_processing_arguments; end
 
-    # source://activestorage//lib/active_storage.rb#354
+    # source://activestorage//lib/active_storage.rb#351
     def unsupported_image_processing_arguments=(val); end
 
-    # source://activestorage//lib/active_storage.rb#357
+    # source://activestorage//lib/active_storage.rb#354
     def urls_expire_in; end
 
-    # source://activestorage//lib/active_storage.rb#357
+    # source://activestorage//lib/active_storage.rb#354
     def urls_expire_in=(val); end
 
     # source://activestorage//lib/active_storage/engine.rb#26
@@ -311,10 +311,10 @@ module ActiveStorage
     # source://activestorage//lib/active_storage/version.rb#7
     def version; end
 
-    # source://activestorage//lib/active_storage.rb#365
+    # source://activestorage//lib/active_storage.rb#362
     def video_preview_arguments; end
 
-    # source://activestorage//lib/active_storage.rb#365
+    # source://activestorage//lib/active_storage.rb#362
     def video_preview_arguments=(val); end
 
     # source://activestorage//lib/active_storage.rb#60
@@ -1906,7 +1906,7 @@ class ActiveStorage::TransformJob < ::ActiveStorage::BaseJob
   end
 end
 
-# source://activestorage//lib/active_storage.rb#383
+# source://activestorage//lib/active_storage.rb#380
 module ActiveStorage::Transformers
   extend ::ActiveSupport::Autoload
 end
