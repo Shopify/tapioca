@@ -4806,5 +4806,34 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       assert_equal(output, compile)
     end
+
+    it "sorts YARD tags stably by tag_name and name" do
+      add_ruby_file("foo.rb", <<~RUBY)
+        class Foo
+          # Method with multiple parameters
+          # @return [String] the result
+          # @param zebra [String] last parameter alphabetically
+          # @raise [ArgumentError] when params are invalid
+          # @param alpha [Integer] first parameter alphabetically
+          # @param beta [Boolean] middle parameter alphabetically
+          def multi_param_method(zebra, alpha, beta); end
+        end
+      RUBY
+
+      output = template(<<~RBI)
+        class Foo
+          # Method with multiple parameters
+          #
+          # @param alpha [Integer] first parameter alphabetically
+          # @param beta [Boolean] middle parameter alphabetically
+          # @param zebra [String] last parameter alphabetically
+          # @raise [ArgumentError] when params are invalid
+          # @return [String] the result
+          def multi_param_method(zebra, alpha, beta); end
+        end
+      RBI
+
+      assert_equal(output, compile(include_doc: true))
+    end
   end
 end
