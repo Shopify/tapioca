@@ -74,7 +74,7 @@ module Tapioca
 
           comments << RBI::Comment.new("") if comments.any? && tags.any?
 
-          tags.sort_by(&:tag_name).each do |tag|
+          tags.sort_by { |tag| [tag.tag_name, tag.name.to_s] }.each do |tag|
             line = +"@#{tag.tag_name}"
 
             tag_name = tag.name
