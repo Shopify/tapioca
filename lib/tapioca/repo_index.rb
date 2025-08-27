@@ -3,10 +3,7 @@
 
 module Tapioca
   class RepoIndex
-    extend T::Sig
     class << self
-      extend T::Sig
-
       #: (String json) -> RepoIndex
       def from_json(json)
         RepoIndex.from_hash(JSON.parse(json))

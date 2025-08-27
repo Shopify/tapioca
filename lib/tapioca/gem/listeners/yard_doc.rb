@@ -5,8 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class YardDoc < Base
-        extend T::Sig
-
         IGNORED_COMMENTS = [
           ":doc:",
           ":nodoc:",

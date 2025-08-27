@@ -151,7 +151,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(::ActiveRecord::Base)]
       class ActiveRecordRelations < Compiler
-        extend T::Sig
         include Helpers::ActiveRecordConstantsHelper
         include SorbetHelper
 
@@ -181,8 +180,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> T::Enumerable[Module]
           def gather_constants
