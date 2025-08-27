@@ -4,6 +4,7 @@
 return unless defined?(ActiveRecord::Base)
 
 require "tapioca/dsl/helpers/active_model_type_helper"
+require "tapioca/dsl/helpers/active_record_column_type_helper"
 require "tapioca/dsl/helpers/active_record_constants_helper"
 
 module Tapioca
@@ -837,9 +838,13 @@ module Tapioca
               end
             when :ids
               if constant.table_exists?
-                primary_key_type = constant.type_for_attribute(constant.primary_key)
-                type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(primary_key_type)
-                type = RBIHelper.as_non_nilable_type(type)
+                column_type_helper = Tapioca::Dsl::Helpers::ActiveRecordColumnTypeHelper.new(
+                  constant,
+                  column_type_option: Tapioca::Dsl::Helpers::ActiveRecordColumnTypeHelper::ColumnTypeOption::Persisted,
+                )
+                primary_key = constant.primary_key
+                getter_type, _setter_type = column_type_helper.type_for(primary_key)
+                type = getter_type
                 create_common_method("ids", return_type: "T::Array[#{type}]")
               else
                 create_common_method("ids", return_type: "Array")
