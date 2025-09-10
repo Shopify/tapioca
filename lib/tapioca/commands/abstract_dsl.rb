@@ -101,6 +101,7 @@ module Tapioca
           eager_load: @requested_constants.empty? && @requested_paths.empty?,
           app_root: @app_root,
           halt_upon_load_error: @halt_upon_load_error,
+          verbose: @verbose,
         )
       end
 

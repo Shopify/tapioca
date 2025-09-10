@@ -26,6 +26,7 @@ module RubyLsp
               eager_load: false,
               app_root: params[:workspace_path],
               halt_upon_load_error: false,
+              verbose: false,
             )
             @loader.load_dsl_extensions_and_compilers
           end

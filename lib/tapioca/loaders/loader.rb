@@ -62,7 +62,7 @@ module Tapioca
         )
         raise e if halt_upon_load_error
 
-        if e.backtrace
+        if @verbose && e.backtrace
           backtrace = T.must(e.backtrace).join("\n")
           say(backtrace, :cyan) # TODO: Check verbose flag to print backtrace.
         end

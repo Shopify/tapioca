@@ -141,6 +141,7 @@ module Tapioca
               postrequire: @postrequire,
               default_command: default_command(:require),
               halt_upon_load_error: @halt_upon_load_error,
+              verbose: false,
             )
 
             Executor.new(gems, number_of_workers: @number_of_workers).run_in_parallel do |gem_name|

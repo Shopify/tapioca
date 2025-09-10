@@ -14,7 +14,14 @@ module Tapioca
         def on_scope(event)
           ancestors = Runtime::Trackers::RequiredAncestor.required_ancestors_by(event.constant)
           ancestors.each do |ancestor|
-            next unless ancestor # TODO: We should have a way to warn from here
+            unless ancestor
+              # Emit a lightweight warning without crashing the pipeline
+              @pipeline.error_handler.call(
+                "Missing required ancestor information for #{event.constant}. " \
+                "This may indicate an incomplete runtime tracker state."
+              )
+              next
+            end
 
             event.node << RBI::RequiresAncestor.new(ancestor.to_s)
           end

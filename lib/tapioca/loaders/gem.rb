@@ -9,14 +9,15 @@ module Tapioca
       class << self
         extend T::Sig
 
-        #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool) -> void
-        def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
+        #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool, ?verbose: bool) -> void
+        def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:, verbose: false)
           loader = new(
             bundle: bundle,
             prerequire: prerequire,
             postrequire: postrequire,
             default_command: default_command,
             halt_upon_load_error: halt_upon_load_error,
+            verbose: verbose,
           )
           loader.load
         end
@@ -30,8 +31,8 @@ module Tapioca
 
       protected
 
-      #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool) -> void
-      def initialize(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
+      #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool, ?verbose: bool) -> void
+      def initialize(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:, verbose: false)
         super()
 
         @bundle = bundle
@@ -39,6 +40,7 @@ module Tapioca
         @postrequire = postrequire
         @default_command = default_command
         @halt_upon_load_error = halt_upon_load_error
+        @verbose = verbose
       end
 
       #: -> void
