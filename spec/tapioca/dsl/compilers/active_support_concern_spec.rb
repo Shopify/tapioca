@@ -14,6 +14,45 @@ module Tapioca
           end
 
           describe "gather_constants" do
+            it "ignores modules that raise ActiveSupport::DeprecationException" do
+              add_ruby_file("deprecated_case.rb", <<~RUBY)
+                module TestCase
+                  module Foo
+                    extend ActiveSupport::Concern
+                  end
+
+                  # This module will simulate a deprecated constant that raises when inspected
+                  module DeprecatedMod
+                  end
+
+                  module Bar
+                    extend ActiveSupport::Concern
+                    include Foo
+                  end
+                end
+              RUBY
+
+              # Stub name_of to raise for our specific deprecated module and verify no crash
+              compiler = Tapioca::Dsl::Compilers::ActiveSupportConcern
+              original = Tapioca::Dsl::Compiler.method(:name_of)
+              begin
+                def compiler.name_of(mod)
+                  if mod == TestCase::DeprecatedMod
+                    raise ActiveSupport::DeprecationException
+                  else
+                    Tapioca::Dsl::Compiler.method(:name_of).call(mod)
+                  end
+                end
+
+                # Presence of DeprecatedMod should not cause crashes; Bar is the only gatherable constant
+                assert_equal(["TestCase::Bar"], gathered_constants_in_namespace(:TestCase))
+              ensure
+                # Restore original implementation
+                def compiler.name_of(mod)
+                  original.call(mod)
+                end
+              end
+            end
             it "does not gather anonymous constants" do
               add_ruby_file("test_case.rb", <<~RUBY)
                 module TestCase

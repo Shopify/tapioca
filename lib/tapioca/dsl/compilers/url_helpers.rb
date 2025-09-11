@@ -114,18 +114,22 @@ module Tapioca
             Object.const_set(:GeneratedPathHelpersModule, path_helpers_module)
 
             constants = all_modules.select do |mod|
-              next unless name_of(mod)
+              begin
+                next unless name_of(mod)
 
-              # Fast-path to quickly disqualify most cases
-              next false unless url_helpers_module > mod || # rubocop:disable Style/InvertibleUnlessCondition
-                path_helpers_module > mod ||
-                url_helpers_module > mod.singleton_class ||
-                path_helpers_module > mod.singleton_class
+                # Fast-path to quickly disqualify most cases
+                next false unless url_helpers_module > mod || # rubocop:disable Style/InvertibleUnlessCondition
+                  path_helpers_module > mod ||
+                  url_helpers_module > mod.singleton_class ||
+                  path_helpers_module > mod.singleton_class
 
-              includes_helper?(mod, url_helpers_module) ||
-                includes_helper?(mod, path_helpers_module) ||
-                includes_helper?(mod.singleton_class, url_helpers_module) ||
-                includes_helper?(mod.singleton_class, path_helpers_module)
+                includes_helper?(mod, url_helpers_module) ||
+                  includes_helper?(mod, path_helpers_module) ||
+                  includes_helper?(mod.singleton_class, url_helpers_module) ||
+                  includes_helper?(mod.singleton_class, path_helpers_module)
+              rescue ActiveSupport::DeprecationException
+                next false
+              end
             end
 
             constants.concat(NON_DISCOVERABLE_INCLUDERS).push(GeneratedUrlHelpersModule, GeneratedPathHelpersModule)

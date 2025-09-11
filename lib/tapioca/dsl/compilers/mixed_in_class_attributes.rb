@@ -67,7 +67,13 @@ module Tapioca
           def gather_constants
             # Select all non-anonymous modules that have overridden Module.included
             all_modules.select do |mod|
-              !mod.is_a?(Class) && name_of(mod) && Runtime::Reflection.method_of(mod, :included).owner != Module
+              begin
+                !mod.is_a?(Class) &&
+                  name_of(mod) &&
+                  Runtime::Reflection.method_of(mod, :included).owner != Module
+              rescue ActiveSupport::DeprecationException
+                false
+              end
             end
           end
         end
