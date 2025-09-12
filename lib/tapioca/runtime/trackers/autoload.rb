@@ -8,8 +8,6 @@ module Tapioca
         extend Tracker
         extend T::Sig
 
-        NOOP_METHOD = ->(*_args, **_kwargs, &_block) {}
-
         @constant_names_registered_for_autoload = [] #: Array[String]
 
         class << self
@@ -17,7 +15,7 @@ module Tapioca
 
           #: -> void
           def eager_load_all!
-            with_disabled_exits do
+            Tapioca.with_disabled_exits do
               until @constant_names_registered_for_autoload.empty?
                 # Grab the next constant name
                 constant_name = T.must(@constant_names_registered_for_autoload.shift)
@@ -32,24 +30,6 @@ module Tapioca
             return unless enabled?
 
             @constant_names_registered_for_autoload << constant_name
-          end
-
-          #: [Result] { -> Result } -> Result
-          def with_disabled_exits(&block)
-            original_abort = Kernel.instance_method(:abort)
-            original_exit = Kernel.instance_method(:exit)
-
-            begin
-              Kernel.define_method(:abort, NOOP_METHOD)
-              Kernel.define_method(:exit, NOOP_METHOD)
-
-              Tapioca.silence_warnings do
-                block.call
-              end
-            ensure
-              Kernel.define_method(:exit, original_exit)
-              Kernel.define_method(:abort, original_abort)
-            end
           end
         end
       end

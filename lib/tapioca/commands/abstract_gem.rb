@@ -67,7 +67,7 @@ module Tapioca
           reason: "types exported from the `#{gem.name}` gem",
         ) if @file_header
 
-        rbi.root = Runtime::Trackers::Autoload.with_disabled_exits do
+        rbi.root = Tapioca.with_disabled_exits do
           Tapioca::Gem::Pipeline.new(
             gem,
             include_doc: @include_doc,
