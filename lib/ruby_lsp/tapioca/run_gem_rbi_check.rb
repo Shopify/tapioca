@@ -13,9 +13,10 @@ module RubyLsp
       #: Process::Status?
       attr_reader :status
 
-      #: (String project_path) -> void
-      def initialize(project_path)
+      #: (String, ?String) -> void
+      def initialize(project_path, gem_rbi_dir = ::Tapioca::DEFAULT_GEM_DIR)
         @project_path = project_path
+        @gem_rbi_dir = gem_rbi_dir
         @stdout = "" #: String
         @stderr = "" #: String
         @status = nil #: Process::Status?
@@ -79,16 +80,16 @@ module RubyLsp
       #: (Array[String] gems) -> void
       def execute_tapioca_gem_command(gems)
         Bundler.with_unbundled_env do
+          cmd = ["bundle", "exec", "tapioca", "gem", "--lsp_addon"]
+
+          if @gem_rbi_dir != ::Tapioca::DEFAULT_GEM_DIR
+            cmd.push("--outdir", @gem_rbi_dir)
+          end
+
+          cmd.concat(gems)
+
           stdout, stderr, status = Open3 #: as untyped
-            .capture3(
-              "bundle",
-              "exec",
-              "tapioca",
-              "gem",
-              "--lsp_addon",
-              *gems,
-              chdir: @project_path,
-            )
+            .capture3(*cmd, chdir: @project_path)
 
           log_message(stdout) unless stdout.empty?
           @stderr = stderr unless stderr.empty?
@@ -99,7 +100,7 @@ module RubyLsp
       #: (Array[String] gems) -> void
       def remove_rbis(gems)
         files = Dir.glob(
-          "sorbet/rbi/gems/{#{gems.join(",")}}@*.rbi",
+          "#{@gem_rbi_dir}/{#{gems.join(",")}}@*.rbi",
           base: @project_path,
         )
         delete_files(files, "Removed RBIs for")
@@ -117,7 +118,7 @@ module RubyLsp
       #: (*untyped flags) -> Array[String]
       def git_ls_gem_rbis(*flags)
         self #: as untyped # rubocop:disable Style/RedundantSelf
-          .execute_in_project_path("git", "ls-files", *flags, "sorbet/rbi/gems/")
+          .execute_in_project_path("git", "ls-files", *flags, "#{@gem_rbi_dir}/")
           .lines
           .map(&:strip)
       end
