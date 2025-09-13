@@ -8,13 +8,10 @@ module Tapioca
     # `Bundler.require`.
     # @requires_ancestor: ::Bundler::Dependency
     module AutoRequireHook
-      extend T::Sig
       @exclude = [] #: Array[String]
       @enabled = false #: bool
 
       class << self
-        extend T::Sig
-
         #: (untyped name) -> bool
         def excluded?(name)
           @exclude.include?(name)

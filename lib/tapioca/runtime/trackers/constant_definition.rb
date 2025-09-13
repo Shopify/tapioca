@@ -11,7 +11,6 @@ module Tapioca
       module ConstantDefinition
         extend Tracker
         extend Reflection
-        extend T::Sig
 
         @class_files = {}.compare_by_identity #: Hash[Module, Set[SourceLocation]]
 
