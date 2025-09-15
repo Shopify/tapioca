@@ -427,6 +427,23 @@ RuboCop::Cop::RSpec::BeforeAfterAll::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set
 # negated matcher for `change`, e.g. `not_change` with
 # the `NegatedMatcher` option, the cop will perform the autocorrection.
 #
+# @example NegatedMatcher: not_change
+#   # bad (support autocorrection to good case)
+#   expect { run }
+#   .to change(Foo, :bar).by(0)
+#   .and change(Foo, :baz).by(0)
+#   expect { run }
+#   .to change { Foo.bar }.by(0)
+#   .and change { Foo.baz }.by(0)
+#
+#   # good
+#   define_negated_matcher :not_change, :change
+#   expect { run }
+#   .to not_change(Foo, :bar)
+#   .and not_change(Foo, :baz)
+#   expect { run }
+#   .to not_change { Foo.bar }
+#   .and not_change { Foo.baz }
 # @example NegatedMatcher: ~ (default)
 #   # bad
 #   expect { run }.to change(Foo, :bar).by(0)
@@ -445,23 +462,6 @@ RuboCop::Cop::RSpec::BeforeAfterAll::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Set
 #   expect { run }.not_to change { Foo.bar }
 #
 #   # good - compound expectations
-#   define_negated_matcher :not_change, :change
-#   expect { run }
-#   .to not_change(Foo, :bar)
-#   .and not_change(Foo, :baz)
-#   expect { run }
-#   .to not_change { Foo.bar }
-#   .and not_change { Foo.baz }
-# @example NegatedMatcher: not_change
-#   # bad (support autocorrection to good case)
-#   expect { run }
-#   .to change(Foo, :bar).by(0)
-#   .and change(Foo, :baz).by(0)
-#   expect { run }
-#   .to change { Foo.bar }.by(0)
-#   .and change { Foo.baz }.by(0)
-#
-#   # good
 #   define_negated_matcher :not_change, :change
 #   expect { run }
 #   .to not_change(Foo, :bar)
@@ -720,16 +720,6 @@ RuboCop::Cop::RSpec::ContextMethod::MSG = T.let(T.unsafe(nil), String)
 # This cop can be customized allowed context description pattern
 # with `AllowedPatterns`. By default, there are no checking by pattern.
 #
-# @example `Prefixes` configuration
-#   # .rubocop.yml
-#   # RSpec/ContextWording:
-#   #   Prefixes:
-#   #     - when
-#   #     - with
-#   #     - without
-#   #     - if
-#   #     - unless
-#   #     - for
 # @example
 #   # bad
 #   context 'the display name not present' do
@@ -740,12 +730,6 @@ RuboCop::Cop::RSpec::ContextMethod::MSG = T.let(T.unsafe(nil), String)
 #   context 'when the display name is not present' do
 #   # ...
 #   end
-# @example `AllowedPatterns` configuration
-#
-#   # .rubocop.yml
-#   # RSpec/ContextWording:
-#   #   AllowedPatterns:
-#   #     - とき$
 # @example
 #   # bad
 #   context '条件を満たす' do
@@ -756,6 +740,22 @@ RuboCop::Cop::RSpec::ContextMethod::MSG = T.let(T.unsafe(nil), String)
 #   context '条件を満たすとき' do
 #   # ...
 #   end
+# @example `AllowedPatterns` configuration
+#
+#   # .rubocop.yml
+#   # RSpec/ContextWording:
+#   #   AllowedPatterns:
+#   #     - とき$
+# @example `Prefixes` configuration
+#   # .rubocop.yml
+#   # RSpec/ContextWording:
+#   #   Prefixes:
+#   #     - when
+#   #     - with
+#   #     - without
+#   #     - if
+#   #     - unless
+#   #     - for
 # @see http://www.betterspecs.org/#contexts
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/context_wording.rb#61
@@ -801,13 +801,6 @@ RuboCop::Cop::RSpec::ContextWording::MSG_MATCH = T.let(T.unsafe(nil), String)
 #
 # Ignores Rails and Aruba `type` metadata by default.
 #
-# @example `IgnoredMetadata` configuration
-#   # .rubocop.yml
-#   # RSpec/DescribeClass:
-#   #   IgnoredMetadata:
-#   #     type:
-#   #       - request
-#   #       - controller
 # @example
 #   # bad
 #   describe 'Do something' do
@@ -824,6 +817,13 @@ RuboCop::Cop::RSpec::ContextWording::MSG_MATCH = T.let(T.unsafe(nil), String)
 #
 #   describe "A feature example", type: :feature do
 #   end
+# @example `IgnoredMetadata` configuration
+#   # .rubocop.yml
+#   # RSpec/DescribeClass:
+#   #   IgnoredMetadata:
+#   #     type:
+#   #       - request
+#   #       - controller
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/describe_class.rb#37
 class RuboCop::Cop::RSpec::DescribeClass < ::RuboCop::Cop::RSpec::Base
@@ -956,16 +956,6 @@ RuboCop::Cop::RSpec::DescribeSymbol::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Arr
 #   describe MyClass do
 #   subject { described_class.do_something }
 #   end
-# @example `OnlyStaticConstants: true` (default)
-#   # good
-#   describe MyClass do
-#   subject { MyClass::CONSTANT }
-#   end
-# @example `OnlyStaticConstants: false`
-#   # bad
-#   describe MyClass do
-#   subject { MyClass::CONSTANT }
-#   end
 # @example `EnforcedStyle: explicit`
 #   # bad
 #   describe MyClass do
@@ -975,6 +965,16 @@ RuboCop::Cop::RSpec::DescribeSymbol::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Arr
 #   # good
 #   describe MyClass do
 #   subject { MyClass.do_something }
+#   end
+# @example `OnlyStaticConstants: false`
+#   # bad
+#   describe MyClass do
+#   subject { MyClass::CONSTANT }
+#   end
+# @example `OnlyStaticConstants: true` (default)
+#   # good
+#   describe MyClass do
+#   subject { MyClass::CONSTANT }
 #   end
 # @example `SkipBlocks: true`
 #   # spec/controllers/.rubocop.yml
@@ -1029,8 +1029,8 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   #   collapse_namespace([:A, :B], [:B, :C])      # => [:A, :B, :C]
   #   collapse_namespace([:A, :B], [nil, :C])     # => [nil, :C]
   #   collapse_namespace([:A, :B], [nil, :B, :C]) # => [nil, :B, :C]
-  # @param namespace [Array<Symbol>]
   # @param const [Array<Symbol>]
+  # @param namespace [Array<Symbol>]
   # @return [Array<Symbol>]
   #
   # source://rubocop-rspec//lib/rubocop/cop/rspec/described_class.rb#202
@@ -1286,11 +1286,11 @@ class RuboCop::Cop::RSpec::EmptyExampleGroup < ::RuboCop::Cop::RSpec::Base
 
   # Matches examples defined in scopes where they could run
   #
+  # @example source that does not match
+  #   before { it { whatever here won't run anyway } }
   # @example source that matches
   #   it { expect(myself).to be_run }
   #   describe { it { i_run_as_well } }
-  # @example source that does not match
-  #   before { it { whatever here won't run anyway } }
   # @param node [RuboCop::AST::Node]
   # @return [Array<RuboCop::AST::Node>] matching nodes
   #
@@ -1311,13 +1311,13 @@ class RuboCop::Cop::RSpec::EmptyExampleGroup < ::RuboCop::Cop::RSpec::Base
 
   # Match examples defined inside a block which is not a hook
   #
-  # @example source that matches
-  #   %w(r g b).each do |color|
-  #   it { is_expected.to have_color(color) }
-  #   end
   # @example source that does not match
   #   before do
   #   it { is_expected.to fall_into_oblivion }
+  #   end
+  # @example source that matches
+  #   %w(r g b).each do |color|
+  #   it { is_expected.to have_color(color) }
   #   end
   # @param node [RuboCop::AST::Node]
   # @return [Array<RuboCop::AST::Node>] matching nodes
@@ -1831,6 +1831,13 @@ RuboCop::Cop::RSpec::ExampleLength::LABEL = T.let(T.unsafe(nil), String)
 #   result = service.call
 #   expect(result).to be(true)
 #   end
+# @example `EnforcedStyle: disallow`
+#   # bad
+#   it { is_expected.to be_good }
+#   it do
+#   result = service.call
+#   expect(result).to be(true)
+#   end
 # @example `EnforcedStyle: single_line_only`
 #   # bad
 #   it('') { is_expected.to be_good }
@@ -1841,13 +1848,6 @@ RuboCop::Cop::RSpec::ExampleLength::LABEL = T.let(T.unsafe(nil), String)
 #
 #   # good
 #   it { is_expected.to be_good }
-# @example `EnforcedStyle: disallow`
-#   # bad
-#   it { is_expected.to be_good }
-#   it do
-#   result = service.call
-#   expect(result).to be(true)
-#   end
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/example_without_description.rb#59
 class RuboCop::Cop::RSpec::ExampleWithoutDescription < ::RuboCop::Cop::RSpec::Base
@@ -2118,6 +2118,12 @@ RuboCop::Cop::RSpec::ExpectActual::SKIPPED_MATCHERS = T.let(T.unsafe(nil), Array
 #
 # This cop can be configured using the `EnforcedStyle` option.
 #
+# @example `EnforcedStyle: block`
+#   # bad
+#   expect { run }.to change(Foo, :bar)
+#
+#   # good
+#   expect { run }.to change { Foo.bar }
 # @example `EnforcedStyle: method_call` (default)
 #   # bad
 #   expect { run }.to change { Foo.bar }
@@ -2129,12 +2135,6 @@ RuboCop::Cop::RSpec::ExpectActual::SKIPPED_MATCHERS = T.let(T.unsafe(nil), Array
 #   # also good when there are arguments or chained method calls
 #   expect { run }.to change { Foo.bar(:count) }
 #   expect { run }.to change { user.reload.name }
-# @example `EnforcedStyle: block`
-#   # bad
-#   expect { run }.to change(Foo, :bar)
-#
-#   # good
-#   expect { run }.to change { Foo.bar }
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/expect_change.rb#51
 class RuboCop::Cop::RSpec::ExpectChange < ::RuboCop::Cop::RSpec::Base
@@ -2428,21 +2428,6 @@ RuboCop::Cop::RSpec::Focus::MSG = T.let(T.unsafe(nil), String)
 # styles: "implicit", "each", and "example." All styles have
 # the same behavior.
 #
-# @example `EnforcedStyle: implicit` (default)
-#   # bad
-#   before(:each) do
-#   # ...
-#   end
-#
-#   # bad
-#   before(:example) do
-#   # ...
-#   end
-#
-#   # good
-#   before do
-#   # ...
-#   end
 # @example `EnforcedStyle: each`
 #   # bad
 #   before(:example) do
@@ -2471,6 +2456,21 @@ RuboCop::Cop::RSpec::Focus::MSG = T.let(T.unsafe(nil), String)
 #
 #   # good
 #   before(:example) do
+#   # ...
+#   end
+# @example `EnforcedStyle: implicit` (default)
+#   # bad
+#   before(:each) do
+#   # ...
+#   end
+#
+#   # bad
+#   before(:example) do
+#   # ...
+#   end
+#
+#   # good
+#   before do
 #   # ...
 #   end
 #
@@ -2700,6 +2700,31 @@ RuboCop::Cop::RSpec::ImplicitExpect::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Arr
 #
 # This cop can be configured using the `EnforcedStyle` option
 #
+# @example `EnforcedStyle: disallow`
+#   # bad
+#   it { is_expected.to be_truthy }
+#
+#   # good
+#   it { expect(subject).to be_truthy }
+# @example `EnforcedStyle: require_implicit`
+#   # bad
+#   it { expect(subject).to be_truthy }
+#
+#   # good
+#   it { is_expected.to be_truthy }
+#
+#   # bad
+#   it do
+#   expect(subject).to be_truthy
+#   end
+#
+#   # good
+#   it do
+#   is_expected.to be_truthy
+#   end
+#
+#   # good
+#   it { expect(named_subject).to be_truthy }
 # @example `EnforcedStyle: single_line_only` (default)
 #   # bad
 #   it do
@@ -2726,31 +2751,6 @@ RuboCop::Cop::RSpec::ImplicitExpect::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Arr
 #   it do
 #   is_expected.to be_truthy
 #   end
-# @example `EnforcedStyle: disallow`
-#   # bad
-#   it { is_expected.to be_truthy }
-#
-#   # good
-#   it { expect(subject).to be_truthy }
-# @example `EnforcedStyle: require_implicit`
-#   # bad
-#   it { expect(subject).to be_truthy }
-#
-#   # good
-#   it { is_expected.to be_truthy }
-#
-#   # bad
-#   it do
-#   expect(subject).to be_truthy
-#   end
-#
-#   # good
-#   it do
-#   is_expected.to be_truthy
-#   end
-#
-#   # good
-#   it { expect(named_subject).to be_truthy }
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/implicit_subject.rb#65
 class RuboCop::Cop::RSpec::ImplicitSubject < ::RuboCop::Cop::RSpec::Base
@@ -2860,6 +2860,14 @@ RuboCop::Cop::RSpec::IncludeExamples::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Ar
 # The configurable options `AllowedIdentifiers` and `AllowedPatterns`
 # will also read those set in `Naming/VariableNumber`.
 #
+# @example `AllowedIdentifiers: ['item_1', 'item_2']`
+#   # good
+#   let(:item_1) { create(:item) }
+#   let(:item_2) { create(:item) }
+# @example `AllowedPatterns: ['item']`
+#   # good
+#   let(:item_1) { create(:item) }
+#   let(:item_2) { create(:item) }
 # @example `Max: 1 (default)`
 #   # bad
 #   let(:item_1) { create(:item) }
@@ -2878,14 +2886,6 @@ RuboCop::Cop::RSpec::IncludeExamples::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Ar
 #   let(:item_2) { create(:item) }
 #   let(:item_3) { create(:item) }
 #
-#   # good
-#   let(:item_1) { create(:item) }
-#   let(:item_2) { create(:item) }
-# @example `AllowedIdentifiers: ['item_1', 'item_2']`
-#   # good
-#   let(:item_1) { create(:item) }
-#   let(:item_2) { create(:item) }
-# @example `AllowedPatterns: ['item']`
 #   # good
 #   let(:item_1) { create(:item) }
 #   let(:item_2) { create(:item) }
@@ -3314,20 +3314,6 @@ RuboCop::Cop::RSpec::LeadingSubject::MSG = T.let(T.unsafe(nil), String)
 # Anonymous classes are fine, since they don't result in global
 # namespace name clashes.
 #
-# @example Constants leak between examples
-#   # bad
-#   describe SomeClass do
-#   OtherClass = Struct.new
-#   CONSTANT_HERE = 'I leak into global namespace'
-#   end
-#
-#   # good
-#   describe SomeClass do
-#   before do
-#   stub_const('OtherClass', Struct.new)
-#   stub_const('CONSTANT_HERE', 'I only exist during this example')
-#   end
-#   end
 # @example
 #   # bad
 #   describe SomeClass do
@@ -3384,6 +3370,20 @@ RuboCop::Cop::RSpec::LeadingSubject::MSG = T.let(T.unsafe(nil), String)
 #   end
 #   end
 #   stub_const('SomeModule::SomeClass', foo_class)
+#   end
+#   end
+# @example Constants leak between examples
+#   # bad
+#   describe SomeClass do
+#   OtherClass = Struct.new
+#   CONSTANT_HERE = 'I leak into global namespace'
+#   end
+#
+#   # good
+#   describe SomeClass do
+#   before do
+#   stub_const('OtherClass', Struct.new)
+#   stub_const('CONSTANT_HERE', 'I only exist during this example')
 #   end
 #   end
 # @see https://rspec.info/features/3-12/rspec-mocks/mutating-constants
@@ -3793,18 +3793,18 @@ end
 # `EnforcedStyle: hash` where the trailing metadata type is ambiguous.
 # (e.g. `describe 'Something', :a, b`)
 #
-# @example EnforcedStyle: symbol (default)
-#   # bad
-#   describe 'Something', a: true
-#
-#   # good
-#   describe 'Something', :a
 # @example EnforcedStyle: hash
 #   # bad
 #   describe 'Something', :a
 #
 #   # good
 #   describe 'Something', a: true
+# @example EnforcedStyle: symbol (default)
+#   # bad
+#   describe 'Something', a: true
+#
+#   # good
+#   describe 'Something', :a
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/metadata_style.rb#25
 class RuboCop::Cop::RSpec::MetadataStyle < ::RuboCop::Cop::RSpec::Base
@@ -4001,22 +4001,6 @@ RuboCop::Cop::RSpec::MultipleDescribes::MSG = T.let(T.unsafe(nil), String)
 #   expect(user.age).to eq(22)
 #   end
 #   end
-# @example `aggregate_failures: true` (default)
-#   # good - the cop ignores when RSpec aggregates failures
-#   describe UserCreator do
-#   it 'builds a user', :aggregate_failures do
-#   expect(user.name).to eq("John")
-#   expect(user.age).to eq(22)
-#   end
-#   end
-# @example `aggregate_failures: false`
-#   # Detected as an offense
-#   describe UserCreator do
-#   it 'builds a user', aggregate_failures: false do
-#   expect(user.name).to eq("John")
-#   expect(user.age).to eq(22)
-#   end
-#   end
 # @example `Max: 1` (default)
 #   # bad
 #   describe UserCreator do
@@ -4029,6 +4013,22 @@ RuboCop::Cop::RSpec::MultipleDescribes::MSG = T.let(T.unsafe(nil), String)
 #   # good
 #   describe UserCreator do
 #   it 'builds a user' do
+#   expect(user.name).to eq("John")
+#   expect(user.age).to eq(22)
+#   end
+#   end
+# @example `aggregate_failures: false`
+#   # Detected as an offense
+#   describe UserCreator do
+#   it 'builds a user', aggregate_failures: false do
+#   expect(user.name).to eq("John")
+#   expect(user.age).to eq(22)
+#   end
+#   end
+# @example `aggregate_failures: true` (default)
+#   # good - the cop ignores when RSpec aggregates failures
+#   describe UserCreator do
+#   it 'builds a user', :aggregate_failures do
 #   expect(user.name).to eq("John")
 #   expect(user.age).to eq(22)
 #   end
@@ -4464,13 +4464,17 @@ end
 #   it 'blah blah'
 #   it 'yada yada'
 #   end
-# @example `Max: 3` (default)
-#   # bad
-#   describe Foo do
-#   context 'foo' do
-#   context 'bar' do
-#   context 'baz' do # flagged by rubocop
+# @example `AllowedGroups: [] (default)`
+#   describe Foo do # <-- nested groups 1
+#   context 'foo' do # <-- nested groups 2
+#   context 'bar' do # <-- nested groups 3
 #   end
+#   end
+#   end
+# @example `AllowedGroups: [path]`
+#   describe Foo do # <-- nested groups 1
+#   path '/foo' do # <-- nested groups 1 (not counted)
+#   context 'bar' do # <-- nested groups 2
 #   end
 #   end
 #   end
@@ -4484,17 +4488,13 @@ end
 #   end
 #   end
 #   end
-# @example `AllowedGroups: [] (default)`
-#   describe Foo do # <-- nested groups 1
-#   context 'foo' do # <-- nested groups 2
-#   context 'bar' do # <-- nested groups 3
+# @example `Max: 3` (default)
+#   # bad
+#   describe Foo do
+#   context 'foo' do
+#   context 'bar' do
+#   context 'baz' do # flagged by rubocop
 #   end
-#   end
-#   end
-# @example `AllowedGroups: [path]`
-#   describe Foo do # <-- nested groups 1
-#   path '/foo' do # <-- nested groups 1 (not counted)
-#   context 'bar' do # <-- nested groups 2
 #   end
 #   end
 #   end
@@ -4571,13 +4571,6 @@ RuboCop::Cop::RSpec::NestedGroups::MSG = T.let(T.unsafe(nil), String)
 #   it do
 #   expect(a?).to be(true)
 #   end
-# @example `AllowedPatterns` configuration
-#
-#   # .rubocop.yml
-#   # RSpec/NoExpectationExample:
-#   #   AllowedPatterns:
-#   #     - ^expect_
-#   #     - ^assert_
 # @example
 #   # bad
 #   it do
@@ -4592,6 +4585,13 @@ RuboCop::Cop::RSpec::NestedGroups::MSG = T.let(T.unsafe(nil), String)
 #   it do
 #   assert_something
 #   end
+# @example `AllowedPatterns` configuration
+#
+#   # .rubocop.yml
+#   # RSpec/NoExpectationExample:
+#   #   AllowedPatterns:
+#   #     - ^expect_
+#   #     - ^assert_
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/no_expectation_example.rb#58
 class RuboCop::Cop::RSpec::NoExpectationExample < ::RuboCop::Cop::RSpec::Base
@@ -4887,15 +4887,12 @@ RuboCop::Cop::RSpec::PendingWithoutReason::MSG = T.let(T.unsafe(nil), String)
 # This cop recommends to use the predicate matcher instead of using
 # predicate method directly.
 #
-# @example Strict: true, EnforcedStyle: inflected (default)
+# @example Strict: false, EnforcedStyle: explicit
 #   # bad
-#   expect(foo.something?).to be_truthy
-#
-#   # good
 #   expect(foo).to be_something
 #
-#   # also good - It checks "true" strictly.
-#   expect(foo.something?).to be(true)
+#   # good - the above code is rewritten to it by this cop
+#   expect(foo.something?).to be_truthy
 # @example Strict: false, EnforcedStyle: inflected
 #   # bad
 #   expect(foo.something?).to be_truthy
@@ -4920,12 +4917,15 @@ RuboCop::Cop::RSpec::PendingWithoutReason::MSG = T.let(T.unsafe(nil), String)
 #   expect(foo.something?(<<~TEXT)).to be(true)
 #   bar
 #   TEXT
-# @example Strict: false, EnforcedStyle: explicit
+# @example Strict: true, EnforcedStyle: inflected (default)
 #   # bad
+#   expect(foo.something?).to be_truthy
+#
+#   # good
 #   expect(foo).to be_something
 #
-#   # good - the above code is rewritten to it by this cop
-#   expect(foo.something?).to be_truthy
+#   # also good - It checks "true" strictly.
+#   expect(foo.something?).to be(true)
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/predicate_matcher.rb#324
 class RuboCop::Cop::RSpec::PredicateMatcher < ::RuboCop::Cop::RSpec::Base
@@ -6148,14 +6148,14 @@ module RuboCop::Cop::RSpec::SkipOrPending
 
   # Match skip/pending statements inside a block (e.g. `context`)
   #
+  # @example source that does not match
+  #   skip 'not implemented yet'
+  #   pending 'not implemented yet'
   # @example source that matches
   #   context 'when color is blue' do
   #   skip 'not implemented yet'
   #   pending 'not implemented yet'
   #   end
-  # @example source that does not match
-  #   skip 'not implemented yet'
-  #   pending 'not implemented yet'
   # @param node [RuboCop::AST::Node]
   # @return [Array<RuboCop::AST::Node>] matching nodes
   #
@@ -6243,15 +6243,15 @@ RuboCop::Cop::RSpec::SortMetadata::MSG = T.let(T.unsafe(nil), String)
 #   # good
 #   rubocop_spec.rb          # describe RuboCop
 #   rspec_spec.rb            # describe RSpec
+# @example `IgnoreMetadata: {type=>routing}` (default)
+#   # good
+#   whatever_spec.rb         # describe MyClass, type: :routing do; end
 # @example `IgnoreMethods: false` (default)
 #   # bad
 #   my_class_spec.rb         # describe MyClass, '#method'
 # @example `IgnoreMethods: true`
 #   # good
 #   my_class_spec.rb         # describe MyClass, '#method'
-# @example `IgnoreMetadata: {type=>routing}` (default)
-#   # good
-#   whatever_spec.rb         # describe MyClass, type: :routing do; end
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/spec_file_path_format.rb#35
 class RuboCop::Cop::RSpec::SpecFilePathFormat < ::RuboCop::Cop::RSpec::Base
@@ -6536,8 +6536,8 @@ RuboCop::Cop::RSpec::SubjectDeclaration::MSG_REDUNDANT = T.let(T.unsafe(nil), St
 #   expect(article.description).to include('by an unknown author')
 #   end
 #   end
-# @see https://robots.thoughtbot.com/don-t-stub-the-system-under-test
 # @see https://penelope.zone/2015/12/27/introducing-rspec-smells-and-where-to-find-them.html#smell-1-stubjec
+# @see https://robots.thoughtbot.com/don-t-stub-the-system-under-test
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/subject_stub.rb#50
 class RuboCop::Cop::RSpec::SubjectStub < ::RuboCop::Cop::RSpec::Base
@@ -6764,14 +6764,6 @@ RuboCop::Cop::RSpec::Variable::Subjects = RuboCop::RSpec::Language::Subjects
 
 # Checks that memoized helpers names are symbols or strings.
 #
-# @example EnforcedStyle: symbols (default)
-#   # bad
-#   subject('user') { create_user }
-#   let('user_name') { 'Adam' }
-#
-#   # good
-#   subject(:user) { create_user }
-#   let(:user_name) { 'Adam' }
 # @example EnforcedStyle: strings
 #   # bad
 #   subject(:user) { create_user }
@@ -6780,6 +6772,14 @@ RuboCop::Cop::RSpec::Variable::Subjects = RuboCop::RSpec::Language::Subjects
 #   # good
 #   subject('user') { create_user }
 #   let('user_name') { 'Adam' }
+# @example EnforcedStyle: symbols (default)
+#   # bad
+#   subject('user') { create_user }
+#   let('user_name') { 'Adam' }
+#
+#   # good
+#   subject(:user) { create_user }
+#   let(:user_name) { 'Adam' }
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/variable_definition.rb#26
 class RuboCop::Cop::RSpec::VariableDefinition < ::RuboCop::Cop::RSpec::Base
@@ -6820,14 +6820,16 @@ RuboCop::Cop::RSpec::VariableDefinition::MSG = T.let(T.unsafe(nil), String)
 # Variables can be excluded from checking using the `AllowedPatterns`
 # option.
 #
-# @example EnforcedStyle: snake_case (default)
-#   # bad
-#   subject(:userName1) { 'Adam' }
-#   let(:userName2) { 'Adam' }
-#
-#   # good
-#   subject(:user_name_1) { 'Adam' }
-#   let(:user_name_2) { 'Adam' }
+# @example
+#   # okay because it matches the `^userFood` regex in `AllowedPatterns`
+#   subject(:userFood_1) { 'spaghetti' }
+#   let(:userFood_2) { 'fettuccine' }
+# @example AllowedPatterns configuration
+#   # rubocop.yml
+#   # RSpec/VariableName:
+#   #   EnforcedStyle: snake_case
+#   #   AllowedPatterns:
+#   #     - ^userFood
 # @example EnforcedStyle: camelCase
 #   # bad
 #   subject(:user_name_1) { 'Adam' }
@@ -6836,16 +6838,14 @@ RuboCop::Cop::RSpec::VariableDefinition::MSG = T.let(T.unsafe(nil), String)
 #   # good
 #   subject(:userName1) { 'Adam' }
 #   let(:userName2) { 'Adam' }
-# @example AllowedPatterns configuration
-#   # rubocop.yml
-#   # RSpec/VariableName:
-#   #   EnforcedStyle: snake_case
-#   #   AllowedPatterns:
-#   #     - ^userFood
-# @example
-#   # okay because it matches the `^userFood` regex in `AllowedPatterns`
-#   subject(:userFood_1) { 'spaghetti' }
-#   let(:userFood_2) { 'fettuccine' }
+# @example EnforcedStyle: snake_case (default)
+#   # bad
+#   subject(:userName1) { 'Adam' }
+#   let(:userName2) { 'Adam' }
+#
+#   # good
+#   subject(:user_name_1) { 'Adam' }
+#   let(:user_name_2) { 'Adam' }
 #
 # source://rubocop-rspec//lib/rubocop/cop/rspec/variable_name.rb#41
 class RuboCop::Cop::RSpec::VariableName < ::RuboCop::Cop::RSpec::Base

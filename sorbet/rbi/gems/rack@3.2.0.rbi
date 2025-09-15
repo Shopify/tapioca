@@ -3698,8 +3698,8 @@ module Rack::Response::Helpers
   # Specify that the content should be cached.
   #
   # @option directive
-  # @param duration [Integer] The number of seconds until the cache expires.
   # @param directive [Hash] a customizable set of options
+  # @param duration [Integer] The number of seconds until the cache expires.
   #
   # source://rack//lib/rack/response.rb#307
   def cache!(duration = T.unsafe(nil), directive: T.unsafe(nil)); end

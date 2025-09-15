@@ -352,10 +352,10 @@ class WebMock::BodyPattern
   #
   #     {a: {b: 'wow'}} and {a: {b: 'wow'}}
   #
-  # @param query_parameters [Hash] typically the result of parsing
-  #   JSON, XML or URL encoded parameters.
   # @param pattern [Hash] which contains keys with a string, hash or
   #   regular expression value to use for comparison.
+  # @param query_parameters [Hash] typically the result of parsing
+  #   JSON, XML or URL encoded parameters.
   # @return [Boolean] true if the paramaters match the comparison
   #   hash, false if not.
   #

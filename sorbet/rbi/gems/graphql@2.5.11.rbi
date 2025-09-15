@@ -75,15 +75,15 @@ module GraphQL::Analysis
   # Multiplex analyzers are ran for all queries, keeping state.
   # Query analyzers are ran per query, without carrying state between queries.
   #
-  # @param multiplex [GraphQL::Execution::Multiplex]
   # @param analyzers [Array<GraphQL::Analysis::Analyzer>]
+  # @param multiplex [GraphQL::Execution::Multiplex]
   # @return [Array<Any>] Results from multiplex analyzers
   #
   # source://graphql//lib/graphql/analysis.rb#27
   def analyze_multiplex(multiplex, analyzers); end
 
-  # @param query [GraphQL::Query]
   # @param analyzers [Array<GraphQL::Analysis::Analyzer>]
+  # @param query [GraphQL::Query]
   # @return [Array<Any>] Results from those analyzers
   #
   # source://graphql//lib/graphql/analysis.rb#56
@@ -97,15 +97,15 @@ module GraphQL::Analysis
     # Multiplex analyzers are ran for all queries, keeping state.
     # Query analyzers are ran per query, without carrying state between queries.
     #
-    # @param multiplex [GraphQL::Execution::Multiplex]
     # @param analyzers [Array<GraphQL::Analysis::Analyzer>]
+    # @param multiplex [GraphQL::Execution::Multiplex]
     # @return [Array<Any>] Results from multiplex analyzers
     #
     # source://graphql//lib/graphql/analysis.rb#27
     def analyze_multiplex(multiplex, analyzers); end
 
-    # @param query [GraphQL::Query]
     # @param analyzers [Array<GraphQL::Analysis::Analyzer>]
+    # @param query [GraphQL::Query]
     # @return [Array<Any>] Results from those analyzers
     #
     # source://graphql//lib/graphql/analysis.rb#56
@@ -343,9 +343,9 @@ class GraphQL::Analysis::QueryComplexity < ::GraphQL::Analysis::Analyzer
   # A hook which is called whenever a field's max complexity is calculated.
   # Override this method to capture individual field complexity details.
   #
-  # @param scoped_type_complexity [ScopedTypeComplexity]
-  # @param max_complexity [Numeric] Field's maximum complexity including child complexity
   # @param child_complexity [Numeric, nil] Field's child complexity
+  # @param max_complexity [Numeric] Field's maximum complexity including child complexity
+  # @param scoped_type_complexity [ScopedTypeComplexity]
   #
   # source://graphql//lib/graphql/analysis/query_complexity.rb#172
   def field_complexity(scoped_type_complexity, max_complexity:, child_complexity: T.unsafe(nil)); end
@@ -364,9 +364,9 @@ class GraphQL::Analysis::QueryComplexity < ::GraphQL::Analysis::Analyzer
   # source://graphql//lib/graphql/analysis/query_complexity.rb#177
   def merged_max_complexity(query, inner_selections); end
 
+  # @param mode [:future, :legacy]
   # @param query [GraphQL::Query] Used for `query.possible_types`
   # @param scopes [Array<ScopedTypeComplexity>] Array of scoped type complexities
-  # @param mode [:future, :legacy]
   # @return [Integer]
   #
   # source://graphql//lib/graphql/analysis/query_complexity.rb#119
@@ -383,8 +383,8 @@ end
 #
 # source://graphql//lib/graphql/analysis/query_complexity.rb#46
 class GraphQL::Analysis::QueryComplexity::ScopedTypeComplexity < ::Hash
-  # @param parent_type [Class] The owner of `field_definition`
   # @param field_definition [GraphQL::Field, GraphQL::Schema::Field] Used for getting the `.complexity` configuration
+  # @param parent_type [Class] The owner of `field_definition`
   # @param query [GraphQL::Query] Used for `query.possible_types`
   # @param response_path [Array<String>] The path to the response key for the field
   # @return [Hash<GraphQL::BaseType, Hash<String, ScopedTypeComplexity>>]
@@ -914,8 +914,8 @@ class GraphQL::Dataloader
   # These will be used by {Dataloader::ActiveRecordSource}, {Dataloader::ActiveRecordAssociationSource} and their helper
   # methods, `dataload_record` and `dataload_association`.
   #
-  # @param records [Array<ActiveRecord::Base>] Already-loaded records to warm the cache with
   # @param index_by [Symbol] The attribute to use as the cache key. (Should match `find_by:` when using {ActiveRecordSource})
+  # @param records [Array<ActiveRecord::Base>] Already-loaded records to warm the cache with
   # @return [void]
   #
   # source://graphql//lib/graphql/dataloader.rb#266
@@ -1400,8 +1400,8 @@ class GraphQL::Execution::Errors
     # internal handler index to maintain least-to-most specific.
     #
     # @param error_class [Class<Exception>]
-    # @param error_handlers [Hash]
     # @param error_handler [Proc]
+    # @param error_handlers [Hash]
     # @return [void]
     #
     # source://graphql//lib/graphql/execution/errors.rb#13
@@ -1412,10 +1412,10 @@ end
 # source://graphql//lib/graphql/execution/interpreter/argument_value.rb#5
 class GraphQL::Execution::Interpreter
   class << self
-    # @param schema [GraphQL::Schema]
-    # @param queries [Array<GraphQL::Query, Hash>]
     # @param context [Hash]
     # @param max_complexity [Integer, nil]
+    # @param queries [Array<GraphQL::Query, Hash>]
+    # @param schema [GraphQL::Schema]
     # @return [Array<GraphQL::Query::Result>] One result per query
     #
     # source://graphql//lib/graphql/execution/interpreter.rb#24
@@ -1645,9 +1645,9 @@ class GraphQL::Execution::Interpreter::Runtime
   def initialize(query:, lazies_at_depth:); end
 
   # @api private
-  # @param obj [Object] Some user-returned value that may want to be batched
-  # @param field [GraphQL::Schema::Field]
   # @param eager [Boolean] Set to `true` for mutation root fields only
+  # @param field [GraphQL::Schema::Field]
+  # @param obj [Object] Some user-returned value that may want to be batched
   # @param trace [Boolean] If `false`, don't wrap this with field tracing
   # @return [GraphQL::Execution::Lazy, Object] If loading `object` will be deferred, it's a wrapper over it.
   #
@@ -2248,9 +2248,9 @@ GraphQL::Execution::Lazy::NullResult = T.let(T.unsafe(nil), GraphQL::Execution::
 #
 # source://graphql//lib/graphql/execution/lookahead.rb#29
 class GraphQL::Execution::Lookahead
-  # @param query [GraphQL::Query]
   # @param ast_nodes [Array<GraphQL::Language::Nodes::Field>, Array<GraphQL::Language::Nodes::OperationDefinition>]
   # @param field [GraphQL::Schema::Field] if `ast_nodes` are fields, this is the field definition matching those nodes
+  # @param query [GraphQL::Query]
   # @param root_type [Class] if `ast_nodes` are operation definition, this is the root type for that operation
   # @return [Lookahead] a new instance of Lookahead
   #
@@ -2343,8 +2343,8 @@ class GraphQL::Execution::Lookahead
   # if any of the given `arguments:` are not present and matching in the next selection.
   # (But, the next selection may contain _more_ than the given arguments.)
   #
-  # @param field_name [String, Symbol]
   # @param arguments [Hash] Arguments which must match in the selection
+  # @param field_name [String, Symbol]
   # @return [Boolean]
   #
   # source://graphql//lib/graphql/execution/lookahead.rb#86
@@ -2976,11 +2976,11 @@ end
 #
 # @api private
 # @param context [Hash]
-# @param only [<#call(member, ctx)>]
 # @param except [<#call(member, ctx)>]
-# @param include_introspection_types [Boolean] Whether or not to include introspection types in the AST
-# @param include_built_in_scalars [Boolean] Whether or not to include built in scalars in the AST
 # @param include_built_in_directives [Boolean] Whether or not to include built in directives in the AST
+# @param include_built_in_scalars [Boolean] Whether or not to include built in scalars in the AST
+# @param include_introspection_types [Boolean] Whether or not to include introspection types in the AST
+# @param only [<#call(member, ctx)>]
 #
 # source://graphql//lib/graphql/language/document_from_schema_definition.rb#15
 class GraphQL::Language::DocumentFromSchemaDefinition
@@ -3162,8 +3162,8 @@ module GraphQL::Language::Generation
   #   document = GraphQL.parse(query_string)
   #   GraphQL::Language::Generation.generate(document)
   #   # => "{ ... }"
-  # @param node [GraphQL::Language::Nodes::AbstractNode] an AST node to recursively stringify
   # @param indent [String] Whitespace to add to each printed node
+  # @param node [GraphQL::Language::Nodes::AbstractNode] an AST node to recursively stringify
   # @param printer [GraphQL::Language::Printer] An optional custom printer for printing AST nodes. Defaults to GraphQL::Language::Printer
   # @return [String] Valid GraphQL for `node`
   #
@@ -3705,11 +3705,6 @@ end
 
 # This is the AST root for normal queries
 #
-# @example Deriving a document by parsing a string
-#   document = GraphQL.parse(query_string)
-# @example Creating a string from a document
-#   document.to_query_string
-#   # { ... }
 # @example Creating a custom string from a document
 #   class VariableScrubber < GraphQL::Language::Printer
 #   def print_argument(arg)
@@ -3718,6 +3713,11 @@ end
 #   end
 #
 #   document.to_query_string(printer: VariableScrubber.new)
+# @example Creating a string from a document
+#   document.to_query_string
+#   # { ... }
+# @example Deriving a document by parsing a string
+#   document = GraphQL.parse(query_string)
 #
 # source://graphql//lib/graphql/language/nodes.rb#616
 class GraphQL::Language::Nodes::Document < ::GraphQL::Language::Nodes::AbstractNode
@@ -5455,10 +5455,6 @@ end
 class GraphQL::Language::Printer
   # Turn an arbitrary AST node back into a string.
   #
-  # @example Turning a document into a query string
-  #   document = GraphQL.parse(query_string)
-  #   GraphQL::Language::Printer.new.print(document)
-  #   # => "{ ... }"
   # @example Building a custom printer
   #
   #   class MyPrinter < GraphQL::Language::Printer
@@ -5469,8 +5465,12 @@ class GraphQL::Language::Printer
   #
   #   MyPrinter.new.print(document)
   #   # => "mutation { pay(creditCard: <HIDDEN>) { success } }"
-  # @param node [Nodes::AbstractNode]
+  # @example Turning a document into a query string
+  #   document = GraphQL.parse(query_string)
+  #   GraphQL::Language::Printer.new.print(document)
+  #   # => "{ ... }"
   # @param indent [String] Whitespace to add to the printed node
+  # @param node [Nodes::AbstractNode]
   # @param truncate_size [Integer, nil] The size to truncate to.
   # @return [String] Valid GraphQL for `node`
   #
@@ -6280,16 +6280,16 @@ end
 #
 # source://graphql//lib/graphql/pagination/connection.rb#14
 class GraphQL::Pagination::Connection
-  # @param items [Object] some unpaginated collection item, like an `Array` or `ActiveRecord::Relation`
-  # @param context [Query::Context]
-  # @param parent [Object] The object this collection belongs to
-  # @param first [Integer, nil] The limit parameter from the client, if it provided one
   # @param after [String, nil] A cursor for pagination, if the client provided one
-  # @param last [Integer, nil] Limit parameter from the client, if provided
-  # @param before [String, nil] A cursor for pagination, if the client provided one.
   # @param arguments [Hash] The arguments to the field that returned the collection wrapped by this connection
-  # @param max_page_size [Integer, nil] A configured value to cap the result size. Applied as `first` if neither first or last are given and no `default_page_size` is set.
+  # @param before [String, nil] A cursor for pagination, if the client provided one.
+  # @param context [Query::Context]
   # @param default_page_size [Integer, nil] A configured value to determine the result size when neither first or last are given.
+  # @param first [Integer, nil] The limit parameter from the client, if it provided one
+  # @param items [Object] some unpaginated collection item, like an `Array` or `ActiveRecord::Relation`
+  # @param last [Integer, nil] Limit parameter from the client, if provided
+  # @param max_page_size [Integer, nil] A configured value to cap the result size. Applied as `first` if neither first or last are given and no `default_page_size` is set.
+  # @param parent [Object] The object this collection belongs to
   # @return [Connection] a new instance of Connection
   #
   # source://graphql//lib/graphql/pagination/connection.rb#69
@@ -6704,8 +6704,8 @@ class GraphQL::Pagination::RelationConnection < ::GraphQL::Pagination::Connectio
   # source://graphql//lib/graphql/pagination/relation_connection.rb#78
   def relation_count(relation); end
 
-  # @param relation [Object] A database query object
   # @param _initial_offset [Integer] The number of items already excluded from the relation
+  # @param relation [Object] A database query object
   # @param size [Integer] The value against which we check the relation size
   # @return [Boolean] True if the number of items in this relation is larger than `size`
   #
@@ -6799,14 +6799,14 @@ class GraphQL::Query
 
   # Prepare query `query_string` on `schema`
   #
-  # @param schema [GraphQL::Schema]
-  # @param query_string [String]
   # @param context [#[]] an arbitrary hash of values which you can access in {GraphQL::Field#resolve}
-  # @param variables [Hash] values for `$variables` in the query
-  # @param operation_name [String] if the query string contains many operations, this is the one which should be executed
-  # @param root_value [Object] the object used to resolve fields on the root type
-  # @param max_depth [Numeric] the maximum number of nested selections allowed for this query (falls back to schema-level value)
   # @param max_complexity [Numeric] the maximum field complexity for this query (falls back to schema-level value)
+  # @param max_depth [Numeric] the maximum number of nested selections allowed for this query (falls back to schema-level value)
+  # @param operation_name [String] if the query string contains many operations, this is the one which should be executed
+  # @param query_string [String]
+  # @param root_value [Object] the object used to resolve fields on the root type
+  # @param schema [GraphQL::Schema]
+  # @param variables [Hash] values for `$variables` in the query
   # @param visibility_profile [Symbol] Another way to assign `context[:visibility_profile]`
   # @return [Query] a new instance of Query
   #
@@ -7385,9 +7385,9 @@ end
 GraphQL::Query::Context::UNSPECIFIED_FETCH_DEFAULT = T.let(T.unsafe(nil), Object)
 
 # @api private
+# @see Query#fingerprint
 # @see Query#query_fingerprint
 # @see Query#variables_fingerprint
-# @see Query#fingerprint
 #
 # source://graphql//lib/graphql/query/fingerprint.rb#11
 module GraphQL::Query::Fingerprint
@@ -7446,6 +7446,7 @@ GraphQL::Query::InputValidationResult::VALID = T.let(T.unsafe(nil), GraphQL::Que
 #
 # source://graphql//lib/graphql/query/null_context.rb#6
 class GraphQL::Query::NullContext < ::GraphQL::Query::Context
+  include ::Singleton::SingletonInstanceMethods
   include ::Singleton
   extend ::Singleton::SingletonClassMethods
 
@@ -7534,11 +7535,11 @@ end
 class GraphQL::Query::Partial
   include ::GraphQL::Query::Runnable
 
-  # @param path [Array<String, Integer>] A path in `query.query_string` to start executing from
-  # @param object [Object] A starting object for execution
-  # @param query [GraphQL::Query] A full query instance that this partial is based on. Caches are shared.
   # @param context [Hash] Extra context values to merge into `query.context`, if provided
   # @param fragment_node [GraphQL::Language::Nodes::InlineFragment, GraphQL::Language::Nodes::FragmentDefinition]
+  # @param object [Object] A starting object for execution
+  # @param path [Array<String, Integer>] A path in `query.query_string` to start executing from
+  # @param query [GraphQL::Query] A full query instance that this partial is based on. Caches are shared.
   # @return [Partial] a new instance of Partial
   #
   # source://graphql//lib/graphql/query/partial.rb#22
@@ -7981,10 +7982,10 @@ module GraphQL::Relay; end
 # source://graphql//lib/graphql/relay/range_add.rb#29
 class GraphQL::Relay::RangeAdd
   # @param collection [Object] The list of items to wrap in a connection
-  # @param item [Object] The newly-added item (will be wrapped in `edge_class`)
   # @param context [GraphQL::Query::Context] The surrounding `ctx`, will be passed to the connection
-  # @param parent [Object] The owner of `collection`, will be passed to the connection if provided
   # @param edge_class [Class] The class to wrap `item` with (defaults to the connection's edge class)
+  # @param item [Object] The newly-added item (will be wrapped in `edge_class`)
+  # @param parent [Object] The owner of `collection`, will be passed to the connection if provided
   # @return [RangeAdd] a new instance of RangeAdd
   #
   # source://graphql//lib/graphql/relay/range_add.rb#37
@@ -8108,10 +8109,10 @@ class GraphQL::Schema
     #
     # @param context [Hash]
     # @param include_deprecated_args [Boolean] If true, deprecated arguments will be included in the JSON response
-    # @param include_schema_description [Boolean] If true, the schema's description will be queried and included in the response
-    # @param include_is_repeatable [Boolean] If true, `isRepeatable: true|false` will be included with the schema's directives
-    # @param include_specified_by_url [Boolean] If true, scalar types' `specifiedByUrl:` will be included in the response
     # @param include_is_one_of [Boolean] If true, `isOneOf: true|false` will be included with input objects
+    # @param include_is_repeatable [Boolean] If true, `isRepeatable: true|false` will be included with the schema's directives
+    # @param include_schema_description [Boolean] If true, the schema's description will be queried and included in the response
+    # @param include_specified_by_url [Boolean] If true, scalar types' `specifiedByUrl:` will be included in the response
     # @return [Hash] GraphQL result
     #
     # source://graphql//lib/graphql/schema.rb#269
@@ -8132,10 +8133,10 @@ class GraphQL::Schema
     #
     # If you choose `:compare`, you must also implement {.legacy_complexity_cost_calculation_mismatch} to handle the input somehow.
     #
-    # @example Opting into the future calculation mode
-    #   complexity_cost_calculation_mode(:future)
     # @example Choosing the legacy mode (which will work until that mode is removed...)
     #   complexity_cost_calculation_mode(:legacy)
+    # @example Opting into the future calculation mode
+    #   complexity_cost_calculation_mode(:future)
     # @example Run both modes for every query, call {.legacy_complexity_cost_calculation_mismatch} when they don't match:
     #   complexity_cost_calculation_mode(:compare)
     #
@@ -8335,8 +8336,8 @@ class GraphQL::Schema
 
     # Create schema from an IDL schema or file containing an IDL definition.
     #
-    # @param definition_or_path [String] A schema definition string, or a path to a file containing the definition
     # @param default_resolve [<#call(type, field, obj, args, ctx)>] A callable for handling field resolution
+    # @param definition_or_path [String] A schema definition string, or a path to a file containing the definition
     # @param parser [Object] An object for handling definition string parsing (must respond to `parse`)
     # @param using [Hash] Plugins to attach to the created schema with `use(key, value)`
     # @return [Class] the schema described by `document`
@@ -8358,8 +8359,8 @@ class GraphQL::Schema
     # source://graphql//lib/graphql/schema.rb#741
     def get_fields(type, context = T.unsafe(nil)); end
 
-    # @param type_name [String]
     # @param context [GraphQL::Query::Context] Used for filtering definitions at query-time
+    # @param type_name [String]
     # @param use_visibility_profile Private, for migration to {Schema::Visibility}
     # @return [Module, nil] A type, or nil if there's no type called `type_name`
     #
@@ -8385,8 +8386,8 @@ class GraphQL::Schema
     #   application_object.to_gid_param
     #   end
     # @param application_object [Object] Some object encountered by GraphQL-Ruby while running a query
-    # @param graphql_type [Class, Module] The type that GraphQL-Ruby is using for `application_object` during this query
     # @param context [GraphQL::Query::Context] The context for the operation that is currently running
+    # @param graphql_type [Class, Module] The type that GraphQL-Ruby is using for `application_object` during this query
     # @raise [GraphQL::RequiredImplementationMissingError]
     # @return [String] A stable identifier which can be passed to {.object_from_id} later to re-fetch `application_object`
     #
@@ -8437,9 +8438,9 @@ class GraphQL::Schema
     #   Stats.increment(:complexity_mismatch, tags: { client: client_id, ops: operation_names })
     #   legacy_cost
     #   end
-    # @param multiplex [GraphQL::Execution::Multiplex]
     # @param future_complexity_cost [Integer]
     # @param legacy_complexity_cost [Integer]
+    # @param multiplex [GraphQL::Execution::Multiplex]
     # @return [Integer] the cost to use for this query (probably one of `future_complexity_cost` or `legacy_complexity_cost`)
     # @see Query::Context#add_error Adding an error to the response to notify the client
     # @see Query::Context#response_extensions Adding key-value pairs to the response `"extensions" => { ... }`
@@ -8470,11 +8471,11 @@ class GraphQL::Schema
     # (Changing the field return type would be a breaking change, but if it works for your client use cases,
     # that might work, too.)
     #
+    # @param node1 [GraphQL::Language::Nodes::Field] This node is recognized as conflicting. You might call `.line` and `.col` for custom error reporting.
+    # @param node2 [GraphQL::Language::Nodes::Field] The other node recognized as conflicting.
     # @param query [GraphQL::Query]
     # @param type1 [Module] A GraphQL type definition
     # @param type2 [Module] A GraphQL type definition
-    # @param node1 [GraphQL::Language::Nodes::Field] This node is recognized as conflicting. You might call `.line` and `.col` for custom error reporting.
-    # @param node2 [GraphQL::Language::Nodes::Field] The other node recognized as conflicting.
     # @return [:return_validation_error] Let GraphQL-Ruby return the (new) normal validation error for this query
     # @return [String] A validation error to return for this query
     # @return [nil] Don't send the client an error, continue the legacy behavior (allow this query to execute)
@@ -8542,8 +8543,8 @@ class GraphQL::Schema
     # @param kwargs [Hash] a customizable set of options
     # @param queries [Array<Hash>] Keyword arguments for each query
     # @return [Array<GraphQL::Query::Result>] One result for each query in the input
-    # @see {Query#initialize} for query keyword arguments
     # @see {Execution::Multiplex#run_all} for multiplex keyword arguments
+    # @see {Query#initialize} for query keyword arguments
     #
     # source://graphql//lib/graphql/schema.rb#1602
     def multiplex(queries, **kwargs); end
@@ -8561,8 +8562,8 @@ class GraphQL::Schema
     #
     # @example Using `Types::Mutation` as the entry-point
     #   mutation { Types::Mutation }
-    # @param new_mutation_object [Class<GraphQL::Schema::Object>] The root type to use for mutations
     # @param lazy_load_block If a block is given, then it will be called when GraphQL-Ruby needs the root mutation type.
+    # @param new_mutation_object [Class<GraphQL::Schema::Object>] The root type to use for mutations
     # @return [Class<GraphQL::Schema::Object>, nil] The configured mutation root type, if there is one.
     #
     # source://graphql//lib/graphql/schema.rb#479
@@ -8593,8 +8594,8 @@ class GraphQL::Schema
     #   GlobalID.find(global_id)
     #   # TODO: use `context[:current_user]` to determine if this object is authorized.
     #   end
-    # @param object_id [String] The ID to fetch an object for. This may be client-provided (as in `node(id: ...)` or `loads:`) or previously stored by the schema (eg, by the `ObjectCache`)
     # @param context [GraphQL::Query::Context] The context for the currently-executing operation
+    # @param object_id [String] The ID to fetch an object for. This may be client-provided (as in `node(id: ...)` or `loads:`) or previously stored by the schema (eg, by the `ObjectCache`)
     # @raise [GraphQL::RequiredImplementationMissingError]
     # @return [Object, nil] The application which `object_id` references, or `nil` if there is no object or the current operation shouldn't have access to the object
     # @see id_from_object which produces these IDs
@@ -8623,8 +8624,8 @@ class GraphQL::Schema
     #
     # The default is to add the error to `context.errors`
     #
-    # @param parse_err [GraphQL::ParseError] The error encountered during parsing
     # @param ctx [GraphQL::Query::Context] The context for the query where the error occurred
+    # @param parse_err [GraphQL::ParseError] The error encountered during parsing
     # @return void
     #
     # source://graphql//lib/graphql/schema.rb#1349
@@ -8633,8 +8634,8 @@ class GraphQL::Schema
     # source://graphql//lib/graphql/schema.rb#329
     def plugins; end
 
-    # @param type [Module] The type definition whose possible types you want to see
     # @param context [GraphQL::Query::Context] used for filtering visible possible types at runtime
+    # @param type [Module] The type definition whose possible types you want to see
     # @param use_visibility_profile Private, for migration to {Schema::Visibility}
     # @return [Hash<String, Module>] All possible types, if no `type` is given.
     # @return [Array<Module>] Possible types for `type`, if it's given.
@@ -8646,8 +8647,8 @@ class GraphQL::Schema
     #
     # @example Using `Types::Query` as the entry-point
     #   query { Types::Query }
-    # @param new_query_object [Class<GraphQL::Schema::Object>] The root type to use for queries
     # @param lazy_load_block If a block is given, then it will be called when GraphQL-Ruby needs the root query type.
+    # @param new_query_object [Class<GraphQL::Schema::Object>] The root type to use for queries
     # @return [Class<GraphQL::Schema::Object>, nil] The configured query root type, if there is one.
     #
     # source://graphql//lib/graphql/schema.rb#440
@@ -8673,8 +8674,8 @@ class GraphQL::Schema
     # Called when execution encounters a `SystemStackError`. By default, it adds a client-facing error to the response.
     # You could modify this method to report this error to your bug tracker.
     #
-    # @param query [GraphQL::Query]
     # @param err [SystemStackError]
+    # @param query [GraphQL::Query]
     # @return [void]
     #
     # source://graphql//lib/graphql/schema.rb#1631
@@ -8691,10 +8692,10 @@ class GraphQL::Schema
     # @param handler_block The code to run when one of those errors is raised during execution
     # @raise [GraphQL::ExecutionError] In the handler, raise to add a client-facing error to the response
     # @raise [StandardError] In the handler, raise to crash the query with a developer-facing error
-    # @yieldparam error [StandardError] An instance of one of the configured `err_classes`
-    # @yieldparam object [Object] The current application object in the query when the error was raised
     # @yieldparam arguments [GraphQL::Query::Arguments] The current field arguments when the error was raised
     # @yieldparam context [GraphQL::Query::Context] The context for the currently-running operation
+    # @yieldparam error [StandardError] An instance of one of the configured `err_classes`
+    # @yieldparam object [Object] The current application object in the query when the error was raised
     # @yieldreturn [Object] Some object to use in the place where this error was raised
     #
     # source://graphql//lib/graphql/schema.rb#1120
@@ -8747,8 +8748,8 @@ class GraphQL::Schema
     #
     # @example Using `Types::Subscription` as the entry-point
     #   subscription { Types::Subscription }
-    # @param new_subscription_object [Class<GraphQL::Schema::Object>] The root type to use for subscriptions
     # @param lazy_load_block If a block is given, then it will be called when GraphQL-Ruby needs the root subscription type.
+    # @param new_subscription_object [Class<GraphQL::Schema::Object>] The root type to use for subscriptions
     # @return [Class<GraphQL::Schema::Object>, nil] The configured subscription root type, if there is one.
     #
     # source://graphql//lib/graphql/schema.rb#518
@@ -8843,9 +8844,9 @@ class GraphQL::Schema
     # @example Adding a trace in a special mode
     #   # only runs when `query.context[:trace_mode]` is `:special`
     #   trace_with SpecialTrace, mode: :special
-    # @param trace_mod [Module] A module that implements tracing methods
     # @param mode [Symbol] Trace module will only be used for this trade mode
     # @param options [Hash] Keywords that will be passed to the tracing class during `#initialize`
+    # @param trace_mod [Module] A module that implements tracing methods
     # @return [void]
     # @see GraphQL::Tracing::Trace Tracing::Trace for available tracing methods
     #
@@ -8864,8 +8865,8 @@ class GraphQL::Schema
     # The default implementation of this method is to follow the GraphQL specification,
     # but you can override this to report errors to your bug tracker or customize error handling.
     #
-    # @param type_error [GraphQL::Error] several specific error classes are passed here, see the default implementation for details
     # @param context [GraphQL::Query::Context] the context for the currently-running operation
+    # @param type_error [GraphQL::Error] several specific error classes are passed here, see the default implementation for details
     # @raise [GraphQL::ExecutionError] to return this error to the client
     # @raise [GraphQL::Error] to crash the query and raise a developer-facing error
     # @return [void]
@@ -9158,19 +9159,19 @@ class GraphQL::Schema::Argument
   include ::GraphQL::Schema::Member::HasValidators
 
   # @param arg_name [Symbol]
-  # @param type_expr
-  # @param desc [String]
-  # @param required [Boolean, :nullable] if true, this argument is non-null; if false, this argument is nullable. If `:nullable`, then the argument must be provided, though it may be `null`.
-  # @param description [String]
-  # @param default_value [Object]
   # @param as [Symbol] Override the keyword name when passed to a method
-  # @param prepare [Symbol] A method to call to transform this argument's valuebefore sending it to field resolution
   # @param camelize [Boolean] if true, the name will be camelized when building the schema
-  # @param from_resolver [Boolean] if true, a Resolver class defined this argument
-  # @param directives [Hash{Class => Hash}]
+  # @param default_value [Object]
   # @param deprecation_reason [String]
-  # @param validates [Hash, nil] Options for building validators, if any should be applied
+  # @param desc [String]
+  # @param description [String]
+  # @param directives [Hash{Class => Hash}]
+  # @param from_resolver [Boolean] if true, a Resolver class defined this argument
+  # @param prepare [Symbol] A method to call to transform this argument's valuebefore sending it to field resolution
   # @param replace_null_with_default [Boolean] if `true`, incoming values of `null` will be replaced with the configured `default_value`
+  # @param required [Boolean, :nullable] if true, this argument is non-null; if false, this argument is nullable. If `:nullable`, then the argument must be provided, though it may be `null`.
+  # @param type_expr
+  # @param validates [Hash, nil] Options for building validators, if any should be applied
   # @return [Argument] a new instance of Argument
   #
   # source://graphql//lib/graphql/schema/argument.rb#53
@@ -9732,6 +9733,15 @@ GraphQL::Schema::Directive::FRAGMENT_SPREAD = T.let(T.unsafe(nil), Symbol)
 #
 # To use it, you have to implement `.enabled?`, for example:
 #
+# @example Flagging a part of the query
+#   viewer {
+#   # This field only runs if `.enabled?("recommendationEngine", obj, context)`
+#   # returns true. Otherwise, it's treated as if it didn't exist.
+#   recommendations @feature(flag: "recommendationEngine") {
+#   name
+#   rating
+#   }
+#   }
 # @example Implementing the Feature directive
 #   # app/graphql/directives/feature.rb
 #   class Directives::Feature < GraphQL::Schema::Directive::Feature
@@ -9743,15 +9753,6 @@ GraphQL::Schema::Directive::FRAGMENT_SPREAD = T.let(T.unsafe(nil), Symbol)
 #   MyFeatureFlags.enabled?(current_user, flag_key)
 #   end
 #   end
-# @example Flagging a part of the query
-#   viewer {
-#   # This field only runs if `.enabled?("recommendationEngine", obj, context)`
-#   # returns true. Otherwise, it's treated as if it didn't exist.
-#   recommendations @feature(flag: "recommendationEngine") {
-#   name
-#   rating
-#   }
-#   }
 #
 # source://graphql//lib/graphql/schema/directive/feature.rb#36
 class GraphQL::Schema::Directive::Feature < ::GraphQL::Schema::Directive
@@ -9761,9 +9762,9 @@ class GraphQL::Schema::Directive::Feature < ::GraphQL::Schema::Directive
   class << self
     # Override this method in your app's subclass of this directive.
     #
+    # @param context [GraphQL::Query::Context]
     # @param flag_name [String] The client-provided string of a feature to check
     # @param object [GraphQL::Schema::Objct] The currently-evaluated GraphQL object instance
-    # @param context [GraphQL::Query::Context]
     # @raise [GraphQL::RequiredImplementationMissingError]
     # @return [Boolean] If truthy, execution will continue
     #
@@ -9980,8 +9981,8 @@ class GraphQL::Schema::Enum < ::GraphQL::Schema::Member
     # Called by the runtime with incoming string representations from a query.
     # It will match the string to a configured by name or by Ruby value.
     #
-    # @param value_name [String, Object] A string from a GraphQL query, or a Ruby value matching a `value(..., value: ...)` configuration
     # @param ctx [GraphQL::Query::Context]
+    # @param value_name [String, Object] A string from a GraphQL query, or a Ruby value matching a `value(..., value: ...)` configuration
     # @raise [GraphQL::UnauthorizedEnumValueError] if an {EnumValue} matches but returns false for `.authorized?`. Goes to {Schema.unauthorized_object}.
     # @return [Object] The Ruby value for the matched {GraphQL::Schema::EnumValue}
     #
@@ -9991,8 +9992,8 @@ class GraphQL::Schema::Enum < ::GraphQL::Schema::Member
     # Called by the runtime when a field returns a value to give back to the client.
     # This method checks that the incoming {value} matches one of the enum's defined values.
     #
-    # @param value [Object] Any value matching the values for this enum.
     # @param ctx [GraphQL::Query::Context]
+    # @param value [Object] Any value matching the values for this enum.
     # @raise [GraphQL::Schema::Enum::UnresolvedValueError] if {value} doesn't match a configured value or if the matching value isn't authorized.
     # @return [String] The GraphQL-ready string for {value}
     #
@@ -10028,8 +10029,8 @@ class GraphQL::Schema::Enum < ::GraphQL::Schema::Member
     # @option kwargs
     # @option kwargs
     # @option kwargs
-    # @param value_method [Symbol, false] A method to generate for this value, or `false` to skip generation
     # @param kwargs [Hash] a customizable set of options
+    # @param value_method [Symbol, false] A method to generate for this value, or `false` to skip generation
     # @return [void]
     # @see {Schema::EnumValue} which handles these inputs by default
     #
@@ -10160,36 +10161,36 @@ class GraphQL::Schema::Field
   extend ::GraphQL::Schema::FindInheritedValue
   extend ::GraphQL::EmptyObjects
 
-  # @param name [Symbol] The underscore-cased version of this field name (will be camelized for the GraphQL API)
-  # @param type [Class, GraphQL::BaseType, Array] The return type of this field
-  # @param owner [Class] The type that this field belongs to
-  # @param null [Boolean] (defaults to `true`) `true` if this field may return `null`, `false` if it is never `null`
-  # @param description [String] Field description
+  # @param arguments [{String=>GraphQL::Schema::Argument, Hash}] Arguments for this field (may be added in the block, also)
+  # @param ast_node [Language::Nodes::FieldDefinition, nil] If this schema was parsed from definition, this AST node defined the field
+  # @param broadcastable [Boolean] Whether or not this field can be distributed in subscription broadcasts
+  # @param camelize [Boolean] If true, the field name will be camelized when building the schema
   # @param comment [String] Field comment
-  # @param deprecation_reason [String] If present, the field is marked "deprecated" with this message
-  # @param method [Symbol] The method to call on the underlying object to resolve this field (defaults to `name`)
-  # @param hash_key [String, Symbol] The hash key to lookup on the underlying object (if its a Hash) to resolve this field (defaults to `name` or `name.to_s`)
-  # @param dig [Array<String, Symbol>] The nested hash keys to lookup on the underlying hash to resolve this field using dig
-  # @param resolver_method [Symbol] The method on the type to call to resolve this field (defaults to `name`)
+  # @param complexity [Numeric] When provided, set the complexity for this field
   # @param connection [Boolean] `true` if this field should get automagic connection behavior; default is to infer by `*Connection` in the return type name
   # @param connection_extension [Class] The extension to add, to implement connections. If `nil`, no extension is added.
-  # @param max_page_size [Integer, nil] For connections, the maximum number of items to return from this field, or `nil` to allow unlimited results.
   # @param default_page_size [Integer, nil] For connections, the default number of items to return from this field, or `nil` to return unlimited results.
+  # @param deprecation_reason [String] If present, the field is marked "deprecated" with this message
+  # @param description [String] Field description
+  # @param dig [Array<String, Symbol>] The nested hash keys to lookup on the underlying hash to resolve this field using dig
+  # @param directives [Hash{Class => Hash}] Directives to apply to this field
+  # @param extensions [Array<Class, Hash<Class => Object>>] Named extensions to apply to this field (see also {#extension})
+  # @param fallback_value [Object] A fallback value if the method is not defined
+  # @param hash_key [String, Symbol] The hash key to lookup on the underlying object (if its a Hash) to resolve this field (defaults to `name` or `name.to_s`)
   # @param introspection [Boolean] If true, this field will be marked as `#introspection?` and the name may begin with `__`
+  # @param max_page_size [Integer, nil] For connections, the maximum number of items to return from this field, or `nil` to allow unlimited results.
+  # @param method [Symbol] The method to call on the underlying object to resolve this field (defaults to `name`)
+  # @param method_conflict_warning [Boolean] If false, skip the warning if this field's method conflicts with a built-in method
+  # @param name [Symbol] The underscore-cased version of this field name (will be camelized for the GraphQL API)
+  # @param null [Boolean] (defaults to `true`) `true` if this field may return `null`, `false` if it is never `null`
+  # @param owner [Class] The type that this field belongs to
   # @param resolver_class [Class] (Private) A {Schema::Resolver} which this field was derived from. Use `resolver:` to create a field with a resolver.
-  # @param arguments [{String=>GraphQL::Schema::Argument, Hash}] Arguments for this field (may be added in the block, also)
-  # @param camelize [Boolean] If true, the field name will be camelized when building the schema
-  # @param complexity [Numeric] When provided, set the complexity for this field
+  # @param resolver_method [Symbol] The method on the type to call to resolve this field (defaults to `name`)
   # @param scope [Boolean] If true, the return type's `.scope_items` method will be called on the return value
   # @param subscription_scope [Symbol, String] A key in `context` which will be used to scope subscription payloads
-  # @param extensions [Array<Class, Hash<Class => Object>>] Named extensions to apply to this field (see also {#extension})
-  # @param directives [Hash{Class => Hash}] Directives to apply to this field
   # @param trace [Boolean] If true, a {GraphQL::Tracing} tracer will measure this scalar field
-  # @param broadcastable [Boolean] Whether or not this field can be distributed in subscription broadcasts
-  # @param ast_node [Language::Nodes::FieldDefinition, nil] If this schema was parsed from definition, this AST node defined the field
-  # @param method_conflict_warning [Boolean] If false, skip the warning if this field's method conflicts with a built-in method
+  # @param type [Class, GraphQL::BaseType, Array] The return type of this field
   # @param validates [Array<Hash>] Configurations for validating this field
-  # @param fallback_value [Object] A fallback value if the method is not defined
   # @return [Field] a new instance of Field
   #
   # source://graphql//lib/graphql/schema/field.rb#258
@@ -10299,10 +10300,10 @@ class GraphQL::Schema::Field
   #
   # @example adding an extension
   #   extensions([MyExtensionClass])
-  # @example adding multiple extensions
-  #   extensions([MyExtensionClass, AnotherExtensionClass])
   # @example adding an extension with options
   #   extensions([MyExtensionClass, { AnotherExtensionClass => { filter: true } }])
+  # @example adding multiple extensions
+  #   extensions([MyExtensionClass, AnotherExtensionClass])
   # @param extensions [Array<Class, Hash<Class => Hash>>] Add extensions to this field. For hash elements, only the first key/value is used.
   # @return [Array<GraphQL::Schema::FieldExtension>] extensions to apply to this field
   #
@@ -10417,9 +10418,9 @@ class GraphQL::Schema::Field
   # This method is called by the interpreter for each field.
   # You can extend it in your base field classes.
   #
-  # @param object [GraphQL::Schema::Object] An instance of some type class, wrapping an application object
   # @param args [Hash] A symbol-keyed hash of Ruby keyword arguments. (Empty if no args)
   # @param ctx [GraphQL::Query::Context]
+  # @param object [GraphQL::Schema::Object] An instance of some type class, wrapping an application object
   #
   # source://graphql//lib/graphql/schema/field.rb#718
   def resolve(object, args, query_ctx); end
@@ -10521,8 +10522,8 @@ class GraphQL::Schema::Field
     #
     # It also normalizes positional arguments into keywords for {Schema::Field#initialize}.
     #
-    # @param resolver [Class] A {GraphQL::Schema::Resolver} class to use for field configuration
     # @param mutation [Class] A {GraphQL::Schema::Mutation} class to use for field configuration
+    # @param resolver [Class] A {GraphQL::Schema::Resolver} class to use for field configuration
     # @param subscription [Class] A {GraphQL::Schema::Subscription} class to use for field configuration
     # @return [GraphQL::Schema:Field] an instance of `self`
     # @see {.initialize} for other options
@@ -10664,11 +10665,11 @@ class GraphQL::Schema::FieldExtension
   #
   # Whatever this hook returns will be used as the return value.
   #
-  # @param object [Object] The object the field is being resolved on
   # @param arguments [Hash] Ruby keyword arguments for resolving this field
   # @param context [Query::Context] the context for this query
-  # @param value [Object] Whatever the field previously returned
   # @param memo [Object] The third value yielded by {#resolve}, or `nil` if there wasn't one
+  # @param object [Object] The object the field is being resolved on
+  # @param value [Object] Whatever the field previously returned
   # @return [Object] The return value for this field.
   #
   # source://graphql//lib/graphql/schema/field_extension.rb#148
@@ -10699,13 +10700,13 @@ class GraphQL::Schema::FieldExtension
   #
   # Whatever this method returns will be used for execution.
   #
-  # @param object [Object] The object the field is being resolved on
   # @param arguments [Hash] Ruby keyword arguments for resolving this field
   # @param context [Query::Context] the context for this query
+  # @param object [Object] The object the field is being resolved on
   # @return [Object] The return value for this field.
-  # @yieldparam object [Object] The object to continue resolving the field on
   # @yieldparam arguments [Hash] The keyword arguments to continue resolving with
   # @yieldparam memo [Object] Any extension-specific value which will be passed to {#after_resolve} later
+  # @yieldparam object [Object] The object to continue resolving the field on
   #
   # source://graphql//lib/graphql/schema/field_extension.rb#133
   def resolve(object:, arguments:, context:); end
@@ -10758,14 +10759,14 @@ end
 
 # Find schema members using string paths
 #
-# @example Finding object types
-#   MySchema.find("SomeObjectType")
-# @example Finding fields
-#   MySchema.find("SomeObjectType.myField")
 # @example Finding arguments
 #   MySchema.find("SomeObjectType.myField.anArgument")
 # @example Finding directives
 #   MySchema.find("@include")
+# @example Finding fields
+#   MySchema.find("SomeObjectType.myField")
+# @example Finding object types
+#   MySchema.find("SomeObjectType")
 #
 # source://graphql//lib/graphql/schema/finder.rb#19
 class GraphQL::Schema::Finder
@@ -11630,8 +11631,8 @@ module GraphQL::Schema::Member::HasArguments
   # If no block is given, it will immediately dataload (but might return a Lazy).
   #
   # @api private
-  # @param values [Hash<String, Object>]
   # @param context [GraphQL::Query::Context]
+  # @param values [Hash<String, Object>]
   # @return [Interpreter::Arguments, Execution::Lazy<Interpreter::Arguments>]
   # @yield [Interpreter::Arguments, Execution::Lazy<Interpreter::Arguments>]
   #
@@ -11693,9 +11694,9 @@ module GraphQL::Schema::Member::HasArguments::ArgumentObjectLoader
   # By default, it uses Relay-style {Schema.object_from_id},
   # override this to find objects another way.
   #
-  # @param type [Class, Module] A GraphQL type definition
-  # @param id [String] A client-provided to look up
   # @param context [GraphQL::Query::Context] the current context
+  # @param id [String] A client-provided to look up
+  # @param type [Class, Module] A GraphQL type definition
   #
   # source://graphql//lib/graphql/schema/member/has_arguments.rb#334
   def object_from_id(type, id, context); end
@@ -11783,9 +11784,9 @@ module GraphQL::Schema::Member::HasDataloader
   # Identical to `dataloader.with(source_class, *source_args).load(load_key)`
   #
   # @api public
-  # @param source_class [Class<GraphQL::Dataloader::Source>]
-  # @param source_args [Array<Object>] Any extra parameters defined in `source_class`'s `initialize` method
   # @param load_key [Object] The key to look up using `def fetch`
+  # @param source_args [Array<Object>] Any extra parameters defined in `source_class`'s `initialize` method
+  # @param source_class [Class<GraphQL::Dataloader::Source>]
   #
   # source://graphql//lib/graphql/schema/member/has_dataloader.rb#19
   def dataload(source_class, *source_args, load_key); end
@@ -11812,9 +11813,9 @@ module GraphQL::Schema::Member::HasDataloader
   #   dataload_record(Post, 5) # Like `Post.find(5)`, but dataloaded
   # @example Finding a record by another attribute
   #   dataload_record(User, "matz", find_by: :handle) # Like `User.find_by(handle: "matz")`, but dataloaded
-  # @param model [Class<ActiveRecord::Base>]
-  # @param find_by_value [Object] Usually an `id`, might be another value if `find_by:` is also provided
   # @param find_by [Symbol, String] A column name to look the record up by. (Defaults to the model's primary key.)
+  # @param find_by_value [Object] Usually an `id`, might be another value if `find_by:` is also provided
+  # @param model [Class<ActiveRecord::Base>]
   # @return [ActiveRecord::Base, nil]
   #
   # source://graphql//lib/graphql/schema/member/has_dataloader.rb#32
@@ -11915,8 +11916,8 @@ module GraphQL::Schema::Member::HasDirectives
     # - Any name conflict is overridden by the incoming member of `dirs`
     # - Any other member of `dirs` is appended
     #
-    # @param target [Array<GraphQL::Schema::Directive>]
     # @param dirs [Array<GraphQL::Schema::Directive>]
+    # @param target [Array<GraphQL::Schema::Directive>]
     # @return [void]
     #
     # source://graphql//lib/graphql/schema/member/has_directives.rb#99
@@ -12228,8 +12229,8 @@ module GraphQL::Schema::Member::Scoped
   #
   # By default, it's a no-op. Override it to scope your objects.
   #
-  # @param items [Object] Some list-like object (eg, Array, ActiveRecord::Relation)
   # @param context [GraphQL::Query::Context]
+  # @param items [Object] Some list-like object (eg, Array, ActiveRecord::Relation)
   # @return [Object] Another list-like object, scoped to the current context
   #
   # source://graphql//lib/graphql/schema/member/scoped.rb#15
@@ -12482,8 +12483,8 @@ class GraphQL::Schema::Object < ::GraphQL::Schema::Member
     # It would be a headache to try to maintain Promise-y state inside a {Schema::Object}
     # instance. So, hopefully this wrapper method will do the job.
     #
-    # @param object [Object] The thing wrapped by this object
     # @param context [GraphQL::Query::Context]
+    # @param object [Object] The thing wrapped by this object
     # @raise [GraphQL::UnauthorizedError] if the user-provided hook returns `false`
     # @return [GraphQL::Schema::Object, GraphQL::Execution::Lazy]
     #
@@ -12529,10 +12530,6 @@ end
 
 # Used to convert your {GraphQL::Schema} to a GraphQL schema string
 #
-# @example print your schema to standard output (via helper)
-#   puts GraphQL::Schema::Printer.print_schema(MySchema)
-# @example print your schema to standard output
-#   puts GraphQL::Schema::Printer.new(MySchema).print_schema
 # @example print a single type to standard output
 #   class Types::Query < GraphQL::Schema::Object
 #   description "The query root of this schema"
@@ -12554,12 +12551,16 @@ end
 #
 #   printer = GraphQL::Schema::Printer.new(MySchema)
 #   puts printer.print_type(Types::Post)
+# @example print your schema to standard output
+#   puts GraphQL::Schema::Printer.new(MySchema).print_schema
+# @example print your schema to standard output (via helper)
+#   puts GraphQL::Schema::Printer.print_schema(MySchema)
 #
 # source://graphql//lib/graphql/schema/printer.rb#34
 class GraphQL::Schema::Printer < ::GraphQL::Language::Printer
-  # @param schema [GraphQL::Schema]
   # @param context [Hash]
   # @param introspection [Boolean] Should include the introspection types in the string?
+  # @param schema [GraphQL::Schema]
   # @return [Printer] a new instance of Printer
   #
   # source://graphql//lib/graphql/schema/printer.rb#40
@@ -12591,10 +12592,10 @@ class GraphQL::Schema::Printer < ::GraphQL::Language::Printer
 
     # Return a GraphQL schema string for the defined types in the schema
     #
-    # @param schema [GraphQL::Schema]
     # @param context [Hash]
-    # @param only [<#call(member, ctx)>]
     # @param except [<#call(member, ctx)>]
+    # @param only [<#call(member, ctx)>]
+    # @param schema [GraphQL::Schema]
     #
     # source://graphql//lib/graphql/schema/printer.rb#82
     def print_schema(schema, **args); end
@@ -12697,8 +12698,8 @@ end
 #
 # A resolver's configuration may be overridden with other keywords in the `field(...)` call.
 #
-# @see {GraphQL::Schema::Mutation} for a concrete subclass of `Resolver`.
 # @see {GraphQL::Function} `Resolver` is a replacement for `GraphQL::Function`
+# @see {GraphQL::Schema::Mutation} for a concrete subclass of `Resolver`.
 #
 # source://graphql//lib/graphql/schema/resolver/has_payload_type.rb#5
 class GraphQL::Schema::Resolver
@@ -12719,9 +12720,9 @@ class GraphQL::Schema::Resolver
   extend ::GraphQL::Schema::Member::HasDeprecationReason
   extend ::GraphQL::Schema::Member::HasDeprecationReason::ClassMethods
 
-  # @param object [Object] The application object that this field is being resolved on
   # @param context [GraphQL::Query::Context]
   # @param field [GraphQL::Schema::Field]
+  # @param object [Object] The application object that this field is being resolved on
   # @return [Resolver] a new instance of Resolver
   #
   # source://graphql//lib/graphql/schema/resolver.rb#36
@@ -13201,10 +13202,6 @@ GraphQL::Schema::Subscription::NO_UPDATE = T.let(T.unsafe(nil), Symbol)
 # timeout options for external connections. For more info, see
 # www.mikeperham.com/2015/05/08/timeout-rubys-most-dangerous-api/
 #
-# @example Stop resolving fields after 2 seconds
-#   class MySchema < GraphQL::Schema
-#   use GraphQL::Schema::Timeout, max_seconds: 2
-#   end
 # @example Notifying Bugsnag and logging a timeout
 #   class MyTimeout < GraphQL::Schema::Timeout
 #   def handle_timeout(error, query)
@@ -13215,6 +13212,10 @@ GraphQL::Schema::Subscription::NO_UPDATE = T.let(T.unsafe(nil), Symbol)
 #
 #   class MySchema < GraphQL::Schema
 #   use MyTimeout, max_seconds: 2
+#   end
+# @example Stop resolving fields after 2 seconds
+#   class MySchema < GraphQL::Schema
+#   use GraphQL::Schema::Timeout, max_seconds: 2
 #   end
 #
 # source://graphql//lib/graphql/schema/timeout.rb#35
@@ -13295,8 +13296,8 @@ module GraphQL::Schema::TypeExpression
     # Return `nil` if not found.
     #
     # @api private
-    # @param type_owner [#type] A thing for looking up types by name
     # @param ast_node [GraphQL::Language::Nodes::AbstractNode]
+    # @param type_owner [#type] A thing for looking up types by name
     # @return [Class, GraphQL::Schema::NonNull, GraphQL::Schema:List]
     #
     # source://graphql//lib/graphql/schema/type_expression.rb#11
@@ -13416,8 +13417,8 @@ module GraphQL::Schema::UniqueWithinType
   # source://graphql//lib/graphql/schema/unique_within_type.rb#29
   def decode(node_id, separator: T.unsafe(nil)); end
 
-  # @param type_name [String]
   # @param object_value [Any]
+  # @param type_name [String]
   # @return [String] a unique, opaque ID generated as a function of the two inputs
   #
   # source://graphql//lib/graphql/schema/unique_within_type.rb#17
@@ -13442,8 +13443,8 @@ module GraphQL::Schema::UniqueWithinType
     # source://graphql//lib/graphql/schema/unique_within_type.rb#8
     def default_id_separator=(_arg0); end
 
-    # @param type_name [String]
     # @param object_value [Any]
+    # @param type_name [String]
     # @return [String] a unique, opaque ID generated as a function of the two inputs
     #
     # source://graphql//lib/graphql/schema/unique_within_type.rb#17
@@ -13468,9 +13469,9 @@ end
 class GraphQL::Schema::Validator
   include ::GraphQL::EmptyObjects
 
-  # @param validated [GraphQL::Schema::Argument, GraphQL::Schema::Field, GraphQL::Schema::Resolver, Class<GraphQL::Schema::InputObject>] The argument or argument owner this validator is attached to
   # @param allow_blank [Boolean] if `true`, then objects that respond to `.blank?` and return true for `.blank?` will skip this validation
   # @param allow_null [Boolean] if `true`, then incoming `null`s will skip this validation
+  # @param validated [GraphQL::Schema::Argument, GraphQL::Schema::Field, GraphQL::Schema::Resolver, Class<GraphQL::Schema::InputObject>] The argument or argument owner this validator is attached to
   # @return [Validator] a new instance of Validator
   #
   # source://graphql//lib/graphql/schema/validator.rb#13
@@ -13487,8 +13488,8 @@ class GraphQL::Schema::Validator
   # source://graphql//lib/graphql/schema/validator.rb#38
   def permitted_empty_value?(value); end
 
-  # @param object [Object] The application object that this argument's field is being resolved for
   # @param context [GraphQL::Query::Context]
+  # @param object [Object] The application object that this argument's field is being resolved for
   # @param value [Object] The client-provided value for this argument (after parsing and coercing by the input type)
   # @raise [GraphQL::RequiredImplementationMissingError]
   # @return [nil, Array<String>, String] Error message or messages to add
@@ -13541,9 +13542,9 @@ class GraphQL::Schema::Validator
     # source://graphql//lib/graphql/schema/validator.rb#94
     def uninstall(name); end
 
-    # @param validators [Array<Validator>]
-    # @param object [Object]
     # @param context [Query::Context]
+    # @param object [Object]
+    # @param validators [Array<Validator>]
     # @param value [Object]
     # @return [void]
     #
@@ -13554,18 +13555,18 @@ end
 
 # Use this to validate each member of an array value.
 #
-# @example validate format of all strings in an array
-#
-#   argument :handles, [String],
-#   validates: { all: { format: { with: /\A[a-z0-9_]+\Z/ } } }
-# @example multiple validators can be combined
-#
-#   argument :handles, [String],
-#   validates: { all: { format: { with: /\A[a-z0-9_]+\Z/ }, length: { maximum: 32 } } }
 # @example any type can be used
 #
 #   argument :choices, [Integer],
 #   validates: { all: { inclusion: { in: 1..12 } } }
+# @example multiple validators can be combined
+#
+#   argument :handles, [String],
+#   validates: { all: { format: { with: /\A[a-z0-9_]+\Z/ }, length: { maximum: 32 } } }
+# @example validate format of all strings in an array
+#
+#   argument :handles, [String],
+#   validates: { all: { format: { with: /\A[a-z0-9_]+\Z/ } } }
 #
 # source://graphql//lib/graphql/schema/validator/all_validator.rb#23
 class GraphQL::Schema::Validator::AllValidator < ::GraphQL::Schema::Validator
@@ -13622,8 +13623,8 @@ GraphQL::Schema::Validator::AllowNullValidator::MESSAGE = T.let(T.unsafe(nil), S
 #
 # source://graphql//lib/graphql/schema/validator/exclusion_validator.rb#13
 class GraphQL::Schema::Validator::ExclusionValidator < ::GraphQL::Schema::Validator
-  # @param message [String]
   # @param in [Array] The values to reject
+  # @param message [String]
   # @return [ExclusionValidator] a new instance of ExclusionValidator
   #
   # source://graphql//lib/graphql/schema/validator/exclusion_validator.rb#16
@@ -13635,22 +13636,22 @@ end
 
 # Use this to assert that string values match (or don't match) the given RegExp.
 #
-# @example requiring input to match a pattern
-#
-#   argument :handle, String, required: true,
-#   validates: { format: { with: /\A[a-z0-9_]+\Z/ } }
 # @example reject inputs that match a pattern
 #
 #   argument :word_that_doesnt_begin_with_a_vowel, String, required: true,
 #   validates: { format: { without: /\A[aeiou]/ } }
 #
 #   # It's pretty hard to come up with a legitimate use case for `without:`
+# @example requiring input to match a pattern
+#
+#   argument :handle, String, required: true,
+#   validates: { format: { with: /\A[a-z0-9_]+\Z/ } }
 #
 # source://graphql//lib/graphql/schema/validator/format_validator.rb#20
 class GraphQL::Schema::Validator::FormatValidator < ::GraphQL::Schema::Validator
+  # @param message [String]
   # @param with [RegExp, nil]
   # @param without [Regexp, nil]
-  # @param message [String]
   # @return [FormatValidator] a new instance of FormatValidator
   #
   # source://graphql//lib/graphql/schema/validator/format_validator.rb#24
@@ -13671,8 +13672,8 @@ end
 #
 # source://graphql//lib/graphql/schema/validator/inclusion_validator.rb#15
 class GraphQL::Schema::Validator::InclusionValidator < ::GraphQL::Schema::Validator
-  # @param message [String]
   # @param in [Array] The values to allow
+  # @param message [String]
   # @return [InclusionValidator] a new instance of InclusionValidator
   #
   # source://graphql//lib/graphql/schema/validator/inclusion_validator.rb#18
@@ -13693,14 +13694,14 @@ end
 #
 # source://graphql//lib/graphql/schema/validator/length_validator.rb#16
 class GraphQL::Schema::Validator::LengthValidator < ::GraphQL::Schema::Validator
-  # @param maximum [Integer]
-  # @param too_long [String] Used when `maximum` is exceeded or value is greater than `within`
-  # @param minimum [Integer]
-  # @param too_short [String] Used with value is less than `minimum` or less than `within`
   # @param is [Integer] Exact length requirement
-  # @param wrong_length [String] Used when value doesn't match `is`
-  # @param within [Range] An allowed range (becomes `minimum:` and `maximum:` under the hood)
+  # @param maximum [Integer]
   # @param message [String]
+  # @param minimum [Integer]
+  # @param too_long [String] Used when `maximum` is exceeded or value is greater than `within`
+  # @param too_short [String] Used with value is less than `minimum` or less than `within`
+  # @param within [Range] An allowed range (becomes `minimum:` and `maximum:` under the hood)
+  # @param wrong_length [String] Used when value doesn't match `is`
   # @return [LengthValidator] a new instance of LengthValidator
   #
   # source://graphql//lib/graphql/schema/validator/length_validator.rb#25
@@ -13715,25 +13716,25 @@ end
 # @example Require a number between 0 and 1
 #
 #   argument :batting_average, Float, required: true, validates: { numericality: { within: 0..1 } }
-# @example Require the number 42
-#
-#   argument :the_answer, Integer, required: true, validates: { numericality: { equal_to: 42 } }
 # @example Require a real number
 #
 #   argument :items_count, Integer, required: true, validates: { numericality: { greater_than_or_equal_to: 0 } }
+# @example Require the number 42
+#
+#   argument :the_answer, Integer, required: true, validates: { numericality: { equal_to: 42 } }
 #
 # source://graphql//lib/graphql/schema/validator/numericality_validator.rb#19
 class GraphQL::Schema::Validator::NumericalityValidator < ::GraphQL::Schema::Validator
+  # @param equal_to [Integer]
+  # @param even [Boolean]
   # @param greater_than [Integer]
   # @param greater_than_or_equal_to [Integer]
   # @param less_than [Integer]
   # @param less_than_or_equal_to [Integer]
-  # @param equal_to [Integer]
-  # @param other_than [Integer]
-  # @param odd [Boolean]
-  # @param even [Boolean]
-  # @param within [Range]
   # @param message [String] used for all validation failures
+  # @param odd [Boolean]
+  # @param other_than [Integer]
+  # @param within [Range]
   # @return [NumericalityValidator] a new instance of NumericalityValidator
   #
   # source://graphql//lib/graphql/schema/validator/numericality_validator.rb#30
@@ -13774,9 +13775,9 @@ end
 #
 # source://graphql//lib/graphql/schema/validator/required_validator.rb#37
 class GraphQL::Schema::Validator::RequiredValidator < ::GraphQL::Schema::Validator
-  # @param one_of [Array<Symbol>] A list of arguments, exactly one of which is required for this field
   # @param argument [Symbol] An argument that is required for this field
   # @param message [String]
+  # @param one_of [Array<Symbol>] A list of arguments, exactly one of which is required for this field
   # @return [RequiredValidator] a new instance of RequiredValidator
   #
   # source://graphql//lib/graphql/schema/validator/required_validator.rb#41
@@ -13917,10 +13918,10 @@ class GraphQL::Schema::Visibility
   def load_all(types: T.unsafe(nil)); end
 
   class << self
-    # @param schema [Class<GraphQL::Schema>]
-    # @param profiles [Hash<Symbol => Hash>] A hash of `name => context` pairs for preloading visibility profiles
-    # @param preload [Boolean] if `true`, load the default schema profile and all named profiles immediately (defaults to `true` for `Rails.env.production?`)
     # @param migration_errors [Boolean] if `true`, raise an error when `Visibility` and `Warden` return different results
+    # @param preload [Boolean] if `true`, load the default schema profile and all named profiles immediately (defaults to `true` for `Rails.env.production?`)
+    # @param profiles [Hash<Symbol => Hash>] A hash of `name => context` pairs for preloading visibility profiles
+    # @param schema [Class<GraphQL::Schema>]
     #
     # source://graphql//lib/graphql/schema/visibility.rb#15
     def use(schema, dynamic: T.unsafe(nil), profiles: T.unsafe(nil), preload: T.unsafe(nil), migration_errors: T.unsafe(nil)); end
@@ -14455,9 +14456,9 @@ class GraphQL::Schema::Warden
     def use(schema); end
 
     # @api private
-    # @param visibility_method [Symbol] a Warden method to call for this entry
-    # @param entry [Object, Array<Object>] One or more definitions for a given name in a GraphQL Schema
     # @param context [GraphQL::Query::Context]
+    # @param entry [Object, Array<Object>] One or more definitions for a given name in a GraphQL Schema
+    # @param visibility_method [Symbol] a Warden method to call for this entry
     # @param warden [Warden]
     # @return [Object] `entry` or one of `entry`'s items if exactly one of them is visible for this context
     # @return [nil] If neither `entry` nor any of `entry`'s items are visible for this context
@@ -16522,8 +16523,8 @@ end
 #
 # source://graphql//lib/graphql/static_validation/validator.rb#15
 class GraphQL::StaticValidation::Validator
-  # @param schema [GraphQL::Schema]
   # @param rules [Array<#validate(context)>] a list of rules to use when validating
+  # @param schema [GraphQL::Schema]
   # @return [Validator] a new instance of Validator
   #
   # source://graphql//lib/graphql/static_validation/validator.rb#18
@@ -16531,18 +16532,18 @@ class GraphQL::StaticValidation::Validator
 
   # Invoked when static validation times out.
   #
-  # @param query [GraphQL::Query]
   # @param context [GraphQL::StaticValidation::ValidationContext]
+  # @param query [GraphQL::Query]
   #
   # source://graphql//lib/graphql/static_validation/validator.rb#75
   def handle_timeout(query, context); end
 
   # Validate `query` against the schema. Returns an array of message hashes.
   #
-  # @param query [GraphQL::Query]
-  # @param validate [Boolean]
-  # @param timeout [Float] Number of seconds to wait before aborting validation. Any positive number may be used, including Floats to specify fractional seconds.
   # @param max_errors [Integer] Maximum number of errors before aborting validation. Any positive number will limit the number of errors. Defaults to nil for no limit.
+  # @param query [GraphQL::Query]
+  # @param timeout [Float] Number of seconds to wait before aborting validation. Any positive number may be used, including Floats to specify fractional seconds.
+  # @param validate [Boolean]
   # @return [Array<Hash>]
   #
   # source://graphql//lib/graphql/static_validation/validator.rb#29
@@ -16927,8 +16928,8 @@ class GraphQL::Subscriptions
   # A subscription query was re-evaluated, returning `result`.
   # The result should be send to `subscription_id`.
   #
-  # @param subscription_id [String]
   # @param result [Hash]
+  # @param subscription_id [String]
   # @raise [GraphQL::RequiredImplementationMissingError]
   # @return [void]
   #
@@ -16938,8 +16939,8 @@ class GraphQL::Subscriptions
   # Run the update query for this subscription and deliver it
   #
   # @return [void]
-  # @see {#execute_update}
   # @see {#deliver}
+  # @see {#execute_update}
   #
   # source://graphql//lib/graphql/subscriptions.rb#158
   def execute(subscription_id, event, object); end
@@ -16960,9 +16961,9 @@ class GraphQL::Subscriptions
   #
   # Load `subscription_id`'s GraphQL data, re-evaluate the query and return the result.
   #
-  # @param subscription_id [String]
   # @param event [GraphQL::Subscriptions::Event] The event which was triggered
   # @param object [Object] The value for the subscription field
+  # @param subscription_id [String]
   # @return [GraphQL::Query::Result]
   #
   # source://graphql//lib/graphql/subscriptions.rb#104
@@ -16993,11 +16994,11 @@ class GraphQL::Subscriptions
   # Fetch subscriptions matching this field + arguments pair
   # And pass them off to the queue.
   #
-  # @param event_name [String]
   # @param args [Hash<String, Symbol => Object]] rgs [Hash<String, Symbol => Object]
+  # @param context [Hash]
+  # @param event_name [String]
   # @param object [Object]
   # @param scope [Symbol, String]
-  # @param context [Hash]
   # @return [void]
   #
   # source://graphql//lib/graphql/subscriptions.rb#60
@@ -17014,8 +17015,8 @@ class GraphQL::Subscriptions
   # `query` was executed and found subscriptions to `events`.
   # Update the database to reflect this new state.
   #
-  # @param query [GraphQL::Query]
   # @param events [Array<GraphQL::Subscriptions::Event>]
+  # @param query [GraphQL::Query]
   # @raise [GraphQL::RequiredImplementationMissingError]
   # @return [void]
   #
@@ -17124,8 +17125,8 @@ end
 #
 # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#84
 class GraphQL::Subscriptions::ActionCableSubscriptions < ::GraphQL::Subscriptions
-  # @param serializer [<#dump(obj), #load(string)] Used for serializing messages before handing them to `.broadcast(msg)`] erializer [<#dump(obj), #load(string)] Used for serializing messages before handing them to `.broadcast(msg)`
   # @param namespace [string] Used to namespace events and subscriptions (default: '')
+  # @param serializer [<#dump(obj), #load(string)] Used for serializing messages before handing them to `.broadcast(msg)`] erializer [<#dump(obj), #load(string)] Used for serializing messages before handing them to `.broadcast(msg)`
   # @return [ActionCableSubscriptions] a new instance of ActionCableSubscriptions
   #
   # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#90
@@ -17151,8 +17152,8 @@ class GraphQL::Subscriptions::ActionCableSubscriptions < ::GraphQL::Subscription
   # This is called to turn an ActionCable-broadcasted string (JSON)
   # into a query-ready application object.
   #
-  # @param message [String] n ActionCable-broadcasted string (JSON)
   # @param context [GraphQL::Query::Context] the context of the first event for a given subscription fingerprint
+  # @param message [String] n ActionCable-broadcasted string (JSON)
   #
   # source://graphql//lib/graphql/subscriptions/action_cable_subscriptions.rb#198
   def load_action_cable_message(message, context); end
@@ -18078,8 +18079,8 @@ class GraphQL::Tracing::DataDogTracing < ::GraphQL::Tracing::PlatformTracing
 
   # Implement this method in a subclass to apply custom tags to datadog spans
   #
-  # @param key [String] The event being traced
   # @param data [Hash] The runtime data for this event (@see GraphQL::Tracing for keys for each event)
+  # @param key [String] The event being traced
   # @param span [Datadog::Tracing::SpanOperation] The datadog span for this event
   #
   # source://graphql//lib/graphql/tracing/data_dog_tracing.rb#55
@@ -18144,16 +18145,16 @@ class GraphQL::Tracing::DetailedTrace
   # source://graphql//lib/graphql/tracing/detailed_trace.rb#51
   def trace_mode; end
 
-  # @param last [Integer]
   # @param before [Integer] Timestamp in milliseconds since epoch
+  # @param last [Integer]
   # @return [Enumerable<StoredTrace>]
   #
   # source://graphql//lib/graphql/tracing/detailed_trace.rb#61
   def traces(last: T.unsafe(nil), before: T.unsafe(nil)); end
 
   class << self
-    # @param redis [Redis] If provided, profiles will be stored in Redis for later review
     # @param limit [Integer] A maximum number of profiles to store
+    # @param redis [Redis] If provided, profiles will be stored in Redis for later review
     #
     # source://graphql//lib/graphql/tracing/detailed_trace.rb#33
     def use(schema, trace_mode: T.unsafe(nil), memory: T.unsafe(nil), redis: T.unsafe(nil), limit: T.unsafe(nil)); end
@@ -18793,10 +18794,6 @@ end
 #
 # Use "trace modes" to configure this to run on command or on a sample of traffic.
 #
-# @example Writing trace output
-#
-#   result = MySchema.execute(...)
-#   result.query.trace.write(file: "tmp/trace.dump")
 # @example Running this instrumenter when `trace: true` is present in the request
 #
 #   class MySchema < GraphQL::Schema
@@ -18811,6 +18808,10 @@ end
 #   if context[:trace_mode] == :trace
 #   result.trace.write(file: ...)
 #   end
+# @example Writing trace output
+#
+#   result = MySchema.execute(...)
+#   result.query.trace.write(file: "tmp/trace.dump")
 #
 # source://graphql//lib/graphql/tracing/perfetto_trace.rb#30
 module GraphQL::Tracing::PerfettoTrace
@@ -18884,8 +18885,8 @@ module GraphQL::Tracing::PerfettoTrace
 
   # Dump protobuf output in the specified file.
   #
-  # @param file [String] path to a file in a directory that already exists
   # @param debug_json [Boolean] True to print JSON instead of binary
+  # @param file [String] path to a file in a directory that already exists
   # @return [nil, String, Hash] If `file` was given, `nil`. If `file` was `nil`, a Hash if `debug_json: true`, else binary data.
   #
   # source://graphql//lib/graphql/tracing/perfetto_trace.rb#505
@@ -19742,8 +19743,8 @@ class GraphQL::Tracing::Trace
   # source://graphql//lib/graphql/tracing/trace.rb#117
   def authorized_lazy(query:, type:, object:); end
 
-  # @param multiplex [GraphQL::Execution::Multiplex]
   # @param analyzers [Array<Class>]
+  # @param multiplex [GraphQL::Execution::Multiplex]
   # @return [void]
   #
   # source://graphql//lib/graphql/tracing/trace.rb#45
@@ -19751,9 +19752,9 @@ class GraphQL::Tracing::Trace
 
   # A call to `.authorized?` is starting
   #
-  # @param type [Class<GraphQL::Schema::Object>]
-  # @param object [Object]
   # @param context [GraphQL::Query::Context]
+  # @param object [Object]
+  # @param type [Class<GraphQL::Schema::Object>]
   # @return [void]
   #
   # source://graphql//lib/graphql/tracing/trace.rb#106
@@ -19777,9 +19778,9 @@ class GraphQL::Tracing::Trace
 
   # GraphQL is about to resolve this field
   #
+  # @param arguments [Hash]
   # @param field [GraphQL::Schema::Field]
   # @param object [GraphQL::Schema::Object]
-  # @param arguments [Hash]
   # @param query [GraphQL::Query]
   #
   # source://graphql//lib/graphql/tracing/trace.rb#80
@@ -19787,9 +19788,9 @@ class GraphQL::Tracing::Trace
 
   # A call to `.resolve_type` is starting
   #
+  # @param context [GraphQL::Query::Context]
   # @param type [Class<GraphQL::Schema::Union>, Module<GraphQL::Schema::Interface>]
   # @param value [Object]
-  # @param context [GraphQL::Query::Context]
   # @return [void]
   #
   # source://graphql//lib/graphql/tracing/trace.rb#134
@@ -19837,8 +19838,8 @@ class GraphQL::Tracing::Trace
   # source://graphql//lib/graphql/tracing/trace.rb#171
   def dataloader_spawn_source_fiber(pending_sources); end
 
-  # @param multiplex [GraphQL::Execution::Multiplex]
   # @param analyzers [Array<Class>]
+  # @param multiplex [GraphQL::Execution::Multiplex]
   # @return [void]
   #
   # source://graphql//lib/graphql/tracing/trace.rb#49
@@ -19846,10 +19847,10 @@ class GraphQL::Tracing::Trace
 
   # A call to `.authorized?` just finished
   #
-  # @param type [Class<GraphQL::Schema::Object>]
-  # @param object [Object]
-  # @param context [GraphQL::Query::Context]
   # @param authorized_result [Boolean]
+  # @param context [GraphQL::Query::Context]
+  # @param object [Object]
+  # @param type [Class<GraphQL::Schema::Object>]
   # @return [void]
   #
   # source://graphql//lib/graphql/tracing/trace.rb#114
@@ -19873,9 +19874,9 @@ class GraphQL::Tracing::Trace
 
   # GraphQL just finished resolving this field
   #
+  # @param arguments [Hash]
   # @param field [GraphQL::Schema::Field]
   # @param object [GraphQL::Schema::Object]
-  # @param arguments [Hash]
   # @param query [GraphQL::Query]
   # @param result [Object]
   #
@@ -19884,10 +19885,10 @@ class GraphQL::Tracing::Trace
 
   # A call to `.resolve_type` just ended
   #
-  # @param type [Class<GraphQL::Schema::Union>, Module<GraphQL::Schema::Interface>]
-  # @param value [Object]
   # @param context [GraphQL::Query::Context]
   # @param resolved_type [Class<GraphQL::Schema::Object>]
+  # @param type [Class<GraphQL::Schema::Union>, Module<GraphQL::Schema::Interface>]
+  # @param value [Object]
   # @return [void]
   #
   # source://graphql//lib/graphql/tracing/trace.rb#143
@@ -20621,9 +20622,9 @@ module GraphQL::Types::Relay::EdgeBehaviors::ClassMethods
 
   # Get or set the Object type that this edge wraps.
   #
+  # @param field_options [Hash] Any extra arguments to pass to the `field :node` configuration
   # @param node_type [Class] A `Schema::Object` subclass
   # @param null [Boolean]
-  # @param field_options [Hash] Any extra arguments to pass to the `field :node` configuration
   #
   # source://graphql//lib/graphql/types/relay/edge_behaviors.rb#48
   def node_type(node_type = T.unsafe(nil), null: T.unsafe(nil), field_options: T.unsafe(nil)); end
@@ -20886,8 +20887,6 @@ module Graphql; end
 #
 # Pass the class name of your schema when mounting it.
 #
-# @example Mounting the Dashboard in your app
-#   mount GraphQL::Dashboard, at: "graphql_dashboard", schema: "MySchema"
 # @example Authenticating the Dashboard with HTTP Basic Auth
 #   # config/initializers/graphql_dashboard.rb
 #   GraphQL::Dashboard.middleware.use(Rack::Auth::Basic) do |username, password|
@@ -20908,6 +20907,8 @@ module Graphql; end
 #   # load current user
 #   end
 #   end
+# @example Mounting the Dashboard in your app
+#   mount GraphQL::Dashboard, at: "graphql_dashboard", schema: "MySchema"
 # @see GraphQL::Tracing::DetailedTrace DetailedTrace for viewing production traces in the Dashboard
 #
 # source://graphql//lib/graphql/dashboard.rb#34

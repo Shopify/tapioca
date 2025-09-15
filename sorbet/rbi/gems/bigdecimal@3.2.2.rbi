@@ -257,19 +257,3 @@ class Complex < ::Numeric
   # source://bigdecimal//lib/bigdecimal/util.rb#157
   def to_d(*args); end
 end
-
-# source://bigdecimal//lib/bigdecimal/util.rb#171
-class NilClass
-  # call-seq:
-  #     nil.to_d -> bigdecimal
-  #
-  # Returns nil represented as a BigDecimal.
-  #
-  #     require 'bigdecimal'
-  #     require 'bigdecimal/util'
-  #
-  #     nil.to_d   # => 0.0
-  #
-  # source://bigdecimal//lib/bigdecimal/util.rb#182
-  def to_d; end
-end

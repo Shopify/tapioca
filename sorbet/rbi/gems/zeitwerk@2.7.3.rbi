@@ -816,7 +816,6 @@ module Zeitwerk::Loader::Config
 
   # User-oriented callbacks to be fired when a constant is loaded.
   #
-  # | Hash[Symbol, Array[{ (String, top, String) -> void }]]
   #
   # source://zeitwerk//lib/zeitwerk/loader/config.rb#75
   def on_load_callbacks; end
@@ -829,7 +828,6 @@ module Zeitwerk::Loader::Config
 
   # User-oriented callbacks to be fired before constants are removed.
   #
-  # | Hash[Symbol, Array[{ (String, top, String) -> void }]]
   #
   # source://zeitwerk//lib/zeitwerk/loader/config.rb#82
   def on_unload_callbacks; end

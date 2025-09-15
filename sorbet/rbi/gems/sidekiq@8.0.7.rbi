@@ -203,9 +203,9 @@ class Sidekiq::Client
   #
   #   Sidekiq::Client.new(config: config)
   #
-  # @param pool [ConnectionPool] explicit Redis pool to use
-  # @param config [Sidekiq::Config] use the pool and middleware from the given Sidekiq container
   # @param chain [Sidekiq::Middleware::Chain] use the given middleware chain
+  # @param config [Sidekiq::Config] use the pool and middleware from the given Sidekiq container
+  # @param pool [ConnectionPool] explicit Redis pool to use
   # @return [Client] a new instance of Client
   #
   # source://sidekiq//lib/sidekiq/client.rb#45
@@ -1073,10 +1073,10 @@ module Sidekiq::Job::Iterable::Enumerators
   #   def each_iteration(user)
   #   user.notify_about_something
   #   end
-  # @param relation [ActiveRecord::Relation] relation to iterate
   # @param cursor [Object] offset id to start iteration from
   # @param options [Hash] additional options that will be passed to relevant
   #   ActiveRecord batching methods
+  # @param relation [ActiveRecord::Relation] relation to iterate
   # @return [ActiveRecordEnumerator]
   #
   # source://sidekiq//lib/sidekiq/job/iterable/enumerators.rb#46
@@ -1442,8 +1442,8 @@ class Sidekiq::Middleware::Chain
   #
   #   chain.add(Statsd::Metrics, { collector: "localhost:8125" })
   #
-  # @param klass [Class] Your middleware class
   # @param *args [Array<Object>] Set of arguments to pass to every instance of your middleware
+  # @param klass [Class] Your middleware class
   #
   # source://sidekiq//lib/sidekiq/middleware/chain.rb#119
   def add(klass, *args); end
