@@ -774,8 +774,8 @@ class Money::Parser::Fuzzy
   # cases, the other cases can lead to surprising results such as parsed amounts being 1000x larger than intended.
   #
   # @deprecated Use {LocaleAware.parse} or {Simple.parse} instead.
-  # @param input [String]
   # @param currency [String, Money::Currency, nil]
+  # @param input [String]
   # @param strict [Boolean]
   # @raise [MoneyFormatError]
   # @return [Money]
@@ -865,10 +865,10 @@ class Money::Parser::LocaleAware
     # character that is not a digit, hyphen-minus or the decimal separator. To prevent user confusion, make sure
     # that formatted Money strings can be parsed back into equivalent Money objects.
     #
-    # @param input [String]
     # @param currency [String, Money::Currency]
-    # @param strict [Boolean]
     # @param decimal_separator [String]
+    # @param input [String]
+    # @param strict [Boolean]
     # @raise [ArgumentError]
     # @return [Money, nil]
     #
@@ -885,8 +885,8 @@ class Money::Parser::Simple
     # with other languages and other use cases where you expect well-formatted input and do not need to take user
     # locale into consideration.
     #
-    # @param input [String]
     # @param currency [String, Money::Currency]
+    # @param input [String]
     # @param strict [Boolean]
     # @return [Money, nil]
     #

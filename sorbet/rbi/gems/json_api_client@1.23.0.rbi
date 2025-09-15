@@ -2043,8 +2043,8 @@ class JsonApiClient::Resource
     # Within the given block, add these headers to all requests made by
     # the resource class
     #
-    # @param headers [Hash] The headers to send along
     # @param block [Block] The block where headers will be set for
+    # @param headers [Hash] The headers to send along
     #
     # source://json_api_client//lib/json_api_client/resource.rb#186
     def with_headers(headers); end
@@ -2091,9 +2091,9 @@ class JsonApiClient::Resource
     #
     # @option [Symbol]
     # @option [Symbol]
+    # @param [Symbol] [Hash] a customizable set of options
     # @param name [Symbol] the name of the endpoint
     # @param options [Hash] endpoint options
-    # @param [Symbol] [Hash] a customizable set of options
     #
     # source://json_api_client//lib/json_api_client/resource.rb#241
     def custom_endpoint(name, options = T.unsafe(nil)); end

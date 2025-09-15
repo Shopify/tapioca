@@ -3732,8 +3732,8 @@ class REXML::Instruction < ::REXML::Child
   # be a Parent if the target argument is a Source.  Otherwise, this
   # String is set as the content of this instruction.
   #
-  # @param target can be one of a number of things.  If String, then
   # @param content Must be either a String, or a Parent.  Can only
+  # @param target can be one of a number of things.  If String, then
   # @return [Instruction] a new instance of Instruction
   #
   # source://rexml//lib/rexml/instruction.rb#25
@@ -4087,9 +4087,9 @@ class REXML::Parent < ::REXML::Child
 
   # Set an index entry.  See Array.[]=
   #
+  # @param child if opt is an Integer, this is the child to set
   # @param index the index of the element to set
   # @param opt either the object to set, or an Integer length
-  # @param child if opt is an Integer, this is the child to set
   # @return the parent (self)
   #
   # source://rexml//lib/rexml/parent.rb#70
@@ -4174,8 +4174,8 @@ class REXML::Parent < ::REXML::Child
   # Replaces one child with another, making sure the nodelist is correct
   # Child)
   #
-  # @param to_replace the child to replace (must be a Child)
   # @param replacement the child to insert into the nodelist (must be a
+  # @param to_replace the child to replace (must be a Child)
   #
   # source://rexml//lib/rexml/parent.rb#140
   def replace_child(to_replace, replacement); end
@@ -4525,32 +4525,18 @@ class REXML::Parsers::XPathParser
 
   private
 
-  # | AdditiveExpr ('+' | '-') MultiplicativeExpr
-  # | MultiplicativeExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#505
   def AdditiveExpr(path, parsed); end
 
-  # | AndExpr S 'and' S EqualityExpr
-  # | EqualityExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#438
   def AndExpr(path, parsed); end
 
-  # | EqualityExpr ('=' | '!=')  RelationalExpr
-  # | RelationalExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#457
   def EqualityExpr(path, parsed); end
 
-  # | FilterExpr Predicate
-  # | PrimaryExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#608
   def FilterExpr(path, parsed); end
 
-  # | FUNCTION_NAME '(' ( expr ( ',' expr )* )? ')'
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#663
   def FunctionCall(rest, parsed); end
 
@@ -4562,24 +4548,15 @@ class REXML::Parsers::XPathParser
   # source://rexml//lib/rexml/parsers/xpathparser.rb#243
   def LocationPath(path, parsed); end
 
-  # | MultiplicativeExpr ('*' | S ('div' | 'mod') S) UnaryExpr
-  # | UnaryExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#528
   def MultiplicativeExpr(path, parsed); end
 
   # source://rexml//lib/rexml/parsers/xpathparser.rb#343
   def NodeTest(path, parsed); end
 
-  # | OrExpr S 'or' S AndExpr
-  # | AndExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#419
   def OrExpr(path, parsed); end
 
-  # | LocationPath
-  # | FilterExpr ('/' | '//') RelativeLocationPath
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#590
   def PathExpr(path, parsed); end
 
@@ -4591,24 +4568,15 @@ class REXML::Parsers::XPathParser
   # source://rexml//lib/rexml/parsers/xpathparser.rb#626
   def PrimaryExpr(path, parsed); end
 
-  # | RelationalExpr ('<' | '>' | '<=' | '>=') AdditiveExpr
-  # | AdditiveExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#480
   def RelationalExpr(path, parsed); end
 
   # source://rexml//lib/rexml/parsers/xpathparser.rb#267
   def RelativeLocationPath(path, parsed); end
 
-  # | '-' UnaryExpr
-  # | UnionExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#553
   def UnaryExpr(path, parsed); end
 
-  # | UnionExpr '|' PathExpr
-  # | PathExpr
-  #
   # source://rexml//lib/rexml/parsers/xpathparser.rb#571
   def UnionExpr(path, parsed); end
 

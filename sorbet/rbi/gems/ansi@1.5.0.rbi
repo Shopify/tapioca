@@ -200,8 +200,8 @@ module ANSI::Code
 
   # Creates an xterm-256 color code from a CSS-style color string.
   #
-  # @param string [String] Hex string in CSS style, .e.g. `#5FA0C2`.
   # @param background [Boolean] Use `true` for background color, otherwise foreground color.
+  # @param string [String] Hex string in CSS style, .e.g. `#5FA0C2`.
   #
   # source://ansi//lib/ansi/code.rb#325
   def hex_code(string, background = T.unsafe(nil)); end

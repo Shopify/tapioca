@@ -78,13 +78,13 @@ end
 #
 # source://yard-sorbet//lib/yard-sorbet/handlers/include_handler.rb#9
 class YARDSorbet::Handlers::IncludeHandler < ::YARD::Handlers::Ruby::Base
-  # source://yard-sorbet//lib/yard-sorbet/handlers/include_handler.rb#18
+  # source://yard-sorbet//lib/yard-sorbet/handlers/include_handler.rb#16
   sig { void }
   def process; end
 
   private
 
-  # source://yard-sorbet//lib/yard-sorbet/handlers/include_handler.rb#30
+  # source://yard-sorbet//lib/yard-sorbet/handlers/include_handler.rb#28
   sig { returns(::YARD::CodeObjects::NamespaceObject) }
   def included_in; end
 end
@@ -95,12 +95,12 @@ end
 #
 # source://yard-sorbet//lib/yard-sorbet/handlers/mixes_in_class_methods_handler.rb#9
 class YARDSorbet::Handlers::MixesInClassMethodsHandler < ::YARD::Handlers::Ruby::Base
-  # source://yard-sorbet//lib/yard-sorbet/handlers/mixes_in_class_methods_handler.rb#23
+  # source://yard-sorbet//lib/yard-sorbet/handlers/mixes_in_class_methods_handler.rb#21
   sig { void }
   def process; end
 
   class << self
-    # source://yard-sorbet//lib/yard-sorbet/handlers/mixes_in_class_methods_handler.rb#20
+    # source://yard-sorbet//lib/yard-sorbet/handlers/mixes_in_class_methods_handler.rb#18
     sig { params(code_obj: ::String).returns(T.nilable(T::Array[::String])) }
     def mixed_in_class_methods(code_obj); end
   end
@@ -174,13 +174,13 @@ YARDSorbet::Handlers::SigHandler::Documentable = T.type_alias { T.any(::YARD::Co
 #
 # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#10
 module YARDSorbet::Handlers::StructClassHandler
-  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#16
+  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#14
   sig { void }
   def process; end
 
   private
 
-  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#52
+  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#50
   sig do
     params(
       object: ::YARD::CodeObjects::MethodObject,
@@ -193,11 +193,11 @@ module YARDSorbet::Handlers::StructClassHandler
 
   # Create a virtual `initialize` method with all the `prop`/`const` arguments
   #
-  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#32
+  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#30
   sig { params(props: T::Array[::YARDSorbet::TStructProp], class_ns: ::YARD::CodeObjects::ClassObject).void }
   def process_t_struct_props(props, class_ns); end
 
-  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#62
+  # source://yard-sorbet//lib/yard-sorbet/handlers/struct_class_handler.rb#60
   sig { params(props: T::Array[::YARDSorbet::TStructProp]).returns(T::Array[[::String, T.nilable(::String)]]) }
   def to_object_parameters(props); end
 end

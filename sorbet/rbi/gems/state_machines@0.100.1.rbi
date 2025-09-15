@@ -3765,9 +3765,9 @@ module StateMachines::OptionsValidator
   class << self
     # Validates that at most one of the exclusive keys is present in the options hash
     #
-    # @param options [Hash] The options hash to validate
-    # @param exclusive_keys [Array<Symbol>] List of mutually exclusive keys
     # @param caller_info [String] Information about the calling method for better error messages
+    # @param exclusive_keys [Array<Symbol>] List of mutually exclusive keys
+    # @param options [Hash] The options hash to validate
     # @raise [ArgumentError] If more than one exclusive key is found
     #
     # source://state_machines//lib/state_machines/options_validator.rb#33
@@ -3775,9 +3775,9 @@ module StateMachines::OptionsValidator
 
     # Validates that all keys in the options hash are in the list of valid keys
     #
+    # @param caller_info [String] Information about the calling method for better error messages
     # @param options [Hash] The options hash to validate
     # @param valid_keys [Array<Symbol>] List of valid key names
-    # @param caller_info [String] Information about the calling method for better error messages
     # @raise [ArgumentError] If any invalid keys are found
     #
     # source://state_machines//lib/state_machines/options_validator.rb#15
@@ -3796,9 +3796,9 @@ module StateMachines::OptionsValidator
     # Validates options using a more convenient interface that works with both
     # hash-style and kwargs-style method definitions
     #
-    # @param valid_keys [Array<Symbol>] List of valid key names
-    # @param exclusive_key_groups [Array<Array<Symbol>>] Groups of mutually exclusive keys
     # @param caller_info [String] Information about the calling method
+    # @param exclusive_key_groups [Array<Array<Symbol>>] Groups of mutually exclusive keys
+    # @param valid_keys [Array<Symbol>] List of valid key names
     # @return [Proc] A validation proc that can be called with options
     #
     # source://state_machines//lib/state_machines/options_validator.rb#50

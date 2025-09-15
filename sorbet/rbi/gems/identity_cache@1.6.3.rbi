@@ -1769,14 +1769,14 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # the database and fill the cache on a cache miss. This behaves like
   # `readonly.find(id)` being called on the model.
   #
-  # @param id Primary key value for the record to fetch.
-  # @param includes [Hash|Array|Symbol] Cached associations to prefetch from
-  #   the cache on the returned record
   # @param fill_lock_duration [Float] If provided, take a fill lock around cache fills
   #   and wait for this duration for cache to be filled when reading a lock provided
   #   by another client. Defaults to not setting the fill lock and trying to fill the
   #   cache from the database regardless of the presence of another client's fill lock.
   #   Set this to just above the typical amount of time it takes to do a cache fill.
+  # @param id Primary key value for the record to fetch.
+  # @param includes [Hash|Array|Symbol] Cached associations to prefetch from
+  #   the cache on the returned record
   # @param lock_wait_tries [Integer] Only applicable if fill_lock_duration is provided,
   #   in which case it specifies the number of times to do a lock wait. After the first
   #   lock wait it will try to take the lock, so will only do following lock waits due
@@ -1796,14 +1796,14 @@ module IdentityCache::WithPrimaryIndex::ClassMethods
   # the database and fill the cache on a cache miss. This behaves like
   # `where(id: id).readonly.first` being called on the model.
   #
-  # @param id Primary key value for the record to fetch.
-  # @param includes [Hash|Array|Symbol] Cached associations to prefetch from
-  #   the cache on the returned record
   # @param fill_lock_duration [Float] If provided, take a fill lock around cache fills
   #   and wait for this duration for cache to be filled when reading a lock provided
   #   by another client. Defaults to not setting the fill lock and trying to fill the
   #   cache from the database regardless of the presence of another client's fill lock.
   #   Set this to just above the typical amount of time it takes to do a cache fill.
+  # @param id Primary key value for the record to fetch.
+  # @param includes [Hash|Array|Symbol] Cached associations to prefetch from
+  #   the cache on the returned record
   # @param lock_wait_tries [Integer] Only applicable if fill_lock_duration is provided,
   #   in which case it specifies the number of times to do a lock wait. After the first
   #   lock wait it will try to take the lock, so will only do following lock waits due

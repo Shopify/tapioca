@@ -93,24 +93,24 @@ module Faraday
     # @example With an URL argument
     #   Faraday.new 'http://faraday.com'
     #   # => Faraday::Connection to http://faraday.com
+    # @example With an URL argument and an options hash
+    #   Faraday.new 'http://faraday.com', params: { page: 1 }
+    #   # => Faraday::Connection to http://faraday.com?page=1
     # @example With everything in an options hash
     #   Faraday.new url: 'http://faraday.com',
     #   params: { page: 1 }
     #   # => Faraday::Connection to http://faraday.com?page=1
-    # @example With an URL argument and an options hash
-    #   Faraday.new 'http://faraday.com', params: { page: 1 }
-    #   # => Faraday::Connection to http://faraday.com?page=1
     # @option options
     # @option options
     # @option options
     # @option options
     # @option options
     # @option options
+    # @param options [Hash]
     # @param url [String, Hash] The optional String base URL to use as a prefix
     #   for all requests.  Can also be the options Hash. Any of these
     #   values will be set on every request made, unless overridden
     #   for a specific request.
-    # @param options [Hash]
     # @return [Faraday::Connection]
     #
     # source://faraday//lib/faraday.rb#96
@@ -187,10 +187,10 @@ class Faraday::Adapter
   # Fetches either a read, write, or open timeout setting. Defaults to the
   # :timeout value if a more specific one is not given.
   #
-  # @param type [Symbol] Describes which timeout setting to get: :read,
-  #   :write, or :open.
   # @param options [Hash] Hash containing Symbol keys like :timeout,
   #   :read_timeout, :write_timeout, or :open_timeout
+  # @param type [Symbol] Describes which timeout setting to get: :read,
+  #   :write, or :open.
   # @return [Integer, nil] Timeout duration in seconds, or nil if no timeout
   #   has been set.
   #
@@ -525,8 +525,8 @@ class Faraday::Adapter::Test::Stubs
 
   protected
 
-  # @param stack [Hash]
   # @param env [Faraday::Env]
+  # @param stack [Hash]
   # @return [Boolean]
   #
   # source://faraday//lib/faraday/adapter/test.rb#177
@@ -600,9 +600,9 @@ class Faraday::Connection
   # @option options
   # @option options
   # @option options
+  # @param options [Hash, Faraday::ConnectionOptions]
   # @param url [URI, String] URI or String base URL to use as a prefix for all
   #   requests (optional).
-  # @param options [Hash, Faraday::ConnectionOptions]
   # @return [Connection] a new instance of Connection
   # @yield [self] after all setup has been done
   #
@@ -619,9 +619,9 @@ class Faraday::Connection
   #
   #          of the resulting url (default: nil).
   #
-  # @param url [String, URI, nil]
   # @param params [Faraday::Utils::ParamsHash] A Faraday::Utils::ParamsHash to
   #   replace the query values
+  # @param url [String, URI, nil]
   # @return [URI]
   #
   # source://faraday//lib/faraday/connection.rb#470
@@ -650,8 +650,8 @@ class Faraday::Connection
   #
   #   conn.build_url("nigiri", page: 2)
   #   # => https://httpbingo.org/api/nigiri?token=abc&page=2
-  # @param url [String, URI, nil]
   # @param extra_params [Hash]
+  # @param url [String, URI, nil]
   #
   # source://faraday//lib/faraday/connection.rb#407
   def build_url(url = T.unsafe(nil), extra_params = T.unsafe(nil)); end
@@ -820,11 +820,11 @@ class Faraday::Connection
 
   # Builds and runs the Faraday::Request.
   #
-  # @param method [Symbol] HTTP method.
-  # @param url [String, URI, nil] String or URI to access.
   # @param body [String, nil] The request body that will eventually be converted to
   #   a string.
   # @param headers [Hash, nil] unencoded HTTP header key/value pairs.
+  # @param method [Symbol] HTTP method.
+  # @param url [String, URI, nil] String or URI to access.
   # @return [Faraday::Response]
   #
   # source://faraday//lib/faraday/connection.rb#431
@@ -870,8 +870,8 @@ class Faraday::Connection
   #   conn.path_prefix # => "/api"
   #
   #   conn.get("nigiri?page=2") # accesses https://httpbingo.org/api/nigiri
-  # @param url [String, URI]
   # @param encoder [Object]
+  # @param url [String, URI]
   #
   # source://faraday//lib/faraday/connection.rb#356
   def url_prefix=(url, encoder = T.unsafe(nil)); end
@@ -885,8 +885,8 @@ class Faraday::Connection
   # @param uri [URI]
   # @return [void]
   # @yield [username, password] any username and password
-  # @yieldparam username [String] any username from URI
   # @yieldparam password [String] any password from URI
+  # @yieldparam username [String] any username from URI
   #
   # source://faraday//lib/faraday/connection.rb#507
   def with_uri_credentials(uri); end
@@ -2195,8 +2195,8 @@ class Faraday::Request < ::Struct
 
   # Update path and params.
   #
-  # @param path [URI, String]
   # @param params [Hash, nil]
+  # @param path [URI, String]
   # @return [void]
   #
   # source://faraday//lib/faraday/request.rb#74
@@ -2241,12 +2241,12 @@ end
 # source://faraday//lib/faraday/request/authorization.rb#6
 class Faraday::Request::Authorization < ::Faraday::Middleware
   # @param app [#call]
-  # @param type [String, Symbol] Type of Authorization
   # @param params [Array<String, Proc, #call>] parameters to build the Authorization header.
   #   If the type is `:basic`, then these can be a login and password pair.
   #   Otherwise, a single value is expected that will be appended after the type.
   #   This value can be a proc or an object responding to `.call`, in which case
   #   it will be invoked on each request.
+  # @param type [String, Symbol] Type of Authorization
   # @return [Authorization] a new instance of Authorization
   #
   # source://faraday//lib/faraday/request/authorization.rb#16
@@ -2259,9 +2259,9 @@ class Faraday::Request::Authorization < ::Faraday::Middleware
 
   private
 
-  # @param type [String, Symbol]
   # @param env [Faraday::Env]
   # @param params [Array]
+  # @param type [String, Symbol]
   # @return [String] a header value
   #
   # source://faraday//lib/faraday/request/authorization.rb#35
