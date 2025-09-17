@@ -5,9 +5,6 @@
 # Please instead update this file by running `bin/tapioca gem unicode-display_width`.
 
 
-# require "rbconfig"
-# RbConfig::CONFIG["host_os"] =~ /mswin|mingw/ # windows
-#
 # source://unicode-display_width//lib/unicode/display_width/constants.rb#3
 module Unicode; end
 
@@ -79,9 +76,12 @@ Unicode::DisplayWidth::DEFAULT_AMBIGUOUS = T.let(T.unsafe(nil), Integer)
 # source://unicode-display_width//lib/unicode/display_width.rb#32
 Unicode::DisplayWidth::EMOJI_SEQUENCES_REGEX_MAPPING = T.let(T.unsafe(nil), Hash)
 
-# source://unicode-display_width//lib/unicode/display_width/emoji_support.rb#6
+# source://unicode-display_width//lib/unicode/display_width/emoji_support.rb#5
 module Unicode::DisplayWidth::EmojiSupport
   class << self
+    # source://unicode-display_width//lib/unicode/display_width/emoji_support.rb#18
+    def _recommended; end
+
     # Tries to find out which terminal emulator is used to
     # set emoji: config to best suiting value
     #
@@ -91,7 +91,7 @@ module Unicode::DisplayWidth::EmojiSupport
     # Please note: Many terminals do not set any ENV vars,
     # maybe CSI queries can help?
     #
-    # source://unicode-display_width//lib/unicode/display_width/emoji_support.rb#15
+    # source://unicode-display_width//lib/unicode/display_width/emoji_support.rb#14
     def recommended; end
   end
 end
