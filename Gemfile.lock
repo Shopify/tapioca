@@ -310,7 +310,7 @@ GEM
     reline (0.6.1)
       io-console (~> 0.5)
     require-hooks (0.2.2)
-    rexml (3.4.1)
+    rexml (3.4.2)
     rubocop (1.80.2)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
