@@ -10,7 +10,7 @@ module ActiveResource
   extend ::ActiveSupport::Autoload
 
   class << self
-    # source://activeresource//lib/active_resource.rb#51
+    # source://activeresource//lib/active_resource.rb#57
     def deprecator; end
   end
 end
@@ -254,7 +254,7 @@ end
 
 # 400 Bad Request
 #
-# source://activeresource//lib/active_resource/exceptions.rb#53
+# source://activeresource//lib/active_resource/exceptions.rb#56
 class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 
 # ActiveResource::Base is the main class for mapping RESTful resources as models in a Rails application.
@@ -553,6 +553,7 @@ class ActiveResource::BadRequest < ::ActiveResource::ClientError; end
 #
 # source://activeresource//lib/active_resource/base.rb#319
 class ActiveResource::Base
+  include ::ActiveResource::Serialization
   include ::ActiveModel::Validations
   include ::ActiveSupport::Callbacks
   include ::ActiveModel::Validations::HelperMethods
@@ -561,13 +562,18 @@ class ActiveResource::Base
   include ::ActiveResource::Callbacks
   include ::ActiveModel::Validations::Callbacks
   include ::ActiveModel::Conversion
+  include ::ActiveModel::ForbiddenAttributesProtection
   include ::ActiveModel::Serialization
   include ::ActiveModel::Serializers::JSON
   include ::ActiveModel::Serializers::Xml
+  include ::ActiveResource::Rescuable
+  include ::ActiveSupport::Rescuable
   include ::ActiveResource::Reflection
   extend ::ThreadsafeAttributes
+  extend ::ActiveModel::ForbiddenAttributesProtection
   extend ::ActiveModel::Naming
   extend ::ActiveResource::Associations
+  extend ::ActiveResource::Serialization::ClassMethods
   extend ::ActiveModel::Validations::ClassMethods
   extend ::ActiveModel::Callbacks
   extend ::ActiveSupport::Callbacks::ClassMethods
@@ -577,6 +583,7 @@ class ActiveResource::Base
   extend ::ActiveResource::CustomMethods::ClassMethods
   extend ::ActiveModel::Validations::Callbacks::ClassMethods
   extend ::ActiveModel::Conversion::ClassMethods
+  extend ::ActiveSupport::Rescuable::ClassMethods
   extend ::ActiveResource::Reflection::ClassMethods
 
   # Constructor method for \new resources; the optional +attributes+ parameter takes a \hash
@@ -593,7 +600,7 @@ class ActiveResource::Base
   #
   # @return [Base] a new instance of Base
   #
-  # source://activeresource//lib/active_resource/base.rb#1213
+  # source://activeresource//lib/active_resource/base.rb#1239
   def initialize(attributes = T.unsafe(nil), persisted = T.unsafe(nil)); end
 
   # Test for equality. Resource are equal if and only if +other+ is the same object or
@@ -618,13 +625,13 @@ class ActiveResource::Base
   #   ryan == ryans_twin
   #   # => true
   #
-  # source://activeresource//lib/active_resource/base.rb#1318
+  # source://activeresource//lib/active_resource/base.rb#1344
   def ==(other); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def __callbacks; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def __callbacks?; end
 
   # source://activeresource//lib/active_resource/base.rb#331
@@ -636,10 +643,10 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#331
   def _collection_parser?; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _create_callbacks; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _destroy_callbacks; end
 
   # source://activeresource//lib/active_resource/base.rb#330
@@ -651,46 +658,46 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#330
   def _format?; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _run_create_callbacks(&block); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _run_destroy_callbacks(&block); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _run_save_callbacks(&block); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _run_update_callbacks(&block); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _run_validate_callbacks(&block); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _run_validation_callbacks(&block); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _save_callbacks; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _update_callbacks; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _validate_callbacks; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _validation_callbacks; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _validators; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _validators?; end
 
-  # source://activeresource//lib/active_resource/base.rb#1184
+  # source://activeresource//lib/active_resource/base.rb#1210
   def attributes; end
 
-  # source://activeresource//lib/active_resource/base.rb#1184
+  # source://activeresource//lib/active_resource/base.rb#1210
   def attributes=(_arg0); end
 
   # Returns a \clone of the resource that hasn't been assigned an +id+ yet and
@@ -714,7 +721,7 @@ class ActiveResource::Base
   #   not_ryan.address         # => NoMethodError
   #   not_ryan.hash            # => {:not => "an ARes instance"}
   #
-  # source://activeresource//lib/active_resource/base.rb#1240
+  # source://activeresource//lib/active_resource/base.rb#1266
   def clone; end
 
   # source://activeresource//lib/active_resource/base.rb#335
@@ -739,7 +746,7 @@ class ActiveResource::Base
   #   new_person.destroy
   #   Person.find(new_id) # 404 (Resource Not Found)
   #
-  # source://activeresource//lib/active_resource/base.rb#1400
+  # source://activeresource//lib/active_resource/base.rb#1426
   def destroy; end
 
   # Duplicates the current resource without saving it.
@@ -755,21 +762,21 @@ class ActiveResource::Base
   #   my_invoice.customer   # => That Company
   #   next_invoice.customer # => That Company
   #
-  # source://activeresource//lib/active_resource/base.rb#1345
+  # source://activeresource//lib/active_resource/base.rb#1371
   def dup; end
 
   # Returns the serialized string representation of the resource in the configured
   # serialization format specified in ActiveResource::Base.format. The options
   # applicable depend on the configured encoding format.
   #
-  # source://activeresource//lib/active_resource/base.rb#1429
+  # source://activeresource//lib/active_resource/base.rb#1455
   def encode(options = T.unsafe(nil)); end
 
   # Tests for equality (delegates to ==).
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1323
+  # source://activeresource//lib/active_resource/base.rb#1349
   def eql?(other); end
 
   # Evaluates to <tt>true</tt> if this resource is not <tt>new?</tt> and is
@@ -791,23 +798,23 @@ class ActiveResource::Base
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1422
+  # source://activeresource//lib/active_resource/base.rb#1448
   def exists?; end
 
   # Delegates to id in order to allow two resources of the same type and \id to work with something like:
   #   [(a = Person.find 1), (b = Person.find 2)] & [(c = Person.find 1), (d = Person.find 4)] # => [a]
   #
-  # source://activeresource//lib/active_resource/base.rb#1329
+  # source://activeresource//lib/active_resource/base.rb#1355
   def hash; end
 
   # Gets the <tt>\id</tt> attribute of the resource.
   #
-  # source://activeresource//lib/active_resource/base.rb#1287
+  # source://activeresource//lib/active_resource/base.rb#1313
   def id; end
 
   # Sets the <tt>\id</tt> attribute of the resource.
   #
-  # source://activeresource//lib/active_resource/base.rb#1292
+  # source://activeresource//lib/active_resource/base.rb#1318
   def id=(id); end
 
   # source://activeresource//lib/active_resource/base.rb#332
@@ -819,17 +826,17 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#332
   def include_format_in_path?; end
 
-  # source://activeresource//lib/active_resource/base.rb#1726
+  # source://activeresource//lib/active_resource/base.rb#1757
   def include_root_in_json; end
 
-  # source://activeresource//lib/active_resource/base.rb#1726
+  # source://activeresource//lib/active_resource/base.rb#1757
   def include_root_in_json?; end
 
   # This is a list of known attributes for this resource. Either
   # gathered from the provided <tt>schema</tt>, or from the attributes
   # set on this instance after it has been fetched from the remote system.
   #
-  # source://activeresource//lib/active_resource/base.rb#1197
+  # source://activeresource//lib/active_resource/base.rb#1223
   def known_attributes; end
 
   # A method to manually load attributes from a \hash. Recursively loads collections of
@@ -854,7 +861,7 @@ class ActiveResource::Base
   #   your_supplier.load(my_attrs)
   #   your_supplier.save
   #
-  # source://activeresource//lib/active_resource/base.rb#1469
+  # source://activeresource//lib/active_resource/base.rb#1497
   def load(attributes, remove_root = T.unsafe(nil), persisted = T.unsafe(nil)); end
 
   # :singleton-method:
@@ -863,7 +870,7 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#323
   def logger; end
 
-  # source://activeresource//lib/active_resource/base.rb#1721
+  # source://activeresource//lib/active_resource/base.rb#1751
   def model_name(&block); end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
@@ -880,7 +887,7 @@ class ActiveResource::Base
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1265
+  # source://activeresource//lib/active_resource/base.rb#1291
   def new?; end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
@@ -897,10 +904,10 @@ class ActiveResource::Base
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1268
+  # source://activeresource//lib/active_resource/base.rb#1294
   def new_record?; end
 
-  # source://activeresource//lib/active_resource/base.rb#1725
+  # source://activeresource//lib/active_resource/base.rb#1755
   def param_delimiter=(_arg0); end
 
   # Returns +true+ if this object has been saved, otherwise returns +false+.
@@ -917,25 +924,25 @@ class ActiveResource::Base
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1282
+  # source://activeresource//lib/active_resource/base.rb#1308
   def persisted?; end
 
-  # source://activeresource//lib/active_resource/base.rb#1185
+  # source://activeresource//lib/active_resource/base.rb#1211
   def prefix_options; end
 
-  # source://activeresource//lib/active_resource/base.rb#1185
+  # source://activeresource//lib/active_resource/base.rb#1211
   def prefix_options=(_arg0); end
 
-  # source://activeresource//lib/active_resource/base.rb#1565
+  # source://activeresource//lib/active_resource/base.rb#1594
   def read_attribute_for_serialization(n); end
 
-  # source://activeresource//lib/active_resource/base.rb#1728
+  # source://activeresource//lib/active_resource/base.rb#1759
   def reflections; end
 
-  # source://activeresource//lib/active_resource/base.rb#1728
+  # source://activeresource//lib/active_resource/base.rb#1759
   def reflections=(_arg0); end
 
-  # source://activeresource//lib/active_resource/base.rb#1728
+  # source://activeresource//lib/active_resource/base.rb#1759
   def reflections?; end
 
   # A method to \reload the attributes of this object from the remote web service.
@@ -950,12 +957,21 @@ class ActiveResource::Base
   #   my_branch.reload
   #   my_branch.name # => "Wilson Road"
   #
-  # source://activeresource//lib/active_resource/base.rb#1444
+  # source://activeresource//lib/active_resource/base.rb#1470
   def reload; end
+
+  # source://activeresource//lib/active_resource/base.rb#1759
+  def rescue_handlers; end
+
+  # source://activeresource//lib/active_resource/base.rb#1759
+  def rescue_handlers=(_arg0); end
+
+  # source://activeresource//lib/active_resource/base.rb#1759
+  def rescue_handlers?; end
 
   # For checking <tt>respond_to?</tt> without searching the attributes (which is faster).
   #
-  # source://activeresource//lib/active_resource/base.rb#1537
+  # source://activeresource//lib/active_resource/base.rb#1566
   def respond_to_without_attributes?(*_arg0); end
 
   # Saves (+POST+) or \updates (+PUT+) a resource. Delegates to +create+ if the object is \new,
@@ -972,7 +988,7 @@ class ActiveResource::Base
   #   my_company.size = 10
   #   my_company.save # sends PUT /companies/1 (update)
   #
-  # source://activeresource//lib/active_resource/base.rb#1365
+  # source://activeresource//lib/active_resource/base.rb#1391
   def save(options = T.unsafe(nil)); end
 
   # Saves the resource.
@@ -989,23 +1005,23 @@ class ActiveResource::Base
   # of the <tt>before_*</tt> callbacks return +false+ the action is
   # cancelled and <tt>save!</tt> raises ActiveResource::ResourceInvalid.
   #
-  # source://activeresource//lib/active_resource/base.rb#1384
+  # source://activeresource//lib/active_resource/base.rb#1410
   def save!; end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def save_without_validation; end
 
   # If no schema has been defined for the class (see
   # <tt>ActiveResource::schema=</tt>), the default automatic schema is
   # generated from the current instance's attributes
   #
-  # source://activeresource//lib/active_resource/base.rb#1190
+  # source://activeresource//lib/active_resource/base.rb#1216
   def schema; end
 
-  # source://activeresource//lib/active_resource/base.rb#1557
+  # source://activeresource//lib/active_resource/base.rb#1586
   def to_json(options = T.unsafe(nil)); end
 
-  # source://activeresource//lib/active_resource/base.rb#1561
+  # source://activeresource//lib/active_resource/base.rb#1590
   def to_xml(options = T.unsafe(nil)); end
 
   # Updates a single attribute and then saves the object.
@@ -1020,7 +1036,7 @@ class ActiveResource::Base
   # exception will be raised. If saving fails because the resource is
   # invalid then <tt>false</tt> will be returned.
   #
-  # source://activeresource//lib/active_resource/base.rb#1517
+  # source://activeresource//lib/active_resource/base.rb#1546
   def update_attribute(name, value); end
 
   # Updates this resource with all the attributes from the passed-in Hash
@@ -1034,76 +1050,76 @@ class ActiveResource::Base
   # resource's attributes, the full body of the request will still be sent
   # in the save request to the remote service.
   #
-  # source://activeresource//lib/active_resource/base.rb#1532
+  # source://activeresource//lib/active_resource/base.rb#1561
   def update_attributes(attributes); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def validation_context; end
 
   protected
 
-  # source://activeresource//lib/active_resource/base.rb#1623
+  # source://activeresource//lib/active_resource/base.rb#1652
   def collection_path(options = T.unsafe(nil)); end
 
-  # source://activeresource//lib/active_resource/base.rb#1574
+  # source://activeresource//lib/active_resource/base.rb#1603
   def connection(refresh = T.unsafe(nil)); end
 
   # Create (i.e., \save to the remote service) the \new resource.
   #
-  # source://activeresource//lib/active_resource/base.rb#1588
+  # source://activeresource//lib/active_resource/base.rb#1617
   def create; end
 
-  # source://activeresource//lib/active_resource/base.rb#1611
+  # source://activeresource//lib/active_resource/base.rb#1640
   def element_path(options = T.unsafe(nil)); end
 
-  # source://activeresource//lib/active_resource/base.rb#1615
+  # source://activeresource//lib/active_resource/base.rb#1644
   def element_url(options = T.unsafe(nil)); end
 
   # Takes a response from a typical create post and pulls the ID out
   #
-  # source://activeresource//lib/active_resource/base.rb#1607
+  # source://activeresource//lib/active_resource/base.rb#1636
   def id_from_response(response); end
 
-  # source://activeresource//lib/active_resource/base.rb#1597
+  # source://activeresource//lib/active_resource/base.rb#1626
   def load_attributes_from_response(response); end
 
-  # source://activeresource//lib/active_resource/base.rb#1619
+  # source://activeresource//lib/active_resource/base.rb#1648
   def new_element_path; end
 
   # Update the resource on the remote service.
   #
-  # source://activeresource//lib/active_resource/base.rb#1579
+  # source://activeresource//lib/active_resource/base.rb#1608
   def update; end
 
   private
 
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1680
+  # source://activeresource//lib/active_resource/base.rb#1709
   def const_valid?(*const_args); end
 
   # Create and return a class definition for a resource inside the current resource
   #
-  # source://activeresource//lib/active_resource/base.rb#1688
+  # source://activeresource//lib/active_resource/base.rb#1717
   def create_resource_for(resource_name); end
 
   # Tries to find a resource for a given name; if it fails, then the resource is created
   #
-  # source://activeresource//lib/active_resource/base.rb#1655
+  # source://activeresource//lib/active_resource/base.rb#1684
   def find_or_create_resource_for(name); end
 
   # Tries to find a resource for a given collection name; if it fails, then the resource is created
   #
-  # source://activeresource//lib/active_resource/base.rb#1634
+  # source://activeresource//lib/active_resource/base.rb#1663
   def find_or_create_resource_for_collection(name); end
 
   # Tries to find a resource in a non empty list of nested modules
   # if it fails, then the resource is created
   #
-  # source://activeresource//lib/active_resource/base.rb#1641
+  # source://activeresource//lib/active_resource/base.rb#1670
   def find_or_create_resource_in_modules(resource_name, module_names); end
 
-  # source://activeresource//lib/active_resource/base.rb#1701
+  # source://activeresource//lib/active_resource/base.rb#1730
   def method_missing(method_symbol, *arguments); end
 
   # A method to determine if an object responds to a message (e.g., a method call). In Active Resource, a Person object with a
@@ -1112,30 +1128,30 @@ class ActiveResource::Base
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1542
+  # source://activeresource//lib/active_resource/base.rb#1571
   def respond_to_missing?(method, include_priv = T.unsafe(nil)); end
 
   # Determine whether the response is allowed to have a body per HTTP 1.1 spec section 4.4.1
   #
   # @return [Boolean]
   #
-  # source://activeresource//lib/active_resource/base.rb#1629
+  # source://activeresource//lib/active_resource/base.rb#1658
   def response_code_allows_body?(c); end
 
-  # source://activeresource//lib/active_resource/base.rb#1697
+  # source://activeresource//lib/active_resource/base.rb#1726
   def split_options(options = T.unsafe(nil)); end
 
-  # source://activeresource//lib/active_resource/base.rb#1724
+  # source://activeresource//lib/active_resource/base.rb#1754
   def validation_context=(_arg0); end
 
   class << self
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def __callbacks; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def __callbacks=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def __callbacks?; end
 
     # source://activeresource//lib/active_resource/base.rb#340
@@ -1165,16 +1181,16 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#340
     def _connection_defined?; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _create_callbacks; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _create_callbacks=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _destroy_callbacks; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _destroy_callbacks=(value); end
 
     # source://activeresource//lib/active_resource/base.rb#330
@@ -1213,10 +1229,10 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#340
     def _proxy_defined?; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _save_callbacks; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _save_callbacks=(value); end
 
     # source://activeresource//lib/active_resource/base.rb#340
@@ -1228,10 +1244,10 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#340
     def _site_defined?; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _update_callbacks; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _update_callbacks=(value); end
 
     # source://activeresource//lib/active_resource/base.rb#340
@@ -1243,55 +1259,55 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#340
     def _user_defined?; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _validate_callbacks; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _validate_callbacks=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _validation_callbacks; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _validation_callbacks=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _validators; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _validators=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def _validators?; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def after_create(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def after_destroy(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def after_save(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def after_update(*args, **options, &block); end
 
     # This is an alias for find(:all). You can pass in all the same
     # arguments to this method as you can to <tt>find(:all)</tt>
     #
-    # source://activeresource//lib/active_resource/base.rb#1039
+    # source://activeresource//lib/active_resource/base.rb#1064
     def all(*args); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def around_create(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def around_destroy(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def around_save(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def around_update(*args, **options, &block); end
 
     # source://activeresource//lib/active_resource/base.rb#562
@@ -1310,16 +1326,16 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#557
     def bearer_token=(bearer_token); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def before_create(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def before_destroy(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def before_save(*args, **options, &block); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def before_update(*args, **options, &block); end
 
     # Builds a new, unsaved record using the default values from the remote server so
@@ -1330,8 +1346,14 @@ class ActiveResource::Base
     #
     # Returns the new resource instance.
     #
-    # source://activeresource//lib/active_resource/base.rb#899
+    # source://activeresource//lib/active_resource/base.rb#924
     def build(attributes = T.unsafe(nil)); end
+
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def coder; end
+
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def coder=(value); end
 
     # source://activeresource//lib/active_resource/base.rb#714
     def collection_name; end
@@ -1375,6 +1397,30 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#883
     def collection_path(prefix_options = T.unsafe(nil), query_options = T.unsafe(nil)); end
 
+    # Gets the collection URL for the REST resources. If the +query_options+ parameter is omitted, Rails
+    # will split from the +prefix_options+.
+    #
+    # ==== Options
+    # * +prefix_options+ - A hash to add a prefix to the request for nested URLs (e.g., <tt>:account_id => 19</tt>
+    #   would yield a URL like <tt>/accounts/19/purchases.json</tt>).
+    # * +query_options+ - A hash to add items to the query string for the request.
+    #
+    # ==== Examples
+    #   Post.collection_url
+    #   # => https://example.com/posts.json
+    #
+    #   Comment.collection_url(:post_id => 5)
+    #   # => https://example.com/posts/5/comments.json
+    #
+    #   Comment.collection_url(:post_id => 5, :active => 1)
+    #   # => https://example.com/posts/5/comments.json?active=1
+    #
+    #   Comment.collection_url({:post_id => 5}, {:active => 1})
+    #   # => https://example.com/posts/5/comments.json?active=1
+    #
+    # source://activeresource//lib/active_resource/base.rb#910
+    def collection_url(prefix_options = T.unsafe(nil), query_options = T.unsafe(nil)); end
+
     # An instance of ActiveResource::Connection that is the base \connection to the remote service.
     # The +refresh+ parameter toggles whether or not the \connection is refreshed at every request
     # or not (defaults to <tt>false</tt>).
@@ -1416,7 +1462,7 @@ class ActiveResource::Base
     #   that_guy.valid? # => false
     #   that_guy.new?   # => true
     #
-    # source://activeresource//lib/active_resource/base.rb#928
+    # source://activeresource//lib/active_resource/base.rb#953
     def create(attributes = T.unsafe(nil)); end
 
     # Creates a new resource (just like <tt>create</tt>) and makes a request to the
@@ -1427,7 +1473,7 @@ class ActiveResource::Base
     #   ryan = Person.new(:first => 'ryan')
     #   ryan.save!
     #
-    # source://activeresource//lib/active_resource/base.rb#939
+    # source://activeresource//lib/active_resource/base.rb#964
     def create!(attributes = T.unsafe(nil)); end
 
     # Deletes the resources with the ID in the +id+ parameter.
@@ -1445,7 +1491,7 @@ class ActiveResource::Base
     #   # Let's assume a request to events/5/cancel.json
     #   Event.delete(params[:id]) # sends DELETE /events/5
     #
-    # source://activeresource//lib/active_resource/base.rb#1063
+    # source://activeresource//lib/active_resource/base.rb#1089
     def delete(custom_method_name, options = T.unsafe(nil)); end
 
     # source://activeresource//lib/active_resource/base.rb#708
@@ -1526,7 +1572,7 @@ class ActiveResource::Base
     #
     # @return [Boolean]
     #
-    # source://activeresource//lib/active_resource/base.rb#1074
+    # source://activeresource//lib/active_resource/base.rb#1100
     def exists?(id, options = T.unsafe(nil)); end
 
     # Core method for finding resources. Used similarly to Active Record's +find+ method.
@@ -1589,14 +1635,14 @@ class ActiveResource::Base
     #   Person.find(:last)
     #   # => nil
     #
-    # source://activeresource//lib/active_resource/base.rb#1002
+    # source://activeresource//lib/active_resource/base.rb#1027
     def find(*arguments); end
 
     # A convenience wrapper for <tt>find(:first, *args)</tt>. You can pass
     # in all the same arguments to this method as you can to
     # <tt>find(:first)</tt>.
     #
-    # source://activeresource//lib/active_resource/base.rb#1026
+    # source://activeresource//lib/active_resource/base.rb#1051
     def first(*args); end
 
     # Returns the current format, default is ActiveResource::Formats::JsonFormat.
@@ -1620,7 +1666,7 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#775
     def format_extension; end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def get(custom_method_name, options = T.unsafe(nil)); end
 
     # source://activeresource//lib/active_resource/base.rb#698
@@ -1635,13 +1681,13 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#332
     def include_format_in_path?; end
 
-    # source://activeresource//lib/active_resource/base.rb#1726
+    # source://activeresource//lib/active_resource/base.rb#1757
     def include_root_in_json; end
 
-    # source://activeresource//lib/active_resource/base.rb#1726
+    # source://activeresource//lib/active_resource/base.rb#1757
     def include_root_in_json=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1726
+    # source://activeresource//lib/active_resource/base.rb#1757
     def include_root_in_json?; end
 
     # Returns the list of known attributes for this resource, gathered
@@ -1659,7 +1705,7 @@ class ActiveResource::Base
     # in all the same arguments to this method as you can to
     # <tt>find(:last)</tt>.
     #
-    # source://activeresource//lib/active_resource/base.rb#1033
+    # source://activeresource//lib/active_resource/base.rb#1058
     def last(*args); end
 
     # source://activeresource//lib/active_resource/base.rb#323
@@ -1698,16 +1744,16 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#612
     def open_timeout=(timeout); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def orig_delete(id, options = T.unsafe(nil)); end
 
-    # source://activeresource//lib/active_resource/base.rb#1725
+    # source://activeresource//lib/active_resource/base.rb#1755
     def param_delimiter; end
 
-    # source://activeresource//lib/active_resource/base.rb#1725
+    # source://activeresource//lib/active_resource/base.rb#1755
     def param_delimiter=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1725
+    # source://activeresource//lib/active_resource/base.rb#1755
     def param_delimiter?; end
 
     # Gets the \password for REST HTTP authentication.
@@ -1720,10 +1766,10 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#541
     def password=(password); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def patch(custom_method_name, options = T.unsafe(nil), body = T.unsafe(nil)); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def post(custom_method_name, options = T.unsafe(nil), body = T.unsafe(nil)); end
 
     # Gets the \prefix for a resource's nested URL (e.g., <tt>prefix/collectionname/1.json</tt>)
@@ -1764,7 +1810,7 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#509
     def proxy=(proxy); end
 
-    # source://activeresource//lib/active_resource/base.rb#1724
+    # source://activeresource//lib/active_resource/base.rb#1754
     def put(custom_method_name, options = T.unsafe(nil), body = T.unsafe(nil)); end
 
     # Gets the number of seconds after which reads to the REST API should time out.
@@ -1777,14 +1823,23 @@ class ActiveResource::Base
     # source://activeresource//lib/active_resource/base.rb#618
     def read_timeout=(timeout); end
 
-    # source://activeresource//lib/active_resource/base.rb#1728
+    # source://activeresource//lib/active_resource/base.rb#1759
     def reflections; end
 
-    # source://activeresource//lib/active_resource/base.rb#1728
+    # source://activeresource//lib/active_resource/base.rb#1759
     def reflections=(value); end
 
-    # source://activeresource//lib/active_resource/base.rb#1728
+    # source://activeresource//lib/active_resource/base.rb#1759
     def reflections?; end
+
+    # source://activeresource//lib/active_resource/base.rb#1759
+    def rescue_handlers; end
+
+    # source://activeresource//lib/active_resource/base.rb#1759
+    def rescue_handlers=(value); end
+
+    # source://activeresource//lib/active_resource/base.rb#1759
+    def rescue_handlers?; end
 
     # Creates a schema for this resource - setting the attributes that are
     # known prior to fetching an instance from the remote system.
@@ -1888,7 +1943,7 @@ class ActiveResource::Base
     #
     # @param value the value to set the attribute primary_key to.
     #
-    # source://activeresource//lib/active_resource/base.rb#889
+    # source://activeresource//lib/active_resource/base.rb#914
     def set_primary_key(_arg0); end
 
     # Gets the URI of the REST resources to map for this class. The site variable is required for
@@ -1945,59 +2000,59 @@ class ActiveResource::Base
 
     # @raise [ArgumentError]
     #
-    # source://activeresource//lib/active_resource/base.rb#1043
+    # source://activeresource//lib/active_resource/base.rb#1068
     def where(clauses = T.unsafe(nil)); end
 
     private
 
-    # source://activeresource//lib/active_resource/base.rb#1087
+    # source://activeresource//lib/active_resource/base.rb#1113
     def check_prefix_options(prefix_options); end
 
     # Accepts a URI and creates the proxy URI from that.
     #
-    # source://activeresource//lib/active_resource/base.rb#1156
+    # source://activeresource//lib/active_resource/base.rb#1182
     def create_proxy_uri_from(proxy); end
 
     # Accepts a URI and creates the site URI from that.
     #
-    # source://activeresource//lib/active_resource/base.rb#1151
+    # source://activeresource//lib/active_resource/base.rb#1177
     def create_site_uri_from(site); end
 
     # Find every resource
     #
-    # source://activeresource//lib/active_resource/base.rb#1095
+    # source://activeresource//lib/active_resource/base.rb#1121
     def find_every(options); end
 
     # Find a single resource from a one-off URL
     #
-    # source://activeresource//lib/active_resource/base.rb#1119
+    # source://activeresource//lib/active_resource/base.rb#1145
     def find_one(options); end
 
     # Find a single resource from the default URL
     #
-    # source://activeresource//lib/active_resource/base.rb#1130
+    # source://activeresource//lib/active_resource/base.rb#1156
     def find_single(scope, options); end
 
-    # source://activeresource//lib/active_resource/base.rb#1136
+    # source://activeresource//lib/active_resource/base.rb#1162
     def instantiate_collection(collection, original_params = T.unsafe(nil), prefix_options = T.unsafe(nil)); end
 
-    # source://activeresource//lib/active_resource/base.rb#1143
+    # source://activeresource//lib/active_resource/base.rb#1169
     def instantiate_record(record, prefix_options = T.unsafe(nil)); end
 
     # contains a set of the current prefix parameters.
     #
-    # source://activeresource//lib/active_resource/base.rb#1161
+    # source://activeresource//lib/active_resource/base.rb#1187
     def prefix_parameters; end
 
     # Builds the query string for the request.
     #
-    # source://activeresource//lib/active_resource/base.rb#1166
+    # source://activeresource//lib/active_resource/base.rb#1192
     def query_string(options); end
 
     # split an option hash into two hashes, one containing the prefix options,
     # and the other containing the leftovers.
     #
-    # source://activeresource//lib/active_resource/base.rb#1172
+    # source://activeresource//lib/active_resource/base.rb#1198
     def split_options(options = T.unsafe(nil)); end
   end
 end
@@ -2032,8 +2087,103 @@ ActiveResource::Callbacks::CALLBACKS = T.let(T.unsafe(nil), Array)
 
 # 4xx Client Error
 #
-# source://activeresource//lib/active_resource/exceptions.rb#49
+# source://activeresource//lib/active_resource/exceptions.rb#52
 class ActiveResource::ClientError < ::ActiveResource::ConnectionError; end
+
+# Integrates with Active Record's
+# {serialize}[link:https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html#method-i-serialize]
+# method as the <tt>:coder</tt> option.
+#
+# Encodes Active Resource instances into a value to be stored in the
+# database. Decodes values read from the database into Active Resource
+# instances.
+#
+#   class User < ActiveRecord::Base
+#     serialize :person, coder: ActiveResource::Coder.new(Person)
+#   end
+#
+#   class Person < ActiveResource::Base
+#     schema do
+#       attribute :name, :string
+#     end
+#   end
+#
+#   user = User.new
+#   user.person = Person.new name: "Matz"
+#   user.person.name # => "Matz"
+#
+# Values are loaded as persisted when decoded from data containing a
+# primary key value, and new records when missing a primary key value:
+#
+#   user.person = Person.new
+#   user.person.persisted? # => true
+#
+#   user.person = Person.find(1)
+#   user.person.persisted? # => true
+#
+# By default, <tt>#dump</tt> serializes the instance to a string value by
+# calling Base#encode:
+#
+#   user.person_before_type_cast # => "{\"name\":\"Matz\"}"
+#
+# To customize serialization, pass the method name or a block as the second
+# argument:
+#
+#   person = Person.new name: "Matz"
+#
+#   coder = ActiveResource::Coder.new(Person, :serializable_hash)
+#   coder.dump(person) # => { "name" => "Matz" }
+#
+#   coder = ActiveResource::Coder.new(Person) { |person| person.serializable_hash }
+#   coder.dump(person) # => { "name" => "Matz" }
+#
+# source://activeresource//lib/active_resource/coder.rb#50
+class ActiveResource::Coder
+  # @return [Coder] a new instance of Coder
+  #
+  # source://activeresource//lib/active_resource/coder.rb#53
+  def initialize(resource_class, encoder_method = T.unsafe(nil), &block); end
+
+  # Serializes a resource value to a value that will be stored in the database.
+  # Returns nil when passed nil
+  #
+  # @raise [ArgumentError]
+  #
+  # source://activeresource//lib/active_resource/coder.rb#60
+  def dump(value); end
+
+  # Returns the value of attribute encoder.
+  #
+  # source://activeresource//lib/active_resource/coder.rb#51
+  def encoder; end
+
+  # Sets the attribute encoder
+  #
+  # @param value the value to set the attribute encoder to.
+  #
+  # source://activeresource//lib/active_resource/coder.rb#51
+  def encoder=(_arg0); end
+
+  # Deserializes a value from the database to a resource instance.
+  # Returns nil when passed nil
+  #
+  # @raise [ArgumentError]
+  #
+  # source://activeresource//lib/active_resource/coder.rb#69
+  def load(value); end
+
+  # Returns the value of attribute resource_class.
+  #
+  # source://activeresource//lib/active_resource/coder.rb#51
+  def resource_class; end
+
+  # Sets the attribute resource_class
+  #
+  # @param value the value to set the attribute resource_class to.
+  #
+  # source://activeresource//lib/active_resource/coder.rb#51
+  def resource_class=(_arg0); end
+end
 
 # source://activeresource//lib/active_resource/collection.rb#7
 class ActiveResource::Collection
@@ -2743,56 +2893,56 @@ class ActiveResource::Connection
 
   private
 
-  # source://activeresource//lib/active_resource/connection.rb#197
+  # source://activeresource//lib/active_resource/connection.rb#203
   def apply_ssl_options(http); end
 
-  # source://activeresource//lib/active_resource/connection.rb#272
+  # source://activeresource//lib/active_resource/connection.rb#278
   def auth_attributes_for(uri, request_digest, params); end
 
-  # source://activeresource//lib/active_resource/connection.rb#232
+  # source://activeresource//lib/active_resource/connection.rb#238
   def authorization_header(http_method, uri); end
 
   # Builds headers for request to remote service.
   #
-  # source://activeresource//lib/active_resource/connection.rb#214
+  # source://activeresource//lib/active_resource/connection.rb#220
   def build_request_headers(headers, http_method, uri); end
 
-  # source://activeresource//lib/active_resource/connection.rb#260
+  # source://activeresource//lib/active_resource/connection.rb#266
   def client_nonce; end
 
-  # source://activeresource//lib/active_resource/connection.rb#185
+  # source://activeresource//lib/active_resource/connection.rb#191
   def configure_http(http); end
 
-  # source://activeresource//lib/active_resource/connection.rb#209
+  # source://activeresource//lib/active_resource/connection.rb#215
   def default_header; end
 
-  # source://activeresource//lib/active_resource/connection.rb#246
+  # source://activeresource//lib/active_resource/connection.rb#252
   def digest_auth_header(http_method, uri); end
 
-  # source://activeresource//lib/active_resource/connection.rb#264
+  # source://activeresource//lib/active_resource/connection.rb#270
   def extract_params_from_response; end
 
   # Handles response and error codes from the remote service.
   #
-  # source://activeresource//lib/active_resource/connection.rb#132
+  # source://activeresource//lib/active_resource/connection.rb#138
   def handle_response(response); end
 
   # Creates new Net::HTTP instance for communication with the
   # remote service and resources.
   #
-  # source://activeresource//lib/active_resource/connection.rb#171
+  # source://activeresource//lib/active_resource/connection.rb#177
   def http; end
 
-  # source://activeresource//lib/active_resource/connection.rb#288
+  # source://activeresource//lib/active_resource/connection.rb#294
   def http_format_header(http_method); end
 
   # source://activeresource//lib/active_resource/http_mock.rb#373
   def http_stub; end
 
-  # source://activeresource//lib/active_resource/connection.rb#292
+  # source://activeresource//lib/active_resource/connection.rb#298
   def legitimize_auth_type(auth_type); end
 
-  # source://activeresource//lib/active_resource/connection.rb#175
+  # source://activeresource//lib/active_resource/connection.rb#181
   def new_http; end
 
   # Makes a request to the remote service.
@@ -2800,7 +2950,7 @@ class ActiveResource::Connection
   # source://activeresource//lib/active_resource/connection.rb#118
   def request(method, path, *arguments); end
 
-  # source://activeresource//lib/active_resource/connection.rb#218
+  # source://activeresource//lib/active_resource/connection.rb#224
   def response_auth_header; end
 
   # source://activeresource//lib/active_resource/http_mock.rb#381
@@ -2809,7 +2959,7 @@ class ActiveResource::Connection
   # source://activeresource//lib/active_resource/http_mock.rb#377
   def unstub_http?; end
 
-  # source://activeresource//lib/active_resource/connection.rb#222
+  # source://activeresource//lib/active_resource/connection.rb#228
   def with_auth; end
 
   class << self
@@ -2836,6 +2986,11 @@ class ActiveResource::ConnectionError < ::StandardError
   # source://activeresource//lib/active_resource/exceptions.rb#12
   def to_s; end
 end
+
+# Raised when a Errno::ECONNREFUSED occurs.
+#
+# source://activeresource//lib/active_resource/exceptions.rb#39
+class ActiveResource::ConnectionRefusedError < ::Errno::ECONNREFUSED; end
 
 # A module to support custom REST methods and sub-resources, allowing you to break out
 # of the "default" REST methods with your own custom resource requests. For example,
@@ -2937,7 +3092,7 @@ end
 
 # 403 Forbidden
 #
-# source://activeresource//lib/active_resource/exceptions.rb#65
+# source://activeresource//lib/active_resource/exceptions.rb#68
 class ActiveResource::ForbiddenAccess < ::ActiveResource::ClientError; end
 
 # source://activeresource//lib/active_resource/formats.rb#4
@@ -2951,7 +3106,7 @@ module ActiveResource::Formats
     # source://activeresource//lib/active_resource/formats.rb#12
     def [](mime_type_reference); end
 
-    # source://activeresource//lib/active_resource/formats.rb#16
+    # source://activeresource//lib/active_resource/formats.rb#20
     def remove_root(data); end
   end
 end
@@ -3282,23 +3437,23 @@ end
 
 # 405 Method Not Allowed
 #
-# source://activeresource//lib/active_resource/exceptions.rb#93
+# source://activeresource//lib/active_resource/exceptions.rb#96
 class ActiveResource::MethodNotAllowed < ::ActiveResource::ClientError
-  # source://activeresource//lib/active_resource/exceptions.rb#94
+  # source://activeresource//lib/active_resource/exceptions.rb#97
   def allowed_methods; end
 end
 
-# source://activeresource//lib/active_resource/exceptions.rb#45
+# source://activeresource//lib/active_resource/exceptions.rb#48
 class ActiveResource::MissingPrefixParam < ::ArgumentError; end
 
 # 402 Payment Required
 #
-# source://activeresource//lib/active_resource/exceptions.rb#61
+# source://activeresource//lib/active_resource/exceptions.rb#64
 class ActiveResource::PaymentRequired < ::ActiveResource::ClientError; end
 
 # 412 Precondition Failed
 #
-# source://activeresource//lib/active_resource/exceptions.rb#81
+# source://activeresource//lib/active_resource/exceptions.rb#84
 class ActiveResource::PreconditionFailed < ::ActiveResource::ClientError; end
 
 # source://activeresource//lib/active_resource/railtie.rb#7
@@ -3306,9 +3461,9 @@ class ActiveResource::Railtie < ::Rails::Railtie; end
 
 # 3xx Redirection
 #
-# source://activeresource//lib/active_resource/exceptions.rb#39
+# source://activeresource//lib/active_resource/exceptions.rb#42
 class ActiveResource::Redirection < ::ActiveResource::ConnectionError
-  # source://activeresource//lib/active_resource/exceptions.rb#40
+  # source://activeresource//lib/active_resource/exceptions.rb#43
   def to_s; end
 end
 
@@ -3482,14 +3637,47 @@ class ActiveResource::Request
   def same_path?(req); end
 end
 
+# = Active Resource \Rescuable
+#
+# Provides
+# {rescue_from}[rdoc-ref:ActiveSupport::Rescuable::ClassMethods#rescue_from]
+# for resources. Wraps calls over the network to handle configured errors.
+#
+# source://activeresource//lib/active_resource/rescuable.rb#9
+module ActiveResource::Rescuable
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+  include ::ActiveSupport::Rescuable
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::ActiveSupport::Rescuable::ClassMethods
+
+  private
+
+  # source://activeresource//lib/active_resource/rescuable.rb#20
+  def handle_exceptions; end
+
+  module GeneratedClassMethods
+    def rescue_handlers; end
+    def rescue_handlers=(value); end
+    def rescue_handlers?; end
+  end
+
+  module GeneratedInstanceMethods
+    def rescue_handlers; end
+    def rescue_handlers=(value); end
+    def rescue_handlers?; end
+  end
+end
+
 # 409 Conflict
 #
-# source://activeresource//lib/active_resource/exceptions.rb#73
+# source://activeresource//lib/active_resource/exceptions.rb#76
 class ActiveResource::ResourceConflict < ::ActiveResource::ClientError; end
 
 # 410 Gone
 #
-# source://activeresource//lib/active_resource/exceptions.rb#77
+# source://activeresource//lib/active_resource/exceptions.rb#80
 class ActiveResource::ResourceGone < ::ActiveResource::ClientError; end
 
 # source://activeresource//lib/active_resource/validations.rb#7
@@ -3497,7 +3685,7 @@ class ActiveResource::ResourceInvalid < ::ActiveResource::ClientError; end
 
 # 404 Not Found
 #
-# source://activeresource//lib/active_resource/exceptions.rb#69
+# source://activeresource//lib/active_resource/exceptions.rb#72
 class ActiveResource::ResourceNotFound < ::ActiveResource::ClientError; end
 
 # source://activeresource//lib/active_resource/http_mock.rb#321
@@ -3666,9 +3854,99 @@ end
 # source://activeresource//lib/active_resource/schema.rb#7
 ActiveResource::Schema::KNOWN_ATTRIBUTE_TYPES = T.let(T.unsafe(nil), Array)
 
+# Compatibilitiy with Active Record's
+# {serialize}[link:https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html#method-i-serialize]
+# method as the <tt>:coder</tt> option.
+#
+# === Writing to String columns
+#
+# Encodes Active Resource instances into a string to be stored in the
+# database. Decodes strings read from the database into Active Resource
+# instances.
+#
+#   class User < ActiveRecord::Base
+#     serialize :person, coder: Person
+#   end
+#
+#   class Person < ActiveResource::Base
+#     schema do
+#       attribute :name, :string
+#     end
+#   end
+#
+#   user = User.new
+#   user.person = Person.new name: "Matz"
+#
+# Writing string values incorporates the Base.format:
+#
+#   Person.format = :json
+#
+#   user.person = Person.new name: "Matz"
+#   user.person_before_type_cast # => "{\"name\":\"Matz\"}"
+#
+#   Person.format = :xml
+#
+#   user.person = Person.new name: "Matz"
+#   user.person_before_type_cast # => "<?xml version=\"1.0\" encoding=\"UTF-8\"?><person><name>Matz</name></person>"
+#
+# Instances are loaded as persisted when decoded from data containing a
+# primary key value, and new records when missing a primary key value:
+#
+#   user.person = Person.new
+#   user.person.persisted? # => false
+#
+#   user.person = Person.find(1)
+#   user.person.persisted? # => true
+#
+# === Writing to JSON and JSONB columns
+#
+#   class User < ActiveRecord::Base
+#     serialize :person, coder: ActiveResource::Coder.new(Person, :serializable_hash)
+#   end
+#
+#   class Person < ActiveResource::Base
+#     schema do
+#       attribute :name, :string
+#     end
+#   end
+#
+#   user = User.new
+#   user.person = Person.new name: "Matz"
+#   user.person.name # => "Matz"
+#
+#   user.person_before_type_cast # => {"name"=>"Matz"}
+#
+# source://activeresource//lib/active_resource/serialization.rb#65
+module ActiveResource::Serialization
+  extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
+
+  mixes_in_class_methods GeneratedClassMethods
+  mixes_in_class_methods ::ActiveResource::Serialization::ClassMethods
+
+  module GeneratedClassMethods
+    def coder; end
+    def coder=(value); end
+  end
+
+  module GeneratedInstanceMethods; end
+end
+
+# source://activeresource//lib/active_resource/serialization.rb#72
+module ActiveResource::Serialization::ClassMethods
+  # source://activeresource//lib/active_resource/serialization.rb#73
+  def dump(*_arg0, **_arg1, &_arg2); end
+
+  # source://activeresource//lib/active_resource/serialization.rb#75
+  def inherited(subclass); end
+
+  # source://activeresource//lib/active_resource/serialization.rb#73
+  def load(*_arg0, **_arg1, &_arg2); end
+end
+
 # 5xx Server Error
 #
-# source://activeresource//lib/active_resource/exceptions.rb#89
+# source://activeresource//lib/active_resource/exceptions.rb#92
 class ActiveResource::ServerError < ::ActiveResource::ConnectionError; end
 
 # source://activeresource//lib/active_resource/singleton.rb#4
@@ -3791,7 +4069,7 @@ end
 
 # 429 Too Many Requests
 #
-# source://activeresource//lib/active_resource/exceptions.rb#85
+# source://activeresource//lib/active_resource/exceptions.rb#88
 class ActiveResource::TooManyRequests < ::ActiveResource::ClientError; end
 
 # source://activeresource//lib/active_resource.rb#36
@@ -3799,7 +4077,7 @@ ActiveResource::URI_PARSER = T.let(T.unsafe(nil), URI::RFC2396_Parser)
 
 # 401 Unauthorized
 #
-# source://activeresource//lib/active_resource/exceptions.rb#57
+# source://activeresource//lib/active_resource/exceptions.rb#60
 class ActiveResource::UnauthorizedAccess < ::ActiveResource::ClientError; end
 
 # source://activeresource//lib/active_resource/version.rb#4
@@ -3905,6 +4183,40 @@ module ActiveResource::Validations
     def _validators; end
     def _validators?; end
   end
+end
+
+# source://activeresource//lib/active_resource/where_clause.rb#4
+class ActiveResource::WhereClause < ::BasicObject
+  # @return [WhereClause] a new instance of WhereClause
+  #
+  # source://activeresource//lib/active_resource/where_clause.rb#7
+  def initialize(resource_class, options = T.unsafe(nil)); end
+
+  # source://activeresource//lib/active_resource/where_clause.rb#18
+  def all(options = T.unsafe(nil)); end
+
+  # source://activeresource//lib/active_resource/where_clause.rb#22
+  def load; end
+
+  # source://activeresource//lib/active_resource/where_clause.rb#5
+  def method_missing(method, *args, **_arg2, &block); end
+
+  # source://activeresource//lib/active_resource/where_clause.rb#31
+  def reload; end
+
+  # source://activeresource//lib/active_resource/where_clause.rb#14
+  def where(clauses = T.unsafe(nil)); end
+
+  private
+
+  # source://activeresource//lib/active_resource/where_clause.rb#42
+  def reset; end
+
+  # source://activeresource//lib/active_resource/where_clause.rb#37
+  def resources; end
+
+  # source://activeresource//lib/active_resource/where_clause.rb#5
+  def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
 # source://activeresource//lib/active_resource/threadsafe_attributes.rb#5
