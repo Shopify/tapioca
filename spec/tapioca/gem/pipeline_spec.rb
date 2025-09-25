@@ -1639,7 +1639,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         module Baz
           include ::Quux
           include ::Foo
-          include ::Kernel
           extend ::Bar
         end
 
