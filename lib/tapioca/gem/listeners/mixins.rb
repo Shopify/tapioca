@@ -98,7 +98,13 @@ module Tapioca
           # inherited ancestors, past the location of the constant itself.
           ancestors = Set.new.compare_by_identity.merge(ancestors_of(constant))
 
-          (ancestors - inherited_ancestors).to_a
+          result = (ancestors - inherited_ancestors).to_a
+
+          # Filter out Kernel for modules (but not classes) since modules shouldn't
+          # need to explicitly include Kernel in RBIs
+          result.delete(Kernel) unless Class === constant
+
+          result
         end
       end
     end
