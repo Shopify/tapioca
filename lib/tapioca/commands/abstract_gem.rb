@@ -8,7 +8,7 @@ module Tapioca
       include SorbetHelper
       include RBIFilesHelper
 
-      #: (gem_names: Array[String], exclude: Array[String], include_dependencies: bool, prerequire: String?, postrequire: String, typed_overrides: Hash[String, String], outpath: Pathname, file_header: bool, include_doc: bool, include_loc: bool, include_exported_rbis: bool, ?number_of_workers: Integer?, ?auto_strictness: bool, ?dsl_dir: String, ?rbi_formatter: RBIFormatter, ?halt_upon_load_error: bool, ?lsp_addon: bool?) -> void
+      #: (gem_names: Array[String], exclude: Array[String], include_dependencies: bool, prerequire: String?, postrequire: String, typed_overrides: Hash[String, String], outpath: Pathname, file_header: bool, include_doc: bool, include_loc: bool, include_exported_rbis: bool, skipped_gems: Array[String], ?number_of_workers: Integer?, ?auto_strictness: bool, ?dsl_dir: String, ?rbi_formatter: RBIFormatter, ?halt_upon_load_error: bool, ?lsp_addon: bool?) -> void
       def initialize(
         gem_names:,
         exclude:,
@@ -21,6 +21,7 @@ module Tapioca
         include_doc:,
         include_loc:,
         include_exported_rbis:,
+        skipped_gems:,
         number_of_workers: nil,
         auto_strictness: true,
         dsl_dir: DEFAULT_DSL_DIR,
@@ -50,6 +51,7 @@ module Tapioca
         @include_doc = include_doc #: bool
         @include_loc = include_loc #: bool
         @include_exported_rbis = include_exported_rbis
+        @skipped_gems = skipped_gems
         @halt_upon_load_error = halt_upon_load_error
       end
 
