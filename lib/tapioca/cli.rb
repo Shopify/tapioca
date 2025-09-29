@@ -301,6 +301,7 @@ module Tapioca
         rbi_formatter: rbi_formatter(options),
         halt_upon_load_error: options[:halt_upon_load_error],
         lsp_addon: options[:lsp_addon],
+        verbose: options[:verbose],
       }
 
       command = if verify
