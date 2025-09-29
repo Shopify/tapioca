@@ -381,6 +381,44 @@ module Tapioca
           assert_success_status(result)
         end
 
+        it "must output currently compiling status with verbose flag" do
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", FOO_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo --verbose")
+
+          assert_stdout_includes(result, "Currently compiling foo")
+          assert_stdout_includes(result, "Compiled foo")
+          assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must output currently compiling with -V flag" do
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", FOO_RB)
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo -V")
+
+          assert_stdout_includes(result, "Currently compiling foo")
+          assert_stdout_includes(result, "Compiled foo")
+          assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+
+          assert_project_file_equal("sorbet/rbi/gems/foo@0.0.1.rbi", FOO_RBI)
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
         it "must generate a gem RBI without the ones exported from the gem when called with `--no-exported-gem-rbis`" do
           foo = mock_gem("foo", "0.0.1") do
             write!("lib/foo.rb", FOO_RB)

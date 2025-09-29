@@ -8,7 +8,7 @@ module Tapioca
       include SorbetHelper
       include RBIFilesHelper
 
-      #: (gem_names: Array[String], exclude: Array[String], include_dependencies: bool, prerequire: String?, postrequire: String, typed_overrides: Hash[String, String], outpath: Pathname, file_header: bool, include_doc: bool, include_loc: bool, include_exported_rbis: bool, ?number_of_workers: Integer?, ?auto_strictness: bool, ?dsl_dir: String, ?rbi_formatter: RBIFormatter, ?halt_upon_load_error: bool, ?lsp_addon: bool?) -> void
+      #: (gem_names: Array[String], exclude: Array[String], include_dependencies: bool, prerequire: String?, postrequire: String, typed_overrides: Hash[String, String], outpath: Pathname, file_header: bool, include_doc: bool, include_loc: bool, include_exported_rbis: bool, ?number_of_workers: Integer?, ?auto_strictness: bool, ?dsl_dir: String, ?rbi_formatter: RBIFormatter, ?halt_upon_load_error: bool, ?lsp_addon: bool?, ?verbose: bool?) -> void
       def initialize(
         gem_names:,
         exclude:,
@@ -26,7 +26,8 @@ module Tapioca
         dsl_dir: DEFAULT_DSL_DIR,
         rbi_formatter: DEFAULT_RBI_FORMATTER,
         halt_upon_load_error: true,
-        lsp_addon: false
+        lsp_addon: false,
+        verbose: false
       )
         @gem_names = gem_names
         @exclude = exclude
@@ -41,6 +42,7 @@ module Tapioca
         @dsl_dir = dsl_dir
         @rbi_formatter = rbi_formatter
         @lsp_addon = lsp_addon
+        @verbose = verbose
 
         super()
 
@@ -58,6 +60,7 @@ module Tapioca
       #: (Gemfile::GemSpec gem) -> void
       def compile_gem_rbi(gem)
         gem_name = set_color(gem.name, :yellow, :bold)
+        say("Currently compiling #{gem_name}", :cyan) if @verbose
 
         rbi = RBI::File.new(strictness: @typed_overrides[gem.name] || "true")
 
