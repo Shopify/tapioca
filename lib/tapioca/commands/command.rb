@@ -21,7 +21,7 @@ module Tapioca
       # @final
       #: -> void
       def run
-        Tapioca.silence_warnings do
+        Runtime.silence_warnings do
           execute
         end
       end
