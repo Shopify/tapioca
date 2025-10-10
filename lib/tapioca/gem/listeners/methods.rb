@@ -24,7 +24,13 @@ module Tapioca
           compile_directly_owned_methods(node, symbol, singleton_class_of(constant), attached_class: constant)
         end
 
-        #: (RBI::Tree tree, String module_name, Module mod, ?Array[Symbol] for_visibility, ?attached_class: Module?) -> void
+        #: (
+        #|   RBI::Tree tree,
+        #|   String module_name,
+        #|   Module mod,
+        #|   ?Array[Symbol] for_visibility,
+        #|   ?attached_class: Module?
+        #| ) -> void
         def compile_directly_owned_methods(
           tree,
           module_name,
@@ -52,7 +58,13 @@ module Tapioca
             end
         end
 
-        #: (RBI::Tree tree, String symbol_name, Module constant, UnboundMethod? method, ?RBI::Visibility visibility) -> void
+        #: (
+        #|   RBI::Tree tree,
+        #|   String symbol_name,
+        #|   Module constant,
+        #|   UnboundMethod? method,
+        #|   ?RBI::Visibility visibility
+        #| ) -> void
         def compile_method(tree, symbol_name, constant, method, visibility = RBI::Public.new)
           return unless method
           return unless method_owned_by_constant?(method, constant)

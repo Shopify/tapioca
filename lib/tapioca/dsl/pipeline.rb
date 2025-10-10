@@ -24,7 +24,17 @@ module Tapioca
       #: Array[String]
       attr_reader :errors
 
-      #: (requested_constants: Array[Module], ?requested_paths: Array[Pathname], ?requested_compilers: Array[singleton(Compiler)], ?excluded_compilers: Array[singleton(Compiler)], ?error_handler: ^(String error) -> void, ?skipped_constants: Array[Module], ?number_of_workers: Integer?, ?compiler_options: Hash[String, untyped], ?lsp_addon: bool) -> void
+      #: (
+      #|   requested_constants: Array[Module],
+      #|   ?requested_paths: Array[Pathname],
+      #|   ?requested_compilers: Array[singleton(Compiler)],
+      #|   ?excluded_compilers: Array[singleton(Compiler)],
+      #|   ?error_handler: ^(String error) -> void,
+      #|   ?skipped_constants: Array[Module],
+      #|   ?number_of_workers: Integer?,
+      #|   ?compiler_options: Hash[String, untyped],
+      #|   ?lsp_addon: bool
+      #| ) -> void
       def initialize(
         requested_constants:,
         requested_paths: [],
@@ -119,7 +129,11 @@ module Tapioca
         active_compilers
       end
 
-      #: (Array[Module] requested_constants, Array[Pathname] requested_paths, Array[Module] skipped_constants) -> Set[Module]
+      #: (
+      #|   Array[Module] requested_constants,
+      #|   Array[Pathname] requested_paths,
+      #|   Array[Module] skipped_constants
+      #| ) -> Set[Module]
       def gather_constants(requested_constants, requested_paths, skipped_constants)
         Compiler.requested_constants = requested_constants
         constants = Set.new.compare_by_identity

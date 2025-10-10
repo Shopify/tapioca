@@ -89,7 +89,11 @@ module Tapioca
       @validating_config = false
     end
 
-    #: (Hash[Symbol, Thor::Option] command_options, String config_key, Hash[untyped, untyped] config_options) -> Array[ConfigError]
+    #: (
+    #|   Hash[Symbol, Thor::Option] command_options,
+    #|   String config_key,
+    #|   Hash[untyped, untyped] config_options
+    #| ) -> Array[ConfigError]
     def validate_config_options(command_options, config_key, config_options)
       config_options.filter_map do |config_option_key, config_option_value|
         command_option = command_options[config_option_key.to_sym]
