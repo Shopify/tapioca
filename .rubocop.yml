@@ -19,8 +19,8 @@ Layout/LeadingCommentSpace:
   AllowRBSInlineAnnotation: true
 
 Layout/LineLength:
+  Enabled: true
   Max: 120
-  AllowedPatterns: ['\A\s*#:']
 
 Naming/InclusiveLanguage:
   Exclude:
