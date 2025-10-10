@@ -22,7 +22,9 @@ module Tapioca
           class << self
             extend T::Sig
 
-            #: (Hash[String, untyped] options) { (String value, ColumnTypeOption default_column_type_option) -> void } -> ColumnTypeOption
+            #: (
+            #|   Hash[String, untyped] options,
+            #| ) { (String value, ColumnTypeOption default_column_type_option) -> void } -> ColumnTypeOption
             def from_options(options, &block)
               column_type_option = Persisted
               value = options["ActiveRecordColumnTypes"]

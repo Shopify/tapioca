@@ -9,7 +9,13 @@ module Tapioca
       class << self
         extend T::Sig
 
-        #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool) -> void
+        #: (
+        #|   bundle: Gemfile,
+        #|   prerequire: String?,
+        #|   postrequire: String,
+        #|   default_command: String,
+        #|   halt_upon_load_error: bool
+        #| ) -> void
         def load_application(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
           loader = new(
             bundle: bundle,
@@ -30,7 +36,13 @@ module Tapioca
 
       protected
 
-      #: (bundle: Gemfile, prerequire: String?, postrequire: String, default_command: String, halt_upon_load_error: bool) -> void
+      #: (
+      #|   bundle: Gemfile,
+      #|   prerequire: String?,
+      #|   postrequire: String,
+      #|   default_command: String,
+      #|   halt_upon_load_error: bool
+      #| ) -> void
       def initialize(bundle:, prerequire:, postrequire:, default_command:, halt_upon_load_error:)
         super()
 

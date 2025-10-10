@@ -8,7 +8,26 @@ module Tapioca
       include SorbetHelper
       include RBIFilesHelper
 
-      #: (gem_names: Array[String], exclude: Array[String], include_dependencies: bool, prerequire: String?, postrequire: String, typed_overrides: Hash[String, String], outpath: Pathname, file_header: bool, include_doc: bool, include_loc: bool, include_exported_rbis: bool, ?number_of_workers: Integer?, ?auto_strictness: bool, ?dsl_dir: String, ?rbi_formatter: RBIFormatter, ?halt_upon_load_error: bool, ?lsp_addon: bool?, ?verbose: bool?) -> void
+      #: (
+      #|   gem_names: Array[String],
+      #|   exclude: Array[String],
+      #|   include_dependencies: bool,
+      #|   prerequire: String?,
+      #|   postrequire: String,
+      #|   typed_overrides: Hash[String, String],
+      #|   outpath: Pathname,
+      #|   file_header: bool,
+      #|   include_doc: bool,
+      #|   include_loc: bool,
+      #|   include_exported_rbis: bool,
+      #|   ?number_of_workers: Integer?,
+      #|   ?auto_strictness: bool,
+      #|   ?dsl_dir: String,
+      #|   ?rbi_formatter: RBIFormatter,
+      #|   ?halt_upon_load_error: bool,
+      #|   ?lsp_addon: bool?,
+      #|   ?verbose: bool?
+      #| ) -> void
       def initialize(
         gem_names:,
         exclude:,

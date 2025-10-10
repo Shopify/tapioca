@@ -1044,7 +1044,12 @@ module Tapioca
           end
         end
 
-        #: ((Symbol | String) name, ?parameters: Array[RBI::TypedParam], ?relation_return_type: String, ?association_return_type: String) -> void
+        #: (
+        #|   (Symbol | String) name,
+        #|   ?parameters: Array[RBI::TypedParam],
+        #|   ?relation_return_type: String,
+        #|   ?association_return_type: String
+        #| ) -> void
         def create_relation_method(
           name,
           parameters: [],

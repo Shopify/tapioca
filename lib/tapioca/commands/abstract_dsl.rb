@@ -8,7 +8,26 @@ module Tapioca
       include SorbetHelper
       include RBIFilesHelper
 
-      #: (requested_constants: Array[String], requested_paths: Array[Pathname], outpath: Pathname, only: Array[String], exclude: Array[String], file_header: bool, tapioca_path: String, ?skip_constant: Array[String], ?quiet: bool, ?verbose: bool, ?number_of_workers: Integer?, ?auto_strictness: bool, ?gem_dir: String, ?rbi_formatter: RBIFormatter, ?app_root: String, ?halt_upon_load_error: bool, ?compiler_options: Hash[String, untyped], ?lsp_addon: bool) -> void
+      #: (
+      #|   requested_constants: Array[String],
+      #|   requested_paths: Array[Pathname],
+      #|   outpath: Pathname,
+      #|   only: Array[String],
+      #|   exclude: Array[String],
+      #|   file_header: bool,
+      #|   tapioca_path: String,
+      #|   ?skip_constant: Array[String],
+      #|   ?quiet: bool,
+      #|   ?verbose: bool,
+      #|   ?number_of_workers: Integer?,
+      #|   ?auto_strictness: bool,
+      #|   ?gem_dir: String,
+      #|   ?rbi_formatter: RBIFormatter,
+      #|   ?app_root: String,
+      #|   ?halt_upon_load_error: bool,
+      #|   ?compiler_options: Hash[String, untyped],
+      #|   ?lsp_addon: bool
+      #| ) -> void
       def initialize(
         requested_constants:,
         requested_paths:,
