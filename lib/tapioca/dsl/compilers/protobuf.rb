@@ -269,7 +269,11 @@ module Tapioca
               Field.new(
                 name: descriptor.name,
                 type: type,
-                init_type: "T.nilable(T.any(#{type}, T::Array[#{elem_type}]))",
+                # The FFI implementation accepts Enumerables:
+                # https://github.com/protocolbuffers/protobuf/blob/fc0eda1fd4eff075f1fb2e9249fa4209f0227e33/ruby/lib/google/protobuf/ffi/repeated_field.rb#L361-L366
+                # However the C implementation of the initializer specifically checks for Arrays:
+                # https://github.com/protocolbuffers/protobuf/blob/fc0eda1fd4eff075f1fb2e9249fa4209f0227e33/ruby/ext/google/protobuf_c/message.c#L568-L573
+                init_type: "T.nilable(T::Array[#{elem_type}])",
                 default: "T.unsafe(nil)",
               )
             end

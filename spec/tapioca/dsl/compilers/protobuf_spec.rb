@@ -242,7 +242,7 @@ module Tapioca
                 # typed: strong
 
                 class Cart < Google::Protobuf::AbstractMessage
-                  sig { params(customer_ids: T.nilable(T.any(Google::Protobuf::RepeatedField[Integer], T::Array[Integer])), indices: T.nilable(T.any(Google::Protobuf::RepeatedField[Google::Protobuf::UInt64Value], T::Array[Google::Protobuf::UInt64Value]))).void }
+                  sig { params(customer_ids: T.nilable(T::Array[Integer]), indices: T.nilable(T::Array[Google::Protobuf::UInt64Value])).void }
                   def initialize(customer_ids: T.unsafe(nil), indices: T.unsafe(nil)); end
 
                   sig { void }
