@@ -598,7 +598,7 @@ module Tapioca
             _, stderr, status = Open3.capture3("protoc --proto_path=#{proto_dir} --ruby_out=#{lib_path} #{proto_path}")
             raise "Error executing protoc: #{stderr}" unless status.success?
 
-            Tapioca.silence_warnings { require("#{lib_path}/#{name}_pb.rb") } if require_file
+            Runtime.silence_warnings { require("#{lib_path}/#{name}_pb.rb") } if require_file
           end
         end
       end
