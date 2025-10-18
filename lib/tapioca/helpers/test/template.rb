@@ -6,7 +6,6 @@ module Tapioca
     module Test
       # @requires_ancestor: Kernel
       module Template
-        extend T::Sig
         ERB_SUPPORTS_KVARGS = ::ERB.instance_method(:initialize).parameters.assoc(:key) #: [Symbol, Symbol]?
 
         #: (String selector) -> bool

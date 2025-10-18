@@ -4,7 +4,6 @@
 module Tapioca
   module Commands
     class CheckShims < CommandWithoutTracker
-      extend T::Sig
       include SorbetHelper
       include RBIFilesHelper
 

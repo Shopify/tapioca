@@ -111,8 +111,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = (Module & ::StateMachines::ClassMethods)]
       class StateMachines < Compiler
-        extend T::Sig
-
         # @override
         #: -> void
         def decorate
@@ -155,8 +153,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> T::Enumerable[Module]
           def gather_constants

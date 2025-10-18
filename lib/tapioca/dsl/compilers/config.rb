@@ -42,8 +42,6 @@ module Tapioca
       # ```
       #: [ConstantType = Module]
       class Config < Compiler
-        extend T::Sig
-
         CONFIG_OPTIONS_SUFFIX = "ConfigOptions"
 
         # @override
@@ -93,8 +91,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> T::Enumerable[Module]
           def gather_constants
