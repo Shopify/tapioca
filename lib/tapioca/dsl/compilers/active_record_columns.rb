@@ -189,7 +189,13 @@ module Tapioca
           )
         end
 
-        #: (RBI::Scope klass, String name, Array[String]? methods_to_add, ?return_type: String, ?parameters: Array[RBI::TypedParam]) -> void
+        #: (
+        #|   RBI::Scope klass,
+        #|   String name,
+        #|   Array[String]? methods_to_add,
+        #|   ?return_type: String,
+        #|   ?parameters: Array[RBI::TypedParam]
+        #| ) -> void
         def add_method(klass, name, methods_to_add, return_type: "void", parameters: [])
           klass.create_method(
             name,
