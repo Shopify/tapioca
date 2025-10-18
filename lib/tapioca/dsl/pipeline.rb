@@ -202,8 +202,13 @@ module Tapioca
         # warns the user, so that they are aware they need to migrate their database
         return if @lsp_addon
         return unless defined?(::Rake)
+        return unless defined?(::Rails) || defined?(::Sinatra)
 
-        Rails.application.load_tasks
+        if defined?(::Rails)
+          Rails.application.load_tasks
+        elsif defined?(::Sinatra) # support Sinatra app with ActiveRecord
+          require "sinatra/activerecord/rake"
+        end
 
         if Rake::Task.task_defined?("db:abort_if_pending_migrations")
           Rake::Task["db:abort_if_pending_migrations"].invoke
