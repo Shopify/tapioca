@@ -68,10 +68,14 @@ module Tapioca
           #: -> T::Enumerable[Module]
           def gather_constants
             all_modules.select do |mod|
-              name_of(mod) && # i.e. not anonymous
-                !mod.singleton_class? &&
-                ActiveSupport::Concern > mod.singleton_class &&
-                has_dependencies?(mod)
+              begin
+                name_of(mod) && # i.e. not anonymous
+                  !mod.singleton_class? &&
+                  ActiveSupport::Concern > mod.singleton_class &&
+                  has_dependencies?(mod)
+              rescue ActiveSupport::DeprecationException
+                false
+              end
             end
           end
 
