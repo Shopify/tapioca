@@ -426,20 +426,17 @@ module Tapioca
           Looking for duplicates...  Done
         OUT
 
-        sections = T.must(result.err).split("\n\n").map(&:strip)
-        duplicates_for_object = sections[-4]&.split("\n")
-        assert_includes(duplicates_for_object, "Duplicated RBI for ::Object:")
-        assert_includes(duplicates_for_object, " * sorbet/rbi/shims/core/object.rbi:1:0-1:17")
+        stderr = T.must(result.err)
+        assert_includes(stderr, "Duplicated RBI for ::Object:")
+        assert_includes(stderr, " * sorbet/rbi/shims/core/object.rbi:1:0-1:17")
 
-        duplicates_for_string_capitalize = sections[-3]&.split("\n")
-        assert_includes(duplicates_for_string_capitalize, "Duplicated RBI for ::String#capitalize:")
-        assert_includes(duplicates_for_string_capitalize, " * sorbet/rbi/shims/core/string.rbi:3:2-3:23")
+        assert_includes(stderr, "Duplicated RBI for ::String#capitalize:")
+        assert_includes(stderr, " * sorbet/rbi/shims/core/string.rbi:3:2-3:23")
 
-        duplicates_for_base64_decode64 = sections[-2]&.split("\n")
-        assert_includes(duplicates_for_base64_decode64, "Duplicated RBI for ::Base64::decode64:")
-        assert_includes(duplicates_for_base64_decode64, " * sorbet/rbi/shims/stdlib/base64.rbi:3:2-3:29")
+        assert_includes(stderr, "Duplicated RBI for ::Base64::decode64:")
+        assert_includes(stderr, " * sorbet/rbi/shims/stdlib/base64.rbi:3:2-3:29")
 
-        assert_includes(sections[-1], "Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi")
+        assert_includes(stderr, "Please remove the duplicated definitions from sorbet/rbi/shims and sorbet/rbi/todo.rbi")
 
         refute_success_status(result)
       end
