@@ -4780,7 +4780,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         # typed: true
 
         class Foo
-          #: \o/
+          #: $o$
           attr_reader :bar
 
           #: foo
@@ -4793,9 +4793,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
       output = template(<<~RBI)
         class Foo
-          sig { returns(T.untyped) }
           def bar; end
-
           def foo; end
 
           sig { void }
