@@ -49,9 +49,6 @@ jobs:
             experimental: true
           - ruby: "head"
             experimental: true
-          - rails: "current"
-            ruby: "3.3"
-            rubygems: "3.5.23"
     name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }} - RubyGems ${{ matrix.rubygems }}
     env:
       RAILS_VERSION: ${{ matrix.rails }}
