@@ -32,7 +32,9 @@ module Tapioca
         @events = [] #: Array[Gem::Event]
 
         @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
-        @bootstrap_symbols = load_bootstrap_symbols(@gem) #: Set[String]
+        @gem_index = index_from_paths(@gem.files) #: Saturn::Graph
+        engine_symbols = engine_symbols(@gem) #: Set[String]
+        @bootstrap_symbols = symbols_from_index(@gem_index).union(engine_symbols) #: Set[String]
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
@@ -186,12 +188,42 @@ module Tapioca
 
       private
 
-      #: (Gemfile::GemSpec gem) -> Set[String]
-      def load_bootstrap_symbols(gem)
-        engine_symbols = Static::SymbolLoader.engine_symbols(gem)
-        gem_symbols = Static::SymbolLoader.gem_symbols(gem)
+      #: (Array[Pathname] paths) -> Saturn::Graph
+      def index_from_paths(paths)
+        index = Saturn::Graph.new
+        index.index_all(paths.map(&:to_s))
+        index
+      end
 
-        gem_symbols.union(engine_symbols)
+      #: (Saturn::Graph index) -> Set[String]
+      def symbols_from_index(index)
+        index.declarations.map(&:name).to_set
+      end
+
+      #: (Gemfile::GemSpec gem) -> Set[String]
+      def engine_symbols(gem)
+        gem_engine = Static::SymbolLoader.engines.find do |engine|
+          gem.full_gem_path == engine.config.root.to_s
+        end
+
+        return Set.new unless gem_engine
+
+        # https://github.com/rails/rails/commit/ebfca905db14020589c22e6937382e6f8f687664
+        config = gem_engine.config
+        eager_load_paths = if config.respond_to?(:all_eager_load_paths)
+          config.all_eager_load_paths
+        else
+          config.eager_load_paths
+        end
+
+        paths = eager_load_paths.flat_map do |load_path|
+          Pathname.glob("#{load_path}/**/*.rb")
+        end
+
+        index = index_from_paths(paths)
+        index.declarations.map(&:name).to_set
+      rescue
+        Set.new
       end
 
       # Events handling
