@@ -61,7 +61,14 @@ module RBI
       create_node(RBI::TypeMember.new(name, value))
     end
 
-    #: (String name, ?parameters: Array[TypedParam], ?return_type: String?, ?class_method: bool, ?visibility: RBI::Visibility, ?comments: Array[RBI::Comment]) ?{ (RBI::Method node) -> void } -> void
+    #: (
+    #|   String name,
+    #|   ?parameters: Array[TypedParam],
+    #|   ?return_type: String?,
+    #|   ?class_method: bool,
+    #|   ?visibility: RBI::Visibility,
+    #|   ?comments: Array[RBI::Comment]
+    #| ) ?{ (RBI::Method node) -> void } -> void
     def create_method(name, parameters: [], return_type: nil, class_method: false, visibility: RBI::Public.new,
       comments: [], &block)
       return unless Tapioca::RBIHelper.valid_method_name?(name)

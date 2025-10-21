@@ -116,7 +116,14 @@ module Tapioca
       #: Array[[Symbol, String]]
       attr_reader :parameters
 
-      #: (String symbol, Module constant, UnboundMethod method, RBI::Method node, untyped signature, Array[[Symbol, String]] parameters) -> void
+      #: (
+      #|   String symbol,
+      #|   Module constant,
+      #|   UnboundMethod method,
+      #|   RBI::Method node,
+      #|   untyped signature,
+      #|   Array[[Symbol, String]] parameters
+      #| ) -> void
       def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
         super(symbol, constant)
         @node = node

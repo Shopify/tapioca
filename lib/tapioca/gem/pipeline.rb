@@ -92,7 +92,14 @@ module Tapioca
         @events << Gem::ForeignScopeNodeAdded.new(symbol, constant, node)
       end
 
-      #: (String symbol, Module constant, UnboundMethod method, RBI::Method node, untyped signature, Array[[Symbol, String]] parameters) -> void
+      #: (
+      #|   String symbol,
+      #|   Module constant,
+      #|   UnboundMethod method,
+      #|   RBI::Method node,
+      #|   untyped signature,
+      #|   Array[[Symbol, String]] parameters
+      #| ) -> void
       def push_method(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
         @events << Gem::MethodNodeAdded.new(symbol, constant, method, node, signature, parameters)
       end

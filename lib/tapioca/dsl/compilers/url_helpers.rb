@@ -6,6 +6,7 @@ return unless defined?(Rails) && defined?(ActionDispatch::Routing)
 module Tapioca
   module Dsl
     module Compilers
+      # rubocop:disable Layout/LineLength
       # `Tapioca::Dsl::Compilers::UrlHelpers` generates RBI files for classes that include or extend
       # [`Rails.application.routes.url_helpers`](https://api.rubyonrails.org/v5.1.7/classes/ActionDispatch/Routing/UrlFor.html#module-ActionDispatch::Routing::UrlFor-label-URL+generation+for+named+routes).
       #
@@ -78,6 +79,7 @@ module Tapioca
       #   include GeneratedUrlHelpersModule
       # end
       # ~~~
+      # rubocop:enable Layout/LineLength
       #: [ConstantType = Module]
       class UrlHelpers < Compiler
         extend T::Sig
