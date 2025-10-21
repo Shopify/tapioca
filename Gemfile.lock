@@ -1,4 +1,9 @@
 PATH
+  remote: ../saturn
+  specs:
+    saturn (0.1.0)
+
+PATH
   remote: .
   specs:
     tapioca (0.17.8)
@@ -442,6 +447,7 @@ DEPENDENCIES
   rubocop-sorbet (>= 0.4.1)
   ruby-lsp (>= 0.23.1)
   ruby-lsp-rails (>= 0.4)
+  saturn!
   shopify-money
   sidekiq
   smart_properties

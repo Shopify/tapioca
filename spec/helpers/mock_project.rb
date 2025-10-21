@@ -37,6 +37,8 @@ module Tapioca
       require_real_gem("logger")
     end
 
+    SATURN_PATH = "/Users/at/src/github.com/Shopify/saturn"
+
     # Default Gemfile contents requiring only Tapioca
     #: -> String
     def tapioca_gemfile
@@ -44,6 +46,7 @@ module Tapioca
         source("https://rubygems.org")
 
         gemspec name: "tapioca", path: "#{TAPIOCA_PATH}"
+        gem "saturn", path: "#{SATURN_PATH}"
       GEMFILE
     end
 
