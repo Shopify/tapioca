@@ -7,25 +7,25 @@ module Tapioca
       class YardDoc < Base
         extend T::Sig
 
-        IGNORED_COMMENTS = [
-          ":doc:",
-          ":nodoc:",
-          "typed:",
-          "frozen_string_literal:",
-          "encoding:",
-          "warn_indent:",
-          "shareable_constant_value:",
-          "rubocop:",
-          "@requires_ancestor:",
-        ] #: Array[String]
+        # IGNORED_COMMENTS = [
+        #   ":doc:",
+        #   ":nodoc:",
+        #   "typed:",
+        #   "frozen_string_literal:",
+        #   "encoding:",
+        #   "warn_indent:",
+        #   "shareable_constant_value:",
+        #   "rubocop:",
+        #   "@requires_ancestor:",
+        # ] #: Array[String]
 
-        IGNORED_SIG_TAGS = ["param", "return"] #: Array[String]
+        # IGNORED_SIG_TAGS = ["param", "return"] #: Array[String]
 
-        #: (Pipeline pipeline) -> void
-        def initialize(pipeline)
-          YARD::Registry.clear
+        #: (Pipeline pipeline, Saturn::Graph index) -> void
+        def initialize(pipeline, index)
           super(pipeline)
-          pipeline.gem.parse_yard_docs
+
+          @index = index
         end
 
         private
@@ -59,46 +59,54 @@ module Tapioca
 
         #: (String name, ?sigs: Array[RBI::Sig]) -> Array[RBI::Comment]
         def documentation_comments(name, sigs: [])
-          yard_docs = YARD::Registry.at(name)
-          return [] unless yard_docs
+          # yard_docs = YARD::Registry.at(name)
+          # return [] unless yard_docs
 
-          docstring = yard_docs.docstring
-          return [] if /(copyright|license)/i.match?(docstring)
+          # docstring = yard_docs.docstring
+          # return [] if /(copyright|license)/i.match?(docstring)
 
-          comments = docstring.lines
-            .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
-            .map! { |line| RBI::Comment.new(line) }
+          # comments = docstring.lines
+          #   .reject { |line| IGNORED_COMMENTS.any? { |comment| line.include?(comment) } || rbs_comment?(line) }
+          #   .map! { |line| RBI::Comment.new(line) }
 
-          tags = yard_docs.tags
-          tags.reject! { |tag| IGNORED_SIG_TAGS.include?(tag.tag_name) } unless sigs.empty?
+          # tags = yard_docs.tags
+          # tags.reject! { |tag| IGNORED_SIG_TAGS.include?(tag.tag_name) } unless sigs.empty?
 
-          comments << RBI::Comment.new("") if comments.any? && tags.any?
+          # comments << RBI::Comment.new("") if comments.any? && tags.any?
 
-          tags.sort_by { |tag| [tag.tag_name, tag.name.to_s] }.each do |tag|
-            line = +"@#{tag.tag_name}"
+          # tags.sort_by { |tag| [tag.tag_name, tag.name.to_s] }.each do |tag|
+          #   line = +"@#{tag.tag_name}"
 
-            tag_name = tag.name
-            line << " #{tag_name}" if tag_name
+          #   tag_name = tag.name
+          #   line << " #{tag_name}" if tag_name
 
-            tag_types = tag.types
-            line << " [#{tag_types.join(", ")}]" if tag_types&.any?
+          #   tag_types = tag.types
+          #   line << " [#{tag_types.join(", ")}]" if tag_types&.any?
 
-            tag_text = tag.text
-            if tag_text && !tag_text.empty?
-              text_lines = tag_text.lines
+          #   tag_text = tag.text
+          #   if tag_text && !tag_text.empty?
+          #     text_lines = tag_text.lines
 
-              # Example are a special case because we want the text to start on the next line
-              line << " #{text_lines.shift&.strip}" unless tag.tag_name == "example"
+          #     # Example are a special case because we want the text to start on the next line
+          #     line << " #{text_lines.shift&.strip}" unless tag.tag_name == "example"
 
-              text_lines.each do |text_line|
-                line << "\n  #{text_line.strip}"
-              end
-            end
+          #     text_lines.each do |text_line|
+          #       line << "\n  #{text_line.strip}"
+          #     end
+          #   end
 
-            comments << RBI::Comment.new(line)
-          end
+          name = name.sub("#", "::")
 
-          comments
+          declaration = @index[name]
+          return [] unless declaration
+
+          comments = declaration.definitions.map(&:comments).reject(&:empty?).join("\n")
+          return [] if comments.empty?
+
+          lines = comments.lines.map { |line| line.delete_prefix("#").strip }
+          return [] if lines.empty?
+
+          lines.map { |line| RBI::Comment.new(line) }
         end
 
         # @override

@@ -16,7 +16,6 @@ PATH
       sorbet-static-and-runtime (>= 0.5.11087)
       spoom (>= 1.7.0)
       thor (>= 1.2.0)
-      yard-sorbet
 
 GEM
   remote: https://rubygems.org/
@@ -401,10 +400,6 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    yard (0.9.37)
-    yard-sorbet (0.9.0)
-      sorbet-runtime
-      yard
     zeitwerk (2.7.3)
     zlib (3.1.0)
 
