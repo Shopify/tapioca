@@ -15,7 +15,7 @@ module Tapioca
 
           #: -> void
           def eager_load_all!
-            Tapioca.with_disabled_exits do
+            Runtime.with_disabled_exits do
               until @constant_names_registered_for_autoload.empty?
                 # Grab the next constant name
                 constant_name = T.must(@constant_names_registered_for_autoload.shift)
