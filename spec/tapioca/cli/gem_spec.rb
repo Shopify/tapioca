@@ -542,6 +542,118 @@ module Tapioca
           assert_success_status(result)
         end
 
+
+        it "must generate a gem RBI and rewrites attributes from exported gem RBIs into methods" do
+          foo = mock_gem("foo", "0.0.1") do
+
+            write!("lib/foo.rb", <<~RBI)
+              class Foo
+                attr_reader :i
+              end
+            RBI
+
+            write!("rbi/foo.rbi", <<~RBI)
+              class Foo
+                sig { returns(Integer) }
+                attr_reader :i
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo")
+
+          assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+          puts @project.read("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_includes("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI.chomp)
+            class Foo
+              sig { returns(Integer) }
+              def i; end
+            end
+          RBI
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "must generate a gem RBI that merges methods and attributes" do
+          foo = mock_gem("foo", "0.0.1") do
+
+            write!("lib/foo.rb", <<~RBI)
+              class Foo
+                extend T::Sig
+
+                sig { returns(Integer) }
+                attr_reader :i
+
+                def s; end
+              end
+            RBI
+
+            write!("rbi/foo.rbi", <<~RBI)
+              class Foo
+                attr_reader :i
+
+                sig { returns(String) }
+                attr_reader :s
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo")
+
+          assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+          puts result.err
+          puts @project.read("sorbet/rbi/gems/foo@0.0.1.rbi")
+          assert_project_file_includes("sorbet/rbi/gems/foo@0.0.1.rbi", <<~RBI.chomp)
+            class Foo
+              sig { returns(Integer) }
+              def i; end
+
+              sig { returns(String) }
+              def s; end
+            end
+          RBI
+          assert_empty_stderr(result)
+          assert_success_status(result)
+        end
+
+        it "logs an error message if an attribute has multiple sigs" do
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", <<~RBI)
+              class Foo
+              end
+            RBI
+
+            write!("rbi/foo.rbi", <<~RBI)
+              class Foo
+                sig { returns(Integer) }
+                sig { returns(String) }
+                attr_reader :i
+              end
+            RBI
+          end
+
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          result = @project.tapioca("gem foo")
+
+          assert_stdout_includes(result, "create  sorbet/rbi/gems/foo@0.0.1.rbi")
+
+          assert_stderr_includes(result, <<~MSG)
+            WARNING: Attributes cannot have more than one sig.
+
+            sig { returns(Integer) }
+            sig { returns(String) }
+            attr_reader :i
+          MSG
+        end
+
         it "must remove outdated RBIs" do
           @project.require_mock_gem(mock_gem("foo", "0.0.1"))
           @project.require_mock_gem(mock_gem("bar", "0.3.0"))
