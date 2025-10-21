@@ -19,6 +19,40 @@ module Tapioca
           end
 
           describe "gather_constants" do
+            it "ignores modules that raise ActiveSupport::DeprecationException" do
+              add_ruby_file("file.rb", <<~RUBY)
+                module ManualIncluded
+                  def self.included(base); end
+                end
+
+                module Concern
+                  extend ActiveSupport::Concern
+                end
+
+                module DeprecatedMod
+                end
+              RUBY
+
+              compiler = Tapioca::Dsl::Compilers::MixedInClassAttributes
+              original = Tapioca::Dsl::Compiler.method(:name_of)
+              begin
+                def compiler.name_of(mod)
+                  if mod == DeprecatedMod
+                    raise ActiveSupport::DeprecationException
+                  else
+                    Tapioca::Dsl::Compiler.method(:name_of).call(mod)
+                  end
+                end
+
+                assert_includes(gathered_constants, "ManualIncluded")
+                assert_includes(gathered_constants, "Concern")
+                refute_includes(gathered_constants, "DeprecatedMod")
+              ensure
+                def compiler.name_of(mod)
+                  original.call(mod)
+                end
+              end
+            end
             it "gathers modules that respond to class_attribute" do
               add_ruby_file("file.rb", <<~RUBY)
                 module ManualIncluded
