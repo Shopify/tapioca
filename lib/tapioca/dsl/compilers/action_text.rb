@@ -45,8 +45,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(::ActiveRecord::Base)]
       class ActionText < Compiler
-        extend T::Sig
-
         # @override
         #: -> void
         def decorate
@@ -73,8 +71,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           #: (singleton(::ActiveRecord::Base) constant) -> Array[String]
           def action_text_associations(constant)
             # Implementation copied from https://github.com/rails/rails/blob/31052d0e518b9da103eea2f79d250242ed1e3705/actiontext/lib/action_text/attribute.rb#L66

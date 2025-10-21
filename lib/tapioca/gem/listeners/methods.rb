@@ -5,8 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class Methods < Base
-        extend T::Sig
-
         include RBIHelper
         include Runtime::Reflection
 
