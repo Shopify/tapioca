@@ -35,6 +35,16 @@ module Tapioca
         #: -> T::Enumerable[Module]
         def gather_constants = raise NotImplementedError, "Abstract method called"
 
+        #: -> void
+        def force_application_load
+          @force_application_load ||= true #: bool?
+        end
+
+        #: -> bool
+        def force_application_load?
+          @force_application_load || false
+        end
+
         #: -> Set[Module]
         def processable_constants
           @processable_constants ||= T::Set[Module].new.compare_by_identity.merge(gather_constants) #: Set[Module]?
@@ -47,6 +57,7 @@ module Tapioca
 
         #: -> void
         def reset_state
+          @force_application_load = nil
           @processable_constants = nil
           @all_classes = nil
           @all_modules = nil

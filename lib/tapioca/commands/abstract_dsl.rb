@@ -98,7 +98,7 @@ module Tapioca
 
         Loaders::Dsl.load_application(
           tapioca_path: @tapioca_path,
-          eager_load: @requested_constants.empty? && @requested_paths.empty?,
+          eager_load: @requested_constants.empty? && @requested_paths.empty? || pipeline.force_load_application?,
           app_root: @app_root,
           halt_upon_load_error: @halt_upon_load_error,
         )

@@ -37,6 +37,8 @@ module Tapioca
       class ActiveRecordFixtures < Compiler
         extend T::Sig
 
+        force_application_load
+
         MISSING = Object.new
 
         # @override

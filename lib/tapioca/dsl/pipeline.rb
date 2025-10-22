@@ -109,6 +109,18 @@ module Tapioca
         end #: Array[singleton(Compiler)]?
       end
 
+      #: -> bool
+      def force_load_application?
+        target_constants = Set.new.compare_by_identity
+        target_constants.merge(requested_constants)
+
+        active_compilers.any? do |compiler|
+          compiler.force_application_load? && target_constants.intersect?(compiler.processable_constants)
+        ensure
+          compiler.reset_state
+        end
+      end
+
       private
 
       #: (Array[singleton(Compiler)] requested_compilers, Array[singleton(Compiler)] excluded_compilers) -> T::Enumerable[singleton(Compiler)]
