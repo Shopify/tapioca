@@ -1845,7 +1845,9 @@ module Tapioca
         end
 
         it "generates RBIs for ActiveResource containing arbitrary constants, and referenced by file path" do
-          @project.require_real_gem("activeresource")
+          # locking to 6.1.4 to avoid breaking changes in later versions
+          @project.require_real_gem("activeresource", "6.1.4")
+          @project.require_real_gem("activemodel", "8.0.0")
           @project.bundle_install!
           @project.write!("lib/post.rb", <<~RUBY)
             require "active_resource"
