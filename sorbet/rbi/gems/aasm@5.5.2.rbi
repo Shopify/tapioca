@@ -782,16 +782,24 @@ class AASM::Core::Invokers::ProcInvoker < ::AASM::Core::Invokers::BaseInvoker
 
   private
 
-  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#34
+  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#57
   def exec_proc(parameters_size); end
 
-  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#45
+  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#38
+  def exec_proc_with_keyword_args(parameters_size); end
+
+  # @return [Boolean]
+  #
+  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#33
+  def keyword_arguments?; end
+
+  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#74
   def log_proc_info; end
 
-  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#41
+  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#70
   def log_source_location; end
 
-  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#49
+  # source://aasm//lib/aasm/core/invokers/proc_invoker.rb#78
   def parameters_to_arity; end
 
   # @return [Boolean]
@@ -1320,54 +1328,54 @@ class AASM::StateMachine
   def set_initial_state(name, options); end
 end
 
-# source://aasm//lib/aasm/state_machine_store.rb#3
+# source://aasm//lib/aasm/state_machine_store.rb#4
 class AASM::StateMachineStore
   # @return [StateMachineStore] a new instance of StateMachineStore
   #
-  # source://aasm//lib/aasm/state_machine_store.rb#43
+  # source://aasm//lib/aasm/state_machine_store.rb#44
   def initialize; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#58
+  # source://aasm//lib/aasm/state_machine_store.rb#59
   def [](name); end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#47
+  # source://aasm//lib/aasm/state_machine_store.rb#48
   def clone; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#63
+  # source://aasm//lib/aasm/state_machine_store.rb#64
   def keys; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#55
+  # source://aasm//lib/aasm/state_machine_store.rb#56
   def machine(name); end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#60
+  # source://aasm//lib/aasm/state_machine_store.rb#61
   def machine_names; end
 
-  # source://aasm//lib/aasm/state_machine_store.rb#65
+  # source://aasm//lib/aasm/state_machine_store.rb#66
   def register(name, machine, force = T.unsafe(nil)); end
 
   class << self
-    # source://aasm//lib/aasm/state_machine_store.rb#36
+    # source://aasm//lib/aasm/state_machine_store.rb#37
     def [](klass, fallback = T.unsafe(nil)); end
 
     # do not overwrite existing state machines, which could have been created by
     # inheritance, see AASM::ClassMethods method inherited
     #
-    # source://aasm//lib/aasm/state_machine_store.rb#25
+    # source://aasm//lib/aasm/state_machine_store.rb#26
     def []=(klass, overwrite = T.unsafe(nil), state_machine = T.unsafe(nil)); end
 
-    # source://aasm//lib/aasm/state_machine_store.rb#27
+    # source://aasm//lib/aasm/state_machine_store.rb#28
     def fetch(klass, fallback = T.unsafe(nil)); end
 
     # do not overwrite existing state machines, which could have been created by
     # inheritance, see AASM::ClassMethods method inherited
     #
-    # source://aasm//lib/aasm/state_machine_store.rb#13
+    # source://aasm//lib/aasm/state_machine_store.rb#14
     def register(klass, overwrite = T.unsafe(nil), state_machine = T.unsafe(nil)); end
 
-    # source://aasm//lib/aasm/state_machine_store.rb#7
+    # source://aasm//lib/aasm/state_machine_store.rb#8
     def stores; end
 
-    # source://aasm//lib/aasm/state_machine_store.rb#38
+    # source://aasm//lib/aasm/state_machine_store.rb#39
     def unregister(klass); end
   end
 end

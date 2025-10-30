@@ -1173,6 +1173,48 @@ RuboCop::Cop::Sorbet::ForbidTAbsurd::MSG = T.let(T.unsafe(nil), String)
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_absurd.rb#19
 RuboCop::Cop::Sorbet::ForbidTAbsurd::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Detect and autocorrect `T.any(..., NilClass, ...)` to `T.nilable(...)`
+#
+# @example
+#
+#   # bad
+#   T.any(String, NilClass)
+#   T.any(NilClass, String)
+#   T.any(NilClass, Symbol, String)
+#
+#   # good
+#   T.nilable(String)
+#   T.nilable(String)
+#   T.nilable(T.any(Symbol, String))
+#
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#19
+class RuboCop::Cop::Sorbet::ForbidTAnyWithNil < ::RuboCop::Cop::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#31
+  def nil_const_node?(param0 = T.unsafe(nil)); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#48
+  def on_csend(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#35
+  def on_send(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#26
+  def t_any_call?(param0 = T.unsafe(nil)); end
+
+  private
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#52
+  def build_replacement(non_nil_args); end
+end
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#22
+RuboCop::Cop::Sorbet::ForbidTAnyWithNil::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_any_with_nil.rb#23
+RuboCop::Cop::Sorbet::ForbidTAnyWithNil::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Disallows using `T.bind` anywhere.
 #
 # @example
@@ -1260,6 +1302,45 @@ end
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_enum.rb#27
 RuboCop::Cop::Sorbet::ForbidTEnum::MSG = T.let(T.unsafe(nil), String)
 
+# Forbids `extend T::Helpers` and `include T::Helpers` in classes and modules.
+#
+# This is useful when using RBS or RBS-inline syntax for type signatures,
+# where `T::Helpers` is not needed and including it is redundant.
+#
+# @example
+#
+#   # bad
+#   class Example
+#   extend T::Helpers
+#   end
+#
+#   # bad
+#   module Example
+#   include T::Helpers
+#   end
+#
+#   # good
+#   class Example
+#   end
+#
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_helpers.rb#26
+class RuboCop::Cop::Sorbet::ForbidTHelpers < ::RuboCop::Cop::Base
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_helpers.rb#40
+  def on_csend(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_helpers.rb#35
+  def on_send(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_helpers.rb#31
+  def t_helpers?(param0 = T.unsafe(nil)); end
+end
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_helpers.rb#27
+RuboCop::Cop::Sorbet::ForbidTHelpers::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_helpers.rb#28
+RuboCop::Cop::Sorbet::ForbidTHelpers::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Disallows using `T.let` anywhere.
 #
 # @example
@@ -1315,6 +1396,45 @@ RuboCop::Cop::Sorbet::ForbidTMust::MSG = T.let(T.unsafe(nil), String)
 
 # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_must.rb#19
 RuboCop::Cop::Sorbet::ForbidTMust::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
+# Forbids `extend T::Sig` and `include T::Sig` in classes and modules.
+#
+# This is useful when using RBS or RBS-inline syntax for type signatures,
+# where `T::Sig` is not needed and including it is redundant.
+#
+# @example
+#
+#   # bad
+#   class Example
+#   extend T::Sig
+#   end
+#
+#   # bad
+#   module Example
+#   include T::Sig
+#   end
+#
+#   # good
+#   class Example
+#   end
+#
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_sig.rb#26
+class RuboCop::Cop::Sorbet::ForbidTSig < ::RuboCop::Cop::Base
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_sig.rb#40
+  def on_csend(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_sig.rb#35
+  def on_send(node); end
+
+  # source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_sig.rb#31
+  def t_sig?(param0 = T.unsafe(nil)); end
+end
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_sig.rb#27
+RuboCop::Cop::Sorbet::ForbidTSig::MSG = T.let(T.unsafe(nil), String)
+
+# source://rubocop-sorbet//lib/rubocop/cop/sorbet/forbid_t_sig.rb#28
+RuboCop::Cop::Sorbet::ForbidTSig::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
 # Disallow using `T::Struct` and `T::Props`.
 #
@@ -2368,17 +2488,17 @@ class RuboCop::Sorbet::Error < ::StandardError; end
 
 # A plugin that integrates RuboCop Sorbet with RuboCop's plugin system.
 #
-# source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#15
+# source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#10
 class RuboCop::Sorbet::Plugin < ::LintRoller::Plugin
-  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#16
+  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#11
   def about; end
 
-  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#29
+  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#24
   def rules(_context); end
 
   # @return [Boolean]
   #
-  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#25
+  # source://rubocop-sorbet//lib/rubocop/sorbet/plugin.rb#20
   def supported?(context); end
 end
 
