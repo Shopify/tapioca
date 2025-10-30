@@ -13,7 +13,7 @@ module Tapioca
       #
       # ~~~rb
       # class Post < ApplicationRecord
-      #   enum title_type: %i(book all web), _suffix: :title
+      #   enum :title_type, %i(book all web), suffix: :title
       # end
       # ~~~
       #
