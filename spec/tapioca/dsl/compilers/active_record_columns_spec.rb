@@ -118,7 +118,6 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(::Integer) }
                       def id_value; end
 
@@ -164,7 +163,6 @@ module Tapioca
                       sig { void }
                       def id_value_will_change!; end
 
-                    <%- end -%>
                       sig { returns(T.nilable(::Integer)) }
                       def id_was; end
 
@@ -174,18 +172,15 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
-                    <%- end -%>
                       sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id; end
 
                       sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
                       def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([::Integer, ::Integer])) }
                       def saved_change_to_id_value; end
 
@@ -197,10 +192,6 @@ module Tapioca
 
                       sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
                       def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-                    <%- else -%>
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-                    <%- end -%>
                     end
                   end
                 RBI
@@ -240,30 +231,28 @@ module Tapioca
               end
 
               it "handles composite primary keys" do
-                if rails_version(">= 7.1")
-                  add_ruby_file("schema.rb", <<~RUBY)
-                    ActiveRecord::Migration.suppress_messages do
-                      ActiveRecord::Schema.define do
-                        create_table :posts, primary_key: [:a, :b] do |t|
-                          t.string :a, null: false
-                          t.integer :b, null: false
-                        end
+                add_ruby_file("schema.rb", <<~RUBY)
+                  ActiveRecord::Migration.suppress_messages do
+                    ActiveRecord::Schema.define do
+                      create_table :posts, primary_key: [:a, :b] do |t|
+                        t.string :a, null: false
+                        t.integer :b, null: false
                       end
                     end
-                  RUBY
+                  end
+                RUBY
 
-                  add_ruby_file("post.rb", <<~RUBY)
-                    class Post < ActiveRecord::Base
-                    end
-                  RUBY
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                  end
+                RUBY
 
-                  expected = indented(<<~RBI, 4)
-                    sig { returns([::String, ::Integer]) }
-                    def id; end
-                  RBI
+                expected = indented(<<~RBI, 4)
+                  sig { returns([::String, ::Integer]) }
+                  def id; end
+                RBI
 
-                  assert_includes(rbi_for(:Post), expected)
-                end
+                assert_includes(rbi_for(:Post), expected)
               end
 
               it "uses ActiveModel::Type::Value types when inheriting from EncryptedAttributeType" do
@@ -456,9 +445,8 @@ module Tapioca
                   class Post < ActiveRecord::Base
                     money_column(:money_column, currency: "USD")
                     serialize :serialized_column
-                    # Change enum calls to new syntax when we drop support to Rails 6.
-                    enum integer_enum_column: [ :active, :archived ]
-                    enum string_enum_column: { high: 'high', low: 'low' }
+                    enum :integer_enum_column, [ :active, :archived ]
+                    enum :string_enum_column, { high: 'high', low: 'low' }
                   end
                 RUBY
 
@@ -574,25 +562,14 @@ module Tapioca
                   end
                 RUBY
 
-                if rails_version(">= 7.1")
-                  add_ruby_file("post.rb", <<~RUBY)
-                    class Post < ActiveRecord::Base
-                      serialize :serialized_column_array, type: Array
-                      serialize :serialized_column_hash, type: Hash
-                      serialize :serialized_column_json, coder: JSON
-                      serialize :serialized_column_custom, coder: CustomCoder
-                    end
-                  RUBY
-                else
-                  add_ruby_file("post.rb", <<~RUBY)
-                    class Post < ActiveRecord::Base
-                      serialize :serialized_column_array, Array
-                      serialize :serialized_column_hash, Hash
-                      serialize :serialized_column_json, JSON
-                      serialize :serialized_column_custom, CustomCoder
-                    end
-                  RUBY
-                end
+                add_ruby_file("post.rb", <<~RUBY)
+                  class Post < ActiveRecord::Base
+                    serialize :serialized_column_array, type: Array
+                    serialize :serialized_column_hash, type: Hash
+                    serialize :serialized_column_json, coder: JSON
+                    serialize :serialized_column_custom, coder: CustomCoder
+                  end
+                RUBY
 
                 output = rbi_for(:Post)
 
@@ -986,10 +963,6 @@ module Tapioca
               end
 
               it "discovers cast type for normalized attributes" do
-                # Support for normalization was added in Rails 7.1 so this test is only relevant
-                # for that version and above.
-                return unless rails_version(">= 7.1")
-
                 add_ruby_file("schema.rb", <<~RUBY)
                   ActiveRecord::Migration.suppress_messages do
                     ActiveRecord::Schema.define do
@@ -1232,7 +1205,6 @@ module Tapioca
                       sig { returns(T.untyped) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.untyped) }
                       def id_value; end
 
@@ -1278,7 +1250,6 @@ module Tapioca
                       sig { void }
                       def id_value_will_change!; end
 
-                    <%- end -%>
                       sig { returns(T.untyped) }
                       def id_was; end
 
@@ -1288,18 +1259,15 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
-                    <%- end -%>
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def saved_change_to_id; end
 
                       sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
                       def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.untyped, T.untyped])) }
                       def saved_change_to_id_value; end
 
@@ -1311,10 +1279,6 @@ module Tapioca
 
                       sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
                       def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-                    <%- else -%>
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-                    <%- end -%>
                     end
                   end
                 RBI
@@ -1418,7 +1382,6 @@ module Tapioca
                       sig { returns(T.nilable(::Integer)) }
                       def id_previously_was; end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable(::Integer)) }
                       def id_value; end
 
@@ -1464,7 +1427,6 @@ module Tapioca
                       sig { void }
                       def id_value_will_change!; end
 
-                    <%- end -%>
                       sig { returns(T.nilable(::Integer)) }
                       def id_was; end
 
@@ -1474,18 +1436,15 @@ module Tapioca
                       sig { void }
                       def restore_id!; end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { void }
                       def restore_id_value!; end
 
-                    <%- end -%>
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id; end
 
                       sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
                       def saved_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
 
-                    <%- if rails_version(">= 7.1") -%>
                       sig { returns(T.nilable([T.nilable(::Integer), T.nilable(::Integer)])) }
                       def saved_change_to_id_value; end
 
@@ -1497,10 +1456,6 @@ module Tapioca
 
                       sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
                       def will_save_change_to_id_value?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-                    <%- else -%>
-                      sig { params(from: T.untyped, to: T.untyped).returns(T::Boolean) }
-                      def will_save_change_to_id?(from: T.unsafe(nil), to: T.unsafe(nil)); end
-                    <%- end -%>
                     end
                   end
                 RBI
