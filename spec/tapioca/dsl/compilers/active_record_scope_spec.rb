@@ -316,7 +316,7 @@ module Tapioca
               it "generates scopes defined by enum attributes" do
                 add_ruby_file("post.rb", <<~RUBY)
                   class Post < ActiveRecord::Base
-                    enum status: [ :active, :archived ]
+                    enum :status, [ :active, :archived ]
                   end
                 RUBY
 
