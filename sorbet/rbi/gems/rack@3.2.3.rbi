@@ -2632,13 +2632,18 @@ Rack::QUERY_STRING = T.let(T.unsafe(nil), String)
 class Rack::QueryParser
   # @return [QueryParser] a new instance of QueryParser
   #
-  # source://rack//lib/rack/query_parser.rb#60
+  # source://rack//lib/rack/query_parser.rb#62
   def initialize(params_class, param_depth_limit, bytesize_limit: T.unsafe(nil), params_limit: T.unsafe(nil)); end
 
-  # source://rack//lib/rack/query_parser.rb#194
+  # Returns the value of attribute bytesize_limit.
+  #
+  # source://rack//lib/rack/query_parser.rb#60
+  def bytesize_limit; end
+
+  # source://rack//lib/rack/query_parser.rb#196
   def make_params; end
 
-  # source://rack//lib/rack/query_parser.rb#198
+  # source://rack//lib/rack/query_parser.rb#200
   def new_depth_limit(param_depth_limit); end
 
   # normalize_params recursively expands parameters into structural types. If
@@ -2647,7 +2652,7 @@ class Rack::QueryParser
   # and should no longer be used, it is kept for backwards compatibility with
   # earlier versions of rack.
   #
-  # source://rack//lib/rack/query_parser.rb#122
+  # source://rack//lib/rack/query_parser.rb#124
   def normalize_params(params, name, v, _depth = T.unsafe(nil)); end
 
   # Returns the value of attribute param_depth_limit.
@@ -2661,7 +2666,7 @@ class Rack::QueryParser
   # ParameterTypeError is raised. Users are encouraged to return a 400 in this
   # case.
   #
-  # source://rack//lib/rack/query_parser.rb#107
+  # source://rack//lib/rack/query_parser.rb#109
   def parse_nested_query(qs, separator = T.unsafe(nil)); end
 
   # Stolen from Mongrel, with some small modifications:
@@ -2669,37 +2674,37 @@ class Rack::QueryParser
   # to parse cookies by changing the characters used in the second parameter
   # (which defaults to '&').
   #
-  # source://rack//lib/rack/query_parser.rb#71
+  # source://rack//lib/rack/query_parser.rb#73
   def parse_query(qs, separator = T.unsafe(nil), &unescaper); end
 
   # Parses a query string by breaking it up at the '&', returning all key-value
   # pairs as an array of [key, value] arrays. Unlike parse_query, this preserves
   # all duplicate keys rather than collapsing them.
   #
-  # source://rack//lib/rack/query_parser.rb#92
+  # source://rack//lib/rack/query_parser.rb#94
   def parse_query_pairs(qs, separator = T.unsafe(nil)); end
 
   private
 
   # @raise [ParamsTooDeepError]
   #
-  # source://rack//lib/rack/query_parser.rb#126
+  # source://rack//lib/rack/query_parser.rb#128
   def _normalize_params(params, name, v, depth); end
 
-  # source://rack//lib/rack/query_parser.rb#220
+  # source://rack//lib/rack/query_parser.rb#222
   def each_query_pair(qs, separator, unescaper = T.unsafe(nil)); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/query_parser.rb#208
+  # source://rack//lib/rack/query_parser.rb#210
   def params_hash_has_key?(hash, key); end
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/query_parser.rb#204
+  # source://rack//lib/rack/query_parser.rb#206
   def params_hash_type?(obj); end
 
-  # source://rack//lib/rack/query_parser.rb#251
+  # source://rack//lib/rack/query_parser.rb#253
   def unescape(string, encoding = T.unsafe(nil)); end
 
   class << self
@@ -2737,9 +2742,9 @@ class Rack::QueryParser::ParameterTypeError < ::TypeError
   include ::Rack::BadRequest
 end
 
-# source://rack//lib/rack/query_parser.rb#255
+# source://rack//lib/rack/query_parser.rb#257
 class Rack::QueryParser::Params < ::Hash
-  # source://rack//lib/rack/query_parser.rb#256
+  # source://rack//lib/rack/query_parser.rb#258
   def to_params_hash; end
 end
 
@@ -3097,13 +3102,13 @@ module Rack::Request::Helpers
   # This method support both application/x-www-form-urlencoded and
   # multipart/form-data.
   #
-  # source://rack//lib/rack/request.rb#539
+  # source://rack//lib/rack/request.rb#542
   def POST; end
 
-  # source://rack//lib/rack/request.rb#608
+  # source://rack//lib/rack/request.rb#611
   def accept_encoding; end
 
-  # source://rack//lib/rack/request.rb#612
+  # source://rack//lib/rack/request.rb#615
   def accept_language; end
 
   # The authority of the incoming request as defined by RFC3976.
@@ -3115,7 +3120,7 @@ module Rack::Request::Helpers
   # source://rack//lib/rack/request.rb#271
   def authority; end
 
-  # source://rack//lib/rack/request.rb#591
+  # source://rack//lib/rack/request.rb#594
   def base_url; end
 
   # source://rack//lib/rack/request.rb#195
@@ -3151,7 +3156,7 @@ module Rack::Request::Helpers
   #
   # <tt>env['rack.input']</tt> is not touched.
   #
-  # source://rack//lib/rack/request.rb#586
+  # source://rack//lib/rack/request.rb#589
   def delete_param(k); end
 
   # Determine whether the request body contains form-data by checking
@@ -3185,7 +3190,7 @@ module Rack::Request::Helpers
   # source://rack//lib/rack/request.rb#379
   def forwarded_port; end
 
-  # source://rack//lib/rack/request.rb#604
+  # source://rack//lib/rack/request.rb#607
   def fullpath; end
 
   # Checks the HTTP request method (or verb) to see if it was of type GET
@@ -3266,7 +3271,7 @@ module Rack::Request::Helpers
   #
   # Note that modifications will not be persisted in the env. Use update_param or delete_param if you want to destructively modify params.
   #
-  # source://rack//lib/rack/request.rb#553
+  # source://rack//lib/rack/request.rb#556
   def params; end
 
   # Determine whether the request body contains data by checking
@@ -3284,7 +3289,7 @@ module Rack::Request::Helpers
   # source://rack//lib/rack/request.rb#240
   def patch?; end
 
-  # source://rack//lib/rack/request.rb#600
+  # source://rack//lib/rack/request.rb#603
   def path; end
 
   # source://rack//lib/rack/request.rb#199
@@ -3313,7 +3318,7 @@ module Rack::Request::Helpers
   # Allow overriding the query parser that the receiver will use.
   # By default Rack::Utils.default_query_parser is used.
   #
-  # source://rack//lib/rack/request.rb#559
+  # source://rack//lib/rack/request.rb#562
   def query_parser=(_arg0); end
 
   # source://rack//lib/rack/request.rb#203
@@ -3373,7 +3378,7 @@ module Rack::Request::Helpers
 
   # @return [Boolean]
   #
-  # source://rack//lib/rack/request.rb#616
+  # source://rack//lib/rack/request.rb#619
   def trusted_proxy?(ip); end
 
   # Checks the HTTP request method (or verb) to see if it was of type UNLINK
@@ -3389,12 +3394,12 @@ module Rack::Request::Helpers
   #
   # <tt>env['rack.input']</tt> is not touched.
   #
-  # source://rack//lib/rack/request.rb#566
+  # source://rack//lib/rack/request.rb#569
   def update_param(k, v); end
 
   # Tries to return a remake of the original request URL as a string.
   #
-  # source://rack//lib/rack/request.rb#596
+  # source://rack//lib/rack/request.rb#599
   def url; end
 
   # source://rack//lib/rack/request.rb#206
@@ -3407,54 +3412,54 @@ module Rack::Request::Helpers
 
   private
 
-  # source://rack//lib/rack/request.rb#767
+  # source://rack//lib/rack/request.rb#770
   def allowed_scheme(header); end
 
-  # source://rack//lib/rack/request.rb#622
+  # source://rack//lib/rack/request.rb#625
   def default_session; end
 
-  # source://rack//lib/rack/request.rb#679
+  # source://rack//lib/rack/request.rb#682
   def expand_param_pairs(pairs, query_parser = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/request.rb#771
+  # source://rack//lib/rack/request.rb#774
   def forwarded_priority; end
 
-  # source://rack//lib/rack/request.rb#743
+  # source://rack//lib/rack/request.rb#746
   def forwarded_scheme; end
 
   # Get an array of values set in the RFC 7239 `Forwarded` request header.
   #
-  # source://rack//lib/rack/request.rb#662
+  # source://rack//lib/rack/request.rb#665
   def get_http_forwarded(token); end
 
-  # source://rack//lib/rack/request.rb#638
+  # source://rack//lib/rack/request.rb#641
   def parse_http_accept_header(header); end
 
-  # source://rack//lib/rack/request.rb#674
+  # source://rack//lib/rack/request.rb#677
   def parse_multipart; end
 
-  # source://rack//lib/rack/request.rb#670
+  # source://rack//lib/rack/request.rb#673
   def parse_query(qs, d = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/request.rb#666
+  # source://rack//lib/rack/request.rb#669
   def query_parser; end
 
-  # source://rack//lib/rack/request.rb#732
+  # source://rack//lib/rack/request.rb#735
   def split_authority(authority); end
 
-  # source://rack//lib/rack/request.rb#689
+  # source://rack//lib/rack/request.rb#692
   def split_header(value); end
 
   # Assist with compatibility when processing `X-Forwarded-For`.
   #
-  # source://rack//lib/rack/request.rb#625
+  # source://rack//lib/rack/request.rb#628
   def wrap_ipv6(host); end
 
-  # source://rack//lib/rack/request.rb#775
+  # source://rack//lib/rack/request.rb#778
   def x_forwarded_proto_priority; end
 end
 
-# source://rack//lib/rack/request.rb#717
+# source://rack//lib/rack/request.rb#720
 Rack::Request::Helpers::AUTHORITY = T.let(T.unsafe(nil), Regexp)
 
 # Default ports depending on scheme. Used to decide whether or not
@@ -3470,7 +3475,7 @@ Rack::Request::Helpers::DEFAULT_PORTS = T.let(T.unsafe(nil), Hash)
 # source://rack//lib/rack/request.rb#158
 Rack::Request::Helpers::FORM_DATA_MEDIA_TYPES = T.let(T.unsafe(nil), Array)
 
-# source://rack//lib/rack/request.rb#738
+# source://rack//lib/rack/request.rb#741
 Rack::Request::Helpers::FORWARDED_SCHEME_HEADERS = T.let(T.unsafe(nil), Hash)
 
 # source://rack//lib/rack/request.rb#181
@@ -4053,21 +4058,21 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 # delivery code.
 #
 # In order to take advantage of this middleware, the response body must
-# respond to +to_path+ and the request must include an x-sendfile-type
+# respond to +to_path+ and the request must include an `x-sendfile-type`
 # header. Rack::Files and other components implement +to_path+ so there's
-# rarely anything you need to do in your application. The x-sendfile-type
+# rarely anything you need to do in your application. The `x-sendfile-type`
 # header is typically set in your web servers configuration. The following
 # sections attempt to document
 #
 # === Nginx
 #
-# Nginx supports the x-accel-redirect header. This is similar to x-sendfile
+# Nginx supports the `x-accel-redirect` header. This is similar to `x-sendfile`
 # but requires parts of the filesystem to be mapped into a private URL
 # hierarchy.
 #
 # The following example shows the Nginx configuration required to create
-# a private "/files/" area, enable x-accel-redirect, and pass the special
-# x-sendfile-type and x-accel-mapping headers to the backend:
+# a private "/files/" area, enable `x-accel-redirect`, and pass the special
+# `x-accel-mapping` header to the backend:
 #
 #   location ~ /files/(.*) {
 #     internal;
@@ -4081,24 +4086,29 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 #     proxy_set_header   X-Real-IP           $remote_addr;
 #     proxy_set_header   X-Forwarded-For     $proxy_add_x_forwarded_for;
 #
-#     proxy_set_header   x-sendfile-type     x-accel-redirect;
 #     proxy_set_header   x-accel-mapping     /var/www/=/files/;
 #
 #     proxy_pass         http://127.0.0.1:8080/;
 #   }
 #
-# Note that the x-sendfile-type header must be set exactly as shown above.
-# The x-accel-mapping header should specify the location on the file system,
+# The `x-accel-mapping` header should specify the location on the file system,
 # followed by an equals sign (=), followed name of the private URL pattern
 # that it maps to. The middleware performs a simple substitution on the
 # resulting path.
+#
+# To enable `x-accel-redirect`, you must configure the middleware explicitly:
+#
+#   use Rack::Sendfile, "x-accel-redirect"
+#
+# For security reasons, the `x-sendfile-type` header from requests is ignored.
+# The sendfile variation must be set via the middleware constructor.
 #
 # See Also: https://www.nginx.com/resources/wiki/start/topics/examples/xsendfile
 #
 # === lighttpd
 #
-# Lighttpd has supported some variation of the x-sendfile header for some
-# time, although only recent version support x-sendfile in a reverse proxy
+# Lighttpd has supported some variation of the `x-sendfile` header for some
+# time, although only recent version support `x-sendfile` in a reverse proxy
 # configuration.
 #
 #   $HTTP["host"] == "example.com" {
@@ -4120,7 +4130,7 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 #
 # === Apache
 #
-# x-sendfile is supported under Apache 2.x using a separate module:
+# `x-sendfile` is supported under Apache 2.x using a separate module:
 #
 # https://tn123.org/mod_xsendfile/
 #
@@ -4134,27 +4144,42 @@ Rack::SET_COOKIE = T.let(T.unsafe(nil), String)
 # === Mapping parameter
 #
 # The third parameter allows for an overriding extension of the
-# x-accel-mapping header. Mappings should be provided in tuples of internal to
+# `x-accel-mapping` header. Mappings should be provided in tuples of internal to
 # external. The internal values may contain regular expression syntax, they
 # will be matched with case indifference.
 #
-# source://rack//lib/rack/sendfile.rb#104
+# When `x-accel-redirect` is explicitly enabled via the variation parameter,
+# and no application-level mappings are provided, the middleware will read
+# the `x-accel-mapping` header from the proxy. This allows nginx to control
+# the path mapping without requiring application-level configuration.
+#
+# === Security
+#
+# For security reasons, the `x-sendfile-type` header from HTTP requests is
+# ignored. The sendfile variation must be explicitly configured via the
+# middleware constructor to prevent information disclosure vulnerabilities
+# where attackers could bypass proxy restrictions.
+#
+# source://rack//lib/rack/sendfile.rb#121
 class Rack::Sendfile
   # @return [Sendfile] a new instance of Sendfile
   #
-  # source://rack//lib/rack/sendfile.rb#105
+  # source://rack//lib/rack/sendfile.rb#122
   def initialize(app, variation = T.unsafe(nil), mappings = T.unsafe(nil)); end
 
-  # source://rack//lib/rack/sendfile.rb#113
+  # source://rack//lib/rack/sendfile.rb#130
   def call(env); end
 
   private
 
-  # source://rack//lib/rack/sendfile.rb#154
+  # source://rack//lib/rack/sendfile.rb#182
   def map_accel_path(env, path); end
 
-  # source://rack//lib/rack/sendfile.rb#148
+  # source://rack//lib/rack/sendfile.rb#166
   def variation(env); end
+
+  # source://rack//lib/rack/sendfile.rb#172
+  def x_accel_mapping(env); end
 end
 
 # Rack::ShowExceptions catches all exceptions raised from the app it
