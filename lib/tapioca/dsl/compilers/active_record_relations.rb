@@ -229,15 +229,7 @@ module Tapioca
           use_ranges: ["T.untyped", "nil"],
         } #: Hash[Symbol, [String, String]]
         CALCULATION_METHODS = ActiveRecord::Calculations.instance_methods(false) #: Array[Symbol]
-        ENUMERABLE_QUERY_METHODS = [:any?, :many?, :none?, :one?] #: Array[Symbol]
-        FIND_OR_CREATE_METHODS = [
-          :find_or_create_by,
-          :find_or_create_by!,
-          :find_or_initialize_by,
-          :create_or_find_by,
-          :create_or_find_by!,
-        ] #: Array[Symbol]
-        BUILDER_METHODS = [:new, :create, :create!, :build] #: Array[Symbol]
+        RELATION_METHODS = ActiveRecord::Relation.instance_methods(false) #: Array[Symbol]
         TO_ARRAY_METHODS = [:to_ary, :to_a] #: Array[Symbol]
 
         private
@@ -907,61 +899,132 @@ module Tapioca
             end
           end
 
-          ENUMERABLE_QUERY_METHODS.each do |method_name|
-            block_type = "T.nilable(T.proc.params(record: #{constant_name}).returns(T.untyped))"
-            create_common_method(
-              method_name,
-              parameters: [
-                create_block_param("block", type: block_type),
-              ],
-              return_type: "T::Boolean",
-            )
-          end
+          RELATION_METHODS.each do |method_name|
+            case method_name
+            when :any?, :many?, :none?, :one? # enumerable query methods
+              block_type = "T.nilable(T.proc.params(record: #{constant_name}).returns(T.untyped))"
+              create_common_method(
+                method_name,
+                parameters: [
+                  create_block_param("block", type: block_type),
+                ],
+                return_type: "T::Boolean",
+              )
+            when :find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :create_or_find_by, :create_or_find_by! # find or create methods
+              common_relation_methods_module.create_method(method_name.to_s) do |method|
+                method.add_param("attributes")
+                method.add_block_param("block")
 
-          FIND_OR_CREATE_METHODS.each do |method_name|
-            common_relation_methods_module.create_method(method_name.to_s) do |method|
-              method.add_param("attributes")
-              method.add_block_param("block")
+                # `T.untyped` matches `T::Array[T.untyped]` so the array signature
+                # must be defined first for Sorbet to pick it, if valid.
+                method.add_sig do |sig|
+                  sig.add_param("attributes", "T::Array[T.untyped]")
+                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                  sig.return_type = "T::Array[#{constant_name}]"
+                end
 
-              # `T.untyped` matches `T::Array[T.untyped]` so the array signature
-              # must be defined first for Sorbet to pick it, if valid.
-              method.add_sig do |sig|
-                sig.add_param("attributes", "T::Array[T.untyped]")
-                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                sig.return_type = "T::Array[#{constant_name}]"
+                method.add_sig do |sig|
+                  sig.add_param("attributes", "T.untyped")
+                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                  sig.return_type = constant_name
+                end
+              end
+            when :new, :create, :create!, :build # builder methods
+              common_relation_methods_module.create_method(method_name.to_s) do |method|
+                method.add_opt_param("attributes", "nil")
+                method.add_block_param("block")
+
+                method.add_sig do |sig|
+                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                  sig.return_type = constant_name
+                end
+
+                # `T.untyped` matches `T::Array[T.untyped]` so the array signature
+                # must be defined first for Sorbet to pick it, if valid.
+                method.add_sig do |sig|
+                  sig.add_param("attributes", "T::Array[T.untyped]")
+                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                  sig.return_type = "T::Array[#{constant_name}]"
+                end
+
+                method.add_sig do |sig|
+                  sig.add_param("attributes", "T.untyped")
+                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                  sig.return_type = constant_name
+                end
+              end
+            when :insert_all, :insert_all!, :upsert_all # insert all methods
+              returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
+              unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
+
+              parameters = [
+                create_param("attributes", type: "T::Array[Hash]"),
+                create_kw_opt_param("returning", type: returning_type, default: "nil"),
+              ]
+
+              # Bang methods don't have the `unique_by` parameter
+              unless bang_method?(method_name)
+                parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
               end
 
-              method.add_sig do |sig|
-                sig.add_param("attributes", "T.untyped")
-                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                sig.return_type = constant_name
-              end
-            end
-          end
+              common_relation_methods_module.create_method(
+                method_name.to_s,
+                parameters: parameters,
+                return_type: "ActiveRecord::Result",
+              )
+            when :insert, :insert!, :upsert # insert methods
+              returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
+              unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
 
-          BUILDER_METHODS.each do |method_name|
-            common_relation_methods_module.create_method(method_name.to_s) do |method|
-              method.add_opt_param("attributes", "nil")
-              method.add_block_param("block")
+              parameters = [
+                create_param("attributes", type: "Hash"),
+                create_kw_opt_param("returning", type: returning_type, default: "nil"),
+              ]
 
-              method.add_sig do |sig|
-                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                sig.return_type = constant_name
-              end
-
-              # `T.untyped` matches `T::Array[T.untyped]` so the array signature
-              # must be defined first for Sorbet to pick it, if valid.
-              method.add_sig do |sig|
-                sig.add_param("attributes", "T::Array[T.untyped]")
-                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                sig.return_type = "T::Array[#{constant_name}]"
+              # Bang methods don't have the `unique_by` parameter
+              unless bang_method?(method_name)
+                parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
               end
 
-              method.add_sig do |sig|
-                sig.add_param("attributes", "T.untyped")
-                sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                sig.return_type = constant_name
-              end
+              common_relation_methods_module.create_method(
+                method_name.to_s,
+                parameters: parameters,
+                return_type: "ActiveRecord::Result",
+              )
+            when :delete, :destroy
+              # For these cases, it is valid to pass the above kind of things, but also:
+              # - a model identifier, which can be:
+              #   - a numeric id, thus `Integer`
+              #   - a string id, thus `String`
+              # - a collection of identifiers
+              #   - a collection of identifiers, thus `T::Enumerable[T.any(Integer, String)]`
+              # which, coupled with the above case, gives us:
+              #   `T.any(Model, Integer, String, T::Enumerable[T.any(Model, Integer, String, T::Enumerable[Model])])`
+
+              common_relation_methods_module.create_method(
+                method_name.to_s,
+                parameters: [
+                  create_rest_param(
+                    "records",
+                    type: "T.any(#{constant_name}, Integer, String" \
+                      ", T::Enumerable[T.any(#{constant_name}, Integer, String, T::Enumerable[#{constant_name}])])",
+                  ),
+                ],
+                return_type: method_name == :delete ? "Integer" : "T::Array[#{constant_name}]",
+              )
+            when :delete_all, :destroy_all
+              common_relation_methods_module.create_method(
+                method_name.to_s,
+                return_type: method_name == :delete_all ? "Integer" : "T::Array[#{constant_name}]",
+              )
+            when :delete_by, :destroy_by
+              common_relation_methods_module.create_method(
+                method_name.to_s,
+                parameters: [
+                  create_param("args", type: "T.untyped"),
+                ],
+                return_type: method_name == :delete_by ? "Integer" : "T::Array[#{constant_name}]",
+              )
             end
           end
 
