@@ -73,13 +73,8 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                <% if rails_version(">= 7.0") %>
                     sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
-                <% else %>
-                    sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
-                    def perform_later(user_id); end
-                <% end %>
 
                     sig { params(user_id: T.untyped).returns(T.untyped) }
                     def perform_now(user_id); end
@@ -105,13 +100,8 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                <% if rails_version(">= 7.0") %>
                     sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
-                <% else %>
-                    sig { params(user_id: ::Integer).returns(T.any(NotifyJob, FalseClass)) }
-                    def perform_later(user_id); end
-                <% end %>
 
                     sig { params(user_id: ::Integer).void }
                     def perform_now(user_id); end
@@ -135,13 +125,8 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                <% if rails_version(">= 7.0") %>
                     sig { params(user_id: T.untyped, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
-                <% else %>
-                    sig { params(user_id: T.untyped).returns(T.any(NotifyJob, FalseClass)) }
-                    def perform_later(user_id); end
-                <% end %>
 
                     sig { params(user_id: T.untyped).returns(T.untyped) }
                     def perform_now(user_id); end
@@ -168,13 +153,8 @@ module Tapioca
 
                 class NotifyJob
                   class << self
-                <% if rails_version(">= 7.0") %>
                     sig { params(user_id: ::Integer, block: T.nilable(T.proc.params(job: NotifyJob).void)).returns(T.any(NotifyJob, FalseClass)) }
                     def perform_later(user_id, &block); end
-                <% else %>
-                    sig { params(user_id: ::Integer).returns(T.any(NotifyJob, FalseClass)) }
-                    def perform_later(user_id); end
-                <% end %>
 
                     sig { params(user_id: ::Integer).void }
                     def perform_now(user_id); end
