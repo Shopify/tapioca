@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 gemspec
 
-CURRENT_RAILS_VERSION = "7.1"
+CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
 gem "minitest"
@@ -29,12 +29,8 @@ group :development, :test do
     rails_version = CURRENT_RAILS_VERSION if rails_version == "current"
     gem "rails", "~> #{rails_version}.0"
   end
-  if rails_version == "7.0"
-    gem "sqlite3", "~> 1.4"
-  else
-    gem "sqlite3"
-  end
 
+  gem "sqlite3"
   gem "mutex_m"
   gem "smart_properties"
   gem "json_api_client"

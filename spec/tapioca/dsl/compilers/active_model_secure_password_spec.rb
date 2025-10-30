@@ -11,6 +11,7 @@ module Tapioca
           #: -> void
           def before_setup
             require "active_model"
+            require "active_support/core_ext/numeric/time"
           end
 
           describe "initialize" do
@@ -78,7 +79,6 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def password_challenge; end
 
@@ -92,11 +92,10 @@ module Tapioca
                   def password_confirmation=(_arg0); end
 
                   sig { returns(T.untyped) }
+                  def password_reset_token; end
+
+                  sig { returns(T.untyped) }
                   def password_salt; end
-                <% else %>
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
-                  def password_confirmation=(unencrypted_password); end
-                <% end %>
                 end
               RBI
 
@@ -125,7 +124,6 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def token_challenge; end
 
@@ -139,11 +137,10 @@ module Tapioca
                   def token_confirmation=(_arg0); end
 
                   sig { returns(T.untyped) }
+                  def token_reset_token; end
+
+                  sig { returns(T.untyped) }
                   def token_salt; end
-                <% else %>
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
-                  def token_confirmation=(unencrypted_password); end
-                <% end %>
                 end
               RBI
 
@@ -179,7 +176,6 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def password=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def password_challenge; end
 
@@ -193,11 +189,10 @@ module Tapioca
                   def password_confirmation=(_arg0); end
 
                   sig { returns(T.untyped) }
+                  def password_reset_token; end
+
+                  sig { returns(T.untyped) }
                   def password_salt; end
-                <% else %>
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
-                  def password_confirmation=(unencrypted_password); end
-                <% end %>
 
                   sig { returns(T.untyped) }
                   def token; end
@@ -205,7 +200,6 @@ module Tapioca
                   sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
                   def token=(unencrypted_password); end
 
-                <% if rails_version(">= 7.1") %>
                   sig { returns(T.untyped) }
                   def token_challenge; end
 
@@ -219,11 +213,10 @@ module Tapioca
                   def token_confirmation=(_arg0); end
 
                   sig { returns(T.untyped) }
+                  def token_reset_token; end
+
+                  sig { returns(T.untyped) }
                   def token_salt; end
-                <% else %>
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
-                  def token_confirmation=(unencrypted_password); end
-                <% end %>
                 end
               RBI
 

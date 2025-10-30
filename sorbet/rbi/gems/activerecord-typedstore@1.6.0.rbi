@@ -259,13 +259,13 @@ class ActiveRecord::TypedStore::TypedHash < ::ActiveSupport::HashWithIndifferent
   def []=(key, value); end
 
   # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#47
-  def defaults_hash(&block); end
+  def defaults_hash(&_arg0); end
 
   # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#21
   def except(*_arg0, **_arg1, &_arg2); end
 
   # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#47
-  def fields(&block); end
+  def fields(&_arg0); end
 
   # source://activerecord-typedstore//lib/active_record/typed_store/typed_hash.rb#34
   def merge!(other_hash); end

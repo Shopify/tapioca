@@ -20949,17 +20949,34 @@ class Graphql::Dashboard::ApplicationController < ::ActionController::Base
   private
 
   # source://graphql//lib/graphql/dashboard.rb#81
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard.rb#82
-    def __callbacks; end
+    def __class_attr___callbacks; end
+
+    # source://graphql//lib/graphql/dashboard.rb#82
+    def __class_attr___callbacks=(new_value); end
 
     # source://graphql//lib/graphql/dashboard.rb#111
-    def _helper_methods; end
+    def __class_attr__helper_methods; end
+
+    # source://graphql//lib/graphql/dashboard.rb#111
+    def __class_attr__helper_methods=(new_value); end
 
     # source://graphql//lib/graphql/dashboard.rb#81
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard.rb#81
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard.rb#81
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard.rb#81
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -20970,7 +20987,7 @@ module Graphql::Dashboard::ApplicationController::HelperMethods
   include ::ActionController::Base::HelperMethods
 
   # source://graphql//lib/graphql/dashboard.rb#111
-  def schema_class(*args, **_arg1, &block); end
+  def schema_class(*_arg0, **_arg1, &_arg2); end
 end
 
 # source://graphql//lib/graphql/dashboard/detailed_traces.rb#5
@@ -20995,7 +21012,7 @@ class Graphql::Dashboard::DetailedTraces::TracesController < ::Graphql::Dashboar
   private
 
   # source://graphql//lib/graphql/dashboard/detailed_traces.rb#6
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   # @return [Boolean]
   #
@@ -21003,11 +21020,25 @@ class Graphql::Dashboard::DetailedTraces::TracesController < ::Graphql::Dashboar
   def feature_installed?; end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/detailed_traces.rb#7
-    def __callbacks; end
+    def __class_attr___callbacks; end
+
+    # source://graphql//lib/graphql/dashboard/detailed_traces.rb#7
+    def __class_attr___callbacks=(new_value); end
 
     # source://graphql//lib/graphql/dashboard/detailed_traces.rb#6
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/detailed_traces.rb#6
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/detailed_traces.rb#6
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/detailed_traces.rb#6
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21043,11 +21074,22 @@ class Graphql::Dashboard::LandingsController < ::Graphql::Dashboard::Application
   private
 
   # source://graphql//lib/graphql/dashboard.rb#114
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard.rb#114
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard.rb#114
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard.rb#114
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard.rb#114
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21067,7 +21109,7 @@ class Graphql::Dashboard::Limiters::LimitersController < ::Graphql::Dashboard::A
   private
 
   # source://graphql//lib/graphql/dashboard/limiters.rb#6
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   # @return [Boolean]
   #
@@ -21078,11 +21120,25 @@ class Graphql::Dashboard::Limiters::LimitersController < ::Graphql::Dashboard::A
   def limiter_for(name); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/limiters.rb#7
-    def __callbacks; end
+    def __class_attr___callbacks; end
+
+    # source://graphql//lib/graphql/dashboard/limiters.rb#7
+    def __class_attr___callbacks=(new_value); end
 
     # source://graphql//lib/graphql/dashboard/limiters.rb#6
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/limiters.rb#6
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/limiters.rb#6
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/limiters.rb#6
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21105,7 +21161,7 @@ class Graphql::Dashboard::OperationStore::BaseController < ::Graphql::Dashboard:
   private
 
   # source://graphql//lib/graphql/dashboard/operation_store.rb#6
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   # @return [Boolean]
   #
@@ -21113,11 +21169,25 @@ class Graphql::Dashboard::OperationStore::BaseController < ::Graphql::Dashboard:
   def feature_installed?; end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/operation_store.rb#7
-    def __callbacks; end
+    def __class_attr___callbacks; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#7
+    def __class_attr___callbacks=(new_value); end
 
     # source://graphql//lib/graphql/dashboard/operation_store.rb#6
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#6
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#6
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#6
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21150,14 +21220,25 @@ class Graphql::Dashboard::OperationStore::ClientsController < ::Graphql::Dashboa
   private
 
   # source://graphql//lib/graphql/dashboard/operation_store.rb#22
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   # source://graphql//lib/graphql/dashboard/operation_store.rb#68
   def init_client(name: T.unsafe(nil), secret: T.unsafe(nil)); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/operation_store.rb#22
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#22
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#22
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#22
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21172,11 +21253,22 @@ class Graphql::Dashboard::OperationStore::IndexEntriesController < ::Graphql::Da
   private
 
   # source://graphql//lib/graphql/dashboard/operation_store.rb#175
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/operation_store.rb#175
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#175
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#175
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#175
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21194,11 +21286,22 @@ class Graphql::Dashboard::OperationStore::OperationsController < ::Graphql::Dash
   private
 
   # source://graphql//lib/graphql/dashboard/operation_store.rb#81
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/operation_store.rb#81
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#81
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#81
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/operation_store.rb#81
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21210,14 +21313,28 @@ class Graphql::Dashboard::StaticsController < ::Graphql::Dashboard::ApplicationC
   private
 
   # source://graphql//lib/graphql/dashboard.rb#119
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard.rb#120
-    def __callbacks; end
+    def __class_attr___callbacks; end
+
+    # source://graphql//lib/graphql/dashboard.rb#120
+    def __class_attr___callbacks=(new_value); end
 
     # source://graphql//lib/graphql/dashboard.rb#119
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard.rb#119
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard.rb#119
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard.rb#119
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21241,14 +21358,28 @@ class Graphql::Dashboard::Subscriptions::BaseController < ::Graphql::Dashboard::
   private
 
   # source://graphql//lib/graphql/dashboard/subscriptions.rb#5
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/subscriptions.rb#6
-    def __callbacks; end
+    def __class_attr___callbacks; end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#6
+    def __class_attr___callbacks=(new_value); end
 
     # source://graphql//lib/graphql/dashboard/subscriptions.rb#5
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#5
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#5
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#5
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21269,11 +21400,22 @@ class Graphql::Dashboard::Subscriptions::SubscriptionsController < ::Graphql::Da
   private
 
   # source://graphql//lib/graphql/dashboard/subscriptions.rb#67
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/subscriptions.rb#67
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#67
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#67
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#67
+    def __class_attr_middleware_stack=(new_value); end
   end
 end
 
@@ -21288,10 +21430,21 @@ class Graphql::Dashboard::Subscriptions::TopicsController < ::Graphql::Dashboard
   private
 
   # source://graphql//lib/graphql/dashboard/subscriptions.rb#21
-  def _layout(lookup_context, formats); end
+  def _layout(lookup_context, formats, keys); end
 
   class << self
+    private
+
     # source://graphql//lib/graphql/dashboard/subscriptions.rb#21
-    def middleware_stack; end
+    def __class_attr_config; end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#21
+    def __class_attr_config=(new_value); end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#21
+    def __class_attr_middleware_stack; end
+
+    # source://graphql//lib/graphql/dashboard/subscriptions.rb#21
+    def __class_attr_middleware_stack=(new_value); end
   end
 end

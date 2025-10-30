@@ -39,7 +39,7 @@ module Tapioca
             it "generates RBI file for classes with an enum attribute" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Conversation < ActiveRecord::Base
-                  enum status: [ :active, :archived ]
+                  enum :status, [ :active, :archived ]
                 end
               RUBY
 
@@ -76,7 +76,7 @@ module Tapioca
             it "generates RBI file for classes with an enum attribute with string values" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Conversation < ActiveRecord::Base
-                  enum status: { active: "0", archived: "1" }
+                  enum :status, { active: "0", archived: "1" }
                 end
 
               RUBY
@@ -114,7 +114,7 @@ module Tapioca
             it "generates RBI file for classes with an enum attribute with mix value types" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Conversation < ActiveRecord::Base
-                  enum status: { active: 0, archived: true, inactive: "Inactive" }
+                  enum :status, { active: 0, archived: true, inactive: "Inactive" }
                 end
               RUBY
 
@@ -157,8 +157,8 @@ module Tapioca
             it "generates RBI file for classes with multiple enum attributes" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Conversation < ActiveRecord::Base
-                  enum status: [ :active, :archived ]
-                  enum comments_status: [:on, :off]
+                  enum :status, [ :active, :archived ]
+                  enum :comments_status, [:on, :off]
                 end
               RUBY
 
@@ -210,8 +210,8 @@ module Tapioca
             it "generates RBI file for classes with multiple enum attributes with mix value types" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Conversation < ActiveRecord::Base
-                  enum status: { active: 0, archived: true, inactive: "Inactive" }
-                  enum comments_status: { on: 0, off: false, ongoing: "Ongoing", topic: [1,2,3] }
+                  enum :status, { active: 0, archived: true, inactive: "Inactive" }
+                  enum :comments_status, { on: 0, off: false, ongoing: "Ongoing" }
                 end
               RUBY
 
@@ -222,7 +222,7 @@ module Tapioca
                   include EnumMethodsModule
 
                   class << self
-                    sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, FalseClass, String, Array)]) }
+                    sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, FalseClass, String)]) }
                     def comments_statuses; end
 
                     sig { returns(T::Hash[T.any(String, Symbol), T.any(Integer, TrueClass, String)]) }
@@ -265,12 +265,6 @@ module Tapioca
 
                     sig { returns(T::Boolean) }
                     def ongoing?; end
-
-                    sig { void }
-                    def topic!; end
-
-                    sig { returns(T::Boolean) }
-                    def topic?; end
                   end
                 end
               RBI
@@ -281,7 +275,7 @@ module Tapioca
             it "generates RBI file for classes with enum attribute with suffix specified" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Conversation < ActiveRecord::Base
-                  enum status: [:active, :archived], _suffix: true
+                  enum :status, [:active, :archived], suffix: true
                 end
               RUBY
 
@@ -318,7 +312,7 @@ module Tapioca
             it "generates RBI file for classes with enum attribute with prefix specified" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class Conversation < ActiveRecord::Base
-                  enum status: [:active, :archived], _prefix: :comments
+                  enum :status, [:active, :archived], prefix: :comments
                 end
               RUBY
 
@@ -355,11 +349,11 @@ module Tapioca
             it "generates RBI file for classes with enum attribute with inheritance" do
               add_ruby_file("conversation.rb", <<~RUBY)
                 class AbstractConversation < ActiveRecord::Base
-                  enum status: [:active, :archived]
+                  enum :status, [:active, :archived]
                 end
 
                 class Conversation < AbstractConversation
-                  enum status: [:inactive]
+                  enum :status, [:inactive]
                 end
               RUBY
 
@@ -421,11 +415,11 @@ module Tapioca
                 class AbstractConversation < ActiveRecord::Base
                   self.abstract_class = true
 
-                  enum status: [:active, :archived]
+                  enum :status, [:active, :archived]
                 end
 
                 class Conversation < AbstractConversation
-                  enum status: [:inactive]
+                  enum :status, [:inactive]
                 end
               RUBY
 

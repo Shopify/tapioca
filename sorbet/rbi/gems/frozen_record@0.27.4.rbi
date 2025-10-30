@@ -134,7 +134,7 @@ class FrozenRecord::Base
   def include_root_in_json?; end
 
   # source://frozen_record//lib/frozen_record/base.rb#24
-  def model_name(&block); end
+  def model_name(&_arg0); end
 
   # source://frozen_record//lib/frozen_record/base.rb#25
   def param_delimiter=(_arg0); end
@@ -412,6 +412,78 @@ class FrozenRecord::Base
     def with_max_records_scan(value); end
 
     private
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr__default_attributes; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr__default_attributes=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr__primary_key; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr__primary_key=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#26
+    def __class_attr_attribute_aliases; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#26
+    def __class_attr_attribute_aliases=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#33
+    def __class_attr_attribute_deserializers; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#33
+    def __class_attr_attribute_deserializers=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#26
+    def __class_attr_attribute_method_patterns; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#26
+    def __class_attr_attribute_method_patterns=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr_auto_reloading; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr_auto_reloading=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr_backend; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr_backend=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr_base_path; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#31
+    def __class_attr_base_path=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/serialization.rb#7
+    def __class_attr_include_root_in_json; end
+
+    # source://frozen_record//lib/frozen_record/serialization.rb#7
+    def __class_attr_include_root_in_json=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#32
+    def __class_attr_index_definitions; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#32
+    def __class_attr_index_definitions=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#34
+    def __class_attr_max_records_scan; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#34
+    def __class_attr_max_records_scan=(new_value); end
+
+    # source://frozen_record//lib/frozen_record/base.rb#25
+    def __class_attr_param_delimiter; end
+
+    # source://frozen_record//lib/frozen_record/base.rb#25
+    def __class_attr_param_delimiter=(new_value); end
 
     # source://frozen_record//lib/frozen_record/base.rb#229
     def assign_defaults!(record); end

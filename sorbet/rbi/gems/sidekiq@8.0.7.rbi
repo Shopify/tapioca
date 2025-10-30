@@ -14,7 +14,7 @@ class ActiveJob::Base; end
 module ActiveJob::QueueAdapters; end
 
 # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#47
-class ActiveJob::QueueAdapters::SidekiqAdapter
+class ActiveJob::QueueAdapters::SidekiqAdapter < ::ActiveJob::QueueAdapters::AbstractAdapter
   # source://sidekiq//lib/active_job/queue_adapters/sidekiq_adapter.rb#63
   def enqueue(job); end
 

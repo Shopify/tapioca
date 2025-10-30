@@ -152,8 +152,10 @@ module Tapioca
           when ActiveRecord::Type::Serialized
             serialized_column_type(column_type)
           when ->(type) {
-                 defined?(ActiveRecord::Normalization::NormalizedValueType) &&
-                   ActiveRecord::Normalization::NormalizedValueType === type
+                 (defined?(ActiveRecord::Normalization::NormalizedValueType) &&
+                   ActiveRecord::Normalization::NormalizedValueType === type) ||
+                   (defined?(ActiveModel::Attributes::Normalization::NormalizedValueType) &&
+                     ActiveModel::Attributes::Normalization::NormalizedValueType === type)
                }
             type_for_activerecord_value(column_type.cast_type, column_nullability:)
           when ->(type) {

@@ -454,12 +454,10 @@ module JsonApiClient::Helpers::Callbacks
   module GeneratedClassMethods
     def __callbacks; end
     def __callbacks=(value); end
-    def __callbacks?; end
   end
 
   module GeneratedInstanceMethods
     def __callbacks; end
-    def __callbacks?; end
   end
 end
 
@@ -990,6 +988,20 @@ class JsonApiClient::Paginating::Paginator
 
     # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
     def per_page_param?; end
+
+    private
+
+    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
+    def __class_attr_page_param; end
+
+    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
+    def __class_attr_page_param=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
+    def __class_attr_per_page_param; end
+
+    # source://json_api_client//lib/json_api_client/paginating/paginator.rb#4
+    def __class_attr_per_page_param=(new_value); end
   end
 end
 
@@ -1397,9 +1409,6 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#9
   def __callbacks; end
 
-  # source://json_api_client//lib/json_api_client/resource.rb#9
-  def __callbacks?; end
-
   # source://json_api_client//lib/json_api_client/resource.rb#44
   def _immutable; end
 
@@ -1407,7 +1416,10 @@ class JsonApiClient::Resource
   def _immutable?; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#9
-  def _run_validate_callbacks(&block); end
+  def _run_validate_callbacks; end
+
+  # source://json_api_client//lib/json_api_client/resource.rb#9
+  def _run_validate_callbacks!(&block); end
 
   # source://json_api_client//lib/json_api_client/resource.rb#9
   def _validate_callbacks; end
@@ -1495,7 +1507,7 @@ class JsonApiClient::Resource
   def mark_as_persisted!; end
 
   # source://json_api_client//lib/json_api_client/resource.rb#7
-  def model_name(&block); end
+  def model_name(&_arg0); end
 
   # Returns true if this is a new record (never persisted to the database)
   #
@@ -1596,9 +1608,6 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#481
   def valid?(context = T.unsafe(nil)); end
 
-  # source://json_api_client//lib/json_api_client/resource.rb#9
-  def validation_context; end
-
   protected
 
   # source://json_api_client//lib/json_api_client/resource.rb#642
@@ -1655,18 +1664,12 @@ class JsonApiClient::Resource
   # source://json_api_client//lib/json_api_client/resource.rb#622
   def respond_to_missing?(symbol, include_all = T.unsafe(nil)); end
 
-  # source://json_api_client//lib/json_api_client/resource.rb#9
-  def validation_context=(_arg0); end
-
   class << self
     # source://json_api_client//lib/json_api_client/resource.rb#9
     def __callbacks; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#9
     def __callbacks=(value); end
-
-    # source://json_api_client//lib/json_api_client/resource.rb#9
-    def __callbacks?; end
 
     # source://json_api_client//lib/json_api_client/resource.rb#44
     def _immutable; end
@@ -2126,6 +2129,158 @@ class JsonApiClient::Resource
     #
     # source://json_api_client//lib/json_api_client/resource.rb#292
     def property(name, options = T.unsafe(nil)); end
+
+    private
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def __class_attr___callbacks; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def __class_attr___callbacks=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#44
+    def __class_attr__immutable; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#44
+    def __class_attr__immutable=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def __class_attr__validators; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#9
+    def __class_attr__validators=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#41
+    def __class_attr_add_defaults_to_changes; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#41
+    def __class_attr_add_defaults_to_changes=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#15
+    def __class_attr_associations; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#15
+    def __class_attr_associations=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_connection_class; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_connection_class=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_connection_object; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_connection_object=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_connection_options; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_connection_options=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_custom_type_to_class; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_custom_type_to_class=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_json_key_format; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_json_key_format=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_keep_request_params; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_keep_request_params=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_linker; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_linker=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_paginator; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_paginator=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#10
+    def __class_attr_param_delimiter; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#10
+    def __class_attr_param_delimiter=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_parser; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_parser=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_primary_key; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_primary_key=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_query_builder; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_query_builder=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_raise_on_blank_find_param; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_raise_on_blank_find_param=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_read_only_attributes; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_read_only_attributes=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_relationship_linker; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_relationship_linker=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_request_params_class; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_request_params_class=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_requestor_class; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_requestor_class=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_route_format; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_route_format=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_search_included_in_result_set; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_search_included_in_result_set=(new_value); end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_site; end
+
+    # source://json_api_client//lib/json_api_client/resource.rb#21
+    def __class_attr_site=(new_value); end
   end
 end
 
