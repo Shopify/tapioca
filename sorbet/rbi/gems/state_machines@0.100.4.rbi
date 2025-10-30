@@ -4608,12 +4608,12 @@ class StateMachines::Transition
   # Determines equality of transitions by testing whether the object, states,
   # and event involved in the transition are equal
   #
-  # source://state_machines//lib/state_machines/transition.rb#295
+  # source://state_machines//lib/state_machines/transition.rb#298
   def ==(other); end
 
   # The action that will be run when this transition is performed
   #
-  # source://state_machines//lib/state_machines/transition.rb#63
+  # source://state_machines//lib/state_machines/transition.rb#64
   def action; end
 
   # The arguments passed in to the event that triggered the transition
@@ -4630,7 +4630,7 @@ class StateMachines::Transition
 
   # The attribute which this transition's machine is defined for
   #
-  # source://state_machines//lib/state_machines/transition.rb#58
+  # source://state_machines//lib/state_machines/transition.rb#59
   def attribute; end
 
   # A hash of all the core attributes defined for this transition with their
@@ -4642,12 +4642,12 @@ class StateMachines::Transition
   #   transition = StateMachines::Transition.new(Vehicle.new, machine, :ignite, :parked, :idling)
   #   transition.attributes   # => {:object => #<Vehicle:0xb7d60ea4>, :attribute => :state, :event => :ignite, :from => 'parked', :to => 'idling'}
   #
-  # source://state_machines//lib/state_machines/transition.rb#139
+  # source://state_machines//lib/state_machines/transition.rb#140
   def attributes; end
 
   # The event that triggered the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#68
+  # source://state_machines//lib/state_machines/transition.rb#69
   def event; end
 
   # The original state value *before* the transition
@@ -4657,22 +4657,22 @@ class StateMachines::Transition
 
   # The state name *before* the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#83
+  # source://state_machines//lib/state_machines/transition.rb#84
   def from_name; end
 
   # The human-readable name of the event that triggered the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#78
+  # source://state_machines//lib/state_machines/transition.rb#79
   def human_event; end
 
   # The human-readable state name *before* the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#93
+  # source://state_machines//lib/state_machines/transition.rb#94
   def human_from_name; end
 
   # The new human-readable state name *after* the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#108
+  # source://state_machines//lib/state_machines/transition.rb#109
   def human_to_name; end
 
   # Generates a nicely formatted description of this transitions's contents.
@@ -4682,7 +4682,7 @@ class StateMachines::Transition
   #   transition = StateMachines::Transition.new(object, machine, :ignite, :parked, :idling)
   #   transition   # => #<StateMachines::Transition attribute=:state event=:ignite from="parked" from_name=:parked to="idling" to_name=:idling>
   #
-  # source://state_machines//lib/state_machines/transition.rb#310
+  # source://state_machines//lib/state_machines/transition.rb#313
   def inspect; end
 
   # Does this transition represent a loopback (i.e. the from and to state
@@ -4696,7 +4696,7 @@ class StateMachines::Transition
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/transition.rb#120
+  # source://state_machines//lib/state_machines/transition.rb#121
   def loopback?; end
 
   # The state machine for which this transition is defined
@@ -4714,7 +4714,7 @@ class StateMachines::Transition
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/transition.rb#316
+  # source://state_machines//lib/state_machines/transition.rb#319
   def paused?; end
 
   # Runs the actual transition and any before/after callbacks associated
@@ -4738,7 +4738,7 @@ class StateMachines::Transition
   #   transition.perform(Time.now, false)             # => Passes in additional arguments and only sets the state attribute
   #   transition.perform(Time.now, run_action: false) # => Passes in additional arguments and only sets the state attribute
   #
-  # source://state_machines//lib/state_machines/transition.rb#163
+  # source://state_machines//lib/state_machines/transition.rb#164
   def perform(*args); end
 
   # Transitions the current value of the state to that specified by the
@@ -4761,28 +4761,28 @@ class StateMachines::Transition
   #
   #   vehicle.state   # => 'idling'
   #
-  # source://state_machines//lib/state_machines/transition.rb#248
+  # source://state_machines//lib/state_machines/transition.rb#250
   def persist; end
 
   # The fully-qualified name of the event that triggered the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#73
+  # source://state_machines//lib/state_machines/transition.rb#74
   def qualified_event; end
 
   # The fully-qualified state name *before* the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#88
+  # source://state_machines//lib/state_machines/transition.rb#89
   def qualified_from_name; end
 
   # The new fully-qualified state name *after* the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#103
+  # source://state_machines//lib/state_machines/transition.rb#104
   def qualified_to_name; end
 
   # Resets any tracking of which callbacks have already been run and whether
   # the state has already been persisted
   #
-  # source://state_machines//lib/state_machines/transition.rb#286
+  # source://state_machines//lib/state_machines/transition.rb#288
   def reset; end
 
   # The result of invoking the action associated with the machine
@@ -4798,7 +4798,7 @@ class StateMachines::Transition
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/transition.rb#325
+  # source://state_machines//lib/state_machines/transition.rb#328
   def resumable?; end
 
   # Manually resumes the execution of a previously paused callback.
@@ -4806,7 +4806,7 @@ class StateMachines::Transition
   # false if there was no paused fiber, and raises an exception if the
   # transition was halted.
   #
-  # source://state_machines//lib/state_machines/transition.rb#333
+  # source://state_machines//lib/state_machines/transition.rb#336
   def resume!(&block); end
 
   # Rolls back changes made to the object's state via this transition.  This
@@ -4834,7 +4834,7 @@ class StateMachines::Transition
   #   transition.rollback
   #   vehicle.state             # => "parked"
   #
-  # source://state_machines//lib/state_machines/transition.rb#279
+  # source://state_machines//lib/state_machines/transition.rb#281
   def rollback; end
 
   # Runs the before / after callbacks for this transition.  If a block is
@@ -4849,7 +4849,7 @@ class StateMachines::Transition
   # This will return true if all before callbacks gets executed.  After
   # callbacks will not have an effect on the result.
   #
-  # source://state_machines//lib/state_machines/transition.rb#197
+  # source://state_machines//lib/state_machines/transition.rb#198
   def run_callbacks(options = T.unsafe(nil), &block); end
 
   # The new state value *after* the transition
@@ -4859,7 +4859,7 @@ class StateMachines::Transition
 
   # The new state name *after* the transition
   #
-  # source://state_machines//lib/state_machines/transition.rb#98
+  # source://state_machines//lib/state_machines/transition.rb#99
   def to_name; end
 
   # Whether the transition is only existing temporarily for the object
@@ -4873,14 +4873,14 @@ class StateMachines::Transition
   #
   # @return [Boolean]
   #
-  # source://state_machines//lib/state_machines/transition.rb#127
+  # source://state_machines//lib/state_machines/transition.rb#128
   def transient?; end
 
   # Runs a block within a transaction for the object being transitioned.
   # By default, transactions are a no-op unless otherwise defined by the
   # machine's integration.
   #
-  # source://state_machines//lib/state_machines/transition.rb#182
+  # source://state_machines//lib/state_machines/transition.rb#183
   def within_transaction(&_arg0); end
 
   private
@@ -4899,7 +4899,7 @@ class StateMachines::Transition
   # exception will not bubble up to the caller since +after+ callbacks
   # should never halt the execution of a +perform+.
   #
-  # source://state_machines//lib/state_machines/transition.rb#539
+  # source://state_machines//lib/state_machines/transition.rb#569
   def after; end
 
   # Runs the machine's +before+ callbacks for this transition.  Only
@@ -4909,7 +4909,7 @@ class StateMachines::Transition
   # Once the callbacks are run, they cannot be run again until this transition
   # is reset.
   #
-  # source://state_machines//lib/state_machines/transition.rb#478
+  # source://state_machines//lib/state_machines/transition.rb#508
   def before(complete = T.unsafe(nil), index = T.unsafe(nil), &block); end
 
   # Gets a hash of the context defining this unique transition (including
@@ -4921,7 +4921,7 @@ class StateMachines::Transition
   #   transition = StateMachines::Transition.new(Vehicle.new, machine, :ignite, :parked, :idling)
   #   transition.context    # => {:on => :ignite, :from => :parked, :to => :idling}
   #
-  # source://state_machines//lib/state_machines/transition.rb#558
+  # source://state_machines//lib/state_machines/transition.rb#592
   def context; end
 
   # Runs a block that may get paused.  If the block doesn't pause, then
@@ -4934,14 +4934,14 @@ class StateMachines::Transition
   # Options:
   # * :fiber - Whether to use fiber-based execution (default: true)
   #
-  # source://state_machines//lib/state_machines/transition.rb#357
+  # source://state_machines//lib/state_machines/transition.rb#360
   def pausable(options = T.unsafe(nil)); end
 
   # Pauses the current callback execution.  This should only occur within
   # around callbacks when the remainder of the callback will be executed at
   # a later point in time.
   #
-  # source://state_machines//lib/state_machines/transition.rb#452
+  # source://state_machines//lib/state_machines/transition.rb#482
   def pause; end
 end
 

@@ -1666,7 +1666,7 @@ class GraphQL::Execution::Interpreter::Runtime
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#951
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#945
   def arguments(graphql_object, arg_owner, ast_node); end
 
   # @api private
@@ -1705,7 +1705,7 @@ class GraphQL::Execution::Interpreter::Runtime
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#960
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#954
   def delete_all_interpreter_context; end
 
   # Check {Schema::Directive.include?} for each directive that's present
@@ -1766,7 +1766,7 @@ class GraphQL::Execution::Interpreter::Runtime
   # @api private
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#992
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#986
   def lazy?(object); end
 
   # @api private
@@ -1787,7 +1787,7 @@ class GraphQL::Execution::Interpreter::Runtime
 
   # @api private
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#971
+  # source://graphql//lib/graphql/execution/interpreter/runtime.rb#965
   def resolve_type(type, value); end
 
   # @api private
@@ -1894,7 +1894,7 @@ module GraphQL::Execution::Interpreter::Runtime::GraphQLResult
 
   # Returns the value of attribute ast_node.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def ast_node; end
 
   # TODO test full path in Partial
@@ -1905,167 +1905,170 @@ module GraphQL::Execution::Interpreter::Runtime::GraphQLResult
   # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#34
   def build_path(path_array); end
 
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#45
+  def depth; end
+
   # Returns the value of attribute graphql_application_value.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_application_value; end
 
   # Returns the value of attribute graphql_arguments.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_arguments; end
 
   # Returns the value of attribute graphql_dead.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#45
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#53
   def graphql_dead; end
 
   # Sets the attribute graphql_dead
   #
   # @param value the value to set the attribute graphql_dead to.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#45
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#53
   def graphql_dead=(_arg0); end
 
   # Returns the value of attribute graphql_field.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_field; end
 
   # Returns the value of attribute graphql_is_eager.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_is_eager; end
 
   # Returns the value of attribute graphql_is_non_null_in_parent.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_is_non_null_in_parent; end
 
   # Returns the value of attribute graphql_parent.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_parent; end
 
   # @return [Hash] Plain-Ruby result data (`@graphql_metadata` contains Result wrapper objects)
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#50
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#58
   def graphql_result_data; end
 
   # @return [Hash] Plain-Ruby result data (`@graphql_metadata` contains Result wrapper objects)
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#50
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#58
   def graphql_result_data=(_arg0); end
 
   # Returns the value of attribute graphql_result_name.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_result_name; end
 
   # Returns the value of attribute graphql_result_type.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_result_type; end
 
   # Returns the value of attribute graphql_selections.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#46
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
   def graphql_selections; end
 
   # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#30
   def path; end
 end
 
-# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#167
+# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#175
 class GraphQL::Execution::Interpreter::Runtime::GraphQLResultArray
   include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
 
   # @return [GraphQLResultArray] a new instance of GraphQLResultArray
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#170
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#178
   def initialize(_result_name, _result_type, _application_value, _parent_result, _is_non_null_in_parent, _selections, _is_eager, _ast_node, _graphql_arguments, graphql_field); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#213
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#221
   def [](idx); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#175
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#183
   def graphql_skip_at(index); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#197
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#205
   def set_child_result(idx, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#187
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#195
   def set_leaf(idx, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#209
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#217
   def values; end
 end
 
-# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#53
+# source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#61
 class GraphQL::Execution::Interpreter::Runtime::GraphQLResultHash
   include ::GraphQL::Execution::Interpreter::Runtime::GraphQLResult
 
   # @return [GraphQLResultHash] a new instance of GraphQLResultHash
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#54
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#62
   def initialize(_result_name, _result_type, _application_value, _parent_result, _is_non_null_in_parent, _selections, _is_eager, _ast_node, _graphql_arguments, graphql_field); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#126
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#134
   def [](k); end
 
   # hook for breadth-first implementations to signal when collecting results.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#162
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#170
   def collect_result(result_name, result_value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#109
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#117
   def delete(key); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#114
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#122
   def each; end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#153
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#161
   def fix_result_order; end
 
   # Returns the value of attribute graphql_merged_into.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#64
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#72
   def graphql_merged_into; end
 
   # Sets the attribute graphql_merged_into
   #
   # @param value the value to set the attribute graphql_merged_into to.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#64
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#72
   def graphql_merged_into=(_arg0); end
 
   # @return [Boolean]
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#122
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#130
   def key?(k); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#130
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#138
   def merge_into(into_result); end
 
   # Returns the value of attribute ordered_result_keys.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#60
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#68
   def ordered_result_keys; end
 
   # Sets the attribute ordered_result_keys
   #
   # @param value the value to set the attribute ordered_result_keys to.
   #
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#60
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#68
   def ordered_result_keys=(_arg0); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#92
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#100
   def set_child_result(key, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#66
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#74
   def set_leaf(key, value); end
 
-  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#118
+  # source://graphql//lib/graphql/execution/interpreter/runtime/graphql_result.rb#126
   def values; end
 end
 
@@ -19608,16 +19611,16 @@ class GraphQL::Tracing::SentryTrace::SentryMonitor < ::GraphQL::Tracing::Monitor
 
   private
 
-  # source://graphql//lib/graphql/tracing/sentry_trace.rb#56
+  # source://graphql//lib/graphql/tracing/sentry_trace.rb#58
   def operation_name(query); end
 end
 
-# source://graphql//lib/graphql/tracing/sentry_trace.rb#65
+# source://graphql//lib/graphql/tracing/sentry_trace.rb#67
 class GraphQL::Tracing::SentryTrace::SentryMonitor::Event < ::GraphQL::Tracing::MonitorTrace::Monitor::Event
-  # source://graphql//lib/graphql/tracing/sentry_trace.rb#73
+  # source://graphql//lib/graphql/tracing/sentry_trace.rb#75
   def finish; end
 
-  # source://graphql//lib/graphql/tracing/sentry_trace.rb#66
+  # source://graphql//lib/graphql/tracing/sentry_trace.rb#68
   def start; end
 end
 
