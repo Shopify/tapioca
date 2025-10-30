@@ -132,8 +132,26 @@ module Tapioca
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create_or_find_by!(attributes, &block); end
 
+                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(Integer) }
+                    def delete(*records); end
+
+                    sig { returns(Integer) }
+                    def delete_all; end
+
+                    sig { params(args: T.untyped).returns(Integer) }
+                    def delete_by(args); end
+
+                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
+                    def destroy(*records); end
+
                     sig { returns(T::Array[::Post]) }
                     def destroy_all; end
+
+                    sig { returns(T::Array[::Post]) }
+                    def destroy_all; end
+
+                    sig { params(args: T.untyped).returns(T::Array[::Post]) }
+                    def destroy_by(args); end
 
                     sig { params(conditions: T.untyped).returns(T::Boolean) }
                     def exists?(conditions = :none); end
@@ -193,11 +211,9 @@ module Tapioca
                     sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::Post) }
                     def find_signed!(signed_id, purpose: nil); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(arg: T.untyped, args: T.untyped).returns(::Post) }
                     def find_sole_by(arg, *args); end
 
-                <% end %>
                     sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def first(limit = nil); end
@@ -224,18 +240,26 @@ module Tapioca
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, cursor: primary_key, order: :asc, use_ranges: nil, &block); end
-                <% elsif rails_version(">= 7.1") %>
+                <% else %>
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
-                <% else %>
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, block: T.proc.params(object: PrivateRelation).void).void }
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol).returns(::ActiveRecord::Batches::BatchEnumerator) }
-                    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
                 <% end %>
 
                     sig { params(record: T.untyped).returns(T::Boolean) }
                     def include?(record); end
+
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def insert(attributes, returning: nil, unique_by: nil); end
+
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
+                    def insert!(attributes, returning: nil); end
+
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def insert_all(attributes, returning: nil, unique_by: nil); end
+
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
+                    def insert_all!(attributes, returning: nil); end
 
                     sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
@@ -285,11 +309,9 @@ module Tapioca
                     sig { returns(::Post) }
                     def second_to_last!; end
 
-                <% if rails_version(">= 7.0") %>
                     sig { returns(::Post) }
                     def sole; end
 
-                <% end %>
                     sig { params(initial_value_or_column: T.untyped).returns(T.any(Integer, Float, BigDecimal)) }
                     sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
                     def sum(initial_value_or_column = nil, &block); end
@@ -312,6 +334,12 @@ module Tapioca
 
                     sig { returns(::Post) }
                     def third_to_last!; end
+
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def upsert(attributes, returning: nil, unique_by: nil); end
+
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def upsert_all(attributes, returning: nil, unique_by: nil); end
                   end
 
                   module GeneratedAssociationRelationMethods
@@ -325,6 +353,9 @@ module Tapioca
                     def annotate(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    def arel_columns(*args, &blk); end
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def create_with(*args, &blk); end
 
                     sig { params(value: T::Boolean).returns(PrivateAssociationRelation) }
@@ -336,11 +367,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def except(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def excluding(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def extending(*args, &blk); end
 
@@ -356,31 +385,15 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def having(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def in_order_of(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def includes(*args, &blk); end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert!(attributes, returning: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert_all(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert_all!(attributes, returning: nil); end
-
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def invert_where(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def joins(*args, &blk); end
 
@@ -401,11 +414,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def none(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def null_relation?(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def offset(*args, &blk); end
@@ -430,11 +441,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def references(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def regroup(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def reorder(*args, &blk); end
@@ -455,36 +464,27 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def strict_loading(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def structurally_compatible?(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def uniq!(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def unscope(*args, &blk); end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert_all(attributes, returning: nil, unique_by: nil); end
-
                     sig { returns(PrivateAssociationRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def where(*args); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def with(*args, &blk); end
-                <% end %>
-                <% if rails_version(">= 7.0") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    def with_recursive(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def without(*args, &blk); end
-                <% end %>
                   end
 
                   module GeneratedRelationMethods
@@ -498,6 +498,9 @@ module Tapioca
                     def annotate(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    def arel_columns(*args, &blk); end
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def create_with(*args, &blk); end
 
                     sig { params(value: T::Boolean).returns(PrivateRelation) }
@@ -509,11 +512,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def except(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def excluding(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def extending(*args, &blk); end
 
@@ -529,19 +530,15 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def having(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def in_order_of(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def includes(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def invert_where(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def joins(*args, &blk); end
 
@@ -562,11 +559,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def none(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def null_relation?(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def offset(*args, &blk); end
@@ -591,11 +586,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def references(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def regroup(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def reorder(*args, &blk); end
@@ -616,11 +609,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def strict_loading(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def structurally_compatible?(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def uniq!(*args, &blk); end
 
@@ -630,16 +621,15 @@ module Tapioca
                     sig { returns(PrivateRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def where(*args); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def with(*args, &blk); end
-                <% end %>
-                <% if rails_version(">= 7.0") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    def with_recursive(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def without(*args, &blk); end
-                <% end %>
                   end
 
                   class PrivateAssociationRelation < ::ActiveRecord::AssociationRelation
@@ -686,11 +676,9 @@ module Tapioca
                   class PrivateAssociationRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def associated(*args); end
 
-                <% end %>
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def missing(*args); end
 
@@ -715,12 +703,6 @@ module Tapioca
 
                     sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
                     def concat(*records); end
-
-                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
-                    def delete(*records); end
-
-                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
-                    def destroy(*records); end
 
                     sig { returns(T::Array[::Post]) }
                     def load_target; end
@@ -791,11 +773,9 @@ module Tapioca
                   class PrivateRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def associated(*args); end
 
-                <% end %>
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def missing(*args); end
 
@@ -869,8 +849,26 @@ module Tapioca
                     sig { params(attributes: T.untyped, block: T.nilable(T.proc.params(object: ::Post).void)).returns(::Post) }
                     def create_or_find_by!(attributes, &block); end
 
+                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(Integer) }
+                    def delete(*records); end
+
+                    sig { returns(Integer) }
+                    def delete_all; end
+
+                    sig { params(args: T.untyped).returns(Integer) }
+                    def delete_by(args); end
+
+                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
+                    def destroy(*records); end
+
                     sig { returns(T::Array[::Post]) }
                     def destroy_all; end
+
+                    sig { returns(T::Array[::Post]) }
+                    def destroy_all; end
+
+                    sig { params(args: T.untyped).returns(T::Array[::Post]) }
+                    def destroy_by(args); end
 
                     sig { params(conditions: T.untyped).returns(T::Boolean) }
                     def exists?(conditions = :none); end
@@ -881,13 +879,8 @@ module Tapioca
                     sig { returns(::Post) }
                     def fifth!; end
 
-                <% if rails_version(">= 7.1") %>
                     sig { params(args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]).returns(::Post) }
                     sig { params(args: T::Array[T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]]).returns(T::Enumerable[::Post]) }
-                <% else %>
-                    sig { params(args: T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])).returns(::Post) }
-                    sig { params(args: T::Array[T.any(String, Symbol, ::ActiveSupport::Multibyte::Chars, T::Boolean, BigDecimal, Numeric, ::ActiveRecord::Type::Binary::Data, ::ActiveRecord::Type::Time::Value, Date, Time, ::ActiveSupport::Duration, T::Class[T.anything])]).returns(T::Enumerable[::Post]) }
-                <% end %>
                     sig { params(args: NilClass, block: T.proc.params(object: ::Post).void).returns(T.nilable(::Post)) }
                     def find(args = nil, &block); end
 
@@ -935,11 +928,9 @@ module Tapioca
                     sig { params(signed_id: T.untyped, purpose: T.untyped).returns(::Post) }
                     def find_signed!(signed_id, purpose: nil); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(arg: T.untyped, args: T.untyped).returns(::Post) }
                     def find_sole_by(arg, *args); end
 
-                <% end %>
                     sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def first(limit = nil); end
@@ -966,18 +957,26 @@ module Tapioca
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, cursor: primary_key, order: :asc, use_ranges: nil, &block); end
-                <% elsif rails_version(">= 7.1") %>
+                <% else %>
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
                     sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
-                <% else %>
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, block: T.proc.params(object: PrivateRelation).void).void }
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol).returns(::ActiveRecord::Batches::BatchEnumerator) }
-                    def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, &block); end
                 <% end %>
 
                     sig { params(record: T.untyped).returns(T::Boolean) }
                     def include?(record); end
+
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def insert(attributes, returning: nil, unique_by: nil); end
+
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
+                    def insert!(attributes, returning: nil); end
+
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def insert_all(attributes, returning: nil, unique_by: nil); end
+
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
+                    def insert_all!(attributes, returning: nil); end
 
                     sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
@@ -1027,11 +1026,9 @@ module Tapioca
                     sig { returns(::Post) }
                     def second_to_last!; end
 
-                <% if rails_version(">= 7.0") %>
                     sig { returns(::Post) }
                     def sole; end
 
-                <% end %>
                     sig { params(initial_value_or_column: T.untyped).returns(T.any(Integer, Float, BigDecimal)) }
                     sig { type_parameters(:U).params(initial_value_or_column: T.nilable(T.type_parameter(:U)), block: T.proc.params(object: ::Post).returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
                     def sum(initial_value_or_column = nil, &block); end
@@ -1054,6 +1051,12 @@ module Tapioca
 
                     sig { returns(::Post) }
                     def third_to_last!; end
+
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def upsert(attributes, returning: nil, unique_by: nil); end
+
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
+                    def upsert_all(attributes, returning: nil, unique_by: nil); end
                   end
 
                   module GeneratedAssociationRelationMethods
@@ -1067,6 +1070,9 @@ module Tapioca
                     def annotate(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    def arel_columns(*args, &blk); end
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def create_with(*args, &blk); end
 
                     sig { params(value: T::Boolean).returns(PrivateAssociationRelation) }
@@ -1078,11 +1084,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def except(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def excluding(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def extending(*args, &blk); end
 
@@ -1098,31 +1102,15 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def having(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def in_order_of(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def includes(*args, &blk); end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert!(attributes, returning: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert_all(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert_all!(attributes, returning: nil); end
-
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def invert_where(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def joins(*args, &blk); end
 
@@ -1143,11 +1131,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def none(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def null_relation?(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def offset(*args, &blk); end
@@ -1172,11 +1158,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def references(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def regroup(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def reorder(*args, &blk); end
@@ -1197,36 +1181,27 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def strict_loading(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def structurally_compatible?(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def uniq!(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def unscope(*args, &blk); end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert_all(attributes, returning: nil, unique_by: nil); end
-
                     sig { returns(PrivateAssociationRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def where(*args); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def with(*args, &blk); end
-                <% end %>
-                <% if rails_version(">= 7.0") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
+                    def with_recursive(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def without(*args, &blk); end
-                <% end %>
                   end
 
                   module GeneratedRelationMethods
@@ -1240,6 +1215,9 @@ module Tapioca
                     def annotate(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    def arel_columns(*args, &blk); end
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def create_with(*args, &blk); end
 
                     sig { params(value: T::Boolean).returns(PrivateRelation) }
@@ -1251,11 +1229,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def except(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def excluding(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def extending(*args, &blk); end
 
@@ -1271,19 +1247,15 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def having(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def in_order_of(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def includes(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def invert_where(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def joins(*args, &blk); end
 
@@ -1304,11 +1276,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def none(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def null_relation?(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def offset(*args, &blk); end
@@ -1333,11 +1303,9 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def references(*args, &blk); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def regroup(*args, &blk); end
-                <% end %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def reorder(*args, &blk); end
@@ -1358,11 +1326,9 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def strict_loading(*args, &blk); end
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def structurally_compatible?(*args, &blk); end
 
-                <% end %>
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def uniq!(*args, &blk); end
 
@@ -1372,16 +1338,15 @@ module Tapioca
                     sig { returns(PrivateRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def where(*args); end
-                <% if rails_version(">= 7.1") %>
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def with(*args, &blk); end
-                <% end %>
-                <% if rails_version(">= 7.0") %>
+
+                    sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
+                    def with_recursive(*args, &blk); end
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def without(*args, &blk); end
-                <% end %>
                   end
 
                   class PrivateAssociationRelation < ::ActiveRecord::AssociationRelation
@@ -1428,11 +1393,9 @@ module Tapioca
                   class PrivateAssociationRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def associated(*args); end
 
-                <% end %>
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def missing(*args); end
 
@@ -1457,12 +1420,6 @@ module Tapioca
 
                     sig { params(records: T.any(::Post, T::Enumerable[T.any(::Post, T::Enumerable[::Post])])).returns(PrivateCollectionProxy) }
                     def concat(*records); end
-
-                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
-                    def delete(*records); end
-
-                    sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
-                    def destroy(*records); end
 
                     sig { returns(T::Array[::Post]) }
                     def load_target; end
@@ -1533,11 +1490,9 @@ module Tapioca
                   class PrivateRelationWhereChain
                     Elem = type_member { { fixed: ::Post } }
 
-                <% if rails_version(">= 7.0") %>
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def associated(*args); end
 
-                <% end %>
                     sig { params(args: T.untyped).returns(PrivateRelation) }
                     def missing(*args); end
 
