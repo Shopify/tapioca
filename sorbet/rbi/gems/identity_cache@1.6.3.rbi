@@ -124,7 +124,7 @@ module IdentityCache
     # source://identity_cache//lib/identity_cache.rb#118
     def should_fill_cache?; end
 
-    # source://identity_cache//lib/identity_cache.rb#147
+    # source://identity_cache//lib/identity_cache.rb#140
     def should_use_cache?; end
 
     # source://identity_cache//lib/identity_cache.rb#177

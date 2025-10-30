@@ -213,6 +213,20 @@ class ActiveResource::Associations::Builder::Association
 
     # source://activeresource//lib/active_resource/associations/builder/association.rb#6
     def valid_options?; end
+
+    private
+
+    # source://activeresource//lib/active_resource/associations/builder/association.rb#10
+    def __class_attr_macro; end
+
+    # source://activeresource//lib/active_resource/associations/builder/association.rb#10
+    def __class_attr_macro=(new_value); end
+
+    # source://activeresource//lib/active_resource/associations/builder/association.rb#6
+    def __class_attr_valid_options; end
+
+    # source://activeresource//lib/active_resource/associations/builder/association.rb#6
+    def __class_attr_valid_options=(new_value); end
   end
 end
 
@@ -222,11 +236,19 @@ class ActiveResource::Associations::Builder::BelongsTo < ::ActiveResource::Assoc
   def build; end
 
   class << self
+    private
+
     # source://activeresource//lib/active_resource/associations/builder/belongs_to.rb#7
-    def macro; end
+    def __class_attr_macro; end
+
+    # source://activeresource//lib/active_resource/associations/builder/belongs_to.rb#7
+    def __class_attr_macro=(new_value); end
 
     # source://activeresource//lib/active_resource/associations/builder/belongs_to.rb#5
-    def valid_options; end
+    def __class_attr_valid_options; end
+
+    # source://activeresource//lib/active_resource/associations/builder/belongs_to.rb#5
+    def __class_attr_valid_options=(new_value); end
   end
 end
 
@@ -236,8 +258,13 @@ class ActiveResource::Associations::Builder::HasMany < ::ActiveResource::Associa
   def build; end
 
   class << self
+    private
+
     # source://activeresource//lib/active_resource/associations/builder/has_many.rb#5
-    def macro; end
+    def __class_attr_macro; end
+
+    # source://activeresource//lib/active_resource/associations/builder/has_many.rb#5
+    def __class_attr_macro=(new_value); end
   end
 end
 
@@ -247,8 +274,13 @@ class ActiveResource::Associations::Builder::HasOne < ::ActiveResource::Associat
   def build; end
 
   class << self
+    private
+
     # source://activeresource//lib/active_resource/associations/builder/has_one.rb#5
-    def macro; end
+    def __class_attr_macro; end
+
+    # source://activeresource//lib/active_resource/associations/builder/has_one.rb#5
+    def __class_attr_macro=(new_value); end
   end
 end
 
@@ -631,9 +663,6 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#1754
   def __callbacks; end
 
-  # source://activeresource//lib/active_resource/base.rb#1754
-  def __callbacks?; end
-
   # source://activeresource//lib/active_resource/base.rb#331
   def _collection_parser; end
 
@@ -659,22 +688,40 @@ class ActiveResource::Base
   def _format?; end
 
   # source://activeresource//lib/active_resource/base.rb#1754
-  def _run_create_callbacks(&block); end
+  def _run_create_callbacks; end
+
+  # source://activeresource//lib/active_resource/base.rb#1754
+  def _run_create_callbacks!(&block); end
 
   # source://activeresource//lib/active_resource/base.rb#1754
   def _run_destroy_callbacks(&block); end
 
   # source://activeresource//lib/active_resource/base.rb#1754
+  def _run_destroy_callbacks!(&block); end
+
+  # source://activeresource//lib/active_resource/base.rb#1754
   def _run_save_callbacks(&block); end
 
   # source://activeresource//lib/active_resource/base.rb#1754
-  def _run_update_callbacks(&block); end
+  def _run_save_callbacks!(&block); end
 
   # source://activeresource//lib/active_resource/base.rb#1754
-  def _run_validate_callbacks(&block); end
+  def _run_update_callbacks; end
 
   # source://activeresource//lib/active_resource/base.rb#1754
-  def _run_validation_callbacks(&block); end
+  def _run_update_callbacks!(&block); end
+
+  # source://activeresource//lib/active_resource/base.rb#1754
+  def _run_validate_callbacks; end
+
+  # source://activeresource//lib/active_resource/base.rb#1754
+  def _run_validate_callbacks!(&block); end
+
+  # source://activeresource//lib/active_resource/base.rb#1754
+  def _run_validation_callbacks; end
+
+  # source://activeresource//lib/active_resource/base.rb#1754
+  def _run_validation_callbacks!(&block); end
 
   # source://activeresource//lib/active_resource/base.rb#1754
   def _save_callbacks; end
@@ -871,7 +918,7 @@ class ActiveResource::Base
   def logger; end
 
   # source://activeresource//lib/active_resource/base.rb#1751
-  def model_name(&block); end
+  def model_name(&_arg0); end
 
   # Returns +true+ if this object hasn't yet been saved, otherwise, returns +false+.
   #
@@ -1053,9 +1100,6 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#1561
   def update_attributes(attributes); end
 
-  # source://activeresource//lib/active_resource/base.rb#1754
-  def validation_context; end
-
   protected
 
   # source://activeresource//lib/active_resource/base.rb#1652
@@ -1141,18 +1185,12 @@ class ActiveResource::Base
   # source://activeresource//lib/active_resource/base.rb#1726
   def split_options(options = T.unsafe(nil)); end
 
-  # source://activeresource//lib/active_resource/base.rb#1754
-  def validation_context=(_arg0); end
-
   class << self
     # source://activeresource//lib/active_resource/base.rb#1754
     def __callbacks; end
 
     # source://activeresource//lib/active_resource/base.rb#1754
     def __callbacks=(value); end
-
-    # source://activeresource//lib/active_resource/base.rb#1754
-    def __callbacks?; end
 
     # source://activeresource//lib/active_resource/base.rb#340
     def _bearer_token; end
@@ -2005,6 +2043,72 @@ class ActiveResource::Base
 
     private
 
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def __class_attr___callbacks; end
+
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def __class_attr___callbacks=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#331
+    def __class_attr__collection_parser; end
+
+    # source://activeresource//lib/active_resource/base.rb#331
+    def __class_attr__collection_parser=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#330
+    def __class_attr__format; end
+
+    # source://activeresource//lib/active_resource/base.rb#330
+    def __class_attr__format=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def __class_attr__validators; end
+
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def __class_attr__validators=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def __class_attr_coder; end
+
+    # source://activeresource//lib/active_resource/base.rb#1754
+    def __class_attr_coder=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#335
+    def __class_attr_connection_class; end
+
+    # source://activeresource//lib/active_resource/base.rb#335
+    def __class_attr_connection_class=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#332
+    def __class_attr_include_format_in_path; end
+
+    # source://activeresource//lib/active_resource/base.rb#332
+    def __class_attr_include_format_in_path=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#1757
+    def __class_attr_include_root_in_json; end
+
+    # source://activeresource//lib/active_resource/base.rb#1757
+    def __class_attr_include_root_in_json=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#1755
+    def __class_attr_param_delimiter; end
+
+    # source://activeresource//lib/active_resource/base.rb#1755
+    def __class_attr_param_delimiter=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#1759
+    def __class_attr_reflections; end
+
+    # source://activeresource//lib/active_resource/base.rb#1759
+    def __class_attr_reflections=(new_value); end
+
+    # source://activeresource//lib/active_resource/base.rb#1759
+    def __class_attr_rescue_handlers; end
+
+    # source://activeresource//lib/active_resource/base.rb#1759
+    def __class_attr_rescue_handlers=(new_value); end
+
     # source://activeresource//lib/active_resource/base.rb#1113
     def check_prefix_options(prefix_options); end
 
@@ -2073,12 +2177,10 @@ module ActiveResource::Callbacks
   module GeneratedClassMethods
     def __callbacks; end
     def __callbacks=(value); end
-    def __callbacks?; end
   end
 
   module GeneratedInstanceMethods
     def __callbacks; end
-    def __callbacks?; end
   end
 end
 
@@ -2521,6 +2623,9 @@ class ActiveResource::Collection
   def prepend(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource//lib/active_resource/collection.rb#10
+  def present?(*_arg0, **_arg1, &_arg2); end
+
+  # source://activeresource//lib/active_resource/collection.rb#10
   def pretty_print(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource//lib/active_resource/collection.rb#10
@@ -2649,9 +2754,6 @@ class ActiveResource::Collection
 
   # source://activeresource//lib/active_resource/collection.rb#10
   def to_ary(*_arg0, **_arg1, &_arg2); end
-
-  # source://activeresource//lib/active_resource/collection.rb#10
-  def to_default_s(*_arg0, **_arg1, &_arg2); end
 
   # source://activeresource//lib/active_resource/collection.rb#10
   def to_formatted_s(*_arg0, **_arg1, &_arg2); end
@@ -4171,7 +4273,6 @@ module ActiveResource::Validations
   module GeneratedClassMethods
     def __callbacks; end
     def __callbacks=(value); end
-    def __callbacks?; end
     def _validators; end
     def _validators=(value); end
     def _validators?; end
@@ -4179,7 +4280,6 @@ module ActiveResource::Validations
 
   module GeneratedInstanceMethods
     def __callbacks; end
-    def __callbacks?; end
     def _validators; end
     def _validators?; end
   end
@@ -4199,7 +4299,7 @@ class ActiveResource::WhereClause < ::BasicObject
   def load; end
 
   # source://activeresource//lib/active_resource/where_clause.rb#5
-  def method_missing(method, *args, **_arg2, &block); end
+  def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
   # source://activeresource//lib/active_resource/where_clause.rb#31
   def reload; end

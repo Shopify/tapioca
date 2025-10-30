@@ -39,11 +39,8 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ["3.2", "3.3", "3.4", "head"]
-        rails: ["7.0", "current", "main"]
+        rails: ["8.0", "current", "main"]
         rubygems: ["3.6.2"]
-        exclude:
-          - ruby: "3.4"
-            rails: "7.0"
         include:
           - rails: "main"
             experimental: true

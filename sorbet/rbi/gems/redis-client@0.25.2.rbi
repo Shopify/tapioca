@@ -9,7 +9,7 @@ module Process
   extend ::SQLite3::ForkSafety::CoreExt
   extend ::ConnectionPool::ForkTracker
   extend ::RedisClient::PIDCache::CoreExt
-  extend ::ActiveSupport::ForkTracker::ModernCoreExt
+  extend ::ActiveSupport::ForkTracker::CoreExt
 end
 
 # source://redis-client//lib/redis_client/version.rb#3
