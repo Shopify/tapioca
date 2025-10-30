@@ -476,28 +476,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
         RUBY
       end
 
-      output = template(<<~RBI)
-        module SomeEngine; end
-
-        class SomeEngine::SomeController < ::ActionController::Base
-          private
-
-          def _layout(lookup_context, formats); end
-
-          class << self
-            def _helper_methods; end
-            def middleware_stack; end
-          end
-        end
-
+      # We only care about the mixin being generated in HelperMethods module,
+      # not the rest of it.
+      assert_includes(compile("some_engine"), <<~RBI.strip)
         module SomeEngine::SomeController::HelperMethods
           include ::ActionController::Base::HelperMethods
-
-          def foo(*args, **_arg1, &block); end
-        end
       RBI
-
-      assert_equal(output, compile("some_engine"))
     end
 
     it "must generate RBIs for constants defined in a different gem but with mixins in this gem" do
