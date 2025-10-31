@@ -47,7 +47,7 @@ module Tapioca
 
         bundle_loaded = true #: bool
 
-        Tapioca.with_disabled_exits do
+        Runtime.with_disabled_exits do
           load_bundle(@bundle, @prerequire, @postrequire, @halt_upon_load_error)
         rescue LoadError => e
           bundle_loaded = false

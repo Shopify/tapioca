@@ -28,7 +28,7 @@ module Tapioca
         #: (String name, String content, ?require_file: bool) -> String
         def add_ruby_file(name, content, require_file: true)
           add_content_file(name, content).tap do |file_name|
-            Tapioca.silence_warnings { require(file_name) } if require_file
+            Runtime.silence_warnings { require(file_name) } if require_file
           end
         end
 
