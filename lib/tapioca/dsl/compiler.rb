@@ -83,7 +83,12 @@ module Tapioca
         end
       end
 
-      #: (Tapioca::Dsl::Pipeline pipeline, RBI::Tree root, ConstantType constant, ?Hash[String, untyped] options) -> void
+      #: (
+      #|   Tapioca::Dsl::Pipeline pipeline,
+      #|   RBI::Tree root,
+      #|   ConstantType constant,
+      #|   ?Hash[String, untyped] options
+      #| ) -> void
       def initialize(pipeline, root, constant, options = {})
         @pipeline = pipeline
         @root = root
