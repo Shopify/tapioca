@@ -3,8 +3,6 @@
 
 module RBI
   class Tree
-    extend T::Sig
-
     #: (::Module constant) ?{ (Scope scope) -> void } -> Scope
     def create_path(constant, &block)
       constant_name = Tapioca::Runtime::Reflection.name_of(constant)

@@ -7,8 +7,6 @@ require "helpers/mock_gem"
 module Tapioca
   # A mock project used for testing purposes
   class MockProject < Spoom::Context
-    extend T::Sig
-
     # Path to Tapioca's source files
     TAPIOCA_PATH = (Pathname.new(__FILE__) / ".." / ".." / "..").to_s #: String
 
