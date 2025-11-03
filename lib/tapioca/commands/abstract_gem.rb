@@ -70,7 +70,7 @@ module Tapioca
           reason: "types exported from the `#{gem.name}` gem",
         ) if @file_header
 
-        rbi.root = Tapioca.with_disabled_exits do
+        rbi.root = Runtime.with_disabled_exits do
           Tapioca::Gem::Pipeline.new(
             gem,
             include_doc: @include_doc,

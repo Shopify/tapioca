@@ -4,6 +4,7 @@
 require "set"
 
 require "tapioca"
+require "tapioca/runtime/helpers"
 require "tapioca/runtime/reflection"
 require "tapioca/runtime/trackers"
 
