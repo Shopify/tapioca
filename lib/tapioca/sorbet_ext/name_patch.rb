@@ -5,24 +5,13 @@ module T
   module Types
     class Simple
       module NamePatch
-        NAME_METHOD = Module.instance_method(:name) #: UnboundMethod
-
         def name
           # Sorbet memoizes this method into the `@name` instance variable but
           # doing so means that types get memoized before this patch is applied
-          qualified_name_of(@raw_type)
-        end
+          name = Tapioca::Runtime::Reflection.qualified_name_of(@raw_type)
+          name = "::T.untyped" if name.nil?
 
-        def qualified_name_of(constant)
-          name = NAME_METHOD.bind_call(constant)
-          name = nil if name&.start_with?("#<")
-          return "::T.untyped" if name.nil?
-
-          if name.start_with?("::")
-            name
-          else
-            "::#{name}"
-          end
+          name
         end
       end
 
