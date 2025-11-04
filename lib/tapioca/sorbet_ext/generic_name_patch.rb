@@ -22,7 +22,7 @@ module T
         # `T::Generic#type_member` just instantiates a `T::Type::TypeMember` instance and returns it.
         # We use that when registering the type member and then later return it from this method.
         Tapioca::TypeVariableModule.new(
-          T.cast(self, Module),
+          T.cast(self, ::Module),
           Tapioca::TypeVariableModule::Type::Member,
           variance,
           bounds_proc,
@@ -35,7 +35,7 @@ module T
         # `T::Generic#type_template` just instantiates a `T::Type::TypeTemplate` instance and returns it.
         # We use that when registering the type template and then later return it from this method.
         Tapioca::TypeVariableModule.new(
-          T.cast(self, Module),
+          T.cast(self, ::Module),
           Tapioca::TypeVariableModule::Type::Template,
           variance,
           bounds_proc,
@@ -48,7 +48,7 @@ module T
         Tapioca::Runtime::GenericTypeRegistry.register_type_variable(
           self,
           Tapioca::TypeVariableModule.new(
-            T.cast(self, Module),
+            T.cast(self, ::Module),
             Tapioca::TypeVariableModule::Type::HasAttachedClass,
             variance,
             bounds_proc,
