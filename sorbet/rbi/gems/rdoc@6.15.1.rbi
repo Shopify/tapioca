@@ -2832,1242 +2832,1242 @@ class RDoc::Markdown
 
   # Alphanumeric = %literals.Alphanumeric
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14727
+  # source://rdoc//lib/rdoc/markdown.rb#14588
   def _Alphanumeric; end
 
   # AlphanumericAscii = %literals.AlphanumericAscii
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14734
+  # source://rdoc//lib/rdoc/markdown.rb#14595
   def _AlphanumericAscii; end
 
   # AtxHeading = AtxStart:s @Spacechar+ AtxInline+:a (@Sp /#*/ @Sp)? @Newline { RDoc::Markup::Heading.new(s, a.join) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1162
+  # source://rdoc//lib/rdoc/markdown.rb#1213
   def _AtxHeading; end
 
   # AtxInline = !@Newline !(@Sp /#*/ @Sp @Newline) Inline
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1080
+  # source://rdoc//lib/rdoc/markdown.rb#1131
   def _AtxInline; end
 
   # AtxStart = < /\#{1,6}/ > { text.length }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1136
+  # source://rdoc//lib/rdoc/markdown.rb#1187
   def _AtxStart; end
 
   # AutoLink = (AutoLinkUrl | AutoLinkEmail)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11596
+  # source://rdoc//lib/rdoc/markdown.rb#11647
   def _AutoLink; end
 
   # AutoLinkEmail = "<" "mailto:"? < /[\w+.\/!%~$-]+/i "@" (!@Newline !">" .)+ > ">" { "mailto:#{text}" }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11729
+  # source://rdoc//lib/rdoc/markdown.rb#11780
   def _AutoLinkEmail; end
 
   # AutoLinkUrl = "<" < /[A-Za-z]+/ "://" (!@Newline !">" .)+ > ">" { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11614
+  # source://rdoc//lib/rdoc/markdown.rb#11665
   def _AutoLinkUrl; end
 
   # BOM = %literals.BOM
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14741
+  # source://rdoc//lib/rdoc/markdown.rb#14602
   def _BOM; end
 
   # BlankLine = @Sp @Newline { "\n" }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14170
+  # source://rdoc//lib/rdoc/markdown.rb#14031
   def _BlankLine; end
 
   # Block = @BlankLine* (BlockQuote | Verbatim | CodeFence | Table | Note | Reference | HorizontalRule | Heading | OrderedList | BulletList | DefinitionList | HtmlBlock | StyleBlock | Para | Plain)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#939
+  # source://rdoc//lib/rdoc/markdown.rb#990
   def _Block; end
 
   # BlockQuote = BlockQuoteRaw:a { RDoc::Markup::BlockQuote.new(*a) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1576
+  # source://rdoc//lib/rdoc/markdown.rb#1627
   def _BlockQuote; end
 
   # BlockQuoteRaw = @StartList:a (">" " "? Line:l { a << l } (!">" !@BlankLine Line:c { a << c })* (@BlankLine:n { a << n })*)+ { inner_parse a.join }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1599
+  # source://rdoc//lib/rdoc/markdown.rb#1650
   def _BlockQuoteRaw; end
 
   # Bullet = !HorizontalRule @NonindentSpace /[+*-]/ @Spacechar+
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2164
+  # source://rdoc//lib/rdoc/markdown.rb#2215
   def _Bullet; end
 
   # BulletList = &Bullet (ListTight | ListLoose):a { RDoc::Markup::List.new(:BULLET, *a) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2208
+  # source://rdoc//lib/rdoc/markdown.rb#2259
   def _BulletList; end
 
   # CharEntity = "&" < /[A-Za-z0-9]+/ > ";" { if entity = HTML_ENTITIES[text] then                  entity.pack 'U*'                else                  "&#{text};"                end              }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14834
+  # source://rdoc//lib/rdoc/markdown.rb#14695
   def _CharEntity; end
 
-  # Code = (Ticks1 @Sp < ((!"`" Nonspacechar)+ | !Ticks1 /`+/ | !(@Sp Ticks1) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks1 | Ticks2 @Sp < ((!"`" Nonspacechar)+ | !Ticks2 /`+/ | !(@Sp Ticks2) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks2 | Ticks3 @Sp < ((!"`" Nonspacechar)+ | !Ticks3 /`+/ | !(@Sp Ticks3) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks3 | Ticks4 @Sp < ((!"`" Nonspacechar)+ | !Ticks4 /`+/ | !(@Sp Ticks4) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks4 | Ticks5 @Sp < ((!"`" Nonspacechar)+ | !Ticks5 /`+/ | !(@Sp Ticks5) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks5) { "<code>#{text}</code>" }
+  # Code = (Ticks1 < ((!"`" Nonspacechar)+ | !Ticks1 /`+/ | !Ticks1 (@Spacechar | @Newline !@BlankLine))+ > Ticks1 | Ticks2 < ((!"`" Nonspacechar)+ | !Ticks2 /`+/ | !Ticks2 (@Spacechar | @Newline !@BlankLine))+ > Ticks2 | Ticks3 < ((!"`" Nonspacechar)+ | !Ticks3 /`+/ | !Ticks3 (@Spacechar | @Newline !@BlankLine))+ > Ticks3 | Ticks4 < ((!"`" Nonspacechar)+ | !Ticks4 /`+/ | !Ticks4 (@Spacechar | @Newline !@BlankLine))+ > Ticks4 | Ticks5 < ((!"`" Nonspacechar)+ | !Ticks5 /`+/ | !Ticks5 (@Spacechar | @Newline !@BlankLine))+ > Ticks5) { code text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12533
+  # source://rdoc//lib/rdoc/markdown.rb#12584
   def _Code; end
 
   # CodeFence = &{ github? } Ticks3 (@Sp StrChunk:format)? Spnl < ((!"`" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format.instance_of?(String)               verbatim             }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15703
+  # source://rdoc//lib/rdoc/markdown.rb#15564
   def _CodeFence; end
 
   # DecEntity = "&#" < /[0-9]+/ > ";" { [text.to_i].pack 'U' }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14798
+  # source://rdoc//lib/rdoc/markdown.rb#14659
   def _DecEntity; end
 
   # DefinitionList = &{ definition_lists? } DefinitionListItem+:list { RDoc::Markup::List.new :NOTE, *list.flatten }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16361
+  # source://rdoc//lib/rdoc/markdown.rb#16225
   def _DefinitionList; end
 
   # DefinitionListDefinition = @NonindentSpace ":" @Space Inlines:a @BlankLine+ { paragraph a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16504
+  # source://rdoc//lib/rdoc/markdown.rb#16368
   def _DefinitionListDefinition; end
 
   # DefinitionListItem = DefinitionListLabel+:label DefinitionListDefinition+:defns { list_items = []                        list_items <<                          RDoc::Markup::ListItem.new(label, defns.shift)                         list_items.concat defns.map { |defn|                          RDoc::Markup::ListItem.new nil, defn                        } unless list_items.empty?                         list_items                      }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16405
+  # source://rdoc//lib/rdoc/markdown.rb#16269
   def _DefinitionListItem; end
 
   # DefinitionListLabel = Inline:label @Sp @Newline { label }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16471
+  # source://rdoc//lib/rdoc/markdown.rb#16335
   def _DefinitionListLabel; end
 
   # Digit = [0-9]
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14713
+  # source://rdoc//lib/rdoc/markdown.rb#14574
   def _Digit; end
 
   # Doc = BOM? Block*:a { RDoc::Markup::Document.new(*a.compact) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#899
+  # source://rdoc//lib/rdoc/markdown.rb#950
   def _Doc; end
 
   # Emph = (EmphStar | EmphUl)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10293
+  # source://rdoc//lib/rdoc/markdown.rb#10344
   def _Emph; end
 
   # EmphStar = "*" !@Whitespace @StartList:a (!"*" Inline:b { a << b } | StrongStar:b { a << b })+ "*" { emphasis a.join }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10329
+  # source://rdoc//lib/rdoc/markdown.rb#10380
   def _EmphStar; end
 
   # EmphUl = "_" !@Whitespace @StartList:a (!"_" Inline:b { a << b } | StrongUl:b { a << b })+ "_" { emphasis a.join }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10487
+  # source://rdoc//lib/rdoc/markdown.rb#10538
   def _EmphUl; end
 
   # EmptyTitle = ""
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12108
+  # source://rdoc//lib/rdoc/markdown.rb#12159
   def _EmptyTitle; end
 
   # Endline = (@LineBreak | @TerminalEndline | @NormalEndline)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9927
+  # source://rdoc//lib/rdoc/markdown.rb#9978
   def _Endline; end
 
   # Entity = (HexEntity | DecEntity | CharEntity):a { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9890
+  # source://rdoc//lib/rdoc/markdown.rb#9941
   def _Entity; end
 
   # Enumerator = @NonindentSpace [0-9]+ "." @Spacechar+
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2697
+  # source://rdoc//lib/rdoc/markdown.rb#2748
   def _Enumerator; end
 
   # Eof = !.
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14564
+  # source://rdoc//lib/rdoc/markdown.rb#14425
   def _Eof; end
 
   # EscapedChar = "\\" !@Newline < /[:\\`|*_{}\[\]()#+.!><-]/ > { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9851
+  # source://rdoc//lib/rdoc/markdown.rb#9902
   def _EscapedChar; end
 
   # ExplicitLink = ExplicitLinkWithLabel:a { "{#{a[:label]}}[#{a[:link]}]" }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11146
+  # source://rdoc//lib/rdoc/markdown.rb#11197
   def _ExplicitLink; end
 
   # ExplicitLinkWithLabel = Label:label "(" @Sp Source:link Spnl Title @Sp ")" { { label: label, link: link } }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11169
+  # source://rdoc//lib/rdoc/markdown.rb#11220
   def _ExplicitLinkWithLabel; end
 
   # ExtendedSpecialChar = &{ notes? } "^"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15206
+  # source://rdoc//lib/rdoc/markdown.rb#15067
   def _ExtendedSpecialChar; end
 
   # Heading = (SetextHeading | AtxHeading)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1558
+  # source://rdoc//lib/rdoc/markdown.rb#1609
   def _Heading; end
 
   # HexEntity = /&#x/i < /[0-9a-fA-F]+/ > ";" { [text.to_i(16)].pack 'U' }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14762
+  # source://rdoc//lib/rdoc/markdown.rb#14623
   def _HexEntity; end
 
   # HorizontalRule = @NonindentSpace ("*" @Sp "*" @Sp "*" (@Sp "*")* | "-" @Sp "-" @Sp "-" (@Sp "-")* | "_" @Sp "_" @Sp "_" (@Sp "_")*) @Sp @Newline @BlankLine+ { RDoc::Markup::Rule.new 1 }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1942
+  # source://rdoc//lib/rdoc/markdown.rb#1993
   def _HorizontalRule; end
 
   # HtmlAnchor = HtmlOpenAnchor (HtmlAnchor | !HtmlCloseAnchor .)* HtmlCloseAnchor
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2981
+  # source://rdoc//lib/rdoc/markdown.rb#3032
   def _HtmlAnchor; end
 
   # HtmlAttribute = (AlphanumericAscii | "-")+ Spnl ("=" Spnl (Quoted | (!">" Nonspacechar)+))? Spnl
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14295
+  # source://rdoc//lib/rdoc/markdown.rb#14156
   def _HtmlAttribute; end
 
   # HtmlBlock = < (HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing | HtmlUnclosed) > @BlankLine+ { if html? then                 RDoc::Markup::Raw.new text               end }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8778
+  # source://rdoc//lib/rdoc/markdown.rb#8829
   def _HtmlBlock; end
 
   # HtmlBlockAddress = HtmlBlockOpenAddress (HtmlBlockAddress | !HtmlBlockCloseAddress .)* HtmlBlockCloseAddress
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3147
+  # source://rdoc//lib/rdoc/markdown.rb#3198
   def _HtmlBlockAddress; end
 
   # HtmlBlockBlockquote = HtmlBlockOpenBlockquote (HtmlBlockBlockquote | !HtmlBlockCloseBlockquote .)* HtmlBlockCloseBlockquote
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3313
+  # source://rdoc//lib/rdoc/markdown.rb#3364
   def _HtmlBlockBlockquote; end
 
   # HtmlBlockCenter = HtmlBlockOpenCenter (HtmlBlockCenter | !HtmlBlockCloseCenter .)* HtmlBlockCloseCenter
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3479
+  # source://rdoc//lib/rdoc/markdown.rb#3530
   def _HtmlBlockCenter; end
 
   # HtmlBlockCloseAddress = "<" Spnl "/" ("address" | "ADDRESS") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3095
+  # source://rdoc//lib/rdoc/markdown.rb#3146
   def _HtmlBlockCloseAddress; end
 
   # HtmlBlockCloseBlockquote = "<" Spnl "/" ("blockquote" | "BLOCKQUOTE") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3261
+  # source://rdoc//lib/rdoc/markdown.rb#3312
   def _HtmlBlockCloseBlockquote; end
 
   # HtmlBlockCloseCenter = "<" Spnl "/" ("center" | "CENTER") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3427
+  # source://rdoc//lib/rdoc/markdown.rb#3478
   def _HtmlBlockCloseCenter; end
 
   # HtmlBlockCloseDd = "<" Spnl "/" ("dd" | "DD") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6747
+  # source://rdoc//lib/rdoc/markdown.rb#6798
   def _HtmlBlockCloseDd; end
 
   # HtmlBlockCloseDir = "<" Spnl "/" ("dir" | "DIR") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3593
+  # source://rdoc//lib/rdoc/markdown.rb#3644
   def _HtmlBlockCloseDir; end
 
   # HtmlBlockCloseDiv = "<" Spnl "/" ("div" | "DIV") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3759
+  # source://rdoc//lib/rdoc/markdown.rb#3810
   def _HtmlBlockCloseDiv; end
 
   # HtmlBlockCloseDl = "<" Spnl "/" ("dl" | "DL") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3925
+  # source://rdoc//lib/rdoc/markdown.rb#3976
   def _HtmlBlockCloseDl; end
 
   # HtmlBlockCloseDt = "<" Spnl "/" ("dt" | "DT") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6913
+  # source://rdoc//lib/rdoc/markdown.rb#6964
   def _HtmlBlockCloseDt; end
 
   # HtmlBlockCloseFieldset = "<" Spnl "/" ("fieldset" | "FIELDSET") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4091
+  # source://rdoc//lib/rdoc/markdown.rb#4142
   def _HtmlBlockCloseFieldset; end
 
   # HtmlBlockCloseForm = "<" Spnl "/" ("form" | "FORM") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4257
+  # source://rdoc//lib/rdoc/markdown.rb#4308
   def _HtmlBlockCloseForm; end
 
   # HtmlBlockCloseFrameset = "<" Spnl "/" ("frameset" | "FRAMESET") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7079
+  # source://rdoc//lib/rdoc/markdown.rb#7130
   def _HtmlBlockCloseFrameset; end
 
   # HtmlBlockCloseH1 = "<" Spnl "/" ("h1" | "H1") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4423
+  # source://rdoc//lib/rdoc/markdown.rb#4474
   def _HtmlBlockCloseH1; end
 
   # HtmlBlockCloseH2 = "<" Spnl "/" ("h2" | "H2") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4589
+  # source://rdoc//lib/rdoc/markdown.rb#4640
   def _HtmlBlockCloseH2; end
 
   # HtmlBlockCloseH3 = "<" Spnl "/" ("h3" | "H3") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4755
+  # source://rdoc//lib/rdoc/markdown.rb#4806
   def _HtmlBlockCloseH3; end
 
   # HtmlBlockCloseH4 = "<" Spnl "/" ("h4" | "H4") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4921
+  # source://rdoc//lib/rdoc/markdown.rb#4972
   def _HtmlBlockCloseH4; end
 
   # HtmlBlockCloseH5 = "<" Spnl "/" ("h5" | "H5") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5087
+  # source://rdoc//lib/rdoc/markdown.rb#5138
   def _HtmlBlockCloseH5; end
 
   # HtmlBlockCloseH6 = "<" Spnl "/" ("h6" | "H6") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5253
+  # source://rdoc//lib/rdoc/markdown.rb#5304
   def _HtmlBlockCloseH6; end
 
   # HtmlBlockCloseHead = "<" Spnl "/" ("head" | "HEAD") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8562
+  # source://rdoc//lib/rdoc/markdown.rb#8613
   def _HtmlBlockCloseHead; end
 
   # HtmlBlockCloseLi = "<" Spnl "/" ("li" | "LI") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7245
+  # source://rdoc//lib/rdoc/markdown.rb#7296
   def _HtmlBlockCloseLi; end
 
   # HtmlBlockCloseMenu = "<" Spnl "/" ("menu" | "MENU") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5419
+  # source://rdoc//lib/rdoc/markdown.rb#5470
   def _HtmlBlockCloseMenu; end
 
   # HtmlBlockCloseNoframes = "<" Spnl "/" ("noframes" | "NOFRAMES") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5585
+  # source://rdoc//lib/rdoc/markdown.rb#5636
   def _HtmlBlockCloseNoframes; end
 
   # HtmlBlockCloseNoscript = "<" Spnl "/" ("noscript" | "NOSCRIPT") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5751
+  # source://rdoc//lib/rdoc/markdown.rb#5802
   def _HtmlBlockCloseNoscript; end
 
   # HtmlBlockCloseOl = "<" Spnl "/" ("ol" | "OL") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5917
+  # source://rdoc//lib/rdoc/markdown.rb#5968
   def _HtmlBlockCloseOl; end
 
   # HtmlBlockCloseP = "<" Spnl "/" ("p" | "P") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6083
+  # source://rdoc//lib/rdoc/markdown.rb#6134
   def _HtmlBlockCloseP; end
 
   # HtmlBlockClosePre = "<" Spnl "/" ("pre" | "PRE") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6249
+  # source://rdoc//lib/rdoc/markdown.rb#6300
   def _HtmlBlockClosePre; end
 
   # HtmlBlockCloseScript = "<" Spnl "/" ("script" | "SCRIPT") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8407
+  # source://rdoc//lib/rdoc/markdown.rb#8458
   def _HtmlBlockCloseScript; end
 
   # HtmlBlockCloseTable = "<" Spnl "/" ("table" | "TABLE") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6415
+  # source://rdoc//lib/rdoc/markdown.rb#6466
   def _HtmlBlockCloseTable; end
 
   # HtmlBlockCloseTbody = "<" Spnl "/" ("tbody" | "TBODY") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7411
+  # source://rdoc//lib/rdoc/markdown.rb#7462
   def _HtmlBlockCloseTbody; end
 
   # HtmlBlockCloseTd = "<" Spnl "/" ("td" | "TD") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7577
+  # source://rdoc//lib/rdoc/markdown.rb#7628
   def _HtmlBlockCloseTd; end
 
   # HtmlBlockCloseTfoot = "<" Spnl "/" ("tfoot" | "TFOOT") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7743
+  # source://rdoc//lib/rdoc/markdown.rb#7794
   def _HtmlBlockCloseTfoot; end
 
   # HtmlBlockCloseTh = "<" Spnl "/" ("th" | "TH") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7909
+  # source://rdoc//lib/rdoc/markdown.rb#7960
   def _HtmlBlockCloseTh; end
 
   # HtmlBlockCloseThead = "<" Spnl "/" ("thead" | "THEAD") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8075
+  # source://rdoc//lib/rdoc/markdown.rb#8126
   def _HtmlBlockCloseThead; end
 
   # HtmlBlockCloseTr = "<" Spnl "/" ("tr" | "TR") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8241
+  # source://rdoc//lib/rdoc/markdown.rb#8292
   def _HtmlBlockCloseTr; end
 
   # HtmlBlockCloseUl = "<" Spnl "/" ("ul" | "UL") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6581
+  # source://rdoc//lib/rdoc/markdown.rb#6632
   def _HtmlBlockCloseUl; end
 
   # HtmlBlockDd = HtmlBlockOpenDd (HtmlBlockDd | !HtmlBlockCloseDd .)* HtmlBlockCloseDd
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6799
+  # source://rdoc//lib/rdoc/markdown.rb#6850
   def _HtmlBlockDd; end
 
   # HtmlBlockDir = HtmlBlockOpenDir (HtmlBlockDir | !HtmlBlockCloseDir .)* HtmlBlockCloseDir
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3645
+  # source://rdoc//lib/rdoc/markdown.rb#3696
   def _HtmlBlockDir; end
 
   # HtmlBlockDiv = HtmlBlockOpenDiv (HtmlBlockDiv | !HtmlBlockCloseDiv .)* HtmlBlockCloseDiv
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3811
+  # source://rdoc//lib/rdoc/markdown.rb#3862
   def _HtmlBlockDiv; end
 
   # HtmlBlockDl = HtmlBlockOpenDl (HtmlBlockDl | !HtmlBlockCloseDl .)* HtmlBlockCloseDl
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3977
+  # source://rdoc//lib/rdoc/markdown.rb#4028
   def _HtmlBlockDl; end
 
   # HtmlBlockDt = HtmlBlockOpenDt (HtmlBlockDt | !HtmlBlockCloseDt .)* HtmlBlockCloseDt
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6965
+  # source://rdoc//lib/rdoc/markdown.rb#7016
   def _HtmlBlockDt; end
 
   # HtmlBlockFieldset = HtmlBlockOpenFieldset (HtmlBlockFieldset | !HtmlBlockCloseFieldset .)* HtmlBlockCloseFieldset
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4143
+  # source://rdoc//lib/rdoc/markdown.rb#4194
   def _HtmlBlockFieldset; end
 
   # HtmlBlockForm = HtmlBlockOpenForm (HtmlBlockForm | !HtmlBlockCloseForm .)* HtmlBlockCloseForm
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4309
+  # source://rdoc//lib/rdoc/markdown.rb#4360
   def _HtmlBlockForm; end
 
   # HtmlBlockFrameset = HtmlBlockOpenFrameset (HtmlBlockFrameset | !HtmlBlockCloseFrameset .)* HtmlBlockCloseFrameset
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7131
+  # source://rdoc//lib/rdoc/markdown.rb#7182
   def _HtmlBlockFrameset; end
 
   # HtmlBlockH1 = HtmlBlockOpenH1 (HtmlBlockH1 | !HtmlBlockCloseH1 .)* HtmlBlockCloseH1
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4475
+  # source://rdoc//lib/rdoc/markdown.rb#4526
   def _HtmlBlockH1; end
 
   # HtmlBlockH2 = HtmlBlockOpenH2 (HtmlBlockH2 | !HtmlBlockCloseH2 .)* HtmlBlockCloseH2
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4641
+  # source://rdoc//lib/rdoc/markdown.rb#4692
   def _HtmlBlockH2; end
 
   # HtmlBlockH3 = HtmlBlockOpenH3 (HtmlBlockH3 | !HtmlBlockCloseH3 .)* HtmlBlockCloseH3
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4807
+  # source://rdoc//lib/rdoc/markdown.rb#4858
   def _HtmlBlockH3; end
 
   # HtmlBlockH4 = HtmlBlockOpenH4 (HtmlBlockH4 | !HtmlBlockCloseH4 .)* HtmlBlockCloseH4
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4973
+  # source://rdoc//lib/rdoc/markdown.rb#5024
   def _HtmlBlockH4; end
 
   # HtmlBlockH5 = HtmlBlockOpenH5 (HtmlBlockH5 | !HtmlBlockCloseH5 .)* HtmlBlockCloseH5
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5139
+  # source://rdoc//lib/rdoc/markdown.rb#5190
   def _HtmlBlockH5; end
 
   # HtmlBlockH6 = HtmlBlockOpenH6 (HtmlBlockH6 | !HtmlBlockCloseH6 .)* HtmlBlockCloseH6
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5305
+  # source://rdoc//lib/rdoc/markdown.rb#5356
   def _HtmlBlockH6; end
 
   # HtmlBlockHead = HtmlBlockOpenHead (!HtmlBlockCloseHead .)* HtmlBlockCloseHead
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8614
+  # source://rdoc//lib/rdoc/markdown.rb#8665
   def _HtmlBlockHead; end
 
   # HtmlBlockInTags = (HtmlAnchor | HtmlBlockAddress | HtmlBlockBlockquote | HtmlBlockCenter | HtmlBlockDir | HtmlBlockDiv | HtmlBlockDl | HtmlBlockFieldset | HtmlBlockForm | HtmlBlockH1 | HtmlBlockH2 | HtmlBlockH3 | HtmlBlockH4 | HtmlBlockH5 | HtmlBlockH6 | HtmlBlockMenu | HtmlBlockNoframes | HtmlBlockNoscript | HtmlBlockOl | HtmlBlockP | HtmlBlockPre | HtmlBlockTable | HtmlBlockUl | HtmlBlockDd | HtmlBlockDt | HtmlBlockFrameset | HtmlBlockLi | HtmlBlockTbody | HtmlBlockTd | HtmlBlockTfoot | HtmlBlockTh | HtmlBlockThead | HtmlBlockTr | HtmlBlockScript | HtmlBlockHead)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8661
+  # source://rdoc//lib/rdoc/markdown.rb#8712
   def _HtmlBlockInTags; end
 
   # HtmlBlockLi = HtmlBlockOpenLi (HtmlBlockLi | !HtmlBlockCloseLi .)* HtmlBlockCloseLi
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7297
+  # source://rdoc//lib/rdoc/markdown.rb#7348
   def _HtmlBlockLi; end
 
   # HtmlBlockMenu = HtmlBlockOpenMenu (HtmlBlockMenu | !HtmlBlockCloseMenu .)* HtmlBlockCloseMenu
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5471
+  # source://rdoc//lib/rdoc/markdown.rb#5522
   def _HtmlBlockMenu; end
 
   # HtmlBlockNoframes = HtmlBlockOpenNoframes (HtmlBlockNoframes | !HtmlBlockCloseNoframes .)* HtmlBlockCloseNoframes
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5637
+  # source://rdoc//lib/rdoc/markdown.rb#5688
   def _HtmlBlockNoframes; end
 
   # HtmlBlockNoscript = HtmlBlockOpenNoscript (HtmlBlockNoscript | !HtmlBlockCloseNoscript .)* HtmlBlockCloseNoscript
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5803
+  # source://rdoc//lib/rdoc/markdown.rb#5854
   def _HtmlBlockNoscript; end
 
   # HtmlBlockOl = HtmlBlockOpenOl (HtmlBlockOl | !HtmlBlockCloseOl .)* HtmlBlockCloseOl
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5969
+  # source://rdoc//lib/rdoc/markdown.rb#6020
   def _HtmlBlockOl; end
 
   # HtmlBlockOpenAddress = "<" Spnl ("address" | "ADDRESS") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3039
+  # source://rdoc//lib/rdoc/markdown.rb#3090
   def _HtmlBlockOpenAddress; end
 
   # HtmlBlockOpenBlockquote = "<" Spnl ("blockquote" | "BLOCKQUOTE") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3205
+  # source://rdoc//lib/rdoc/markdown.rb#3256
   def _HtmlBlockOpenBlockquote; end
 
   # HtmlBlockOpenCenter = "<" Spnl ("center" | "CENTER") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3371
+  # source://rdoc//lib/rdoc/markdown.rb#3422
   def _HtmlBlockOpenCenter; end
 
   # HtmlBlockOpenDd = "<" Spnl ("dd" | "DD") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6691
+  # source://rdoc//lib/rdoc/markdown.rb#6742
   def _HtmlBlockOpenDd; end
 
   # HtmlBlockOpenDir = "<" Spnl ("dir" | "DIR") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3537
+  # source://rdoc//lib/rdoc/markdown.rb#3588
   def _HtmlBlockOpenDir; end
 
   # HtmlBlockOpenDiv = "<" Spnl ("div" | "DIV") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3703
+  # source://rdoc//lib/rdoc/markdown.rb#3754
   def _HtmlBlockOpenDiv; end
 
   # HtmlBlockOpenDl = "<" Spnl ("dl" | "DL") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#3869
+  # source://rdoc//lib/rdoc/markdown.rb#3920
   def _HtmlBlockOpenDl; end
 
   # HtmlBlockOpenDt = "<" Spnl ("dt" | "DT") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6857
+  # source://rdoc//lib/rdoc/markdown.rb#6908
   def _HtmlBlockOpenDt; end
 
   # HtmlBlockOpenFieldset = "<" Spnl ("fieldset" | "FIELDSET") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4035
+  # source://rdoc//lib/rdoc/markdown.rb#4086
   def _HtmlBlockOpenFieldset; end
 
   # HtmlBlockOpenForm = "<" Spnl ("form" | "FORM") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4201
+  # source://rdoc//lib/rdoc/markdown.rb#4252
   def _HtmlBlockOpenForm; end
 
   # HtmlBlockOpenFrameset = "<" Spnl ("frameset" | "FRAMESET") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7023
+  # source://rdoc//lib/rdoc/markdown.rb#7074
   def _HtmlBlockOpenFrameset; end
 
   # HtmlBlockOpenH1 = "<" Spnl ("h1" | "H1") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4367
+  # source://rdoc//lib/rdoc/markdown.rb#4418
   def _HtmlBlockOpenH1; end
 
   # HtmlBlockOpenH2 = "<" Spnl ("h2" | "H2") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4533
+  # source://rdoc//lib/rdoc/markdown.rb#4584
   def _HtmlBlockOpenH2; end
 
   # HtmlBlockOpenH3 = "<" Spnl ("h3" | "H3") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4699
+  # source://rdoc//lib/rdoc/markdown.rb#4750
   def _HtmlBlockOpenH3; end
 
   # HtmlBlockOpenH4 = "<" Spnl ("h4" | "H4") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#4865
+  # source://rdoc//lib/rdoc/markdown.rb#4916
   def _HtmlBlockOpenH4; end
 
   # HtmlBlockOpenH5 = "<" Spnl ("h5" | "H5") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5031
+  # source://rdoc//lib/rdoc/markdown.rb#5082
   def _HtmlBlockOpenH5; end
 
   # HtmlBlockOpenH6 = "<" Spnl ("h6" | "H6") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5197
+  # source://rdoc//lib/rdoc/markdown.rb#5248
   def _HtmlBlockOpenH6; end
 
   # HtmlBlockOpenHead = "<" Spnl ("head" | "HEAD") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8506
+  # source://rdoc//lib/rdoc/markdown.rb#8557
   def _HtmlBlockOpenHead; end
 
   # HtmlBlockOpenLi = "<" Spnl ("li" | "LI") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7189
+  # source://rdoc//lib/rdoc/markdown.rb#7240
   def _HtmlBlockOpenLi; end
 
   # HtmlBlockOpenMenu = "<" Spnl ("menu" | "MENU") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5363
+  # source://rdoc//lib/rdoc/markdown.rb#5414
   def _HtmlBlockOpenMenu; end
 
   # HtmlBlockOpenNoframes = "<" Spnl ("noframes" | "NOFRAMES") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5529
+  # source://rdoc//lib/rdoc/markdown.rb#5580
   def _HtmlBlockOpenNoframes; end
 
   # HtmlBlockOpenNoscript = "<" Spnl ("noscript" | "NOSCRIPT") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5695
+  # source://rdoc//lib/rdoc/markdown.rb#5746
   def _HtmlBlockOpenNoscript; end
 
   # HtmlBlockOpenOl = "<" Spnl ("ol" | "OL") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#5861
+  # source://rdoc//lib/rdoc/markdown.rb#5912
   def _HtmlBlockOpenOl; end
 
   # HtmlBlockOpenP = "<" Spnl ("p" | "P") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6027
+  # source://rdoc//lib/rdoc/markdown.rb#6078
   def _HtmlBlockOpenP; end
 
   # HtmlBlockOpenPre = "<" Spnl ("pre" | "PRE") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6193
+  # source://rdoc//lib/rdoc/markdown.rb#6244
   def _HtmlBlockOpenPre; end
 
   # HtmlBlockOpenScript = "<" Spnl ("script" | "SCRIPT") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8351
+  # source://rdoc//lib/rdoc/markdown.rb#8402
   def _HtmlBlockOpenScript; end
 
   # HtmlBlockOpenTable = "<" Spnl ("table" | "TABLE") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6359
+  # source://rdoc//lib/rdoc/markdown.rb#6410
   def _HtmlBlockOpenTable; end
 
   # HtmlBlockOpenTbody = "<" Spnl ("tbody" | "TBODY") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7355
+  # source://rdoc//lib/rdoc/markdown.rb#7406
   def _HtmlBlockOpenTbody; end
 
   # HtmlBlockOpenTd = "<" Spnl ("td" | "TD") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7521
+  # source://rdoc//lib/rdoc/markdown.rb#7572
   def _HtmlBlockOpenTd; end
 
   # HtmlBlockOpenTfoot = "<" Spnl ("tfoot" | "TFOOT") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7687
+  # source://rdoc//lib/rdoc/markdown.rb#7738
   def _HtmlBlockOpenTfoot; end
 
   # HtmlBlockOpenTh = "<" Spnl ("th" | "TH") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7853
+  # source://rdoc//lib/rdoc/markdown.rb#7904
   def _HtmlBlockOpenTh; end
 
   # HtmlBlockOpenThead = "<" Spnl ("thead" | "THEAD") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8019
+  # source://rdoc//lib/rdoc/markdown.rb#8070
   def _HtmlBlockOpenThead; end
 
   # HtmlBlockOpenTr = "<" Spnl ("tr" | "TR") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8185
+  # source://rdoc//lib/rdoc/markdown.rb#8236
   def _HtmlBlockOpenTr; end
 
   # HtmlBlockOpenUl = "<" Spnl ("ul" | "UL") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6525
+  # source://rdoc//lib/rdoc/markdown.rb#6576
   def _HtmlBlockOpenUl; end
 
   # HtmlBlockP = HtmlBlockOpenP (HtmlBlockP | !HtmlBlockCloseP .)* HtmlBlockCloseP
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6135
+  # source://rdoc//lib/rdoc/markdown.rb#6186
   def _HtmlBlockP; end
 
   # HtmlBlockPre = HtmlBlockOpenPre (HtmlBlockPre | !HtmlBlockClosePre .)* HtmlBlockClosePre
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6301
+  # source://rdoc//lib/rdoc/markdown.rb#6352
   def _HtmlBlockPre; end
 
   # HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseScript
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8459
+  # source://rdoc//lib/rdoc/markdown.rb#8510
   def _HtmlBlockScript; end
 
   # HtmlBlockSelfClosing = "<" Spnl HtmlBlockType Spnl HtmlAttribute* "/" Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8906
+  # source://rdoc//lib/rdoc/markdown.rb#8957
   def _HtmlBlockSelfClosing; end
 
   # HtmlBlockTable = HtmlBlockOpenTable (HtmlBlockTable | !HtmlBlockCloseTable .)* HtmlBlockCloseTable
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6467
+  # source://rdoc//lib/rdoc/markdown.rb#6518
   def _HtmlBlockTable; end
 
   # HtmlBlockTbody = HtmlBlockOpenTbody (HtmlBlockTbody | !HtmlBlockCloseTbody .)* HtmlBlockCloseTbody
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7463
+  # source://rdoc//lib/rdoc/markdown.rb#7514
   def _HtmlBlockTbody; end
 
   # HtmlBlockTd = HtmlBlockOpenTd (HtmlBlockTd | !HtmlBlockCloseTd .)* HtmlBlockCloseTd
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7629
+  # source://rdoc//lib/rdoc/markdown.rb#7680
   def _HtmlBlockTd; end
 
   # HtmlBlockTfoot = HtmlBlockOpenTfoot (HtmlBlockTfoot | !HtmlBlockCloseTfoot .)* HtmlBlockCloseTfoot
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7795
+  # source://rdoc//lib/rdoc/markdown.rb#7846
   def _HtmlBlockTfoot; end
 
   # HtmlBlockTh = HtmlBlockOpenTh (HtmlBlockTh | !HtmlBlockCloseTh .)* HtmlBlockCloseTh
   #
-  # source://rdoc//lib/rdoc/markdown.rb#7961
+  # source://rdoc//lib/rdoc/markdown.rb#8012
   def _HtmlBlockTh; end
 
   # HtmlBlockThead = HtmlBlockOpenThead (HtmlBlockThead | !HtmlBlockCloseThead .)* HtmlBlockCloseThead
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8127
+  # source://rdoc//lib/rdoc/markdown.rb#8178
   def _HtmlBlockThead; end
 
   # HtmlBlockTr = HtmlBlockOpenTr (HtmlBlockTr | !HtmlBlockCloseTr .)* HtmlBlockCloseTr
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8293
+  # source://rdoc//lib/rdoc/markdown.rb#8344
   def _HtmlBlockTr; end
 
   # HtmlBlockType = ("ADDRESS" | "BLOCKQUOTE" | "CENTER" | "DD" | "DIR" | "DIV" | "DL" | "DT" | "FIELDSET" | "FORM" | "FRAMESET" | "H1" | "H2" | "H3" | "H4" | "H5" | "H6" | "HR" | "ISINDEX" | "LI" | "MENU" | "NOFRAMES" | "NOSCRIPT" | "OL" | "P" | "PRE" | "SCRIPT" | "TABLE" | "TBODY" | "TD" | "TFOOT" | "TH" | "THEAD" | "TR" | "UL" | "address" | "blockquote" | "center" | "dd" | "dir" | "div" | "dl" | "dt" | "fieldset" | "form" | "frameset" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "hr" | "isindex" | "li" | "menu" | "noframes" | "noscript" | "ol" | "p" | "pre" | "script" | "table" | "tbody" | "td" | "tfoot" | "th" | "thead" | "tr" | "ul")
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8961
+  # source://rdoc//lib/rdoc/markdown.rb#9012
   def _HtmlBlockType; end
 
   # HtmlBlockUl = HtmlBlockOpenUl (HtmlBlockUl | !HtmlBlockCloseUl .)* HtmlBlockCloseUl
   #
-  # source://rdoc//lib/rdoc/markdown.rb#6633
+  # source://rdoc//lib/rdoc/markdown.rb#6684
   def _HtmlBlockUl; end
 
   # HtmlCloseAnchor = "<" Spnl "/" ("a" | "A") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2929
+  # source://rdoc//lib/rdoc/markdown.rb#2980
   def _HtmlCloseAnchor; end
 
   # HtmlComment = "<!--" (!"-->" .)* "-->"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14437
+  # source://rdoc//lib/rdoc/markdown.rb#14298
   def _HtmlComment; end
 
   # HtmlOpenAnchor = "<" Spnl ("a" | "A") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2873
+  # source://rdoc//lib/rdoc/markdown.rb#2924
   def _HtmlOpenAnchor; end
 
   # HtmlTag = "<" Spnl "/"? AlphanumericAscii+ Spnl HtmlAttribute* "/"? Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14484
+  # source://rdoc//lib/rdoc/markdown.rb#14345
   def _HtmlTag; end
 
   # HtmlUnclosed = "<" Spnl HtmlUnclosedType Spnl HtmlAttribute* Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8838
+  # source://rdoc//lib/rdoc/markdown.rb#8889
   def _HtmlUnclosed; end
 
   # HtmlUnclosedType = ("HR" | "hr")
   #
-  # source://rdoc//lib/rdoc/markdown.rb#8888
+  # source://rdoc//lib/rdoc/markdown.rb#8939
   def _HtmlUnclosedType; end
 
   # Image = "!" ExplicitLinkWithLabel:a { "rdoc-image:#{a[:link]}:#{a[:label]}" }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10982
+  # source://rdoc//lib/rdoc/markdown.rb#11033
   def _Image; end
 
   # InStyleTags = StyleOpen (!StyleClose .)* StyleClose
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9291
+  # source://rdoc//lib/rdoc/markdown.rb#9342
   def _InStyleTags; end
 
   # Indent = /\t|    /
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14882
+  # source://rdoc//lib/rdoc/markdown.rb#14743
   def _Indent; end
 
   # IndentedLine = Indent Line
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14889
+  # source://rdoc//lib/rdoc/markdown.rb#14750
   def _IndentedLine; end
 
   # Inline = (Str | @Endline | UlOrStarLine | @Space | Strong | Emph | Strike | Image | Link | NoteReference | InlineNote | Code | RawHtml | Entity | EscapedChar | Symbol)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9596
+  # source://rdoc//lib/rdoc/markdown.rb#9647
   def _Inline; end
 
   # InlineNote = &{ notes? } "^[" @StartList:a (!"]" Inline:l { a << l })+ "]" { ref = [:inline, @note_order.length]                @footnotes[ref] = paragraph a                 note_for ref              }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15453
+  # source://rdoc//lib/rdoc/markdown.rb#15314
   def _InlineNote; end
 
   # Inlines = (!@Endline Inline:i { i } | @Endline:c !(&{ github? } Ticks3 /[^`\n]*$/) &Inline { c })+:chunks @Endline? { chunks }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9375
+  # source://rdoc//lib/rdoc/markdown.rb#9426
   def _Inlines; end
 
   # Label = "[" (!"^" &{ notes? } | &. &{ !notes? }) @StartList:a (!"]" Inline:l { a << l })* "]" { a.join.gsub(/\s+/, ' ') }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11929
+  # source://rdoc//lib/rdoc/markdown.rb#11980
   def _Label; end
 
   # Line = @RawLine:a { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14960
+  # source://rdoc//lib/rdoc/markdown.rb#14821
   def _Line; end
 
   # LineBreak = "  " @NormalEndline { RDoc::Markup::HardBreak.new }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10052
+  # source://rdoc//lib/rdoc/markdown.rb#10103
   def _LineBreak; end
 
   # Link = (ExplicitLink | ReferenceLink | AutoLink)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11010
+  # source://rdoc//lib/rdoc/markdown.rb#11061
   def _Link; end
 
   # ListBlock = !@BlankLine Line:a ListBlockLine*:c { [a, *c] }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2558
+  # source://rdoc//lib/rdoc/markdown.rb#2609
   def _ListBlock; end
 
   # ListBlockLine = !@BlankLine !(Indent? (Bullet | Enumerator)) !HorizontalRule OptionallyIndentedLine
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2803
+  # source://rdoc//lib/rdoc/markdown.rb#2854
   def _ListBlockLine; end
 
   # ListContinuationBlock = @StartList:a @BlankLine* { a << "\n" } (Indent ListBlock:b { a.concat b })+ { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2602
+  # source://rdoc//lib/rdoc/markdown.rb#2653
   def _ListContinuationBlock; end
 
   # ListItem = (Bullet | Enumerator) @StartList:a ListBlock:b { a << b } (ListContinuationBlock:c { a.push(*c) })* { list_item_from a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2402
+  # source://rdoc//lib/rdoc/markdown.rb#2453
   def _ListItem; end
 
   # ListItemTight = (Bullet | Enumerator) ListBlock:a (!@BlankLine ListContinuationBlock:b { a.push(*b) })* !ListContinuationBlock { list_item_from a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2478
+  # source://rdoc//lib/rdoc/markdown.rb#2529
   def _ListItemTight; end
 
   # ListLoose = @StartList:a (ListItem:b @BlankLine* { a << b })+ { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2314
+  # source://rdoc//lib/rdoc/markdown.rb#2365
   def _ListLoose; end
 
   # ListTight = ListItemTight+:a @BlankLine* !(Bullet | Enumerator) { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2249
+  # source://rdoc//lib/rdoc/markdown.rb#2300
   def _ListTight; end
 
   # Newline = %literals.Newline
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14748
+  # source://rdoc//lib/rdoc/markdown.rb#14609
   def _Newline; end
 
   # NonblankIndentedLine = !@BlankLine IndentedLine
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1831
+  # source://rdoc//lib/rdoc/markdown.rb#1882
   def _NonblankIndentedLine; end
 
   # NonindentSpace = / {0,3}/
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14875
+  # source://rdoc//lib/rdoc/markdown.rb#14736
   def _NonindentSpace; end
 
   # Nonspacechar = !@Spacechar !@Newline .
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14574
+  # source://rdoc//lib/rdoc/markdown.rb#14435
   def _Nonspacechar; end
 
   # NormalChar = !(@SpecialChar | @Spacechar | @Newline) .
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14675
+  # source://rdoc//lib/rdoc/markdown.rb#14536
   def _NormalChar; end
 
   # NormalEndline = @Sp @Newline !@BlankLine !">" !AtxStart !(Line /={1,}|-{1,}/ @Newline) { "\n" }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9948
+  # source://rdoc//lib/rdoc/markdown.rb#9999
   def _NormalEndline; end
 
   # Note = &{ notes? } @NonindentSpace RawNoteReference:ref ":" @Sp @StartList:a RawNoteBlock:i { a.concat i } (&Indent RawNoteBlock:i { a.concat i })* { @footnotes[ref] = paragraph a                    nil                 }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15355
+  # source://rdoc//lib/rdoc/markdown.rb#15216
   def _Note; end
 
   # NoteReference = &{ notes? } RawNoteReference:ref { note_for ref }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15229
+  # source://rdoc//lib/rdoc/markdown.rb#15090
   def _NoteReference; end
 
   # Notes = (Note | SkipBlock)*
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15560
+  # source://rdoc//lib/rdoc/markdown.rb#15421
   def _Notes; end
 
   # OptionallyIndentedLine = Indent? Line
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14910
+  # source://rdoc//lib/rdoc/markdown.rb#14771
   def _OptionallyIndentedLine; end
 
   # OrderedList = &Enumerator (ListTight | ListLoose):a { RDoc::Markup::List.new(:NUMBER, *a) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#2762
+  # source://rdoc//lib/rdoc/markdown.rb#2813
   def _OrderedList; end
 
   # Para = @NonindentSpace Inlines:a @BlankLine+ { paragraph a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1014
+  # source://rdoc//lib/rdoc/markdown.rb#1065
   def _Para; end
 
   # Plain = Inlines:a { paragraph a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1057
+  # source://rdoc//lib/rdoc/markdown.rb#1108
   def _Plain; end
 
   # Quoted = ("\"" (!"\"" .)* "\"" | "'" (!"'" .)* "'")
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14197
+  # source://rdoc//lib/rdoc/markdown.rb#14058
   def _Quoted; end
 
   # RawHtml = < (HtmlComment | HtmlBlockScript | HtmlTag) > { if html? then text else '' end }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14130
+  # source://rdoc//lib/rdoc/markdown.rb#13991
   def _RawHtml; end
 
   # RawLine = (< /[^\r\n]*/ @Newline > | < .+ > @Eof) { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14983
+  # source://rdoc//lib/rdoc/markdown.rb#14844
   def _RawLine; end
 
   # RawNoteBlock = @StartList:a (!@BlankLine !RawNoteReference OptionallyIndentedLine:l { a << l })+ < @BlankLine* > { a << text } { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15582
+  # source://rdoc//lib/rdoc/markdown.rb#15443
   def _RawNoteBlock; end
 
   # RawNoteReference = "[^" < (!@Newline !"]" .)+ > "]" { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15259
+  # source://rdoc//lib/rdoc/markdown.rb#15120
   def _RawNoteReference; end
 
   # RefSrc = < Nonspacechar+ > { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12048
+  # source://rdoc//lib/rdoc/markdown.rb#12099
   def _RefSrc; end
 
   # RefTitle = (RefTitleSingle | RefTitleDouble | RefTitleParens | EmptyTitle)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12084
+  # source://rdoc//lib/rdoc/markdown.rb#12135
   def _RefTitle; end
 
   # RefTitleDouble = Spnl "\"" < (!("\"" @Sp @Newline | @Newline) .)* > "\"" { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12207
+  # source://rdoc//lib/rdoc/markdown.rb#12258
   def _RefTitleDouble; end
 
   # RefTitleParens = Spnl "(" < (!(")" @Sp @Newline | @Newline) .)* > ")" { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12299
+  # source://rdoc//lib/rdoc/markdown.rb#12350
   def _RefTitleParens; end
 
   # RefTitleSingle = Spnl "'" < (!("'" @Sp @Newline | @Newline) .)* > "'" { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12115
+  # source://rdoc//lib/rdoc/markdown.rb#12166
   def _RefTitleSingle; end
 
   # Reference = @NonindentSpace !"[]" Label:label ":" Spnl RefSrc:link RefTitle @BlankLine+ { # TODO use title               reference label, link               nil             }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11854
+  # source://rdoc//lib/rdoc/markdown.rb#11905
   def _Reference; end
 
   # ReferenceLink = (ReferenceLinkDouble | ReferenceLinkSingle)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11031
+  # source://rdoc//lib/rdoc/markdown.rb#11082
   def _ReferenceLink; end
 
   # ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label { link_to content, label, text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11049
+  # source://rdoc//lib/rdoc/markdown.rb#11100
   def _ReferenceLinkDouble; end
 
   # ReferenceLinkSingle = Label:content < (Spnl "[]")? > { link_to content, content, text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11095
+  # source://rdoc//lib/rdoc/markdown.rb#11146
   def _ReferenceLinkSingle; end
 
   # References = (Reference | SkipBlock)*
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12391
+  # source://rdoc//lib/rdoc/markdown.rb#12442
   def _References; end
 
   # SetextBottom1 = /={1,}/ @Newline
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1272
+  # source://rdoc//lib/rdoc/markdown.rb#1323
   def _SetextBottom1; end
 
   # SetextBottom2 = /-{1,}/ @Newline
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1293
+  # source://rdoc//lib/rdoc/markdown.rb#1344
   def _SetextBottom2; end
 
   # SetextHeading = (SetextHeading1 | SetextHeading2)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1254
+  # source://rdoc//lib/rdoc/markdown.rb#1305
   def _SetextHeading; end
 
   # SetextHeading1 = &(@RawLine SetextBottom1) @StartList:a (!@Endline Inline:b { a << b })+ @Sp @Newline SetextBottom1 { RDoc::Markup::Heading.new(1, a.join) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1314
+  # source://rdoc//lib/rdoc/markdown.rb#1365
   def _SetextHeading1; end
 
   # SetextHeading2 = &(@RawLine SetextBottom2) @StartList:a (!@Endline Inline:b { a << b })+ @Sp @Newline SetextBottom2 { RDoc::Markup::Heading.new(2, a.join) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1436
+  # source://rdoc//lib/rdoc/markdown.rb#1487
   def _SetextHeading2; end
 
   # SkipBlock = (HtmlBlock | (!"#" !SetextBottom1 !SetextBottom2 !@BlankLine @RawLine)+ @BlankLine* | @BlankLine+ | @RawLine)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15062
+  # source://rdoc//lib/rdoc/markdown.rb#14923
   def _SkipBlock; end
 
   # Source = ("<" < SourceContents > ">" | < SourceContents >) { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11228
+  # source://rdoc//lib/rdoc/markdown.rb#11279
   def _Source; end
 
   # SourceContents = ((!"(" !")" !">" Nonspacechar)+ | "(" SourceContents ")")*
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11288
+  # source://rdoc//lib/rdoc/markdown.rb#11339
   def _SourceContents; end
 
   # Sp = @Spacechar*
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14606
+  # source://rdoc//lib/rdoc/markdown.rb#14467
   def _Sp; end
 
   # Space = @Spacechar+ { " " }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9656
+  # source://rdoc//lib/rdoc/markdown.rb#9707
   def _Space; end
 
   # Spacechar = %literals.Spacechar
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14755
+  # source://rdoc//lib/rdoc/markdown.rb#14616
   def _Spacechar; end
 
   # SpecialChar = (/[~*_`&\[\]()<!#\\'"]/ | @ExtendedSpecialChar)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14657
+  # source://rdoc//lib/rdoc/markdown.rb#14518
   def _SpecialChar; end
 
   # Spnl = @Sp (@Newline @Sp)?
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14617
+  # source://rdoc//lib/rdoc/markdown.rb#14478
   def _Spnl; end
 
   # StarLine = (< /\*{4,}/ > { text } | < @Spacechar /\*+/ &@Spacechar > { text })
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10139
+  # source://rdoc//lib/rdoc/markdown.rb#10190
   def _StarLine; end
 
   # StartList = &. { [] }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#14936
+  # source://rdoc//lib/rdoc/markdown.rb#14797
   def _StartList; end
 
   # Str = @StartList:a < @NormalChar+ > { a = text } (StrChunk:c { a << c })* { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9688
+  # source://rdoc//lib/rdoc/markdown.rb#9739
   def _Str; end
 
   # StrChunk = < (@NormalChar | /_+/ &Alphanumeric)+ > { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9761
+  # source://rdoc//lib/rdoc/markdown.rb#9812
   def _StrChunk; end
 
   # Strike = &{ strike? } "~~" !@Whitespace @StartList:a (!"~~" Inline:b { a << b })+ "~~" { strike a.join }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10871
+  # source://rdoc//lib/rdoc/markdown.rb#10922
   def _Strike; end
 
   # Strong = (StrongStar | StrongUl)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10645
+  # source://rdoc//lib/rdoc/markdown.rb#10696
   def _Strong; end
 
   # StrongStar = "**" !@Whitespace @StartList:a (!"**" Inline:b { a << b })+ "**" { strong a.join }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10663
+  # source://rdoc//lib/rdoc/markdown.rb#10714
   def _StrongStar; end
 
   # StrongUl = "__" !@Whitespace @StartList:a (!"__" Inline:b { a << b })+ "__" { strong a.join }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10767
+  # source://rdoc//lib/rdoc/markdown.rb#10818
   def _StrongUl; end
 
   # StyleBlock = < InStyleTags > @BlankLine* { if css? then                     RDoc::Markup::Raw.new text                   end }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9338
+  # source://rdoc//lib/rdoc/markdown.rb#9389
   def _StyleBlock; end
 
   # StyleClose = "<" Spnl "/" ("style" | "STYLE") Spnl ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9239
+  # source://rdoc//lib/rdoc/markdown.rb#9290
   def _StyleClose; end
 
   # StyleOpen = "<" Spnl ("style" | "STYLE") Spnl HtmlAttribute* ">"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#9183
+  # source://rdoc//lib/rdoc/markdown.rb#9234
   def _StyleOpen; end
 
   # Symbol = < @SpecialChar > { text }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10079
+  # source://rdoc//lib/rdoc/markdown.rb#10130
   def _Symbol; end
 
-  # Table = &{ github? } TableHead:header TableLine:line TableRow+:body { table = RDoc::Markup::Table.new(header, line, body) }
+  # Table = &{ github? } TableHead:header TableLine:line TableRow+:body {           table = RDoc::Markup::Table.new(header, line, body)           parse_table_cells(table)         }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#15959
+  # source://rdoc//lib/rdoc/markdown.rb#15820
   def _Table; end
 
   # TableAlign = < /:?-+:?/ > @Sp {                 text.start_with?(":") ?                 (text.end_with?(":") ? :center : :left) :                 (text.end_with?(":") ? :right : nil)               }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16326
+  # source://rdoc//lib/rdoc/markdown.rb#16190
   def _TableAlign; end
 
   # TableAlign2 = "|" @Sp TableAlign
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16300
+  # source://rdoc//lib/rdoc/markdown.rb#16164
   def _TableAlign2; end
 
   # TableHead = TableItem2+:items "|"? @Newline { items }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16015
+  # source://rdoc//lib/rdoc/markdown.rb#15879
   def _TableHead; end
 
-  # TableItem = < /(?:\\.|[^|\n])+/ > { text.strip.gsub(/\\(.)/, '\1')  }
+  # TableItem = < /(?:\\.|[^|\n])+/ > { text.strip.gsub(/\\([|])/, '\1')  }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16181
+  # source://rdoc//lib/rdoc/markdown.rb#16045
   def _TableItem; end
 
   # TableItem2 = "|" TableItem
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16160
+  # source://rdoc//lib/rdoc/markdown.rb#16024
   def _TableItem2; end
 
   # TableLine = ((TableAlign:align1 TableAlign2*:aligns {[align1, *aligns] }):line | TableAlign2+:line) "|"? @Newline { line }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16207
+  # source://rdoc//lib/rdoc/markdown.rb#16071
   def _TableLine; end
 
   # TableRow = ((TableItem:item1 TableItem2*:items { [item1, *items] }):row | TableItem2+:row) "|"? @Newline { row }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#16067
+  # source://rdoc//lib/rdoc/markdown.rb#15931
   def _TableRow; end
 
   # TerminalEndline = @Sp @Newline @Eof
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10026
+  # source://rdoc//lib/rdoc/markdown.rb#10077
   def _TerminalEndline; end
 
   # Ticks1 = "`" !"`"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12413
+  # source://rdoc//lib/rdoc/markdown.rb#12464
   def _Ticks1; end
 
   # Ticks2 = "``" !"`"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12437
+  # source://rdoc//lib/rdoc/markdown.rb#12488
   def _Ticks2; end
 
   # Ticks3 = "```" !"`"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12461
+  # source://rdoc//lib/rdoc/markdown.rb#12512
   def _Ticks3; end
 
   # Ticks4 = "````" !"`"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12485
+  # source://rdoc//lib/rdoc/markdown.rb#12536
   def _Ticks4; end
 
   # Ticks5 = "`````" !"`"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#12509
+  # source://rdoc//lib/rdoc/markdown.rb#12560
   def _Ticks5; end
 
   # Title = (TitleSingle | TitleDouble | ""):a { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11405
+  # source://rdoc//lib/rdoc/markdown.rb#11456
   def _Title; end
 
   # TitleDouble = "\"" (!("\"" @Sp (")" | @Newline)) .)* "\""
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11519
+  # source://rdoc//lib/rdoc/markdown.rb#11570
   def _TitleDouble; end
 
   # TitleSingle = "'" (!("'" @Sp (")" | @Newline)) .)* "'"
   #
-  # source://rdoc//lib/rdoc/markdown.rb#11442
+  # source://rdoc//lib/rdoc/markdown.rb#11493
   def _TitleSingle; end
 
   # UlLine = (< /_{4,}/ > { text } | < @Spacechar /_+/ &@Spacechar > { text })
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10216
+  # source://rdoc//lib/rdoc/markdown.rb#10267
   def _UlLine; end
 
   # UlOrStarLine = (UlLine | StarLine):a { a }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10105
+  # source://rdoc//lib/rdoc/markdown.rb#10156
   def _UlOrStarLine; end
 
   # Verbatim = VerbatimChunk+:a { RDoc::Markup::Verbatim.new(*a.flatten) }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1905
+  # source://rdoc//lib/rdoc/markdown.rb#1956
   def _Verbatim; end
 
   # VerbatimChunk = @BlankLine*:a NonblankIndentedLine+:b { a.concat b }
   #
-  # source://rdoc//lib/rdoc/markdown.rb#1855
+  # source://rdoc//lib/rdoc/markdown.rb#1906
   def _VerbatimChunk; end
 
   # Whitespace = (@Spacechar | @Newline)
   #
-  # source://rdoc//lib/rdoc/markdown.rb#10311
+  # source://rdoc//lib/rdoc/markdown.rb#10362
   def _Whitespace; end
 
   # root = Doc
   #
-  # source://rdoc//lib/rdoc/markdown.rb#892
+  # source://rdoc//lib/rdoc/markdown.rb#943
   def _root; end
 
   # source://rdoc//lib/rdoc/markdown.rb#502
@@ -4081,6 +4081,11 @@ class RDoc::Markdown
 
   # source://rdoc//lib/rdoc/markdown.rb#606
   def break_on_newline?; end
+
+  # Wraps `text` in code markup for rdoc inline formatting
+  #
+  # source://rdoc//lib/rdoc/markdown.rb#888
+  def code(text); end
 
   # source://rdoc//lib/rdoc/markdown.rb#610
   def css=(enable); end
@@ -4232,6 +4237,16 @@ class RDoc::Markdown
   # source://rdoc//lib/rdoc/markdown.rb#414
   def parse(markdown); end
 
+  # Parses inline markdown in a single table cell
+  #
+  # source://rdoc//lib/rdoc/markdown.rb#914
+  def parse_cell_inline(text); end
+
+  # Parses inline markdown in table cells
+  #
+  # source://rdoc//lib/rdoc/markdown.rb#899
+  def parse_table_cells(table); end
+
   # The internal kpeg parse method
   #
   # source://rdoc//lib/rdoc/markdown.rb#787
@@ -4288,7 +4303,7 @@ class RDoc::Markdown
 
   # :stopdoc:
   #
-  # source://rdoc//lib/rdoc/markdown.rb#887
+  # source://rdoc//lib/rdoc/markdown.rb#938
   def setup_foreign_grammar; end
 
   # Prepares for parsing +str+.  If you define a custom initialize you must
@@ -5636,6 +5651,22 @@ class RDoc::Markup::IndentedParagraph < ::RDoc::Markup::Raw
   def text(hard_break = T.unsafe(nil)); end
 end
 
+# Formatter dedicated to rendering tidy link labels without mutating the
+# calling formatter's state.
+#
+# source://rdoc//lib/rdoc/markup/to_html.rb#597
+class RDoc::Markup::LinkLabelToHtml < ::RDoc::Markup::ToHtml
+  # @return [LinkLabelToHtml] a new instance of LinkLabelToHtml
+  #
+  # source://rdoc//lib/rdoc/markup/to_html.rb#602
+  def initialize(options, from_path = T.unsafe(nil)); end
+
+  class << self
+    # source://rdoc//lib/rdoc/markup/to_html.rb#598
+    def render(label, options, from_path); end
+  end
+end
+
 # A List is a homogeneous set of ListItems.
 #
 # The supported list types include:
@@ -6339,63 +6370,63 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
 
   # Adds +blank_line+ to the output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#300
+  # source://rdoc//lib/rdoc/markup/to_html.rb#297
   def accept_blank_line(blank_line); end
 
   # Adds +block_quote+ to the output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#199
+  # source://rdoc//lib/rdoc/markup/to_html.rb#196
   def accept_block_quote(block_quote); end
 
   # Adds +heading+ to the output.  The headings greater than 6 are trimmed to
   # level 6.
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#308
+  # source://rdoc//lib/rdoc/markup/to_html.rb#305
   def accept_heading(heading); end
 
   # Finishes consumption of +list+
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#271
+  # source://rdoc//lib/rdoc/markup/to_html.rb#268
   def accept_list_end(list); end
 
   # Finishes consumption of +list_item+
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#293
+  # source://rdoc//lib/rdoc/markup/to_html.rb#290
   def accept_list_item_end(list_item); end
 
   # Prepares the visitor for consuming +list_item+
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#282
+  # source://rdoc//lib/rdoc/markup/to_html.rb#279
   def accept_list_item_start(list_item); end
 
   # Prepares the visitor for consuming +list+
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#262
+  # source://rdoc//lib/rdoc/markup/to_html.rb#259
   def accept_list_start(list); end
 
   # Adds +paragraph+ to the output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#212
+  # source://rdoc//lib/rdoc/markup/to_html.rb#209
   def accept_paragraph(paragraph); end
 
   # Adds +raw+ to the output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#329
+  # source://rdoc//lib/rdoc/markup/to_html.rb#326
   def accept_raw(raw); end
 
   # Adds +rule+ to the output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#255
+  # source://rdoc//lib/rdoc/markup/to_html.rb#252
   def accept_rule(rule); end
 
   # Adds +table+ to the output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#336
+  # source://rdoc//lib/rdoc/markup/to_html.rb#333
   def accept_table(header, body, aligns); end
 
   # Adds +verbatim+ to the output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#225
+  # source://rdoc//lib/rdoc/markup/to_html.rb#222
   def accept_verbatim(verbatim); end
 
   # The RDoc::CodeObject HTML is being generated for.  This is used to
@@ -6412,12 +6443,12 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
 
   # CGI-escapes +text+
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#361
+  # source://rdoc//lib/rdoc/markup/to_html.rb#358
   def convert_string(text); end
 
   # Returns the generated output
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#192
+  # source://rdoc//lib/rdoc/markup/to_html.rb#189
   def end_accepting; end
 
   # Path to this document for relative links
@@ -6433,7 +6464,7 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
   # Generate a link to +url+ with content +text+.  Handles the special cases
   # for img: and link: described under handle_regexp_HYPERLINK
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#369
+  # source://rdoc//lib/rdoc/markup/to_html.rb#366
   def gen_url(url, text); end
 
   # source://rdoc//lib/rdoc/markup/to_html.rb#86
@@ -6479,7 +6510,7 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
   #
   # @raise [RDoc::Error]
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#394
+  # source://rdoc//lib/rdoc/markup/to_html.rb#391
   def html_list_name(list_type, open_tag); end
 
   # source://rdoc//lib/rdoc/markup/to_html.rb#27
@@ -6497,7 +6528,7 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
 
   # Maps attributes to HTML tags
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#403
+  # source://rdoc//lib/rdoc/markup/to_html.rb#400
   def init_tags; end
 
   # source://rdoc//lib/rdoc/markup/to_html.rb#28
@@ -6505,20 +6536,20 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
 
   # Returns the HTML end-tag for +list_type+
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#429
+  # source://rdoc//lib/rdoc/markup/to_html.rb#426
   def list_end_for(list_type); end
 
   # Returns the HTML tag for +list_type+, possible using a label from
   # +list_item+
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#413
+  # source://rdoc//lib/rdoc/markup/to_html.rb#410
   def list_item_start(list_item, list_type); end
 
   # Returns true if text is valid ruby syntax
   #
   # @return [Boolean]
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#443
+  # source://rdoc//lib/rdoc/markup/to_html.rb#440
   def parseable?(text); end
 
   # source://rdoc//lib/rdoc/markup/to_html.rb#26
@@ -6526,14 +6557,81 @@ class RDoc::Markup::ToHtml < ::RDoc::Markup::Formatter
 
   # Prepares the visitor for HTML generation
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#183
+  # source://rdoc//lib/rdoc/markup/to_html.rb#180
   def start_accepting; end
 
   # Converts +item+ to HTML using RDoc::Text#to_html
   #
-  # source://rdoc//lib/rdoc/markup/to_html.rb#457
+  # source://rdoc//lib/rdoc/markup/to_html.rb#454
   def to_html(item); end
+
+  private
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#480
+  def append_flow_fragment(res, fragment); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#486
+  def append_to_tidy_label(fragment); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#514
+  def convert_complete_tidy_link(text); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#460
+  def convert_flow(flow_items); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#530
+  def emit_tidy_link_fragment(res, fragment); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#553
+  def extract_tidy_link_parts(text); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#538
+  def finish_tidy_link(text); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#572
+  def off_tags(res, item); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#565
+  def on_tags(res, item); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#588
+  def render_tidy_link_label(label); end
+
+  # source://rdoc//lib/rdoc/markup/to_html.rb#579
+  def start_tidy_link(text); end
+
+  # @return [Boolean]
+  #
+  # source://rdoc//lib/rdoc/markup/to_html.rb#584
+  def tidy_link_capturing?; end
 end
+
+# Matches a tidy link with a single-word label "label[url]".
+#
+# Capture 1: the single-word label (no whitespace).
+# Capture 2: URL text between the brackets.
+#
+# source://rdoc//lib/rdoc/markup/to_html.rb#512
+RDoc::Markup::ToHtml::TIDY_LINK_SINGLE_WORD = T.let(T.unsafe(nil), Regexp)
+
+# Matches an entire tidy link with a braced label "{label}[url]".
+#
+# Capture 1: label contents.
+# Capture 2: URL text.
+# Capture 3: trailing content.
+#
+# source://rdoc//lib/rdoc/markup/to_html.rb#496
+RDoc::Markup::ToHtml::TIDY_LINK_WITH_BRACES = T.let(T.unsafe(nil), Regexp)
+
+# Matches the tail of a braced tidy link when the opening brace was
+# consumed earlier while accumulating the label text.
+#
+# Capture 1: remaining label content.
+# Capture 2: URL text.
+# Capture 3: trailing content.
+#
+# source://rdoc//lib/rdoc/markup/to_html.rb#505
+RDoc::Markup::ToHtml::TIDY_LINK_WITH_BRACES_TAIL = T.let(T.unsafe(nil), Regexp)
 
 # source://rdoc//lib/rdoc/markup/to_html.rb#66
 RDoc::Markup::ToHtml::URL_CHARACTERS_REGEXP_STR = T.let(T.unsafe(nil), String)
@@ -6566,7 +6664,7 @@ class RDoc::Markup::ToHtmlCrossref < ::RDoc::Markup::ToHtml
   def context=(_arg0); end
 
   # source://rdoc//lib/rdoc/markup/to_html_crossref.rb#187
-  def convert_flow(flow); end
+  def convert_flow(flow_items, &block); end
 
   # Creates a link to the reference +name+ if the name exists.  If +text+ is
   # given it is used as the link text, otherwise +name+ is used.
@@ -6622,6 +6720,15 @@ class RDoc::Markup::ToHtmlCrossref < ::RDoc::Markup::ToHtml
   #
   # source://rdoc//lib/rdoc/markup/to_html_crossref.rb#24
   def show_hash=(_arg0); end
+
+  private
+
+  # Detects <tt>...</tt> spans that contain a single cross-reference candidate.
+  # When the candidate occupies the whole span (aside from trailing
+  # punctuation), the tt markup is replaced by the resolved cross-reference.
+  #
+  # source://rdoc//lib/rdoc/markup/to_html_crossref.rb#231
+  def convert_tt_crossref(flow_items, index); end
 end
 
 # Outputs RDoc markup as paragraphs with inline markup only.
@@ -8431,13 +8538,13 @@ class RDoc::Options
   def warn(message); end
 
   # Warn if rdoc-ref links can't be resolved
-  # Default is +false+
+  # Default is +true+
   #
   # source://rdoc//lib/rdoc/options.rb#332
   def warn_missing_rdoc_ref; end
 
   # Warn if rdoc-ref links can't be resolved
-  # Default is +false+
+  # Default is +true+
   #
   # source://rdoc//lib/rdoc/options.rb#332
   def warn_missing_rdoc_ref=(_arg0); end
@@ -12048,7 +12155,7 @@ class RDoc::Store
   # source://rdoc//lib/rdoc/store.rb#97
   def options; end
 
-  # Returns the RDoc::TopLevel that is a text file and has the given +name+
+  # Returns the RDoc::TopLevel that is a file and has the given +name+
   #
   # source://rdoc//lib/rdoc/store.rb#725
   def page(name); end
@@ -12229,8 +12336,8 @@ end
 #   require 'rdoc/task'
 #
 #   RDoc::Task.new do |rdoc|
-#     rdoc.main = "README.rdoc"
-#     rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+#     rdoc.main = "README.md"
+#     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
 #   end
 #
 # The +rdoc+ object passed to the block is an RDoc::Task object. See the
@@ -12245,8 +12352,8 @@ end
 #   require 'rdoc/task'
 #
 #   RDoc::Task.new :rdoc_dev do |rdoc|
-#     rdoc.main = "README.rdoc"
-#     rdoc.rdoc_files.include("README.rdoc", "lib/**/*.rb")
+#     rdoc.main = "README.md"
+#     rdoc.rdoc_files.include("README.md", "lib/**/*.rb")
 #     rdoc.options << "--all"
 #   end
 #
@@ -12799,14 +12906,6 @@ class RDoc::TopLevel < ::RDoc::Context
   # source://rdoc//lib/rdoc/generator/markup.rb#161
   def cvs_url; end
 
-  # Only a TopLevel that contains text file) will be displayed.  See also
-  # RDoc::CodeObject#display?
-  #
-  # @return [Boolean]
-  #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#121
-  def display?; end
-
   # An RDoc::TopLevel is equal to another with the same relative_name
   #
   # source://rdoc//lib/rdoc/code_object/top_level.rb#62
@@ -12817,46 +12916,46 @@ class RDoc::TopLevel < ::RDoc::Context
   # TODO Why do we search through all classes/modules found, not just the
   #       ones of this instance?
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#131
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#123
   def find_class_or_module(name); end
 
   # Finds a class or module named +symbol+
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#138
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#130
   def find_local_symbol(symbol); end
 
   # Finds a module or class with +name+
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#145
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#137
   def find_module_named(name); end
 
   # Returns the relative name of this file
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#152
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#144
   def full_name; end
 
   # An RDoc::TopLevel has the same hash as another with the same
   # relative_name
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#160
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#152
   def hash; end
 
   # URL for this with a +prefix+
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#167
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#159
   def http_url; end
 
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#171
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#163
   def inspect; end
 
   # Dumps this TopLevel for use by ri.  See also #marshal_load
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#183
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#175
   def marshal_dump; end
 
   # Loads this TopLevel from +array+.
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#195
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#187
   def marshal_load(array); end
 
   # Base name of this file
@@ -12868,12 +12967,12 @@ class RDoc::TopLevel < ::RDoc::Context
   #
   # Records +self+ as a location in "Object".
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#207
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#199
   def object_class; end
 
   # Base name of this file without the extension
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#218
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#210
   def page_name; end
 
   # The parser class that processed this file
@@ -12888,10 +12987,10 @@ class RDoc::TopLevel < ::RDoc::Context
 
   # Path to this file for use with HTML generator output.
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#228
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#220
   def path; end
 
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#234
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#226
   def pretty_print(q); end
 
   # Relative name of this file
@@ -12906,17 +13005,17 @@ class RDoc::TopLevel < ::RDoc::Context
 
   # Search record used by RDoc::Generator::JsonIndex
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#248
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#240
   def search_record; end
 
   # Is this TopLevel from a text file instead of a source code file?
   #
   # @return [Boolean]
   #
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#265
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#257
   def text?; end
 
-  # source://rdoc//lib/rdoc/code_object/top_level.rb#269
+  # source://rdoc//lib/rdoc/code_object/top_level.rb#261
   def to_s; end
 end
 
