@@ -741,7 +741,6 @@ module Tapioca
                     "Cannot generate association `has_many :readers, through: :author` on `Post` since the constant `Reader` does not exist.",
                     "Cannot generate association `has_one :award, through: :blog` on `Post` since the constant `Award` does not exist.",
                   ]
-                  # rubocop:enable Layout/LineLength
 
                   assert_equal(expected_errors, generated_errors)
                 end
@@ -1503,7 +1502,6 @@ module Tapioca
 
                   assert_equal(6, generated_errors.size)
 
-                  # rubocop:disable Layout/LineLength
                   expected_errors = [
                     "Cannot generate association `has_one :author` on `Post` since the constant `Author` does not exist.",
                     "Cannot generate association `has_many :comments` on `Post` since the constant `Comment` does not exist.",
@@ -1512,7 +1510,6 @@ module Tapioca
                     "Cannot generate association `has_many :readers, through: :author` on `Post` since the constant `Reader` does not exist.",
                     "Cannot generate association `has_one :award, through: :blog` on `Post` since the constant `Award` does not exist.",
                   ]
-                  # rubocop:enable Layout/LineLength
 
                   assert_equal(expected_errors, generated_errors)
                 end
