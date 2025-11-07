@@ -6,7 +6,13 @@ module Tapioca
     class Annotations < CommandWithoutTracker
       extend T::Sig
 
-      #: (central_repo_root_uris: Array[String], ?auth: String?, ?netrc_file: String?, ?central_repo_index_path: String, ?typed_overrides: Hash[String, String]) -> void
+      #: (
+      #|   central_repo_root_uris: Array[String],
+      #|   ?auth: String?,
+      #|   ?netrc_file: String?,
+      #|   ?central_repo_index_path: String,
+      #|   ?typed_overrides: Hash[String, String]
+      #| ) -> void
       def initialize(
         central_repo_root_uris:,
         auth: nil,

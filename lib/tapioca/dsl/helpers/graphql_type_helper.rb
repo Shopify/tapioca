@@ -9,7 +9,10 @@ module Tapioca
 
         extend T::Sig
 
-        #: (GraphQL::Schema::Argument argument, (singleton(GraphQL::Schema::Mutation) | singleton(GraphQL::Schema::InputObject)) constant) -> String
+        #: (
+        #|   GraphQL::Schema::Argument argument,
+        #|   (singleton(GraphQL::Schema::Mutation) | singleton(GraphQL::Schema::InputObject)) constant
+        #| ) -> String
         def type_for_argument(argument, constant)
           type = if argument.loads
             loads_type = ::GraphQL::Schema::Wrapper.new(argument.loads)
@@ -34,7 +37,19 @@ module Tapioca
           )
         end
 
-        #: ((GraphQL::Schema::Wrapper | singleton(GraphQL::Schema::Scalar) | singleton(GraphQL::Schema::Enum) | singleton(GraphQL::Schema::Union) | singleton(GraphQL::Schema::Object) | singleton(GraphQL::Schema::Interface) | singleton(GraphQL::Schema::InputObject)) type, ?ignore_nilable_wrapper: bool, ?prepare_method: Method?) -> String
+        #: (
+        #|   (
+        #|     GraphQL::Schema::Wrapper |
+        #|     singleton(GraphQL::Schema::Scalar) |
+        #|     singleton(GraphQL::Schema::Enum) |
+        #|     singleton(GraphQL::Schema::Union) |
+        #|     singleton(GraphQL::Schema::Object) |
+        #|     singleton(GraphQL::Schema::Interface) |
+        #|     singleton(GraphQL::Schema::InputObject)
+        #|   ) type,
+        #|   ?ignore_nilable_wrapper: bool,
+        #|   ?prepare_method: Method?
+        #| ) -> String
         def type_for(type, ignore_nilable_wrapper: false, prepare_method: nil)
           unwrapped_type = type.unwrap
 
