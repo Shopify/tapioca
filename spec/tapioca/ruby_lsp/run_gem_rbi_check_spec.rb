@@ -176,6 +176,26 @@ module Tapioca
 
           assert_project_file_exist("sorbet/rbi/gems/foo@0.0.1.rbi")
         end
+
+        it "respects custom gem directory" do
+          FileUtils.mkdir_p("#{@project.absolute_path}/custom/gem/dir")
+
+          foo = mock_gem("foo", "0.0.1") do
+            write!("lib/foo.rb", FOO_RB)
+          end
+          @project.require_mock_gem(foo)
+          @project.bundle_install!
+
+          FileUtils.touch("#{@project.absolute_path}/custom/gem/dir/bar@0.0.1.rbi")
+
+          check = ::RubyLsp::Tapioca::RunGemRbiCheck.new(@project.absolute_path, "custom/gem/dir")
+          check.run
+
+          refute_project_file_exist("custom/gem/dir/bar@0.0.1.rbi")
+          assert_project_file_exist("custom/gem/dir/foo@0.0.1.rbi")
+
+          @project.remove!("custom")
+        end
       end
     end
   end
