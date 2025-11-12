@@ -32,6 +32,18 @@ class Tapioca::SorbetHelperSpec < Minitest::Spec
         sorbet_supports?(:unknown_feature_name)
       end
     end
+
+    it "uses the default args if no environment variable is set" do
+      with_custom_sorbet_args(nil) do
+        assert_equal(sorbet_default_args, [])
+      end
+    end
+
+    it "uses the environment variable args if set" do
+      with_custom_sorbet_args("--parser=prism ") do
+        assert_equal(sorbet_default_args, ["--parser=prism"])
+      end
+    end
   end
 
   private
@@ -44,6 +56,17 @@ class Tapioca::SorbetHelperSpec < Minitest::Spec
       block.call(path)
     ensure
       ENV[SORBET_EXE_PATH_ENV_VAR] = sorbet_exe_env_value
+    end
+  end
+
+  #: (String? args) { (String? custom_args) -> void } -> void
+  def with_custom_sorbet_args(args, &block)
+    sorbet_args_env_value = ENV[SORBET_ARGS_ENV_VAR]
+    begin
+      ENV[SORBET_ARGS_ENV_VAR] = args
+      block.call(args)
+    ensure
+      ENV[SORBET_ARGS_ENV_VAR] = sorbet_args_env_value
     end
   end
 end

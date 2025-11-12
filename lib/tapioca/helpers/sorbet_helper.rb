@@ -11,6 +11,8 @@ module Tapioca
 
     SORBET_EXE_PATH_ENV_VAR = "TAPIOCA_SORBET_EXE"
 
+    SORBET_ARGS_ENV_VAR = "TAPIOCA_SORBET_ARGS"
+
     SORBET_PAYLOAD_URL = "https://github.com/sorbet/sorbet/tree/master/rbi"
 
     SPOOM_CONTEXT = Spoom::Context.new(".") #: Spoom::Context
@@ -21,7 +23,12 @@ module Tapioca
 
     #: (*String sorbet_args) -> Spoom::ExecResult
     def sorbet(*sorbet_args)
-      SPOOM_CONTEXT.srb(sorbet_args.join(" "), sorbet_bin: sorbet_path)
+      SPOOM_CONTEXT.srb((sorbet_default_args + sorbet_args).join(" "), sorbet_bin: sorbet_path)
+    end
+
+    #: -> Array[String]
+    def sorbet_default_args
+      ENV.fetch(SORBET_ARGS_ENV_VAR, "").split(" ")
     end
 
     #: -> String
