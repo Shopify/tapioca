@@ -22,6 +22,9 @@ jobs:
           rubygems: 3.6.2
       - name: Run type check
         run: bin/typecheck
+      - name: Run type check with Prism parser
+        run: bin/typecheck --parser=prism
+        continue-on-error: true
       - name: Lint Ruby files
         run: bin/style
       - name: Verify documentation
