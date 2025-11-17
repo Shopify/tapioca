@@ -26,7 +26,6 @@ Tapioca::Runtime::Trackers::Autoload.eager_load_all!
 require "tapioca/rbs/rewriter"
 # ^ Do not change the order of these requires
 
-require "benchmark"
 require "bundler"
 require "erb"
 require "etc"
