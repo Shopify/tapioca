@@ -58,7 +58,7 @@ module Tapioca
         @errors = [] #: Array[String]
       end
 
-      #: [T] { (T::Module[top] constant, RBI::File rbi) -> T } -> Array[T]
+      #: [R] { (T::Module[top] constant, RBI::File rbi) -> R } -> Array[R]
       def run(&blk)
         constants_to_process = gather_constants(requested_constants, requested_paths, skipped_constants)
           .select { |c| Module === c } # Filter value constants out
