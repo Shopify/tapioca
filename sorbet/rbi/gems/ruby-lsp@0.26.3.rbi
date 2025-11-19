@@ -1009,11 +1009,11 @@ class RubyIndexer::Index
   sig { params(entry: ::RubyIndexer::Entry, skip_prefix_tree: T::Boolean).void }
   def add(entry, skip_prefix_tree: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#630
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#634
   sig { params(name: ::String, owner_name: ::String).returns(T::Array[::RubyIndexer::Entry::ClassVariable]) }
   def class_variable_completion_candidates(name, owner_name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#679
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#683
   sig { void }
   def clear_ancestors; end
 
@@ -1021,7 +1021,7 @@ class RubyIndexer::Index
   sig { returns(::RubyIndexer::Configuration) }
   def configuration; end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#266
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#270
   sig do
     params(
       name: ::String,
@@ -1034,11 +1034,11 @@ class RubyIndexer::Index
   sig { params(uri: ::URI::Generic, skip_require_paths_tree: T::Boolean).void }
   def delete(uri, skip_require_paths_tree: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#684
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#688
   sig { returns(T::Boolean) }
   def empty?; end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#727
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#731
   sig do
     type_parameters(:T)
       .params(
@@ -1048,7 +1048,7 @@ class RubyIndexer::Index
   end
   def entries_for(uri, type = T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#704
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#708
   sig { params(name: ::String).returns(::RubyIndexer::Entry::SingletonClass) }
   def existing_or_new_singleton_class(name); end
 
@@ -1074,22 +1074,27 @@ class RubyIndexer::Index
   # `Something::Else`, then we first discover `Something::Else::Baz`. But `Something::Else::Baz` might contain other
   # aliases, so we have to invoke `follow_aliased_namespace` again to check until we only return a real name
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#420
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#424
   sig { params(name: ::String, seen_names: T::Array[::String]).returns(::String) }
   def follow_aliased_namespace(name, seen_names = T.unsafe(nil)); end
 
   # Fuzzy searches index entries based on Jaro-Winkler similarity. If no query is provided, all entries are returned
   #
   # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#199
-  sig { params(query: T.nilable(::String)).returns(T::Array[::RubyIndexer::Entry]) }
-  def fuzzy_search(query); end
+  sig do
+    params(
+      query: T.nilable(::String),
+      condition: T.nilable(T.proc.params(arg0: ::RubyIndexer::Entry).returns(T.nilable(T::Boolean)))
+    ).returns(T::Array[::RubyIndexer::Entry])
+  end
+  def fuzzy_search(query, &condition); end
 
   # Synchronizes a change made to the given URI. This method will ensure that new declarations are indexed, removed
   # declarations removed and that the ancestor linearization cache is cleared if necessary. If a block is passed, the
   # consumer of this API has to handle deleting and inserting/updating entries in the index instead of passing the
   # document's source (used to handle unsaved changes to files)
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#646
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#650
   sig do
     params(
       uri: ::URI::Generic,
@@ -1103,7 +1108,7 @@ class RubyIndexer::Index
   # indexing progress. That block is invoked with the current progress percentage and should return `true` to continue
   # indexing or `false` to stop indexing.
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#353
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#357
   sig do
     params(
       uris: T::Array[::URI::Generic],
@@ -1114,15 +1119,15 @@ class RubyIndexer::Index
 
   # Indexes a File URI by reading the contents from disk
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#401
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#405
   sig { params(uri: ::URI::Generic, collect_comments: T::Boolean).void }
   def index_file(uri, collect_comments: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#379
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#383
   sig { params(uri: ::URI::Generic, source: ::String, collect_comments: T::Boolean).void }
   def index_single(uri, source, collect_comments: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#694
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#698
   sig { params(name: ::String).returns(T::Boolean) }
   def indexed?(name); end
 
@@ -1133,7 +1138,7 @@ class RubyIndexer::Index
   # Returns a list of possible candidates for completion of instance variables for a given owner name. The name must
   # include the `@` prefix
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#600
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#604
   sig do
     params(
       name: ::String,
@@ -1142,7 +1147,7 @@ class RubyIndexer::Index
   end
   def instance_variable_completion_candidates(name, owner_name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#699
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#703
   sig { returns(::Integer) }
   def length; end
 
@@ -1157,11 +1162,11 @@ class RubyIndexer::Index
   #
   # @raise [NonExistingNamespaceError]
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#497
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#501
   sig { params(fully_qualified_name: ::String).returns(T::Array[::String]) }
   def linearized_ancestors_of(fully_qualified_name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#223
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#227
   sig do
     params(
       name: T.nilable(::String),
@@ -1170,7 +1175,7 @@ class RubyIndexer::Index
   end
   def method_completion_candidates(name, receiver_name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#689
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#693
   sig { returns(T::Array[::String]) }
   def names; end
 
@@ -1216,7 +1221,7 @@ class RubyIndexer::Index
   # seen_names: this parameter should not be used by consumers of the api. It is used to avoid infinite recursion when
   # resolving circular references
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#317
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#321
   sig do
     params(
       name: ::String,
@@ -1226,7 +1231,7 @@ class RubyIndexer::Index
   end
   def resolve(name, nesting, seen_names = T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#587
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#591
   sig do
     params(
       variable_name: ::String,
@@ -1238,7 +1243,7 @@ class RubyIndexer::Index
   # Resolves an instance variable name for a given owner name. This method will linearize the ancestors of the owner
   # and find inherited instance variables as well
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#576
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#580
   sig do
     params(
       variable_name: ::String,
@@ -1251,7 +1256,7 @@ class RubyIndexer::Index
   # as it is used only internally to prevent infinite loops when resolving circular aliases
   # Returns `nil` if the method does not exist on that receiver
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#459
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#463
   sig do
     params(
       method_name: ::String,
@@ -1273,13 +1278,13 @@ class RubyIndexer::Index
   # with `A::B::A::B::Foo`. This method will remove any redundant parts from the final name based on the reference and
   # the nesting
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1012
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1016
   sig { params(name: ::String, nesting: T::Array[::String]).returns(::String) }
   def build_non_redundant_full_name(name, nesting); end
 
   # Tries to return direct entry from index then non seen canonicalized alias or nil
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1034
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1038
   sig do
     params(
       full_name: ::String,
@@ -1288,7 +1293,7 @@ class RubyIndexer::Index
   end
   def direct_or_aliased_constant(full_name, seen_names); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#970
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#974
   sig do
     params(
       name: T.nilable(::String),
@@ -1300,7 +1305,7 @@ class RubyIndexer::Index
   # Linearize mixins for an array of namespace entries. This method will mutate the `ancestors` array with the
   # linearized ancestors of the mixins
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#783
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#787
   sig do
     params(
       ancestors: T::Array[::String],
@@ -1313,7 +1318,7 @@ class RubyIndexer::Index
   # Linearize the superclass of a given namespace (including modules with the implicit `Module` superclass). This
   # method will mutate the `ancestors` array with the linearized ancestors of the superclass
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#825
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#829
   sig do
     params(
       ancestors: T::Array[::String],
@@ -1329,11 +1334,11 @@ class RubyIndexer::Index
   # Always returns the linearized ancestors for the attached class, regardless of whether `name` refers to a singleton
   # or attached namespace
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#739
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#743
   sig { params(name: ::String).returns(T::Array[::String]) }
   def linearized_attached_ancestors(name); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#948
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#952
   sig do
     params(
       name: ::String,
@@ -1343,7 +1348,7 @@ class RubyIndexer::Index
   end
   def lookup_ancestor_chain(name, nesting, seen_names); end
 
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#928
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#932
   sig do
     params(
       name: ::String,
@@ -1356,7 +1361,7 @@ class RubyIndexer::Index
   # Attempts to resolve an UnresolvedAlias into a resolved Alias. If the unresolved alias is pointing to a constant
   # that doesn't exist, then we return the same UnresolvedAlias
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#901
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#905
   sig do
     params(
       entry: ::RubyIndexer::Entry::UnresolvedConstantAlias,
@@ -1368,7 +1373,7 @@ class RubyIndexer::Index
   # Attempt to resolve a given unresolved method alias. This method returns the resolved alias if we managed to
   # identify the target or the same unresolved alias entry if we couldn't
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1052
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#1056
   sig do
     params(
       entry: ::RubyIndexer::Entry::UnresolvedMethodAlias,
@@ -1380,7 +1385,7 @@ class RubyIndexer::Index
 
   # Runs the registered included hooks
   #
-  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#753
+  # source://ruby-lsp//lib/ruby_indexer/lib/ruby_indexer/index.rb#757
   sig { params(fully_qualified_name: ::String, nesting: T::Array[::String]).void }
   def run_included_hooks(fully_qualified_name, nesting); end
 
@@ -2250,19 +2255,23 @@ class RubyLsp::BaseServer
   sig { params(id: ::Integer, message: ::String, type: ::Integer).void }
   def fail_request_and_notify(id, message, type: T.unsafe(nil)); end
 
+  # source://ruby-lsp//lib/ruby_lsp/base_server.rb#166
+  sig { params(message: T::Hash[::Symbol, T.untyped]).void }
+  def handle_incoming_message(message); end
+
   # source://ruby-lsp//lib/ruby_lsp/base_server.rb#157
   sig { returns(::Thread) }
   def new_worker; end
 
-  # source://ruby-lsp//lib/ruby_lsp/base_server.rb#188
+  # source://ruby-lsp//lib/ruby_lsp/base_server.rb#197
   sig { params(id: ::Integer).void }
   def send_empty_response(id); end
 
-  # source://ruby-lsp//lib/ruby_lsp/base_server.rb#193
+  # source://ruby-lsp//lib/ruby_lsp/base_server.rb#202
   sig { params(message: ::String, type: ::Integer).void }
   def send_log_message(message, type: T.unsafe(nil)); end
 
-  # source://ruby-lsp//lib/ruby_lsp/base_server.rb#177
+  # source://ruby-lsp//lib/ruby_lsp/base_server.rb#186
   sig { params(message: T.any(::RubyLsp::Error, ::RubyLsp::Notification, ::RubyLsp::Request, ::RubyLsp::Result)).void }
   def send_message(message); end
 
@@ -3552,11 +3561,11 @@ RubyLsp::Listeners::DocumentHighlight::INSTANCE_VARIABLE_NODES = T.let(T.unsafe(
 # source://ruby-lsp//lib/ruby_lsp/listeners/document_highlight.rb#54
 RubyLsp::Listeners::DocumentHighlight::LOCAL_NODES = T.let(T.unsafe(nil), Array)
 
-# source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#8
+# source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#9
 class RubyLsp::Listeners::DocumentLink
   include ::RubyLsp::Requests::Support::Common
 
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#52
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#53
   sig do
     params(
       response_builder: RubyLsp::ResponseBuilders::CollectionResponseBuilder[::LanguageServer::Protocol::Interface::DocumentLink],
@@ -3567,49 +3576,57 @@ class RubyLsp::Listeners::DocumentLink
   end
   def initialize(response_builder, uri, comments, dispatcher); end
 
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#79
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#80
   sig { params(node: ::Prism::ClassNode).void }
   def on_class_node_enter(node); end
 
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#94
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#95
   sig { params(node: ::Prism::ConstantPathWriteNode).void }
   def on_constant_path_write_node_enter(node); end
 
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#89
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#90
   sig { params(node: ::Prism::ConstantWriteNode).void }
   def on_constant_write_node_enter(node); end
 
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#74
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#75
   sig { params(node: ::Prism::DefNode).void }
   def on_def_node_enter(node); end
 
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#84
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#85
   sig { params(node: ::Prism::ModuleNode).void }
   def on_module_node_enter(node); end
 
   private
 
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#101
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#102
   sig { params(node: ::Prism::Node).void }
   def extract_document_link(node); end
+
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#127
+  sig { params(uri_string: ::String).returns(T.nilable([::String, ::String])) }
+  def parse_package_url(uri_string); end
+
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#149
+  sig { params(uri_string: ::String).returns(T.nilable([::String, ::String])) }
+  def parse_source_uri(uri_string); end
 
   # Try to figure out the gem version for a source:// link. The order of precedence is:
   # 1. The version in the URI
   # 2. The version in the RBI file name
   # 3. The version from the gemspec
   #
-  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#141
-  sig { params(uri: ::URI::Source).returns(T.nilable(::String)) }
-  def resolve_version(uri); end
+  # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#177
+  sig { params(version: T.nilable(::String), gem_name: T.nilable(::String)).returns(T.nilable(::String)) }
+  def resolve_version(version, gem_name); end
 
   class << self
-    # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#17
+    # source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#18
     sig { returns(T::Hash[::String, T::Hash[::String, T::Hash[::String, ::String]]]) }
     def gem_paths; end
   end
 end
 
-# source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#11
+# source://ruby-lsp//lib/ruby_lsp/listeners/document_link.rb#12
 RubyLsp::Listeners::DocumentLink::GEM_TO_VERSION_MAP = T.let(T.unsafe(nil), Hash)
 
 # source://ruby-lsp//lib/ruby_lsp/listeners/document_symbol.rb#6
@@ -4698,6 +4715,106 @@ class RubyLsp::Notification < ::RubyLsp::Message
     def window_show_message(message, type: T.unsafe(nil)); end
   end
 end
+
+# source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#47
+class RubyLsp::PackageURL
+  # Constructs a package URL from its components
+  #
+  # @param name [String] The name of the package.
+  # @param namespace [String] A name prefix, specific to the type of package.
+  # @param qualifiers [Hash] Extra qualifying data for a package, specific to the type of package.
+  # @param subpath [String] An extra subpath within a package, relative to the package root.
+  # @param type [String] The package type or protocol.
+  # @param version [String] The version of the package.
+  # @raise [ArgumentError]
+  # @return [PackageURL] a new instance of PackageURL
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#84
+  def initialize(type:, name:, namespace: T.unsafe(nil), version: T.unsafe(nil), qualifiers: T.unsafe(nil), subpath: T.unsafe(nil)); end
+
+  # Returns an array containing the
+  # scheme, type, namespace, name, version, qualifiers, and subpath components
+  # of the package URL.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#403
+  def deconstruct; end
+
+  # Returns a hash containing the
+  # scheme, type, namespace, name, version, qualifiers, and subpath components
+  # of the package URL.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#410
+  def deconstruct_keys(_keys); end
+
+  # The name of the package.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#65
+  def name; end
+
+  # A name prefix, specific to the type of package.
+  # For example, an npm scope, a Docker image owner, or a GitHub user.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#62
+  def namespace; end
+
+  # Extra qualifying data for a package, specific to the type of package.
+  # For example, the operating system or architecture.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#72
+  def qualifiers; end
+
+  # The URL scheme, which has a constant value of `"pkg"`.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#53
+  def scheme; end
+
+  # An extra subpath within a package, relative to the package root.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#75
+  def subpath; end
+
+  # Returns a hash containing the
+  # scheme, type, namespace, name, version, qualifiers, and subpath components
+  # of the package URL.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#258
+  def to_h; end
+
+  # Returns a string representation of the package URL.
+  # Package URL representations are created according to the instructions from
+  # https://github.com/package-url/purl-spec/blob/0b1559f76b79829e789c4f20e6d832c7314762c5/PURL-SPECIFICATION.rst#how-to-build-purl-string-from-its-components.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#273
+  def to_s; end
+
+  # The package type or protocol, such as `"gem"`, `"npm"`, and `"github"`.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#58
+  def type; end
+
+  # The version of the package.
+  #
+  # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#68
+  def version; end
+
+  class << self
+    # Creates a new PackageURL from a string.
+    #
+    # @param string [String] The package URL string.
+    # @raise [InvalidPackageURL] If the string is not a valid package URL.
+    # @return [PackageURL]
+    #
+    # source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#100
+    def parse(string); end
+  end
+end
+
+# Raised when attempting to parse an invalid package URL string.
+#
+# @see #parse
+#
+# source://ruby-lsp//lib/ruby_lsp/requests/support/package_url.rb#50
+class RubyLsp::PackageURL::InvalidPackageURL < ::ArgumentError; end
 
 # source://ruby-lsp//lib/ruby_lsp/rbs_document.rb#5
 class RubyLsp::RBSDocument < ::RubyLsp::Document
@@ -6215,6 +6332,12 @@ class RubyLsp::Requests::WorkspaceSymbol < ::RubyLsp::Requests::Request
   # source://ruby-lsp//lib/ruby_lsp/requests/workspace_symbol.rb#22
   sig { override.returns(T::Array[::LanguageServer::Protocol::Interface::WorkspaceSymbol]) }
   def perform; end
+
+  private
+
+  # source://ruby-lsp//lib/ruby_lsp/requests/workspace_symbol.rb#50
+  sig { returns(T::Array[::RubyIndexer::Entry]) }
+  def fuzzy_search; end
 end
 
 # source://ruby-lsp//lib/ruby_lsp/response_builders/response_builder.rb#5
