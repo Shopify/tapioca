@@ -37,7 +37,7 @@ module Tapioca
 
         #: -> Set[T::Module[top]]
         def processable_constants
-          @processable_constants ||= T::Set[Module].new.compare_by_identity.merge(gather_constants) #: Set[T::Module[top]]?
+          @processable_constants ||= T::Set[T::Module[T.anything]].new.compare_by_identity.merge(gather_constants) #: Set[T::Module[top]]?
         end
 
         #: (Array[T::Module[top]] constants) -> void

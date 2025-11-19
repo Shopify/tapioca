@@ -162,7 +162,7 @@ module Tapioca
           .group_by { |c| Runtime::Reflection.name_of(c) }
           .select { |name, _| !name.nil? }
 
-        constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[Module]])
+        constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[T::Module[T.anything]]])
 
         # Find the constants that have been reloaded
         reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys

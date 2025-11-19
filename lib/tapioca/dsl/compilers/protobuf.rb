@@ -168,7 +168,7 @@ module Tapioca
             else
               T.cast(
                 ObjectSpace.each_object(marker).to_a,
-                T::Array[Module],
+                T::Array[T::Module[T.anything]],
               )
             end
 
