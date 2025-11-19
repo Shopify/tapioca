@@ -310,7 +310,7 @@ module Tapioca
             klass = Class.new(ActiveModel::Type::Value) do
               extend T::Sig
 
-              #: -> Module
+              #: -> T::Module[top]
               def __tapioca_type = String
             end
 

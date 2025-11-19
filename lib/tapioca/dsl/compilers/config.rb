@@ -40,7 +40,7 @@ module Tapioca
       #   def github=(value); end
       # end
       # ```
-      #: [ConstantType = Module]
+      #: [ConstantType = T::Module[top]]
       class Config < Compiler
         extend T::Sig
 
@@ -96,7 +96,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[Module]
+          #: -> T::Enumerable[T::Module[top]]
           def gather_constants
             name = ::Config.const_name
             return [] unless Object.const_defined?(name)
