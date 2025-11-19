@@ -46,7 +46,7 @@ module Tapioca
       # @override
       #: -> T::Module[top]
       def constant
-        T.cast(@constant, Module)
+        T.cast(@constant, T::Module[T.anything])
       end
 
       #: (String symbol, T::Module[top] constant) -> void

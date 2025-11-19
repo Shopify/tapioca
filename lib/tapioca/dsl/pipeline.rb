@@ -178,7 +178,7 @@ module Tapioca
         # set of constants that are actually in memory with those names.
         filtered_constants = constants_by_name
           .keys
-          .map { |name| T.cast(Runtime::Reflection.constantize(name), Module) }
+          .map { |name| T.cast(Runtime::Reflection.constantize(name), T::Module[T.anything]) }
           .select { |mod| Runtime::Reflection.constant_defined?(mod) }
 
         Set.new.compare_by_identity.merge(filtered_constants)

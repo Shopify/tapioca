@@ -92,7 +92,7 @@ module Tapioca
           self.class.dependencies_of(concern)
         end
 
-        #: (?Module concern) -> Array[T::Module[top]]
+        #: (?T::Module[top] concern) -> Array[T::Module[top]]
         def linearized_dependencies(concern = constant)
           # Grab all the dependencies of the concern
           dependencies = dependencies_of(concern)
