@@ -162,7 +162,7 @@ module Tapioca
         filenames.to_set
       end
 
-      #: (Array[String] constant_names, ?ignore_missing: bool) -> Array[Module]
+      #: (Array[String] constant_names, ?ignore_missing: bool) -> Array[T::Module[top]]
       def constantize(constant_names, ignore_missing: false)
         constant_map = constant_names.to_h do |name|
           [name, Object.const_get(name)]

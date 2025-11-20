@@ -87,7 +87,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[Module]
+          #: -> T::Enumerable[T::Module[top]]
           def gather_constants
             all_classes.select { |c| Sidekiq::Worker > c }
           end

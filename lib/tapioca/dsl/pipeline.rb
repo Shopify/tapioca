@@ -9,13 +9,13 @@ module Tapioca
       #: T::Enumerable[singleton(Compiler)]
       attr_reader :active_compilers
 
-      #: Array[Module]
+      #: Array[T::Module[top]]
       attr_reader :requested_constants
 
       #: Array[Pathname]
       attr_reader :requested_paths
 
-      #: Array[Module]
+      #: Array[T::Module[top]]
       attr_reader :skipped_constants
 
       #: ^(String error) -> void
@@ -25,12 +25,12 @@ module Tapioca
       attr_reader :errors
 
       #: (
-      #|   requested_constants: Array[Module],
+      #|   requested_constants: Array[T::Module[top]],
       #|   ?requested_paths: Array[Pathname],
       #|   ?requested_compilers: Array[singleton(Compiler)],
       #|   ?excluded_compilers: Array[singleton(Compiler)],
       #|   ?error_handler: ^(String error) -> void,
-      #|   ?skipped_constants: Array[Module],
+      #|   ?skipped_constants: Array[T::Module[top]],
       #|   ?number_of_workers: Integer?,
       #|   ?compiler_options: Hash[String, untyped],
       #|   ?lsp_addon: bool
@@ -58,7 +58,7 @@ module Tapioca
         @errors = [] #: Array[String]
       end
 
-      #: [T] { (Module constant, RBI::File rbi) -> T } -> Array[T]
+      #: [R] { (T::Module[top] constant, RBI::File rbi) -> R } -> Array[R]
       def run(&blk)
         constants_to_process = gather_constants(requested_constants, requested_paths, skipped_constants)
           .select { |c| Module === c } # Filter value constants out
@@ -130,10 +130,10 @@ module Tapioca
       end
 
       #: (
-      #|   Array[Module] requested_constants,
+      #|   Array[T::Module[top]] requested_constants,
       #|   Array[Pathname] requested_paths,
-      #|   Array[Module] skipped_constants
-      #| ) -> Set[Module]
+      #|   Array[T::Module[top]] skipped_constants
+      #| ) -> Set[T::Module[top]]
       def gather_constants(requested_constants, requested_paths, skipped_constants)
         Compiler.requested_constants = requested_constants
         constants = Set.new.compare_by_identity
@@ -155,14 +155,14 @@ module Tapioca
         constants
       end
 
-      #: (Set[Module] constants) -> Set[Module]
+      #: (Set[T::Module[top]] constants) -> Set[T::Module[top]]
       def filter_anonymous_and_reloaded_constants(constants)
         # Group constants by their names
         constants_by_name = constants
           .group_by { |c| Runtime::Reflection.name_of(c) }
           .select { |name, _| !name.nil? }
 
-        constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[Module]])
+        constants_by_name = T.cast(constants_by_name, T::Hash[String, T::Array[T::Module[T.anything]]])
 
         # Find the constants that have been reloaded
         reloaded_constants = constants_by_name.select { |_, constants| constants.size > 1 }.keys
@@ -178,13 +178,13 @@ module Tapioca
         # set of constants that are actually in memory with those names.
         filtered_constants = constants_by_name
           .keys
-          .map { |name| T.cast(Runtime::Reflection.constantize(name), Module) }
+          .map { |name| T.cast(Runtime::Reflection.constantize(name), T::Module[T.anything]) }
           .select { |mod| Runtime::Reflection.constant_defined?(mod) }
 
         Set.new.compare_by_identity.merge(filtered_constants)
       end
 
-      #: (Module constant) -> RBI::File?
+      #: (T::Module[top] constant) -> RBI::File?
       def rbi_for_constant(constant)
         file = RBI::File.new(strictness: "true")
 

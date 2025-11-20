@@ -54,7 +54,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[Module]
+          #: -> T::Enumerable[T::Module[top]]
           def gather_constants
             descendants_of(::ActionMailer::Base).reject(&:abstract?)
           end

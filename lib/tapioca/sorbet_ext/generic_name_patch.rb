@@ -135,7 +135,7 @@ module Tapioca
     #: Type
     attr_reader :type
 
-    #: (Module context, Type type, Symbol variance, (^-> Hash[Symbol, untyped])? bounds_proc) -> void
+    #: (T::Module[top] context, Type type, Symbol variance, (^-> Hash[Symbol, untyped])? bounds_proc) -> void
     def initialize(context, type, variance, bounds_proc)
       @context = context
       @type = type
