@@ -93,7 +93,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[T::Module[top]]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             # In some versions of Rails 8.1, `ActiveModel::SecurePassword` uses `Numeric#minutes`
             # which isn't explicitly required in the gem, and it might not be loaded already.
