@@ -166,7 +166,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[T::Module[top]]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             descendants_of(::ActiveRecord::Base).reject(&:abstract_class?)
           end

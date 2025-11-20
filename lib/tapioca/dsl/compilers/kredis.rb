@@ -88,7 +88,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[T::Module[top]]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             all_classes
               .grep(::Kredis::Attributes::ClassMethods)
