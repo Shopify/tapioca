@@ -71,8 +71,12 @@ module Tapioca
       materialized_dependencies = resolve.materialize(deps)
 
       if Bundler::VERSION >= "2.6.0"
+        missing_spec_names = resolve.missing_specs.map(&:name).to_set
         missing_specs = resolve.missing_specs.map do |spec|
           "#{spec.name} (#{spec.version})"
+        end
+        materialized_dependencies = materialized_dependencies.to_a.reject do |spec|
+          missing_spec_names.include?(spec.name)
         end
       else
         missing_spec_names = materialized_dependencies.missing_specs.map(&:name).to_set
