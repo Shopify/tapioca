@@ -69,26 +69,16 @@ module Tapioca
       deps = definition.locked_gems.dependencies.except(*@excluded_gems).values
       resolve = definition.resolve
       materialized_dependencies = resolve.materialize(deps)
+      missing_specs = Bundler::VERSION >= "2.6.0" ? resolve.missing_specs : materialized_dependencies.missing_specs
 
-      if Bundler::VERSION >= "2.6.0"
-        missing_spec_names = resolve.missing_specs.map(&:name).to_set
-        missing_specs = resolve.missing_specs.map do |spec|
-          "#{spec.name} (#{spec.version})"
-        end
-        materialized_dependencies = materialized_dependencies.to_a.reject do |spec|
-          missing_spec_names.include?(spec.name)
-        end
-      else
-        missing_spec_names = materialized_dependencies.missing_specs.map(&:name).to_set
-        missing_specs = materialized_dependencies.missing_specs.map do |spec|
-          "#{spec.name} (#{spec.version})"
-        end
-        materialized_dependencies = materialized_dependencies.to_a.reject do |spec|
-          missing_spec_names.include?(spec.name)
-        end
+      missing_spec_names = missing_specs.map(&:name).to_set
+      materialized_dependencies = materialized_dependencies.to_a.reject do |spec|
+        missing_spec_names.include?(spec.name)
       end
 
-      [materialized_dependencies, missing_specs]
+      missing_spec_strings = missing_specs.map { |spec| "#{spec.name} (#{spec.version})" }
+
+      [materialized_dependencies, missing_spec_strings]
     end
 
     #: -> Bundler::Runtime
