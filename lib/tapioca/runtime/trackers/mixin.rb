@@ -27,7 +27,7 @@ module Tapioca
             with_disabled_tracker(&block)
           end
 
-          #: (T::Module[top] constant, T::Module[top] mixin, Type mixin_type) -> void
+          #: (Module[top] constant, Module[top] mixin, Type mixin_type) -> void
           def register(constant, mixin, mixin_type)
             return unless enabled?
 
@@ -49,19 +49,19 @@ module Tapioca
             attached_class
           end
 
-          #: (T::Module[top] mixin) -> Hash[Type, Hash[T::Module[top], String]]
+          #: (Module[top] mixin) -> Hash[Type, Hash[Module[top], String]]
           def constants_with_mixin(mixin)
             find_or_initialize_mixin_lookup(mixin)
           end
 
-          #: (T::Module[top] mixin, Type mixin_type, T::Module[top] constant) -> String?
+          #: (Module[top] mixin, Type mixin_type, Module[top] constant) -> String?
           def mixin_location(mixin, mixin_type, constant)
             find_or_initialize_mixin_lookup(mixin).dig(mixin_type, constant)
           end
 
           private
 
-          #: (T::Module[top] constant, T::Module[top] mixin, Type mixin_type, String location) -> void
+          #: (Module[top] constant, Module[top] mixin, Type mixin_type, String location) -> void
           def register_with_location(constant, mixin, mixin_type, location)
             return unless @enabled
 
@@ -69,7 +69,7 @@ module Tapioca
             constants.fetch(mixin_type).store(constant, location)
           end
 
-          #: (T::Module[top] mixin) -> Hash[Type, Hash[T::Module[top], String]]
+          #: (Module[top] mixin) -> Hash[Type, Hash[Module[top], String]]
           def find_or_initialize_mixin_lookup(mixin)
             @mixins_to_constants[mixin] ||= {
               Type::Prepend => {}.compare_by_identity,

@@ -32,7 +32,7 @@ module Tapioca
           add_mixins(node, constant, extends.reverse, Runtime::Trackers::Mixin::Type::Extend)
         end
 
-        #: (RBI::Tree tree, T::Module[top] constant, Array[T::Module[top]] mods, Runtime::Trackers::Mixin::Type mixin_type) -> void
+        #: (RBI::Tree tree, Module[top] constant, Array[Module[top]] mods, Runtime::Trackers::Mixin::Type mixin_type) -> void
         def add_mixins(tree, constant, mods, mixin_type)
           mods
             .select do |mod|
@@ -59,7 +59,7 @@ module Tapioca
             end
         end
 
-        #: (T::Module[top] constant, T::Module[top] mixin, Runtime::Trackers::Mixin::Type mixin_type) -> bool
+        #: (Module[top] constant, Module[top] mixin, Runtime::Trackers::Mixin::Type mixin_type) -> bool
         def mixed_in_by_gem?(constant, mixin, mixin_type)
           mixin_location = Runtime::Trackers::Mixin.mixin_location(mixin, mixin_type, constant)
 
@@ -75,7 +75,7 @@ module Tapioca
           mixin_name.start_with?("T::") && !mixin_name.start_with?("T::Props")
         end
 
-        #: (T::Module[top] constant) -> Array[T::Module[top]]
+        #: (Module[top] constant) -> Array[Module[top]]
         def interesting_ancestors_of(constant)
           inherited_ancestors = Set.new.compare_by_identity.merge(inherited_ancestors_of(constant))
 

@@ -30,7 +30,7 @@ module Tapioca
       @entries.add(gem_name)
     end
 
-    #: -> T::Enumerable[String]
+    #: -> Enumerable[String]
     def gems
       @entries.sort
     end

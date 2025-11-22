@@ -27,9 +27,9 @@ module Tapioca
         #: (
         #|   RBI::Tree tree,
         #|   String module_name,
-        #|   T::Module[top] mod,
+        #|   Module[top] mod,
         #|   ?Array[Symbol] for_visibility,
-        #|   ?attached_class: T::Module[top]?
+        #|   ?attached_class: Module[top]?
         #| ) -> void
         def compile_directly_owned_methods(
           tree,
@@ -61,7 +61,7 @@ module Tapioca
         #: (
         #|   RBI::Tree tree,
         #|   String symbol_name,
-        #|   T::Module[top] constant,
+        #|   Module[top] constant,
         #|   UnboundMethod? method,
         #|   ?RBI::Visibility visibility
         #| ) -> void
@@ -171,7 +171,7 @@ module Tapioca
         # This method implements a better way of checking whether a constant defines a method.
         # It walks up the ancestor tree via the `super_method` method; if any of the super
         # methods are owned by the constant, it means that the constant declares the method.
-        #: (UnboundMethod method, T::Module[top] constant) -> bool
+        #: (UnboundMethod method, Module[top] constant) -> bool
         def method_owned_by_constant?(method, constant)
           # Widen the type of `method` to be nilable
           method = method #: UnboundMethod?
@@ -185,7 +185,7 @@ module Tapioca
           false
         end
 
-        #: (T::Module[top] mod) -> Hash[Symbol, Array[Symbol]]
+        #: (Module[top] mod) -> Hash[Symbol, Array[Symbol]]
         def method_names_by_visibility(mod)
           {
             public: public_instance_methods_of(mod),
@@ -194,7 +194,7 @@ module Tapioca
           }
         end
 
-        #: (T::Module[top] constant, String method_name) -> bool
+        #: (Module[top] constant, String method_name) -> bool
         def struct_method?(constant, method_name)
           return false unless T::Props::ClassMethods === constant
 
@@ -204,7 +204,7 @@ module Tapioca
             .include?(method_name.gsub(/=$/, "").to_sym)
         end
 
-        #: (T::Module[top]? attached_class, Symbol method_name) -> bool?
+        #: (Module[top]? attached_class, Symbol method_name) -> bool?
         def method_new_in_abstract_class?(attached_class, method_name)
           attached_class &&
             method_name == :new &&
@@ -212,7 +212,7 @@ module Tapioca
             Class === attached_class.singleton_class
         end
 
-        #: (T::Module[top] constant) -> UnboundMethod?
+        #: (Module[top] constant) -> UnboundMethod?
         def initialize_method_for(constant)
           constant.instance_method(:initialize)
         rescue
