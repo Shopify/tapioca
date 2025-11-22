@@ -156,7 +156,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             marker = Google::Protobuf::MessageExts::ClassMethods
 

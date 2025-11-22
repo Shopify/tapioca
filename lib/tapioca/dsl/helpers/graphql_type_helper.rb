@@ -112,7 +112,7 @@ module Tapioca
 
         private
 
-        #: (T::Module[top] constant) -> String
+        #: (Module[top] constant) -> String
         def type_for_constant(constant)
           if constant.instance_methods.include?(:prepare)
             prepare_method = constant.instance_method(:prepare)

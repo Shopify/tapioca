@@ -38,7 +38,7 @@ module Tapioca
       #   def photo=(attachable); end
       # end
       # ~~~
-      #: [ConstantType = (T::Module[top] & ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)]
+      #: [ConstantType = (Module[top] & ::ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods)]
       class ActiveStorage < Compiler
         extend T::Sig
 
@@ -68,7 +68,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             descendants_of(::ActiveRecord::Base)
               .reject(&:abstract_class?)

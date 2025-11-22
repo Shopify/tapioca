@@ -24,7 +24,7 @@ module Tapioca
           node << sclass if sclass.nodes.length > 1
         end
 
-        #: (RBI::Tree tree, T::Module[top] constant) -> void
+        #: (RBI::Tree tree, Module[top] constant) -> void
         def compile_type_variable_declarations(tree, constant)
           # Try to find the type variables defined on this constant, bail if we can't
           type_variables = Runtime::GenericTypeRegistry.lookup_type_variables(constant)

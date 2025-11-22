@@ -59,7 +59,7 @@ module Tapioca
       class IdentityCache < Compiler
         extend T::Sig
 
-        COLLECTION_TYPE = ->(type) { "T::Array[::#{type}]" } #: ^((T::Module[top] | String) type) -> String
+        COLLECTION_TYPE = ->(type) { "T::Array[::#{type}]" } #: ^((Module[top] | String) type) -> String
 
         # @override
         #: -> void
@@ -95,7 +95,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             descendants_of(::ActiveRecord::Base).select do |klass|
               ::IdentityCache::WithoutPrimaryIndex > klass

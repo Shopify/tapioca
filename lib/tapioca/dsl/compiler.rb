@@ -4,7 +4,7 @@
 module Tapioca
   module Dsl
     # @abstract
-    #: [ConstantType < T::Module[top]]
+    #: [ConstantType < Module[top]]
     class Compiler
       extend T::Sig
 
@@ -21,26 +21,26 @@ module Tapioca
       #: Hash[String, untyped]
       attr_reader :options
 
-      @@requested_constants = [] #: Array[T::Module[top]] # rubocop:disable Style/ClassVars
+      @@requested_constants = [] #: Array[Module[top]] # rubocop:disable Style/ClassVars
 
       class << self
         extend T::Sig
 
-        #: (T::Module[top] constant) -> bool
+        #: (Module[top] constant) -> bool
         def handles?(constant)
           processable_constants.include?(constant)
         end
 
         # @abstract
-        #: -> Enumerable[T::Module[top]]
+        #: -> Enumerable[Module[top]]
         def gather_constants = raise NotImplementedError, "Abstract method called"
 
-        #: -> Set[T::Module[top]]
+        #: -> Set[Module[top]]
         def processable_constants
-          @processable_constants ||= T::Set[T::Module[T.anything]].new.compare_by_identity.merge(gather_constants) #: Set[T::Module[top]]?
+          @processable_constants ||= T::Set[T::Module[T.anything]].new.compare_by_identity.merge(gather_constants) #: Set[Module[top]]?
         end
 
-        #: (Array[T::Module[top]] constants) -> void
+        #: (Array[Module[top]] constants) -> void
         def requested_constants=(constants)
           @@requested_constants = constants # rubocop:disable Style/ClassVars
         end
@@ -73,13 +73,13 @@ module Tapioca
           @all_classes ||= all_modules.grep(Class).freeze #: Enumerable[Class[top]]?
         end
 
-        #: -> Enumerable[T::Module[top]]
+        #: -> Enumerable[Module[top]]
         def all_modules
           @all_modules ||= if @@requested_constants.any?
             @@requested_constants.grep(Module)
           else
             ObjectSpace.each_object(Module).to_a
-          end.freeze #: Enumerable[T::Module[top]]?
+          end.freeze #: Enumerable[Module[top]]?
         end
       end
 

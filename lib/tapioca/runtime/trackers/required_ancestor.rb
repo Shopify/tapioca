@@ -19,12 +19,12 @@ module Tapioca
             ancestors << block
           end
 
-          #: (T::Module[top] mod) -> Array[^-> void]
+          #: (Module[top] mod) -> Array[^-> void]
           def required_ancestors_blocks_by(mod)
             @required_ancestors_map[mod] || []
           end
 
-          #: (T::Module[top] mod) -> Array[untyped]
+          #: (Module[top] mod) -> Array[untyped]
           def required_ancestors_by(mod)
             blocks = required_ancestors_blocks_by(mod)
             blocks.map do |block|

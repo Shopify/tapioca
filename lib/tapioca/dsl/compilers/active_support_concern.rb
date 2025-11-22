@@ -37,7 +37,7 @@ module Tapioca
       #   mixes_in_class_methods(::Foo::ClassMethods)
       # end
       # ~~~
-      #: [ConstantType = T::Module[top]]
+      #: [ConstantType = Module[top]]
       class ActiveSupportConcern < Compiler
         extend T::Sig
 
@@ -65,7 +65,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             all_modules.select do |mod|
               name_of(mod) && # i.e. not anonymous
@@ -76,10 +76,10 @@ module Tapioca
           end
 
           # Returns true when `mod` includes other concerns
-          #: (T::Module[top] mod) -> bool
+          #: (Module[top] mod) -> bool
           def has_dependencies?(mod) = dependencies_of(mod).any?
 
-          #: (T::Module[top] concern) -> Array[T::Module[top]]
+          #: (Module[top] concern) -> Array[Module[top]]
           def dependencies_of(concern)
             concern.instance_variable_get(:@_dependencies) || []
           end
@@ -87,12 +87,12 @@ module Tapioca
 
         private
 
-        #: (T::Module[top] concern) -> Array[T::Module[top]]
+        #: (Module[top] concern) -> Array[Module[top]]
         def dependencies_of(concern)
           self.class.dependencies_of(concern)
         end
 
-        #: (?T::Module[top] concern) -> Array[T::Module[top]]
+        #: (?Module[top] concern) -> Array[Module[top]]
         def linearized_dependencies(concern = constant)
           # Grab all the dependencies of the concern
           dependencies = dependencies_of(concern)

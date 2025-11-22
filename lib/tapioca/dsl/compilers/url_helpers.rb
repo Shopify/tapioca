@@ -78,7 +78,7 @@ module Tapioca
       #   include GeneratedUrlHelpersModule
       # end
       # ~~~
-      #: [ConstantType = T::Module[top]]
+      #: [ConstantType = Module[top]]
       class UrlHelpers < Compiler
         extend T::Sig
 
@@ -99,7 +99,7 @@ module Tapioca
         class << self
           extend T::Sig
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
@@ -131,7 +131,7 @@ module Tapioca
             constants.concat(NON_DISCOVERABLE_INCLUDERS).push(GeneratedUrlHelpersModule, GeneratedPathHelpersModule)
           end
 
-          #: -> Array[T::Module[top]]
+          #: -> Array[Module[top]]
           def gather_non_discoverable_includers
             [].tap do |includers|
               if defined?(ActionController::TemplateAssertions) && defined?(ActionDispatch::IntegrationTest)
@@ -146,7 +146,7 @@ module Tapioca
 
           # Returns `true` if `mod` "directly" includes `helper`.
           # For classes, this method will return false if the `helper` is included only by a superclass
-          #: (T::Module[top] mod, T::Module[top] helper) -> bool
+          #: (Module[top] mod, Module[top] helper) -> bool
           private def includes_helper?(mod, helper)
             ancestors = ancestors_of(mod)
 
@@ -161,11 +161,11 @@ module Tapioca
           end
         end
 
-        NON_DISCOVERABLE_INCLUDERS = gather_non_discoverable_includers #: Array[T::Module[top]]
+        NON_DISCOVERABLE_INCLUDERS = gather_non_discoverable_includers #: Array[Module[top]]
 
         private
 
-        #: (RBI::Tree root, T::Module[top] constant) -> void
+        #: (RBI::Tree root, Module[top] constant) -> void
         def generate_module_for(root, constant)
           root.create_module(T.must(constant.name)) do |mod|
             mod.create_include("::ActionDispatch::Routing::UrlFor")
@@ -181,7 +181,7 @@ module Tapioca
           end
         end
 
-        #: (RBI::Scope mod, T::Module[top] helper_module) -> void
+        #: (RBI::Scope mod, Module[top] helper_module) -> void
         def create_mixins_for(mod, helper_module)
           include_helper = constant.ancestors.include?(helper_module) || NON_DISCOVERABLE_INCLUDERS.include?(constant)
           extend_helper = constant.singleton_class.ancestors.include?(helper_module)

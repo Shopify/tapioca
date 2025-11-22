@@ -109,7 +109,7 @@ module Tapioca
       #   end
       # end
       # ~~~
-      #: [ConstantType = (T::Module[top] & ::StateMachines::ClassMethods)]
+      #: [ConstantType = (Module[top] & ::StateMachines::ClassMethods)]
       class StateMachines < Compiler
         extend T::Sig
 
@@ -158,7 +158,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> Enumerable[T::Module[top]]
+          #: -> Enumerable[Module[top]]
           def gather_constants
             all_classes.select { |mod| ::StateMachines::InstanceMethods > mod }
           end
