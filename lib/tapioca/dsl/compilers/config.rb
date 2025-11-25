@@ -96,7 +96,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[T::Module[top]]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             name = ::Config.const_name
             return [] unless Object.const_defined?(name)

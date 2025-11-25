@@ -65,7 +65,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[T::Module[top]]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             all_modules.select do |mod|
               name_of(mod) && # i.e. not anonymous

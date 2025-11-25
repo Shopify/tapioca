@@ -64,7 +64,7 @@ module Tapioca
       [dependencies, missing_specs]
     end
 
-    #: -> [T::Enumerable[Spec], Array[String]]
+    #: -> [Enumerable[Spec], Array[String]]
     def materialize_deps
       deps = definition.locked_gems.dependencies.except(*@excluded_gems).values
       resolve = definition.resolve

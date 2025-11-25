@@ -6,7 +6,7 @@ module Tapioca
     class Pipeline
       extend T::Sig
 
-      #: T::Enumerable[singleton(Compiler)]
+      #: Enumerable[singleton(Compiler)]
       attr_reader :active_compilers
 
       #: Array[T::Module[top]]
@@ -121,7 +121,7 @@ module Tapioca
 
       private
 
-      #: (Array[singleton(Compiler)] requested_compilers, Array[singleton(Compiler)] excluded_compilers) -> T::Enumerable[singleton(Compiler)]
+      #: (Array[singleton(Compiler)] requested_compilers, Array[singleton(Compiler)] excluded_compilers) -> Enumerable[singleton(Compiler)]
       def gather_active_compilers(requested_compilers, excluded_compilers)
         active_compilers = compilers
         active_compilers -= excluded_compilers

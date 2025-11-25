@@ -99,7 +99,7 @@ module Tapioca
         class << self
           extend T::Sig
           # @override
-          #: -> T::Enumerable[T::Module[top]]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             return [] unless defined?(Rails.application) && Rails.application
 
