@@ -44,18 +44,18 @@ class ConnectionPool
 
   # Automatically drop all connections after fork
   #
-  # source://connection_pool//lib/connection_pool.rb#216
+  # source://connection_pool//lib/connection_pool.rb#219
   def auto_reload_after_fork; end
 
   # Number of pool entries available for checkout at this instant.
   #
-  # source://connection_pool//lib/connection_pool.rb#219
+  # source://connection_pool//lib/connection_pool.rb#222
   def available; end
 
-  # source://connection_pool//lib/connection_pool.rb#164
+  # source://connection_pool//lib/connection_pool.rb#167
   def checkin(force: T.unsafe(nil)); end
 
-  # source://connection_pool//lib/connection_pool.rb#154
+  # source://connection_pool//lib/connection_pool.rb#157
   def checkout(options = T.unsafe(nil)); end
 
   # Marks the current thread's checked-out connection for discard.
@@ -85,40 +85,40 @@ class ConnectionPool
   # @yieldparam conn [Object] The connection to be discarded.
   # @yieldreturn [void]
   #
-  # source://connection_pool//lib/connection_pool.rb#150
+  # source://connection_pool//lib/connection_pool.rb#153
   def discard_current_connection(&block); end
 
   # Number of pool entries created and idle in the pool.
   #
-  # source://connection_pool//lib/connection_pool.rb#224
+  # source://connection_pool//lib/connection_pool.rb#227
   def idle; end
 
   # Reaps idle connections that have been idle for over +idle_seconds+.
   # +idle_seconds+ defaults to 60.
   #
-  # source://connection_pool//lib/connection_pool.rb#209
+  # source://connection_pool//lib/connection_pool.rb#212
   def reap(idle_seconds = T.unsafe(nil), &block); end
 
   # Reloads the ConnectionPool by passing each connection to +block+ and then
   # removing it the pool. Subsequent checkouts will create new connections as
   # needed.
   #
-  # source://connection_pool//lib/connection_pool.rb#203
+  # source://connection_pool//lib/connection_pool.rb#206
   def reload(&block); end
 
   # Shuts down the ConnectionPool by passing each connection to +block+ and
   # then removing it from the pool. Attempting to checkout a connection after
   # shutdown will raise +ConnectionPool::PoolShuttingDownError+.
   #
-  # source://connection_pool//lib/connection_pool.rb#195
+  # source://connection_pool//lib/connection_pool.rb#198
   def shutdown(&block); end
 
   # Size of this connection pool
   #
-  # source://connection_pool//lib/connection_pool.rb#214
+  # source://connection_pool//lib/connection_pool.rb#217
   def size; end
 
-  # source://connection_pool//lib/connection_pool.rb#118
+  # source://connection_pool//lib/connection_pool.rb#121
   def then(options = T.unsafe(nil)); end
 
   # source://connection_pool//lib/connection_pool.rb#106
@@ -187,24 +187,24 @@ class ConnectionPool::TimedStack
 
   # Reduce the created count
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#139
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#149
   def decrement_created; end
 
   # Returns +true+ if there are no available connections.
   #
   # @return [Boolean]
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#121
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#131
   def empty?; end
 
   # The number of connections created and available on the stack.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#133
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#143
   def idle; end
 
   # The number of connections available on the stack.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#127
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#137
   def length; end
 
   # Returns the value of attribute max.
@@ -216,11 +216,14 @@ class ConnectionPool::TimedStack
   # immediately returned. If no connection is available within the given
   # timeout a ConnectionPool::TimeoutError is raised.
   #
-  # +:timeout+ is the only checked entry in +options+ and is preferred over
-  # the +timeout+ argument (which will be removed in a future release). Other
-  # options may be used by subclasses that extend TimedStack.
+  # The +timeout+ argument will be removed in 3.0.
+  # Other options may be used by subclasses that extend TimedStack.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#60
+  # @option options
+  # @option options
+  # @param options [Hash] a customizable set of options
+  #
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#63
   def pop(timeout = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # Returns +obj+ to the stack. +options+ is ignored in TimedStack but may be
@@ -233,7 +236,7 @@ class ConnectionPool::TimedStack
   #
   # @raise [ArgumentError]
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#101
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#111
   def reap(idle_seconds, &block); end
 
   # Shuts down the TimedStack by passing each connection to +block+ and then
@@ -243,7 +246,7 @@ class ConnectionPool::TimedStack
   #
   # @raise [ArgumentError]
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#87
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#97
   def shutdown(reload: T.unsafe(nil), &block); end
 
   private
@@ -254,17 +257,17 @@ class ConnectionPool::TimedStack
   #
   # @return [Boolean]
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#163
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#173
   def connection_stored?(options = T.unsafe(nil)); end
 
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#145
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#155
   def current_time; end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must return a connection from the stack.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#171
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#181
   def fetch_connection(options = T.unsafe(nil)); end
 
   # This is an extension point for TimedStack and is called with a mutex.
@@ -273,7 +276,7 @@ class ConnectionPool::TimedStack
   #
   # @return [Boolean]
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#203
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#213
   def idle_connections?(idle_seconds); end
 
   # This is an extension point for TimedStack and is called with a mutex.
@@ -281,21 +284,21 @@ class ConnectionPool::TimedStack
   # This method returns the oldest idle connection if it has been idle for more than idle_seconds.
   # This requires that the stack is kept in order of checked in time (oldest first).
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#191
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#201
   def reserve_idle_connection(idle_seconds); end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must shut down all connections on the stack.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#179
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#189
   def shutdown_connections(options = T.unsafe(nil)); end
 
   # This is an extension point for TimedStack and is called with a mutex.
   #
   # This method must return +obj+ to the stack.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#211
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#221
   def store_connection(obj, options = T.unsafe(nil)); end
 
   # This is an extension point for TimedStack and is called with a mutex.
@@ -303,7 +306,7 @@ class ConnectionPool::TimedStack
   # This method must create a connection if and only if the total number of
   # connections allowed has not been met.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#220
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#230
   def try_create(options = T.unsafe(nil)); end
 
   # This is an extension point for TimedStack and is called with a mutex.
@@ -312,7 +315,7 @@ class ConnectionPool::TimedStack
   # subclasses with expensive match/search algorithms to avoid double-handling
   # their stack.
   #
-  # source://connection_pool//lib/connection_pool/timed_stack.rb#155
+  # source://connection_pool//lib/connection_pool/timed_stack.rb#165
   def try_fetch_connection(options = T.unsafe(nil)); end
 end
 
