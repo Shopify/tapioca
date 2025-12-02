@@ -604,8 +604,8 @@ module Tapioca
 
         #: -> void
         def create_association_relation_methods
-          returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
-          unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
+          returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
+          unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
 
           ASSOCIATION_METHODS.each do |method_name|
             case method_name
@@ -954,8 +954,8 @@ module Tapioca
                 end
               end
             when :insert_all, :insert_all!, :upsert_all # insert all methods
-              returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
-              unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
+              returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
+              unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
 
               parameters = [
                 create_param("attributes", type: "T::Array[Hash]"),
@@ -973,8 +973,8 @@ module Tapioca
                 return_type: "ActiveRecord::Result",
               )
             when :insert, :insert!, :upsert # insert methods
-              returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
-              unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
+              returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
+              unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
 
               parameters = [
                 create_param("attributes", type: "Hash"),
