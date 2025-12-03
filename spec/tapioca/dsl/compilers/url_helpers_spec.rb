@@ -14,6 +14,39 @@ module Tapioca
           end
 
           describe "initialize" do
+            it "ignores modules that raise ActiveSupport::DeprecationException" do
+              add_ruby_file("content.rb", <<~RUBY)
+                class Application < Rails::Application
+                end
+
+                module DeprecatedMod
+                end
+              RUBY
+
+              compiler = Tapioca::Dsl::Compilers::UrlHelpers
+              original = Tapioca::Dsl::Compiler.method(:name_of)
+              begin
+                def compiler.name_of(mod)
+                  if mod == DeprecatedMod
+                    raise ActiveSupport::DeprecationException
+                  else
+                    Tapioca::Dsl::Compiler.method(:name_of).call(mod)
+                  end
+                end
+
+                assert_equal(
+                  [
+                    "GeneratedPathHelpersModule",
+                    "GeneratedUrlHelpersModule",
+                  ],
+                  gathered_constants,
+                )
+              ensure
+                def compiler.name_of(mod)
+                  original.call(mod)
+                end
+              end
+            end
             it "does not gather constants when url_helpers is not included" do
               add_ruby_file("content.rb", <<~RUBY)
                 class Application < Rails::Application
