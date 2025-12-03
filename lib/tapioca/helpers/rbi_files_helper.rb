@@ -11,7 +11,7 @@ module Tapioca
       return unless File.exist?(file)
 
       say("Loading #{kind} RBIs from #{file}... ")
-      time = Benchmark.realtime do
+      time = realtime do
         parse_and_index_files(index, [file], number_of_workers: 1)
       end
       say(" Done ", :green)
@@ -27,7 +27,7 @@ module Tapioca
       else
         say("Loading #{kind} RBIs from #{dir}... ")
       end
-      time = Benchmark.realtime do
+      time = realtime do
         files = Dir.glob("#{dir}/**/*.rbi").sort
         parse_and_index_files(index, files, number_of_workers: number_of_workers)
       end
@@ -39,7 +39,7 @@ module Tapioca
     def duplicated_nodes_from_index(index, shim_rbi_dir:, todo_rbi_file:)
       duplicates = {}
       say("Looking for duplicates... ")
-      time = Benchmark.realtime do
+      time = realtime do
         index.keys.each do |key|
           nodes = index[key]
           next unless shims_or_todos_have_duplicates?(nodes, shim_rbi_dir: shim_rbi_dir, todo_rbi_file: todo_rbi_file)
@@ -289,6 +289,13 @@ module Tapioca
     #: (String path) -> String
     def gem_name_from_rbi_path(path)
       T.must(File.basename(path, ".rbi").split("@").first)
+    end
+
+    #: ?{ (?) -> untyped } -> (Integer | Float)
+    def realtime(&block)
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      yield
+      Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
     end
   end
 end
