@@ -608,6 +608,7 @@ module Tapioca
           unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
           record_timestamps_type = "T.nilable(T::Boolean)"
           update_only_type = "T.nilable(T::Array[T.any(Symbol, String)])"
+          on_duplicate_type = "T.any(Symbol, Arel::Nodes::SqlLiteral)"
 
           ASSOCIATION_METHODS.each do |method_name|
             case method_name
@@ -618,9 +619,10 @@ module Tapioca
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
-              # Only upsert_all has the `update_only` parameter
+              # Only upsert_all has the `update_only` and `on_duplicate` parameters
               if method_name == :upsert_all
                 parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+                parameters << create_kw_opt_param("on_duplicate", type: on_duplicate_type, default: ":update")
               end
 
               # Bang methods don't have the `unique_by` parameter
@@ -640,9 +642,10 @@ module Tapioca
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
-              # Only upsert has the `update_only` parameter
+              # Only upsert has the `update_only` and `on_duplicate` parameters
               if method_name == :upsert
                 parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+                parameters << create_kw_opt_param("on_duplicate", type: on_duplicate_type, default: ":update")
               end
 
               # Bang methods don't have the `unique_by` parameter
@@ -972,6 +975,7 @@ module Tapioca
               unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
               record_timestamps_type = "T.nilable(T::Boolean)"
               update_only_type = "T.nilable(T::Array[T.any(Symbol, String)])"
+              on_duplicate_type = "T.any(Symbol, Arel::Nodes::SqlLiteral)"
 
               parameters = [
                 create_param("attributes", type: "T::Array[Hash]"),
@@ -979,9 +983,10 @@ module Tapioca
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
-              # Only upsert_all has the `update_only` parameter
+              # Only upsert_all has the `update_only` and `on_duplicate` parameters
               if method_name == :upsert_all
                 parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+                parameters << create_kw_opt_param("on_duplicate", type: on_duplicate_type, default: ":update")
               end
 
               # Bang methods don't have the `unique_by` parameter
@@ -999,6 +1004,7 @@ module Tapioca
               unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
               record_timestamps_type = "T.nilable(T::Boolean)"
               update_only_type = "T.nilable(T::Array[T.any(Symbol, String)])"
+              on_duplicate_type = "T.any(Symbol, Arel::Nodes::SqlLiteral)"
 
               parameters = [
                 create_param("attributes", type: "Hash"),
@@ -1006,9 +1012,10 @@ module Tapioca
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
-              # Only upsert has the `update_only` parameter
+              # Only upsert has the `update_only` and `on_duplicate` parameters
               if method_name == :upsert
                 parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+                parameters << create_kw_opt_param("on_duplicate", type: on_duplicate_type, default: ":update")
               end
 
               # Bang methods don't have the `unique_by` parameter

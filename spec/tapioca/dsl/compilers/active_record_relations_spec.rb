@@ -335,11 +335,11 @@ module Tapioca
                     sig { returns(::Post) }
                     def third_to_last!; end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
-                    def upsert(attributes, returning: nil, record_timestamps: nil, update_only: nil, unique_by: nil); end
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), on_duplicate: T.any(Symbol, Arel::Nodes::SqlLiteral), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
+                    def upsert(attributes, returning: nil, record_timestamps: nil, update_only: nil, on_duplicate: :update, unique_by: nil); end
 
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
-                    def upsert_all(attributes, returning: nil, record_timestamps: nil, update_only: nil, unique_by: nil); end
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), on_duplicate: T.any(Symbol, Arel::Nodes::SqlLiteral), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
+                    def upsert_all(attributes, returning: nil, record_timestamps: nil, update_only: nil, on_duplicate: :update, unique_by: nil); end
                   end
 
                   module GeneratedAssociationRelationMethods
@@ -1052,11 +1052,11 @@ module Tapioca
                     sig { returns(::Post) }
                     def third_to_last!; end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
-                    def upsert(attributes, returning: nil, record_timestamps: nil, update_only: nil, unique_by: nil); end
+                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), on_duplicate: T.any(Symbol, Arel::Nodes::SqlLiteral), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
+                    def upsert(attributes, returning: nil, record_timestamps: nil, update_only: nil, on_duplicate: :update, unique_by: nil); end
 
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
-                    def upsert_all(attributes, returning: nil, record_timestamps: nil, update_only: nil, unique_by: nil); end
+                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass)), record_timestamps: T.nilable(T::Boolean), update_only: T.nilable(T::Array[T.any(Symbol, String)]), on_duplicate: T.any(Symbol, Arel::Nodes::SqlLiteral), unique_by: T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))).returns(ActiveRecord::Result) }
+                    def upsert_all(attributes, returning: nil, record_timestamps: nil, update_only: nil, on_duplicate: :update, unique_by: nil); end
                   end
 
                   module GeneratedAssociationRelationMethods
