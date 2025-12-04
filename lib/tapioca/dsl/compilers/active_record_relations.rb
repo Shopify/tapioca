@@ -606,6 +606,7 @@ module Tapioca
         def create_association_relation_methods
           returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
           unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
+          record_timestamps_type = "T.nilable(T::Boolean)"
 
           ASSOCIATION_METHODS.each do |method_name|
             case method_name
@@ -613,6 +614,7 @@ module Tapioca
               parameters = [
                 create_param("attributes", type: "T::Array[Hash]"),
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
+                create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
               # Bang methods don't have the `unique_by` parameter
@@ -629,6 +631,7 @@ module Tapioca
               parameters = [
                 create_param("attributes", type: "Hash"),
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
+                create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
               # Bang methods don't have the `unique_by` parameter
@@ -956,10 +959,12 @@ module Tapioca
             when :insert_all, :insert_all!, :upsert_all # insert all methods
               returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
               unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
+              record_timestamps_type = "T.nilable(T::Boolean)"
 
               parameters = [
                 create_param("attributes", type: "T::Array[Hash]"),
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
+                create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
               # Bang methods don't have the `unique_by` parameter
@@ -975,10 +980,12 @@ module Tapioca
             when :insert, :insert!, :upsert # insert methods
               returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
               unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
+              record_timestamps_type = "T.nilable(T::Boolean)"
 
               parameters = [
                 create_param("attributes", type: "Hash"),
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
+                create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
 
               # Bang methods don't have the `unique_by` parameter
