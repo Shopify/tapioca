@@ -607,6 +607,7 @@ module Tapioca
           returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
           unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
           record_timestamps_type = "T.nilable(T::Boolean)"
+          update_only_type = "T.nilable(T::Array[T.any(Symbol, String)])"
 
           ASSOCIATION_METHODS.each do |method_name|
             case method_name
@@ -616,6 +617,11 @@ module Tapioca
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
+
+              # Only upsert_all has the `update_only` parameter
+              if method_name == :upsert_all
+                parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+              end
 
               # Bang methods don't have the `unique_by` parameter
               unless bang_method?(method_name)
@@ -633,6 +639,11 @@ module Tapioca
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
+
+              # Only upsert has the `update_only` parameter
+              if method_name == :upsert
+                parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+              end
 
               # Bang methods don't have the `unique_by` parameter
               unless bang_method?(method_name)
@@ -960,12 +971,18 @@ module Tapioca
               returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
               unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
               record_timestamps_type = "T.nilable(T::Boolean)"
+              update_only_type = "T.nilable(T::Array[T.any(Symbol, String)])"
 
               parameters = [
                 create_param("attributes", type: "T::Array[Hash]"),
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
+
+              # Only upsert_all has the `update_only` parameter
+              if method_name == :upsert_all
+                parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+              end
 
               # Bang methods don't have the `unique_by` parameter
               unless bang_method?(method_name)
@@ -981,12 +998,18 @@ module Tapioca
               returning_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], String, FalseClass))"
               unique_by_type = "T.nilable(T.any(T::Array[T.any(Symbol, String)], Symbol, String))"
               record_timestamps_type = "T.nilable(T::Boolean)"
+              update_only_type = "T.nilable(T::Array[T.any(Symbol, String)])"
 
               parameters = [
                 create_param("attributes", type: "Hash"),
                 create_kw_opt_param("returning", type: returning_type, default: "nil"),
                 create_kw_opt_param("record_timestamps", type: record_timestamps_type, default: "nil"),
               ]
+
+              # Only upsert has the `update_only` parameter
+              if method_name == :upsert
+                parameters << create_kw_opt_param("update_only", type: update_only_type, default: "nil")
+              end
 
               # Bang methods don't have the `unique_by` parameter
               unless bang_method?(method_name)
