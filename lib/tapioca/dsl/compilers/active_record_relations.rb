@@ -604,47 +604,9 @@ module Tapioca
 
         #: -> void
         def create_association_relation_methods
-          returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
-          unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
-
-          ASSOCIATION_METHODS.each do |method_name|
-            case method_name
-            when :insert_all, :insert_all!, :upsert_all
-              parameters = [
-                create_param("attributes", type: "T::Array[Hash]"),
-                create_kw_opt_param("returning", type: returning_type, default: "nil"),
-              ]
-
-              # Bang methods don't have the `unique_by` parameter
-              unless bang_method?(method_name)
-                parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
-              end
-
-              association_relation_methods_module.create_method(
-                method_name.to_s,
-                parameters: parameters,
-                return_type: "ActiveRecord::Result",
-              )
-            when :insert, :insert!, :upsert
-              parameters = [
-                create_param("attributes", type: "Hash"),
-                create_kw_opt_param("returning", type: returning_type, default: "nil"),
-              ]
-
-              # Bang methods don't have the `unique_by` parameter
-              unless bang_method?(method_name)
-                parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
-              end
-
-              association_relation_methods_module.create_method(
-                method_name.to_s,
-                parameters: parameters,
-                return_type: "ActiveRecord::Result",
-              )
-            when :proxy_association
-              # skip - private method
-            end
-          end
+          # skips insert/upsert methods - these methods' signatures aren't model-specific and don't need to be generated dynamically
+          # also skips proxy_association method - it's a private method
+          # but there could be other association methods that we need to generate
         end
 
         #: -> void
@@ -953,44 +915,8 @@ module Tapioca
                   sig.return_type = constant_name
                 end
               end
-            when :insert_all, :insert_all!, :upsert_all # insert all methods
-              returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
-              unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
-
-              parameters = [
-                create_param("attributes", type: "T::Array[Hash]"),
-                create_kw_opt_param("returning", type: returning_type, default: "nil"),
-              ]
-
-              # Bang methods don't have the `unique_by` parameter
-              unless bang_method?(method_name)
-                parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
-              end
-
-              common_relation_methods_module.create_method(
-                method_name.to_s,
-                parameters: parameters,
-                return_type: "ActiveRecord::Result",
-              )
-            when :insert, :insert!, :upsert # insert methods
-              returning_type = "T.nilable(T.any(T::Array[Symbol], FalseClass))"
-              unique_by_type = "T.nilable(T.any(T::Array[Symbol], Symbol))"
-
-              parameters = [
-                create_param("attributes", type: "Hash"),
-                create_kw_opt_param("returning", type: returning_type, default: "nil"),
-              ]
-
-              # Bang methods don't have the `unique_by` parameter
-              unless bang_method?(method_name)
-                parameters << create_kw_opt_param("unique_by", type: unique_by_type, default: "nil")
-              end
-
-              common_relation_methods_module.create_method(
-                method_name.to_s,
-                parameters: parameters,
-                return_type: "ActiveRecord::Result",
-              )
+            when :insert_all, :insert_all!, :upsert_all, :insert, :insert!, :upsert # insert methods
+              # skip - these methods' signatures aren't model-specific and don't need to be generated dynamically
             when :delete, :destroy
               # For these cases, it is valid to pass the above kind of things, but also:
               # - a model identifier, which can be:
