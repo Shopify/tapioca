@@ -38472,7 +38472,7 @@ class ActiveRecord::Type::Json < ::ActiveModel::Type::Value
 end
 
 # source://activerecord//lib/active_record/type/json.rb#28
-ActiveRecord::Type::Json::JSON_ENCODER = T.let(T.unsafe(nil), ActiveSupport::JSON::Encoding::JSONGemEncoder)
+ActiveRecord::Type::Json::JSON_ENCODER = T.let(T.unsafe(nil), ActiveSupport::JSON::Encoding::JSONGemCoderEncoder)
 
 # source://activerecord//lib/active_record/type/adapter_specific_registry.rb#47
 class ActiveRecord::Type::Registration
