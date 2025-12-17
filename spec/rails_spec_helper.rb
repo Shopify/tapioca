@@ -6,6 +6,15 @@ module Tapioca
     extend Tapioca::Helpers::Test::Content
 
     class << self
+      #: -> void
+      def define_fake_rails_app
+        base_folder = Pathname.new(tmp_path("lib"))
+        config_class = Struct.new(:root)
+        config = config_class.new(base_folder)
+        app_class = Struct.new(:config)
+        Rails.application = app_class.new(config)
+      end
+
       def load_active_storage
         add_ruby_file("application.rb", <<~RUBY)
           ENV["DATABASE_URL"] = "sqlite3::memory:"
