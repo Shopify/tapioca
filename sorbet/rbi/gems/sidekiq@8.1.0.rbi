@@ -449,7 +449,7 @@ class Sidekiq::Config
   #
   # See sidekiq/scheduled.rb for an in-depth explanation of this value
   #
-  # source://sidekiq//lib/sidekiq/config.rb#252
+  # source://sidekiq//lib/sidekiq/config.rb#251
   def average_scheduled_poll_interval=(interval); end
 
   # register a new queue processing subsystem
@@ -487,7 +487,7 @@ class Sidekiq::Config
   #   end
   # end
   #
-  # source://sidekiq//lib/sidekiq/config.rb#243
+  # source://sidekiq//lib/sidekiq/config.rb#242
   def death_handlers; end
 
   # source://sidekiq//lib/sidekiq/config.rb#129
@@ -504,18 +504,18 @@ class Sidekiq::Config
   #
   # The default error handler logs errors to @logger.
   #
-  # source://sidekiq//lib/sidekiq/config.rb#263
+  # source://sidekiq//lib/sidekiq/config.rb#262
   def error_handlers; end
 
   # source://sidekiq//lib/sidekiq/config.rb#71
   def fetch(*args, **_arg1, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#228
+  # source://sidekiq//lib/sidekiq/config.rb#227
   def freeze!; end
 
   # INTERNAL USE ONLY
   #
-  # source://sidekiq//lib/sidekiq/config.rb#307
+  # source://sidekiq//lib/sidekiq/config.rb#306
   def handle_exception(ex, ctx = T.unsafe(nil)); end
 
   # source://sidekiq//lib/sidekiq/config.rb#71
@@ -527,24 +527,24 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#71
   def key?(*args, **_arg1, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#158
+  # source://sidekiq//lib/sidekiq/config.rb#157
   def local_redis_pool; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#281
+  # source://sidekiq//lib/sidekiq/config.rb#280
   def logger; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#292
+  # source://sidekiq//lib/sidekiq/config.rb#291
   def logger=(logger); end
 
   # find a singleton
   #
-  # source://sidekiq//lib/sidekiq/config.rb#220
+  # source://sidekiq//lib/sidekiq/config.rb#219
   def lookup(name, default_class = T.unsafe(nil)); end
 
   # source://sidekiq//lib/sidekiq/config.rb#71
   def merge!(*args, **_arg1, &block); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#164
+  # source://sidekiq//lib/sidekiq/config.rb#163
   def new_redis_pool(size, name = T.unsafe(nil)); end
 
   # Register a block to run at a point in the Sidekiq lifecycle.
@@ -558,7 +558,7 @@ class Sidekiq::Config
   #
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#275
+  # source://sidekiq//lib/sidekiq/config.rb#274
   def on(event, &block); end
 
   # source://sidekiq//lib/sidekiq/config.rb#113
@@ -578,15 +578,12 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#109
   def queues=(val); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#152
-  def reap(timeout = T.unsafe(nil)); end
-
   # source://sidekiq//lib/sidekiq/config.rb#149
   def reap_idle_redis_connections(timeout = T.unsafe(nil)); end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/config.rb#186
+  # source://sidekiq//lib/sidekiq/config.rb#185
   def redis; end
 
   # All capsules must use the same Redis configuration
@@ -594,15 +591,15 @@ class Sidekiq::Config
   # source://sidekiq//lib/sidekiq/config.rb#145
   def redis=(hash); end
 
-  # source://sidekiq//lib/sidekiq/config.rb#170
+  # source://sidekiq//lib/sidekiq/config.rb#169
   def redis_info; end
 
-  # source://sidekiq//lib/sidekiq/config.rb#154
+  # source://sidekiq//lib/sidekiq/config.rb#153
   def redis_pool; end
 
   # register global singletons which can be accessed elsewhere
   #
-  # source://sidekiq//lib/sidekiq/config.rb#209
+  # source://sidekiq//lib/sidekiq/config.rb#208
   def register(name, instance); end
 
   # @yield [@server_chain]
@@ -630,7 +627,7 @@ class Sidekiq::Config
 
   private
 
-  # source://sidekiq//lib/sidekiq/config.rb#301
+  # source://sidekiq//lib/sidekiq/config.rb#300
   def parameter_size(handler); end
 end
 
@@ -811,38 +808,38 @@ end
 #   When I sign up as "foo@example.com"
 #   Then I should receive a welcome email to "foo@example.com"
 #
-# source://sidekiq//lib/sidekiq/job.rb#275
+# source://sidekiq//lib/sidekiq/job.rb#277
 module Sidekiq::Job::ClassMethods
-  # source://sidekiq//lib/sidekiq/job.rb#378
+  # source://sidekiq//lib/sidekiq/job.rb#380
   def build_client; end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/job.rb#363
+  # source://sidekiq//lib/sidekiq/job.rb#365
   def client_push(item); end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/job.rb#276
+  # source://sidekiq//lib/sidekiq/job.rb#278
   def delay(*args); end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/job.rb#280
+  # source://sidekiq//lib/sidekiq/job.rb#282
   def delay_for(*args); end
 
   # @raise [ArgumentError]
   #
-  # source://sidekiq//lib/sidekiq/job.rb#284
+  # source://sidekiq//lib/sidekiq/job.rb#286
   def delay_until(*args); end
 
-  # source://sidekiq//lib/sidekiq/job.rb#296
+  # source://sidekiq//lib/sidekiq/job.rb#298
   def perform_async(*args); end
 
   # +interval+ must be a timestamp, numeric or something that acts
   #   numeric (like an activesupport time interval).
   #
-  # source://sidekiq//lib/sidekiq/job.rb#344
+  # source://sidekiq//lib/sidekiq/job.rb#346
   def perform_at(interval, *args); end
 
   # Push a large number of jobs to Redis, while limiting the batch of
@@ -864,29 +861,29 @@ module Sidekiq::Job::ClassMethods
   #
   #     SomeJob.perform_bulk([[1], [2], [3]])
   #
-  # source://sidekiq//lib/sidekiq/job.rb#326
+  # source://sidekiq//lib/sidekiq/job.rb#328
   def perform_bulk(*args, **kwargs); end
 
   # +interval+ must be a timestamp, numeric or something that acts
   #   numeric (like an activesupport time interval).
   #
-  # source://sidekiq//lib/sidekiq/job.rb#332
+  # source://sidekiq//lib/sidekiq/job.rb#334
   def perform_in(interval, *args); end
 
   # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
   #
-  # source://sidekiq//lib/sidekiq/job.rb#301
+  # source://sidekiq//lib/sidekiq/job.rb#303
   def perform_inline(*args); end
 
   # Inline execution of job's perform method after passing through Sidekiq.client_middleware and Sidekiq.server_middleware
   #
-  # source://sidekiq//lib/sidekiq/job.rb#304
+  # source://sidekiq//lib/sidekiq/job.rb#306
   def perform_sync(*args); end
 
-  # source://sidekiq//lib/sidekiq/job.rb#288
+  # source://sidekiq//lib/sidekiq/job.rb#290
   def queue_as(q); end
 
-  # source://sidekiq//lib/sidekiq/job.rb#292
+  # source://sidekiq//lib/sidekiq/job.rb#294
   def set(options); end
 
   # Allows customization for this type of Job.
@@ -902,7 +899,7 @@ module Sidekiq::Job::ClassMethods
   # In practice, any option is allowed.  This is the main mechanism to configure the
   # options for a specific job.
   #
-  # source://sidekiq//lib/sidekiq/job.rb#359
+  # source://sidekiq//lib/sidekiq/job.rb#361
   def sidekiq_options(opts = T.unsafe(nil)); end
 end
 
@@ -1328,16 +1325,16 @@ class Sidekiq::Job::Setter
   # +interval+ must be a timestamp, numeric or something that acts
   #   numeric (like an activesupport time interval).
   #
-  # source://sidekiq//lib/sidekiq/job.rb#261
+  # source://sidekiq//lib/sidekiq/job.rb#263
   def perform_at(interval, *args); end
 
-  # source://sidekiq//lib/sidekiq/job.rb#251
+  # source://sidekiq//lib/sidekiq/job.rb#253
   def perform_bulk(args, **options); end
 
   # +interval+ must be a timestamp, numeric or something that acts
   #   numeric (like an activesupport time interval).
   #
-  # source://sidekiq//lib/sidekiq/job.rb#258
+  # source://sidekiq//lib/sidekiq/job.rb#260
   def perform_in(interval, *args); end
 
   # Explicit inline execution of a job. Returns nil if the job did not
@@ -1349,7 +1346,7 @@ class Sidekiq::Job::Setter
   # Explicit inline execution of a job. Returns nil if the job did not
   # execute, true otherwise.
   #
-  # source://sidekiq//lib/sidekiq/job.rb#249
+  # source://sidekiq//lib/sidekiq/job.rb#251
   def perform_sync(*args); end
 
   # source://sidekiq//lib/sidekiq/job.rb#197
@@ -1357,7 +1354,7 @@ class Sidekiq::Job::Setter
 
   private
 
-  # source://sidekiq//lib/sidekiq/job.rb#265
+  # source://sidekiq//lib/sidekiq/job.rb#267
   def at(interval); end
 end
 

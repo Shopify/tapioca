@@ -8930,6 +8930,25 @@ ActiveSupport::JSON::Encoding::FULL_ESCAPE_REGEX = T.let(T.unsafe(nil), Regexp)
 # source://activesupport//lib/active_support/json/encoding.rb#71
 ActiveSupport::JSON::Encoding::HTML_ENTITIES_REGEX = T.let(T.unsafe(nil), Regexp)
 
+# source://activesupport//lib/active_support/json/encoding.rb#150
+class ActiveSupport::JSON::Encoding::JSONGemCoderEncoder
+  # @return [JSONGemCoderEncoder] a new instance of JSONGemCoderEncoder
+  #
+  # source://activesupport//lib/active_support/json/encoding.rb#171
+  def initialize(options = T.unsafe(nil)); end
+
+  # Encode the given object into a JSON string
+  #
+  # source://activesupport//lib/active_support/json/encoding.rb#183
+  def encode(value); end
+end
+
+# source://activesupport//lib/active_support/json/encoding.rb#152
+ActiveSupport::JSON::Encoding::JSONGemCoderEncoder::CODER = T.let(T.unsafe(nil), JSON::Coder)
+
+# source://activesupport//lib/active_support/json/encoding.rb#151
+ActiveSupport::JSON::Encoding::JSONGemCoderEncoder::JSON_NATIVE_TYPES = T.let(T.unsafe(nil), Array)
+
 # source://activesupport//lib/active_support/json/encoding.rb#75
 class ActiveSupport::JSON::Encoding::JSONGemEncoder
   # @return [JSONGemEncoder] a new instance of JSONGemEncoder
@@ -13821,7 +13840,7 @@ class ActiveSupport::TestCase < ::Minitest::Test
   def assert_not_in_delta(exp, act, delta = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # source://activesupport//lib/active_support/test_case.rb#252
-  def assert_not_in_epsilon(a, b, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
+  def assert_not_in_epsilon(exp, act, epsilon = T.unsafe(nil), msg = T.unsafe(nil)); end
 
   # source://activesupport//lib/active_support/test_case.rb#263
   def assert_not_includes(collection, obj, msg = T.unsafe(nil)); end

@@ -693,7 +693,7 @@ module JSON
   # Output:
   #   {"foo":[0,1],"bar":{"baz":2,"bat":3},"bam":"bad"}
   #
-  # source://json//lib/json/common.rb#913
+  # source://json//lib/json/common.rb#930
   def dump(obj, anIO = T.unsafe(nil), limit = T.unsafe(nil), kwargs = T.unsafe(nil)); end
 
   # :call-seq:
@@ -713,7 +713,7 @@ module JSON
   # source://json//lib/json/common.rb#460
   def fast_generate(obj, opts = T.unsafe(nil)); end
 
-  # source://json//lib/json/common.rb#958
+  # source://json//lib/json/common.rb#975
   def fast_unparse(*_arg0, **_arg1, &_arg2); end
 
   # :call-seq:
@@ -756,6 +756,7 @@ module JSON
   def generate(obj, opts = T.unsafe(nil)); end
 
   # :call-seq:
+  #   JSON.load(source, options = {}) -> object
   #   JSON.load(source, proc = nil, options = {}) -> object
   #
   # Returns the Ruby objects created by parsing the given +source+.
@@ -891,7 +892,7 @@ module JSON
   #      #<Admin:0x00000000064c41f8
   #      @attributes={"type"=>"Admin", "password"=>"0wn3d"}>}
   #
-  # source://json//lib/json/common.rb#847
+  # source://json//lib/json/common.rb#854
   def load(source, proc = T.unsafe(nil), options = T.unsafe(nil)); end
 
   # :call-seq:
@@ -1015,20 +1016,21 @@ module JSON
   # source://json//lib/json/common.rb#507
   def pretty_generate(obj, opts = T.unsafe(nil)); end
 
-  # source://json//lib/json/common.rb#968
+  # source://json//lib/json/common.rb#985
   def pretty_unparse(*_arg0, **_arg1, &_arg2); end
 
-  # source://json//lib/json/common.rb#978
+  # source://json//lib/json/common.rb#995
   def restore(*_arg0, **_arg1, &_arg2); end
 
   # :stopdoc:
   # All these were meant to be deprecated circa 2009, but were just set as undocumented
   # so usage still exist in the wild.
   #
-  # source://json//lib/json/common.rb#948
+  # source://json//lib/json/common.rb#965
   def unparse(*_arg0, **_arg1, &_arg2); end
 
   # :call-seq:
+  #   JSON.unsafe_load(source, options = {}) -> object
   #   JSON.unsafe_load(source, proc = nil, options = {}) -> object
   #
   # Returns the Ruby objects created by parsing the given +source+.
@@ -1158,7 +1160,7 @@ module JSON
   #      #<Admin:0x00000000064c41f8
   #      @attributes={"type"=>"Admin", "password"=>"0wn3d"}>}
   #
-  # source://json//lib/json/common.rb#682
+  # source://json//lib/json/common.rb#683
   def unsafe_load(source, proc = T.unsafe(nil), options = T.unsafe(nil)); end
 
   class << self
@@ -1230,7 +1232,7 @@ module JSON
     # Output:
     #   {"foo":[0,1],"bar":{"baz":2,"bat":3},"bam":"bad"}
     #
-    # source://json//lib/json/common.rb#913
+    # source://json//lib/json/common.rb#930
     def dump(obj, anIO = T.unsafe(nil), limit = T.unsafe(nil), kwargs = T.unsafe(nil)); end
 
     # source://json//lib/json/common.rb#206
@@ -1256,7 +1258,7 @@ module JSON
     # source://json//lib/json/common.rb#460
     def fast_generate(obj, opts = T.unsafe(nil)); end
 
-    # source://json//lib/json/common.rb#958
+    # source://json//lib/json/common.rb#975
     def fast_unparse(*_arg0, **_arg1, &_arg2); end
 
     # :call-seq:
@@ -1309,6 +1311,7 @@ module JSON
     def generator=(generator); end
 
     # :call-seq:
+    #   JSON.load(source, options = {}) -> object
     #   JSON.load(source, proc = nil, options = {}) -> object
     #
     # Returns the Ruby objects created by parsing the given +source+.
@@ -1444,7 +1447,7 @@ module JSON
     #      #<Admin:0x00000000064c41f8
     #      @attributes={"type"=>"Admin", "password"=>"0wn3d"}>}
     #
-    # source://json//lib/json/common.rb#847
+    # source://json//lib/json/common.rb#854
     def load(source, proc = T.unsafe(nil), options = T.unsafe(nil)); end
 
     # source://json//lib/json/common.rb#206
@@ -1584,10 +1587,10 @@ module JSON
     # source://json//lib/json/common.rb#507
     def pretty_generate(obj, opts = T.unsafe(nil)); end
 
-    # source://json//lib/json/common.rb#968
+    # source://json//lib/json/common.rb#985
     def pretty_unparse(*_arg0, **_arg1, &_arg2); end
 
-    # source://json//lib/json/common.rb#978
+    # source://json//lib/json/common.rb#995
     def restore(*_arg0, **_arg1, &_arg2); end
 
     # Sets or Returns the JSON generator state class that is used by JSON.
@@ -1604,10 +1607,11 @@ module JSON
     # All these were meant to be deprecated circa 2009, but were just set as undocumented
     # so usage still exist in the wild.
     #
-    # source://json//lib/json/common.rb#948
+    # source://json//lib/json/common.rb#965
     def unparse(*_arg0, **_arg1, &_arg2); end
 
     # :call-seq:
+    #   JSON.unsafe_load(source, options = {}) -> object
     #   JSON.unsafe_load(source, proc = nil, options = {}) -> object
     #
     # Returns the Ruby objects created by parsing the given +source+.
@@ -1737,7 +1741,7 @@ module JSON
     #      #<Admin:0x00000000064c41f8
     #      @attributes={"type"=>"Admin", "password"=>"0wn3d"}>}
     #
-    # source://json//lib/json/common.rb#682
+    # source://json//lib/json/common.rb#683
     def unsafe_load(source, proc = T.unsafe(nil), options = T.unsafe(nil)); end
 
     # source://json//lib/json/common.rb#206
@@ -1748,7 +1752,7 @@ module JSON
 
     private
 
-    # source://json//lib/json/common.rb#991
+    # source://json//lib/json/common.rb#1008
     def const_missing(const_name); end
 
     # source://json//lib/json/common.rb#203
@@ -1771,7 +1775,7 @@ end
 #
 #   MyApp::JSONC_CODER.load(document)
 #
-# source://json//lib/json/common.rb#1017
+# source://json//lib/json/common.rb#1034
 class JSON::Coder
   # :call-seq:
   #   JSON.new(options = nil, &block)
@@ -1798,7 +1802,7 @@ class JSON::Coder
   #
   # @return [Coder] a new instance of Coder
   #
-  # source://json//lib/json/common.rb#1041
+  # source://json//lib/json/common.rb#1058
   def initialize(options = T.unsafe(nil), &as_json); end
 
   # call-seq:
@@ -1807,7 +1811,7 @@ class JSON::Coder
   #
   # Serialize the given object into a \JSON document.
   #
-  # source://json//lib/json/common.rb#1059
+  # source://json//lib/json/common.rb#1076
   def dump(object, io = T.unsafe(nil)); end
 
   # call-seq:
@@ -1816,7 +1820,7 @@ class JSON::Coder
   #
   # Serialize the given object into a \JSON document.
   #
-  # source://json//lib/json/common.rb#1062
+  # source://json//lib/json/common.rb#1079
   def generate(object, io = T.unsafe(nil)); end
 
   # call-seq:
@@ -1824,7 +1828,7 @@ class JSON::Coder
   #
   # Parse the given \JSON document and return an equivalent Ruby object.
   #
-  # source://json//lib/json/common.rb#1068
+  # source://json//lib/json/common.rb#1085
   def load(source); end
 
   # call-seq:
@@ -1832,7 +1836,7 @@ class JSON::Coder
   #
   # Parse the given \JSON document and return an equivalent Ruby object.
   #
-  # source://json//lib/json/common.rb#1077
+  # source://json//lib/json/common.rb#1094
   def load_file(path); end
 
   # call-seq:
@@ -1840,7 +1844,7 @@ class JSON::Coder
   #
   # Parse the given \JSON document and return an equivalent Ruby object.
   #
-  # source://json//lib/json/common.rb#1071
+  # source://json//lib/json/common.rb#1088
   def parse(source); end
 end
 
@@ -1975,9 +1979,6 @@ class JSON::Ext::Generator::State
 
   # source://json//lib/json/ext.rb#39
   def generate(*_arg0); end
-
-  # source://json//lib/json/ext.rb#39
-  def generate_new(*_arg0); end
 
   # source://json//lib/json/ext.rb#39
   def indent; end
@@ -2271,7 +2272,7 @@ end
 # source://json//lib/json/common.rb#171
 JSON::State = JSON::Ext::Generator::State
 
-# source://json//lib/json/common.rb#1083
+# source://json//lib/json/common.rb#1100
 module Kernel
   private
 
@@ -2282,19 +2283,19 @@ module Kernel
   # The _opts_ argument is passed through to generate/parse respectively. See
   # generate and parse for their documentation.
   #
-  # source://json//lib/json/common.rb#1122
+  # source://json//lib/json/common.rb#1139
   def JSON(object, opts = T.unsafe(nil)); end
 
   # Outputs _objs_ to STDOUT as JSON strings in the shortest form, that is in
   # one line.
   #
-  # source://json//lib/json/common.rb#1088
+  # source://json//lib/json/common.rb#1105
   def j(*objs); end
 
   # Outputs _objs_ to STDOUT as JSON strings in a pretty format, with
   # indentation and over many lines.
   #
-  # source://json//lib/json/common.rb#1103
+  # source://json//lib/json/common.rb#1120
   def jj(*objs); end
 end
 
