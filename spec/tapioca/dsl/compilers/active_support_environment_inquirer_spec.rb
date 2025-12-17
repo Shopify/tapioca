@@ -19,7 +19,7 @@ module Tapioca
           describe "with a Rails app" do
             before do
               require "rails"
-              define_fake_rails_app
+              Tapioca::RailsSpecHelper.define_fake_rails_app(tmp_path("lib"))
               add_default_environment_files
             end
 
@@ -61,15 +61,6 @@ module Tapioca
         end
 
         private
-
-        #: -> void
-        def define_fake_rails_app
-          base_folder = Pathname.new(tmp_path("lib"))
-          config_class = Struct.new(:root)
-          config = config_class.new(base_folder)
-          app_class = Struct.new(:config)
-          Rails.application = app_class.new(config)
-        end
 
         #: -> void
         def add_default_environment_files

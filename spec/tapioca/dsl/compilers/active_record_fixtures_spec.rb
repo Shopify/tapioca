@@ -32,7 +32,7 @@ module Tapioca
             before do
               require "rails"
 
-              define_fake_rails_app
+              Tapioca::RailsSpecHelper.define_fake_rails_app(tmp_path("lib"))
             end
 
             it "gathers only the ActiveSupport::TestCase base class" do
@@ -230,18 +230,6 @@ module Tapioca
               assert_equal(expected, rbi_for("ActiveSupport::TestCase"))
             end
           end
-        end
-
-        private
-
-        #: -> void
-        def define_fake_rails_app
-          base_folder = Pathname.new(tmp_path("lib"))
-
-          config_class = Struct.new(:root)
-          config = config_class.new(base_folder)
-          app_class = Struct.new(:config)
-          Rails.application = app_class.new(config)
         end
       end
     end
