@@ -43,27 +43,6 @@ class ERB
   #
   # It's good practice to choose a variable name that begins with an underscore: `'_'`.
   #
-  # <b>Backward Compatibility</b>
-  #
-  # The calling sequence given above -- which is the one you should use --
-  # is a simplified version of the complete formal calling sequence,
-  # which is:
-  #
-  # ```
-  # ERB.new(template,
-  # safe_level=NOT_GIVEN, legacy_trim_mode=NOT_GIVEN, legacy_eoutvar=NOT_GIVEN,
-  # trim_mode: nil, eoutvar: '_erbout')
-  # ```
-  #
-  # The second, third, and fourth positional arguments (those in the second line above) are deprecated;
-  # this method issues warnings if they are given.
-  #
-  # However, their values, if given, are handled thus:
-  #
-  # - `safe_level`: ignored.
-  # - `legacy_trim_mode`: overrides keyword argument `trim_mode`.
-  # - `legacy_eoutvar`: overrides keyword argument `eoutvar`.
-  #
   # [blank line control]: rdoc-ref:ERB@Suppressing+Unwanted+Blank+Lines
   # [combine trim modes]: rdoc-ref:ERB@Combining+Trim+Modes
   # [newline control]: rdoc-ref:ERB@Suppressing+Unwanted+Newlines
@@ -71,8 +50,8 @@ class ERB
   #
   # @return [ERB] a new instance of ERB
   #
-  # source://erb//lib/erb.rb#856
-  def initialize(str, safe_level = T.unsafe(nil), legacy_trim_mode = T.unsafe(nil), legacy_eoutvar = T.unsafe(nil), trim_mode: T.unsafe(nil), eoutvar: T.unsafe(nil)); end
+  # source://erb//lib/erb.rb#832
+  def initialize(str, trim_mode: T.unsafe(nil), eoutvar: T.unsafe(nil)); end
 
   # :markup: markdown
   #
@@ -125,7 +104,7 @@ class ERB
   # </html>
   # ```
   #
-  # source://erb//lib/erb.rb#1215
+  # source://erb//lib/erb.rb#1170
   def def_class(superklass = T.unsafe(nil), methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -153,7 +132,7 @@ class ERB
   # MyClass.new.render('foo', 123)                      # => "foo 123"
   # ```
   #
-  # source://erb//lib/erb.rb#1132
+  # source://erb//lib/erb.rb#1088
   def def_method(mod, methodname, fname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -174,7 +153,7 @@ class ERB
   # # => "foo 123"
   # ```
   #
-  # source://erb//lib/erb.rb#1157
+  # source://erb//lib/erb.rb#1113
   def def_module(methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -184,7 +163,7 @@ class ERB
   #
   # [encodings]: rdoc-ref:ERB@Encodings
   #
-  # source://erb//lib/erb.rb#953
+  # source://erb//lib/erb.rb#909
   def encoding; end
 
   # :markup: markdown
@@ -194,7 +173,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#961
+  # source://erb//lib/erb.rb#917
   def filename; end
 
   # :markup: markdown
@@ -204,7 +183,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#961
+  # source://erb//lib/erb.rb#917
   def filename=(_arg0); end
 
   # :markup: markdown
@@ -214,7 +193,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#969
+  # source://erb//lib/erb.rb#925
   def lineno; end
 
   # :markup: markdown
@@ -224,7 +203,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#969
+  # source://erb//lib/erb.rb#925
   def lineno=(_arg0); end
 
   # :markup: markdown
@@ -238,7 +217,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#981
+  # source://erb//lib/erb.rb#937
   def location=(_arg0); end
 
   # :markup: markdown
@@ -254,7 +233,7 @@ class ERB
   # # => #<ERB::Compiler:0x000001cff9467678 @insert_cmd="print", @percent=false, @post_cmd=[], @pre_cmd=[], @put_cmd="print", @trim_mode=nil>
   # ```
   #
-  # source://erb//lib/erb.rb#898
+  # source://erb//lib/erb.rb#854
   def make_compiler(trim_mode); end
 
   # :markup: markdown
@@ -275,7 +254,7 @@ class ERB
   # [default binding]: rdoc-ref:ERB@Default+Binding
   # [local binding]: rdoc-ref:ERB@Local+Binding
   #
-  # source://erb//lib/erb.rb#1052
+  # source://erb//lib/erb.rb#1008
   def result(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -290,7 +269,7 @@ class ERB
   #
   # [augmented binding]: rdoc-ref:ERB@Augmented+Binding
   #
-  # source://erb//lib/erb.rb#1071
+  # source://erb//lib/erb.rb#1027
   def result_with_hash(hash); end
 
   # :markup: markdown
@@ -301,7 +280,7 @@ class ERB
   # Like #result, but prints the result string (instead of returning it);
   # returns `nil`.
   #
-  # source://erb//lib/erb.rb#1030
+  # source://erb//lib/erb.rb#986
   def run(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -334,7 +313,7 @@ class ERB
   #  @trim_mode=nil>
   # ```
   #
-  # source://erb//lib/erb.rb#1016
+  # source://erb//lib/erb.rb#972
   def set_eoutvar(compiler, eoutvar = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -379,7 +358,7 @@ class ERB
   # _foo
   # ```
   #
-  # source://erb//lib/erb.rb#944
+  # source://erb//lib/erb.rb#900
   def src; end
 
   private
@@ -401,7 +380,7 @@ class ERB
   #
   # [default binding]: rdoc-ref:ERB@Default+Binding
   #
-  # source://erb//lib/erb.rb#1095
+  # source://erb//lib/erb.rb#1051
   def new_toplevel(vars = T.unsafe(nil)); end
 
   class << self
@@ -412,7 +391,7 @@ class ERB
     #
     # Returns the string \ERB version.
     #
-    # source://erb//lib/erb.rb#790
+    # source://erb//lib/erb.rb#787
     def version; end
   end
 end
@@ -593,9 +572,7 @@ class ERB::Compiler
   # source://erb//lib/erb/compiler.rb#459
   def detect_magic_comment(s, enc = T.unsafe(nil)); end
 
-  # :startdoc:
-  #
-  # source://erb//lib/erb/compiler.rb#485
+  # source://erb//lib/erb/compiler.rb#484
   def warn_invalid_trim_mode(mode, uplevel:); end
 end
 
@@ -791,18 +768,11 @@ end
 
 module ERB::Escape; end
 
-# :markup: markdown
-#
-# Placeholder constant; used as default value for certain method arguments.
-#
-# source://erb//lib/erb.rb#881
-ERB::NOT_GIVEN = T.let(T.unsafe(nil), Object)
-
 # ERB::Util
 #
 # A utility module for conversion routines, often handy in HTML generation.
 #
-# source://erb//lib/erb/util.rb#32
+# source://erb//lib/erb/util.rb#33
 module ERB::Util
   include ::ActiveSupport::CoreExt::ERBUtil
   include ::ERB::Escape
@@ -812,29 +782,29 @@ module ERB::Util
 
   # cgi.gem <= v0.3.2
   #
-  # source://erb//lib/erb/util.rb#73
+  # source://erb//lib/erb/util.rb#74
   def u(s); end
 
   # cgi.gem <= v0.3.2
   #
-  # source://erb//lib/erb/util.rb#63
+  # source://erb//lib/erb/util.rb#64
   def url_encode(s); end
 
   class << self
-    # source://erb//lib/erb/util.rb#48
+    # source://erb//lib/erb/util.rb#49
     def h(s); end
 
-    # source://erb//lib/erb/util.rb#46
+    # source://erb//lib/erb/util.rb#47
     def html_escape(s); end
 
     # cgi.gem <= v0.3.2
     #
-    # source://erb//lib/erb/util.rb#74
+    # source://erb//lib/erb/util.rb#75
     def u(s); end
 
     # cgi.gem <= v0.3.2
     #
-    # source://erb//lib/erb/util.rb#75
+    # source://erb//lib/erb/util.rb#76
     def url_encode(s); end
   end
 end
