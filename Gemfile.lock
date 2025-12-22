@@ -431,7 +431,7 @@ DEPENDENCIES
   json_api_client
   kramdown (~> 2.5)
   kredis
-  minitest
+  minitest (< 6.0)
   minitest-hooks
   minitest-reporters
   mutex_m

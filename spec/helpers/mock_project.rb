@@ -35,6 +35,8 @@ module Tapioca
     def require_default_gems
       require_real_gem("ostruct")
       require_real_gem("logger")
+      # Rails 8.1.1 doesn't support minitest 6.0 which causes errors
+      require_real_gem("minitest", "< 6.0")
     end
 
     # Default Gemfile contents requiring only Tapioca
