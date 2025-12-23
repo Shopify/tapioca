@@ -51,17 +51,17 @@ end
 module Minitest::Hooks::ClassMethods
   # If type is :all, set the after_all hook instead of the after hook.
   #
-  # source://minitest-hooks//lib/minitest/hooks/test.rb#125
+  # source://minitest-hooks//lib/minitest/hooks/test.rb#134
   def after(type = T.unsafe(nil), &block); end
 
   # If type is :all, set the around_all hook, otherwise set the around hook.
   #
-  # source://minitest-hooks//lib/minitest/hooks/test.rb#106
+  # source://minitest-hooks//lib/minitest/hooks/test.rb#115
   def around(type = T.unsafe(nil), &block); end
 
   # If type is :all, set the before_all hook instead of the before hook.
   #
-  # source://minitest-hooks//lib/minitest/hooks/test.rb#112
+  # source://minitest-hooks//lib/minitest/hooks/test.rb#121
   def before(type = T.unsafe(nil), &block); end
 
   # Unless name is NEW, return a dup singleton instance.
@@ -73,12 +73,12 @@ module Minitest::Hooks::ClassMethods
   # used to implement around_all/before_all/after_all hooks, and each spec will run as a
   # dup of the singleton instance.
   #
-  # source://minitest-hooks//lib/minitest/hooks/test.rb#64
+  # source://minitest-hooks//lib/minitest/hooks/test.rb#73
   def with_info_handler(*args, &block); end
 
   private
 
-  # source://minitest-hooks//lib/minitest/hooks/test.rb#139
+  # source://minitest-hooks//lib/minitest/hooks/test.rb#148
   def _record_minitest_hooks_error(reporter, instance); end
 end
 
