@@ -203,7 +203,8 @@ GEM
       net-smtp
     marcel (1.0.4)
     mini_mime (1.1.5)
-    minitest (5.27.0)
+    minitest (6.0.0)
+      prism (~> 1.5)
     minitest-hooks (1.5.2)
       minitest (> 5.3)
     minitest-reporters (1.7.1)
@@ -431,7 +432,7 @@ DEPENDENCIES
   json_api_client
   kramdown (~> 2.5)
   kredis
-  minitest (< 6.0)
+  minitest (< 7.0)
   minitest-hooks
   minitest-reporters
   mutex_m
