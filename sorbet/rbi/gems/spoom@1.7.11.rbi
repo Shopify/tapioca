@@ -552,13 +552,13 @@ end
 
 # Execution features for a context
 #
-# source://spoom//lib/spoom/context/exec.rb#26
+# source://spoom//lib/spoom/context/exec.rb#28
 module Spoom::Context::Exec
   requires_ancestor { Spoom::Context }
 
   # Run a command in this context directory
   #
-  # source://spoom//lib/spoom/context/exec.rb#29
+  # source://spoom//lib/spoom/context/exec.rb#31
   sig { params(command: ::String, capture_err: T::Boolean).returns(::Spoom::ExecResult) }
   def exec(command, capture_err: T.unsafe(nil)); end
 end
@@ -2601,14 +2601,14 @@ end
 # source://spoom//lib/spoom.rb#10
 class Spoom::Error < ::StandardError; end
 
-# source://spoom//lib/spoom/context/exec.rb#5
+# source://spoom//lib/spoom/context/exec.rb#7
 class Spoom::ExecResult < ::T::Struct
   const :out, ::String
   const :err, T.nilable(::String)
   const :status, T::Boolean
   const :exit_code, ::Integer
 
-  # source://spoom//lib/spoom/context/exec.rb#12
+  # source://spoom//lib/spoom/context/exec.rb#14
   sig { returns(::String) }
   def to_s; end
 end
