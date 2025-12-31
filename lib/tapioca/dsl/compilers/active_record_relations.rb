@@ -977,7 +977,7 @@ module Tapioca
           when :find_each
             [constant_name, "T::Enumerator[#{constant_name}]"]
           when :find_in_batches
-            ["T::Array[#{constant_name}]", "T::Enumerator[T::Enumerator[#{constant_name}]]"]
+            ["T::Array[#{constant_name}]", "T::Enumerator[T::Array[#{constant_name}]]"]
           when :in_batches
             [RelationClassName, "::ActiveRecord::Batches::BatchEnumerator"]
           else
