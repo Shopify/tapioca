@@ -455,6 +455,10 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def unscope(*args, &blk); end
 
+                    sig { returns(PrivateAssociationRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
+
                     sig { returns(PrivateAssociationRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def where(*args); end
@@ -599,6 +603,10 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def unscope(*args, &blk); end
+
+                    sig { returns(PrivateRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
 
                     sig { returns(PrivateRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateRelation) }
@@ -1154,6 +1162,10 @@ module Tapioca
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def unscope(*args, &blk); end
 
+                    sig { returns(PrivateAssociationRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
+
                     sig { returns(PrivateAssociationRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
                     def where(*args); end
@@ -1298,6 +1310,10 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def unscope(*args, &blk); end
+
+                    sig { returns(PrivateRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
 
                     sig { returns(PrivateRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateRelation) }
