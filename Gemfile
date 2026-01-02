@@ -7,7 +7,7 @@ gemspec
 CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
-gem "minitest", "< 6.0" # Rails 8.1.1 doesn't support minitest 6.0 which causes errors
+gem "minitest", "< 7.0" # Rails 8.1.1 doesn't support minitest 6.0 which causes errors
 gem "minitest-hooks"
 gem "minitest-reporters"
 gem "debug"
