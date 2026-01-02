@@ -203,14 +203,14 @@ class Rackup::Server
     # This method can be used to very easily launch a CGI application, for
     # example:
     #
-    #  Rack::Server.start(
+    #  Rackup::Server.start(
     #    :app => lambda do |e|
     #      [200, {'content-type' => 'text/html'}, ['hello world']]
     #    end,
     #    :server => 'cgi'
     #  )
     #
-    # Further options available here are documented on Rack::Server#initialize
+    # Further options available here are documented on Rackup::Server#initialize
     #
     # source://rackup//lib/rackup/server.rb#181
     def start(options = T.unsafe(nil)); end

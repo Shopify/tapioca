@@ -154,9 +154,6 @@ class BigDecimal < ::Numeric
   def precision_scale; end
 
   # source://bigdecimal//lib/bigdecimal.rb#10
-  def precs; end
-
-  # source://bigdecimal//lib/bigdecimal.rb#10
   def quo(*_arg0); end
 
   # source://bigdecimal//lib/bigdecimal.rb#10
@@ -180,7 +177,7 @@ class BigDecimal < ::Numeric
   #
   # @raise [FloatDomainError]
   #
-  # source://bigdecimal//lib/bigdecimal.rb#211
+  # source://bigdecimal//lib/bigdecimal.rb#212
   def sqrt(prec); end
 
   # source://bigdecimal//lib/bigdecimal.rb#10
@@ -288,8 +285,41 @@ BigDecimal::VERSION = T.let(T.unsafe(nil), String)
 # Core BigMath methods for BigDecimal (log, exp) are defined here.
 # Other methods (sin, cos, atan) are defined in 'bigdecimal/math.rb'.
 #
-# source://bigdecimal//lib/bigdecimal.rb#237
+# source://bigdecimal//lib/bigdecimal.rb#240
 module BigMath
+  private
+
+  # source://bigdecimal//lib/bigdecimal.rb#310
+  def _exp_taylor(x, prec); end
+
+  # call-seq:
+  #   BigMath.exp(decimal, numeric)    -> BigDecimal
+  #
+  # Computes the value of e (the base of natural logarithms) raised to the
+  # power of +decimal+, to the specified number of digits of precision.
+  #
+  # If +decimal+ is infinity, returns Infinity.
+  #
+  # If +decimal+ is NaN, returns NaN.
+  #
+  # source://bigdecimal//lib/bigdecimal.rb#332
+  def exp(x, prec); end
+
+  # call-seq:
+  #   BigMath.log(decimal, numeric)    -> BigDecimal
+  #
+  # Computes the natural logarithm of +decimal+ to the specified number of
+  # digits of precision, +numeric+.
+  #
+  # If +decimal+ is zero or negative, raises Math::DomainError.
+  #
+  # If +decimal+ is positive infinity, returns Infinity.
+  #
+  # If +decimal+ is NaN, returns NaN.
+  #
+  # source://bigdecimal//lib/bigdecimal.rb#255
+  def log(x, prec); end
+
   class << self
     # call-seq:
     #   BigMath.exp(decimal, numeric)    -> BigDecimal
@@ -301,7 +331,7 @@ module BigMath
     #
     # If +decimal+ is NaN, returns NaN.
     #
-    # source://bigdecimal//lib/bigdecimal.rb#328
+    # source://bigdecimal//lib/bigdecimal.rb#332
     def exp(x, prec); end
 
     # call-seq:
@@ -318,12 +348,12 @@ module BigMath
     #
     # @raise [Math::DomainError]
     #
-    # source://bigdecimal//lib/bigdecimal.rb#251
+    # source://bigdecimal//lib/bigdecimal.rb#255
     def log(x, prec); end
 
     private
 
-    # source://bigdecimal//lib/bigdecimal.rb#306
+    # source://bigdecimal//lib/bigdecimal.rb#310
     def _exp_taylor(x, prec); end
   end
 end
