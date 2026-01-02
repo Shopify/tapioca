@@ -3,6 +3,29 @@
 
 require "sorbet-runtime"
 require "rubygems/user_interaction"
+require "uri"
+
+module Patch
+  def register_scheme(name, klass)
+    if name == "SOURCE"
+      if URI.scheme_list.has_key?("SOURCE")
+        raise "Tried to regsiter #{klass.inspect} a second time."
+      else
+        puts "Tried to regsiter #{klass.inspect} for #{name.inspect} for the first time."
+        puts caller_locations
+      end
+    end
+
+    super
+  end
+end
+
+module URI
+  class << self
+    puts "Installing URI::register_scheme patch"
+    prepend Patch
+  end
+end
 
 module Tapioca
   extend T::Sig
