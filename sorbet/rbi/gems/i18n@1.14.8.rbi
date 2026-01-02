@@ -133,7 +133,7 @@ module I18n
   end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#16
+# source://i18n//lib/i18n/exceptions.rb#14
 class I18n::ArgumentError < ::ArgumentError; end
 
 # source://i18n//lib/i18n/backend.rb#4
@@ -628,15 +628,15 @@ end
 
 # source://i18n//lib/i18n/backend/interpolation_compiler.rb#20
 module I18n::Backend::InterpolationCompiler
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#97
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#98
   def interpolate(locale, string, values); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#107
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#108
   def store_translations(locale, data, options = T.unsafe(nil)); end
 
   protected
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#113
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#114
   def compile_all_strings_in(data); end
 end
 
@@ -649,47 +649,47 @@ module I18n::Backend::InterpolationCompiler::Compiler
 
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#38
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#39
   def interpolated_str?(str); end
 
   protected
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#58
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#59
   def compile_interpolation_token(key); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#48
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#49
   def compiled_interpolation_body(str); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#71
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#72
   def direct_key(key); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#91
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#92
   def escape_key_sym(key); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#87
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#88
   def escape_plain_str(str); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#54
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#55
   def handle_interpolation_token(token); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#67
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#68
   def interpolate_key(key); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#62
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#63
   def interpolate_or_raise_missing(key); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#79
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#80
   def missing_key(key); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#75
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#76
   def nil_key(key); end
 
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#83
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#84
   def reserved_key(key); end
 
   # tokenize("foo %{bar} baz %%{buz}") # => ["foo ", "%{bar}", " baz ", "%%{buz}"]
   #
-  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#44
+  # source://i18n//lib/i18n/backend/interpolation_compiler.rb#45
   def tokenize(str); end
 end
 
@@ -1219,21 +1219,21 @@ end
 
 # source://i18n//lib/i18n.rb#55
 module I18n::Base
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def available_locales; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def available_locales=(value); end
 
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n.rb#386
+  # source://i18n//lib/i18n.rb#387
   def available_locales_initialized?; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def backend; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def backend=(value); end
 
   # Gets I18n configuration object.
@@ -1243,43 +1243,43 @@ module I18n::Base
 
   # Sets I18n configuration object.
   #
-  # source://i18n//lib/i18n.rb#62
+  # source://i18n//lib/i18n.rb#63
   def config=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def default_locale; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def default_locale=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def default_separator; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def default_separator=(value); end
 
   # Tells the backend to load translations now. Used in situations like the
   # Rails production environment. Backends can implement whatever strategy
   # is useful.
   #
-  # source://i18n//lib/i18n.rb#91
+  # source://i18n//lib/i18n.rb#92
   def eager_load!; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def enforce_available_locales; end
 
   # Raises an InvalidLocale exception when the passed locale is not available.
   #
-  # source://i18n//lib/i18n.rb#380
+  # source://i18n//lib/i18n.rb#381
   def enforce_available_locales!(locale); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def enforce_available_locales=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def exception_handler; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def exception_handler=(value); end
 
   # Returns true if a translation exists for a given key, otherwise returns false.
@@ -1287,7 +1287,7 @@ module I18n::Base
   # @raise [Disabled]
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n.rb#265
+  # source://i18n//lib/i18n.rb#266
   def exists?(key, _locale = T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Returns an array of interpolation keys for the given translation key
@@ -1312,26 +1312,26 @@ module I18n::Base
   #
   # @raise [I18n::ArgumentError]
   #
-  # source://i18n//lib/i18n.rb#254
+  # source://i18n//lib/i18n.rb#255
   def interpolation_keys(key, **options); end
 
   # Localizes certain objects, such as dates and numbers to local formatting.
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#343
+  # source://i18n//lib/i18n.rb#344
   def l(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def load_path; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def load_path=(value); end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def locale; end
 
-  # source://i18n//lib/i18n.rb#69
+  # source://i18n//lib/i18n.rb#70
   def locale=(value); end
 
   # Returns true when the passed locale, which can be either a String or a
@@ -1339,28 +1339,28 @@ module I18n::Base
   #
   # @return [Boolean]
   #
-  # source://i18n//lib/i18n.rb#375
+  # source://i18n//lib/i18n.rb#376
   def locale_available?(locale); end
 
   # Localizes certain objects, such as dates and numbers to local formatting.
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#335
+  # source://i18n//lib/i18n.rb#336
   def localize(object, locale: T.unsafe(nil), format: T.unsafe(nil), **options); end
 
   # Merges the given locale, key and scope into a single array of keys.
   # Splits keys that contain dots into multiple keys. Makes sure all
   # keys are Symbols.
   #
-  # source://i18n//lib/i18n.rb#363
+  # source://i18n//lib/i18n.rb#364
   def normalize_keys(locale, key, scope, separator = T.unsafe(nil)); end
 
   # Tells the backend to reload translations. Used in situations like the
   # Rails development environment. Backends can implement whatever strategy
   # is useful.
   #
-  # source://i18n//lib/i18n.rb#83
+  # source://i18n//lib/i18n.rb#84
   def reload!; end
 
   # Translates, pluralizes and interpolates a given key using a given locale,
@@ -1481,13 +1481,13 @@ module I18n::Base
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#226
+  # source://i18n//lib/i18n.rb#227
   def t(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Wrapper for <tt>translate</tt> that adds <tt>:raise => true</tt>. With
   # this option, if no translation is found, it will raise <tt>I18n::MissingTranslationData</tt>
   #
-  # source://i18n//lib/i18n.rb#233
+  # source://i18n//lib/i18n.rb#234
   def t!(key, **options); end
 
   # Translates, pluralizes and interpolates a given key using a given locale,
@@ -1608,13 +1608,13 @@ module I18n::Base
   #
   # @raise [Disabled]
   #
-  # source://i18n//lib/i18n.rb#211
+  # source://i18n//lib/i18n.rb#212
   def translate(key = T.unsafe(nil), throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), **options); end
 
   # Wrapper for <tt>translate</tt> that adds <tt>:raise => true</tt>. With
   # this option, if no translation is found, it will raise <tt>I18n::MissingTranslationData</tt>
   #
-  # source://i18n//lib/i18n.rb#230
+  # source://i18n//lib/i18n.rb#231
   def translate!(key, **options); end
 
   # Transliterates UTF-8 characters to ASCII. By default this method will
@@ -1669,12 +1669,12 @@ module I18n::Base
   #     I18n.transliterate("Jürgen", :locale => :en) # => "Jurgen"
   #     I18n.transliterate("Jürgen", :locale => :de) # => "Juergen"
   #
-  # source://i18n//lib/i18n.rb#324
+  # source://i18n//lib/i18n.rb#325
   def transliterate(key, throw: T.unsafe(nil), raise: T.unsafe(nil), locale: T.unsafe(nil), replacement: T.unsafe(nil), **options); end
 
   # Executes block with given I18n.locale set.
   #
-  # source://i18n//lib/i18n.rb#346
+  # source://i18n//lib/i18n.rb#347
   def with_locale(tmp_locale = T.unsafe(nil)); end
 
   private
@@ -1698,16 +1698,16 @@ module I18n::Base
   #   I18n.exception_handler = I18nExceptionHandler.new               # an object
   #   I18n.exception_handler.call(exception, locale, key, options)    # will be called like this
   #
-  # source://i18n//lib/i18n.rb#422
+  # source://i18n//lib/i18n.rb#423
   def handle_exception(handling, exception, locale, key, options); end
 
-  # source://i18n//lib/i18n.rb#464
+  # source://i18n//lib/i18n.rb#465
   def interpolation_keys_from_translation(translation); end
 
-  # source://i18n//lib/i18n.rb#440
+  # source://i18n//lib/i18n.rb#441
   def normalize_key(key, separator); end
 
-  # source://i18n//lib/i18n.rb#392
+  # source://i18n//lib/i18n.rb#393
   def translate_key(key, throw, raise, locale, backend, options); end
 end
 
@@ -1861,20 +1861,20 @@ end
 # source://i18n//lib/i18n/interpolate/ruby.rb#7
 I18n::DEFAULT_INTERPOLATION_PATTERNS = T.let(T.unsafe(nil), Array)
 
-# source://i18n//lib/i18n/exceptions.rb#18
+# source://i18n//lib/i18n/exceptions.rb#16
 class I18n::Disabled < ::I18n::ArgumentError
   # @return [Disabled] a new instance of Disabled
   #
-  # source://i18n//lib/i18n/exceptions.rb#19
+  # source://i18n//lib/i18n/exceptions.rb#17
   def initialize(method); end
 end
 
 # source://i18n//lib/i18n.rb#36
 I18n::EMPTY_HASH = T.let(T.unsafe(nil), Hash)
 
-# source://i18n//lib/i18n/exceptions.rb#6
+# source://i18n//lib/i18n/exceptions.rb#4
 class I18n::ExceptionHandler
-  # source://i18n//lib/i18n/exceptions.rb#7
+  # source://i18n//lib/i18n/exceptions.rb#5
   def call(exception, _locale, _key, _options); end
 end
 
@@ -1975,63 +1975,63 @@ I18n::INTERPOLATION_PATTERN = T.let(T.unsafe(nil), Regexp)
 # source://i18n//lib/i18n/interpolate/ruby.rb#15
 I18n::INTERPOLATION_PATTERNS_CACHE = T.let(T.unsafe(nil), Hash)
 
-# source://i18n//lib/i18n/exceptions.rb#134
+# source://i18n//lib/i18n/exceptions.rb#132
 class I18n::InvalidFilenames < ::I18n::ArgumentError
   # @return [InvalidFilenames] a new instance of InvalidFilenames
   #
-  # source://i18n//lib/i18n/exceptions.rb#136
+  # source://i18n//lib/i18n/exceptions.rb#134
   def initialize(file_errors); end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#135
+# source://i18n//lib/i18n/exceptions.rb#133
 I18n::InvalidFilenames::NUMBER_OF_ERRORS_SHOWN = T.let(T.unsafe(nil), Integer)
 
-# source://i18n//lib/i18n/exceptions.rb#32
+# source://i18n//lib/i18n/exceptions.rb#30
 class I18n::InvalidLocale < ::I18n::ArgumentError
   # @return [InvalidLocale] a new instance of InvalidLocale
   #
-  # source://i18n//lib/i18n/exceptions.rb#34
+  # source://i18n//lib/i18n/exceptions.rb#32
   def initialize(locale); end
 
   # Returns the value of attribute locale.
   #
-  # source://i18n//lib/i18n/exceptions.rb#33
+  # source://i18n//lib/i18n/exceptions.rb#31
   def locale; end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#40
+# source://i18n//lib/i18n/exceptions.rb#38
 class I18n::InvalidLocaleData < ::I18n::ArgumentError
   # @return [InvalidLocaleData] a new instance of InvalidLocaleData
   #
-  # source://i18n//lib/i18n/exceptions.rb#42
+  # source://i18n//lib/i18n/exceptions.rb#40
   def initialize(filename, exception_message); end
 
   # Returns the value of attribute filename.
   #
-  # source://i18n//lib/i18n/exceptions.rb#41
+  # source://i18n//lib/i18n/exceptions.rb#39
   def filename; end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#92
+# source://i18n//lib/i18n/exceptions.rb#90
 class I18n::InvalidPluralizationData < ::I18n::ArgumentError
   # @return [InvalidPluralizationData] a new instance of InvalidPluralizationData
   #
-  # source://i18n//lib/i18n/exceptions.rb#94
+  # source://i18n//lib/i18n/exceptions.rb#92
   def initialize(entry, count, key); end
 
   # Returns the value of attribute count.
   #
-  # source://i18n//lib/i18n/exceptions.rb#93
+  # source://i18n//lib/i18n/exceptions.rb#91
   def count; end
 
   # Returns the value of attribute entry.
   #
-  # source://i18n//lib/i18n/exceptions.rb#93
+  # source://i18n//lib/i18n/exceptions.rb#91
   def entry; end
 
   # Returns the value of attribute key.
   #
-  # source://i18n//lib/i18n/exceptions.rb#93
+  # source://i18n//lib/i18n/exceptions.rb#91
   def key; end
 end
 
@@ -2210,74 +2210,74 @@ class I18n::Middleware
   def call(env); end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#100
+# source://i18n//lib/i18n/exceptions.rb#98
 class I18n::MissingInterpolationArgument < ::I18n::ArgumentError
   # @return [MissingInterpolationArgument] a new instance of MissingInterpolationArgument
   #
-  # source://i18n//lib/i18n/exceptions.rb#102
+  # source://i18n//lib/i18n/exceptions.rb#100
   def initialize(key, values, string); end
 
   # Returns the value of attribute key.
   #
-  # source://i18n//lib/i18n/exceptions.rb#101
+  # source://i18n//lib/i18n/exceptions.rb#99
   def key; end
 
   # Returns the value of attribute string.
   #
-  # source://i18n//lib/i18n/exceptions.rb#101
+  # source://i18n//lib/i18n/exceptions.rb#99
   def string; end
 
   # Returns the value of attribute values.
   #
-  # source://i18n//lib/i18n/exceptions.rb#101
+  # source://i18n//lib/i18n/exceptions.rb#99
   def values; end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#48
+# source://i18n//lib/i18n/exceptions.rb#46
 class I18n::MissingTranslation < ::I18n::ArgumentError
   include ::I18n::MissingTranslation::Base
 end
 
-# source://i18n//lib/i18n/exceptions.rb#49
+# source://i18n//lib/i18n/exceptions.rb#47
 module I18n::MissingTranslation::Base
-  # source://i18n//lib/i18n/exceptions.rb#54
+  # source://i18n//lib/i18n/exceptions.rb#52
   def initialize(locale, key, options = T.unsafe(nil)); end
 
   # Returns the value of attribute key.
   #
-  # source://i18n//lib/i18n/exceptions.rb#52
+  # source://i18n//lib/i18n/exceptions.rb#50
   def key; end
 
-  # source://i18n//lib/i18n/exceptions.rb#59
+  # source://i18n//lib/i18n/exceptions.rb#57
   def keys; end
 
   # Returns the value of attribute locale.
   #
-  # source://i18n//lib/i18n/exceptions.rb#52
+  # source://i18n//lib/i18n/exceptions.rb#50
   def locale; end
 
-  # source://i18n//lib/i18n/exceptions.rb#65
+  # source://i18n//lib/i18n/exceptions.rb#63
   def message; end
 
-  # source://i18n//lib/i18n/exceptions.rb#74
+  # source://i18n//lib/i18n/exceptions.rb#72
   def normalized_option(key); end
 
   # Returns the value of attribute options.
   #
-  # source://i18n//lib/i18n/exceptions.rb#52
+  # source://i18n//lib/i18n/exceptions.rb#50
   def options; end
 
-  # source://i18n//lib/i18n/exceptions.rb#80
+  # source://i18n//lib/i18n/exceptions.rb#78
   def to_exception; end
 
-  # source://i18n//lib/i18n/exceptions.rb#78
+  # source://i18n//lib/i18n/exceptions.rb#76
   def to_s; end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#50
+# source://i18n//lib/i18n/exceptions.rb#48
 I18n::MissingTranslation::Base::PERMITTED_KEYS = T.let(T.unsafe(nil), Array)
 
-# source://i18n//lib/i18n/exceptions.rb#88
+# source://i18n//lib/i18n/exceptions.rb#86
 class I18n::MissingTranslationData < ::I18n::ArgumentError
   include ::I18n::MissingTranslation::Base
 end
@@ -2285,21 +2285,21 @@ end
 # source://i18n//lib/i18n.rb#19
 I18n::RESERVED_KEYS = T.let(T.unsafe(nil), Array)
 
-# source://i18n//lib/i18n/exceptions.rb#108
+# source://i18n//lib/i18n/exceptions.rb#106
 class I18n::ReservedInterpolationKey < ::I18n::ArgumentError
   # @return [ReservedInterpolationKey] a new instance of ReservedInterpolationKey
   #
-  # source://i18n//lib/i18n/exceptions.rb#110
+  # source://i18n//lib/i18n/exceptions.rb#108
   def initialize(key, string); end
 
   # Returns the value of attribute key.
   #
-  # source://i18n//lib/i18n/exceptions.rb#109
+  # source://i18n//lib/i18n/exceptions.rb#107
   def key; end
 
   # Returns the value of attribute string.
   #
-  # source://i18n//lib/i18n/exceptions.rb#109
+  # source://i18n//lib/i18n/exceptions.rb#107
   def string; end
 end
 
@@ -2316,44 +2316,44 @@ module I18n::Tests::Localization
   end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#116
+# source://i18n//lib/i18n/exceptions.rb#114
 class I18n::UnknownFileType < ::I18n::ArgumentError
   # @return [UnknownFileType] a new instance of UnknownFileType
   #
-  # source://i18n//lib/i18n/exceptions.rb#118
+  # source://i18n//lib/i18n/exceptions.rb#116
   def initialize(type, filename); end
 
   # Returns the value of attribute filename.
   #
-  # source://i18n//lib/i18n/exceptions.rb#117
+  # source://i18n//lib/i18n/exceptions.rb#115
   def filename; end
 
   # Returns the value of attribute type.
   #
-  # source://i18n//lib/i18n/exceptions.rb#117
+  # source://i18n//lib/i18n/exceptions.rb#115
   def type; end
 end
 
-# source://i18n//lib/i18n/exceptions.rb#124
+# source://i18n//lib/i18n/exceptions.rb#122
 class I18n::UnsupportedMethod < ::I18n::ArgumentError
   # @return [UnsupportedMethod] a new instance of UnsupportedMethod
   #
-  # source://i18n//lib/i18n/exceptions.rb#126
+  # source://i18n//lib/i18n/exceptions.rb#124
   def initialize(method, backend_klass, msg); end
 
   # Returns the value of attribute backend_klass.
   #
-  # source://i18n//lib/i18n/exceptions.rb#125
+  # source://i18n//lib/i18n/exceptions.rb#123
   def backend_klass; end
 
   # Returns the value of attribute method.
   #
-  # source://i18n//lib/i18n/exceptions.rb#125
+  # source://i18n//lib/i18n/exceptions.rb#123
   def method; end
 
   # Returns the value of attribute msg.
   #
-  # source://i18n//lib/i18n/exceptions.rb#125
+  # source://i18n//lib/i18n/exceptions.rb#123
   def msg; end
 end
 
