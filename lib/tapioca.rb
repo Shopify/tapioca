@@ -17,7 +17,6 @@ module Tapioca
   TAPIOCA_DIR = "#{SORBET_DIR}/tapioca" #: String
   TAPIOCA_CONFIG_FILE = "#{TAPIOCA_DIR}/config.yml" #: String
 
-  BINARY_FILE = "bin/tapioca" #: String
   DEFAULT_POSTREQUIRE_FILE = "#{TAPIOCA_DIR}/require.rb" #: String
   DEFAULT_RBI_DIR = "#{SORBET_DIR}/rbi" #: String
   DEFAULT_DSL_DIR = "#{DEFAULT_RBI_DIR}/dsl" #: String
@@ -38,6 +37,21 @@ module Tapioca
   CENTRAL_REPO_ROOT_URI = "https://raw.githubusercontent.com/Shopify/rbi-central/main"
   CENTRAL_REPO_INDEX_PATH = "index.json"
   CENTRAL_REPO_ANNOTATIONS_DIR = "rbi/annotations"
+
+  #: -> bool
+  def self.__is_this_bundle_tapioca_itself?
+    (Bundler.root + "tapioca.gemspec").exist?
+  rescue Bundler::GemfileNotFound
+    false
+  end
+
+  BINARY_FILE = if __is_this_bundle_tapioca_itself?
+    # This code is running from the Tapioca repo itself, which doesn't have `bin/tapioca`
+    "exe/tapioca"
+  else
+    # This code is running from any other user of Tapioca, who should have a binstub.
+    "bin/tapioca"
+  end #: String
 end
 
 require "tapioca/version"
