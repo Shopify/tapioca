@@ -541,6 +541,7 @@ module Tapioca
         #: -> void
         def create_relation_methods
           create_relation_method("all")
+          create_unscoped_relation_method
 
           QUERY_METHODS.each do |method_name|
             case method_name
@@ -1055,6 +1056,35 @@ module Tapioca
             parameters: parameters,
             return_type: association_return_type,
           )
+        end
+
+        #: -> void
+        def create_unscoped_relation_method
+          relation_methods_module.create_method("unscoped") do |method|
+            method.add_block_param("block")
+
+            method.add_sig do |sig|
+              sig.return_type = RelationClassName
+            end
+
+            method.add_sig(type_params: ["U"]) do |sig|
+              sig.add_param("block", "T.proc.returns(T.type_parameter(:U))")
+              sig.return_type = "T.type_parameter(:U)"
+            end
+          end
+
+          association_relation_methods_module.create_method("unscoped") do |method|
+            method.add_block_param("block")
+
+            method.add_sig do |sig|
+              sig.return_type = AssociationRelationClassName
+            end
+
+            method.add_sig(type_params: ["U"]) do |sig|
+              sig.add_param("block", "T.proc.returns(T.type_parameter(:U))")
+              sig.return_type = "T.type_parameter(:U)"
+            end
+          end
         end
       end
     end
