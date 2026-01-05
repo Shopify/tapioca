@@ -1,12 +1,16 @@
-# typed: true
+# typed: strict
 # frozen_string_literal: true
 
 require "uri/file"
 
-module Tapioca
-  class SourceURI < URI::File
-    extend T::Sig
+# Don't redefine this class if RubyLSP already defined it.
+# This also prevents us from registering two different classes for the `SOURCE` scheme.
+return if defined?(URI::Source)
 
+module URI
+  # Must be kept in sync with the one in Ruby LSP
+  # https://github.com/Shopify/ruby-lsp/blob/main/lib/ruby_lsp/requests/support/source_uri.rb
+  class Source < ::URI::File
     COMPONENT = [
       :scheme,
       :gem_name,
@@ -22,12 +26,17 @@ module Tapioca
     # have the uri gem in their own bundle and thus not use a compatible version.
     PARSER = const_defined?(:RFC2396_PARSER) ? RFC2396_PARSER : DEFAULT_PARSER #: RFC2396_Parser
 
+    # We need to hide these aliased methods from Sorbet, because it would otherwise complain about these
+    # being redefinitions of the existing methods it knows about from RubyLSP.
+    self #: as untyped # rubocop:disable Style/RedundantSelf
+      .alias_method(:gem_name, :host)
+    self #: as untyped # rubocop:disable Style/RedundantSelf
+      .alias_method(:line_number, :fragment)
+
     #: String?
     attr_reader :gem_version
 
     class << self
-      extend T::Sig
-
       #: (gem_name: String, gem_version: String?, path: String, line_number: String?) -> instance
       def build(gem_name:, gem_version:, path:, line_number:)
         super(
@@ -41,21 +50,14 @@ module Tapioca
       end
     end
 
-    #: -> String?
-    def gem_name
-      host
-    end
-
-    #: -> String?
-    def line_number
-      fragment
-    end
-
     #: (String? v) -> void
     def set_path(v) # rubocop:disable Naming/AccessorMethodName
       return if v.nil?
 
-      @gem_version, @path = v.split("/", 2)
+      gem_version, path = v.delete_prefix("/").split("/", 2)
+
+      @gem_version = gem_version #: String?
+      @path = path #: String?
     end
 
     #: (String? v) -> bool
@@ -76,8 +78,11 @@ module Tapioca
     end
 
     if URI.respond_to?(:register_scheme)
+      # Handle URI 0.11.0 and newer https://github.com/ruby/uri/pull/26
       URI.register_scheme("SOURCE", self)
     else
+      # Fallback for URI <0.11.0
+      @@schemes = @@schemes #: Hash[String, untyped] # rubocop:disable Style/ClassVars
       @@schemes["SOURCE"] = self
     end
   end
