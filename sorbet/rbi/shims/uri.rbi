@@ -13,7 +13,7 @@ module URI
     sig { returns(String) }
     attr_reader :host
 
-    sig { returns(String) }
+    sig { returns(T.nilable(String)) }
     attr_reader :fragment
   end
 
