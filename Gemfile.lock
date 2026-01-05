@@ -1,3 +1,16 @@
+GIT
+  remote: https://github.com/paracycle/json_api_client.git
+  revision: 9564f34d250e852b90d24505ab6fe3214f936eef
+  branch: uk-bump-versions
+  specs:
+    json_api_client (1.23.0)
+      activemodel (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      addressable (~> 2.2)
+      faraday (>= 1.10, < 3.0)
+      faraday-gzip (>= 1.0, < 4.0)
+      rack (>= 0.2)
+
 PATH
   remote: .
   specs:
@@ -134,8 +147,8 @@ GEM
     erubi (1.13.1)
     faraday (2.9.0)
       faraday-net_http (>= 2.0, < 3.2)
-    faraday-gzip (2.0.1)
-      faraday (>= 1.0)
+    faraday-gzip (3.1.0)
+      faraday (>= 2.0, < 3)
       zlib (~> 3.0)
     faraday-net_http (3.1.0)
       net-http
@@ -144,6 +157,9 @@ GEM
       activemodel
     globalid (1.2.1)
       activesupport (>= 6.1)
+    google-protobuf (4.33.2)
+      bigdecimal
+      rake (>= 13)
     google-protobuf (4.33.2-aarch64-linux-gnu)
       bigdecimal
       rake (>= 13)
@@ -178,13 +194,6 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.18.0)
-    json_api_client (1.23.0)
-      activemodel (>= 6.0.0)
-      activesupport (>= 6.0.0)
-      addressable (~> 2.2)
-      faraday (>= 1.10, < 3.0)
-      faraday-gzip (>= 1.0, < 3.0)
-      rack (>= 0.2)
     kramdown (2.5.1)
       rexml (>= 3.3.9)
     kredis (1.8.0)
@@ -204,6 +213,7 @@ GEM
       net-smtp
     marcel (1.0.4)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (5.27.0)
     minitest-hooks (1.5.3)
       minitest (> 5.3)
@@ -226,6 +236,9 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.4)
+    nokogiri (1.18.10)
+      mini_portile2 (~> 2.8.2)
+      racc (~> 1.4)
     nokogiri (1.18.10-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.18.10-aarch64-linux-musl)
@@ -371,6 +384,8 @@ GEM
       concurrent-ruby (~> 1.0)
       logger
       rack (>= 2.2.4, < 4)
+    sqlite3 (2.5.0)
+      mini_portile2 (~> 2.8.0)
     sqlite3 (2.5.0-aarch64-linux-gnu)
     sqlite3 (2.5.0-aarch64-linux-musl)
     sqlite3 (2.5.0-arm64-darwin)
@@ -386,7 +401,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
-    unicode-emoji (4.1.0)
+    unicode-emoji (4.2.0)
     uri (1.1.1)
     useragent (0.16.11)
     webmock (3.26.1)
@@ -403,7 +418,7 @@ GEM
       sorbet-runtime
       yard
     zeitwerk (2.7.4)
-    zlib (3.1.0)
+    zlib (3.2.2)
 
 PLATFORMS
   aarch64-linux
@@ -429,7 +444,7 @@ DEPENDENCIES
   graphql
   identity_cache
   irb
-  json_api_client
+  json_api_client!
   kramdown (~> 2.5)
   kredis
   minitest (< 6.0)
@@ -455,4 +470,4 @@ DEPENDENCIES
   xpath
 
 BUNDLED WITH
-   2.6.2
+  4.0.3

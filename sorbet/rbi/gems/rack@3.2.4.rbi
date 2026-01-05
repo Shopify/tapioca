@@ -1612,28 +1612,28 @@ class Rack::Lint::Wrapper::StreamWrapper
   def initialize(stream); end
 
   # source://rack//lib/rack/lint.rb#945
-  def <<(*args, **_arg1, &block); end
+  def <<(*_arg0, **_arg1, &_arg2); end
 
   # source://rack//lib/rack/lint.rb#945
-  def close(*args, **_arg1, &block); end
+  def close(*_arg0, **_arg1, &_arg2); end
 
   # source://rack//lib/rack/lint.rb#945
-  def close_read(*args, **_arg1, &block); end
+  def close_read(*_arg0, **_arg1, &_arg2); end
 
   # source://rack//lib/rack/lint.rb#945
-  def close_write(*args, **_arg1, &block); end
+  def close_write(*_arg0, **_arg1, &_arg2); end
 
   # source://rack//lib/rack/lint.rb#945
-  def closed?(*args, **_arg1, &block); end
+  def closed?(*_arg0, **_arg1, &_arg2); end
 
   # source://rack//lib/rack/lint.rb#945
-  def flush(*args, **_arg1, &block); end
+  def flush(*_arg0, **_arg1, &_arg2); end
 
   # source://rack//lib/rack/lint.rb#945
-  def read(*args, **_arg1, &block); end
+  def read(*_arg0, **_arg1, &_arg2); end
 
   # source://rack//lib/rack/lint.rb#945
-  def write(*args, **_arg1, &block); end
+  def write(*_arg0, **_arg1, &_arg2); end
 end
 
 # The semantics of these +IO+ methods must be a best effort match to those of a normal Ruby +IO+ or +Socket+ object, using standard arguments and raising standard exceptions. Servers may simply pass on real +IO+ objects to the Streaming Body. In some cases (e.g. when using <tt>transfer-encoding</tt> or HTTP/2+), the server may need to provide a wrapper that implements the required methods, in order to provide the correct semantics.

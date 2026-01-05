@@ -33,7 +33,9 @@ group :development, :test do
   gem "sqlite3"
   gem "mutex_m"
   gem "smart_properties"
-  gem "json_api_client"
+  # Needed for Ruby 4.0 compatibility
+  # Can be removed once https://github.com/JsonApiClient/json_api_client/pull/416 is merged
+  gem "json_api_client", github: "paracycle/json_api_client", branch: "uk-bump-versions"
   gem "frozen_record"
   gem "sprockets"
   gem "state_machines"

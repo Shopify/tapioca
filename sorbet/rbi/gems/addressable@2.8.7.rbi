@@ -1917,7 +1917,6 @@ Addressable::URI::EMPTY_STR = T.let(T.unsafe(nil), String)
 # source://addressable//lib/addressable/uri.rb#34
 class Addressable::URI::InvalidURIError < ::StandardError; end
 
-# source://addressable//lib/addressable/uri.rb#2598
 module Addressable::URI::NONE; end
 
 # source://addressable//lib/addressable/uri.rb#1530
