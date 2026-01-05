@@ -9,8 +9,8 @@ end
 
 class ActiveRecord::FixtureSet::File
   sig { returns(T.nilable(String)) }
-  def modle_class; end
+  def model_class; end
 
-  sig params(filename: String, blk: T.proc.params(arg0: ActiveRecord::FixtureSet::File).void)
+  sig { params(filename: String, block: T.proc.params(arg0: ActiveRecord::FixtureSet::File).void).void }
   def self.open(filename, &block); end
 end
