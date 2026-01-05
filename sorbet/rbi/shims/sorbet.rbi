@@ -1,4 +1,4 @@
-# typed: strict
+# typed: true
 
 module T::Private
   class Abstract::Data

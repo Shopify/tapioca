@@ -525,7 +525,6 @@ module Rake::Cloneable
   def initialize_copy(source); end
 end
 
-# source://rake//lib/rake/application.rb#13
 class Rake::CommandLineOptionError < ::StandardError; end
 
 # Based on a script at:
@@ -1374,6 +1373,9 @@ class Rake::FileList
 
   # source://rake//lib/rake/file_list.rb#76
   def reverse_each(*args, &block); end
+
+  # source://rake//lib/rake/file_list.rb#76
+  def rfind(*args, &block); end
 
   # source://rake//lib/rake/file_list.rb#76
   def rindex(*args, &block); end
