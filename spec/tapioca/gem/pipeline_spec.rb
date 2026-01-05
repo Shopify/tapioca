@@ -4537,7 +4537,12 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def foo; end
         end
 
+
+        class MyModule < Module; end
+
         NewClass = Class.new
+        NewModule = Module.new
+        NewCustomModule = MyModule.new
       RB
 
       output = template(<<~RBI)
@@ -4589,8 +4594,17 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def helper_method; end
         end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#30
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#31
+        class MyModule < ::Module; end
+
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#33
         class NewClass; end
+
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#35
+        module NewCustomModule; end
+
+        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#34
+        module NewModule; end
 
         # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
         class Quux < ::T::Struct; end
