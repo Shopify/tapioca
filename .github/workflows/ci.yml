@@ -44,6 +44,9 @@ jobs:
         ruby: ["3.2", "3.3", "3.4", "head"]
         rails: ["8.0", "current", "main"]
         rubygems: ["3.6.2"]
+        exclude:
+          - ruby: "3.2"
+            rails: "main"
         include:
           - rails: "main"
             experimental: true
