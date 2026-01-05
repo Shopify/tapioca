@@ -1390,7 +1390,7 @@ module Tapioca
         end
 
         it "does not crash while tracking `rbtrace` constants" do
-          @project.require_real_gem("rbtrace", "0.4.14")
+          @project.require_real_gem("rbtrace")
           @project.bundle_install!
           result = @project.tapioca("gem rbtrace")
           assert_empty_stderr(result)
