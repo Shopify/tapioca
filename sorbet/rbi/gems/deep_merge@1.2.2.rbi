@@ -5,10 +5,10 @@
 # Please instead update this file by running `bin/tapioca gem deep_merge`.
 
 
-# source://deep_merge//lib/deep_merge/core.rb#1
+# pkg:gem/deep_merge#lib/deep_merge/core.rb:1
 module DeepMerge
   class << self
-    # source://deep_merge//lib/deep_merge/core.rb#238
+    # pkg:gem/deep_merge#lib/deep_merge/core.rb:238
     def clear_or_nil(obj); end
 
     # Deep Merge core documentation.
@@ -85,18 +85,18 @@ module DeepMerge
     #
     # @raise [InvalidParameter]
     #
-    # source://deep_merge//lib/deep_merge/core.rb#78
+    # pkg:gem/deep_merge#lib/deep_merge/core.rb:78
     def deep_merge!(source, dest, options = T.unsafe(nil)); end
 
     # allows deep_merge! to uniformly handle overwriting of unmergeable entities
     #
-    # source://deep_merge//lib/deep_merge/core.rb#212
+    # pkg:gem/deep_merge#lib/deep_merge/core.rb:212
     def overwrite_unmergeables(source, dest, options); end
   end
 end
 
-# source://deep_merge//lib/deep_merge/core.rb#5
+# pkg:gem/deep_merge#lib/deep_merge/core.rb:5
 DeepMerge::DEFAULT_FIELD_KNOCKOUT_PREFIX = T.let(T.unsafe(nil), String)
 
-# source://deep_merge//lib/deep_merge/core.rb#3
+# pkg:gem/deep_merge#lib/deep_merge/core.rb:3
 class DeepMerge::InvalidParameter < ::StandardError; end

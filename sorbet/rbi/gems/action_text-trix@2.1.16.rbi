@@ -5,11 +5,11 @@
 # Please instead update this file by running `bin/tapioca gem action_text-trix`.
 
 
-# source://action_text-trix//lib/action_text/trix/version.rb#1
+# pkg:gem/action_text-trix#lib/action_text/trix/version.rb:1
 module Trix; end
 
-# source://action_text-trix//lib/action_text/trix/engine.rb#2
+# pkg:gem/action_text-trix#lib/action_text/trix/engine.rb:2
 class Trix::Engine < ::Rails::Engine; end
 
-# source://action_text-trix//lib/action_text/trix/version.rb#2
+# pkg:gem/action_text-trix#lib/action_text/trix/version.rb:2
 Trix::VERSION = T.let(T.unsafe(nil), String)
