@@ -16,313 +16,313 @@ end
 # :markup: markdown
 # :include: ../README.md
 #
-# source://activestorage//lib/active_storage/gem_version.rb#3
+# pkg:gem/activestorage#lib/active_storage/gem_version.rb:3
 module ActiveStorage
   extend ::ActiveSupport::Autoload
 
-  # source://activestorage//lib/active_storage.rb#57
+  # pkg:gem/activestorage#lib/active_storage.rb:57
   def analyzers; end
 
-  # source://activestorage//lib/active_storage.rb#57
+  # pkg:gem/activestorage#lib/active_storage.rb:57
   def analyzers=(val); end
 
-  # source://activestorage//lib/active_storage.rb#63
+  # pkg:gem/activestorage#lib/active_storage.rb:63
   def binary_content_type; end
 
-  # source://activestorage//lib/active_storage.rb#63
+  # pkg:gem/activestorage#lib/active_storage.rb:63
   def binary_content_type=(val); end
 
-  # source://activestorage//lib/active_storage.rb#65
+  # pkg:gem/activestorage#lib/active_storage.rb:65
   def content_types_allowed_inline; end
 
-  # source://activestorage//lib/active_storage.rb#65
+  # pkg:gem/activestorage#lib/active_storage.rb:65
   def content_types_allowed_inline=(val); end
 
-  # source://activestorage//lib/active_storage.rb#64
+  # pkg:gem/activestorage#lib/active_storage.rb:64
   def content_types_to_serve_as_binary; end
 
-  # source://activestorage//lib/active_storage.rb#64
+  # pkg:gem/activestorage#lib/active_storage.rb:64
   def content_types_to_serve_as_binary=(val); end
 
-  # source://activestorage//lib/active_storage.rb#360
+  # pkg:gem/activestorage#lib/active_storage.rb:360
   def draw_routes; end
 
-  # source://activestorage//lib/active_storage.rb#360
+  # pkg:gem/activestorage#lib/active_storage.rb:360
   def draw_routes=(val); end
 
-  # source://activestorage//lib/active_storage.rb#48
+  # pkg:gem/activestorage#lib/active_storage.rb:48
   def logger; end
 
-  # source://activestorage//lib/active_storage.rb#48
+  # pkg:gem/activestorage#lib/active_storage.rb:48
   def logger=(val); end
 
-  # source://activestorage//lib/active_storage.rb#59
+  # pkg:gem/activestorage#lib/active_storage.rb:59
   def paths; end
 
-  # source://activestorage//lib/active_storage.rb#59
+  # pkg:gem/activestorage#lib/active_storage.rb:59
   def paths=(val); end
 
-  # source://activestorage//lib/active_storage.rb#56
+  # pkg:gem/activestorage#lib/active_storage.rb:56
   def previewers; end
 
-  # source://activestorage//lib/active_storage.rb#56
+  # pkg:gem/activestorage#lib/active_storage.rb:56
   def previewers=(val); end
 
-  # source://activestorage//lib/active_storage.rb#54
+  # pkg:gem/activestorage#lib/active_storage.rb:54
   def queues; end
 
-  # source://activestorage//lib/active_storage.rb#54
+  # pkg:gem/activestorage#lib/active_storage.rb:54
   def queues=(val); end
 
-  # source://activestorage//lib/active_storage.rb#361
+  # pkg:gem/activestorage#lib/active_storage.rb:361
   def resolve_model_to_route; end
 
-  # source://activestorage//lib/active_storage.rb#361
+  # pkg:gem/activestorage#lib/active_storage.rb:361
   def resolve_model_to_route=(val); end
 
-  # source://activestorage//lib/active_storage.rb#359
+  # pkg:gem/activestorage#lib/active_storage.rb:359
   def routes_prefix; end
 
-  # source://activestorage//lib/active_storage.rb#359
+  # pkg:gem/activestorage#lib/active_storage.rb:359
   def routes_prefix=(val); end
 
-  # source://activestorage//lib/active_storage.rb#355
+  # pkg:gem/activestorage#lib/active_storage.rb:355
   def service_urls_expire_in; end
 
-  # source://activestorage//lib/active_storage.rb#355
+  # pkg:gem/activestorage#lib/active_storage.rb:355
   def service_urls_expire_in=(val); end
 
-  # source://activestorage//lib/active_storage.rb#67
+  # pkg:gem/activestorage#lib/active_storage.rb:67
   def supported_image_processing_methods; end
 
-  # source://activestorage//lib/active_storage.rb#67
+  # pkg:gem/activestorage#lib/active_storage.rb:67
   def supported_image_processing_methods=(val); end
 
-  # source://activestorage//lib/active_storage.rb#356
+  # pkg:gem/activestorage#lib/active_storage.rb:356
   def touch_attachment_records; end
 
-  # source://activestorage//lib/active_storage.rb#356
+  # pkg:gem/activestorage#lib/active_storage.rb:356
   def touch_attachment_records=(val); end
 
-  # source://activestorage//lib/active_storage.rb#363
+  # pkg:gem/activestorage#lib/active_storage.rb:363
   def track_variants; end
 
-  # source://activestorage//lib/active_storage.rb#363
+  # pkg:gem/activestorage#lib/active_storage.rb:363
   def track_variants=(val); end
 
-  # source://activestorage//lib/active_storage.rb#353
+  # pkg:gem/activestorage#lib/active_storage.rb:353
   def unsupported_image_processing_arguments; end
 
-  # source://activestorage//lib/active_storage.rb#353
+  # pkg:gem/activestorage#lib/active_storage.rb:353
   def unsupported_image_processing_arguments=(val); end
 
-  # source://activestorage//lib/active_storage.rb#357
+  # pkg:gem/activestorage#lib/active_storage.rb:357
   def urls_expire_in; end
 
-  # source://activestorage//lib/active_storage.rb#357
+  # pkg:gem/activestorage#lib/active_storage.rb:357
   def urls_expire_in=(val); end
 
-  # source://activestorage//lib/active_storage.rb#61
+  # pkg:gem/activestorage#lib/active_storage.rb:61
   def variable_content_types; end
 
-  # source://activestorage//lib/active_storage.rb#61
+  # pkg:gem/activestorage#lib/active_storage.rb:61
   def variable_content_types=(val); end
 
-  # source://activestorage//lib/active_storage.rb#50
+  # pkg:gem/activestorage#lib/active_storage.rb:50
   def variant_processor; end
 
-  # source://activestorage//lib/active_storage.rb#50
+  # pkg:gem/activestorage#lib/active_storage.rb:50
   def variant_processor=(val); end
 
-  # source://activestorage//lib/active_storage.rb#52
+  # pkg:gem/activestorage#lib/active_storage.rb:52
   def variant_transformer; end
 
-  # source://activestorage//lib/active_storage.rb#52
+  # pkg:gem/activestorage#lib/active_storage.rb:52
   def variant_transformer=(val); end
 
-  # source://activestorage//lib/active_storage.rb#49
+  # pkg:gem/activestorage#lib/active_storage.rb:49
   def verifier; end
 
-  # source://activestorage//lib/active_storage.rb#49
+  # pkg:gem/activestorage#lib/active_storage.rb:49
   def verifier=(val); end
 
-  # source://activestorage//lib/active_storage.rb#365
+  # pkg:gem/activestorage#lib/active_storage.rb:365
   def video_preview_arguments; end
 
-  # source://activestorage//lib/active_storage.rb#365
+  # pkg:gem/activestorage#lib/active_storage.rb:365
   def video_preview_arguments=(val); end
 
-  # source://activestorage//lib/active_storage.rb#62
+  # pkg:gem/activestorage#lib/active_storage.rb:62
   def web_image_content_types; end
 
-  # source://activestorage//lib/active_storage.rb#62
+  # pkg:gem/activestorage#lib/active_storage.rb:62
   def web_image_content_types=(val); end
 
   class << self
-    # source://activestorage//lib/active_storage.rb#57
+    # pkg:gem/activestorage#lib/active_storage.rb:57
     def analyzers; end
 
-    # source://activestorage//lib/active_storage.rb#57
+    # pkg:gem/activestorage#lib/active_storage.rb:57
     def analyzers=(val); end
 
-    # source://activestorage//lib/active_storage.rb#63
+    # pkg:gem/activestorage#lib/active_storage.rb:63
     def binary_content_type; end
 
-    # source://activestorage//lib/active_storage.rb#63
+    # pkg:gem/activestorage#lib/active_storage.rb:63
     def binary_content_type=(val); end
 
-    # source://activestorage//lib/active_storage.rb#65
+    # pkg:gem/activestorage#lib/active_storage.rb:65
     def content_types_allowed_inline; end
 
-    # source://activestorage//lib/active_storage.rb#65
+    # pkg:gem/activestorage#lib/active_storage.rb:65
     def content_types_allowed_inline=(val); end
 
-    # source://activestorage//lib/active_storage.rb#64
+    # pkg:gem/activestorage#lib/active_storage.rb:64
     def content_types_to_serve_as_binary; end
 
-    # source://activestorage//lib/active_storage.rb#64
+    # pkg:gem/activestorage#lib/active_storage.rb:64
     def content_types_to_serve_as_binary=(val); end
 
-    # source://activestorage//lib/active_storage/deprecator.rb#4
+    # pkg:gem/activestorage#lib/active_storage/deprecator.rb:4
     def deprecator; end
 
-    # source://activestorage//lib/active_storage.rb#360
+    # pkg:gem/activestorage#lib/active_storage.rb:360
     def draw_routes; end
 
-    # source://activestorage//lib/active_storage.rb#360
+    # pkg:gem/activestorage#lib/active_storage.rb:360
     def draw_routes=(val); end
 
     # Returns the currently loaded version of Active Storage as a +Gem::Version+.
     #
-    # source://activestorage//lib/active_storage/gem_version.rb#5
+    # pkg:gem/activestorage#lib/active_storage/gem_version.rb:5
     def gem_version; end
 
-    # source://activestorage//lib/active_storage.rb#48
+    # pkg:gem/activestorage#lib/active_storage.rb:48
     def logger; end
 
-    # source://activestorage//lib/active_storage.rb#48
+    # pkg:gem/activestorage#lib/active_storage.rb:48
     def logger=(val); end
 
-    # source://activestorage//lib/active_storage.rb#59
+    # pkg:gem/activestorage#lib/active_storage.rb:59
     def paths; end
 
-    # source://activestorage//lib/active_storage.rb#59
+    # pkg:gem/activestorage#lib/active_storage.rb:59
     def paths=(val); end
 
-    # source://activestorage//lib/active_storage.rb#56
+    # pkg:gem/activestorage#lib/active_storage.rb:56
     def previewers; end
 
-    # source://activestorage//lib/active_storage.rb#56
+    # pkg:gem/activestorage#lib/active_storage.rb:56
     def previewers=(val); end
 
-    # source://activestorage//lib/active_storage.rb#54
+    # pkg:gem/activestorage#lib/active_storage.rb:54
     def queues; end
 
-    # source://activestorage//lib/active_storage.rb#54
+    # pkg:gem/activestorage#lib/active_storage.rb:54
     def queues=(val); end
 
-    # source://activestorage//lib/active_storage/engine.rb#24
+    # pkg:gem/activestorage#lib/active_storage/engine.rb:24
     def railtie_helpers_paths; end
 
-    # source://activestorage//lib/active_storage/engine.rb#24
+    # pkg:gem/activestorage#lib/active_storage/engine.rb:24
     def railtie_namespace; end
 
-    # source://activestorage//lib/active_storage/engine.rb#24
+    # pkg:gem/activestorage#lib/active_storage/engine.rb:24
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
 
-    # source://activestorage//lib/active_storage.rb#361
+    # pkg:gem/activestorage#lib/active_storage.rb:361
     def resolve_model_to_route; end
 
-    # source://activestorage//lib/active_storage.rb#361
+    # pkg:gem/activestorage#lib/active_storage.rb:361
     def resolve_model_to_route=(val); end
 
-    # source://activestorage//lib/active_storage.rb#359
+    # pkg:gem/activestorage#lib/active_storage.rb:359
     def routes_prefix; end
 
-    # source://activestorage//lib/active_storage.rb#359
+    # pkg:gem/activestorage#lib/active_storage.rb:359
     def routes_prefix=(val); end
 
-    # source://activestorage//lib/active_storage.rb#355
+    # pkg:gem/activestorage#lib/active_storage.rb:355
     def service_urls_expire_in; end
 
-    # source://activestorage//lib/active_storage.rb#355
+    # pkg:gem/activestorage#lib/active_storage.rb:355
     def service_urls_expire_in=(val); end
 
-    # source://activestorage//lib/active_storage.rb#67
+    # pkg:gem/activestorage#lib/active_storage.rb:67
     def supported_image_processing_methods; end
 
-    # source://activestorage//lib/active_storage.rb#67
+    # pkg:gem/activestorage#lib/active_storage.rb:67
     def supported_image_processing_methods=(val); end
 
-    # source://activestorage//lib/active_storage/engine.rb#24
+    # pkg:gem/activestorage#lib/active_storage/engine.rb:24
     def table_name_prefix; end
 
-    # source://activestorage//lib/active_storage.rb#356
+    # pkg:gem/activestorage#lib/active_storage.rb:356
     def touch_attachment_records; end
 
-    # source://activestorage//lib/active_storage.rb#356
+    # pkg:gem/activestorage#lib/active_storage.rb:356
     def touch_attachment_records=(val); end
 
-    # source://activestorage//lib/active_storage.rb#363
+    # pkg:gem/activestorage#lib/active_storage.rb:363
     def track_variants; end
 
-    # source://activestorage//lib/active_storage.rb#363
+    # pkg:gem/activestorage#lib/active_storage.rb:363
     def track_variants=(val); end
 
-    # source://activestorage//lib/active_storage.rb#353
+    # pkg:gem/activestorage#lib/active_storage.rb:353
     def unsupported_image_processing_arguments; end
 
-    # source://activestorage//lib/active_storage.rb#353
+    # pkg:gem/activestorage#lib/active_storage.rb:353
     def unsupported_image_processing_arguments=(val); end
 
-    # source://activestorage//lib/active_storage.rb#357
+    # pkg:gem/activestorage#lib/active_storage.rb:357
     def urls_expire_in; end
 
-    # source://activestorage//lib/active_storage.rb#357
+    # pkg:gem/activestorage#lib/active_storage.rb:357
     def urls_expire_in=(val); end
 
-    # source://activestorage//lib/active_storage/engine.rb#24
+    # pkg:gem/activestorage#lib/active_storage/engine.rb:24
     def use_relative_model_naming?; end
 
-    # source://activestorage//lib/active_storage.rb#61
+    # pkg:gem/activestorage#lib/active_storage.rb:61
     def variable_content_types; end
 
-    # source://activestorage//lib/active_storage.rb#61
+    # pkg:gem/activestorage#lib/active_storage.rb:61
     def variable_content_types=(val); end
 
-    # source://activestorage//lib/active_storage.rb#50
+    # pkg:gem/activestorage#lib/active_storage.rb:50
     def variant_processor; end
 
-    # source://activestorage//lib/active_storage.rb#50
+    # pkg:gem/activestorage#lib/active_storage.rb:50
     def variant_processor=(val); end
 
-    # source://activestorage//lib/active_storage.rb#52
+    # pkg:gem/activestorage#lib/active_storage.rb:52
     def variant_transformer; end
 
-    # source://activestorage//lib/active_storage.rb#52
+    # pkg:gem/activestorage#lib/active_storage.rb:52
     def variant_transformer=(val); end
 
-    # source://activestorage//lib/active_storage.rb#49
+    # pkg:gem/activestorage#lib/active_storage.rb:49
     def verifier; end
 
-    # source://activestorage//lib/active_storage.rb#49
+    # pkg:gem/activestorage#lib/active_storage.rb:49
     def verifier=(val); end
 
     # Returns the currently loaded version of Active Storage as a +Gem::Version+.
     #
-    # source://activestorage//lib/active_storage/version.rb#7
+    # pkg:gem/activestorage#lib/active_storage/version.rb:7
     def version; end
 
-    # source://activestorage//lib/active_storage.rb#365
+    # pkg:gem/activestorage#lib/active_storage.rb:365
     def video_preview_arguments; end
 
-    # source://activestorage//lib/active_storage.rb#365
+    # pkg:gem/activestorage#lib/active_storage.rb:365
     def video_preview_arguments=(val); end
 
-    # source://activestorage//lib/active_storage.rb#62
+    # pkg:gem/activestorage#lib/active_storage.rb:62
     def web_image_content_types; end
 
-    # source://activestorage//lib/active_storage.rb#62
+    # pkg:gem/activestorage#lib/active_storage.rb:62
     def web_image_content_types=(val); end
   end
 end
@@ -345,39 +345,39 @@ end
 # This is an abstract base class for analyzers, which extract metadata from blobs. See
 # ActiveStorage::Analyzer::VideoAnalyzer for an example of a concrete subclass.
 #
-# source://activestorage//lib/active_storage/analyzer.rb#8
+# pkg:gem/activestorage#lib/active_storage/analyzer.rb:8
 class ActiveStorage::Analyzer
   # @return [Analyzer] a new instance of Analyzer
   #
-  # source://activestorage//lib/active_storage/analyzer.rb#23
+  # pkg:gem/activestorage#lib/active_storage/analyzer.rb:23
   def initialize(blob); end
 
   # Returns the value of attribute blob.
   #
-  # source://activestorage//lib/active_storage/analyzer.rb#9
+  # pkg:gem/activestorage#lib/active_storage/analyzer.rb:9
   def blob; end
 
   # Override this method in a concrete subclass. Have it return a Hash of metadata.
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/analyzer.rb#28
+  # pkg:gem/activestorage#lib/active_storage/analyzer.rb:28
   def metadata; end
 
   private
 
   # Downloads the blob to a tempfile on disk. Yields the tempfile.
   #
-  # source://activestorage//lib/active_storage/analyzer.rb#34
+  # pkg:gem/activestorage#lib/active_storage/analyzer.rb:34
   def download_blob_to_tempfile(&block); end
 
-  # source://activestorage//lib/active_storage/analyzer.rb#46
+  # pkg:gem/activestorage#lib/active_storage/analyzer.rb:46
   def instrument(analyzer, &block); end
 
-  # source://activestorage//lib/active_storage/analyzer.rb#38
+  # pkg:gem/activestorage#lib/active_storage/analyzer.rb:38
   def logger; end
 
-  # source://activestorage//lib/active_storage/analyzer.rb#42
+  # pkg:gem/activestorage#lib/active_storage/analyzer.rb:42
   def tmpdir; end
 
   class << self
@@ -386,7 +386,7 @@ class ActiveStorage::Analyzer
     #
     # @return [Boolean]
     #
-    # source://activestorage//lib/active_storage/analyzer.rb#13
+    # pkg:gem/activestorage#lib/active_storage/analyzer.rb:13
     def accept?(blob); end
 
     # Implement this method in concrete subclasses. It will determine if blob analysis
@@ -394,188 +394,188 @@ class ActiveStorage::Analyzer
     #
     # @return [Boolean]
     #
-    # source://activestorage//lib/active_storage/analyzer.rb#19
+    # pkg:gem/activestorage#lib/active_storage/analyzer.rb:19
     def analyze_later?; end
   end
 end
 
-# source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#14
+# pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:14
 class ActiveStorage::Analyzer::AudioAnalyzer < ::ActiveStorage::Analyzer
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#19
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:19
   def metadata; end
 
   private
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#44
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:44
   def audio_stream; end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#29
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:29
   def bit_rate; end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#24
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:24
   def duration; end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#73
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:73
   def ffprobe_path; end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#52
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:52
   def probe; end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#56
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:56
   def probe_from(file); end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#34
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:34
   def sample_rate; end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#48
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:48
   def streams; end
 
-  # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#39
+  # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:39
   def tags; end
 
   class << self
-    # source://activestorage//lib/active_storage/analyzer/audio_analyzer.rb#15
+    # pkg:gem/activestorage#lib/active_storage/analyzer/audio_analyzer.rb:15
     def accept?(blob); end
   end
 end
 
-# source://activestorage//lib/active_storage/analyzer/image_analyzer.rb#14
+# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer.rb:14
 class ActiveStorage::Analyzer::ImageAnalyzer < ::ActiveStorage::Analyzer
   extend ::ActiveSupport::Autoload
 
-  # source://activestorage//lib/active_storage/analyzer/image_analyzer.rb#24
+  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer.rb:24
   def metadata; end
 
   class << self
-    # source://activestorage//lib/active_storage/analyzer/image_analyzer.rb#20
+    # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer.rb:20
     def accept?(blob); end
   end
 end
 
-# source://activestorage//lib/active_storage/analyzer/image_analyzer/image_magick.rb#15
+# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:15
 class ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick < ::ActiveStorage::Analyzer::ImageAnalyzer
   private
 
-  # source://activestorage//lib/active_storage/analyzer/image_analyzer/image_magick.rb#21
+  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:21
   def read_image; end
 
-  # source://activestorage//lib/active_storage/analyzer/image_analyzer/image_magick.rb#44
+  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:44
   def rotated_image?(image); end
 
   class << self
-    # source://activestorage//lib/active_storage/analyzer/image_analyzer/image_magick.rb#16
+    # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:16
     def accept?(blob); end
   end
 end
 
-# source://activestorage//lib/active_storage/analyzer/image_analyzer/vips.rb#23
+# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/vips.rb:23
 class ActiveStorage::Analyzer::ImageAnalyzer::Vips < ::ActiveStorage::Analyzer::ImageAnalyzer
   private
 
-  # source://activestorage//lib/active_storage/analyzer/image_analyzer/vips.rb#29
+  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/vips.rb:29
   def read_image; end
 
-  # source://activestorage//lib/active_storage/analyzer/image_analyzer/vips.rb#59
+  # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/vips.rb:59
   def rotated_image?(image); end
 
   class << self
-    # source://activestorage//lib/active_storage/analyzer/image_analyzer/vips.rb#24
+    # pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/vips.rb:24
     def accept?(blob); end
   end
 end
 
-# source://activestorage//lib/active_storage/analyzer/image_analyzer/vips.rb#58
+# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/vips.rb:58
 ActiveStorage::Analyzer::ImageAnalyzer::Vips::ROTATIONS = T.let(T.unsafe(nil), Regexp)
 
-# source://activestorage//lib/active_storage/analyzer/null_analyzer.rb#4
+# pkg:gem/activestorage#lib/active_storage/analyzer/null_analyzer.rb:4
 class ActiveStorage::Analyzer::NullAnalyzer < ::ActiveStorage::Analyzer
-  # source://activestorage//lib/active_storage/analyzer/null_analyzer.rb#13
+  # pkg:gem/activestorage#lib/active_storage/analyzer/null_analyzer.rb:13
   def metadata; end
 
   class << self
-    # source://activestorage//lib/active_storage/analyzer/null_analyzer.rb#5
+    # pkg:gem/activestorage#lib/active_storage/analyzer/null_analyzer.rb:5
     def accept?(blob); end
 
-    # source://activestorage//lib/active_storage/analyzer/null_analyzer.rb#9
+    # pkg:gem/activestorage#lib/active_storage/analyzer/null_analyzer.rb:9
     def analyze_later?; end
   end
 end
 
-# source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#24
+# pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:24
 class ActiveStorage::Analyzer::VideoAnalyzer < ::ActiveStorage::Analyzer
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#29
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:29
   def metadata; end
 
   private
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#55
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:55
   def angle; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#82
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:82
   def audio?; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#120
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:120
   def audio_stream; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#90
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:90
   def computed_height; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#128
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:128
   def container; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#67
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:67
   def display_aspect_ratio; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#104
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:104
   def display_height_scale; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#63
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:63
   def display_matrix; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#50
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:50
   def duration; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#100
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:100
   def encoded_height; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#96
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:96
   def encoded_width; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#153
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:153
   def ffprobe_path; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#42
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:42
   def height; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#132
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:132
   def probe; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#136
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:136
   def probe_from(file); end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#78
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:78
   def rotated?; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#112
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:112
   def side_data; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#124
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:124
   def streams; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#108
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:108
   def tags; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#86
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:86
   def video?; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#116
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:116
   def video_stream; end
 
-  # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#34
+  # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:34
   def width; end
 
   class << self
-    # source://activestorage//lib/active_storage/analyzer/video_analyzer.rb#25
+    # pkg:gem/activestorage#lib/active_storage/analyzer/video_analyzer.rb:25
     def accept?(blob); end
   end
 end
@@ -585,384 +585,384 @@ end
 # Abstract base class for the concrete ActiveStorage::Attached::One and ActiveStorage::Attached::Many
 # classes that both provide proxy access to the blob association for a record.
 #
-# source://activestorage//lib/active_storage/attached.rb#9
+# pkg:gem/activestorage#lib/active_storage/attached.rb:9
 class ActiveStorage::Attached
   # @return [Attached] a new instance of Attached
   #
-  # source://activestorage//lib/active_storage/attached.rb#12
+  # pkg:gem/activestorage#lib/active_storage/attached.rb:12
   def initialize(name, record); end
 
   # Returns the value of attribute name.
   #
-  # source://activestorage//lib/active_storage/attached.rb#10
+  # pkg:gem/activestorage#lib/active_storage/attached.rb:10
   def name; end
 
   # Returns the value of attribute record.
   #
-  # source://activestorage//lib/active_storage/attached.rb#10
+  # pkg:gem/activestorage#lib/active_storage/attached.rb:10
   def record; end
 
   private
 
-  # source://activestorage//lib/active_storage/attached.rb#17
+  # pkg:gem/activestorage#lib/active_storage/attached.rb:17
   def change; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes.rb:4
 module ActiveStorage::Attached::Changes
   extend ::ActiveSupport::Autoload
 end
 
-# source://activestorage//lib/active_storage/attached/changes/create_many.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:4
 class ActiveStorage::Attached::Changes::CreateMany
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#7
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:7
   def initialize(name, record, attachables, pending_uploads: T.unsafe(nil)); end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:5
   def attachables; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#14
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:14
   def attachments; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#18
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:18
   def blobs; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:5
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:5
   def pending_uploads; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:5
   def record; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#26
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:26
   def save; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#22
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:22
   def upload; end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#44
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:44
   def assign_associated_attachments; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#36
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:36
   def build_subchange_from(attachable); end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#52
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:52
   def persisted_or_new_attachments; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#48
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:48
   def reset_associated_blobs; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#32
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:32
   def subchanges; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_many.rb#40
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_many.rb:40
   def subchanges_without_blobs; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/create_one.rb#7
+# pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:7
 class ActiveStorage::Attached::Changes::CreateOne
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#10
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:10
   def initialize(name, record, attachable); end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#8
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:8
   def attachable; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#15
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:15
   def attachment; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#19
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:19
   def blob; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#8
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:8
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#8
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:8
   def record; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#48
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:48
   def save; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#23
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:23
   def upload; end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#120
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:120
   def attachment_service_name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#64
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:64
   def build_attachment; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#58
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:58
   def find_attachment; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#54
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:54
   def find_or_build_attachment; end
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one.rb#68
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one.rb:68
   def find_or_build_blob; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/create_one_of_many.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/create_one_of_many.rb:4
 class ActiveStorage::Attached::Changes::CreateOneOfMany < ::ActiveStorage::Attached::Changes::CreateOne
   private
 
-  # source://activestorage//lib/active_storage/attached/changes/create_one_of_many.rb#6
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/create_one_of_many.rb:6
   def find_attachment; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/delete_many.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:4
 class ActiveStorage::Attached::Changes::DeleteMany
-  # source://activestorage//lib/active_storage/attached/changes/delete_many.rb#7
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:7
   def initialize(name, record); end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_many.rb#11
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:11
   def attachables; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_many.rb#15
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:15
   def attachments; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_many.rb#19
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:19
   def blobs; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:5
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:5
   def record; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_many.rb#23
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_many.rb:23
   def save; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/delete_one.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/delete_one.rb:4
 class ActiveStorage::Attached::Changes::DeleteOne
-  # source://activestorage//lib/active_storage/attached/changes/delete_one.rb#7
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_one.rb:7
   def initialize(name, record); end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_one.rb#11
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_one.rb:11
   def attachment; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_one.rb:5
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_one.rb:5
   def record; end
 
-  # source://activestorage//lib/active_storage/attached/changes/delete_one.rb#15
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/delete_one.rb:15
   def save; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/detach_many.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/detach_many.rb:4
 class ActiveStorage::Attached::Changes::DetachMany
-  # source://activestorage//lib/active_storage/attached/changes/detach_many.rb#7
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_many.rb:7
   def initialize(name, record, attachments); end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_many.rb:5
   def attachments; end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_many.rb#11
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_many.rb:11
   def detach; end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_many.rb:5
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_many.rb:5
   def record; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/detach_one.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/detach_one.rb:4
 class ActiveStorage::Attached::Changes::DetachOne
-  # source://activestorage//lib/active_storage/attached/changes/detach_one.rb#7
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_one.rb:7
   def initialize(name, record, attachment); end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_one.rb:5
   def attachment; end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_one.rb#11
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_one.rb:11
   def detach; end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_one.rb:5
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_one.rb:5
   def record; end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/changes/detach_one.rb#19
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/detach_one.rb:19
   def reset; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/purge_many.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:4
 class ActiveStorage::Attached::Changes::PurgeMany
-  # source://activestorage//lib/active_storage/attached/changes/purge_many.rb#7
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:7
   def initialize(name, record, attachments); end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:5
   def attachments; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:5
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_many.rb#11
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:11
   def purge; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_many.rb#16
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:16
   def purge_later; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_many.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:5
   def record; end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_many.rb#22
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_many.rb:22
   def reset; end
 end
 
-# source://activestorage//lib/active_storage/attached/changes/purge_one.rb#4
+# pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:4
 class ActiveStorage::Attached::Changes::PurgeOne
-  # source://activestorage//lib/active_storage/attached/changes/purge_one.rb#7
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:7
   def initialize(name, record, attachment); end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:5
   def attachment; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:5
   def name; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_one.rb#11
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:11
   def purge; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_one.rb#16
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:16
   def purge_later; end
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_one.rb#5
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:5
   def record; end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/changes/purge_one.rb#22
+  # pkg:gem/activestorage#lib/active_storage/attached/changes/purge_one.rb:22
   def reset; end
 end
 
-# source://activestorage//lib/active_storage/attached/many.rb#7
+# pkg:gem/activestorage#lib/active_storage/attached/many.rb:7
 class ActiveStorage::Attached::Many < ::ActiveStorage::Attached
-  # source://activestorage//lib/active_storage/attached/many.rb#51
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:51
   def attach(*attachables); end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#66
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:66
   def attached?; end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#32
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:32
   def attachments; end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#37
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:37
   def blobs; end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#25
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:25
   def detach(*_arg0, **_arg1, &_arg2); end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#27
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:27
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#13
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:13
   def purge(*_arg0, **_arg1, &_arg2); end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#19
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:19
   def purge_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/many.rb#75
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:75
   def detach_many; end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#71
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:71
   def purge_many; end
 
-  # source://activestorage//lib/active_storage/attached/many.rb#27
+  # pkg:gem/activestorage#lib/active_storage/attached/many.rb:27
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
-# source://activestorage//lib/active_storage/attached/model.rb#9
+# pkg:gem/activestorage#lib/active_storage/attached/model.rb:9
 module ActiveStorage::Attached::Model
   extend ::ActiveSupport::Concern
 
   mixes_in_class_methods ::ActiveStorage::Attached::Model::ClassMethods
 
-  # source://activestorage//lib/active_storage/attached/model.rb#281
+  # pkg:gem/activestorage#lib/active_storage/attached/model.rb:281
   def attachment_changes; end
 
-  # source://activestorage//lib/active_storage/attached/model.rb#285
+  # pkg:gem/activestorage#lib/active_storage/attached/model.rb:285
   def changed_for_autosave?; end
 
-  # source://activestorage//lib/active_storage/attached/model.rb#295
+  # pkg:gem/activestorage#lib/active_storage/attached/model.rb:295
   def reload(*_arg0); end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/model.rb#289
+  # pkg:gem/activestorage#lib/active_storage/attached/model.rb:289
   def initialize_dup(*_arg0); end
 
   class << self
-    # source://activestorage//lib/active_storage/attached/model.rb#263
+    # pkg:gem/activestorage#lib/active_storage/attached/model.rb:263
     def validate_service_configuration(service_name, model_class, association_name); end
 
     private
 
-    # source://activestorage//lib/active_storage/attached/model.rb#274
+    # pkg:gem/activestorage#lib/active_storage/attached/model.rb:274
     def validate_global_service_configuration(model_class); end
   end
 end
 
-# source://activestorage//lib/active_storage/attached/model.rb#54
+# pkg:gem/activestorage#lib/active_storage/attached/model.rb:54
 module ActiveStorage::Attached::Model::ClassMethods
-  # source://activestorage//lib/active_storage/attached/model.rb#210
+  # pkg:gem/activestorage#lib/active_storage/attached/model.rb:210
   def has_many_attached(name, dependent: T.unsafe(nil), service: T.unsafe(nil), strict_loading: T.unsafe(nil)); end
 
-  # source://activestorage//lib/active_storage/attached/model.rb#108
+  # pkg:gem/activestorage#lib/active_storage/attached/model.rb:108
   def has_one_attached(name, dependent: T.unsafe(nil), service: T.unsafe(nil), strict_loading: T.unsafe(nil)); end
 end
 
-# source://activestorage//lib/active_storage/attached/one.rb#7
+# pkg:gem/activestorage#lib/active_storage/attached/one.rb:7
 class ActiveStorage::Attached::One < ::ActiveStorage::Attached
-  # source://activestorage//lib/active_storage/attached/one.rb#58
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:58
   def attach(attachable); end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#73
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:73
   def attached?; end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#33
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:33
   def attachment; end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#44
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:44
   def blank?; end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#25
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:25
   def detach(*_arg0, **_arg1, &_arg2); end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#27
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:27
   def method_missing(method, *_arg1, **_arg2, &_arg3); end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#13
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:13
   def purge(*_arg0, **_arg1, &_arg2); end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#19
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:19
   def purge_later(*_arg0, **_arg1, &_arg2); end
 
   private
 
-  # source://activestorage//lib/active_storage/attached/one.rb#82
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:82
   def detach_one; end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#78
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:78
   def purge_one; end
 
-  # source://activestorage//lib/active_storage/attached/one.rb#27
+  # pkg:gem/activestorage#lib/active_storage/attached/one.rb:27
   def respond_to_missing?(name, include_private = T.unsafe(nil)); end
 end
 
@@ -1165,45 +1165,45 @@ class ActiveStorage::DiskController < ::ActiveStorage::BaseController
   end
 end
 
-# source://activestorage//lib/active_storage/downloader.rb#4
+# pkg:gem/activestorage#lib/active_storage/downloader.rb:4
 class ActiveStorage::Downloader
   # @return [Downloader] a new instance of Downloader
   #
-  # source://activestorage//lib/active_storage/downloader.rb#7
+  # pkg:gem/activestorage#lib/active_storage/downloader.rb:7
   def initialize(service); end
 
-  # source://activestorage//lib/active_storage/downloader.rb#11
+  # pkg:gem/activestorage#lib/active_storage/downloader.rb:11
   def open(key, checksum: T.unsafe(nil), verify: T.unsafe(nil), name: T.unsafe(nil), tmpdir: T.unsafe(nil)); end
 
   # Returns the value of attribute service.
   #
-  # source://activestorage//lib/active_storage/downloader.rb#5
+  # pkg:gem/activestorage#lib/active_storage/downloader.rb:5
   def service; end
 
   private
 
-  # source://activestorage//lib/active_storage/downloader.rb#30
+  # pkg:gem/activestorage#lib/active_storage/downloader.rb:30
   def download(key, file); end
 
-  # source://activestorage//lib/active_storage/downloader.rb#20
+  # pkg:gem/activestorage#lib/active_storage/downloader.rb:20
   def open_tempfile(name, tmpdir = T.unsafe(nil)); end
 
-  # source://activestorage//lib/active_storage/downloader.rb#37
+  # pkg:gem/activestorage#lib/active_storage/downloader.rb:37
   def verify_integrity_of(file, checksum:); end
 end
 
-# source://activestorage//lib/active_storage/engine.rb#23
+# pkg:gem/activestorage#lib/active_storage/engine.rb:23
 class ActiveStorage::Engine < ::Rails::Engine; end
 
 # Generic base class for all Active Storage exceptions.
 #
-# source://activestorage//lib/active_storage/errors.rb#5
+# pkg:gem/activestorage#lib/active_storage/errors.rb:5
 class ActiveStorage::Error < ::StandardError; end
 
 # Raised when ActiveStorage::Blob#download is called on a blob where the
 # backing file is no longer present in its service.
 #
-# source://activestorage//lib/active_storage/errors.rb#25
+# pkg:gem/activestorage#lib/active_storage/errors.rb:25
 class ActiveStorage::FileNotFoundError < ::ActiveStorage::Error; end
 
 module ActiveStorage::FileServer
@@ -1270,19 +1270,19 @@ end
 # When processed, Active Record will insert database records for each fixture
 # entry and will ensure the Active Storage relationship is intact.
 #
-# source://activestorage//lib/active_storage/fixture_set.rb#44
+# pkg:gem/activestorage#lib/active_storage/fixture_set.rb:44
 class ActiveStorage::FixtureSet
   include ::ActiveSupport::Testing::FileFixtures
   include ::ActiveRecord::SecureToken
   extend ::ActiveRecord::SecureToken::ClassMethods
 
-  # source://activestorage//lib/active_storage/fixture_set.rb#45
+  # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:45
   def file_fixture_path; end
 
-  # source://activestorage//lib/active_storage/fixture_set.rb#45
+  # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:45
   def file_fixture_path?; end
 
-  # source://activestorage//lib/active_storage/fixture_set.rb#70
+  # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:70
   def prepare(instance, **attributes); end
 
   class << self
@@ -1304,24 +1304,24 @@ class ActiveStorage::FixtureSet
     #     service_name: "public"
     #   ) %>
     #
-    # source://activestorage//lib/active_storage/fixture_set.rb#66
+    # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:66
     def blob(filename:, **attributes); end
 
-    # source://activestorage//lib/active_storage/fixture_set.rb#45
+    # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:45
     def file_fixture_path; end
 
-    # source://activestorage//lib/active_storage/fixture_set.rb#45
+    # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:45
     def file_fixture_path=(value); end
 
-    # source://activestorage//lib/active_storage/fixture_set.rb#45
+    # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:45
     def file_fixture_path?; end
 
     private
 
-    # source://activestorage//lib/active_storage/fixture_set.rb#45
+    # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:45
     def __class_attr_file_fixture_path; end
 
-    # source://activestorage//lib/active_storage/fixture_set.rb#45
+    # pkg:gem/activestorage#lib/active_storage/fixture_set.rb:45
     def __class_attr_file_fixture_path=(new_value); end
   end
 end
@@ -1329,73 +1329,73 @@ end
 # Raised when uploaded or downloaded data does not match a precomputed checksum.
 # Indicates that a network error or a software bug caused data corruption.
 #
-# source://activestorage//lib/active_storage/errors.rb#21
+# pkg:gem/activestorage#lib/active_storage/errors.rb:21
 class ActiveStorage::IntegrityError < ::ActiveStorage::Error; end
 
 # Raised when ActiveStorage::Blob#variant is called on a blob that isn't variable.
 # Use ActiveStorage::Blob#variable? to determine whether a blob is variable.
 #
-# source://activestorage//lib/active_storage/errors.rb#9
+# pkg:gem/activestorage#lib/active_storage/errors.rb:9
 class ActiveStorage::InvariableError < ::ActiveStorage::Error; end
 
-# source://activestorage//lib/active_storage/log_subscriber.rb#6
+# pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:6
 class ActiveStorage::LogSubscriber < ::ActiveSupport::LogSubscriber
-  # source://activestorage//lib/active_storage/log_subscriber.rb#53
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:53
   def logger; end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#21
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:21
   def preview(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#26
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:26
   def service_delete(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#31
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:31
   def service_delete_prefixed(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#14
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:14
   def service_download(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#36
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:36
   def service_exist(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#46
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:46
   def service_mirror(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#19
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:19
   def service_streaming_download(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#7
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:7
   def service_upload(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#41
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:41
   def service_url(event); end
 
   private
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#62
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:62
   def debug(event, colored_message); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#58
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:58
   def info(event, colored_message); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#70
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:70
   def key_in(event); end
 
-  # source://activestorage//lib/active_storage/log_subscriber.rb#66
+  # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:66
   def log_prefix_for_service(event); end
 
   class << self
     private
 
-    # source://activestorage//lib/active_storage/log_subscriber.rb#12
+    # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:12
     def __class_attr_log_levels; end
 
-    # source://activestorage//lib/active_storage/log_subscriber.rb#12
+    # pkg:gem/activestorage#lib/active_storage/log_subscriber.rb:12
     def __class_attr_log_levels=(new_value); end
   end
 end
 
-# source://activestorage//lib/active_storage/analyzer/image_analyzer/image_magick.rb#8
+# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/image_magick.rb:8
 ActiveStorage::MINIMAGICK_AVAILABLE = T.let(T.unsafe(nil), FalseClass)
 
 class ActiveStorage::MirrorJob < ::ActiveStorage::BaseJob
@@ -1421,7 +1421,7 @@ end
 
 # Raised when a Previewer is unable to generate a preview image.
 #
-# source://activestorage//lib/active_storage/errors.rb#28
+# pkg:gem/activestorage#lib/active_storage/errors.rb:28
 class ActiveStorage::PreviewError < ::ActiveStorage::Error; end
 
 class ActiveStorage::PreviewImageJob < ::ActiveStorage::BaseJob
@@ -1443,16 +1443,16 @@ end
 # ActiveStorage::Previewer::MuPDFPreviewer and ActiveStorage::Previewer::VideoPreviewer for
 # examples of concrete subclasses.
 #
-# source://activestorage//lib/active_storage/previewer.rb#9
+# pkg:gem/activestorage#lib/active_storage/previewer.rb:9
 class ActiveStorage::Previewer
   # @return [Previewer] a new instance of Previewer
   #
-  # source://activestorage//lib/active_storage/previewer.rb#18
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:18
   def initialize(blob); end
 
   # Returns the value of attribute blob.
   #
-  # source://activestorage//lib/active_storage/previewer.rb#10
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:10
   def blob; end
 
   # Override this method in a concrete subclass. Have it yield an attachable preview image (i.e.
@@ -1461,17 +1461,17 @@ class ActiveStorage::Previewer
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/previewer.rb#25
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:25
   def preview(**options); end
 
   private
 
-  # source://activestorage//lib/active_storage/previewer.rb#78
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:78
   def capture(*argv, to:); end
 
   # Downloads the blob to a tempfile on disk. Yields the tempfile.
   #
-  # source://activestorage//lib/active_storage/previewer.rb#31
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:31
   def download_blob_to_tempfile(&block); end
 
   # Executes a system command, capturing its binary output in a tempfile. Yields the tempfile.
@@ -1489,22 +1489,22 @@ class ActiveStorage::Previewer
   #
   # The output tempfile is opened in the directory returned by #tmpdir.
   #
-  # source://activestorage//lib/active_storage/previewer.rb#49
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:49
   def draw(*argv); end
 
-  # source://activestorage//lib/active_storage/previewer.rb#69
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:69
   def instrument(operation, payload = T.unsafe(nil), &block); end
 
-  # source://activestorage//lib/active_storage/previewer.rb#93
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:93
   def logger; end
 
-  # source://activestorage//lib/active_storage/previewer.rb#59
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:59
   def open_tempfile; end
 
-  # source://activestorage//lib/active_storage/previewer.rb#73
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:73
   def service_name; end
 
-  # source://activestorage//lib/active_storage/previewer.rb#97
+  # pkg:gem/activestorage#lib/active_storage/previewer.rb:97
   def tmpdir; end
 
   class << self
@@ -1513,79 +1513,79 @@ class ActiveStorage::Previewer
     #
     # @return [Boolean]
     #
-    # source://activestorage//lib/active_storage/previewer.rb#14
+    # pkg:gem/activestorage#lib/active_storage/previewer.rb:14
     def accept?(blob); end
   end
 end
 
-# source://activestorage//lib/active_storage/previewer/mupdf_previewer.rb#4
+# pkg:gem/activestorage#lib/active_storage/previewer/mupdf_previewer.rb:4
 class ActiveStorage::Previewer::MuPDFPreviewer < ::ActiveStorage::Previewer
-  # source://activestorage//lib/active_storage/previewer/mupdf_previewer.rb#27
+  # pkg:gem/activestorage#lib/active_storage/previewer/mupdf_previewer.rb:27
   def preview(**options); end
 
   private
 
-  # source://activestorage//lib/active_storage/previewer/mupdf_previewer.rb#36
+  # pkg:gem/activestorage#lib/active_storage/previewer/mupdf_previewer.rb:36
   def draw_first_page_from(file, &block); end
 
   class << self
-    # source://activestorage//lib/active_storage/previewer/mupdf_previewer.rb#6
+    # pkg:gem/activestorage#lib/active_storage/previewer/mupdf_previewer.rb:6
     def accept?(blob); end
 
-    # source://activestorage//lib/active_storage/previewer/mupdf_previewer.rb#18
+    # pkg:gem/activestorage#lib/active_storage/previewer/mupdf_previewer.rb:18
     def mutool_exists?; end
 
-    # source://activestorage//lib/active_storage/previewer/mupdf_previewer.rb#14
+    # pkg:gem/activestorage#lib/active_storage/previewer/mupdf_previewer.rb:14
     def mutool_path; end
 
-    # source://activestorage//lib/active_storage/previewer/mupdf_previewer.rb#10
+    # pkg:gem/activestorage#lib/active_storage/previewer/mupdf_previewer.rb:10
     def pdf?(content_type); end
   end
 end
 
-# source://activestorage//lib/active_storage/previewer/poppler_pdf_previewer.rb#4
+# pkg:gem/activestorage#lib/active_storage/previewer/poppler_pdf_previewer.rb:4
 class ActiveStorage::Previewer::PopplerPDFPreviewer < ::ActiveStorage::Previewer
-  # source://activestorage//lib/active_storage/previewer/poppler_pdf_previewer.rb#25
+  # pkg:gem/activestorage#lib/active_storage/previewer/poppler_pdf_previewer.rb:25
   def preview(**options); end
 
   private
 
-  # source://activestorage//lib/active_storage/previewer/poppler_pdf_previewer.rb#34
+  # pkg:gem/activestorage#lib/active_storage/previewer/poppler_pdf_previewer.rb:34
   def draw_first_page_from(file, &block); end
 
   class << self
-    # source://activestorage//lib/active_storage/previewer/poppler_pdf_previewer.rb#6
+    # pkg:gem/activestorage#lib/active_storage/previewer/poppler_pdf_previewer.rb:6
     def accept?(blob); end
 
-    # source://activestorage//lib/active_storage/previewer/poppler_pdf_previewer.rb#10
+    # pkg:gem/activestorage#lib/active_storage/previewer/poppler_pdf_previewer.rb:10
     def pdf?(content_type); end
 
-    # source://activestorage//lib/active_storage/previewer/poppler_pdf_previewer.rb#18
+    # pkg:gem/activestorage#lib/active_storage/previewer/poppler_pdf_previewer.rb:18
     def pdftoppm_exists?; end
 
-    # source://activestorage//lib/active_storage/previewer/poppler_pdf_previewer.rb#14
+    # pkg:gem/activestorage#lib/active_storage/previewer/poppler_pdf_previewer.rb:14
     def pdftoppm_path; end
   end
 end
 
-# source://activestorage//lib/active_storage/previewer/video_previewer.rb#6
+# pkg:gem/activestorage#lib/active_storage/previewer/video_previewer.rb:6
 class ActiveStorage::Previewer::VideoPreviewer < ::ActiveStorage::Previewer
-  # source://activestorage//lib/active_storage/previewer/video_previewer.rb#23
+  # pkg:gem/activestorage#lib/active_storage/previewer/video_previewer.rb:23
   def preview(**options); end
 
   private
 
-  # source://activestorage//lib/active_storage/previewer/video_previewer.rb#32
+  # pkg:gem/activestorage#lib/active_storage/previewer/video_previewer.rb:32
   def draw_relevant_frame_from(file, &block); end
 
   class << self
-    # source://activestorage//lib/active_storage/previewer/video_previewer.rb#8
+    # pkg:gem/activestorage#lib/active_storage/previewer/video_previewer.rb:8
     def accept?(blob); end
 
-    # source://activestorage//lib/active_storage/previewer/video_previewer.rb#12
+    # pkg:gem/activestorage#lib/active_storage/previewer/video_previewer.rb:12
     def ffmpeg_exists?; end
 
-    # source://activestorage//lib/active_storage/previewer/video_previewer.rb#18
+    # pkg:gem/activestorage#lib/active_storage/previewer/video_previewer.rb:18
     def ffmpeg_path; end
   end
 end
@@ -1620,10 +1620,10 @@ end
 module ActiveStorage::Record::GeneratedAssociationMethods; end
 module ActiveStorage::Record::GeneratedAttributeMethods; end
 
-# source://activestorage//lib/active_storage/reflection.rb#4
+# pkg:gem/activestorage#lib/active_storage/reflection.rb:4
 module ActiveStorage::Reflection; end
 
-# source://activestorage//lib/active_storage/reflection.rb#49
+# pkg:gem/activestorage#lib/active_storage/reflection.rb:49
 module ActiveStorage::Reflection::ActiveRecordExtensions
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -1643,12 +1643,12 @@ module ActiveStorage::Reflection::ActiveRecordExtensions
   end
 end
 
-# source://activestorage//lib/active_storage/reflection.rb#56
+# pkg:gem/activestorage#lib/active_storage/reflection.rb:56
 module ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods
   # Returns an array of reflection objects for all the attachments in the
   # class.
   #
-  # source://activestorage//lib/active_storage/reflection.rb#59
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:59
   def reflect_on_all_attachments; end
 
   # Returns the reflection object for the named +attachment+.
@@ -1656,45 +1656,45 @@ module ActiveStorage::Reflection::ActiveRecordExtensions::ClassMethods
   #    User.reflect_on_attachment(:avatar)
   #    # => the avatar reflection
   #
-  # source://activestorage//lib/active_storage/reflection.rb#68
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:68
   def reflect_on_attachment(attachment); end
 end
 
-# source://activestorage//lib/active_storage/reflection.rb#5
+# pkg:gem/activestorage#lib/active_storage/reflection.rb:5
 class ActiveStorage::Reflection::HasAttachedReflection < ::ActiveRecord::Reflection::MacroReflection
-  # source://activestorage//lib/active_storage/reflection.rb#10
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:10
   def named_variants; end
 
-  # source://activestorage//lib/active_storage/reflection.rb#6
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:6
   def variant(name, transformations); end
 end
 
 # Holds all the metadata about a has_many_attached attachment as it was
 # specified in the Active Record class.
 #
-# source://activestorage//lib/active_storage/reflection.rb#25
+# pkg:gem/activestorage#lib/active_storage/reflection.rb:25
 class ActiveStorage::Reflection::HasManyAttachedReflection < ::ActiveStorage::Reflection::HasAttachedReflection
-  # source://activestorage//lib/active_storage/reflection.rb#26
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:26
   def macro; end
 end
 
 # Holds all the metadata about a has_one_attached attachment as it was
 # specified in the Active Record class.
 #
-# source://activestorage//lib/active_storage/reflection.rb#17
+# pkg:gem/activestorage#lib/active_storage/reflection.rb:17
 class ActiveStorage::Reflection::HasOneAttachedReflection < ::ActiveStorage::Reflection::HasAttachedReflection
-  # source://activestorage//lib/active_storage/reflection.rb#18
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:18
   def macro; end
 end
 
-# source://activestorage//lib/active_storage/reflection.rb#31
+# pkg:gem/activestorage#lib/active_storage/reflection.rb:31
 module ActiveStorage::Reflection::ReflectionExtension
-  # source://activestorage//lib/active_storage/reflection.rb#32
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:32
   def add_attachment_reflection(model, name, reflection); end
 
   private
 
-  # source://activestorage//lib/active_storage/reflection.rb#37
+  # pkg:gem/activestorage#lib/active_storage/reflection.rb:37
   def reflection_class_for(macro); end
 end
 
@@ -1796,7 +1796,7 @@ end
 #     { local: {service: "Disk",  root: Pathname("/tmp/foo/storage") } }
 #   )
 #
-# source://activestorage//lib/active_storage/service.rb#43
+# pkg:gem/activestorage#lib/active_storage/service.rb:43
 class ActiveStorage::Service
   extend ::ActiveSupport::Autoload
 
@@ -1804,35 +1804,35 @@ class ActiveStorage::Service
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#96
+  # pkg:gem/activestorage#lib/active_storage/service.rb:96
   def compose(source_keys, destination_key, filename: T.unsafe(nil), content_type: T.unsafe(nil), disposition: T.unsafe(nil), custom_metadata: T.unsafe(nil)); end
 
   # Delete the file at the +key+.
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#101
+  # pkg:gem/activestorage#lib/active_storage/service.rb:101
   def delete(key); end
 
   # Delete files at keys starting with the +prefix+.
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#106
+  # pkg:gem/activestorage#lib/active_storage/service.rb:106
   def delete_prefixed(prefix); end
 
   # Return the content of the file at the +key+.
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#82
+  # pkg:gem/activestorage#lib/active_storage/service.rb:82
   def download(key); end
 
   # Return the partial content in the byte +range+ of the file at the +key+.
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#87
+  # pkg:gem/activestorage#lib/active_storage/service.rb:87
   def download_chunk(key, range); end
 
   # Return +true+ if a file exists at the +key+.
@@ -1840,42 +1840,42 @@ class ActiveStorage::Service
   # @raise [NotImplementedError]
   # @return [Boolean]
   #
-  # source://activestorage//lib/active_storage/service.rb#111
+  # pkg:gem/activestorage#lib/active_storage/service.rb:111
   def exist?(key); end
 
   # Returns a Hash of headers for +url_for_direct_upload+ requests.
   #
-  # source://activestorage//lib/active_storage/service.rb#143
+  # pkg:gem/activestorage#lib/active_storage/service.rb:143
   def headers_for_direct_upload(key, filename:, content_type:, content_length:, checksum:, custom_metadata: T.unsafe(nil)); end
 
-  # source://activestorage//lib/active_storage/service.rb#151
+  # pkg:gem/activestorage#lib/active_storage/service.rb:151
   def inspect; end
 
   # Returns the value of attribute name.
   #
-  # source://activestorage//lib/active_storage/service.rb#46
+  # pkg:gem/activestorage#lib/active_storage/service.rb:46
   def name; end
 
   # Sets the attribute name
   #
   # @param value the value to set the attribute name to.
   #
-  # source://activestorage//lib/active_storage/service.rb#46
+  # pkg:gem/activestorage#lib/active_storage/service.rb:46
   def name=(_arg0); end
 
-  # source://activestorage//lib/active_storage/service.rb#91
+  # pkg:gem/activestorage#lib/active_storage/service.rb:91
   def open(*args, **options, &block); end
 
   # @return [Boolean]
   #
-  # source://activestorage//lib/active_storage/service.rb#147
+  # pkg:gem/activestorage#lib/active_storage/service.rb:147
   def public?; end
 
   # Update metadata for the file identified by +key+ in the service.
   # Override in subclasses only if the service needs to store specific
   # metadata that has to be updated upon identification.
   #
-  # source://activestorage//lib/active_storage/service.rb#78
+  # pkg:gem/activestorage#lib/active_storage/service.rb:78
   def update_metadata(key, **metadata); end
 
   # Upload the +io+ to the +key+ specified. If a +checksum+ is provided, the service will
@@ -1883,7 +1883,7 @@ class ActiveStorage::Service
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#71
+  # pkg:gem/activestorage#lib/active_storage/service.rb:71
   def upload(key, io, checksum: T.unsafe(nil), **options); end
 
   # Returns the URL for the file at the +key+. This returns a permanent URL for public files, and returns a
@@ -1891,7 +1891,7 @@ class ActiveStorage::Service
   # +filename+, and +content_type+ that you wish the file to be served with on request. Additionally, you can also provide
   # the amount of seconds the URL will be valid for, specified in +expires_in+.
   #
-  # source://activestorage//lib/active_storage/service.rb#119
+  # pkg:gem/activestorage#lib/active_storage/service.rb:119
   def url(key, **options); end
 
   # Returns a signed, temporary URL that a direct upload file can be PUT to on the +key+.
@@ -1901,33 +1901,33 @@ class ActiveStorage::Service
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#138
+  # pkg:gem/activestorage#lib/active_storage/service.rb:138
   def url_for_direct_upload(key, expires_in:, content_type:, content_length:, checksum:, custom_metadata: T.unsafe(nil)); end
 
   private
 
-  # source://activestorage//lib/active_storage/service.rb#179
+  # pkg:gem/activestorage#lib/active_storage/service.rb:179
   def content_disposition_with(filename:, type: T.unsafe(nil)); end
 
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#164
+  # pkg:gem/activestorage#lib/active_storage/service.rb:164
   def custom_metadata_headers(metadata); end
 
-  # source://activestorage//lib/active_storage/service.rb#168
+  # pkg:gem/activestorage#lib/active_storage/service.rb:168
   def instrument(operation, payload = T.unsafe(nil), &block); end
 
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#156
+  # pkg:gem/activestorage#lib/active_storage/service.rb:156
   def private_url(key, expires_in:, filename:, disposition:, content_type:, **_arg5); end
 
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/service.rb#160
+  # pkg:gem/activestorage#lib/active_storage/service.rb:160
   def public_url(key, **_arg1); end
 
-  # source://activestorage//lib/active_storage/service.rb#174
+  # pkg:gem/activestorage#lib/active_storage/service.rb:174
   def service_name; end
 
   class << self
@@ -1938,66 +1938,66 @@ class ActiveStorage::Service
     #
     # See MirrorService for an example.
     #
-    # source://activestorage//lib/active_storage/service.rb#62
+    # pkg:gem/activestorage#lib/active_storage/service.rb:62
     def build(configurator:, name:, service: T.unsafe(nil), **service_config); end
 
     # Configure an Active Storage service by name from a set of configurations,
     # typically loaded from a YAML file. The Active Storage engine uses this
     # to set the global Active Storage service when the app boots.
     #
-    # source://activestorage//lib/active_storage/service.rb#52
+    # pkg:gem/activestorage#lib/active_storage/service.rb:52
     def configure(service_name, configurations); end
   end
 end
 
-# source://activestorage//lib/active_storage/service/configurator.rb#4
+# pkg:gem/activestorage#lib/active_storage/service/configurator.rb:4
 class ActiveStorage::Service::Configurator
-  # source://activestorage//lib/active_storage/service/configurator.rb#11
+  # pkg:gem/activestorage#lib/active_storage/service/configurator.rb:11
   def initialize(configurations); end
 
-  # source://activestorage//lib/active_storage/service/configurator.rb#15
+  # pkg:gem/activestorage#lib/active_storage/service/configurator.rb:15
   def build(service_name); end
 
-  # source://activestorage//lib/active_storage/service/configurator.rb#5
+  # pkg:gem/activestorage#lib/active_storage/service/configurator.rb:5
   def configurations; end
 
-  # source://activestorage//lib/active_storage/service/configurator.rb#22
+  # pkg:gem/activestorage#lib/active_storage/service/configurator.rb:22
   def inspect; end
 
   private
 
-  # source://activestorage//lib/active_storage/service/configurator.rb#29
+  # pkg:gem/activestorage#lib/active_storage/service/configurator.rb:29
   def config_for(name); end
 
-  # source://activestorage//lib/active_storage/service/configurator.rb#35
+  # pkg:gem/activestorage#lib/active_storage/service/configurator.rb:35
   def resolve(class_name); end
 
   class << self
-    # source://activestorage//lib/active_storage/service/configurator.rb#7
+    # pkg:gem/activestorage#lib/active_storage/service/configurator.rb:7
     def build(service_name, configurations); end
   end
 end
 
-# source://activestorage//lib/active_storage/service/registry.rb#4
+# pkg:gem/activestorage#lib/active_storage/service/registry.rb:4
 class ActiveStorage::Service::Registry
-  # source://activestorage//lib/active_storage/service/registry.rb#5
+  # pkg:gem/activestorage#lib/active_storage/service/registry.rb:5
   def initialize(configurations); end
 
-  # source://activestorage//lib/active_storage/service/registry.rb#10
+  # pkg:gem/activestorage#lib/active_storage/service/registry.rb:10
   def fetch(name); end
 
-  # source://activestorage//lib/active_storage/service/registry.rb#25
+  # pkg:gem/activestorage#lib/active_storage/service/registry.rb:25
   def inspect; end
 
   private
 
-  # source://activestorage//lib/active_storage/service/registry.rb#32
+  # pkg:gem/activestorage#lib/active_storage/service/registry.rb:32
   def configurations; end
 
-  # source://activestorage//lib/active_storage/service/registry.rb#34
+  # pkg:gem/activestorage#lib/active_storage/service/registry.rb:34
   def configurator; end
 
-  # source://activestorage//lib/active_storage/service/registry.rb#32
+  # pkg:gem/activestorage#lib/active_storage/service/registry.rb:32
   def services; end
 end
 
@@ -2031,33 +2031,33 @@ end
 
 ActiveStorage::Streaming::DEFAULT_BLOB_STREAMING_DISPOSITION = T.let(T.unsafe(nil), String)
 
-# source://activestorage//lib/active_storage/structured_event_subscriber.rb#6
+# pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:6
 class ActiveStorage::StructuredEventSubscriber < ::ActiveSupport::StructuredEventSubscriber
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#29
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:29
   def preview(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#36
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:36
   def service_delete(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#43
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:43
   def service_delete_prefixed(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#15
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:15
   def service_download(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#50
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:50
   def service_exist(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#68
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:68
   def service_mirror(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#22
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:22
   def service_streaming_download(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#7
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:7
   def service_upload(event); end
 
-  # source://activestorage//lib/active_storage/structured_event_subscriber.rb#59
+  # pkg:gem/activestorage#lib/active_storage/structured_event_subscriber.rb:59
   def service_url(event); end
 end
 
@@ -2074,16 +2074,16 @@ class ActiveStorage::TransformJob < ::ActiveStorage::BaseJob
   end
 end
 
-# source://activestorage//lib/active_storage.rb#367
+# pkg:gem/activestorage#lib/active_storage.rb:367
 module ActiveStorage::Transformers
   extend ::ActiveSupport::Autoload
 end
 
-# source://activestorage//lib/active_storage/transformers/null_transformer.rb#5
+# pkg:gem/activestorage#lib/active_storage/transformers/null_transformer.rb:5
 class ActiveStorage::Transformers::NullTransformer < ::ActiveStorage::Transformers::Transformer
   private
 
-  # source://activestorage//lib/active_storage/transformers/null_transformer.rb#7
+  # pkg:gem/activestorage#lib/active_storage/transformers/null_transformer.rb:7
   def process(file, format:); end
 end
 
@@ -2096,23 +2096,23 @@ end
 # * ActiveStorage::Transformers::ImageProcessingTransformer:
 #   backed by ImageProcessing, a common interface for MiniMagick and ruby-vips
 #
-# source://activestorage//lib/active_storage/transformers/transformer.rb#13
+# pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:13
 class ActiveStorage::Transformers::Transformer
   # @return [Transformer] a new instance of Transformer
   #
-  # source://activestorage//lib/active_storage/transformers/transformer.rb#16
+  # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:16
   def initialize(transformations); end
 
   # Applies the transformations to the source image in +file+, producing a target image in the
   # specified +format+. Yields an open Tempfile containing the target image. Closes and unlinks
   # the output tempfile after yielding to the given block. Returns the result of the block.
   #
-  # source://activestorage//lib/active_storage/transformers/transformer.rb#23
+  # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:23
   def transform(file, format:); end
 
   # Returns the value of attribute transformations.
   #
-  # source://activestorage//lib/active_storage/transformers/transformer.rb#14
+  # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:14
   def transformations; end
 
   private
@@ -2122,41 +2122,41 @@ class ActiveStorage::Transformers::Transformer
   #
   # @raise [NotImplementedError]
   #
-  # source://activestorage//lib/active_storage/transformers/transformer.rb#36
+  # pkg:gem/activestorage#lib/active_storage/transformers/transformer.rb:36
   def process(file, format:); end
 end
 
 # Raised when ActiveStorage::Blob#preview is called on a blob that isn't previewable.
 # Use ActiveStorage::Blob#previewable? to determine whether a blob is previewable.
 #
-# source://activestorage//lib/active_storage/errors.rb#13
+# pkg:gem/activestorage#lib/active_storage/errors.rb:13
 class ActiveStorage::UnpreviewableError < ::ActiveStorage::Error; end
 
 # Raised when ActiveStorage::Blob#representation is called on a blob that isn't representable.
 # Use ActiveStorage::Blob#representable? to determine whether a blob is representable.
 #
-# source://activestorage//lib/active_storage/errors.rb#17
+# pkg:gem/activestorage#lib/active_storage/errors.rb:17
 class ActiveStorage::UnrepresentableError < ::ActiveStorage::Error; end
 
-# source://activestorage//lib/active_storage/gem_version.rb#9
+# pkg:gem/activestorage#lib/active_storage/gem_version.rb:9
 module ActiveStorage::VERSION; end
 
-# source://activestorage//lib/active_storage/gem_version.rb#10
+# pkg:gem/activestorage#lib/active_storage/gem_version.rb:10
 ActiveStorage::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
-# source://activestorage//lib/active_storage/gem_version.rb#11
+# pkg:gem/activestorage#lib/active_storage/gem_version.rb:11
 ActiveStorage::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-# source://activestorage//lib/active_storage/gem_version.rb#13
+# pkg:gem/activestorage#lib/active_storage/gem_version.rb:13
 ActiveStorage::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
-# source://activestorage//lib/active_storage/gem_version.rb#15
+# pkg:gem/activestorage#lib/active_storage/gem_version.rb:15
 ActiveStorage::VERSION::STRING = T.let(T.unsafe(nil), String)
 
-# source://activestorage//lib/active_storage/gem_version.rb#12
+# pkg:gem/activestorage#lib/active_storage/gem_version.rb:12
 ActiveStorage::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
-# source://activestorage//lib/active_storage/analyzer/image_analyzer/vips.rb#16
+# pkg:gem/activestorage#lib/active_storage/analyzer/image_analyzer/vips.rb:16
 ActiveStorage::VIPS_AVAILABLE = T.let(T.unsafe(nil), FalseClass)
 
 class ActiveStorage::VariantRecord < ::ActiveStorage::Record

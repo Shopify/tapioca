@@ -5,7 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem erb`.
 
 
-# source://erb//lib/erb/version.rb#2
+# pkg:gem/erb#lib/erb/version.rb:2
 class ERB
   # :markup: markdown
   #
@@ -50,7 +50,7 @@ class ERB
   #
   # @return [ERB] a new instance of ERB
   #
-  # source://erb//lib/erb.rb#832
+  # pkg:gem/erb#lib/erb.rb:832
   def initialize(str, trim_mode: T.unsafe(nil), eoutvar: T.unsafe(nil)); end
 
   # :markup: markdown
@@ -104,7 +104,7 @@ class ERB
   # </html>
   # ```
   #
-  # source://erb//lib/erb.rb#1170
+  # pkg:gem/erb#lib/erb.rb:1170
   def def_class(superklass = T.unsafe(nil), methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -132,7 +132,7 @@ class ERB
   # MyClass.new.render('foo', 123)                      # => "foo 123"
   # ```
   #
-  # source://erb//lib/erb.rb#1088
+  # pkg:gem/erb#lib/erb.rb:1088
   def def_method(mod, methodname, fname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -153,7 +153,7 @@ class ERB
   # # => "foo 123"
   # ```
   #
-  # source://erb//lib/erb.rb#1113
+  # pkg:gem/erb#lib/erb.rb:1113
   def def_module(methodname = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -163,7 +163,7 @@ class ERB
   #
   # [encodings]: rdoc-ref:ERB@Encodings
   #
-  # source://erb//lib/erb.rb#909
+  # pkg:gem/erb#lib/erb.rb:909
   def encoding; end
 
   # :markup: markdown
@@ -173,7 +173,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#917
+  # pkg:gem/erb#lib/erb.rb:917
   def filename; end
 
   # :markup: markdown
@@ -183,7 +183,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#917
+  # pkg:gem/erb#lib/erb.rb:917
   def filename=(_arg0); end
 
   # :markup: markdown
@@ -193,7 +193,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#925
+  # pkg:gem/erb#lib/erb.rb:925
   def lineno; end
 
   # :markup: markdown
@@ -203,7 +203,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#925
+  # pkg:gem/erb#lib/erb.rb:925
   def lineno=(_arg0); end
 
   # :markup: markdown
@@ -217,7 +217,7 @@ class ERB
   #
   # [error reporting]: rdoc-ref:ERB@Error+Reporting
   #
-  # source://erb//lib/erb.rb#937
+  # pkg:gem/erb#lib/erb.rb:937
   def location=(_arg0); end
 
   # :markup: markdown
@@ -233,7 +233,7 @@ class ERB
   # # => #<ERB::Compiler:0x000001cff9467678 @insert_cmd="print", @percent=false, @post_cmd=[], @pre_cmd=[], @put_cmd="print", @trim_mode=nil>
   # ```
   #
-  # source://erb//lib/erb.rb#854
+  # pkg:gem/erb#lib/erb.rb:854
   def make_compiler(trim_mode); end
 
   # :markup: markdown
@@ -254,7 +254,7 @@ class ERB
   # [default binding]: rdoc-ref:ERB@Default+Binding
   # [local binding]: rdoc-ref:ERB@Local+Binding
   #
-  # source://erb//lib/erb.rb#1008
+  # pkg:gem/erb#lib/erb.rb:1008
   def result(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -269,7 +269,7 @@ class ERB
   #
   # [augmented binding]: rdoc-ref:ERB@Augmented+Binding
   #
-  # source://erb//lib/erb.rb#1027
+  # pkg:gem/erb#lib/erb.rb:1027
   def result_with_hash(hash); end
 
   # :markup: markdown
@@ -280,7 +280,7 @@ class ERB
   # Like #result, but prints the result string (instead of returning it);
   # returns `nil`.
   #
-  # source://erb//lib/erb.rb#986
+  # pkg:gem/erb#lib/erb.rb:986
   def run(b = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -313,7 +313,7 @@ class ERB
   #  @trim_mode=nil>
   # ```
   #
-  # source://erb//lib/erb.rb#972
+  # pkg:gem/erb#lib/erb.rb:972
   def set_eoutvar(compiler, eoutvar = T.unsafe(nil)); end
 
   # :markup: markdown
@@ -358,7 +358,7 @@ class ERB
   # _foo
   # ```
   #
-  # source://erb//lib/erb.rb#900
+  # pkg:gem/erb#lib/erb.rb:900
   def src; end
 
   private
@@ -380,7 +380,7 @@ class ERB
   #
   # [default binding]: rdoc-ref:ERB@Default+Binding
   #
-  # source://erb//lib/erb.rb#1051
+  # pkg:gem/erb#lib/erb.rb:1051
   def new_toplevel(vars = T.unsafe(nil)); end
 
   class << self
@@ -391,7 +391,7 @@ class ERB
     #
     # Returns the string \ERB version.
     #
-    # source://erb//lib/erb.rb#787
+    # pkg:gem/erb#lib/erb.rb:787
     def version; end
   end
 end
@@ -468,20 +468,20 @@ end
 #
 # Good! See also ERB#def_method, ERB#def_module, and ERB#def_class.
 #
-# source://erb//lib/erb/compiler.rb#73
+# pkg:gem/erb#lib/erb/compiler.rb:73
 class ERB::Compiler
   # Construct a new compiler using the trim_mode. See ERB::new for available
   # trim modes.
   #
   # @return [Compiler] a new instance of Compiler
   #
-  # source://erb//lib/erb/compiler.rb#433
+  # pkg:gem/erb#lib/erb/compiler.rb:433
   def initialize(trim_mode); end
 
-  # source://erb//lib/erb/compiler.rb#315
+  # pkg:gem/erb#lib/erb/compiler.rb:315
   def add_insert_cmd(out, content); end
 
-  # source://erb//lib/erb/compiler.rb#311
+  # pkg:gem/erb#lib/erb/compiler.rb:311
   def add_put_cmd(out, content); end
 
   # Compiles an ERB template into Ruby code.  Returns an array of the code
@@ -489,232 +489,232 @@ class ERB::Compiler
   #
   # @raise [ArgumentError]
   #
-  # source://erb//lib/erb/compiler.rb#321
+  # pkg:gem/erb#lib/erb/compiler.rb:321
   def compile(s); end
 
-  # source://erb//lib/erb/compiler.rb#381
+  # pkg:gem/erb#lib/erb/compiler.rb:381
   def compile_content(stag, out); end
 
-  # source://erb//lib/erb/compiler.rb#368
+  # pkg:gem/erb#lib/erb/compiler.rb:368
   def compile_etag(etag, out, scanner); end
 
-  # source://erb//lib/erb/compiler.rb#344
+  # pkg:gem/erb#lib/erb/compiler.rb:344
   def compile_stag(stag, out, scanner); end
 
   # The command to handle text that is inserted prior to a newline
   #
-  # source://erb//lib/erb/compiler.rb#446
+  # pkg:gem/erb#lib/erb/compiler.rb:446
   def insert_cmd; end
 
   # The command to handle text that is inserted prior to a newline
   #
-  # source://erb//lib/erb/compiler.rb#446
+  # pkg:gem/erb#lib/erb/compiler.rb:446
   def insert_cmd=(_arg0); end
 
-  # source://erb//lib/erb/compiler.rb#427
+  # pkg:gem/erb#lib/erb/compiler.rb:427
   def make_scanner(src); end
 
   # Returns the value of attribute percent.
   #
-  # source://erb//lib/erb/compiler.rb#440
+  # pkg:gem/erb#lib/erb/compiler.rb:440
   def percent; end
 
   # An array of commands appended to compiled code
   #
-  # source://erb//lib/erb/compiler.rb#452
+  # pkg:gem/erb#lib/erb/compiler.rb:452
   def post_cmd; end
 
   # An array of commands appended to compiled code
   #
-  # source://erb//lib/erb/compiler.rb#452
+  # pkg:gem/erb#lib/erb/compiler.rb:452
   def post_cmd=(_arg0); end
 
   # An array of commands prepended to compiled code
   #
-  # source://erb//lib/erb/compiler.rb#449
+  # pkg:gem/erb#lib/erb/compiler.rb:449
   def pre_cmd; end
 
   # An array of commands prepended to compiled code
   #
-  # source://erb//lib/erb/compiler.rb#449
+  # pkg:gem/erb#lib/erb/compiler.rb:449
   def pre_cmd=(_arg0); end
 
-  # source://erb//lib/erb/compiler.rb#398
+  # pkg:gem/erb#lib/erb/compiler.rb:398
   def prepare_trim_mode(mode); end
 
   # The command to handle text that ends with a newline
   #
-  # source://erb//lib/erb/compiler.rb#443
+  # pkg:gem/erb#lib/erb/compiler.rb:443
   def put_cmd; end
 
   # The command to handle text that ends with a newline
   #
-  # source://erb//lib/erb/compiler.rb#443
+  # pkg:gem/erb#lib/erb/compiler.rb:443
   def put_cmd=(_arg0); end
 
   # Returns the value of attribute trim_mode.
   #
-  # source://erb//lib/erb/compiler.rb#440
+  # pkg:gem/erb#lib/erb/compiler.rb:440
   def trim_mode; end
 
   private
 
   # A buffered text in #compile
   #
-  # source://erb//lib/erb/compiler.rb#457
+  # pkg:gem/erb#lib/erb/compiler.rb:457
   def content; end
 
   # A buffered text in #compile
   #
-  # source://erb//lib/erb/compiler.rb#457
+  # pkg:gem/erb#lib/erb/compiler.rb:457
   def content=(_arg0); end
 
-  # source://erb//lib/erb/compiler.rb#459
+  # pkg:gem/erb#lib/erb/compiler.rb:459
   def detect_magic_comment(s, enc = T.unsafe(nil)); end
 
-  # source://erb//lib/erb/compiler.rb#484
+  # pkg:gem/erb#lib/erb/compiler.rb:484
   def warn_invalid_trim_mode(mode, uplevel:); end
 end
 
-# source://erb//lib/erb/compiler.rb#278
+# pkg:gem/erb#lib/erb/compiler.rb:278
 class ERB::Compiler::Buffer
   # @return [Buffer] a new instance of Buffer
   #
-  # source://erb//lib/erb/compiler.rb#279
+  # pkg:gem/erb#lib/erb/compiler.rb:279
   def initialize(compiler, enc = T.unsafe(nil), frozen = T.unsafe(nil)); end
 
-  # source://erb//lib/erb/compiler.rb#301
+  # pkg:gem/erb#lib/erb/compiler.rb:301
   def close; end
 
-  # source://erb//lib/erb/compiler.rb#295
+  # pkg:gem/erb#lib/erb/compiler.rb:295
   def cr; end
 
-  # source://erb//lib/erb/compiler.rb#291
+  # pkg:gem/erb#lib/erb/compiler.rb:291
   def push(cmd); end
 
   # Returns the value of attribute script.
   #
-  # source://erb//lib/erb/compiler.rb#289
+  # pkg:gem/erb#lib/erb/compiler.rb:289
   def script; end
 end
 
-# source://erb//lib/erb/compiler.rb#254
+# pkg:gem/erb#lib/erb/compiler.rb:254
 class ERB::Compiler::ExplicitScanner < ::ERB::Compiler::Scanner
-  # source://erb//lib/erb/compiler.rb#255
+  # pkg:gem/erb#lib/erb/compiler.rb:255
   def scan; end
 end
 
-# source://erb//lib/erb/compiler.rb#74
+# pkg:gem/erb#lib/erb/compiler.rb:74
 class ERB::Compiler::PercentLine
   # @return [PercentLine] a new instance of PercentLine
   #
-  # source://erb//lib/erb/compiler.rb#75
+  # pkg:gem/erb#lib/erb/compiler.rb:75
   def initialize(str); end
 
   # Returns the value of attribute value.
   #
-  # source://erb//lib/erb/compiler.rb#79
+  # pkg:gem/erb#lib/erb/compiler.rb:79
   def to_s; end
 
   # Returns the value of attribute value.
   #
-  # source://erb//lib/erb/compiler.rb#78
+  # pkg:gem/erb#lib/erb/compiler.rb:78
   def value; end
 end
 
-# source://erb//lib/erb/compiler.rb#82
+# pkg:gem/erb#lib/erb/compiler.rb:82
 class ERB::Compiler::Scanner
   # @return [Scanner] a new instance of Scanner
   #
-  # source://erb//lib/erb/compiler.rb#108
+  # pkg:gem/erb#lib/erb/compiler.rb:108
   def initialize(src, trim_mode, percent); end
 
   # Returns the value of attribute etags.
   #
-  # source://erb//lib/erb/compiler.rb#115
+  # pkg:gem/erb#lib/erb/compiler.rb:115
   def etags; end
 
-  # source://erb//lib/erb/compiler.rb#117
+  # pkg:gem/erb#lib/erb/compiler.rb:117
   def scan; end
 
   # Returns the value of attribute stag.
   #
-  # source://erb//lib/erb/compiler.rb#114
+  # pkg:gem/erb#lib/erb/compiler.rb:114
   def stag; end
 
   # Sets the attribute stag
   #
   # @param value the value to set the attribute stag to.
   #
-  # source://erb//lib/erb/compiler.rb#114
+  # pkg:gem/erb#lib/erb/compiler.rb:114
   def stag=(_arg0); end
 
   # Returns the value of attribute stags.
   #
-  # source://erb//lib/erb/compiler.rb#115
+  # pkg:gem/erb#lib/erb/compiler.rb:115
   def stags; end
 
   class << self
-    # source://erb//lib/erb/compiler.rb#97
+    # pkg:gem/erb#lib/erb/compiler.rb:97
     def default_scanner=(klass); end
 
-    # source://erb//lib/erb/compiler.rb#101
+    # pkg:gem/erb#lib/erb/compiler.rb:101
     def make_scanner(src, trim_mode, percent); end
 
-    # source://erb//lib/erb/compiler.rb#94
+    # pkg:gem/erb#lib/erb/compiler.rb:94
     def regist_scanner(klass, trim_mode, percent); end
 
-    # source://erb//lib/erb/compiler.rb#86
+    # pkg:gem/erb#lib/erb/compiler.rb:86
     def register_scanner(klass, trim_mode, percent); end
   end
 end
 
-# source://erb//lib/erb/compiler.rb#107
+# pkg:gem/erb#lib/erb/compiler.rb:107
 ERB::Compiler::Scanner::DEFAULT_ETAGS = T.let(T.unsafe(nil), Array)
 
-# source://erb//lib/erb/compiler.rb#106
+# pkg:gem/erb#lib/erb/compiler.rb:106
 ERB::Compiler::Scanner::DEFAULT_STAGS = T.let(T.unsafe(nil), Array)
 
-# source://erb//lib/erb/compiler.rb#240
+# pkg:gem/erb#lib/erb/compiler.rb:240
 class ERB::Compiler::SimpleScanner < ::ERB::Compiler::Scanner
-  # source://erb//lib/erb/compiler.rb#241
+  # pkg:gem/erb#lib/erb/compiler.rb:241
   def scan; end
 end
 
-# source://erb//lib/erb/compiler.rb#120
+# pkg:gem/erb#lib/erb/compiler.rb:120
 class ERB::Compiler::TrimScanner < ::ERB::Compiler::Scanner
   # @return [TrimScanner] a new instance of TrimScanner
   #
-  # source://erb//lib/erb/compiler.rb#121
+  # pkg:gem/erb#lib/erb/compiler.rb:121
   def initialize(src, trim_mode, percent); end
 
-  # source://erb//lib/erb/compiler.rb#210
+  # pkg:gem/erb#lib/erb/compiler.rb:210
   def explicit_trim_line(line); end
 
   # @return [Boolean]
   #
-  # source://erb//lib/erb/compiler.rb#229
+  # pkg:gem/erb#lib/erb/compiler.rb:229
   def is_erb_stag?(s); end
 
-  # source://erb//lib/erb/compiler.rb#152
+  # pkg:gem/erb#lib/erb/compiler.rb:152
   def percent_line(line, &block); end
 
-  # source://erb//lib/erb/compiler.rb#140
+  # pkg:gem/erb#lib/erb/compiler.rb:140
   def scan(&block); end
 
-  # source://erb//lib/erb/compiler.rb#165
+  # pkg:gem/erb#lib/erb/compiler.rb:165
   def scan_line(line); end
 
-  # source://erb//lib/erb/compiler.rb#174
+  # pkg:gem/erb#lib/erb/compiler.rb:174
   def trim_line1(line); end
 
-  # source://erb//lib/erb/compiler.rb#188
+  # pkg:gem/erb#lib/erb/compiler.rb:188
   def trim_line2(line); end
 end
 
 # :stopdoc:
 #
-# source://erb//lib/erb/compiler.rb#476
+# pkg:gem/erb#lib/erb/compiler.rb:476
 ERB::Compiler::WARNING_UPLEVEL = T.let(T.unsafe(nil), Integer)
 
 # ERB::DefMethod
@@ -747,32 +747,30 @@ ERB::Compiler::WARNING_UPLEVEL = T.let(T.unsafe(nil), Integer)
 #
 #   <b>30</b>
 #
-# source://erb//lib/erb/def_method.rb#33
+# pkg:gem/erb#lib/erb/def_method.rb:33
 module ERB::DefMethod
   private
 
   # define _methodname_ as instance method of current module, using ERB
   # object or eRuby file
   #
-  # source://erb//lib/erb/def_method.rb#36
+  # pkg:gem/erb#lib/erb/def_method.rb:36
   def def_erb_method(methodname, erb_or_fname); end
 
   class << self
     # define _methodname_ as instance method of current module, using ERB
     # object or eRuby file
     #
-    # source://erb//lib/erb/def_method.rb#46
+    # pkg:gem/erb#lib/erb/def_method.rb:46
     def def_erb_method(methodname, erb_or_fname); end
   end
 end
-
-module ERB::Escape; end
 
 # ERB::Util
 #
 # A utility module for conversion routines, often handy in HTML generation.
 #
-# source://erb//lib/erb/util.rb#33
+# pkg:gem/erb#lib/erb/util.rb:33
 module ERB::Util
   include ::ActiveSupport::CoreExt::ERBUtil
   include ::ERB::Escape
@@ -782,34 +780,34 @@ module ERB::Util
 
   # cgi.gem <= v0.3.2
   #
-  # source://erb//lib/erb/util.rb#74
+  # pkg:gem/erb#lib/erb/util.rb:74
   def u(s); end
 
   # cgi.gem <= v0.3.2
   #
-  # source://erb//lib/erb/util.rb#64
+  # pkg:gem/erb#lib/erb/util.rb:64
   def url_encode(s); end
 
   class << self
-    # source://erb//lib/erb/util.rb#49
+    # pkg:gem/erb#lib/erb/util.rb:49
     def h(s); end
 
-    # source://erb//lib/erb/util.rb#47
+    # pkg:gem/erb#lib/erb/util.rb:47
     def html_escape(s); end
 
     # cgi.gem <= v0.3.2
     #
-    # source://erb//lib/erb/util.rb#75
+    # pkg:gem/erb#lib/erb/util.rb:75
     def u(s); end
 
     # cgi.gem <= v0.3.2
     #
-    # source://erb//lib/erb/util.rb#76
+    # pkg:gem/erb#lib/erb/util.rb:76
     def url_encode(s); end
   end
 end
 
 # The string \ERB version.
 #
-# source://erb//lib/erb/version.rb#4
+# pkg:gem/erb#lib/erb/version.rb:4
 ERB::VERSION = T.let(T.unsafe(nil), String)

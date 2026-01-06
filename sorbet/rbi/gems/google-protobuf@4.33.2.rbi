@@ -8,207 +8,212 @@
 # We define these before requiring the platform-specific modules.
 # That way the module init can grab references to these.
 #
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#8
+# pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:8
 module Google; end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#9
+# pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:9
 module Google::Protobuf
   class << self
-    # source://google-protobuf//lib/google/protobuf.rb#38
+    # pkg:gem/google-protobuf#lib/google/protobuf.rb:38
     def decode(klass, proto, options = T.unsafe(nil)); end
 
-    # source://google-protobuf//lib/google/protobuf.rb#42
+    # pkg:gem/google-protobuf#lib/google/protobuf.rb:42
     def decode_json(klass, json, options = T.unsafe(nil)); end
 
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def deep_copy(_arg0); end
 
     # @raise [FrozenError]
     #
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def discard_unknown(_arg0); end
 
-    # source://google-protobuf//lib/google/protobuf.rb#30
+    # pkg:gem/google-protobuf#lib/google/protobuf.rb:30
     def encode(msg, options = T.unsafe(nil)); end
 
-    # source://google-protobuf//lib/google/protobuf.rb#34
+    # pkg:gem/google-protobuf#lib/google/protobuf.rb:34
     def encode_json(msg, options = T.unsafe(nil)); end
   end
 end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#33
+# pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:33
 class Google::Protobuf::AbstractMessage
   include ::Google::Protobuf::MessageExts
   extend ::Google::Protobuf::MessageExts::ClassMethods
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(*_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def ==(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def [](_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def []=(_arg0, _arg1); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clone; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def dup; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def eql?(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def freeze; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def frozen?; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def hash; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def inspect; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def method_missing(*_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_h; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_s; end
 
   private
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def respond_to_missing?(*_arg0); end
 
   class << self
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def decode(*_arg0); end
 
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def decode_json(*_arg0); end
 
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def descriptor; end
 
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def encode(*_arg0); end
 
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def encode_json(*_arg0); end
   end
 end
 
 # Message Descriptor - Descriptor for short.
+#
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::Descriptor
   include ::Enumerable
 
   # @return [Descriptor] a new instance of Descriptor
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def each; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def each_oneof; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def file_descriptor; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def lookup(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def lookup_oneof(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def msgclass; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_proto; end
 end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::DescriptorPool
   # @raise [ArgumentError]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def add_serialized_file(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def lookup(_arg0); end
 
   class << self
-    # source://google-protobuf//lib/google/protobuf_native.rb#15
+    # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
     def generated_pool; end
   end
 end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::EnumDescriptor
   include ::Enumerable
 
   # @return [EnumDescriptor] a new instance of EnumDescriptor
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def each; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def enummodule; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def file_descriptor; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def is_closed?; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def lookup_name(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def lookup_value(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_proto; end
 end
 
-# source://google-protobuf//lib/google/protobuf.rb#16
+# pkg:gem/google-protobuf#lib/google/protobuf.rb:16
 class Google::Protobuf::Error < ::StandardError; end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::FieldDescriptor
   # @return [FieldDescriptor] a new instance of FieldDescriptor
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
   # @param msg [Google::Protobuf::Message]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clear(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def default; end
 
   # Tests if this field has been set on the argument message.
@@ -217,7 +222,7 @@ class Google::Protobuf::FieldDescriptor
   # @raise [TypeError] If the field is not defined on this message.
   # @return [Object] Value of the field on this message.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def get(_arg0); end
 
   # Tests if this field has been set on the argument message.
@@ -227,48 +232,48 @@ class Google::Protobuf::FieldDescriptor
   # @raise [ArgumentError] If this field does not track presence
   # @return [Boolean] True iff message has this field set
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def has?(_arg0); end
 
   # Tests if this field tracks presence.
   #
   # @return [Boolean] True iff this field tracks presence
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def has_presence?; end
 
   # Tests if this is a repeated field that uses packed encoding.
   #
   # @return [Boolean] True iff this field is packed
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def is_packed?; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def json_name; end
 
   # DEPRECATED: Use required? or repeated? instead.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def label; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def number; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
   # @return [Boolean]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def repeated?; end
 
   # @return [Boolean]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def required?; end
 
   # call-seq:
@@ -281,62 +286,64 @@ class Google::Protobuf::FieldDescriptor
   # @param msg [Google::Protobuf::Message]
   # @param value [Object]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def set(_arg0, _arg1); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def submsg_name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def subtype; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_proto; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def type; end
 end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::FileDescriptor
   # @return [FileDescriptor] a new instance of FileDescriptor
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_proto; end
 end
 
-# source://google-protobuf//lib/google/protobuf.rb#46
+# pkg:gem/google-protobuf#lib/google/protobuf.rb:46
 Google::Protobuf::IMPLEMENTATION = T.let(T.unsafe(nil), Symbol)
 
-# source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#10
+# pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:10
 module Google::Protobuf::Internal; end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::Internal::Arena; end
 
-# source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#42
+# pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:42
 class Google::Protobuf::Internal::LegacyObjectCache
   # @return [LegacyObjectCache] a new instance of LegacyObjectCache
   #
-  # source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#43
+  # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:43
   def initialize; end
 
-  # source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#49
+  # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:49
   def get(key); end
 
-  # source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#71
+  # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:71
   def try_add(key, value); end
 
   private
 
-  # source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#86
+  # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:86
   def purge; end
 end
 
@@ -357,29 +364,30 @@ Google::Protobuf::Internal::OBJECT_CACHE = T.let(T.unsafe(nil), Google::Protobuf
 # are 32 bits. In this case, we enable the secondary Hash to hold the keys
 # and prevent them from being collected.
 #
-# source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#25
+# pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:25
 class Google::Protobuf::Internal::ObjectCache
   # @return [ObjectCache] a new instance of ObjectCache
   #
-  # source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#26
+  # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:26
   def initialize; end
 
-  # source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#31
+  # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:31
   def get(key); end
 
-  # source://google-protobuf//lib/google/protobuf/internal/object_cache.rb#35
+  # pkg:gem/google-protobuf#lib/google/protobuf/internal/object_cache.rb:35
   def try_add(key, value); end
 end
 
 Google::Protobuf::Internal::SIZEOF_LONG = T.let(T.unsafe(nil), Integer)
 Google::Protobuf::Internal::SIZEOF_VALUE = T.let(T.unsafe(nil), Integer)
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::Map
   include ::Enumerable
 
   # @return [Map] a new instance of Map
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(*_arg0); end
 
   # call-seq:
@@ -394,7 +402,7 @@ class Google::Protobuf::Map
   # even if value comparison (for example, between integers and floats) would
   # have otherwise indicated that every element has equal value.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def ==(_arg0); end
 
   # call-seq:
@@ -403,7 +411,7 @@ class Google::Protobuf::Map
   #  Accesses the element at the given key. Throws an exception if the key type is
   #  incorrect. Returns nil when the key is not present in the map.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def [](_arg0); end
 
   # call-seq:
@@ -413,10 +421,10 @@ class Google::Protobuf::Map
   # Throws an exception if the key type is incorrect. Returns the new value that
   # was just inserted.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def []=(_arg0, _arg1); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clear; end
 
   # call-seq:
@@ -425,7 +433,7 @@ class Google::Protobuf::Map
   # Duplicates this map with a shallow copy. References to all non-primitive
   # element objects (e.g., submessages) are shared.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clone; end
 
   # call-seq:
@@ -434,7 +442,7 @@ class Google::Protobuf::Map
   # Deletes the value at the given key, if any, returning either the old value or
   # nil if none was present. Throws an exception if the key is of the wrong type.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def delete(_arg0); end
 
   # call-seq:
@@ -443,7 +451,7 @@ class Google::Protobuf::Map
   # Duplicates this map with a shallow copy. References to all non-primitive
   # element objects (e.g., submessages) are shared.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def dup; end
 
   # call-seq:
@@ -453,13 +461,13 @@ class Google::Protobuf::Map
   # Note that Map also includes Enumerable; map thus acts like a normal Ruby
   # sequence.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def each; end
 
   # Freezes the map object. We have to intercept this so we can freeze the
   # underlying representation, not just the Ruby wrapper. Returns self.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def freeze; end
 
   # Is this object frozen?
@@ -469,18 +477,18 @@ class Google::Protobuf::Map
   #
   # @return [Boolean]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def frozen?; end
 
   # @return [Boolean]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def has_key?(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def hash; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def inspect; end
 
   # call-seq:
@@ -488,10 +496,10 @@ class Google::Protobuf::Map
   #
   # Returns the list of keys contained in the map, in unspecified order.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def keys; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def length; end
 
   # call-seq:
@@ -502,10 +510,10 @@ class Google::Protobuf::Map
   # in the new copy of this map. Returns the new copy of this map with merged
   # contents.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def merge(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def size; end
 
   # call-seq:
@@ -513,7 +521,7 @@ class Google::Protobuf::Map
   #
   # Returns a Ruby Hash object containing all the values within the map
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_h; end
 
   # call-seq:
@@ -521,193 +529,195 @@ class Google::Protobuf::Map
   #
   # Returns the list of values contained in the map, in unspecified order.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def values; end
 end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#10
+# pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:10
 module Google::Protobuf::MessageExts
   mixes_in_class_methods ::Google::Protobuf::MessageExts::ClassMethods
 
-  # source://google-protobuf//lib/google/protobuf/message_exts.rb#28
+  # pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:28
   def to_hash; end
 
-  # source://google-protobuf//lib/google/protobuf/message_exts.rb#20
+  # pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:20
   def to_json(options = T.unsafe(nil)); end
 
-  # source://google-protobuf//lib/google/protobuf/message_exts.rb#24
+  # pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:24
   def to_proto(options = T.unsafe(nil)); end
 
   class << self
     # this is only called in jruby; mri loades the ClassMethods differently
     #
-    # source://google-protobuf//lib/google/protobuf/message_exts.rb#13
+    # pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:13
     def included(klass); end
   end
 end
 
-# source://google-protobuf//lib/google/protobuf/message_exts.rb#17
+# pkg:gem/google-protobuf#lib/google/protobuf/message_exts.rb:17
 module Google::Protobuf::MessageExts::ClassMethods; end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::MethodDescriptor
   # @return [MethodDescriptor] a new instance of MethodDescriptor
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def client_streaming; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def input_type; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def output_type; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def server_streaming; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_proto; end
 end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::OneofDescriptor
   include ::Enumerable
 
   # @return [OneofDescriptor] a new instance of OneofDescriptor
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def each; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_proto; end
 end
 
-# source://google-protobuf//lib/google/protobuf.rb#20
+# pkg:gem/google-protobuf#lib/google/protobuf.rb:20
 Google::Protobuf::PREFER_FFI = T.let(T.unsafe(nil), FalseClass)
 
-# source://google-protobuf//lib/google/protobuf.rb#17
+# pkg:gem/google-protobuf#lib/google/protobuf.rb:17
 class Google::Protobuf::ParseError < ::Google::Protobuf::Error; end
 
-# source://google-protobuf//lib/google/protobuf/repeated_field.rb#27
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::RepeatedField
   include ::Enumerable
   extend ::Forwardable
 
   # @return [RepeatedField] a new instance of RepeatedField
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(*_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def &(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def *(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def +(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def -(*_arg0, **_arg1, &_arg2); end
 
   # @raise [FrozenError]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def <<(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def <=>(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def ==(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def [](*_arg0); end
 
   # @raise [FrozenError]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def []=(_arg0, _arg1); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def assoc(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def at(*_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def bsearch(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def bsearch_index(*_arg0, **_arg1, &_arg2); end
 
   # @raise [FrozenError]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clear; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def clone; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def collect!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def combination(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def compact(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def compact!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def concat(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def count(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def cycle(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#104
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:104
   def delete(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#104
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:104
   def delete_at(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def delete_if(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def difference(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def dig(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def drop(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def drop_while(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def dup; end
 
   # call-seq:
@@ -717,43 +727,43 @@ class Google::Protobuf::RepeatedField
   # also includes Enumerable; combined with this method, the repeated field thus
   # acts like an ordinary Ruby sequence.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def each; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def each_index(*args, &block); end
 
   # @return [Boolean]
   #
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#92
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:92
   def empty?; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def eql?(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def fetch(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def fill(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def find_index(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#58
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:58
   def first(n = T.unsafe(nil)); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def flatten(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def flatten!(*args, &block); end
 
   # Freezes the RepeatedField object. We have to intercept this so we can
   # freeze the underlying representation, not just the Ruby wrapper. Returns
   # self.
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def freeze; end
 
   # Is this object frozen?
@@ -763,133 +773,133 @@ class Google::Protobuf::RepeatedField
   #
   # @return [Boolean]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def frozen?; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def hash; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def include?(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def index(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def insert(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def inspect(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def intersection(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def join(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#151
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:151
   def keep_if(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#69
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:69
   def last(n = T.unsafe(nil)); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def length; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#99
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:99
   def map; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#152
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:152
   def map!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def pack(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def permutation(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#81
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:81
   def pop(n = T.unsafe(nil)); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def pretty_print(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def pretty_print_cycle(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def product(*_arg0, **_arg1, &_arg2); end
 
   # @raise [FrozenError]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def push(*_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def rassoc(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#153
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:153
   def reject!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def repeated_combination(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def repeated_permutation(*_arg0, **_arg1, &_arg2); end
 
   # @raise [FrozenError]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def replace(_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def reverse(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def reverse!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def rindex(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def rotate(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def rotate!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def sample(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def select!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def shelljoin(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#104
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:104
   def shift(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def shuffle(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def shuffle!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def size; end
 
   # array aliases into enumerable
   #
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#97
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:97
   def slice(*_arg0); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#104
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:104
   def slice!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def sort!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def sort_by!(*args, &block); end
 
   # call-seq:
@@ -898,47 +908,47 @@ class Google::Protobuf::RepeatedField
   # Used when converted implicitly into array, e.g. compared to an Array.
   # Also called as a fallback of Object#to_a
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_ary; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def to_s(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def transpose(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def union(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def uniq(*_arg0, **_arg1, &_arg2); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#116
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:116
   def uniq!(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#104
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:104
   def unshift(*args, &block); end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#98
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:98
   def values_at; end
 
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#47
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:47
   def |(*_arg0, **_arg1, &_arg2); end
 
   private
 
   # @raise [FrozenError]
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def pop_one; end
 
   class << self
     private
 
-    # source://google-protobuf//lib/google/protobuf/repeated_field.rb#103
+    # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:103
     def define_array_wrapper_method(method_name); end
 
-    # source://google-protobuf//lib/google/protobuf/repeated_field.rb#115
+    # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:115
     def define_array_wrapper_with_result_method(method_name); end
   end
 end
@@ -947,35 +957,36 @@ end
 # This only applies in cases where the calling function which created the enumerator,
 # such as #sort!, modifies itself rather than a new array, such as #sort
 #
-# source://google-protobuf//lib/google/protobuf/repeated_field.rb#159
+# pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:159
 class Google::Protobuf::RepeatedField::ProxyingEnumerator < ::Struct
-  # source://google-protobuf//lib/google/protobuf/repeated_field.rb#160
+  # pkg:gem/google-protobuf#lib/google/protobuf/repeated_field.rb:160
   def each(*args, &block); end
 end
 
+# pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
 class Google::Protobuf::ServiceDescriptor
   include ::Enumerable
 
   # @return [ServiceDescriptor] a new instance of ServiceDescriptor
   #
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def initialize(_arg0, _arg1, _arg2); end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def each; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def file_descriptor; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def name; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def options; end
 
-  # source://google-protobuf//lib/google/protobuf_native.rb#15
+  # pkg:gem/google-protobuf#lib/google/protobuf_native.rb:15
   def to_proto; end
 end
 
-# source://google-protobuf//lib/google/protobuf.rb#18
+# pkg:gem/google-protobuf#lib/google/protobuf.rb:18
 class Google::Protobuf::TypeError < ::TypeError; end
