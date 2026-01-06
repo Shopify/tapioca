@@ -673,7 +673,7 @@ module Tapioca
 
       ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
 
-      sig { override.returns(T::Enumerable[Module]) }
+      sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
       def self.gather_constants
         # Collect all the classes that include Encryptable
         all_classes.select { |c| c < ::Encryptable }
@@ -806,7 +806,7 @@ module Tapioca
 
       ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
 
-      sig { override.returns(T::Enumerable[Module]) }
+      sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
       def self.gather_constants
         # Collect all the classes that include Encryptable
         all_classes.select { |c| c < ::Encryptable }

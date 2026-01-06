@@ -62,7 +62,12 @@ module Tapioca
     #
     # assert(@gem.file?("lib/foo.rb"))
     # ~~~
-    #: (String name, String version, ?dependencies: Array[String], ?path: String) ?{ (MockGem gem) [self: MockGem] -> void } -> MockGem
+    #: (
+    #|   String name,
+    #|   String version,
+    #|   ?dependencies: Array[String],
+    #|   ?path: String
+    #| ) ?{ (MockGem gem) [self: MockGem] -> void } -> MockGem
     def mock_gem(name, version, dependencies: [], path: default_gem_path(name), &block)
       gem = MockGem.new(path, name, version, dependencies)
       gem.mkdir!

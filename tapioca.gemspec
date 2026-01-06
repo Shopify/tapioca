@@ -35,6 +35,9 @@ Gem::Specification.new do |spec|
   # to ensure that the RBS comments are translated correctly.
   spec.add_dependency("rbi", ">= 0.3.7")
   spec.add_dependency("spoom", ">= 1.7.9")
+  # We need this to be ported to the RBS 4.0 branch before we can remove this dependency:
+  # https://github.com/ruby/rbs/pull/2601
+  spec.add_dependency("tsort") # Until rbs supports Ruby 4.0 with tsort extracted to bundled gems
 
   spec.required_ruby_version = ">= 3.2"
 end

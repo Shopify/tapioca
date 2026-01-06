@@ -5,7 +5,7 @@ module RBI
   class Tree
     extend T::Sig
 
-    #: (::Module constant) ?{ (Scope scope) -> void } -> Scope
+    #: (T::Module[top] constant) ?{ (Scope scope) -> void } -> Scope
     def create_path(constant, &block)
       constant_name = Tapioca::Runtime::Reflection.name_of(constant)
       raise "given constant does not have a name" unless constant_name
@@ -61,7 +61,14 @@ module RBI
       create_node(RBI::TypeMember.new(name, value))
     end
 
-    #: (String name, ?parameters: Array[TypedParam], ?return_type: String?, ?class_method: bool, ?visibility: RBI::Visibility, ?comments: Array[RBI::Comment]) ?{ (RBI::Method node) -> void } -> void
+    #: (
+    #|   String name,
+    #|   ?parameters: Array[TypedParam],
+    #|   ?return_type: String?,
+    #|   ?class_method: bool,
+    #|   ?visibility: RBI::Visibility,
+    #|   ?comments: Array[RBI::Comment]
+    #| ) ?{ (RBI::Method node) -> void } -> void
     def create_method(name, parameters: [], return_type: nil, class_method: false, visibility: RBI::Public.new,
       comments: [], &block)
       return unless Tapioca::RBIHelper.valid_method_name?(name)

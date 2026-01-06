@@ -7,7 +7,7 @@ gemspec
 CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
-gem "minitest"
+gem "minitest", "< 6.0" # Rails 8.1.1 doesn't support minitest 6.0 which causes errors
 gem "minitest-hooks"
 gem "minitest-reporters"
 gem "debug"
@@ -33,7 +33,9 @@ group :development, :test do
   gem "sqlite3"
   gem "mutex_m"
   gem "smart_properties"
-  gem "json_api_client"
+  # Needed for Ruby 4.0 compatibility
+  # Can be removed once https://github.com/JsonApiClient/json_api_client/pull/416 is merged
+  gem "json_api_client", github: "paracycle/json_api_client", branch: "uk-bump-versions"
   gem "frozen_record"
   gem "sprockets"
   gem "state_machines"

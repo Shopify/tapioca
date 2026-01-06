@@ -77,7 +77,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[Module]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             all_classes.select { |c| GraphQL::Schema::InputObject > c }
           end

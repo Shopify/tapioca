@@ -13,7 +13,7 @@ module Tapioca
         extend Reflection
         extend T::Sig
 
-        @class_files = {}.compare_by_identity #: Hash[Module, Set[SourceLocation]]
+        @class_files = {}.compare_by_identity #: Hash[T::Module[top], Set[SourceLocation]]
 
         # Immediately activated upon load. Observes class/module definition.
         @class_tracepoint = TracePoint.trace(:class) do |tp|
@@ -36,7 +36,7 @@ module Tapioca
             ])
           end
 
-          (@class_files[key] ||= Set.new) << loc
+          ConstantDefinition.register(key, loc)
         end
 
         @creturn_tracepoint = TracePoint.trace(:c_return) do |tp|
@@ -46,7 +46,7 @@ module Tapioca
           next unless Module === key
 
           loc = build_source_location(tp, caller_locations)
-          (@class_files[key] ||= Set.new) << loc
+          ConstantDefinition.register(key, loc)
         end
 
         class << self
@@ -67,15 +67,31 @@ module Tapioca
             SourceLocation.from_loc([file || "", lineno])
           end
 
+          def register(constant, loc)
+            return unless loc
+
+            (@class_files[constant] ||= Set.new) << loc
+          end
+
+          def register_cname(cname, namespace, locations)
+            return if namespace.autoload?(cname)
+
+            key = Reflection.constantize(cname, namespace: namespace, inherit: true)
+            return unless Module === key
+
+            loc = Reflection.resolve_loc(locations)
+            ConstantDefinition.register(key, loc)
+          end
+
           # Returns the files in which this class or module was opened. Doesn't know
           # about situations where the class was opened prior to +require+ing,
           # or where metaprogramming was used via +eval+, etc.
-          #: (Module klass) -> Set[String]
+          #: (T::Module[top] klass) -> Set[String]
           def files_for(klass)
             locations_for(klass).map(&:file).to_set
           end
 
-          #: (Module klass) -> Set[SourceLocation]
+          #: (T::Module[top] klass) -> Set[SourceLocation]
           def locations_for(klass)
             @class_files.fetch(klass, Set.new)
           end
@@ -83,4 +99,13 @@ module Tapioca
       end
     end
   end
+end
+
+class Module
+  prepend(::Module.new do
+    def const_added(cname)
+      ::Tapioca::Runtime::Trackers::ConstantDefinition.register_cname(cname, self, Kernel.caller_locations)
+      super(cname)
+    end
+  end)
 end

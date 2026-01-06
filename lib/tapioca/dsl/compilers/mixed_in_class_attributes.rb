@@ -44,7 +44,7 @@ module Tapioca
       #   end
       # end
       # ~~~
-      #: [ConstantType = Module]
+      #: [ConstantType = T::Module[top]]
       class MixedInClassAttributes < Compiler
         extend T::Sig
 
@@ -63,7 +63,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[Module]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             # Select all non-anonymous modules that have overridden Module.included
             all_modules.select do |mod|

@@ -7,7 +7,6 @@ module Tapioca
       # @requires_ancestor: Kernel
       module Template
         extend T::Sig
-        ERB_SUPPORTS_KVARGS = ::ERB.instance_method(:initialize).parameters.assoc(:key) #: [Symbol, Symbol]?
 
         #: (String selector) -> bool
         def ruby_version(selector)
@@ -21,12 +20,7 @@ module Tapioca
 
         #: (String src, ?trim_mode: String) -> String
         def template(src, trim_mode: ">")
-          erb = if ERB_SUPPORTS_KVARGS
-            ::ERB.new(src, trim_mode: trim_mode)
-          else
-            ::ERB.new(src, nil, trim_mode)
-          end
-
+          erb = ::ERB.new(src, trim_mode: trim_mode)
           erb.result(binding)
         end
 

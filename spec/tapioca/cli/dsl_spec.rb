@@ -998,7 +998,7 @@ module Tapioca
                 end
               end
 
-              sig { override.returns(T::Enumerable[Module]) }
+              sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
               def self.gather_constants
                 [::Post]
               end
@@ -1022,7 +1022,7 @@ module Tapioca
                 end
               end
 
-              sig { override.returns(T::Enumerable[Module]) }
+              sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
               def self.gather_constants
                 [::Post]
               end
@@ -1116,7 +1116,7 @@ module Tapioca
                   end
                 end
 
-                sig { override.returns(T::Enumerable[Module]) }
+                sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
                 def self.gather_constants
                   [Job]
                 end
@@ -1246,7 +1246,7 @@ module Tapioca
                   end
                 end
 
-                sig { override.returns(T::Enumerable[Module]) }
+                sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
                 def self.gather_constants
                   [Job]
                 end
@@ -1416,7 +1416,7 @@ module Tapioca
                   end
                 end
 
-                sig { override.returns(T::Enumerable[Module]) }
+                sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
                 def self.gather_constants
                   [Job, Post, User]
                 end
@@ -1479,7 +1479,7 @@ module Tapioca
                   end
                 end
 
-                sig { override.returns(T::Enumerable[Module]) }
+                sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
                 def self.gather_constants
                   [Post, Job]
                 end
@@ -2147,7 +2147,7 @@ module Tapioca
                   end
                 end
 
-                sig { override.returns(T::Enumerable[Module]) }
+                sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
                 def self.gather_constants
                   [::Post]
                 end
@@ -2222,7 +2222,7 @@ module Tapioca
                 end
               end
 
-              sig { override.returns(T::Enumerable[Module]) }
+              sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
               def self.gather_constants
                 [::Post]
               end
@@ -2400,7 +2400,7 @@ module Tapioca
 
                     ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
 
-                    sig { override.returns(T::Enumerable[Module]) }
+                    sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
                     def self.gather_constants
                       # Collect all the classes that include Encryptable
                       all_classes.select { |c| c < ::Encryptable }
@@ -2555,7 +2555,7 @@ module Tapioca
 
                   ConstantType = type_member {{ fixed: T.class_of(Encryptable) }}
 
-                  sig { override.returns(T::Enumerable[Module]) }
+                  sig { override.returns(T::Enumerable[T::Module[T.anything]]) }
                   def self.gather_constants
                     # Collect all the classes that include Encryptable
                     all_classes.select { |c| c < ::Encryptable }
@@ -2858,6 +2858,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordStore                   enabled
               Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
+              Tapioca::Dsl::Compilers::ActiveSupportEnvironmentInquirer    enabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
               Tapioca::Dsl::Compilers::SidekiqWorker                       enabled
               Tapioca::Dsl::Compilers::SmartProperties                     enabled
@@ -2893,6 +2894,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordStore                   enabled
               Tapioca::Dsl::Compilers::ActiveSupportConcern                enabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      enabled
+              Tapioca::Dsl::Compilers::ActiveSupportEnvironmentInquirer    enabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              enabled
               Tapioca::Dsl::Compilers::SidekiqWorker                       enabled
               Tapioca::Dsl::Compilers::SmartProperties                     disabled
@@ -2928,6 +2930,7 @@ module Tapioca
               Tapioca::Dsl::Compilers::ActiveRecordStore                   disabled
               Tapioca::Dsl::Compilers::ActiveSupportConcern                disabled
               Tapioca::Dsl::Compilers::ActiveSupportCurrentAttributes      disabled
+              Tapioca::Dsl::Compilers::ActiveSupportEnvironmentInquirer    disabled
               Tapioca::Dsl::Compilers::MixedInClassAttributes              disabled
               Tapioca::Dsl::Compilers::SidekiqWorker                       disabled
               Tapioca::Dsl::Compilers::SmartProperties                     enabled

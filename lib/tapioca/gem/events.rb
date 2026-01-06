@@ -44,12 +44,12 @@ module Tapioca
       extend T::Sig
 
       # @override
-      #: -> Module
+      #: -> T::Module[top]
       def constant
-        T.cast(@constant, Module)
+        T.cast(@constant, T::Module[T.anything])
       end
 
-      #: (String symbol, Module constant) -> void
+      #: (String symbol, T::Module[top] constant) -> void
       def initialize(symbol, constant)
         super
       end
@@ -62,10 +62,10 @@ module Tapioca
       #: String
       attr_reader :symbol
 
-      #: Module
+      #: T::Module[top]
       attr_reader :constant
 
-      #: (String symbol, Module constant) -> void
+      #: (String symbol, T::Module[top] constant) -> void
       def initialize(symbol, constant)
         super()
         @symbol = symbol
@@ -79,7 +79,7 @@ module Tapioca
       #: RBI::Const
       attr_reader :node
 
-      #: (String symbol, Module constant, RBI::Const node) -> void
+      #: (String symbol, T::Module[top] constant, RBI::Const node) -> void
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -92,7 +92,7 @@ module Tapioca
       #: RBI::Scope
       attr_reader :node
 
-      #: (String symbol, Module constant, RBI::Scope node) -> void
+      #: (String symbol, T::Module[top] constant, RBI::Scope node) -> void
       def initialize(symbol, constant, node)
         super(symbol, constant)
         @node = node
@@ -116,7 +116,14 @@ module Tapioca
       #: Array[[Symbol, String]]
       attr_reader :parameters
 
-      #: (String symbol, Module constant, UnboundMethod method, RBI::Method node, untyped signature, Array[[Symbol, String]] parameters) -> void
+      #: (
+      #|   String symbol,
+      #|   T::Module[top] constant,
+      #|   UnboundMethod method,
+      #|   RBI::Method node,
+      #|   untyped signature,
+      #|   Array[[Symbol, String]] parameters
+      #| ) -> void
       def initialize(symbol, constant, method, node, signature, parameters) # rubocop:disable Metrics/ParameterLists
         super(symbol, constant)
         @node = node

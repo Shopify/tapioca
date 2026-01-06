@@ -88,7 +88,7 @@ module Tapioca
           extend T::Sig
 
           # @override
-          #: -> T::Enumerable[Module]
+          #: -> Enumerable[T::Module[top]]
           def gather_constants
             descendants_of(::ActiveJob::Base)
           end

@@ -249,18 +249,6 @@ module Tapioca
                     sig { params(record: T.untyped).returns(T::Boolean) }
                     def include?(record); end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert!(attributes, returning: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert_all(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert_all!(attributes, returning: nil); end
-
                     sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def last(limit = nil); end
@@ -334,12 +322,6 @@ module Tapioca
 
                     sig { returns(::Post) }
                     def third_to_last!; end
-
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert_all(attributes, returning: nil, unique_by: nil); end
                   end
 
                   module GeneratedAssociationRelationMethods
@@ -472,6 +454,10 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def unscope(*args, &blk); end
+
+                    sig { returns(PrivateAssociationRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
 
                     sig { returns(PrivateAssociationRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
@@ -617,6 +603,10 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def unscope(*args, &blk); end
+
+                    sig { returns(PrivateRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
 
                     sig { returns(PrivateRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateRelation) }
@@ -966,18 +956,6 @@ module Tapioca
                     sig { params(record: T.untyped).returns(T::Boolean) }
                     def include?(record); end
 
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert!(attributes, returning: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def insert_all(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass))).returns(ActiveRecord::Result) }
-                    def insert_all!(attributes, returning: nil); end
-
                     sig { returns(T.nilable(::Post)) }
                     sig { params(limit: Integer).returns(T::Array[::Post]) }
                     def last(limit = nil); end
@@ -1051,12 +1029,6 @@ module Tapioca
 
                     sig { returns(::Post) }
                     def third_to_last!; end
-
-                    sig { params(attributes: Hash, returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert(attributes, returning: nil, unique_by: nil); end
-
-                    sig { params(attributes: T::Array[Hash], returning: T.nilable(T.any(T::Array[Symbol], FalseClass)), unique_by: T.nilable(T.any(T::Array[Symbol], Symbol))).returns(ActiveRecord::Result) }
-                    def upsert_all(attributes, returning: nil, unique_by: nil); end
                   end
 
                   module GeneratedAssociationRelationMethods
@@ -1189,6 +1161,10 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateAssociationRelation) }
                     def unscope(*args, &blk); end
+
+                    sig { returns(PrivateAssociationRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
 
                     sig { returns(PrivateAssociationRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateAssociationRelation) }
@@ -1334,6 +1310,10 @@ module Tapioca
 
                     sig { params(args: T.untyped, blk: T.untyped).returns(PrivateRelation) }
                     def unscope(*args, &blk); end
+
+                    sig { returns(PrivateRelation) }
+                    sig { type_parameters(:U).params(block: T.proc.returns(T.type_parameter(:U))).returns(T.type_parameter(:U)) }
+                    def unscoped(&block); end
 
                     sig { returns(PrivateRelationWhereChain) }
                     sig { params(args: T.untyped).returns(PrivateRelation) }
