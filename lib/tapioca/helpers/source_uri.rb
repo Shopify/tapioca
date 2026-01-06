@@ -1,11 +1,26 @@
 # typed: strict
 # frozen_string_literal: true
 
+require "ruby_lsp/internal"
 require "uri/file"
 
-# Don't redefine this class if RubyLSP already defined it.
-# This also prevents us from registering two different classes for the `SOURCE` scheme.
-return if defined?(URI::Source)
+if defined?(URI::Source)
+   # @requires_ancestor: URI::Source
+  module Tapioca::URISourceToSPatch
+    #: -> String
+    def to_s
+      "source://#{gem_name}/#{gem_version}/#{path}##{line_number}"
+    end
+  end
+
+  # Patch the broken implementation of `to_s` from RubyLSP,
+  # which was missing the `/` the `gem_version` and `path`.
+  URI::Source.prepend(Tapioca::URISourceToSPatch)
+
+  # Don't redefine the the class if RubyLSP already defined it.
+  # This also prevents us from registering two different classes for the `SOURCE` scheme.
+  return
+end
 
 module URI
   # Must be kept in sync with the one in Ruby LSP
