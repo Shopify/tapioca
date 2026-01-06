@@ -49,7 +49,7 @@ require "tapioca/helpers/git_attributes"
 require "tapioca/helpers/sorbet_helper"
 require "tapioca/helpers/rbi_helper"
 
-require "tapioca/helpers/source_uri"
+require "tapioca/helpers/package_url"
 require "tapioca/helpers/cli_helper"
 require "tapioca/helpers/config_helper"
 require "tapioca/helpers/rbi_files_helper"
