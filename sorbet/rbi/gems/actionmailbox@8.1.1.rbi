@@ -8,109 +8,109 @@
 # :markup: markdown
 # :include: ../README.md
 #
-# source://actionmailbox//lib/action_mailbox/gem_version.rb#3
+# pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:3
 module ActionMailbox
   extend ::ActiveSupport::Autoload
 
-  # source://actionmailbox//lib/action_mailbox.rb#22
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:22
   def incinerate; end
 
-  # source://actionmailbox//lib/action_mailbox.rb#22
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:22
   def incinerate=(val); end
 
-  # source://actionmailbox//lib/action_mailbox.rb#23
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:23
   def incinerate_after; end
 
-  # source://actionmailbox//lib/action_mailbox.rb#23
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:23
   def incinerate_after=(val); end
 
-  # source://actionmailbox//lib/action_mailbox.rb#20
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:20
   def ingress; end
 
-  # source://actionmailbox//lib/action_mailbox.rb#20
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:20
   def ingress=(val); end
 
-  # source://actionmailbox//lib/action_mailbox.rb#21
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:21
   def logger; end
 
-  # source://actionmailbox//lib/action_mailbox.rb#21
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:21
   def logger=(val); end
 
-  # source://actionmailbox//lib/action_mailbox.rb#24
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:24
   def queues; end
 
-  # source://actionmailbox//lib/action_mailbox.rb#24
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:24
   def queues=(val); end
 
-  # source://actionmailbox//lib/action_mailbox.rb#25
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:25
   def storage_service; end
 
-  # source://actionmailbox//lib/action_mailbox.rb#25
+  # pkg:gem/actionmailbox#lib/action_mailbox.rb:25
   def storage_service=(val); end
 
   class << self
-    # source://actionmailbox//lib/action_mailbox/deprecator.rb#4
+    # pkg:gem/actionmailbox#lib/action_mailbox/deprecator.rb:4
     def deprecator; end
 
     # Returns the currently loaded version of Action Mailbox as a +Gem::Version+.
     #
-    # source://actionmailbox//lib/action_mailbox/gem_version.rb#5
+    # pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:5
     def gem_version; end
 
-    # source://actionmailbox//lib/action_mailbox.rb#22
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:22
     def incinerate; end
 
-    # source://actionmailbox//lib/action_mailbox.rb#22
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:22
     def incinerate=(val); end
 
-    # source://actionmailbox//lib/action_mailbox.rb#23
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:23
     def incinerate_after; end
 
-    # source://actionmailbox//lib/action_mailbox.rb#23
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:23
     def incinerate_after=(val); end
 
-    # source://actionmailbox//lib/action_mailbox.rb#20
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:20
     def ingress; end
 
-    # source://actionmailbox//lib/action_mailbox.rb#20
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:20
     def ingress=(val); end
 
-    # source://actionmailbox//lib/action_mailbox.rb#21
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:21
     def logger; end
 
-    # source://actionmailbox//lib/action_mailbox.rb#21
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:21
     def logger=(val); end
 
-    # source://actionmailbox//lib/action_mailbox.rb#24
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:24
     def queues; end
 
-    # source://actionmailbox//lib/action_mailbox.rb#24
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:24
     def queues=(val); end
 
-    # source://actionmailbox//lib/action_mailbox/engine.rb#13
+    # pkg:gem/actionmailbox#lib/action_mailbox/engine.rb:13
     def railtie_helpers_paths; end
 
-    # source://actionmailbox//lib/action_mailbox/engine.rb#13
+    # pkg:gem/actionmailbox#lib/action_mailbox/engine.rb:13
     def railtie_namespace; end
 
-    # source://actionmailbox//lib/action_mailbox/engine.rb#13
+    # pkg:gem/actionmailbox#lib/action_mailbox/engine.rb:13
     def railtie_routes_url_helpers(include_path_helpers = T.unsafe(nil)); end
 
-    # source://actionmailbox//lib/action_mailbox.rb#25
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:25
     def storage_service; end
 
-    # source://actionmailbox//lib/action_mailbox.rb#25
+    # pkg:gem/actionmailbox#lib/action_mailbox.rb:25
     def storage_service=(val); end
 
-    # source://actionmailbox//lib/action_mailbox/engine.rb#13
+    # pkg:gem/actionmailbox#lib/action_mailbox/engine.rb:13
     def table_name_prefix; end
 
-    # source://actionmailbox//lib/action_mailbox/engine.rb#13
+    # pkg:gem/actionmailbox#lib/action_mailbox/engine.rb:13
     def use_relative_model_naming?; end
 
     # Returns the currently loaded version of Action Mailbox as a +Gem::Version+.
     #
-    # source://actionmailbox//lib/action_mailbox/version.rb#7
+    # pkg:gem/actionmailbox#lib/action_mailbox/version.rb:7
     def version; end
   end
 end
@@ -173,7 +173,7 @@ end
 #     rescue_from(ApplicationSpecificVerificationError) { bounced! }
 #   end
 #
-# source://actionmailbox//lib/action_mailbox/base.rb#66
+# pkg:gem/actionmailbox#lib/action_mailbox/base.rb:66
 class ActionMailbox::Base
   include ::ActiveSupport::Rescuable
   include ::ActionMailbox::Routing
@@ -187,125 +187,125 @@ class ActionMailbox::Base
 
   # @return [Base] a new instance of Base
   #
-  # source://actionmailbox//lib/action_mailbox/base.rb#79
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:79
   def initialize(inbound_email); end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#68
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
   def __callbacks; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#68
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
   def _process_callbacks; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#68
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
   def _run_process_callbacks; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#68
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
   def _run_process_callbacks!(&block); end
 
   # Immediately sends the given +message+ and changes the inbound email's status to +:bounced+.
   #
-  # source://actionmailbox//lib/action_mailbox/base.rb#111
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:111
   def bounce_now_with(message); end
 
   # Enqueues the given +message+ for delivery and changes the inbound email's status to +:bounced+.
   #
-  # source://actionmailbox//lib/action_mailbox/base.rb#105
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:105
   def bounce_with(message); end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#71
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:71
   def bounced!(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#71
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:71
   def delivered!(*_arg0, **_arg1, &_arg2); end
 
   # @return [Boolean]
   #
-  # source://actionmailbox//lib/action_mailbox/base.rb#100
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:100
   def finished_processing?; end
 
   # Returns the value of attribute inbound_email.
   #
-  # source://actionmailbox//lib/action_mailbox/base.rb#70
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:70
   def inbound_email; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#73
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:73
   def logger(&_arg0); end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#71
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:71
   def mail(*_arg0, **_arg1, &_arg2); end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#83
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:83
   def perform_processing; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#96
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:96
   def process; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#67
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
   def rescue_handlers; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#67
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
   def rescue_handlers=(_arg0); end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#67
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
   def rescue_handlers?; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#68
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
   def router; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#68
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
   def router=(val); end
 
   private
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#117
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:117
   def instrumentation_payload; end
 
-  # source://actionmailbox//lib/action_mailbox/base.rb#124
+  # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:124
   def track_status_of_inbound_email; end
 
   class << self
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def __callbacks; end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def __callbacks=(value); end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def _process_callbacks; end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def _process_callbacks=(value); end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#75
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:75
     def receive(inbound_email); end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#67
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
     def rescue_handlers; end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#67
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
     def rescue_handlers=(value); end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#67
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
     def rescue_handlers?; end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def router; end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def router=(val); end
 
     private
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def __class_attr___callbacks; end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#68
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:68
     def __class_attr___callbacks=(new_value); end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#67
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
     def __class_attr_rescue_handlers; end
 
-    # source://actionmailbox//lib/action_mailbox/base.rb#67
+    # pkg:gem/actionmailbox#lib/action_mailbox/base.rb:67
     def __class_attr_rescue_handlers=(new_value); end
   end
 end
@@ -335,7 +335,7 @@ end
 #
 # Defines the callbacks related to processing.
 #
-# source://actionmailbox//lib/action_mailbox/callbacks.rb#9
+# pkg:gem/actionmailbox#lib/action_mailbox/callbacks.rb:9
 module ActionMailbox::Callbacks
   extend ::ActiveSupport::Concern
   include GeneratedInstanceMethods
@@ -356,22 +356,22 @@ module ActionMailbox::Callbacks
   end
 end
 
-# source://actionmailbox//lib/action_mailbox/callbacks.rb#22
+# pkg:gem/actionmailbox#lib/action_mailbox/callbacks.rb:22
 module ActionMailbox::Callbacks::ClassMethods
-  # source://actionmailbox//lib/action_mailbox/callbacks.rb#27
+  # pkg:gem/actionmailbox#lib/action_mailbox/callbacks.rb:27
   def after_processing(*methods, &block); end
 
-  # source://actionmailbox//lib/action_mailbox/callbacks.rb#31
+  # pkg:gem/actionmailbox#lib/action_mailbox/callbacks.rb:31
   def around_processing(*methods, &block); end
 
-  # source://actionmailbox//lib/action_mailbox/callbacks.rb#23
+  # pkg:gem/actionmailbox#lib/action_mailbox/callbacks.rb:23
   def before_processing(*methods, &block); end
 end
 
-# source://actionmailbox//lib/action_mailbox/callbacks.rb#13
+# pkg:gem/actionmailbox#lib/action_mailbox/callbacks.rb:13
 ActionMailbox::Callbacks::TERMINATOR = T.let(T.unsafe(nil), Proc)
 
-# source://actionmailbox//lib/action_mailbox/engine.rb#12
+# pkg:gem/actionmailbox#lib/action_mailbox/engine.rb:12
 class ActionMailbox::Engine < ::Rails::Engine; end
 
 class ActionMailbox::InboundEmail < ::ActionMailbox::Record
@@ -672,77 +672,77 @@ module ActionMailbox::Record::GeneratedAttributeMethods; end
 # Encapsulates the routes that live on the ApplicationMailbox and performs the actual routing when
 # an inbound_email is received.
 #
-# source://actionmailbox//lib/action_mailbox/router.rb#8
+# pkg:gem/actionmailbox#lib/action_mailbox/router.rb:8
 class ActionMailbox::Router
   # @return [Router] a new instance of Router
   #
-  # source://actionmailbox//lib/action_mailbox/router.rb#11
+  # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:11
   def initialize; end
 
-  # source://actionmailbox//lib/action_mailbox/router.rb#21
+  # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:21
   def add_route(address, to:); end
 
-  # source://actionmailbox//lib/action_mailbox/router.rb#15
+  # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:15
   def add_routes(routes); end
 
-  # source://actionmailbox//lib/action_mailbox/router.rb#35
+  # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:35
   def mailbox_for(inbound_email); end
 
-  # source://actionmailbox//lib/action_mailbox/router.rb#25
+  # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:25
   def route(inbound_email); end
 
   private
 
   # Returns the value of attribute routes.
   #
-  # source://actionmailbox//lib/action_mailbox/router.rb#40
+  # pkg:gem/actionmailbox#lib/action_mailbox/router.rb:40
   def routes; end
 end
 
-# source://actionmailbox//lib/action_mailbox/router/route.rb#7
+# pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:7
 class ActionMailbox::Router::Route
-  # source://actionmailbox//lib/action_mailbox/router/route.rb#10
+  # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:10
   def initialize(address, to:); end
 
-  # source://actionmailbox//lib/action_mailbox/router/route.rb#8
+  # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:8
   def address; end
 
-  # source://actionmailbox//lib/action_mailbox/router/route.rb#31
+  # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:31
   def mailbox_class; end
 
-  # source://actionmailbox//lib/action_mailbox/router/route.rb#8
+  # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:8
   def mailbox_name; end
 
-  # source://actionmailbox//lib/action_mailbox/router/route.rb#16
+  # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:16
   def match?(inbound_email); end
 
   private
 
-  # source://actionmailbox//lib/action_mailbox/router/route.rb#36
+  # pkg:gem/actionmailbox#lib/action_mailbox/router/route.rb:36
   def ensure_valid_address; end
 end
 
-# source://actionmailbox//lib/action_mailbox/router.rb#9
+# pkg:gem/actionmailbox#lib/action_mailbox/router.rb:9
 class ActionMailbox::Router::RoutingError < ::StandardError; end
 
 # See ActionMailbox::Base for how to specify routing.
 #
-# source://actionmailbox//lib/action_mailbox/routing.rb#5
+# pkg:gem/actionmailbox#lib/action_mailbox/routing.rb:5
 module ActionMailbox::Routing
   extend ::ActiveSupport::Concern
 
   mixes_in_class_methods ::ActionMailbox::Routing::ClassMethods
 end
 
-# source://actionmailbox//lib/action_mailbox/routing.rb#12
+# pkg:gem/actionmailbox#lib/action_mailbox/routing.rb:12
 module ActionMailbox::Routing::ClassMethods
-  # source://actionmailbox//lib/action_mailbox/routing.rb#21
+  # pkg:gem/actionmailbox#lib/action_mailbox/routing.rb:21
   def mailbox_for(inbound_email); end
 
-  # source://actionmailbox//lib/action_mailbox/routing.rb#17
+  # pkg:gem/actionmailbox#lib/action_mailbox/routing.rb:17
   def route(inbound_email); end
 
-  # source://actionmailbox//lib/action_mailbox/routing.rb#13
+  # pkg:gem/actionmailbox#lib/action_mailbox/routing.rb:13
   def routing(routes); end
 end
 
@@ -757,17 +757,17 @@ class ActionMailbox::RoutingJob < ::ActiveJob::Base
   end
 end
 
-# source://actionmailbox//lib/action_mailbox/test_case.rb#7
+# pkg:gem/actionmailbox#lib/action_mailbox/test_case.rb:7
 class ActionMailbox::TestCase < ::ActiveSupport::TestCase
   include ::ActionMailbox::TestHelper
 end
 
-# source://actionmailbox//lib/action_mailbox/test_helper.rb#6
+# pkg:gem/actionmailbox#lib/action_mailbox/test_helper.rb:6
 module ActionMailbox::TestHelper
   # Create an InboundEmail record using an eml fixture in the format of message/rfc822
   # referenced with +fixture_name+ located in +test/fixtures/files/fixture_name+.
   #
-  # source://actionmailbox//lib/action_mailbox/test_helper.rb#9
+  # pkg:gem/actionmailbox#lib/action_mailbox/test_helper.rb:9
   def create_inbound_email_from_fixture(fixture_name, status: T.unsafe(nil)); end
 
   # Creates an InboundEmail by specifying through options or a block.
@@ -821,102 +821,102 @@ module ActionMailbox::TestHelper
   #     end
   #   end
   #
-  # source://actionmailbox//lib/action_mailbox/test_helper.rb#63
+  # pkg:gem/actionmailbox#lib/action_mailbox/test_helper.rb:63
   def create_inbound_email_from_mail(status: T.unsafe(nil), **mail_options, &block); end
 
   # Create an InboundEmail using the raw rfc822 +source+ as text.
   #
-  # source://actionmailbox//lib/action_mailbox/test_helper.rb#72
+  # pkg:gem/actionmailbox#lib/action_mailbox/test_helper.rb:72
   def create_inbound_email_from_source(source, status: T.unsafe(nil)); end
 
   # Create an InboundEmail from fixture using the same arguments as create_inbound_email_from_fixture
   # and immediately route it to processing.
   #
-  # source://actionmailbox//lib/action_mailbox/test_helper.rb#79
+  # pkg:gem/actionmailbox#lib/action_mailbox/test_helper.rb:79
   def receive_inbound_email_from_fixture(*args); end
 
   # Create an InboundEmail using the same options or block as
   # create_inbound_email_from_mail, then immediately route it for processing.
   #
-  # source://actionmailbox//lib/action_mailbox/test_helper.rb#85
+  # pkg:gem/actionmailbox#lib/action_mailbox/test_helper.rb:85
   def receive_inbound_email_from_mail(**kwargs, &block); end
 
   # Create an InboundEmail using the same arguments as create_inbound_email_from_source and immediately route it
   # to processing.
   #
-  # source://actionmailbox//lib/action_mailbox/test_helper.rb#91
+  # pkg:gem/actionmailbox#lib/action_mailbox/test_helper.rb:91
   def receive_inbound_email_from_source(*args); end
 end
 
-# source://actionmailbox//lib/action_mailbox/gem_version.rb#9
+# pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:9
 module ActionMailbox::VERSION; end
 
-# source://actionmailbox//lib/action_mailbox/gem_version.rb#10
+# pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:10
 ActionMailbox::VERSION::MAJOR = T.let(T.unsafe(nil), Integer)
 
-# source://actionmailbox//lib/action_mailbox/gem_version.rb#11
+# pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:11
 ActionMailbox::VERSION::MINOR = T.let(T.unsafe(nil), Integer)
 
-# source://actionmailbox//lib/action_mailbox/gem_version.rb#13
+# pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:13
 ActionMailbox::VERSION::PRE = T.let(T.unsafe(nil), T.untyped)
 
-# source://actionmailbox//lib/action_mailbox/gem_version.rb#15
+# pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:15
 ActionMailbox::VERSION::STRING = T.let(T.unsafe(nil), String)
 
-# source://actionmailbox//lib/action_mailbox/gem_version.rb#12
+# pkg:gem/actionmailbox#lib/action_mailbox/gem_version.rb:12
 ActionMailbox::VERSION::TINY = T.let(T.unsafe(nil), Integer)
 
-# source://actionmailbox//lib/action_mailbox/mail_ext/address_equality.rb#3
+# pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/address_equality.rb:3
 module Mail
   class << self
-    # source://actionmailbox//lib/action_mailbox/mail_ext/from_source.rb#4
+    # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/from_source.rb:4
     def from_source(source); end
   end
 end
 
-# source://actionmailbox//lib/action_mailbox/mail_ext/address_equality.rb#4
+# pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/address_equality.rb:4
 class Mail::Address
-  # source://actionmailbox//lib/action_mailbox/mail_ext/address_equality.rb#5
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/address_equality.rb:5
   def ==(other_address); end
 
   class << self
-    # source://actionmailbox//lib/action_mailbox/mail_ext/address_wrapping.rb#5
+    # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/address_wrapping.rb:5
     def wrap(address); end
   end
 end
 
-# source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#4
+# pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:4
 class Mail::Message
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#25
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:25
   def bcc_addresses; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#21
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:21
   def cc_addresses; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#5
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:5
   def from_address; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/recipients.rb#5
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/recipients.rb:5
   def recipients; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#13
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:13
   def recipients_addresses; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#9
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:9
   def reply_to_address; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#17
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:17
   def to_addresses; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#33
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:33
   def x_forwarded_to_addresses; end
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#29
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:29
   def x_original_to_addresses; end
 
   private
 
-  # source://actionmailbox//lib/action_mailbox/mail_ext/addresses.rb#38
+  # pkg:gem/actionmailbox#lib/action_mailbox/mail_ext/addresses.rb:38
   def address_list(obj); end
 end
 

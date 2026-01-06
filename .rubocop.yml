@@ -12,6 +12,7 @@ AllCops:
   SuggestExtensions: false
   Exclude:
   - "vendor/**/*"
+  - "lib/tapioca/helpers/package_url.rb"
   Include:
   - "sorbet/rbi/shims/**/*.rbi"
 

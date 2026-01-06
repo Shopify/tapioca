@@ -4546,81 +4546,79 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       RB
 
       output = template(<<~RBI)
-        # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#1
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/bar.rb:1
         module Bar
           # Some documentation
           #
-          # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#6
+          # pkg:gem/#{DEFAULT_GEM_NAME}#lib/bar.rb:6
           sig { void }
           def bar; end
 
-          # source://the-default-gem//lib/bar.rb#14
+          # pkg:gem/#{DEFAULT_GEM_NAME}#lib/bar.rb:14
           def foo1; end
 
-          # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#15
+          # pkg:gem/#{DEFAULT_GEM_NAME}#lib/bar.rb:15
           def foo2; end
 
           class << self
             # Some documentation
             #
-            # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#9
+            # pkg:gem/#{DEFAULT_GEM_NAME}#lib/bar.rb:9
             def bar; end
           end
         end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/bar.rb#11
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/bar.rb:11
         Bar::BAR = T.let(T.unsafe(nil), Integer)
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#23
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:23
         class BasicFoo < ::BasicObject
-          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#27
+          # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:27
           sig { void }
           def foo; end
         end
 
         # @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
         #
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#11
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:11
         class Baz
           abstract!
         end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#1
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:1
         class Foo; end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#6
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:6
         module Foo::Helper
-          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#7
+          # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:7
           def helper_method; end
         end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#31
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:31
         class MyModule < ::Module; end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#33
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:33
         class NewClass; end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#35
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:35
         module NewCustomModule; end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#34
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:34
         module NewModule; end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#16
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:16
         class Quux < ::T::Struct; end
 
-        # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#19
+        # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:19
         class String
           include ::Comparable
 
-          # source://#{DEFAULT_GEM_NAME}//lib/foo.rb#20
+          # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:20
           def foo; end
         end
       RBI
 
       compiled = compile(include_doc: true, include_loc: true)
-        .gsub(%r{\s+# source://activesupport/.+?\nString::.+$}m, "")
-        .rstrip.concat("\n")
 
       assert_equal(output, compiled)
     end

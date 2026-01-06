@@ -5,40 +5,40 @@
 # Please instead update this file by running `bin/tapioca gem ar_transaction_changes`.
 
 
-# source://ar_transaction_changes//lib/ar_transaction_changes/version.rb#3
+# pkg:gem/ar_transaction_changes#lib/ar_transaction_changes/version.rb:3
 module ArTransactionChanges
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#7
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:7
   def _run_commit_callbacks; end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#13
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:13
   def _run_rollback_callbacks; end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#23
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:23
   def _write_attribute(attr_name, value); end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#37
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:37
   def attribute_will_change!(attr_name); end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#19
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:19
   def transaction_changed_attributes; end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#30
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:30
   def write_attribute(attr_name, value); end
 
   private
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#53
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:53
   def _deserialize_transaction_change_value(attr_name, value); end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#78
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:78
   def _read_attribute_for_transaction(attr_name); end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#59
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:59
   def _store_transaction_changed_attributes(attr_name); end
 
-  # source://ar_transaction_changes//lib/ar_transaction_changes.rb#48
+  # pkg:gem/ar_transaction_changes#lib/ar_transaction_changes.rb:48
   def init_internals; end
 end
 
-# source://ar_transaction_changes//lib/ar_transaction_changes/version.rb#4
+# pkg:gem/ar_transaction_changes#lib/ar_transaction_changes/version.rb:4
 ArTransactionChanges::VERSION = T.let(T.unsafe(nil), String)
