@@ -239,6 +239,7 @@ module Tapioca
             return true if shim_or_todo_prop.sigs.any? { |sig| node.sigs.include?(sig) }
 
             # Another prop has the same RBS comment, we have a duplicate
+            # Note: can't use `intersect?` here because RBI::RBSComment doesn't implement `eql?`/`hash`
             other_rbs_comments = extract_rbs_comments(node)
             return true if shim_rbs_comments.any? { |rbs| other_rbs_comments.include?(rbs) }
           end
