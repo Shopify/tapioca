@@ -3,7 +3,3 @@
 --ignore=/vendor
 --enable-experimental-requires-ancestor
 --enable-experimental-rbs-comments
---suppress-payload-superclass-redefinition-for=Reline::ANSI
---suppress-payload-superclass-redefinition-for=RDoc::Markup::BlankLine
---suppress-payload-superclass-redefinition-for=RDoc::Markup::HardBreak
---suppress-payload-superclass-redefinition-for=RDoc::Markup::Heading
