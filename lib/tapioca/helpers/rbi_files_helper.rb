@@ -217,7 +217,9 @@ module Tapioca
         shims_or_todos_props.each do |shim_or_todo_prop|
           other_nodes = extract_methods_and_attrs(nodes) - [shim_or_todo_prop]
 
-          if shim_or_todo_prop.sigs.empty?
+          shim_rbs_comments = extract_rbs_comments(shim_or_todo_prop)
+
+          if shim_or_todo_prop.sigs.empty? && shim_rbs_comments.empty?
             # If the node doesn't have a signature and is an attribute accessor, we have a duplicate
             return true if shim_or_todo_prop.is_a?(RBI::Attr)
 
@@ -235,6 +237,10 @@ module Tapioca
           other_nodes.each do |node|
             # Another prop has the same sig, we have a duplicate
             return true if shim_or_todo_prop.sigs.any? { |sig| node.sigs.include?(sig) }
+
+            # Another prop has the same RBS comment, we have a duplicate
+            other_rbs_comments = extract_rbs_comments(node)
+            return true if shim_rbs_comments.any? { |rbs| other_rbs_comments.include?(rbs) }
           end
         end
       end
@@ -257,6 +263,11 @@ module Tapioca
         end,
         T::Array[T.any(RBI::Method, RBI::Attr)],
       )
+    end
+
+    #: ((RBI::Method | RBI::Attr) node) -> Array[RBI::RBSComment]
+    def extract_rbs_comments(node)
+      node.comments.grep(RBI::RBSComment)
     end
 
     #: (Array[Spoom::Sorbet::Errors::Error] errors, String gem_dir) -> void
