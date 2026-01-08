@@ -13,7 +13,7 @@ module BCrypt; end
 
 # A Ruby wrapper for the bcrypt() C extension calls and the Java calls.
 #
-# source://bcrypt//lib/bcrypt/engine.rb#3
+# source://bcrypt//lib/bcrypt.rb#12
 class BCrypt::Engine
   class << self
     # Autodetects the cost from the salt string.
@@ -195,7 +195,9 @@ class BCrypt::Password < ::String
   #    @password.to_s == @password      # => True
   #    @password.to_s == @password.to_s # => True
   #
-  # source://bcrypt//lib/bcrypt/password.rb#76
+  #    secret == @password              # => probably False, because the secret is not a BCrypt::Password instance.
+  #
+  # source://bcrypt//lib/bcrypt/password.rb#78
   def ==(secret); end
 
   # The hash portion of the stored password hash.
@@ -221,7 +223,9 @@ class BCrypt::Password < ::String
   #    @password.to_s == @password      # => True
   #    @password.to_s == @password.to_s # => True
   #
-  # source://bcrypt//lib/bcrypt/password.rb#79
+  #    secret == @password              # => probably False, because the secret is not a BCrypt::Password instance.
+  #
+  # source://bcrypt//lib/bcrypt/password.rb#88
   def is_password?(secret); end
 
   # The salt of the store password hash (including version and cost).
@@ -241,14 +245,14 @@ class BCrypt::Password < ::String
   #
   # Splits +h+ into version, cost, salt, and hash and returns them in that order.
   #
-  # source://bcrypt//lib/bcrypt/password.rb#92
+  # source://bcrypt//lib/bcrypt/password.rb#101
   def split_hash(h); end
 
   # Returns true if +h+ is a valid hash.
   #
   # @return [Boolean]
   #
-  # source://bcrypt//lib/bcrypt/password.rb#84
+  # source://bcrypt//lib/bcrypt/password.rb#93
   def valid_hash?(h); end
 
   class << self
