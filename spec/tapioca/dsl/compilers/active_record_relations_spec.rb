@@ -174,22 +174,22 @@ module Tapioca
                     def find_by!(*args); end
 
                 <% if rails_version(">= 8.0") %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, block: T.proc.params(object: ::Post).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol).returns(T::Enumerator[::Post]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: ::Post).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[::Post]) }
                     def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, cursor: primary_key, order: :asc, &block); end
                 <% else %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol, block: T.proc.params(object: ::Post).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol).returns(T::Enumerator[::Post]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: ::Post).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[::Post]) }
                     def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
                 <% end %>
 
                 <% if rails_version(">= 8.0") %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, block: T.proc.params(object: T::Array[::Post]).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol).returns(T::Enumerator[T::Enumerator[::Post]]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: T::Array[::Post]).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[T::Array[::Post]]) }
                     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, cursor: primary_key, order: :asc, &block); end
                 <% else %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol, block: T.proc.params(object: T::Array[::Post]).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol).returns(T::Enumerator[T::Enumerator[::Post]]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: T::Array[::Post]).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[T::Array[::Post]]) }
                     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
                 <% end %>
 
@@ -237,12 +237,12 @@ module Tapioca
                     def ids; end
 
                 <% if rails_version(">= 8.0") %>
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, cursor: primary_key, order: :asc, use_ranges: nil, &block); end
                 <% else %>
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
                 <% end %>
 
@@ -881,22 +881,22 @@ module Tapioca
                     def find_by!(*args); end
 
                 <% if rails_version(">= 8.0") %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, block: T.proc.params(object: ::Post).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol).returns(T::Enumerator[::Post]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: ::Post).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[::Post]) }
                     def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, cursor: primary_key, order: :asc, &block); end
                 <% else %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol, block: T.proc.params(object: ::Post).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol).returns(T::Enumerator[::Post]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: ::Post).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[::Post]) }
                     def find_each(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
                 <% end %>
 
                 <% if rails_version(">= 8.0") %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, block: T.proc.params(object: T::Array[::Post]).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol).returns(T::Enumerator[T::Enumerator[::Post]]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: T::Array[::Post]).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[T::Array[::Post]]) }
                     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, cursor: primary_key, order: :asc, &block); end
                 <% else %>
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol, block: T.proc.params(object: T::Array[::Post]).void).void }
-                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: Symbol).returns(T::Enumerator[T::Enumerator[::Post]]) }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), block: T.proc.params(object: T::Array[::Post]).void).void }
+                    sig { params(start: T.untyped, finish: T.untyped, batch_size: Integer, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol])).returns(T::Enumerator[T::Array[::Post]]) }
                     def find_in_batches(start: nil, finish: nil, batch_size: 1000, error_on_ignore: nil, order: :asc, &block); end
                 <% end %>
 
@@ -944,12 +944,12 @@ module Tapioca
                     def ids; end
 
                 <% if rails_version(">= 8.0") %>
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, cursor: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, cursor: primary_key, order: :asc, use_ranges: nil, &block); end
                 <% else %>
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
-                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: Symbol, use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped, block: T.proc.params(object: PrivateRelation).void).void }
+                    sig { params(of: Integer, start: T.untyped, finish: T.untyped, load: T.untyped, error_on_ignore: T.untyped, order: T.any(Symbol, T::Array[Symbol]), use_ranges: T.untyped).returns(::ActiveRecord::Batches::BatchEnumerator) }
                     def in_batches(of: 1000, start: nil, finish: nil, load: false, error_on_ignore: nil, order: :asc, use_ranges: nil, &block); end
                 <% end %>
 
