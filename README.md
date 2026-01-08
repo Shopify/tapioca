@@ -87,6 +87,7 @@ Commands:
   tapioca init               # Get project ready for type checking
   tapioca require            # Generate the list of files to be required by tapioca
   tapioca todo               # Generate the list of unresolved constants
+  tapioca tree               # Print a tree of all available commands
 
 Options:
   -c, [--config=<config file path>]                  # Path to the Tapioca configuration file
