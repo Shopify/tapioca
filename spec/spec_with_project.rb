@@ -5,8 +5,6 @@ require "helpers/mock_project"
 
 module Tapioca
   class SpecWithProject < Minitest::HooksSpec
-    extend T::Sig
-
     TEST_TMP_PATH = "/tmp/tapioca/tests"
 
     # Spec lifecycle
@@ -173,8 +171,6 @@ module Tapioca
       @assertion_updates = {} #: Hash[String, Array[[Integer, Symbol, String]]]
 
       class << self
-        extend T::Sig
-
         #: Hash[String, Array[[Integer, Symbol, String]]]
         attr_reader :assertion_updates
 

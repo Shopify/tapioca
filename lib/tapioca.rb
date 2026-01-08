@@ -5,8 +5,6 @@ require "sorbet-runtime"
 require "rubygems/user_interaction"
 
 module Tapioca
-  extend T::Sig
-
   @traces = [] #: Array[TracePoint]
 
   class Error < StandardError; end

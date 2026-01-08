@@ -4,8 +4,6 @@
 module Tapioca
   module Dsl
     class Pipeline
-      extend T::Sig
-
       #: Enumerable[singleton(Compiler)]
       attr_reader :active_compilers
 

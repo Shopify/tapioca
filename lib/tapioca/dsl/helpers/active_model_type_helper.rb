@@ -6,8 +6,6 @@ module Tapioca
     module Helpers
       module ActiveModelTypeHelper
         class << self
-          extend T::Sig
-
           # Returns the type indicated by the custom ActiveModel::Type::Value.
           # Accepts subclasses of ActiveModel::Type::Value as well as classes that implement similar methods.
           #: (untyped type_value) -> String

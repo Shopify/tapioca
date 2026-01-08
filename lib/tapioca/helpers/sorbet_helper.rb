@@ -3,8 +3,6 @@
 
 module Tapioca
   module SorbetHelper
-    extend T::Sig
-
     SORBET_GEM_SPEC = ::Gem::Specification.find_by_name("sorbet-static") #: ::Gem::Specification
 
     SORBET_BIN = Pathname.new(SORBET_GEM_SPEC.full_gem_path) / "libexec" / "sorbet" #: Pathname

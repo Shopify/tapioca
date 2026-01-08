@@ -4,7 +4,6 @@
 module Tapioca
   module Runtime
     class DynamicMixinCompiler
-      extend T::Sig
       include Runtime::Reflection
 
       #: Array[T::Module[top]]
@@ -95,8 +94,6 @@ module Tapioca
           end
 
           class << self
-            extend T::Sig
-
             T::Sig::WithoutRuntime.sig { params(symbol: Symbol, args: T.untyped).returns(T.untyped) }
             def method_missing(symbol, *args)
               # Similarly, we need this here so that we can handle any

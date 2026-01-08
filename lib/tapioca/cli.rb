@@ -378,8 +378,6 @@ module Tapioca
       @addon_mode = false
 
       class << self
-        extend T::Sig
-
         # Indicates that we are running from the LSP, set using the `addon_mode!` method
         attr_reader :addon_mode
 

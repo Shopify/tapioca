@@ -3,8 +3,6 @@
 
 class GitAttributes
   class << self
-    extend T::Sig
-
     #: (Pathname path) -> void
     def create_generated_attribute_file(path)
       create_gitattributes_file(path, <<~CONTENT)

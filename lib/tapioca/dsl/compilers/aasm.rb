@@ -34,8 +34,6 @@ module Tapioca
       #
       #: [ConstantType = (Class[::AASM] & ::AASM::ClassMethods)]
       class AASM < Compiler
-        extend T::Sig
-
         # Taken directly from the AASM::Core::Event class, here:
         # https://github.com/aasm/aasm/blob/0e03746/lib/aasm/core/event.rb#L21-L29
         EVENT_CALLBACKS = [
@@ -200,8 +198,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> Enumerable[T::Module[top]]
           def gather_constants

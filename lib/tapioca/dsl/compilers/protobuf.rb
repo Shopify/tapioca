@@ -73,8 +73,6 @@ module Tapioca
           prop :default, String
         end
 
-        extend T::Sig
-
         FIELD_RE = /^[a-z_][a-zA-Z0-9_]*$/
 
         # @override
@@ -153,8 +151,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> Enumerable[T::Module[top]]
           def gather_constants

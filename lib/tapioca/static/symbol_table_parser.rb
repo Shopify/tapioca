@@ -4,13 +4,9 @@
 module Tapioca
   module Static
     class SymbolTableParser
-      extend T::Sig
-
       SKIP_PARSE_KINDS = ["CLASS_OR_MODULE", "STATIC_FIELD"].freeze #: Array[String]
 
       class << self
-        extend T::Sig
-
         #: (String json_string) -> Set[String]
         def parse_json(json_string)
           obj = JSON.parse(json_string)

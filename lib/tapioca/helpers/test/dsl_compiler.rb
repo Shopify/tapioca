@@ -12,7 +12,6 @@ module Tapioca
     module Test
       # @requires_ancestor: Kernel
       module DslCompiler
-        extend T::Sig
         include Isolation
         include Content
         include Template
@@ -50,8 +49,6 @@ module Tapioca
         end
 
         class CompilerContext
-          extend T::Sig
-
           include SorbetHelper
 
           #: singleton(Tapioca::Dsl::Compiler)

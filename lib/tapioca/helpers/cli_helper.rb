@@ -4,7 +4,6 @@
 module Tapioca
   # @requires_ancestor: Thor::Shell
   module CliHelper
-    extend T::Sig
     #: (?String message, *(Symbol | Array[Symbol]) color) -> void
     def say_error(message = "", *color)
       # Thor has its own `say_error` now, but it has two problems:

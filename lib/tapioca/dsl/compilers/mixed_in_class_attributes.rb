@@ -46,8 +46,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = T::Module[top]]
       class MixedInClassAttributes < Compiler
-        extend T::Sig
-
         # @override
         #: -> void
         def decorate
@@ -60,8 +58,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> Enumerable[T::Module[top]]
           def gather_constants

@@ -4,11 +4,7 @@
 module Tapioca
   module Loaders
     class Gem < Loader
-      extend T::Sig
-
       class << self
-        extend T::Sig
-
         #: (
         #|   bundle: Gemfile,
         #|   prerequire: String?,

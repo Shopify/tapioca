@@ -8,8 +8,6 @@ module Tapioca
     # added in Ruby 3.2 and fetches the attached object of a singleton
     # class without having to iterate through all of ObjectSpace.
     module AttachedClassOf
-      extend T::Sig
-
       #: (Class singleton_class) -> T::Module[top]?
       def attached_class_of(singleton_class)
         result = singleton_class.attached_object

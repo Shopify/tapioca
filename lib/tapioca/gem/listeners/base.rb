@@ -6,7 +6,6 @@ module Tapioca
     module Listeners
       # @abstract
       class Base
-        extend T::Sig
         #: (Pipeline pipeline) -> void
         def initialize(pipeline)
           @pipeline = pipeline

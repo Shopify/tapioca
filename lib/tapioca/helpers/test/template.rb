@@ -6,8 +6,6 @@ module Tapioca
     module Test
       # @requires_ancestor: Kernel
       module Template
-        extend T::Sig
-
         #: (String selector) -> bool
         def ruby_version(selector)
           ::Gem::Requirement.new(selector).satisfied_by?(::Gem::Version.new(RUBY_VERSION))

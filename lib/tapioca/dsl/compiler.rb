@@ -6,8 +6,6 @@ module Tapioca
     # @abstract
     #: [ConstantType < T::Module[top]]
     class Compiler
-      extend T::Sig
-
       include RBIHelper
       include Runtime::Reflection
       extend Runtime::Reflection
@@ -24,8 +22,6 @@ module Tapioca
       @@requested_constants = [] #: Array[T::Module[top]] # rubocop:disable Style/ClassVars
 
       class << self
-        extend T::Sig
-
         #: (T::Module[top] constant) -> bool
         def handles?(constant)
           processable_constants.include?(constant)

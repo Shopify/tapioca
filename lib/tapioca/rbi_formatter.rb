@@ -3,8 +3,6 @@
 
 module Tapioca
   class RBIFormatter < RBI::Formatter
-    extend T::Sig
-
     #: (RBI::File file, String command, ?reason: String?) -> void
     def write_header!(file, command, reason: nil)
       file.comments << RBI::Comment.new("DO NOT EDIT MANUALLY")

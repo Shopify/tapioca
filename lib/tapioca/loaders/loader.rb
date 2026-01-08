@@ -5,7 +5,6 @@ module Tapioca
   module Loaders
     # @abstract
     class Loader
-      extend T::Sig
       include Thor::Base
       include CliHelper
       include Tapioca::GemHelper

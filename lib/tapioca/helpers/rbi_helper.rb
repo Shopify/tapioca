@@ -3,14 +3,11 @@
 
 module Tapioca
   module RBIHelper
-    extend T::Sig
     include SorbetHelper
     extend SorbetHelper
     extend self
 
     class << self
-      extend T::Sig
-
       #: (String type, Symbol variance, String? fixed, String? upper, String? lower) -> String
       def serialize_type_variable(type, variance, fixed, upper, lower)
         variance = nil if variance == :invariant

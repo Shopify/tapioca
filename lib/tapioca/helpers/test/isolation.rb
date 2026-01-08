@@ -7,12 +7,9 @@ module Tapioca
       # Copied from ActiveSupport::Testing::Isolation since we cannot require
       # constants from ActiveSupport without polluting the global namespace.
       module Isolation
-        extend T::Sig
         require "thread"
 
         class << self
-          extend T::Sig
-
           #: -> bool
           def forking_env?
             !ENV["NO_FORK"] && Process.respond_to?(:fork)
@@ -30,7 +27,6 @@ module Tapioca
 
         # @requires_ancestor: Kernel
         module Forking
-          extend T::Sig
           #: ?{ (?) -> untyped } -> String
           def run_in_isolation(&_blk)
             read, write = IO.pipe
@@ -72,8 +68,6 @@ module Tapioca
 
         # @requires_ancestor: Kernel
         module Subprocess
-          extend T::Sig
-
           ORIG_ARGV = ARGV.dup #: Array[String]
 
           # Crazy H4X to get this working in windows / jruby with

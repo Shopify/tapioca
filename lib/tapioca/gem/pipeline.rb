@@ -4,7 +4,6 @@
 module Tapioca
   module Gem
     class Pipeline
-      extend T::Sig
       include Runtime::Reflection
       include RBIHelper
 
@@ -140,8 +139,6 @@ module Tapioca
 
       # The method defined in gem and has a source location
       class MethodInGemWithLocation < MethodDefinitionLookupResult
-        extend T::Sig
-
         #: Runtime::SourceLocation
         attr_reader :location
 
