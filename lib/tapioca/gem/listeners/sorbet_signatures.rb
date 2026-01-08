@@ -5,8 +5,6 @@ module Tapioca
   module Gem
     module Listeners
       class SorbetSignatures < Base
-        extend T::Sig
-
         include Runtime::Reflection
         include RBIHelper
 

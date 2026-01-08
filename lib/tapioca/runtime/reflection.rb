@@ -16,8 +16,6 @@ module Tapioca
   module Runtime
     module Reflection
       include AttachedClassOf
-
-      extend T::Sig
       extend self
 
       CLASS_METHOD = Kernel.instance_method(:class) #: UnboundMethod

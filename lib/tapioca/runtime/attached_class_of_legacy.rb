@@ -9,7 +9,6 @@ module Tapioca
     # class by iterating through ObjectSpace.
     # @requires_ancestor: Tapioca::Runtime::Reflection
     module AttachedClassOf
-      extend T::Sig
       #: (Class singleton_class) -> T::Module[top]?
       def attached_class_of(singleton_class)
         # https://stackoverflow.com/a/36622320/98634

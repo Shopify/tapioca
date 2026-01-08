@@ -6,13 +6,10 @@ module Tapioca
     module Trackers
       module Autoload
         extend Tracker
-        extend T::Sig
 
         @constant_names_registered_for_autoload = [] #: Array[String]
 
         class << self
-          extend T::Sig
-
           #: -> void
           def eager_load_all!
             Runtime.with_disabled_exits do

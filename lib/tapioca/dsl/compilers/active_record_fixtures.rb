@@ -35,8 +35,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(ActiveSupport::TestCase)]
       class ActiveRecordFixtures < Compiler
-        extend T::Sig
-
         MISSING = Object.new
 
         # @override
@@ -59,8 +57,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> Enumerable[T::Module[top]]
           def gather_constants

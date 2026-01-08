@@ -11,7 +11,6 @@ module Tapioca
       module ConstantDefinition
         extend Tracker
         extend Reflection
-        extend T::Sig
 
         @class_files = {}.compare_by_identity #: Hash[T::Module[top], Set[SourceLocation]]
 
@@ -50,8 +49,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           def disable!
             @class_tracepoint.disable
             @creturn_tracepoint.disable

@@ -7,12 +7,9 @@ module Tapioca
   module Dsl
     module Helpers
       class ActiveRecordColumnTypeHelper
-        extend T::Sig
         include RBIHelper
 
         class ColumnTypeOption < T::Enum
-          extend T::Sig
-
           enums do
             Untyped = new("untyped")
             Nilable = new("nilable")
@@ -20,8 +17,6 @@ module Tapioca
           end
 
           class << self
-            extend T::Sig
-
             #: (
             #|   Hash[String, untyped] options,
             #| ) { (String value, ColumnTypeOption default_column_type_option) -> void } -> ColumnTypeOption

@@ -55,8 +55,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = (Class[::ActiveModel::SecurePassword] & ::ActiveModel::SecurePassword::ClassMethods)]
       class ActiveModelSecurePassword < Compiler
-        extend T::Sig
-
         # @override
         #: -> void
         def decorate
@@ -90,8 +88,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> Enumerable[T::Module[top]]
           def gather_constants

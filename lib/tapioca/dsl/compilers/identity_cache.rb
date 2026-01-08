@@ -57,8 +57,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(::ActiveRecord::Base)]
       class IdentityCache < Compiler
-        extend T::Sig
-
         COLLECTION_TYPE = ->(type) { "T::Array[::#{type}]" } #: ^((T::Module[top] | String) type) -> String
 
         # @override
@@ -92,8 +90,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> Enumerable[T::Module[top]]
           def gather_constants

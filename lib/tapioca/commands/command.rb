@@ -5,7 +5,6 @@ module Tapioca
   module Commands
     # @abstract
     class Command
-      extend T::Sig
       class FileWriter < Thor
         include Thor::Actions
       end

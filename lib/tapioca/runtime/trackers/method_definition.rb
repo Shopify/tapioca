@@ -6,7 +6,6 @@ module Tapioca
     module Trackers
       module MethodDefinition
         extend Tracker
-        extend T::Sig
 
         @method_definitions = {}.compare_by_identity #: Hash[T::Module[top], Hash[Symbol, Array[SourceLocation]]]
 

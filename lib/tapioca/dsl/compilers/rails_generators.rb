@@ -35,8 +35,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = singleton(::Rails::Generators::Base)]
       class RailsGenerators < Compiler
-        extend T::Sig
-
         BUILT_IN_MATCHER = /::(ActionMailbox|ActionText|ActiveRecord|Rails)::Generators/
 
         # @override
@@ -57,8 +55,6 @@ module Tapioca
         end
 
         class << self
-          extend T::Sig
-
           # @override
           #: -> Enumerable[T::Module[top]]
           def gather_constants

@@ -4,8 +4,6 @@
 module Tapioca
   module Commands
     class Annotations < CommandWithoutTracker
-      extend T::Sig
-
       #: (
       #|   central_repo_root_uris: Array[String],
       #|   ?auth: String?,

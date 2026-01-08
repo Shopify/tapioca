@@ -3,8 +3,6 @@
 
 module Tapioca
   class Executor
-    extend T::Sig
-
     MINIMUM_ITEMS_PER_WORKER = 2 #: Integer
 
     #: (Array[untyped] queue, ?number_of_workers: Integer?) -> void

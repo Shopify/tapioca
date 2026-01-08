@@ -42,8 +42,6 @@ module Tapioca
       # ~~~
       #: [ConstantType = (Class[ActiveModel::Validations] & ActiveModel::Validations::HelperMethods & ActiveModel::Validations::ClassMethods)]
       class ActiveModelValidationsConfirmation < Compiler
-        extend T::Sig
-
         class << self
           # @override
           #: -> Enumerable[T::Module[top]]

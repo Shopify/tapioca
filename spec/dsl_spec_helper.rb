@@ -6,12 +6,9 @@ require "minitest/spec"
 require "tapioca/helpers/test/dsl_compiler"
 
 class DslSpec < Minitest::Spec
-  extend T::Sig
   include Tapioca::Helpers::Test::DslCompiler
 
   class << self
-    extend T::Sig
-
     #: -> singleton(DslSpec)
     def spec_test_class
       # It should be the one that directly inherits from DslSpec

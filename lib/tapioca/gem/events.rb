@@ -5,12 +5,9 @@ module Tapioca
   module Gem
     # @abstract
     class Event
-      extend T::Sig
     end
 
     class SymbolFound < Event
-      extend T::Sig
-
       #: String
       attr_reader :symbol
 
@@ -22,8 +19,6 @@ module Tapioca
     end
 
     class ConstantFound < Event
-      extend T::Sig
-
       #: String
       attr_reader :symbol
 
@@ -41,8 +36,6 @@ module Tapioca
     end
 
     class ForeignConstantFound < ConstantFound
-      extend T::Sig
-
       # @override
       #: -> T::Module[top]
       def constant
@@ -57,8 +50,6 @@ module Tapioca
 
     # @abstract
     class NodeAdded < Event
-      extend T::Sig
-
       #: String
       attr_reader :symbol
 
@@ -74,8 +65,6 @@ module Tapioca
     end
 
     class ConstNodeAdded < NodeAdded
-      extend T::Sig
-
       #: RBI::Const
       attr_reader :node
 
@@ -87,8 +76,6 @@ module Tapioca
     end
 
     class ScopeNodeAdded < NodeAdded
-      extend T::Sig
-
       #: RBI::Scope
       attr_reader :node
 
@@ -102,8 +89,6 @@ module Tapioca
     class ForeignScopeNodeAdded < ScopeNodeAdded; end
 
     class MethodNodeAdded < NodeAdded
-      extend T::Sig
-
       #: UnboundMethod
       attr_reader :method
 

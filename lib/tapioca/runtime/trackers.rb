@@ -6,13 +6,9 @@ require "tapioca/runtime/trackers/tracker"
 module Tapioca
   module Runtime
     module Trackers
-      extend T::Sig
-
       @trackers = [] #: Array[Tracker]
 
       class << self
-        extend T::Sig
-
         #: [Return] { -> Return } -> Return
         def with_trackers_enabled(&blk)
           # Currently this is a dirty hack to ensure disabling trackers
