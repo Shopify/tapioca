@@ -7,7 +7,6 @@ gemspec
 CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
-gem "minitest", "< 7.0" # Rails 8.1.1 doesn't support minitest 6.0 which causes errors
 gem "minitest-hooks"
 gem "minitest-reporters"
 gem "debug"
@@ -25,9 +24,22 @@ end
 group :development, :test do
   if rails_version == "main"
     gem "rails", github: "rails/rails", branch: "main"
+    gem "minitest", "< 7.0" 
   else
     rails_version = CURRENT_RAILS_VERSION if rails_version == "current"
-    gem "rails", "~> #{rails_version}.0"
+
+    if rails_version == "8.1"
+      rails_version = "8.1.2"
+      gem "rails", "~> 8.1.2" # Fixes support for Minitest 6.0
+    else
+      gem "rails", "~> #{rails_version}.0"
+    end
+
+    if Gem::Version.new(rails_version) < Gem::Version.new("8.1.2")
+      gem "minitest", "< 6.0" # Don't use Minitest 6 for Rails versions older than 8.1.2
+    else
+      gem "minitest", "< 7.0" # Rails 8.1.1 doesn't support minitest 6.0 which causes errors
+    end
   end
 
   gem "sqlite3"
