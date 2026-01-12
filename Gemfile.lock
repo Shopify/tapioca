@@ -157,25 +157,7 @@ GEM
       activemodel
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.33.2)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.2-aarch64-linux-gnu)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.2-aarch64-linux-musl)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.2-arm64-darwin)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.2-x86_64-darwin)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.2-x86_64-linux-gnu)
-      bigdecimal
-      rake (>= 13)
-    google-protobuf (4.33.2-x86_64-linux-musl)
+    google-protobuf (4.33.3)
       bigdecimal
       rake (>= 13)
     graphql (2.5.16)
@@ -213,7 +195,6 @@ GEM
       net-smtp
     marcel (1.0.4)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (5.27.0)
     minitest-hooks (1.5.3)
       minitest (> 5.3)
@@ -381,14 +362,12 @@ GEM
       concurrent-ruby (~> 1.0)
       logger
       rack (>= 2.2.4, < 4)
-    sqlite3 (2.5.0)
-      mini_portile2 (~> 2.8.0)
-    sqlite3 (2.5.0-aarch64-linux-gnu)
-    sqlite3 (2.5.0-aarch64-linux-musl)
-    sqlite3 (2.5.0-arm64-darwin)
-    sqlite3 (2.5.0-x86_64-darwin)
-    sqlite3 (2.5.0-x86_64-linux-gnu)
-    sqlite3 (2.5.0-x86_64-linux-musl)
+    sqlite3 (2.9.0-aarch64-linux-gnu)
+    sqlite3 (2.9.0-aarch64-linux-musl)
+    sqlite3 (2.9.0-arm64-darwin)
+    sqlite3 (2.9.0-x86_64-darwin)
+    sqlite3 (2.9.0-x86_64-linux-gnu)
+    sqlite3 (2.9.0-x86_64-linux-musl)
     state_machines (0.100.4)
     stringio (3.2.0)
     thor (1.5.0)
