@@ -11,98 +11,98 @@
 # server. This resembles what Ruby 1.9+ does internally in Net::HTTP#get.
 # Based on https://github.com/lostisland/faraday_middleware/blob/main/lib/faraday_middleware/gzip.rb
 #
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#11
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:11
 module Faraday; end
 
 # Middleware main module.
 #
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#13
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:13
 module Faraday::Gzip; end
 
 # Faraday middleware for decompression
 #
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#15
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:15
 class Faraday::Gzip::Middleware < ::Faraday::Middleware
   # Process brotli
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#115
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:115
   def brotli_inflate(body); end
 
   # Main method to process the response
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#42
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:42
   def call(env); end
 
   # Finds a proper processor
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#51
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:51
   def find_processor(response_env); end
 
   # Process deflate
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#100
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:100
   def inflate(body); end
 
   # Calls the proper processor to decompress body
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#70
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:70
   def reset_body(env, processor); end
 
   # Process gzip
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#89
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:89
   def uncompress_gzip(body); end
 
   private
 
   # @return [Boolean]
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#121
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:121
   def body_nil_or_empty?(body); end
 
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#131
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:131
   def parse_content_encoding(value); end
 
   # Decode in reverse order of application:
   # "gzip, br"  => br -> gzip
   #
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#142
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:142
   def processor_chain(encodings); end
 
-  # source://faraday-gzip//lib/faraday/gzip/middleware.rb#146
+  # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:146
   def processors; end
 
   class << self
     # System method required by Faraday
     #
-    # source://faraday-gzip//lib/faraday/gzip/middleware.rb#22
+    # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:22
     def optional_dependency(lib = T.unsafe(nil)); end
 
     # Returns supported encodings, adds brotli if the corresponding
     # dependency is present
     #
-    # source://faraday-gzip//lib/faraday/gzip/middleware.rb#33
+    # pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:33
     def supported_encodings; end
   end
 end
 
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#16
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:16
 Faraday::Gzip::Middleware::ACCEPT_ENCODING = T.let(T.unsafe(nil), String)
 
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#29
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:29
 Faraday::Gzip::Middleware::BROTLI_SUPPORTED = T.let(T.unsafe(nil), FalseClass)
 
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#17
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:17
 Faraday::Gzip::Middleware::CONTENT_ENCODING = T.let(T.unsafe(nil), String)
 
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#18
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:18
 Faraday::Gzip::Middleware::CONTENT_LENGTH = T.let(T.unsafe(nil), String)
 
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#19
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:19
 Faraday::Gzip::Middleware::IDENTITY = T.let(T.unsafe(nil), String)
 
-# source://faraday-gzip//lib/faraday/gzip/middleware.rb#39
+# pkg:gem/faraday-gzip#lib/faraday/gzip/middleware.rb:39
 Faraday::Gzip::Middleware::SUPPORTED_ENCODINGS = T.let(T.unsafe(nil), String)
 
-# source://faraday-gzip//lib/faraday/gzip/version.rb#5
+# pkg:gem/faraday-gzip#lib/faraday/gzip/version.rb:5
 Faraday::Gzip::VERSION = T.let(T.unsafe(nil), String)

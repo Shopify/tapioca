@@ -5,13 +5,13 @@
 # Please instead update this file by running `bin/tapioca gem activemodel-serializers-xml`.
 
 
-# source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#8
+# pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:8
 module ActiveModel; end
 
-# source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#9
+# pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:9
 module ActiveModel::Serializers; end
 
-# source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#10
+# pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:10
 module ActiveModel::Serializers::Xml
   include ::ActiveModel::Serialization
   extend ::ActiveSupport::Concern
@@ -43,7 +43,7 @@ module ActiveModel::Serializers::Xml
   #   person.age           # => 22
   #   person.awesome       # => true
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#233
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:233
   def from_xml(xml); end
 
   # Returns XML representing the model. Configuration can be
@@ -72,81 +72,81 @@ module ActiveModel::Serializers::Xml
   #
   # For further documentation, see <tt>ActiveRecord::Serialization#to_xml</tt>
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#205
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:205
   def to_xml(options = T.unsafe(nil), &block); end
 end
 
-# source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#18
+# pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:18
 class ActiveModel::Serializers::Xml::Serializer
   # @return [Serializer] a new instance of Serializer
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#57
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:57
   def initialize(serializable, options = T.unsafe(nil)); end
 
   # Returns the value of attribute options.
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#55
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:55
   def options; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#66
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:66
   def serializable_collection; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#62
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:62
   def serializable_hash; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#78
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:78
   def serialize; end
 
   private
 
   # TODO: This can likely be cleaned up to simple use ActiveSupport::XmlMini.to_tag as well.
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#124
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:124
   def add_associations(association, records, opts); end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#108
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:108
   def add_attributes_and_methods; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#105
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:105
   def add_extra_behavior; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#117
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:117
   def add_includes; end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#167
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:167
   def add_procs; end
 end
 
-# source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#19
+# pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:19
 class ActiveModel::Serializers::Xml::Serializer::Attribute
   # @return [Attribute] a new instance of Attribute
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#22
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:22
   def initialize(name, serializable, value); end
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#33
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:33
   def decorations; end
 
   # Returns the value of attribute name.
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#20
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:20
   def name; end
 
   # Returns the value of attribute type.
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#20
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:20
   def type; end
 
   # Returns the value of attribute value.
   #
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#20
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:20
   def value; end
 
   protected
 
-  # source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#43
+  # pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:43
   def compute_type; end
 end
 
-# source://activemodel-serializers-xml//lib/active_model/serializers/xml.rb#52
+# pkg:gem/activemodel-serializers-xml#lib/active_model/serializers/xml.rb:52
 class ActiveModel::Serializers::Xml::Serializer::MethodAttribute < ::ActiveModel::Serializers::Xml::Serializer::Attribute; end

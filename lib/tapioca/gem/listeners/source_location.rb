@@ -62,12 +62,13 @@ module Tapioca
           # we can clear the gem version if the gem is the same one we are processing
           version = "" if gem == @pipeline.gem
 
-          uri = SourceURI.build(
-            gem_name: gem.name,
-            gem_version: version,
-            path: path.to_s,
-            line_number: line.to_s,
+          uri = Tapioca::Helpers::PackageURL.new(
+            type: "gem",
+            name: gem.name,
+            version: version,
+            subpath: "#{path}:#{line}",
           )
+
           node.comments << RBI::Comment.new("") if node.comments.any?
           node.comments << RBI::Comment.new(uri.to_s)
         rescue URI::InvalidComponentError, URI::InvalidURIError

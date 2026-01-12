@@ -5,7 +5,7 @@
 # Please instead update this file by running `bin/tapioca gem rackup`.
 
 
-# source://rackup//lib/rackup/handler.rb#6
+# pkg:gem/rackup#lib/rackup/handler.rb:6
 module Rackup; end
 
 # *Handlers* connect web servers with Rack.
@@ -16,16 +16,16 @@ module Rackup; end
 # A second optional hash can be passed to include server-specific
 # configuration.
 #
-# source://rackup//lib/rackup/handler.rb#14
+# pkg:gem/rackup#lib/rackup/handler.rb:14
 module Rackup::Handler
   class << self
-    # source://rackup//lib/rackup/handler.rb#30
+    # pkg:gem/rackup#lib/rackup/handler.rb:30
     def [](name); end
 
-    # source://rackup//lib/rackup/handler.rb#84
+    # pkg:gem/rackup#lib/rackup/handler.rb:84
     def default; end
 
-    # source://rackup//lib/rackup/handler.rb#40
+    # pkg:gem/rackup#lib/rackup/handler.rb:40
     def get(name); end
 
     # Select first available Rack handler given an `Array` of server names.
@@ -36,12 +36,12 @@ module Rackup::Handler
     #
     # @raise [LoadError]
     #
-    # source://rackup//lib/rackup/handler.rb#69
+    # pkg:gem/rackup#lib/rackup/handler.rb:69
     def pick(server_names); end
 
     # Register a named handler class.
     #
-    # source://rackup//lib/rackup/handler.rb#18
+    # pkg:gem/rackup#lib/rackup/handler.rb:18
     def register(name, klass); end
 
     # Transforms server-name constants to their canonical form as filenames,
@@ -56,21 +56,21 @@ module Rackup::Handler
     #   FOOBAR # => 'foobar.rb'
     #   FooBarBaz # => 'foo_bar_baz.rb'
     #
-    # source://rackup//lib/rackup/handler.rb#106
+    # pkg:gem/rackup#lib/rackup/handler.rb:106
     def require_handler(prefix, const_name); end
   end
 end
 
-# source://rackup//lib/rackup/handler.rb#59
+# pkg:gem/rackup#lib/rackup/handler.rb:59
 Rackup::Handler::RACKUP_HANDLER = T.let(T.unsafe(nil), String)
 
-# source://rackup//lib/rackup/handler.rb#58
+# pkg:gem/rackup#lib/rackup/handler.rb:58
 Rackup::Handler::RACK_HANDLER = T.let(T.unsafe(nil), String)
 
-# source://rackup//lib/rackup/handler.rb#61
+# pkg:gem/rackup#lib/rackup/handler.rb:61
 Rackup::Handler::SERVER_NAMES = T.let(T.unsafe(nil), Array)
 
-# source://rackup//lib/rackup/server.rb#22
+# pkg:gem/rackup#lib/rackup/server.rb:22
 class Rackup::Server
   # Options may include:
   # * :app
@@ -118,80 +118,80 @@ class Rackup::Server
   #
   # @return [Server] a new instance of Server
   #
-  # source://rackup//lib/rackup/server.rb#230
+  # pkg:gem/rackup#lib/rackup/server.rb:230
   def initialize(options = T.unsafe(nil)); end
 
-  # source://rackup//lib/rackup/server.rb#262
+  # pkg:gem/rackup#lib/rackup/server.rb:262
   def app; end
 
-  # source://rackup//lib/rackup/server.rb#248
+  # pkg:gem/rackup#lib/rackup/server.rb:248
   def default_options; end
 
-  # source://rackup//lib/rackup/server.rb#296
+  # pkg:gem/rackup#lib/rackup/server.rb:296
   def middleware; end
 
-  # source://rackup//lib/rackup/server.rb#243
+  # pkg:gem/rackup#lib/rackup/server.rb:243
   def options; end
 
   # Sets the attribute options
   #
   # @param value the value to set the attribute options to.
   #
-  # source://rackup//lib/rackup/server.rb#185
+  # pkg:gem/rackup#lib/rackup/server.rb:185
   def options=(_arg0); end
 
-  # source://rackup//lib/rackup/server.rb#344
+  # pkg:gem/rackup#lib/rackup/server.rb:344
   def server; end
 
-  # source://rackup//lib/rackup/server.rb#300
+  # pkg:gem/rackup#lib/rackup/server.rb:300
   def start(&block); end
 
   private
 
-  # source://rackup//lib/rackup/server.rb#413
+  # pkg:gem/rackup#lib/rackup/server.rb:413
   def build_app(app); end
 
-  # source://rackup//lib/rackup/server.rb#349
+  # pkg:gem/rackup#lib/rackup/server.rb:349
   def build_app_and_options_from_config; end
 
-  # source://rackup//lib/rackup/server.rb#395
+  # pkg:gem/rackup#lib/rackup/server.rb:395
   def build_app_from_string; end
 
-  # source://rackup//lib/rackup/server.rb#442
+  # pkg:gem/rackup#lib/rackup/server.rb:442
   def check_pid!; end
 
-  # source://rackup//lib/rackup/server.rb#427
+  # pkg:gem/rackup#lib/rackup/server.rb:427
   def daemonize_app; end
 
-  # source://rackup//lib/rackup/server.rb#456
+  # pkg:gem/rackup#lib/rackup/server.rb:456
   def exit_with_pid(pid); end
 
-  # source://rackup//lib/rackup/server.rb#357
+  # pkg:gem/rackup#lib/rackup/server.rb:357
   def handle_profiling(heapfile, profile_mode, filename); end
 
-  # source://rackup//lib/rackup/server.rb#385
+  # pkg:gem/rackup#lib/rackup/server.rb:385
   def make_profile_name(filename); end
 
-  # source://rackup//lib/rackup/server.rb#409
+  # pkg:gem/rackup#lib/rackup/server.rb:409
   def opt_parser; end
 
-  # source://rackup//lib/rackup/server.rb#399
+  # pkg:gem/rackup#lib/rackup/server.rb:399
   def parse_options(args); end
 
-  # source://rackup//lib/rackup/server.rb#423
+  # pkg:gem/rackup#lib/rackup/server.rb:423
   def wrapped_app; end
 
-  # source://rackup//lib/rackup/server.rb#434
+  # pkg:gem/rackup#lib/rackup/server.rb:434
   def write_pid; end
 
   class << self
-    # source://rackup//lib/rackup/server.rb#273
+    # pkg:gem/rackup#lib/rackup/server.rb:273
     def default_middleware_by_environment; end
 
-    # source://rackup//lib/rackup/server.rb#267
+    # pkg:gem/rackup#lib/rackup/server.rb:267
     def logging_middleware; end
 
-    # source://rackup//lib/rackup/server.rb#291
+    # pkg:gem/rackup#lib/rackup/server.rb:291
     def middleware; end
 
     # Start a new rack server (like running rackup). This will parse ARGV and
@@ -212,19 +212,19 @@ class Rackup::Server
     #
     # Further options available here are documented on Rackup::Server#initialize
     #
-    # source://rackup//lib/rackup/server.rb#181
+    # pkg:gem/rackup#lib/rackup/server.rb:181
     def start(options = T.unsafe(nil)); end
   end
 end
 
-# source://rackup//lib/rackup/server.rb#23
+# pkg:gem/rackup#lib/rackup/server.rb:23
 class Rackup::Server::Options
-  # source://rackup//lib/rackup/server.rb#143
+  # pkg:gem/rackup#lib/rackup/server.rb:143
   def handler_opts(options); end
 
-  # source://rackup//lib/rackup/server.rb#24
+  # pkg:gem/rackup#lib/rackup/server.rb:24
   def parse!(args); end
 end
 
-# source://rackup//lib/rackup/version.rb#7
+# pkg:gem/rackup#lib/rackup/version.rb:7
 Rackup::VERSION = T.let(T.unsafe(nil), String)
