@@ -767,10 +767,14 @@ module Tapioca
 
         it "must not generate RBIs for missing gem specs" do
           @project.write_gemfile!(<<~GEMFILE, append: true)
-            platform :rbx do
+            platform :jruby do
               gem "sidekiq", "=7.1.2"
             end
           GEMFILE
+
+          # We need to add the platform to the lock file so that bundler includes the gem
+          # but it won't be materializable on the current platform (since we are not on JRuby)
+          @project.exec("bundle lock --add-platform jruby")
 
           @project.bundle_install!
 
