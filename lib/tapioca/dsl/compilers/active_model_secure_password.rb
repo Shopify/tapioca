@@ -77,8 +77,8 @@ module Tapioca
               if method == :authenticate || method.start_with?("authenticate_")
                 klass.create_method(
                   method.to_s,
-                  parameters: [create_param("unencrypted_password", type: "T.untyped")],
-                  return_type: "T.any(#{constant}, FalseClass)",
+                  parameters: [create_param("unencrypted_password", type: RBI::Type.untyped)],
+                  return_type: RBI::Type.any(RBI::Type.simple(T.must(qualified_name_of(constant))), RBI::Type.boolean),
                 )
               else
                 create_method_from_def(klass, constant.instance_method(method))

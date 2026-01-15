@@ -67,34 +67,34 @@ module Tapioca
                 # typed: strong
 
                 class User
-                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.any(::User, T::Boolean)) }
                   def authenticate(unencrypted_password); end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.any(::User, T::Boolean)) }
                   def authenticate_password(unencrypted_password); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password; end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.untyped) }
                   def password=(unencrypted_password); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_challenge; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def password_challenge=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_confirmation; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def password_confirmation=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_reset_token; end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_salt; end
                 end
               RBI
@@ -115,31 +115,31 @@ module Tapioca
                 # typed: strong
 
                 class User
-                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.any(::User, T::Boolean)) }
                   def authenticate_token(unencrypted_password); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token; end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.untyped) }
                   def token=(unencrypted_password); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_challenge; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def token_challenge=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_confirmation; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def token_confirmation=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_reset_token; end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_salt; end
                 end
               RBI
@@ -161,61 +161,61 @@ module Tapioca
                 # typed: strong
 
                 class User
-                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.any(::User, T::Boolean)) }
                   def authenticate(unencrypted_password); end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.any(::User, T::Boolean)) }
                   def authenticate_password(unencrypted_password); end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.any(User, FalseClass)) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.any(::User, T::Boolean)) }
                   def authenticate_token(unencrypted_password); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password; end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.untyped) }
                   def password=(unencrypted_password); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_challenge; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def password_challenge=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_confirmation; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def password_confirmation=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_reset_token; end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def password_salt; end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token; end
 
-                  sig { params(unencrypted_password: T.untyped).returns(T.untyped) }
+                  sig { params(unencrypted_password: ::T.untyped).returns(::T.untyped) }
                   def token=(unencrypted_password); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_challenge; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def token_challenge=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_confirmation; end
 
-                  sig { params(_arg0: T.untyped).returns(T.untyped) }
+                  sig { params(_arg0: ::T.untyped).returns(::T.untyped) }
                   def token_confirmation=(_arg0); end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_reset_token; end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def token_salt; end
                 end
               RBI
