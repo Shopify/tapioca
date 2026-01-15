@@ -51,20 +51,21 @@ module Tapioca
           root.create_path(constant) do |scope|
             self.class.action_text_associations(constant).each do |name|
               reflection = constant.reflections.fetch(name)
-              type = reflection.options.fetch(:class_name)
+              type = RBI::Type.simple(reflection.options.fetch(:class_name))
               name = reflection.name.to_s.sub("rich_text_", "")
+
               scope.create_method(
                 name,
                 return_type: type,
               )
               scope.create_method(
                 "#{name}?",
-                return_type: "T::Boolean",
+                return_type: RBI::Type.boolean,
               )
               scope.create_method(
                 "#{name}=",
-                parameters: [create_param("value", type: "T.nilable(T.any(#{type}, String))")],
-                return_type: "T.untyped",
+                parameters: [create_param("value", type: RBI::Type.any(type, RBI::Type.simple("::String")).nilable)],
+                return_type: RBI::Type.untyped,
               )
             end
           end
