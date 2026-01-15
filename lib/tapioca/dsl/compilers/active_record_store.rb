@@ -112,16 +112,16 @@ module Tapioca
                 keys.flatten.map { |key| "#{accessor_prefix}#{key}#{accessor_suffix}" }.each do |accessor_key|
                   mod.create_method(
                     "#{accessor_key}=",
-                    parameters: [create_param("value", type: "T.untyped")],
-                    return_type: "T.untyped",
+                    parameters: [create_param("value", type: RBI::Type.untyped)],
+                    return_type: RBI::Type.untyped,
                   )
-                  mod.create_method(accessor_key, return_type: "T.untyped")
-                  mod.create_method("#{accessor_key}_changed?", return_type: "T::Boolean")
-                  mod.create_method("#{accessor_key}_change", return_type: "T.untyped")
-                  mod.create_method("#{accessor_key}_was", return_type: "T.untyped")
-                  mod.create_method("saved_change_to_#{accessor_key}?", return_type: "T::Boolean")
-                  mod.create_method("saved_change_to_#{accessor_key}", return_type: "T.untyped")
-                  mod.create_method("#{accessor_key}_before_last_save", return_type: "T.untyped")
+                  mod.create_method(accessor_key, return_type: RBI::Type.untyped)
+                  mod.create_method("#{accessor_key}_changed?", return_type: RBI::Type.boolean)
+                  mod.create_method("#{accessor_key}_change", return_type: RBI::Type.untyped)
+                  mod.create_method("#{accessor_key}_was", return_type: RBI::Type.untyped)
+                  mod.create_method("saved_change_to_#{accessor_key}?", return_type: RBI::Type.boolean)
+                  mod.create_method("saved_change_to_#{accessor_key}", return_type: RBI::Type.untyped)
+                  mod.create_method("#{accessor_key}_before_last_save", return_type: RBI::Type.untyped)
                 end
               end
             end
