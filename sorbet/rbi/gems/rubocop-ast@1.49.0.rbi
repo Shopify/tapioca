@@ -5573,6 +5573,9 @@ RuboCop::AST::NodePattern::Sets::SET_IF_UNLESS = T.let(T.unsafe(nil), Set)
 RuboCop::AST::NodePattern::Sets::SET_INCLUDE_EXTEND_PREPEND = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET_INCLUDE_MEMBER = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_INCLUDE_PREPEND = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
@@ -5715,6 +5718,9 @@ RuboCop::AST::NodePattern::Sets::SET_SPAWN_SYSTEM = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_SPRINTF_FORMAT = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
+RuboCop::AST::NodePattern::Sets::SET_STDOUT_STDERR = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/rubocop-ast#lib/rubocop/ast/node_pattern/sets.rb:10
 RuboCop::AST::NodePattern::Sets::SET_STRUCT_CLASS = T.let(T.unsafe(nil), Set)
@@ -6366,29 +6372,29 @@ class RuboCop::AST::ProcessedSource
 
   private
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:333
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:328
   def builder_class(parser_engine); end
 
   # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:218
   def comment_index; end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:343
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:338
   def create_parser(ruby_version, parser_engine, prism_result); end
 
   # The Parser gem does not support Ruby 3.5 or later.
   # It is also not fully compatible with Ruby 3.4 but for
   # now respects using parser for backwards compatibility.
   #
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:389
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:384
   def default_parser_engine(ruby_version); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:397
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:392
   def first_token_index(range_or_node); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:402
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:397
   def last_token_index(range_or_node); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:372
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:367
   def normalize_parser_engine(parser_engine, ruby_version); end
 
   # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:224
@@ -6397,7 +6403,7 @@ class RuboCop::AST::ProcessedSource
   # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:260
   def parser_class(ruby_version, parser_engine); end
 
-  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:407
+  # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:402
   def source_range(range_or_node); end
 
   # pkg:gem/rubocop-ast#lib/rubocop/ast/processed_source.rb:243

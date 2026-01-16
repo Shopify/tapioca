@@ -15,6 +15,8 @@ end
 # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/mixin/file_help.rb:4
 module RuboCop::Cop; end
 
+# NOTE: Originally based on the `Rails/Output` cop.
+#
 # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/mixin/file_help.rb:5
 module RuboCop::Cop::RSpec; end
 
@@ -997,29 +999,29 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:85
   def common_instance_exec_closure?(param0 = T.unsafe(nil)); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:108
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:110
   def contains_described_class?(param0); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:103
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:105
   def described_constant(param0 = T.unsafe(nil)); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:111
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:113
   def on_block(node); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:96
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:98
   def rspec_block?(param0 = T.unsafe(nil)); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:100
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:102
   def scope_changing_syntax?(param0 = T.unsafe(nil)); end
 
   private
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:147
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:149
   def allowed?(node); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:128
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:130
   def autocorrect(corrector, match); end
 
   # @example
@@ -1033,7 +1035,7 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   # @param namespace [Array<Symbol>]
   # @return [Array<Symbol>]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:213
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:215
   def collapse_namespace(namespace, const); end
 
   # @example
@@ -1043,43 +1045,43 @@ class RuboCop::Cop::RSpec::DescribedClass < ::RuboCop::Cop::RSpec::Base
   # @param node [RuboCop::AST::Node]
   # @return [Array<Symbol>]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:230
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:232
   def const_name(node); end
 
   # @yield [node]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:138
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:140
   def find_usage(node, &block); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:198
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:200
   def full_const_name(node); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:151
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:153
   def message(offense); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:176
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:178
   def offensive?(node); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:184
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:186
   def offensive_described_class?(node); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:172
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:174
   def only_static_constants?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:160
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:162
   def scope_change?(node); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:166
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/described_class.rb:168
   def skippable_block?(node); end
 end
 
@@ -3486,59 +3488,71 @@ RuboCop::Cop::RSpec::LeakyConstantDeclaration::MSG_MODULE = T.let(T.unsafe(nil),
 #   expectations
 #   end
 #
+#   # good - when variable is used only in example metadata
+#   skip_message = 'not yet implemented'
+#
+#   it 'does something', skip: skip_message do
+#   expectations
+#   end
+#
 #   # good - when variable is used only to include other examples
 #   examples = foo ? 'some examples' : 'other examples'
 #
 #   it_behaves_like examples, another_argument
 #
-# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:65
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:72
 class RuboCop::Cop::RSpec::LeakyLocalVariable < ::RuboCop::Cop::RSpec::Base
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:83
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:90
   def after_leaving_scope(scope, _variable_table); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:70
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:77
   def example_method?(param0 = T.unsafe(nil)); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:75
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:82
   def includes_method?(param0 = T.unsafe(nil)); end
 
   private
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:114
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:132
   def allowed_includes_arguments?(node, argument); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:103
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:110
   def allowed_reference?(node); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:89
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:96
   def check_references(variable); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:127
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:145
   def example_scope?(node); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:132
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:123
+  def in_example_arguments?(ancestor, node); end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:150
   def inside_describe_block?(node); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:123
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:141
   def part_of_example_scope?(node); end
 
   class << self
-    # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:79
+    # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:86
     def joining_forces; end
   end
 end
 
-# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:66
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/leaky_local_variable.rb:73
 RuboCop::Cop::RSpec::LeakyLocalVariable::MSG = T.let(T.unsafe(nil), String)
 
 # Checks for `let` definitions that come after an example.
@@ -4822,6 +4836,47 @@ RuboCop::Cop::RSpec::NotToNot::MSG = T.let(T.unsafe(nil), String)
 # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/not_to_not.rb:35
 RuboCop::Cop::RSpec::NotToNot::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
 
+# Checks for the use of output calls like puts and print in specs.
+#
+# @example
+#   # bad
+#   puts 'A debug message'
+#   pp 'A debug message'
+#   print 'A debug message'
+#
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:19
+class RuboCop::Cop::RSpec::Output < ::RuboCop::Cop::RSpec::Base
+  extend ::RuboCop::Cop::AutoCorrector
+
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:50
+  def io_output?(param0 = T.unsafe(nil)); end
+
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:60
+  def on_send(node); end
+
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:45
+  def output?(param0 = T.unsafe(nil)); end
+
+  private
+
+  # @return [Boolean]
+  #
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:72
+  def match_gvar?(sym); end
+end
+
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:34
+RuboCop::Cop::RSpec::Output::IO_METHODS = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:24
+RuboCop::Cop::RSpec::Output::KERNEL_METHODS = T.let(T.unsafe(nil), Set)
+
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:22
+RuboCop::Cop::RSpec::Output::MSG = T.let(T.unsafe(nil), String)
+
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/output.rb:42
+RuboCop::Cop::RSpec::Output::RESTRICT_ON_SEND = T.let(T.unsafe(nil), Array)
+
 # Checks if there is a let/subject that overwrites an existing one.
 #
 # @example
@@ -5982,6 +6037,7 @@ RuboCop::Cop::RSpec::ScatteredLet::MSG = T.let(T.unsafe(nil), String)
 # Unify `before` and `after` hooks when possible.
 # However, `around` hooks are allowed to be defined multiple times,
 # as unifying them would typically make the code harder to read.
+# Hooks defined in class methods are also ignored.
 #
 # @example
 #   # bad
@@ -6004,31 +6060,39 @@ RuboCop::Cop::RSpec::ScatteredLet::MSG = T.let(T.unsafe(nil), String)
 #   around { |example| before2; example.call; after2 }
 #   end
 #
-# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:33
+#   # good
+#   describe Foo do
+#   before { setup1 }
+#   def self.setup
+#   before { setup2 }
+#   end
+#   end
+#
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:42
 class RuboCop::Cop::RSpec::ScatteredSetup < ::RuboCop::Cop::RSpec::Base
   include ::RuboCop::Cop::RSpec::FinalEndLocation
   include ::RuboCop::Cop::RangeHelp
   extend ::RuboCop::Cop::AutoCorrector
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:41
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:50
   def on_block(node); end
 
   private
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:84
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:94
   def autocorrect(corrector, first_occurrence, occurrence); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:69
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:79
   def lines_msg(numbers); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:77
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:87
   def message(occurrences, occurrence); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:56
+  # pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:65
   def repeated_hooks(node); end
 end
 
-# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:38
+# pkg:gem/rubocop-rspec#lib/rubocop/cop/rspec/scattered_setup.rb:47
 RuboCop::Cop::RSpec::ScatteredSetup::MSG = T.let(T.unsafe(nil), String)
 
 # Checks for proper shared_context and shared_examples usage.
@@ -7497,35 +7561,45 @@ class RuboCop::RSpec::Hook < ::RuboCop::RSpec::Concept
 
   # @return [Boolean]
   #
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:28
+  def inside_class_method?; end
+
+  # @return [Boolean]
+  #
   # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:18
   def knowable_scope?; end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:38
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:45
   def metadata; end
 
   # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:14
   def name; end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:28
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:35
   def scope; end
 
   private
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:76
+  # @return [Boolean]
+  #
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:87
+  def inside_class_self?(node); end
+
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:83
   def scope_argument; end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:72
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:79
   def scope_name; end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:51
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:58
   def transform_metadata(meta); end
 
-  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:66
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:73
   def transform_true(node); end
 
   # @return [Boolean]
   #
-  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:47
+  # pkg:gem/rubocop-rspec#lib/rubocop/rspec/hook.rb:54
   def valid_scope?(node); end
 end
 
