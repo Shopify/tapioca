@@ -10634,7 +10634,7 @@ class ActionView::Helpers::Tags::FileField < ::ActionView::Helpers::Tags::TextFi
 
   private
 
-  # pkg:gem/actionview#lib/action_view/helpers/tags/file_field.rb:20
+  # pkg:gem/actionview#lib/action_view/helpers/tags/file_field.rb:23
   def hidden_field_for_multiple_file(options); end
 end
 
