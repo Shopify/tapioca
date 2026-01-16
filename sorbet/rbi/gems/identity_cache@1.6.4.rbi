@@ -1520,25 +1520,19 @@ module IdentityCache::QueryAPI
 
   mixes_in_class_methods ::IdentityCache::QueryAPI::ClassMethods
 
-  # Override the method that is used to call after_commit callbacks so that we can
-  # expire the caches before other after_commit callbacks. This way we can avoid stale
-  # cache reads that happen from the ordering of callbacks. For example, if an after_commit
-  # callback enqueues a background job, then we don't want it to be possible for the
-  # background job to run and load data from the cache before it is invalidated.
-  #
-  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:168
-  def _run_commit_callbacks; end
-
   # Invalidate the cache data associated with the record. Returns `true` on success,
   # `false` otherwise.
   #
-  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:177
+  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:186
   def expire_cache; end
+
+  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:169
+  def run_callbacks(kind, type = T.unsafe(nil)); end
 
   # @api private
   # @return [Boolean]
   #
-  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:185
+  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:194
   def was_new_record?; end
 
   private
@@ -1546,7 +1540,7 @@ module IdentityCache::QueryAPI
   # Even if we have problems with some attributes, carry over the results and expire
   # all possible attributes without array allocation.
   #
-  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:194
+  # pkg:gem/identity_cache#lib/identity_cache/query_api.rb:203
   def expire_attribute_indexes; end
 end
 
