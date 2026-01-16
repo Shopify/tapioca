@@ -3,3 +3,4 @@
 --ignore=/vendor
 --enable-experimental-requires-ancestor
 --enable-experimental-rbs-comments
+--suppress-payload-superclass-redefinition-for=Net::IMAP::CommandData

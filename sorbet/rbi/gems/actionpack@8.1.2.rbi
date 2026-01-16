@@ -4545,22 +4545,65 @@ class ActionController::InvalidParameterKey < ::ArgumentError; end
 #       ...
 #     end
 #
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:56
+# ## Streaming and Execution State
+#
+# When streaming, the action is executed in a separate thread. By default, this thread
+# shares execution state from the parent thread.
+#
+# You can configure which execution state keys should be excluded from being shared
+# using the `config.action_controller.live_streaming_excluded_keys` configuration:
+#
+#   # config/application.rb
+#   config.action_controller.live_streaming_excluded_keys = [:active_record_connected_to_stack]
+#
+# This is useful when using ActionController::Live inside a `connected_to` block. For example,
+# if the parent request is reading from a replica using `connected_to(role: :reading)`, you may
+# want the streaming thread to use its own connection context instead of inheriting the read-only
+# context:
+#
+#   # Without configuration, streaming thread inherits read-only connection
+#   ActiveRecord::Base.connected_to(role: :reading) do
+#     @posts = Post.all
+#     render stream: true # Streaming thread cannot write to database
+#   end
+#
+#   # With configuration, streaming thread gets fresh connection context
+#   # config.action_controller.live_streaming_excluded_keys = [:active_record_connected_to_stack]
+#   ActiveRecord::Base.connected_to(role: :reading) do
+#     @posts = Post.all
+#     render stream: true # Streaming thread can write to database if needed
+#   end
+#
+# Common keys you might want to exclude:
+# - `:active_record_connected_to_stack` - Database connection routing and roles
+# - `:active_record_prohibit_shard_swapping` - Shard swapping restrictions
+#
+# By default, no keys are excluded to maintain backward compatibility.
+#
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:91
 module ActionController::Live
   extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
 
+  mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActionController::Live::ClassMethods
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:371
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:413
   def clean_up_thread_locals(*args); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:362
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:94
+  def live_streaming_excluded_keys; end
+
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:94
+  def live_streaming_excluded_keys=(val); end
+
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:404
   def new_controller_thread; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:266
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:307
   def process(name); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:310
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:352
   def response_body=(body); end
 
   # Sends a stream to the browser, which is helpful when you're generating exports
@@ -4589,12 +4632,12 @@ module ActionController::Live
   #       end
   #     end
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:340
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:382
   def send_stream(filename:, disposition: T.unsafe(nil), type: T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:379
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:421
   def log_error(exception); end
 
   # Ensure we clean up any thread locals we copied so that the thread can reused.
@@ -4617,18 +4660,32 @@ module ActionController::Live
   def original_new_controller_thread; end
 
   class << self
-    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:375
+    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:94
+    def live_streaming_excluded_keys; end
+
+    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:94
+    def live_streaming_excluded_keys=(val); end
+
+    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:417
     def live_thread_pool_executor; end
   end
+
+  module GeneratedClassMethods
+    def live_streaming_excluded_keys; end
+    def live_streaming_excluded_keys=(value); end
+    def live_streaming_excluded_keys?; end
+  end
+
+  module GeneratedInstanceMethods; end
 end
 
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:152
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:193
 class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   include ::MonitorMixin
 
   # @return [Buffer] a new instance of Buffer
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:167
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:208
   def initialize(response); end
 
   # Inform the producer/writing thread that the client has disconnected; the
@@ -4636,10 +4693,10 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   #
   # See also #close.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:215
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:256
   def abort; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:234
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:275
   def call_on_error; end
 
   # Write a 'close' event to the buffer; the producer/writing thread uses this to
@@ -4647,7 +4704,7 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   #
   # See also #abort.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:203
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:244
   def close; end
 
   # Is the client still connected and waiting for content?
@@ -4657,7 +4714,7 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   #
   # @return [Boolean]
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:226
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:267
   def connected?; end
 
   # Ignore that the client has disconnected.
@@ -4666,7 +4723,7 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   # result in the written content being silently discarded. If this value is
   # `false` (the default), a ClientDisconnected exception will be raised.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:165
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:206
   def ignore_disconnect; end
 
   # Ignore that the client has disconnected.
@@ -4675,60 +4732,60 @@ class ActionController::Live::Buffer < ::ActionDispatch::Response::Buffer
   # result in the written content being silently discarded. If this value is
   # `false` (the default), a ClientDisconnected exception will be raised.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:165
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:206
   def ignore_disconnect=(_arg0); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:230
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:271
   def on_error(&block); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:175
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:216
   def write(string); end
 
   # Same as `write` but automatically include a newline at the end of the string.
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:195
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:236
   def writeln(string); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:245
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:286
   def build_queue(queue_size); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:239
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:280
   def each_chunk(&block); end
 
   class << self
     # Returns the value of attribute queue_size.
     #
-    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:156
+    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:197
     def queue_size; end
 
     # Sets the attribute queue_size
     #
     # @param value the value to set the attribute queue_size to.
     #
-    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:156
+    # pkg:gem/actionpack#lib/action_controller/metal/live.rb:197
     def queue_size=(_arg0); end
   end
 end
 
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:59
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:100
 module ActionController::Live::ClassMethods
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:60
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:101
   def make_response!(request); end
 end
 
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:149
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:190
 class ActionController::Live::ClientDisconnected < ::RuntimeError; end
 
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:250
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:291
 class ActionController::Live::Response < ::ActionDispatch::Response
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:252
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:293
   def before_committed; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:259
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:300
   def build_buffer(response, body); end
 end
 
@@ -4771,26 +4828,26 @@ end
 # Note: SSEs are not currently supported by IE. However, they are supported by
 # Chrome, Firefox, Opera, and Safari.
 #
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:112
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:153
 class ActionController::Live::SSE
   # @return [SSE] a new instance of SSE
   #
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:115
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:156
   def initialize(stream, options = T.unsafe(nil)); end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:120
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:161
   def close; end
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:124
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:165
   def write(object, options = T.unsafe(nil)); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:134
+  # pkg:gem/actionpack#lib/action_controller/metal/live.rb:175
   def perform_write(json, options); end
 end
 
-# pkg:gem/actionpack#lib/action_controller/metal/live.rb:113
+# pkg:gem/actionpack#lib/action_controller/metal/live.rb:154
 ActionController::Live::SSE::PERMITTED_OPTIONS = T.let(T.unsafe(nil), Array)
 
 # pkg:gem/actionpack#lib/action_controller/test_case.rb:184
@@ -4822,28 +4879,28 @@ class ActionController::LogSubscriber < ::ActiveSupport::LogSubscriber
   # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:7
   def backtrace_cleaner?; end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:89
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:93
   def exist_fragment?(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:89
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:93
   def expire_fragment(event); end
 
   # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:47
   def halted_callback(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:101
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:105
   def logger; end
 
   # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:26
   def process_action(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:89
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:93
   def read_fragment(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:105
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:109
   def redirect_source_location; end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:64
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:68
   def redirect_to(event); end
 
   # Manually subscribed below
@@ -4851,19 +4908,19 @@ class ActionController::LogSubscriber < ::ActiveSupport::LogSubscriber
   # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:53
   def rescue_from_callback(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:73
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:77
   def send_data(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:59
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:63
   def send_file(event); end
 
   # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:9
   def start_processing(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:78
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:82
   def unpermitted_parameters(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:89
+  # pkg:gem/actionpack#lib/action_controller/log_subscriber.rb:93
   def write_fragment(event); end
 
   class << self
@@ -7322,7 +7379,7 @@ module ActionController::Redirecting
   # The `action_on_open_redirect` configuration option controls the behavior when an unsafe
   # redirect is detected:
   # * `:log` - Logs a warning but allows the redirect
-  # * `:notify` - Sends an ActiveSupport notification for monitoring
+  # * `:notify` - Sends an Active Support notification for monitoring
   # * `:raise` - Raises an UnsafeRedirectError
   #
   # To allow any external redirects pass `allow_other_host: true`, though using a
@@ -7349,7 +7406,7 @@ module ActionController::Redirecting
   #     config.action_controller.action_on_path_relative_redirect = :raise
   #
   # * `:log` - Logs a warning but allows the redirect
-  # * `:notify` - Sends an ActiveSupport notification but allows the redirect
+  # * `:notify` - Sends an Active Support notification but allows the redirect
   #   (includes stack trace to help identify the source)
   # * `:raise` - Raises an UnsafeRedirectError
   #
@@ -8850,10 +8907,10 @@ end
 class ActionController::StructuredEventSubscriber < ::ActiveSupport::StructuredEventSubscriber
   # @return [Boolean]
   #
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:87
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:91
   def exist_fragment?(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:91
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:95
   def expire_fragment(event); end
 
   # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:43
@@ -8862,36 +8919,36 @@ class ActionController::StructuredEventSubscriber < ::ActiveSupport::StructuredE
   # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:25
   def process_action(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:83
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:87
   def read_fragment(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:60
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:64
   def redirect_to(event); end
 
   # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:47
   def rescue_from_callback(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:64
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:68
   def send_data(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:56
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:60
   def send_file(event); end
 
   # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:7
   def start_processing(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:68
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:72
   def unpermitted_parameters(event); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:79
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:83
   def write_fragment(event); end
 
   private
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:106
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:110
   def additions_for(payload); end
 
-  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:96
+  # pkg:gem/actionpack#lib/action_controller/structured_event_subscriber.rb:100
   def fragment_cache(method_name, event); end
 end
 
@@ -15879,18 +15936,18 @@ class ActionDispatch::RemoteIp::GetIp
   # Memoizes the value returned by #calculate_ip and returns it for
   # ActionDispatch::Request to use.
   #
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:173
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:174
   def to_s; end
 
   private
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:196
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:197
   def filter_proxies(ips); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:178
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:179
   def ips_from(header); end
 
-  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:184
+  # pkg:gem/actionpack#lib/action_dispatch/middleware/remote_ip.rb:185
   def sanitize_ips(ips); end
 end
 

@@ -1072,12 +1072,18 @@ class ActiveStorage::Blobs::ProxyController < ::ActiveStorage::BaseController
   def _layout(lookup_context, formats, keys); end
 
   class << self
+    def live_streaming_excluded_keys; end
+    def live_streaming_excluded_keys=(value); end
+    def live_streaming_excluded_keys?; end
+
     private
 
     def __class_attr___callbacks; end
     def __class_attr___callbacks=(new_value); end
     def __class_attr_config; end
     def __class_attr_config=(new_value); end
+    def __class_attr_live_streaming_excluded_keys; end
+    def __class_attr_live_streaming_excluded_keys=(new_value); end
     def __class_attr_middleware_stack; end
     def __class_attr_middleware_stack=(new_value); end
   end
@@ -1734,12 +1740,18 @@ class ActiveStorage::Representations::ProxyController < ::ActiveStorage::Represe
   def _layout(lookup_context, formats, keys); end
 
   class << self
+    def live_streaming_excluded_keys; end
+    def live_streaming_excluded_keys=(value); end
+    def live_streaming_excluded_keys?; end
+
     private
 
     def __class_attr___callbacks; end
     def __class_attr___callbacks=(new_value); end
     def __class_attr_config; end
     def __class_attr_config=(new_value); end
+    def __class_attr_live_streaming_excluded_keys; end
+    def __class_attr_live_streaming_excluded_keys=(new_value); end
     def __class_attr_middleware_stack; end
     def __class_attr_middleware_stack=(new_value); end
   end
@@ -2016,10 +2028,12 @@ end
 
 module ActiveStorage::Streaming
   extend ::ActiveSupport::Concern
+  include GeneratedInstanceMethods
   include ::ActionController::Rendering
   include ::ActionController::DataStreaming
   include ::ActionController::Live
 
+  mixes_in_class_methods GeneratedClassMethods
   mixes_in_class_methods ::ActionController::Rendering::ClassMethods
   mixes_in_class_methods ::ActionController::Live::ClassMethods
 
@@ -2027,6 +2041,14 @@ module ActiveStorage::Streaming
 
   def send_blob_byte_range_data(blob, range_header, disposition: T.unsafe(nil)); end
   def send_blob_stream(blob, disposition: T.unsafe(nil)); end
+
+  module GeneratedClassMethods
+    def live_streaming_excluded_keys; end
+    def live_streaming_excluded_keys=(value); end
+    def live_streaming_excluded_keys?; end
+  end
+
+  module GeneratedInstanceMethods; end
 end
 
 ActiveStorage::Streaming::DEFAULT_BLOB_STREAMING_DISPOSITION = T.let(T.unsafe(nil), String)

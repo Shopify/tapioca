@@ -94,6 +94,11 @@ module Mail
     # pkg:gem/mail#lib/mail/mail.rb:131
     def deliver(*args, &block); end
 
+    # Returns a list of registered delivery interceptors.
+    #
+    # pkg:gem/mail#lib/mail/mail.rb:240
+    def delivery_interceptors; end
+
     # Returns the delivery method selected, defaults to an instance of Mail::SMTP
     #
     # pkg:gem/mail#lib/mail/mail.rb:103
@@ -134,7 +139,7 @@ module Mail
     # pkg:gem/mail#lib/mail/mail.rb:227
     def inform_observers(mail); end
 
-    # Receive the first email(s) from the default retriever
+    # Receive the last email(s) from the default retriever
     # See Mail::Retriever for a complete documentation.
     #
     # pkg:gem/mail#lib/mail/mail.rb:157
@@ -189,7 +194,7 @@ module Mail
     # pkg:gem/mail#lib/mail/mail.rb:50
     def new(*args, &block); end
 
-    # pkg:gem/mail#lib/mail/mail.rb:243
+    # pkg:gem/mail#lib/mail/mail.rb:248
     def random_tag; end
 
     # Reads in an email message from a path and instantiates it as a new Mail::Message
@@ -230,10 +235,10 @@ module Mail
     # pkg:gem/mail#lib/mail/mail.rb:108
     def retriever_method; end
 
-    # pkg:gem/mail#lib/mail/mail.rb:252
+    # pkg:gem/mail#lib/mail/mail.rb:257
     def something_random; end
 
-    # pkg:gem/mail#lib/mail/mail.rb:256
+    # pkg:gem/mail#lib/mail/mail.rb:261
     def uniq; end
 
     # Unregister the given interceptor, allowing mail to resume operations
@@ -420,14 +425,14 @@ class Mail::Address
   def strip_domain_comments(value); end
 end
 
-# pkg:gem/mail#lib/mail/fields/common_address_field.rb:6
+# pkg:gem/mail#lib/mail/fields/common_address_field.rb:5
 class Mail::AddressContainer < ::Array
   # @return [AddressContainer] a new instance of AddressContainer
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:7
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:6
   def initialize(field, list = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:12
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:11
   def <<(address); end
 end
 
@@ -483,22 +488,22 @@ class Mail::AttachmentsList < ::Array
   # mail.attachments['test.png'].filename #=> 'test.png'
   # mail.attachments[1].filename          #=> 'test.jpg'
   #
-  # pkg:gem/mail#lib/mail/attachments_list.rb:32
+  # pkg:gem/mail#lib/mail/attachments_list.rb:34
   def [](index_value); end
 
-  # pkg:gem/mail#lib/mail/attachments_list.rb:40
+  # pkg:gem/mail#lib/mail/attachments_list.rb:42
   def []=(name, value); end
 
   # Uses the mime type to try and guess the encoding, if it is a binary type, or unknown, then we
   # set it to binary, otherwise as set to plain text
   #
-  # pkg:gem/mail#lib/mail/attachments_list.rb:91
+  # pkg:gem/mail#lib/mail/attachments_list.rb:93
   def guess_encoding; end
 
-  # pkg:gem/mail#lib/mail/attachments_list.rb:20
+  # pkg:gem/mail#lib/mail/attachments_list.rb:22
   def inline; end
 
-  # pkg:gem/mail#lib/mail/attachments_list.rb:99
+  # pkg:gem/mail#lib/mail/attachments_list.rb:101
   def set_mime_type(filename); end
 end
 
@@ -528,32 +533,32 @@ end
 #  mail[:bcc].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:bcc].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/bcc_field.rb:31
+# pkg:gem/mail#lib/mail/fields/bcc_field.rb:30
 class Mail::BccField < ::Mail::CommonAddressField
   # @return [BccField] a new instance of BccField
   #
-  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:36
+  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:35
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   # Bcc field should not be :encoded by default
   #
-  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:42
+  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:41
   def encoded; end
 
   # Returns the value of attribute include_in_headers.
   #
-  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:34
+  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:33
   def include_in_headers; end
 
   # Sets the attribute include_in_headers
   #
   # @param value the value to set the attribute include_in_headers to.
   #
-  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:34
+  # pkg:gem/mail#lib/mail/fields/bcc_field.rb:33
   def include_in_headers=(_arg0); end
 end
 
-# pkg:gem/mail#lib/mail/fields/bcc_field.rb:32
+# pkg:gem/mail#lib/mail/fields/bcc_field.rb:31
 Mail::BccField::NAME = T.let(T.unsafe(nil), String)
 
 # = Body
@@ -812,52 +817,11 @@ end
 #  mail[:cc].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:cc].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/cc_field.rb:31
+# pkg:gem/mail#lib/mail/fields/cc_field.rb:30
 class Mail::CcField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/cc_field.rb:32
+# pkg:gem/mail#lib/mail/fields/cc_field.rb:31
 Mail::CcField::NAME = T.let(T.unsafe(nil), String)
-
-# pkg:gem/mail#lib/mail/check_delivery_params.rb:5
-module Mail::CheckDeliveryParams
-  class << self
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:16
-    def _deprecated_check(mail); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:36
-    def _deprecated_check_addr(addr_name, addr); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:22
-    def _deprecated_check_from(addr); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:62
-    def _deprecated_check_message(message); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:30
-    def _deprecated_check_to(addrs); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:51
-    def _deprecated_validate_smtp_addr(addr); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:10
-    def check(*args, **_arg1, &block); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:32
-    def check_addr(*args, **_arg1, &block); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:18
-    def check_from(*args, **_arg1, &block); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:53
-    def check_message(*args, **_arg1, &block); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:24
-    def check_to(*args, **_arg1, &block); end
-
-    # pkg:gem/mail#lib/mail/check_delivery_params.rb:38
-    def validate_smtp_addr(*args, **_arg1, &block); end
-  end
-end
 
 # = Comments Field
 #
@@ -883,141 +847,141 @@ end
 #  mail[:comments].map { |c| c.to_s }
 #  #=> ['This is a comment', "This is another comment"]
 #
-# pkg:gem/mail#lib/mail/fields/comments_field.rb:29
+# pkg:gem/mail#lib/mail/fields/comments_field.rb:28
 class Mail::CommentsField < ::Mail::NamedUnstructuredField; end
 
-# pkg:gem/mail#lib/mail/fields/comments_field.rb:30
+# pkg:gem/mail#lib/mail/fields/comments_field.rb:29
 Mail::CommentsField::NAME = T.let(T.unsafe(nil), String)
 
-# pkg:gem/mail#lib/mail/fields/common_address_field.rb:17
+# pkg:gem/mail#lib/mail/fields/common_address_field.rb:16
 class Mail::CommonAddressField < ::Mail::NamedStructuredField
   # @return [CommonAddressField] a new instance of CommonAddressField
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:22
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:21
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:94
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:93
   def <<(val); end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:41
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:40
   def address; end
 
   # Returns the address string of all the addresses in the address list
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:46
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:45
   def addresses; end
 
   # Returns the actual address objects in the address list
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:64
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:63
   def addrs; end
 
   # Returns a list of decoded group addresses
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:80
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:79
   def decoded_group_addresses; end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:37
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:36
   def default; end
 
   # Returns the display name of all the addresses in the address list
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:58
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:57
   def display_names; end
 
   # Allows you to iterate through each address object in the address_list
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:31
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:30
   def each; end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:26
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:25
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:105
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:104
   def encode_if_needed(val, val_charset = T.unsafe(nil)); end
 
   # Returns a list of encoded group addresses
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:85
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:84
   def encoded_group_addresses; end
 
   # Returns the formatted string of all the addresses in the address list
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:52
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:51
   def formatted; end
 
   # Returns the addresses that are part of groups
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:75
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:74
   def group_addresses; end
 
   # Returns the name of all the groups in a string
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:90
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:89
   def group_names; end
 
   # Returns a hash of group name => address strings for the address list
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:70
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:69
   def groups; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:150
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:142
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:140
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:132
   def do_encode; end
 
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:160
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:152
   def get_group_addresses(group_list); end
 
   # Pass through UTF-8 addresses
   #
-  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:123
+  # pkg:gem/mail#lib/mail/fields/common_address_field.rb:122
   def utf8_if_needed(val, val_charset); end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/common_address_field.rb:18
+    # pkg:gem/mail#lib/mail/fields/common_address_field.rb:17
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/common_date_field.rb:6
+# pkg:gem/mail#lib/mail/fields/common_date_field.rb:4
 class Mail::CommonDateField < ::Mail::NamedStructuredField
   # @return [CommonDateField] a new instance of CommonDateField
   #
-  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:30
+  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:28
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   # Returns a date time object of the parsed date
   #
-  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:35
+  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:33
   def date_time; end
 
-  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:41
+  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:39
   def default; end
 
-  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:45
+  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:43
   def element; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:54
+  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:52
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:50
+  # pkg:gem/mail#lib/mail/fields/common_date_field.rb:48
   def do_encode; end
 
   class << self
-    # pkg:gem/mail#lib/mail/fields/common_date_field.rb:11
+    # pkg:gem/mail#lib/mail/fields/common_date_field.rb:9
     def normalize_datetime(string); end
 
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/common_date_field.rb:7
+    # pkg:gem/mail#lib/mail/fields/common_date_field.rb:5
     def singular?; end
   end
 end
@@ -1113,32 +1077,32 @@ end
 # pkg:gem/mail#lib/mail/fields/common_field.rb:68
 Mail::CommonField::FILENAME_RE = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:7
+# pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:6
 class Mail::CommonMessageIdField < ::Mail::NamedStructuredField
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:20
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:19
   def default; end
 
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:8
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:7
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:12
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:11
   def message_id; end
 
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:16
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:15
   def message_ids; end
 
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:25
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:24
   def to_s; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:34
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:33
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:30
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:29
   def do_encode; end
 
-  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:38
+  # pkg:gem/mail#lib/mail/fields/common_message_id_field.rb:37
   def formatted_message_ids(join = T.unsafe(nil)); end
 end
 
@@ -1302,17 +1266,17 @@ Mail::Constants::UNFOLD_WS = T.let(T.unsafe(nil), Regexp)
 # pkg:gem/mail#lib/mail/constants.rb:20
 Mail::Constants::WSP = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/mail#lib/mail/fields/content_description_field.rb:6
+# pkg:gem/mail#lib/mail/fields/content_description_field.rb:5
 class Mail::ContentDescriptionField < ::Mail::NamedUnstructuredField
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/content_description_field.rb:9
+    # pkg:gem/mail#lib/mail/fields/content_description_field.rb:8
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_description_field.rb:7
+# pkg:gem/mail#lib/mail/fields/content_description_field.rb:6
 Mail::ContentDescriptionField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_disposition_element.rb:6
@@ -1338,72 +1302,72 @@ class Mail::ContentDispositionElement
   def cleaned(string); end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:7
+# pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:5
 class Mail::ContentDispositionField < ::Mail::NamedStructuredField
   # @return [ContentDispositionField] a new instance of ContentDispositionField
   #
-  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:14
+  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:12
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:41
+  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:39
   def decoded; end
 
-  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:22
+  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:20
   def disposition_type; end
 
-  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:18
+  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:16
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:36
+  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:34
   def encoded; end
 
-  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:32
+  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:30
   def filename; end
 
-  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:26
+  # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:24
   def parameters; end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:10
+    # pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:8
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:8
+# pkg:gem/mail#lib/mail/fields/content_disposition_field.rb:6
 Mail::ContentDispositionField::NAME = T.let(T.unsafe(nil), String)
 
-# pkg:gem/mail#lib/mail/fields/content_id_field.rb:7
+# pkg:gem/mail#lib/mail/fields/content_id_field.rb:6
 class Mail::ContentIdField < ::Mail::NamedStructuredField
   # @return [ContentIdField] a new instance of ContentIdField
   #
-  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:14
+  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:13
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:23
+  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:22
   def content_id; end
 
-  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:19
+  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:18
   def element; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:28
+  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:27
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:32
+  # pkg:gem/mail#lib/mail/fields/content_id_field.rb:31
   def do_encode; end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/content_id_field.rb:10
+    # pkg:gem/mail#lib/mail/fields/content_id_field.rb:9
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_id_field.rb:8
+# pkg:gem/mail#lib/mail/fields/content_id_field.rb:7
 Mail::ContentIdField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_location_element.rb:6
@@ -1422,29 +1386,29 @@ class Mail::ContentLocationElement
   def to_s(*args); end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_location_field.rb:6
+# pkg:gem/mail#lib/mail/fields/content_location_field.rb:5
 class Mail::ContentLocationField < ::Mail::NamedStructuredField
-  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:25
+  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:24
   def decoded; end
 
-  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:13
+  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:12
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:21
+  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:20
   def encoded; end
 
-  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:17
+  # pkg:gem/mail#lib/mail/fields/content_location_field.rb:16
   def location; end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/content_location_field.rb:9
+    # pkg:gem/mail#lib/mail/fields/content_location_field.rb:8
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_location_field.rb:7
+# pkg:gem/mail#lib/mail/fields/content_location_field.rb:6
 Mail::ContentLocationField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_transfer_encoding_element.rb:6
@@ -1460,39 +1424,39 @@ class Mail::ContentTransferEncodingElement
   def encoding; end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:6
+# pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:5
 class Mail::ContentTransferEncodingField < ::Mail::NamedStructuredField
   # @return [ContentTransferEncodingField] a new instance of ContentTransferEncodingField
   #
-  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:24
+  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:23
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:28
+  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:27
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:32
+  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:31
   def encoding; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:41
+  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:40
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:37
+  # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:36
   def do_encode; end
 
   class << self
-    # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:13
+    # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:12
     def normalize_content_transfer_encoding(value); end
 
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:9
+    # pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:8
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:7
+# pkg:gem/mail#lib/mail/fields/content_transfer_encoding_field.rb:6
 Mail::ContentTransferEncodingField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/content_type_element.rb:6
@@ -1523,81 +1487,81 @@ class Mail::ContentTypeElement
   def cleaned(string); end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_type_field.rb:7
+# pkg:gem/mail#lib/mail/fields/content_type_field.rb:5
 class Mail::ContentTypeField < ::Mail::NamedStructuredField
   # @return [ContentTypeField] a new instance of ContentTypeField
   #
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:24
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:22
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:47
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:45
   def attempt_to_clean; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:66
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:64
   def content_type; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:101
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:99
   def decoded; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:68
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:66
   def default; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:38
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:36
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:96
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:94
   def encoded; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:92
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:90
   def filename; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:55
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:53
   def main_type; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:72
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:70
   def parameters; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:63
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:61
   def string; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:88
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:86
   def stringify(params); end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:59
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:57
   def sub_type; end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:80
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:78
   def value; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:163
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:162
   def get_mime_type(val); end
 
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:108
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:106
   def method_missing(name, *args, &block); end
 
   # Various special cases from random emails found that I am not going to change
   # the parser for
   #
-  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:119
+  # pkg:gem/mail#lib/mail/fields/content_type_field.rb:117
   def sanitize(val); end
 
   class << self
-    # pkg:gem/mail#lib/mail/fields/content_type_field.rb:19
+    # pkg:gem/mail#lib/mail/fields/content_type_field.rb:17
     def generate_boundary; end
 
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/content_type_field.rb:11
+    # pkg:gem/mail#lib/mail/fields/content_type_field.rb:9
     def singular?; end
 
-    # pkg:gem/mail#lib/mail/fields/content_type_field.rb:15
+    # pkg:gem/mail#lib/mail/fields/content_type_field.rb:13
     def with_boundary(type); end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/content_type_field.rb:8
+# pkg:gem/mail#lib/mail/fields/content_type_field.rb:6
 Mail::ContentTypeField::NAME = T.let(T.unsafe(nil), String)
 
 # = Date Field
@@ -1621,10 +1585,10 @@ Mail::ContentTypeField::NAME = T.let(T.unsafe(nil), String)
 #  mail['date']    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
 #  mail['Date']    #=> '#<Mail::Field:0x180e5e8 @field=#<Mail::DateField:0x180e1c4
 #
-# pkg:gem/mail#lib/mail/fields/date_field.rb:26
+# pkg:gem/mail#lib/mail/fields/date_field.rb:25
 class Mail::DateField < ::Mail::CommonDateField; end
 
-# pkg:gem/mail#lib/mail/fields/date_field.rb:27
+# pkg:gem/mail#lib/mail/fields/date_field.rb:26
 Mail::DateField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/date_time_element.rb:6
@@ -2160,66 +2124,66 @@ class Mail::Field
   #
   # @return [Field] a new instance of Field
   #
-  # pkg:gem/mail#lib/mail/field.rb:166
+  # pkg:gem/mail#lib/mail/field.rb:195
   def initialize(name, value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/field.rb:224
+  # pkg:gem/mail#lib/mail/field.rb:254
   def <=>(other); end
 
-  # pkg:gem/mail#lib/mail/field.rb:216
+  # pkg:gem/mail#lib/mail/field.rb:246
   def ==(other); end
 
-  # pkg:gem/mail#lib/mail/field.rb:186
+  # pkg:gem/mail#lib/mail/field.rb:216
   def field; end
 
-  # pkg:gem/mail#lib/mail/field.rb:182
+  # pkg:gem/mail#lib/mail/field.rb:212
   def field=(field); end
 
-  # pkg:gem/mail#lib/mail/field.rb:228
+  # pkg:gem/mail#lib/mail/field.rb:258
   def field_order_id; end
 
-  # pkg:gem/mail#lib/mail/field.rb:206
+  # pkg:gem/mail#lib/mail/field.rb:236
   def inspect; end
 
-  # pkg:gem/mail#lib/mail/field.rb:232
+  # pkg:gem/mail#lib/mail/field.rb:262
   def method_missing(name, *args, &block); end
 
-  # pkg:gem/mail#lib/mail/field.rb:190
+  # pkg:gem/mail#lib/mail/field.rb:220
   def name; end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/field.rb:220
+  # pkg:gem/mail#lib/mail/field.rb:250
   def responsible_for?(field_name); end
 
-  # pkg:gem/mail#lib/mail/field.rb:212
+  # pkg:gem/mail#lib/mail/field.rb:242
   def same(other); end
 
-  # pkg:gem/mail#lib/mail/field.rb:202
+  # pkg:gem/mail#lib/mail/field.rb:232
   def to_s; end
 
   # Returns the value of attribute unparsed_value.
   #
-  # pkg:gem/mail#lib/mail/field.rb:152
+  # pkg:gem/mail#lib/mail/field.rb:181
   def unparsed_value; end
 
-  # pkg:gem/mail#lib/mail/field.rb:194
+  # pkg:gem/mail#lib/mail/field.rb:224
   def value; end
 
-  # pkg:gem/mail#lib/mail/field.rb:198
+  # pkg:gem/mail#lib/mail/field.rb:228
   def value=(val); end
 
   private
 
-  # pkg:gem/mail#lib/mail/field.rb:253
+  # pkg:gem/mail#lib/mail/field.rb:283
   def create_field(name, value, charset); end
 
-  # pkg:gem/mail#lib/mail/field.rb:261
+  # pkg:gem/mail#lib/mail/field.rb:291
   def parse_field(name, value, charset); end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/field.rb:236
+  # pkg:gem/mail#lib/mail/field.rb:266
   def respond_to_missing?(method_name, include_private); end
 
   # 2.2.3. Long Header Fields
@@ -2231,11 +2195,11 @@ class Mail::Field
   #  treated in its unfolded form for further syntactic and semantic
   #  evaluation.
   #
-  # pkg:gem/mail#lib/mail/field.rb:279
+  # pkg:gem/mail#lib/mail/field.rb:309
   def unfold(string); end
 
   class << self
-    # pkg:gem/mail#lib/mail/field.rb:147
+    # pkg:gem/mail#lib/mail/field.rb:175
     def field_class_for(name); end
 
     # Parse a field from a raw header line:
@@ -2243,10 +2207,10 @@ class Mail::Field
     #  Mail::Field.parse("field-name: field data")
     #  # => #<Mail::Field …>
     #
-    # pkg:gem/mail#lib/mail/field.rb:122
+    # pkg:gem/mail#lib/mail/field.rb:150
     def parse(field, charset = T.unsafe(nil)); end
 
-    # pkg:gem/mail#lib/mail/field.rb:129
+    # pkg:gem/mail#lib/mail/field.rb:157
     def split(raw_field); end
   end
 end
@@ -2257,64 +2221,64 @@ Mail::Field::FIELDS_MAP = T.let(T.unsafe(nil), Hash)
 # pkg:gem/mail#lib/mail/field.rb:70
 Mail::Field::FIELD_NAME_MAP = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/mail#lib/mail/field.rb:240
+# pkg:gem/mail#lib/mail/field.rb:270
 Mail::Field::FIELD_ORDER_LOOKUP = T.let(T.unsafe(nil), Hash)
 
 # Generic Field Exception
 #
-# pkg:gem/mail#lib/mail/field.rb:75
+# pkg:gem/mail#lib/mail/field.rb:103
 class Mail::Field::FieldError < ::StandardError; end
 
-# pkg:gem/mail#lib/mail/field.rb:106
+# pkg:gem/mail#lib/mail/field.rb:134
 class Mail::Field::IncompleteParseError < ::Mail::Field::ParseError
   # @return [IncompleteParseError] a new instance of IncompleteParseError
   #
-  # pkg:gem/mail#lib/mail/field.rb:107
+  # pkg:gem/mail#lib/mail/field.rb:135
   def initialize(element, original_text, unparsed_index); end
 end
 
 # pkg:gem/mail#lib/mail/field.rb:36
 Mail::Field::KNOWN_FIELDS = T.let(T.unsafe(nil), Array)
 
-# pkg:gem/mail#lib/mail/field.rb:100
+# pkg:gem/mail#lib/mail/field.rb:128
 class Mail::Field::NilParseError < ::Mail::Field::ParseError
   # @return [NilParseError] a new instance of NilParseError
   #
-  # pkg:gem/mail#lib/mail/field.rb:101
+  # pkg:gem/mail#lib/mail/field.rb:129
   def initialize(element); end
 end
 
 # Raised when a parsing error has occurred (ie, a StructuredField has tried
 # to parse a field that is invalid or improperly written)
 #
-# pkg:gem/mail#lib/mail/field.rb:80
+# pkg:gem/mail#lib/mail/field.rb:108
 class Mail::Field::ParseError < ::Mail::Field::FieldError
   # @return [ParseError] a new instance of ParseError
   #
-  # pkg:gem/mail#lib/mail/field.rb:83
+  # pkg:gem/mail#lib/mail/field.rb:111
   def initialize(element, value, reason); end
 
-  # pkg:gem/mail#lib/mail/field.rb:81
+  # pkg:gem/mail#lib/mail/field.rb:109
   def element; end
 
-  # pkg:gem/mail#lib/mail/field.rb:81
+  # pkg:gem/mail#lib/mail/field.rb:109
   def element=(_arg0); end
 
-  # pkg:gem/mail#lib/mail/field.rb:81
+  # pkg:gem/mail#lib/mail/field.rb:109
   def reason; end
 
-  # pkg:gem/mail#lib/mail/field.rb:81
+  # pkg:gem/mail#lib/mail/field.rb:109
   def reason=(_arg0); end
 
-  # pkg:gem/mail#lib/mail/field.rb:81
+  # pkg:gem/mail#lib/mail/field.rb:109
   def value; end
 
-  # pkg:gem/mail#lib/mail/field.rb:81
+  # pkg:gem/mail#lib/mail/field.rb:109
   def value=(_arg0); end
 
   private
 
-  # pkg:gem/mail#lib/mail/field.rb:91
+  # pkg:gem/mail#lib/mail/field.rb:119
   def to_utf8(text); end
 end
 
@@ -2323,7 +2287,7 @@ Mail::Field::STRUCTURED_FIELDS = T.let(T.unsafe(nil), Array)
 
 # Raised when attempting to set a structured field's contents to an invalid syntax
 #
-# pkg:gem/mail#lib/mail/field.rb:114
+# pkg:gem/mail#lib/mail/field.rb:142
 class Mail::Field::SyntaxError < ::Mail::Field::FieldError; end
 
 # Field List class provides an enhanced array that keeps a list of
@@ -2429,10 +2393,10 @@ end
 #  mail[:from].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:from].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/from_field.rb:31
+# pkg:gem/mail#lib/mail/fields/from_field.rb:30
 class Mail::FromField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/from_field.rb:32
+# pkg:gem/mail#lib/mail/fields/from_field.rb:31
 Mail::FromField::NAME = T.let(T.unsafe(nil), String)
 
 # Provides access to a header object.
@@ -2677,12 +2641,12 @@ class Mail::IMAP < ::Mail::Retriever
   #
   # @raise [ArgumentError]
   #
-  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:133
+  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:136
   def connection(&block); end
 
   # Delete all emails from a IMAP mailbox
   #
-  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:119
+  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:122
   def delete_all(mailbox = T.unsafe(nil)); end
 
   # Find emails in a IMAP mailbox. Without any options, the 10 last received emails are returned.
@@ -2723,12 +2687,12 @@ class Mail::IMAP < ::Mail::Retriever
 
   # Start an IMAP session and ensures that it will be closed in any case.
   #
-  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:160
+  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:163
   def start(config = T.unsafe(nil), &block); end
 
   # Set default options
   #
-  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:144
+  # pkg:gem/mail#lib/mail/network/retriever_methods/imap.rb:147
   def validate_options(options); end
 end
 
@@ -2758,22 +2722,22 @@ end
 #
 #  mail[:in_reply_to].message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
 #
-# pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:31
+# pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:30
 class Mail::InReplyToField < ::Mail::CommonMessageIdField
   # @return [InReplyToField] a new instance of InReplyToField
   #
-  # pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:38
+  # pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:37
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:34
+    # pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:33
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:32
+# pkg:gem/mail#lib/mail/fields/in_reply_to_field.rb:31
 Mail::InReplyToField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/indifferent_hash.rb:8
@@ -2953,27 +2917,27 @@ end
 
 # keywords        =       "Keywords:" phrase *("," phrase) CRLF
 #
-# pkg:gem/mail#lib/mail/fields/keywords_field.rb:7
+# pkg:gem/mail#lib/mail/fields/keywords_field.rb:6
 class Mail::KeywordsField < ::Mail::NamedStructuredField
-  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:18
+  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:17
   def default; end
 
-  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:10
+  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:9
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:14
+  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:13
   def keywords; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:23
+  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:22
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:27
+  # pkg:gem/mail#lib/mail/fields/keywords_field.rb:26
   def do_encode; end
 end
 
-# pkg:gem/mail#lib/mail/fields/keywords_field.rb:8
+# pkg:gem/mail#lib/mail/fields/keywords_field.rb:7
 Mail::KeywordsField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/network/delivery_methods/logger_delivery.rb:4
@@ -3329,6 +3293,10 @@ class Mail::Message
   # the same content, ignoring the Message-ID field, unless BOTH emails have a defined and
   # different Message-ID value, then they are false.
   #
+  # Note that Mail creates Date and Mime-Type fields if they don't exist.
+  # The Date field is derived from the current time, so this needs to be allowed for in comparisons.
+  # (Mime-type does not depend on dynamic data, so cannot affect equality)
+  #
   # So, in practice the == operator works like this:
   #
   #  m1 = Mail.new("Subject: Hello\r\n\r\nHello")
@@ -3351,7 +3319,7 @@ class Mail::Message
   #  m2 = Mail.new("Message-ID: <DIFFERENT@test>\r\nSubject: Hello\r\n\r\nHello")
   #  m1 == m2 #=> false
   #
-  # pkg:gem/mail#lib/mail/message.rb:373
+  # pkg:gem/mail#lib/mail/message.rb:377
   def ==(other); end
 
   # Allows you to read an arbitrary header
@@ -3361,7 +3329,7 @@ class Mail::Message
   #  mail['foo'] = '1234'
   #  mail['foo'].to_s #=> '1234'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1334
+  # pkg:gem/mail#lib/mail/message.rb:1341
   def [](name); end
 
   # Allows you to add an arbitrary header
@@ -3371,29 +3339,29 @@ class Mail::Message
   #  mail['foo'] = '1234'
   #  mail['foo'].to_s #=> '1234'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1316
+  # pkg:gem/mail#lib/mail/message.rb:1323
   def []=(name, value); end
 
-  # pkg:gem/mail#lib/mail/message.rb:1558
+  # pkg:gem/mail#lib/mail/message.rb:1565
   def action; end
 
   # Adds a content type and charset if the body is US-ASCII
   #
   # Otherwise raises a warning
   #
-  # pkg:gem/mail#lib/mail/message.rb:1472
+  # pkg:gem/mail#lib/mail/message.rb:1479
   def add_charset; end
 
   # Adds a content transfer encoding
   #
-  # pkg:gem/mail#lib/mail/message.rb:1487
+  # pkg:gem/mail#lib/mail/message.rb:1494
   def add_content_transfer_encoding; end
 
   # Adds a content type and charset if the body is US-ASCII
   #
   # Otherwise raises a warning
   #
-  # pkg:gem/mail#lib/mail/message.rb:1465
+  # pkg:gem/mail#lib/mail/message.rb:1472
   def add_content_type; end
 
   # Creates a new empty Date field and inserts it in the correct order
@@ -3403,7 +3371,7 @@ class Mail::Message
   #
   # It will preserve any date you specify if you do.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1448
+  # pkg:gem/mail#lib/mail/message.rb:1455
   def add_date(date_val = T.unsafe(nil)); end
 
   # Adds a file to the message.  You have two options with this method, you can
@@ -3436,7 +3404,7 @@ class Mail::Message
   #
   # See also #attachments
   #
-  # pkg:gem/mail#lib/mail/message.rb:1757
+  # pkg:gem/mail#lib/mail/message.rb:1764
   def add_file(values); end
 
   # Creates a new empty Message-ID field and inserts it in the correct order
@@ -3446,7 +3414,7 @@ class Mail::Message
   #
   # It will preserve the message ID you specify if you do.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1438
+  # pkg:gem/mail#lib/mail/message.rb:1445
   def add_message_id(msg_id_val = T.unsafe(nil)); end
 
   # Creates a new empty Mime Version field and inserts it in the correct order
@@ -3456,20 +3424,20 @@ class Mail::Message
   #
   # It will preserve any date you specify if you do.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1458
+  # pkg:gem/mail#lib/mail/message.rb:1465
   def add_mime_version(ver_val = T.unsafe(nil)); end
 
   # Adds a part to the parts list or creates the part list
   #
-  # pkg:gem/mail#lib/mail/message.rb:1701
+  # pkg:gem/mail#lib/mail/message.rb:1708
   def add_part(part); end
 
-  # pkg:gem/mail#lib/mail/message.rb:1927
+  # pkg:gem/mail#lib/mail/message.rb:1934
   def all_parts; end
 
   # Returns the attachment data if there is any
   #
-  # pkg:gem/mail#lib/mail/message.rb:1918
+  # pkg:gem/mail#lib/mail/message.rb:1925
   def attachment; end
 
   # Returns true if this part is an attachment,
@@ -3477,7 +3445,7 @@ class Mail::Message
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1913
+  # pkg:gem/mail#lib/mail/message.rb:1920
   def attachment?; end
 
   # Returns an AttachmentsList object, which holds all of the attachments in
@@ -3514,7 +3482,7 @@ class Mail::Message
   #  # or by index
   #  mail.attachments[0]                #=> Mail::Part (first attachment)
   #
-  # pkg:gem/mail#lib/mail/message.rb:1626
+  # pkg:gem/mail#lib/mail/message.rb:1633
   def attachments; end
 
   # Returns the Bcc value of the mail object as an array of strings of
@@ -3543,7 +3511,7 @@ class Mail::Message
   #  mail.bcc << 'ada@test.lindsaar.net'
   #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:500
+  # pkg:gem/mail#lib/mail/message.rb:507
   def bcc(val = T.unsafe(nil)); end
 
   # Sets the Bcc value of the mail object, pass in a string of the field
@@ -3555,13 +3523,13 @@ class Mail::Message
   #  mail.bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:512
+  # pkg:gem/mail#lib/mail/message.rb:519
   def bcc=(val); end
 
   # Returns an array of addresses (the encoded value) in the Bcc field,
   # if no Bcc field, returns an empty array
   #
-  # pkg:gem/mail#lib/mail/message.rb:1306
+  # pkg:gem/mail#lib/mail/message.rb:1313
   def bcc_addrs; end
 
   # Returns the body of the message object. Or, if passed
@@ -3575,7 +3543,7 @@ class Mail::Message
   #  mail.body 'This is another body'
   #  mail.body #=> #<Mail::Body:0x13919c @raw_source="This is anothe...
   #
-  # pkg:gem/mail#lib/mail/message.rb:1251
+  # pkg:gem/mail#lib/mail/message.rb:1258
   def body(value = T.unsafe(nil)); end
 
   # Sets the body object of the message object.
@@ -3604,23 +3572,23 @@ class Mail::Message
   #  mail.parts.length #=> 2
   #  mail.parts.last.content_type.content_type #=> 'This is a body'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1237
+  # pkg:gem/mail#lib/mail/message.rb:1244
   def body=(value); end
 
-  # pkg:gem/mail#lib/mail/message.rb:1260
+  # pkg:gem/mail#lib/mail/message.rb:1267
   def body_encoding(value = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:1268
+  # pkg:gem/mail#lib/mail/message.rb:1275
   def body_encoding=(value); end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1554
+  # pkg:gem/mail#lib/mail/message.rb:1561
   def bounced?; end
 
   # Returns the current boundary for this message part
   #
-  # pkg:gem/mail#lib/mail/message.rb:1583
+  # pkg:gem/mail#lib/mail/message.rb:1590
   def boundary; end
 
   # Returns the Cc value of the mail object as an array of strings of
@@ -3649,7 +3617,7 @@ class Mail::Message
   #  mail.cc << 'ada@test.lindsaar.net'
   #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:541
+  # pkg:gem/mail#lib/mail/message.rb:548
   def cc(val = T.unsafe(nil)); end
 
   # Sets the Cc value of the mail object, pass in a string of the field
@@ -3661,85 +3629,85 @@ class Mail::Message
   #  mail.cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:553
+  # pkg:gem/mail#lib/mail/message.rb:560
   def cc=(val); end
 
   # Returns an array of addresses (the encoded value) in the Cc field,
   # if no Cc field, returns an empty array
   #
-  # pkg:gem/mail#lib/mail/message.rb:1300
+  # pkg:gem/mail#lib/mail/message.rb:1307
   def cc_addrs; end
 
   # Returns the character set defined in the content type field
   #
-  # pkg:gem/mail#lib/mail/message.rb:1497
+  # pkg:gem/mail#lib/mail/message.rb:1504
   def charset; end
 
   # Sets the charset to the supplied value.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1506
+  # pkg:gem/mail#lib/mail/message.rb:1513
   def charset=(value); end
 
-  # pkg:gem/mail#lib/mail/message.rb:557
+  # pkg:gem/mail#lib/mail/message.rb:564
   def comments(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:561
+  # pkg:gem/mail#lib/mail/message.rb:568
   def comments=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:565
+  # pkg:gem/mail#lib/mail/message.rb:572
   def content_description(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:569
+  # pkg:gem/mail#lib/mail/message.rb:576
   def content_description=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:573
+  # pkg:gem/mail#lib/mail/message.rb:580
   def content_disposition(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:577
+  # pkg:gem/mail#lib/mail/message.rb:584
   def content_disposition=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:581
+  # pkg:gem/mail#lib/mail/message.rb:588
   def content_id(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:585
+  # pkg:gem/mail#lib/mail/message.rb:592
   def content_id=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:589
+  # pkg:gem/mail#lib/mail/message.rb:596
   def content_location(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:593
+  # pkg:gem/mail#lib/mail/message.rb:600
   def content_location=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:597
+  # pkg:gem/mail#lib/mail/message.rb:604
   def content_transfer_encoding(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:601
+  # pkg:gem/mail#lib/mail/message.rb:608
   def content_transfer_encoding=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:605
+  # pkg:gem/mail#lib/mail/message.rb:612
   def content_type(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:609
+  # pkg:gem/mail#lib/mail/message.rb:616
   def content_type=(val); end
 
   # Returns the content type parameters
   #
-  # pkg:gem/mail#lib/mail/message.rb:1523
+  # pkg:gem/mail#lib/mail/message.rb:1530
   def content_type_parameters; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1773
+  # pkg:gem/mail#lib/mail/message.rb:1780
   def convert_to_multipart; end
 
-  # pkg:gem/mail#lib/mail/message.rb:613
+  # pkg:gem/mail#lib/mail/message.rb:620
   def date(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:617
+  # pkg:gem/mail#lib/mail/message.rb:624
   def date=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:1907
+  # pkg:gem/mail#lib/mail/message.rb:1914
   def decode_body; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1886
+  # pkg:gem/mail#lib/mail/message.rb:1893
   def decoded; end
 
   # Returns the default value of the field requested as a symbol.
@@ -3750,7 +3718,7 @@ class Mail::Message
   # their value, the address field types will return a single addr_spec or an array of
   # addr_specs if there is more than one.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1204
+  # pkg:gem/mail#lib/mail/message.rb:1211
   def default(sym, val = T.unsafe(nil)); end
 
   # Delivers a mail object.
@@ -3864,14 +3832,14 @@ class Mail::Message
 
   # returns the part in a multipart/report email that has the content-type delivery-status
   #
-  # pkg:gem/mail#lib/mail/message.rb:1543
+  # pkg:gem/mail#lib/mail/message.rb:1550
   def delivery_status_part; end
 
   # Returns true if the message is a multipart/report; report-type=delivery-status;
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1538
+  # pkg:gem/mail#lib/mail/message.rb:1545
   def delivery_status_report?; end
 
   # Returns the list of addresses this message should be sent to by
@@ -3885,26 +3853,26 @@ class Mail::Message
   #  mail.destinations.length #=> 3
   #  mail.destinations.first #=> 'mikel@test.lindsaar.net'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1282
+  # pkg:gem/mail#lib/mail/message.rb:1289
   def destinations; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1570
+  # pkg:gem/mail#lib/mail/message.rb:1577
   def diagnostic_code; end
 
   # Outputs an encoded string representation of the mail message including
   # all headers, attachments, etc.  This is an encoded email in US-ASCII,
   # so it is able to be directly sent to an email server.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1803
+  # pkg:gem/mail#lib/mail/message.rb:1810
   def encoded; end
 
-  # pkg:gem/mail#lib/mail/message.rb:418
+  # pkg:gem/mail#lib/mail/message.rb:425
   def envelope_date; end
 
-  # pkg:gem/mail#lib/mail/message.rb:414
+  # pkg:gem/mail#lib/mail/message.rb:421
   def envelope_from; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1566
+  # pkg:gem/mail#lib/mail/message.rb:1573
   def error_status; end
 
   # Returns a list of parser errors on the header, each field that had an error
@@ -3920,23 +3888,23 @@ class Mail::Message
   #  message.errors.size #=> 1
   #  message.errors.first[0] #=> "Content-Transfer-Encoding"
   #  message.errors.first[1] #=> "weirdo"
-  #  message.errors.first[3] #=> <The original error message exception>
+  #  message.errors.first[2] #=> <The original error message exception>
   #
   # This is a good first defence on detecting spam by the way.  Some spammers send
   # invalid emails to try and get email parsers to give up parsing them.
   #
-  # pkg:gem/mail#lib/mail/message.rb:471
+  # pkg:gem/mail#lib/mail/message.rb:478
   def errors; end
 
   # Returns the filename of the attachment
   #
-  # pkg:gem/mail#lib/mail/message.rb:1923
+  # pkg:gem/mail#lib/mail/message.rb:1930
   def filename; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1562
+  # pkg:gem/mail#lib/mail/message.rb:1569
   def final_recipient; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1931
+  # pkg:gem/mail#lib/mail/message.rb:1938
   def find_first_mime_type(mt); end
 
   # Returns the From value of the mail object as an array of strings of
@@ -3965,7 +3933,7 @@ class Mail::Message
   #  mail.from << 'ada@test.lindsaar.net'
   #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:658
+  # pkg:gem/mail#lib/mail/message.rb:665
   def from(val = T.unsafe(nil)); end
 
   # Sets the From value of the mail object, pass in a string of the field
@@ -3977,33 +3945,33 @@ class Mail::Message
   #  mail.from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:670
+  # pkg:gem/mail#lib/mail/message.rb:677
   def from=(val); end
 
   # Returns an array of addresses (the encoded value) in the From field,
   # if no From field, returns an empty array
   #
-  # pkg:gem/mail#lib/mail/message.rb:1288
+  # pkg:gem/mail#lib/mail/message.rb:1295
   def from_addrs; end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1630
+  # pkg:gem/mail#lib/mail/message.rb:1637
   def has_attachments?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1423
+  # pkg:gem/mail#lib/mail/message.rb:1430
   def has_charset?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1428
+  # pkg:gem/mail#lib/mail/message.rb:1435
   def has_content_transfer_encoding?; end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1418
+  # pkg:gem/mail#lib/mail/message.rb:1425
   def has_content_type?; end
 
   # Returns true if the message has a Date field, the field may or may
@@ -4011,7 +3979,7 @@ class Mail::Message
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1408
+  # pkg:gem/mail#lib/mail/message.rb:1415
   def has_date?; end
 
   # Returns true if the message has a message ID field, the field may or may
@@ -4019,15 +3987,15 @@ class Mail::Message
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1402
+  # pkg:gem/mail#lib/mail/message.rb:1409
   def has_message_id?; end
 
-  # Returns true if the message has a Mime-Version field, the field may or may
+  # Returns true if the message has a MIME-Version field, the field may or may
   # not have a value, but the field exists or not.
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1414
+  # pkg:gem/mail#lib/mail/message.rb:1421
   def has_mime_version?; end
 
   # Returns the header object of the message object. Or, if passed
@@ -4042,7 +4010,7 @@ class Mail::Message
   #  mail.header 'To: mikel\r\nFrom: you'
   #  mail.header #=> #<Mail::Header:0x13ce14 @raw_source="To: mikel\r\nFr...
   #
-  # pkg:gem/mail#lib/mail/message.rb:443
+  # pkg:gem/mail#lib/mail/message.rb:450
   def header(value = T.unsafe(nil)); end
 
   # Sets the header of the message object.
@@ -4052,36 +4020,36 @@ class Mail::Message
   #  mail.header = 'To: mikel@test.lindsaar.net\r\nFrom: Bob@bob.com'
   #  mail.header #=> <#Mail::Header
   #
-  # pkg:gem/mail#lib/mail/message.rb:428
+  # pkg:gem/mail#lib/mail/message.rb:435
   def header=(value); end
 
   # Returns an FieldList of all the fields in the header in the order that
   # they appear in the header
   #
-  # pkg:gem/mail#lib/mail/message.rb:1396
+  # pkg:gem/mail#lib/mail/message.rb:1403
   def header_fields; end
 
   # Provides a way to set custom headers, by passing in a hash
   #
-  # pkg:gem/mail#lib/mail/message.rb:448
+  # pkg:gem/mail#lib/mail/message.rb:455
   def headers(hash = T.unsafe(nil)); end
 
   # Accessor for html_part
   #
-  # pkg:gem/mail#lib/mail/message.rb:1635
+  # pkg:gem/mail#lib/mail/message.rb:1642
   def html_part(&block); end
 
   # Helper to add a html part to a multipart/alternative email.  If this and
   # text_part are both defined in a message, then it will be a multipart/alternative
   # message and set itself that way.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1655
+  # pkg:gem/mail#lib/mail/message.rb:1662
   def html_part=(msg); end
 
-  # pkg:gem/mail#lib/mail/message.rb:674
+  # pkg:gem/mail#lib/mail/message.rb:681
   def in_reply_to(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:678
+  # pkg:gem/mail#lib/mail/message.rb:685
   def in_reply_to=(val); end
 
   # pkg:gem/mail#lib/mail/message.rb:240
@@ -4090,10 +4058,10 @@ class Mail::Message
   # pkg:gem/mail#lib/mail/message.rb:236
   def inform_observers; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1873
+  # pkg:gem/mail#lib/mail/message.rb:1880
   def inspect; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1877
+  # pkg:gem/mail#lib/mail/message.rb:1884
   def inspect_structure; end
 
   # Returns whether message will be marked for deletion.
@@ -4108,18 +4076,18 @@ class Mail::Message
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1960
+  # pkg:gem/mail#lib/mail/message.rb:1967
   def is_marked_for_delete?; end
 
-  # pkg:gem/mail#lib/mail/message.rb:682
+  # pkg:gem/mail#lib/mail/message.rb:689
   def keywords(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:686
+  # pkg:gem/mail#lib/mail/message.rb:693
   def keywords=(val); end
 
   # Returns the main content type
   #
-  # pkg:gem/mail#lib/mail/message.rb:1513
+  # pkg:gem/mail#lib/mail/message.rb:1520
   def main_type; end
 
   # Sets whether this message should be deleted at session close (i.e.
@@ -4127,7 +4095,7 @@ class Mail::Message
   # using the #find_and_delete method, or by calling #find with
   # :delete_after_find set to true.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1947
+  # pkg:gem/mail#lib/mail/message.rb:1954
   def mark_for_delete=(value = T.unsafe(nil)); end
 
   # Returns the Message-ID of the mail object.  Note, per RFC 2822 the Message ID
@@ -4144,7 +4112,7 @@ class Mail::Message
   #  mail.message_id '<1234@message.id>'
   #  mail.message_id #=> '1234@message.id'
   #
-  # pkg:gem/mail#lib/mail/message.rb:703
+  # pkg:gem/mail#lib/mail/message.rb:710
   def message_id(val = T.unsafe(nil)); end
 
   # Sets the Message-ID. Note, per RFC 2822 the Message ID consists of what is INSIDE
@@ -4153,7 +4121,7 @@ class Mail::Message
   #  mail.message_id = '<1234@message.id>'
   #  mail.message_id #=> '1234@message.id'
   #
-  # pkg:gem/mail#lib/mail/message.rb:712
+  # pkg:gem/mail#lib/mail/message.rb:719
   def message_id=(val); end
 
   # Method Missing in this implementation allows you to set any of the
@@ -4196,12 +4164,12 @@ class Mail::Message
   #  mail.resent_msg_id '<4567@resent_msg_id.lindsaar.net>'
   #  mail.resent_msg_id #=> '<4567@resent_msg_id.lindsaar.net>'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1377
+  # pkg:gem/mail#lib/mail/message.rb:1384
   def method_missing(name, *args, &block); end
 
   # Returns the MIME media type of part we are on, this is taken from the content-type header
   #
-  # pkg:gem/mail#lib/mail/message.rb:1492
+  # pkg:gem/mail#lib/mail/message.rb:1499
   def mime_type; end
 
   # Returns the MIME version of the email as a string
@@ -4218,7 +4186,7 @@ class Mail::Message
   #  mail.mime_version '1.0'
   #  mail.mime_version #=> '1.0'
   #
-  # pkg:gem/mail#lib/mail/message.rb:729
+  # pkg:gem/mail#lib/mail/message.rb:736
   def mime_version(val = T.unsafe(nil)); end
 
   # Sets the MIME version of the email by accepting a string
@@ -4228,21 +4196,21 @@ class Mail::Message
   #  mail.mime_version = '1.0'
   #  mail.mime_version #=> '1.0'
   #
-  # pkg:gem/mail#lib/mail/message.rb:739
+  # pkg:gem/mail#lib/mail/message.rb:746
   def mime_version=(val); end
 
   # Returns true if the message is multipart
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1528
+  # pkg:gem/mail#lib/mail/message.rb:1535
   def multipart?; end
 
   # Returns true if the message is a multipart/report
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1533
+  # pkg:gem/mail#lib/mail/message.rb:1540
   def multipart_report?; end
 
   # Allows you to add a part in block form to an existing mail message object
@@ -4258,12 +4226,12 @@ class Mail::Message
   #
   # @yield [new_part]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1722
+  # pkg:gem/mail#lib/mail/message.rb:1729
   def part(params = T.unsafe(nil)); end
 
   # Returns a parts list object of all the parts in the message
   #
-  # pkg:gem/mail#lib/mail/message.rb:1588
+  # pkg:gem/mail#lib/mail/message.rb:1595
   def parts; end
 
   # If set to false, mail will go through the motions of doing a delivery,
@@ -4340,7 +4308,7 @@ class Mail::Message
   # type field that you can see at the top of any email that has come
   # from a mailbox
   #
-  # pkg:gem/mail#lib/mail/message.rb:410
+  # pkg:gem/mail#lib/mail/message.rb:417
   def raw_envelope; end
 
   # Provides access to the raw source of the message as it was when it
@@ -4352,31 +4320,31 @@ class Mail::Message
   #  mail = Mail.new('This is an invalid email message')
   #  mail.raw_source #=> "This is an invalid email message"
   #
-  # pkg:gem/mail#lib/mail/message.rb:397
+  # pkg:gem/mail#lib/mail/message.rb:404
   def raw_source; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1899
+  # pkg:gem/mail#lib/mail/message.rb:1906
   def read; end
 
   # Encodes the message, calls encode on all its parts, gets an email message
   # ready to send
   #
-  # pkg:gem/mail#lib/mail/message.rb:1791
+  # pkg:gem/mail#lib/mail/message.rb:1798
   def ready_to_send!; end
 
-  # pkg:gem/mail#lib/mail/message.rb:743
+  # pkg:gem/mail#lib/mail/message.rb:750
   def received(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:751
+  # pkg:gem/mail#lib/mail/message.rb:758
   def received=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:755
+  # pkg:gem/mail#lib/mail/message.rb:762
   def references(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:759
+  # pkg:gem/mail#lib/mail/message.rb:766
   def references=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:1574
+  # pkg:gem/mail#lib/mail/message.rb:1581
   def remote_mta; end
 
   # pkg:gem/mail#lib/mail/message.rb:282
@@ -4408,7 +4376,7 @@ class Mail::Message
   #  mail.reply_to << 'ada@test.lindsaar.net'
   #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:788
+  # pkg:gem/mail#lib/mail/message.rb:795
   def reply_to(val = T.unsafe(nil)); end
 
   # Sets the Reply-To value of the mail object, pass in a string of the field
@@ -4420,7 +4388,7 @@ class Mail::Message
   #  mail.reply_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.reply_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:800
+  # pkg:gem/mail#lib/mail/message.rb:807
   def reply_to=(val); end
 
   # Returns the Resent-Bcc value of the mail object as an array of strings of
@@ -4449,7 +4417,7 @@ class Mail::Message
   #  mail.resent_bcc << 'ada@test.lindsaar.net'
   #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:829
+  # pkg:gem/mail#lib/mail/message.rb:836
   def resent_bcc(val = T.unsafe(nil)); end
 
   # Sets the Resent-Bcc value of the mail object, pass in a string of the field
@@ -4461,7 +4429,7 @@ class Mail::Message
   #  mail.resent_bcc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.resent_bcc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:841
+  # pkg:gem/mail#lib/mail/message.rb:848
   def resent_bcc=(val); end
 
   # Returns the Resent-Cc value of the mail object as an array of strings of
@@ -4490,7 +4458,7 @@ class Mail::Message
   #  mail.resent_cc << 'ada@test.lindsaar.net'
   #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:870
+  # pkg:gem/mail#lib/mail/message.rb:877
   def resent_cc(val = T.unsafe(nil)); end
 
   # Sets the Resent-Cc value of the mail object, pass in a string of the field
@@ -4502,13 +4470,13 @@ class Mail::Message
   #  mail.resent_cc = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.resent_cc #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:882
+  # pkg:gem/mail#lib/mail/message.rb:889
   def resent_cc=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:886
+  # pkg:gem/mail#lib/mail/message.rb:893
   def resent_date(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:890
+  # pkg:gem/mail#lib/mail/message.rb:897
   def resent_date=(val); end
 
   # Returns the Resent-From value of the mail object as an array of strings of
@@ -4537,7 +4505,7 @@ class Mail::Message
   #  mail.resent_from << 'ada@test.lindsaar.net'
   #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:919
+  # pkg:gem/mail#lib/mail/message.rb:926
   def resent_from(val = T.unsafe(nil)); end
 
   # Sets the Resent-From value of the mail object, pass in a string of the field
@@ -4549,13 +4517,13 @@ class Mail::Message
   #  mail.resent_from = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.resent_from #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:931
+  # pkg:gem/mail#lib/mail/message.rb:938
   def resent_from=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:935
+  # pkg:gem/mail#lib/mail/message.rb:942
   def resent_message_id(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:939
+  # pkg:gem/mail#lib/mail/message.rb:946
   def resent_message_id=(val); end
 
   # Returns the Resent-Sender value of the mail object, as a single string of an address
@@ -4574,7 +4542,7 @@ class Mail::Message
   #  mail.resent_sender 'Mikel <mikel@test.lindsaar.net>'
   #  mail.resent_sender #=> 'mikel@test.lindsaar.net'
   #
-  # pkg:gem/mail#lib/mail/message.rb:958
+  # pkg:gem/mail#lib/mail/message.rb:965
   def resent_sender(val = T.unsafe(nil)); end
 
   # Sets the Resent-Sender value of the mail object, pass in a string of the field
@@ -4584,7 +4552,7 @@ class Mail::Message
   #  mail.resent_sender = 'Mikel <mikel@test.lindsaar.net>'
   #  mail.resent_sender #=> 'mikel@test.lindsaar.net'
   #
-  # pkg:gem/mail#lib/mail/message.rb:968
+  # pkg:gem/mail#lib/mail/message.rb:975
   def resent_sender=(val); end
 
   # Returns the Resent-To value of the mail object as an array of strings of
@@ -4613,7 +4581,7 @@ class Mail::Message
   #  mail.resent_to << 'ada@test.lindsaar.net'
   #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:997
+  # pkg:gem/mail#lib/mail/message.rb:1004
   def resent_to(val = T.unsafe(nil)); end
 
   # Sets the Resent-To value of the mail object, pass in a string of the field
@@ -4625,22 +4593,22 @@ class Mail::Message
   #  mail.resent_to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.resent_to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:1009
+  # pkg:gem/mail#lib/mail/message.rb:1016
   def resent_to=(val); end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1578
+  # pkg:gem/mail#lib/mail/message.rb:1585
   def retryable?; end
 
   # Returns the return path of the mail object, or sets it if you pass a string
   #
-  # pkg:gem/mail#lib/mail/message.rb:1014
+  # pkg:gem/mail#lib/mail/message.rb:1021
   def return_path(val = T.unsafe(nil)); end
 
   # Sets the return path of the object
   #
-  # pkg:gem/mail#lib/mail/message.rb:1019
+  # pkg:gem/mail#lib/mail/message.rb:1026
   def return_path=(val); end
 
   # Returns the Sender value of the mail object, as a single string of an address
@@ -4658,7 +4626,7 @@ class Mail::Message
   #  mail.sender 'Mikel <mikel@test.lindsaar.net>'
   #  mail.sender #=> 'mikel@test.lindsaar.net'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1037
+  # pkg:gem/mail#lib/mail/message.rb:1044
   def sender(val = T.unsafe(nil)); end
 
   # Sets the Sender value of the mail object, pass in a string of the field
@@ -4668,12 +4636,12 @@ class Mail::Message
   #  mail.sender = 'Mikel <mikel@test.lindsaar.net>'
   #  mail.sender #=> 'mikel@test.lindsaar.net'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1047
+  # pkg:gem/mail#lib/mail/message.rb:1054
   def sender=(val); end
 
   # Sets the envelope from for the email
   #
-  # pkg:gem/mail#lib/mail/message.rb:402
+  # pkg:gem/mail#lib/mail/message.rb:409
   def set_envelope(val); end
 
   # Skips the deletion of this message. All other messages
@@ -4681,7 +4649,7 @@ class Mail::Message
   # #find exits). Only has an effect if you're using #find_and_delete
   # or #find with :delete_after_find set to true.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1939
+  # pkg:gem/mail#lib/mail/message.rb:1946
   def skip_deletion; end
 
   # Returns the SMTP Envelope From value of the mail object, as a single
@@ -4701,7 +4669,7 @@ class Mail::Message
   #  mail.smtp_envelope_from 'Mikel <mikel@test.lindsaar.net>'
   #  mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1067
+  # pkg:gem/mail#lib/mail/message.rb:1074
   def smtp_envelope_from(val = T.unsafe(nil)); end
 
   # Sets the From address on the SMTP Envelope.
@@ -4711,7 +4679,7 @@ class Mail::Message
   #  mail.smtp_envelope_from = 'Mikel <mikel@test.lindsaar.net>'
   #  mail.smtp_envelope_from #=> 'mikel@test.lindsaar.net'
   #
-  # pkg:gem/mail#lib/mail/message.rb:1081
+  # pkg:gem/mail#lib/mail/message.rb:1088
   def smtp_envelope_from=(val); end
 
   # Returns the SMTP Envelope To value of the mail object.
@@ -4730,7 +4698,7 @@ class Mail::Message
   #  mail.smtp_envelope_to ['Mikel <mikel@test.lindsaar.net>', 'Lindsaar <lindsaar@test.lindsaar.net>']
   #  mail.smtp_envelope_to #=> ['mikel@test.lindsaar.net', 'lindsaar@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:1100
+  # pkg:gem/mail#lib/mail/message.rb:1107
   def smtp_envelope_to(val = T.unsafe(nil)); end
 
   # Sets the To addresses on the SMTP Envelope.
@@ -4743,12 +4711,12 @@ class Mail::Message
   #  mail.smtp_envelope_to = ['Mikel <mikel@test.lindsaar.net>', 'Lindsaar <lindsaar@test.lindsaar.net>']
   #  mail.smtp_envelope_to #=> ['mikel@test.lindsaar.net', 'lindsaar@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:1117
+  # pkg:gem/mail#lib/mail/message.rb:1124
   def smtp_envelope_to=(val); end
 
   # Returns the sub content type
   #
-  # pkg:gem/mail#lib/mail/message.rb:1518
+  # pkg:gem/mail#lib/mail/message.rb:1525
   def sub_type; end
 
   # Returns the decoded value of the subject field, as a single string.
@@ -4767,7 +4735,7 @@ class Mail::Message
   #  mail.subject "G'Day mate"
   #  mail.subject #=> "G'Day mate"
   #
-  # pkg:gem/mail#lib/mail/message.rb:1142
+  # pkg:gem/mail#lib/mail/message.rb:1149
   def subject(val = T.unsafe(nil)); end
 
   # Sets the Subject value of the mail object, pass in a string of the field
@@ -4777,24 +4745,24 @@ class Mail::Message
   #  mail.subject = '=?UTF-8?Q?This_is_=E3=81=82_string?='
   #  mail.subject #=> "This is あ string"
   #
-  # pkg:gem/mail#lib/mail/message.rb:1152
+  # pkg:gem/mail#lib/mail/message.rb:1159
   def subject=(val); end
 
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/message.rb:1964
+  # pkg:gem/mail#lib/mail/message.rb:1971
   def text?; end
 
   # Accessor for text_part
   #
-  # pkg:gem/mail#lib/mail/message.rb:1644
+  # pkg:gem/mail#lib/mail/message.rb:1651
   def text_part(&block); end
 
   # Helper to add a text part to a multipart/alternative email.  If this and
   # html_part are both defined in a message, then it will be a multipart/alternative
   # message and set itself that way.
   #
-  # pkg:gem/mail#lib/mail/message.rb:1679
+  # pkg:gem/mail#lib/mail/message.rb:1686
   def text_part=(msg); end
 
   # Returns the To value of the mail object as an array of strings of
@@ -4823,7 +4791,7 @@ class Mail::Message
   #  mail.to << 'ada@test.lindsaar.net'
   #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:1181
+  # pkg:gem/mail#lib/mail/message.rb:1188
   def to(val = T.unsafe(nil)); end
 
   # Sets the To value of the mail object, pass in a string of the field
@@ -4835,79 +4803,79 @@ class Mail::Message
   #  mail.to = 'Mikel <mikel@test.lindsaar.net>, ada@test.lindsaar.net'
   #  mail.to #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
   #
-  # pkg:gem/mail#lib/mail/message.rb:1193
+  # pkg:gem/mail#lib/mail/message.rb:1200
   def to=(val); end
 
   # Returns an array of addresses (the encoded value) in the To field,
   # if no To field, returns an empty array
   #
-  # pkg:gem/mail#lib/mail/message.rb:1294
+  # pkg:gem/mail#lib/mail/message.rb:1301
   def to_addrs; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1869
+  # pkg:gem/mail#lib/mail/message.rb:1876
   def to_s; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1823
+  # pkg:gem/mail#lib/mail/message.rb:1830
   def to_yaml(opts = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:621
+  # pkg:gem/mail#lib/mail/message.rb:628
   def transport_encoding(val = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/message.rb:629
+  # pkg:gem/mail#lib/mail/message.rb:636
   def transport_encoding=(val); end
 
-  # pkg:gem/mail#lib/mail/message.rb:1811
+  # pkg:gem/mail#lib/mail/message.rb:1818
   def without_attachments!; end
 
   private
 
-  # pkg:gem/mail#lib/mail/message.rb:2067
+  # pkg:gem/mail#lib/mail/message.rb:2074
   def add_boundary; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2032
+  # pkg:gem/mail#lib/mail/message.rb:2039
   def add_encoding_to_body; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2062
+  # pkg:gem/mail#lib/mail/message.rb:2069
   def add_multipart_alternate_header; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2079
+  # pkg:gem/mail#lib/mail/message.rb:2082
   def add_multipart_mixed_header; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2048
+  # pkg:gem/mail#lib/mail/message.rb:2055
   def add_required_fields; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2056
+  # pkg:gem/mail#lib/mail/message.rb:2063
   def add_required_message_fields; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2025
+  # pkg:gem/mail#lib/mail/message.rb:2032
   def allowed_encodings; end
 
   # see comments to body=. We take data and process it lazily
   #
-  # pkg:gem/mail#lib/mail/message.rb:1990
+  # pkg:gem/mail#lib/mail/message.rb:1997
   def body_lazy(value); end
 
-  # pkg:gem/mail#lib/mail/message.rb:2152
+  # pkg:gem/mail#lib/mail/message.rb:2155
   def decode_body_as_text; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2142
+  # pkg:gem/mail#lib/mail/message.rb:2145
   def do_delivery; end
 
   # Returns the filename of the attachment (if it exists) or returns nil
   #
-  # pkg:gem/mail#lib/mail/message.rb:2124
+  # pkg:gem/mail#lib/mail/message.rb:2127
   def find_attachment; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2038
+  # pkg:gem/mail#lib/mail/message.rb:2045
   def identify_and_set_transfer_encoding; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2086
+  # pkg:gem/mail#lib/mail/message.rb:2089
   def init_with_hash(hash); end
 
-  # pkg:gem/mail#lib/mail/message.rb:2116
+  # pkg:gem/mail#lib/mail/message.rb:2119
   def init_with_string(string); end
 
-  # pkg:gem/mail#lib/mail/message.rb:384
+  # pkg:gem/mail#lib/mail/message.rb:391
   def initialize_copy(original); end
 
   # 2.1. General Description
@@ -4918,19 +4886,19 @@ class Mail::Message
   #   follows the header and is separated from the header by an empty line
   #   (i.e., a line with nothing preceding the CRLF).
   #
-  # pkg:gem/mail#lib/mail/message.rb:1979
+  # pkg:gem/mail#lib/mail/message.rb:1986
   def parse_message; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2005
+  # pkg:gem/mail#lib/mail/message.rb:2012
   def process_body_raw; end
 
-  # pkg:gem/mail#lib/mail/message.rb:1985
+  # pkg:gem/mail#lib/mail/message.rb:1992
   def raw_source=(value); end
 
-  # pkg:gem/mail#lib/mail/message.rb:2021
+  # pkg:gem/mail#lib/mail/message.rb:2028
   def separate_parts; end
 
-  # pkg:gem/mail#lib/mail/message.rb:2013
+  # pkg:gem/mail#lib/mail/message.rb:2020
   def set_envelope_header; end
 
   class << self
@@ -4940,18 +4908,18 @@ class Mail::Message
     # pkg:gem/mail#lib/mail/message.rb:233
     def default_charset=(charset); end
 
-    # pkg:gem/mail#lib/mail/message.rb:1865
+    # pkg:gem/mail#lib/mail/message.rb:1872
     def from_hash(hash); end
 
-    # pkg:gem/mail#lib/mail/message.rb:1843
+    # pkg:gem/mail#lib/mail/message.rb:1850
     def from_yaml(str); end
   end
 end
 
-# pkg:gem/mail#lib/mail/message.rb:1970
+# pkg:gem/mail#lib/mail/message.rb:1977
 Mail::Message::HEADER_SEPARATOR = T.let(T.unsafe(nil), Regexp)
 
-# pkg:gem/mail#lib/mail/message.rb:1770
+# pkg:gem/mail#lib/mail/message.rb:1777
 Mail::Message::MULTIPART_CONVERSION_CONTENT_FIELDS = T.let(T.unsafe(nil), Array)
 
 # Only one Message-ID field may appear in a header.
@@ -4969,25 +4937,25 @@ Mail::Message::MULTIPART_CONVERSION_CONTENT_FIELDS = T.let(T.unsafe(nil), Array)
 #  mail[:message_id].message_id   #=> 'F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom'
 #  mail[:message_id].message_ids  #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
 #
-# pkg:gem/mail#lib/mail/fields/message_id_field.rb:21
+# pkg:gem/mail#lib/mail/fields/message_id_field.rb:20
 class Mail::MessageIdField < ::Mail::CommonMessageIdField
   # @return [MessageIdField] a new instance of MessageIdField
   #
-  # pkg:gem/mail#lib/mail/fields/message_id_field.rb:28
+  # pkg:gem/mail#lib/mail/fields/message_id_field.rb:27
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/message_id_field.rb:33
+  # pkg:gem/mail#lib/mail/fields/message_id_field.rb:32
   def message_ids; end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/message_id_field.rb:24
+    # pkg:gem/mail#lib/mail/fields/message_id_field.rb:23
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/message_id_field.rb:22
+# pkg:gem/mail#lib/mail/fields/message_id_field.rb:21
 Mail::MessageIdField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/message_ids_element.rb:7
@@ -5034,40 +5002,40 @@ class Mail::MimeVersionElement
   def minor; end
 end
 
-# pkg:gem/mail#lib/mail/fields/mime_version_field.rb:7
+# pkg:gem/mail#lib/mail/fields/mime_version_field.rb:6
 class Mail::MimeVersionField < ::Mail::NamedStructuredField
   # @return [MimeVersionField] a new instance of MimeVersionField
   #
-  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:14
+  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:13
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:39
+  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:38
   def decoded; end
 
-  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:19
+  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:18
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:35
+  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:34
   def encoded; end
 
-  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:27
+  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:26
   def major; end
 
-  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:31
+  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:30
   def minor; end
 
-  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:23
+  # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:22
   def version; end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:10
+    # pkg:gem/mail#lib/mail/fields/mime_version_field.rb:9
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/mime_version_field.rb:8
+# pkg:gem/mail#lib/mail/fields/mime_version_field.rb:7
 Mail::MimeVersionField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/multibyte/unicode.rb:3
@@ -5771,19 +5739,19 @@ Mail::Multibyte::Unicode::WHITESPACE = T.let(T.unsafe(nil), Array)
 # pkg:gem/mail#lib/mail/multibyte.rb:64
 Mail::Multibyte::VALID_CHARACTER = T.let(T.unsafe(nil), Hash)
 
-# pkg:gem/mail#lib/mail/fields/named_structured_field.rb:6
+# pkg:gem/mail#lib/mail/fields/named_structured_field.rb:5
 class Mail::NamedStructuredField < ::Mail::StructuredField
   # @return [NamedStructuredField] a new instance of NamedStructuredField
   #
-  # pkg:gem/mail#lib/mail/fields/named_structured_field.rb:7
+  # pkg:gem/mail#lib/mail/fields/named_structured_field.rb:6
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 end
 
-# pkg:gem/mail#lib/mail/fields/named_unstructured_field.rb:6
+# pkg:gem/mail#lib/mail/fields/named_unstructured_field.rb:5
 class Mail::NamedUnstructuredField < ::Mail::UnstructuredField
   # @return [NamedUnstructuredField] a new instance of NamedUnstructuredField
   #
-  # pkg:gem/mail#lib/mail/fields/named_unstructured_field.rb:7
+  # pkg:gem/mail#lib/mail/fields/named_unstructured_field.rb:6
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 end
 
@@ -5792,11 +5760,11 @@ end
 #
 # optional-field  =       field-name ":" unstructured CRLF
 #
-# pkg:gem/mail#lib/mail/fields/optional_field.rb:10
+# pkg:gem/mail#lib/mail/fields/optional_field.rb:9
 class Mail::OptionalField < ::Mail::UnstructuredField
   private
 
-  # pkg:gem/mail#lib/mail/fields/optional_field.rb:12
+  # pkg:gem/mail#lib/mail/fields/optional_field.rb:11
   def do_encode; end
 end
 
@@ -5917,1403 +5885,1403 @@ module Mail::ParserTools
   def chars(data, from_bytes, to_bytes); end
 end
 
-# pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:9
+# pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:8
 module Mail::Parsers; end
 
-# pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:9
 module Mail::Parsers::AddressListsParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31951
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31950
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31951
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31950
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31955
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31954
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31955
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31954
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31946
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31945
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31946
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31945
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31942
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31941
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31942
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31941
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31959
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31958
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31938
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31937
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31938
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31937
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31614
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31613
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31614
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:31613
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1300
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1299
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1300
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1299
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1624
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1623
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1624
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:1623
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:976
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:975
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:976
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:975
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30983
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30982
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30983
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30982
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:18
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:17
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:18
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:17
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30352
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30351
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30352
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:30351
     def _trans_targs=(_arg0); end
+  end
+end
+
+# pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+  def addresses; end
+
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+  def addresses=(_); end
+
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+  def error; end
+
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+  def error=(_); end
+
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+  def group_names; end
+
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+  def group_names=(_); end
+
+  class << self
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+    def [](*_arg0); end
+
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+    def inspect; end
+
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+    def keyword_init?; end
+
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+    def members; end
+
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:12
+    def new(*_arg0); end
   end
 end
 
 # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-class Mail::Parsers::AddressListsParser::AddressListStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-  def addresses; end
-
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-  def addresses=(_); end
-
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-  def error; end
-
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-  def error=(_); end
-
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-  def group_names; end
-
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-  def group_names=(_); end
-
-  class << self
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-    def [](*_arg0); end
-
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-    def inspect; end
-
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-    def keyword_init?; end
-
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-    def members; end
-
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
-    def new(*_arg0); end
-  end
-end
-
-# pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
 class Mail::Parsers::AddressListsParser::AddressStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def comments; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def comments=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def display_name; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def display_name=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def domain; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def domain=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def group; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def group=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def local; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def local=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def obs_domain_list; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def obs_domain_list=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def raw; end
 
-  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+  # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
   def raw=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:14
+    # pkg:gem/mail#lib/mail/parsers/address_lists_parser.rb:13
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:9
 module Mail::Parsers::ContentDispositionParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:556
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:555
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:556
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:555
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:560
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:559
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:560
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:559
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:551
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:550
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:551
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:550
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:547
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:546
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:547
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:546
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:564
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:563
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:543
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:542
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:543
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:542
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:530
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:529
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:530
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:529
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:54
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:53
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:54
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:53
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:67
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:66
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:67
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:66
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:41
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:40
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:41
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:40
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:510
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:509
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:510
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:509
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:490
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:489
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:490
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:489
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
 class Mail::Parsers::ContentDispositionParser::ContentDispositionStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
   def disposition_type; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
   def disposition_type=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
   def parameters; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
   def parameters=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_disposition_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:9
 module Mail::Parsers::ContentLocationParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:577
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:576
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:577
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:576
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:581
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:580
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:581
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:580
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:572
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:571
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:572
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:571
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:568
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:567
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:568
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:567
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:585
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:584
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:564
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:563
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:564
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:563
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:551
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:550
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:551
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:550
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:52
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:51
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:52
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:51
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:65
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:64
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:65
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:64
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:39
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:38
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:39
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:38
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:533
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:532
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:533
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:532
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:515
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:514
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:515
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:514
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
 class Mail::Parsers::ContentLocationParser::ContentLocationStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
   def location; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
   def location=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_location_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:9
 module Mail::Parsers::ContentTransferEncodingParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:328
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:327
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:328
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:327
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:332
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:331
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:332
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:331
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:323
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:322
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:323
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:322
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:319
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:318
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:319
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:318
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:336
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:335
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:315
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:314
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:315
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:314
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:304
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:303
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:304
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:303
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:45
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:44
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:45
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:44
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:56
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:55
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:56
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:55
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:34
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:33
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:34
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:33
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:290
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:289
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:290
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:289
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:276
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:275
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:276
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:275
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
 class Mail::Parsers::ContentTransferEncodingParser::ContentTransferEncodingStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
   def encoding; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
   def encoding=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
   def error=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_transfer_encoding_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:9
 module Mail::Parsers::ContentTypeParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:681
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:680
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:681
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:680
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:685
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:684
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:685
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:684
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:676
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:675
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:676
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:675
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:672
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:671
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:672
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:671
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:689
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:688
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:668
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:667
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:668
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:667
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:654
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:653
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:654
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:653
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:58
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:57
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:58
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:57
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:72
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:71
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:72
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:71
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:44
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:43
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:44
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:43
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:632
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:631
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:632
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:631
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:610
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:609
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:610
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:609
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
 class Mail::Parsers::ContentTypeParser::ContentTypeStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def main_type; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def main_type=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def parameters; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def parameters=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def sub_type; end
 
-  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
   def sub_type=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/content_type_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:9
 module Mail::Parsers::DateTimeParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:660
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:659
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:660
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:659
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:664
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:663
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:664
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:663
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:655
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:654
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:655
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:654
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:651
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:650
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:651
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:650
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:668
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:667
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:647
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:646
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:647
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:646
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:626
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:625
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:626
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:625
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:86
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:85
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:86
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:85
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:107
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:106
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:107
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:106
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:65
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:64
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:65
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:64
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:595
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:594
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:595
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:594
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:564
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:563
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:564
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:563
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
 class Mail::Parsers::DateTimeParser::DateTimeStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
   def date_string; end
 
-  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
   def date_string=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
   def time_string; end
 
-  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
   def time_string=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/date_time_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:9
 module Mail::Parsers::EnvelopeFromParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3211
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3210
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3211
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3210
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3215
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3214
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3215
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3214
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3206
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3205
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3206
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3205
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3202
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3201
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3202
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3201
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3219
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3218
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3198
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3197
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3198
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3197
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3152
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3151
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3152
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3151
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:185
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:184
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:185
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:184
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:231
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:230
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:231
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:230
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:139
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:138
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:139
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:138
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3077
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3076
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3077
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3076
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3002
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3001
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3002
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:3001
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
 class Mail::Parsers::EnvelopeFromParser::EnvelopeFromStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
   def address; end
 
-  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
   def address=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
   def ctime_date; end
 
-  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
   def ctime_date=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
   def error=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/envelope_from_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:9
 module Mail::Parsers::MessageIdsParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4818
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4817
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4818
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4817
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4822
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4821
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4822
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4821
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4813
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4812
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4813
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4812
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4809
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4808
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4809
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4808
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4826
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4825
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4805
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4804
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4805
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4804
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4755
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4754
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4755
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4754
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:202
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:201
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:202
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:201
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:252
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:251
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:252
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:251
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:152
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:151
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:152
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:151
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4675
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4674
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4675
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4674
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4595
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4594
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4595
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:4594
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
 class Mail::Parsers::MessageIdsParser::MessageIdsStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
   def message_ids; end
 
-  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
   def message_ids=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/message_ids_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:9
 module Mail::Parsers::MimeVersionParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:292
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:291
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:292
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:291
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:296
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:295
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:296
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:295
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:287
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:286
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:287
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:286
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:283
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:282
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:283
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:282
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:300
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:299
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:279
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:278
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:279
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:278
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:268
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:267
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:268
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:267
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:45
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:44
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:45
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:44
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:56
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:55
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:56
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:55
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:34
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:33
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:34
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:33
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:254
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:253
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:254
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:253
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:240
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:239
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:240
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:239
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
 class Mail::Parsers::MimeVersionParser::MimeVersionStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
   def major; end
 
-  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
   def major=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
   def minor; end
 
-  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
   def minor=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/mime_version_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:9
 class Mail::Parsers::PhraseListsParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:672
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:671
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:672
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:671
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:676
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:675
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:676
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:675
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:667
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:666
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:667
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:666
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:663
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:662
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:663
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:662
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:680
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:679
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:659
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:658
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:659
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:658
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:646
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:645
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:646
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:645
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:54
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:53
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:54
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:53
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:67
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:66
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:67
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:66
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:41
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:40
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:41
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:40
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:626
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:625
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:626
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:625
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:606
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:605
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:606
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:605
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
 class Mail::Parsers::PhraseListsParser::PhraseListsStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
   def phrases; end
 
-  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
   def phrases=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/phrase_lists_parser.rb:12
     def new(*_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/received_parser.rb:10
+# pkg:gem/mail#lib/mail/parsers/received_parser.rb:9
 module Mail::Parsers::ReceivedParser
   extend ::Mail::ParserTools
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7484
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7483
     def en_comment_tail; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7484
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7483
     def en_comment_tail=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7488
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7487
     def en_main; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7488
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7487
     def en_main=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7479
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7478
     def error; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7479
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7478
     def error=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7475
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7474
     def first_final; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7475
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7474
     def first_final=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7492
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7491
     def parse(data); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7471
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7470
     def start; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7471
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7470
     def start=(_arg0); end
 
     private
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7382
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7381
     def _eof_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7382
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7381
     def _eof_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:358
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:357
     def _index_offsets; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:358
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:357
     def _index_offsets=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:447
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:446
     def _indicies; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:447
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:446
     def _indicies=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:269
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:268
     def _key_spans; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:269
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:268
     def _key_spans=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7199
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7198
     def _trans_actions; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7199
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7198
     def _trans_actions=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:15
     def _trans_keys; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:16
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:15
     def _trans_keys=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7016
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7015
     def _trans_targs; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7016
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:7015
     def _trans_targs=(_arg0); end
   end
 end
 
-# pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+# pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
 class Mail::Parsers::ReceivedParser::ReceivedStruct < ::Struct
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def date; end
 
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def date=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def error; end
 
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def error=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def info; end
 
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def info=(_); end
 
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def time; end
 
-  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+  # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
   def time=(_); end
 
   class << self
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
     def [](*_arg0); end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
     def inspect; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
     def keyword_init?; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
     def members; end
 
-    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:13
+    # pkg:gem/mail#lib/mail/parsers/received_parser.rb:12
     def new(*_arg0); end
   end
 end
@@ -7486,7 +7454,7 @@ class Mail::PhraseList
   def phrases; end
 end
 
-# pkg:gem/mail#lib/mail/mail.rb:241
+# pkg:gem/mail#lib/mail/mail.rb:246
 Mail::RANDOM_TAG = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/elements/received_element.rb:8
@@ -7534,30 +7502,30 @@ end
 # item-value      =       1*angle-addr / addr-spec /
 #                          atom / domain / msg-id
 #
-# pkg:gem/mail#lib/mail/fields/received_field.rb:24
+# pkg:gem/mail#lib/mail/fields/received_field.rb:23
 class Mail::ReceivedField < ::Mail::NamedStructuredField
-  # pkg:gem/mail#lib/mail/fields/received_field.rb:31
+  # pkg:gem/mail#lib/mail/fields/received_field.rb:30
   def date_time; end
 
-  # pkg:gem/mail#lib/mail/fields/received_field.rb:27
+  # pkg:gem/mail#lib/mail/fields/received_field.rb:26
   def element; end
 
-  # pkg:gem/mail#lib/mail/fields/received_field.rb:39
+  # pkg:gem/mail#lib/mail/fields/received_field.rb:38
   def formatted_date; end
 
-  # pkg:gem/mail#lib/mail/fields/received_field.rb:35
+  # pkg:gem/mail#lib/mail/fields/received_field.rb:34
   def info; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/received_field.rb:54
+  # pkg:gem/mail#lib/mail/fields/received_field.rb:53
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/received_field.rb:46
+  # pkg:gem/mail#lib/mail/fields/received_field.rb:45
   def do_encode; end
 end
 
-# pkg:gem/mail#lib/mail/fields/received_field.rb:25
+# pkg:gem/mail#lib/mail/fields/received_field.rb:24
 Mail::ReceivedField::NAME = T.let(T.unsafe(nil), String)
 
 # = References Field
@@ -7586,22 +7554,22 @@ Mail::ReceivedField::NAME = T.let(T.unsafe(nil), String)
 #
 #  mail[:references].message_ids #=> ['F6E2D0B4-CC35-4A91-BA4C-C7C712B10C13@test.me.dom']
 #
-# pkg:gem/mail#lib/mail/fields/references_field.rb:31
+# pkg:gem/mail#lib/mail/fields/references_field.rb:30
 class Mail::ReferencesField < ::Mail::CommonMessageIdField
   # @return [ReferencesField] a new instance of ReferencesField
   #
-  # pkg:gem/mail#lib/mail/fields/references_field.rb:38
+  # pkg:gem/mail#lib/mail/fields/references_field.rb:37
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/references_field.rb:34
+    # pkg:gem/mail#lib/mail/fields/references_field.rb:33
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/references_field.rb:32
+# pkg:gem/mail#lib/mail/fields/references_field.rb:31
 Mail::ReferencesField::NAME = T.let(T.unsafe(nil), String)
 
 # = Reply-To Field
@@ -7630,10 +7598,10 @@ Mail::ReferencesField::NAME = T.let(T.unsafe(nil), String)
 #  mail[:reply_to].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:reply_to].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/reply_to_field.rb:31
+# pkg:gem/mail#lib/mail/fields/reply_to_field.rb:30
 class Mail::ReplyToField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/reply_to_field.rb:32
+# pkg:gem/mail#lib/mail/fields/reply_to_field.rb:31
 Mail::ReplyToField::NAME = T.let(T.unsafe(nil), String)
 
 # = Resent-Bcc Field
@@ -7662,10 +7630,10 @@ Mail::ReplyToField::NAME = T.let(T.unsafe(nil), String)
 #  mail[:resent_bcc].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:resent_bcc].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/resent_bcc_field.rb:31
+# pkg:gem/mail#lib/mail/fields/resent_bcc_field.rb:30
 class Mail::ResentBccField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/resent_bcc_field.rb:32
+# pkg:gem/mail#lib/mail/fields/resent_bcc_field.rb:31
 Mail::ResentBccField::NAME = T.let(T.unsafe(nil), String)
 
 # = Resent-Cc Field
@@ -7694,18 +7662,18 @@ Mail::ResentBccField::NAME = T.let(T.unsafe(nil), String)
 #  mail[:resent_cc].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:resent_cc].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/resent_cc_field.rb:31
+# pkg:gem/mail#lib/mail/fields/resent_cc_field.rb:30
 class Mail::ResentCcField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/resent_cc_field.rb:32
+# pkg:gem/mail#lib/mail/fields/resent_cc_field.rb:31
 Mail::ResentCcField::NAME = T.let(T.unsafe(nil), String)
 
 # resent-date     =       "Resent-Date:" date-time CRLF
 #
-# pkg:gem/mail#lib/mail/fields/resent_date_field.rb:8
+# pkg:gem/mail#lib/mail/fields/resent_date_field.rb:7
 class Mail::ResentDateField < ::Mail::CommonDateField; end
 
-# pkg:gem/mail#lib/mail/fields/resent_date_field.rb:9
+# pkg:gem/mail#lib/mail/fields/resent_date_field.rb:8
 Mail::ResentDateField::NAME = T.let(T.unsafe(nil), String)
 
 # = Resent-From Field
@@ -7734,18 +7702,18 @@ Mail::ResentDateField::NAME = T.let(T.unsafe(nil), String)
 #  mail[:resent_from].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:resent_from].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/resent_from_field.rb:31
+# pkg:gem/mail#lib/mail/fields/resent_from_field.rb:30
 class Mail::ResentFromField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/resent_from_field.rb:32
+# pkg:gem/mail#lib/mail/fields/resent_from_field.rb:31
 Mail::ResentFromField::NAME = T.let(T.unsafe(nil), String)
 
 # resent-msg-id   =       "Resent-Message-ID:" msg-id CRLF
 #
-# pkg:gem/mail#lib/mail/fields/resent_message_id_field.rb:8
+# pkg:gem/mail#lib/mail/fields/resent_message_id_field.rb:7
 class Mail::ResentMessageIdField < ::Mail::CommonMessageIdField; end
 
-# pkg:gem/mail#lib/mail/fields/resent_message_id_field.rb:9
+# pkg:gem/mail#lib/mail/fields/resent_message_id_field.rb:8
 Mail::ResentMessageIdField::NAME = T.let(T.unsafe(nil), String)
 
 # = Resent-Sender Field
@@ -7773,10 +7741,10 @@ Mail::ResentMessageIdField::NAME = T.let(T.unsafe(nil), String)
 #  mail.resent_sender.addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail.resent_sender.formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/resent_sender_field.rb:30
+# pkg:gem/mail#lib/mail/fields/resent_sender_field.rb:29
 class Mail::ResentSenderField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/resent_sender_field.rb:31
+# pkg:gem/mail#lib/mail/fields/resent_sender_field.rb:30
 Mail::ResentSenderField::NAME = T.let(T.unsafe(nil), String)
 
 # = Resent-To Field
@@ -7805,10 +7773,10 @@ Mail::ResentSenderField::NAME = T.let(T.unsafe(nil), String)
 #  mail[:resent_to].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:resent_to].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/resent_to_field.rb:31
+# pkg:gem/mail#lib/mail/fields/resent_to_field.rb:30
 class Mail::ResentToField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/resent_to_field.rb:32
+# pkg:gem/mail#lib/mail/fields/resent_to_field.rb:31
 Mail::ResentToField::NAME = T.let(T.unsafe(nil), String)
 
 # pkg:gem/mail#lib/mail/network/retriever_methods/base.rb:6
@@ -7881,33 +7849,33 @@ end
 # item-value      =       1*angle-addr / addr-spec /
 #                          atom / domain / msg-id
 #
-# pkg:gem/mail#lib/mail/fields/return_path_field.rb:33
+# pkg:gem/mail#lib/mail/fields/return_path_field.rb:32
 class Mail::ReturnPathField < ::Mail::CommonAddressField
   # @return [ReturnPathField] a new instance of ReturnPathField
   #
-  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:40
+  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:39
   def initialize(value = T.unsafe(nil), charset = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:48
+  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:47
   def default; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:57
+  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:56
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:53
+  # pkg:gem/mail#lib/mail/fields/return_path_field.rb:52
   def do_encode; end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/return_path_field.rb:36
+    # pkg:gem/mail#lib/mail/fields/return_path_field.rb:35
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/return_path_field.rb:34
+# pkg:gem/mail#lib/mail/fields/return_path_field.rb:33
 Mail::ReturnPathField::NAME = T.let(T.unsafe(nil), String)
 
 # == Sending Email with SMTP
@@ -7930,7 +7898,7 @@ Mail::ReturnPathField::NAME = T.let(T.unsafe(nil), String)
 #                              :user_name            => '<username>',
 #                              :password             => '<password>',
 #                              :authentication       => 'plain',
-#                              :enable_starttls_auto => true  }
+#                              :enable_starttls      => :auto  }
 #   end
 #
 # === Sending via GMail
@@ -7942,8 +7910,16 @@ Mail::ReturnPathField::NAME = T.let(T.unsafe(nil), String)
 #                              :user_name            => '<username>',
 #                              :password             => '<password>',
 #                              :authentication       => 'plain',
-#                              :enable_starttls_auto => true  }
+#                              :enable_starttls      => :auto  }
 #   end
+#
+# === Configuring TLS/SSL and STARTTLS
+#
+# A few remarks:
+# - when enabling `tls` (or `ssl`), setting (truthy values for) either `enable_starttls` or `enable_starttls_auto` will raise an ArgumentError as TLS and STARTTLS are mutually exclusive.
+# - to configure STARTTLS, use the `enable_starttls`-flag (instead of a combination of `enable_starttls` and `enable_starttls_auto`). Acceptable values are `:always`, `:auto` and `false`.
+# - when providing a truthy value for `enable_starttls`, the `enable_starttls_auto`-flag will be ignored.
+# - when none of `tls`, `ssl`, `enable_starttls` or `enable_starttls_auto` is set, the fallback will be `enable_starttls` `:auto`.
 #
 # === Certificate verification
 #
@@ -7982,44 +7958,64 @@ Mail::ReturnPathField::NAME = T.let(T.unsafe(nil), String)
 #
 #   mail.deliver!
 #
-# pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:76
+# pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:84
 class Mail::SMTP
   # @return [SMTP] a new instance of SMTP
   #
-  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:95
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:103
   def initialize(values); end
 
-  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:99
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:107
   def deliver!(mail); end
 
   # Returns the value of attribute settings.
   #
-  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:77
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:85
   def settings; end
 
   # Sets the attribute settings
   #
   # @param value the value to set the attribute settings to.
   #
-  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:77
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:85
   def settings=(_arg0); end
 
   private
 
-  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:112
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:157
   def build_smtp_session; end
+
+  # `k` is said to be provided when `settings` has a non-nil value for `k`.
+  #
+  # @return [Boolean]
+  #
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:117
+  def setting_provided?(k); end
+
+  # Yields one of `:always`, `:auto` or `false` based on `enable_starttls` and `enable_starttls_auto` flags.
+  # Yields `false` when `smtp_tls?`.
+  # Else defaults to `:auto` when neither `enable_starttls*` flag is provided.
+  # Providing a truthy value for `enable_starttls` will ignore `enable_starttls_auto`.
+  #
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:125
+  def smtp_starttls; end
+
+  # @return [Boolean]
+  #
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:149
+  def smtp_tls?; end
 
   # Allow SSL context to be configured via settings, for Ruby >= 1.9
   # Just returns openssl verify mode for Ruby 1.8.x
   #
-  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:151
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:186
   def ssl_context; end
 
-  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:108
+  # pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:153
   def start_smtp_session(&block); end
 end
 
-# pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:79
+# pkg:gem/mail#lib/mail/network/delivery_methods/smtp.rb:87
 Mail::SMTP::DEFAULTS = T.let(T.unsafe(nil), Hash)
 
 # == Sending Email with SMTP
@@ -8123,23 +8119,23 @@ end
 #  mail[:sender].addresses #=> ['mikel@test.lindsaar.net']
 #  mail[:sender].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>']
 #
-# pkg:gem/mail#lib/mail/fields/sender_field.rb:31
+# pkg:gem/mail#lib/mail/fields/sender_field.rb:30
 class Mail::SenderField < ::Mail::CommonAddressField
-  # pkg:gem/mail#lib/mail/fields/sender_field.rb:42
+  # pkg:gem/mail#lib/mail/fields/sender_field.rb:41
   def addresses; end
 
-  # pkg:gem/mail#lib/mail/fields/sender_field.rb:38
+  # pkg:gem/mail#lib/mail/fields/sender_field.rb:37
   def default; end
 
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/sender_field.rb:34
+    # pkg:gem/mail#lib/mail/fields/sender_field.rb:33
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/sender_field.rb:32
+# pkg:gem/mail#lib/mail/fields/sender_field.rb:31
 Mail::SenderField::NAME = T.let(T.unsafe(nil), String)
 
 # A delivery method implementation which sends via sendmail.
@@ -8180,15 +8176,16 @@ Mail::SenderField::NAME = T.let(T.unsafe(nil), String)
 #
 # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:40
 class Mail::Sendmail
+  # @raise [ArgumentError]
   # @return [Sendmail] a new instance of Sendmail
   #
   # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:51
   def initialize(values); end
 
-  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:64
+  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:60
   def deliver!(mail); end
 
-  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:60
+  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:56
   def destinations_for(envelope); end
 
   # Returns the value of attribute settings.
@@ -8205,28 +8202,8 @@ class Mail::Sendmail
 
   private
 
-  # - support for delivery using string arguments
-  #
-  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:129
-  def deprecation_warn; end
-
-  # + support for delivery using string arguments (deprecated)
-  #
-  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:97
-  def old_deliver(envelope); end
-
-  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:88
+  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:79
   def popen(command, &block); end
-
-  # The following is an adaptation of ruby 1.9.2's shellwords.rb file,
-  # with the following modifications:
-  #
-  # - Wraps in double quotes
-  # - Allows '+' to accept email addresses with them
-  # - Allows '~' as it is not unescaped in double quotes
-  #
-  # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:118
-  def shellquote(address); end
 end
 
 # pkg:gem/mail#lib/mail/network/delivery_methods/sendmail.rb:41
@@ -8296,22 +8273,22 @@ Mail::SmtpEnvelope::MAX_ADDRESS_BYTESIZE = T.let(T.unsafe(nil), Integer)
 #     described in section 2.2.3.  Semantic analysis of structured field
 #     bodies is given along with their syntax.
 #
-# pkg:gem/mail#lib/mail/fields/structured_field.rb:23
+# pkg:gem/mail#lib/mail/fields/structured_field.rb:22
 class Mail::StructuredField < ::Mail::CommonField; end
 
 # subject         =       "Subject:" unstructured CRLF
 #
-# pkg:gem/mail#lib/mail/fields/subject_field.rb:8
+# pkg:gem/mail#lib/mail/fields/subject_field.rb:7
 class Mail::SubjectField < ::Mail::NamedUnstructuredField
   class << self
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/fields/subject_field.rb:11
+    # pkg:gem/mail#lib/mail/fields/subject_field.rb:10
     def singular?; end
   end
 end
 
-# pkg:gem/mail#lib/mail/fields/subject_field.rb:9
+# pkg:gem/mail#lib/mail/fields/subject_field.rb:8
 Mail::SubjectField::NAME = T.let(T.unsafe(nil), String)
 
 # The TestMailer is a bare bones mailer that does nothing.  It is useful
@@ -8410,10 +8387,10 @@ end
 #  mail[:to].addresses #=> ['mikel@test.lindsaar.net', 'ada@test.lindsaar.net']
 #  mail[:to].formatted #=> ['Mikel Lindsaar <mikel@test.lindsaar.net>', 'ada@test.lindsaar.net']
 #
-# pkg:gem/mail#lib/mail/fields/to_field.rb:31
+# pkg:gem/mail#lib/mail/fields/to_field.rb:30
 class Mail::ToField < ::Mail::CommonAddressField; end
 
-# pkg:gem/mail#lib/mail/fields/to_field.rb:32
+# pkg:gem/mail#lib/mail/fields/to_field.rb:31
 Mail::ToField::NAME = T.let(T.unsafe(nil), String)
 
 # Raised when attempting to decode an unknown encoding type
@@ -8434,36 +8411,36 @@ class Mail::UnknownEncodingType < ::StandardError; end
 #     with no further processing (except for header "folding" and
 #     "unfolding" as described in section 2.2.3).
 #
-# pkg:gem/mail#lib/mail/fields/unstructured_field.rb:19
+# pkg:gem/mail#lib/mail/fields/unstructured_field.rb:18
 class Mail::UnstructuredField < ::Mail::CommonField
   # @return [UnstructuredField] a new instance of UnstructuredField
   #
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:20
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:19
   def initialize(name, value, charset = T.unsafe(nil)); end
 
   # An unstructured field does not parse
   #
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:40
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:39
   def parse; end
 
   private
 
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:54
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:53
   def do_decode; end
 
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:46
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:45
   def do_encode; end
 
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:169
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:168
   def encode(value); end
 
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:180
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:179
   def encode_crlf(value); end
 
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:102
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:101
   def fold(prepend = T.unsafe(nil)); end
 
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:186
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:185
   def normalized_encoding; end
 
   # 6.2. Display of 'encoded-word's
@@ -8475,7 +8452,7 @@ class Mail::UnstructuredField < ::Mail::CommonField
   #  without having to separate 'encoded-word's where spaces occur in the
   #  unencoded text.)
   #
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:96
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:95
   def wrap_lines(name, folded_lines); end
 
   # 2.2.3. Long Header Fields
@@ -8505,7 +8482,7 @@ class Mail::UnstructuredField < ::Mail::CommonField
   #  preference to other places where the field could be folded, even if
   #  it is allowed elsewhere.
   #
-  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:84
+  # pkg:gem/mail#lib/mail/fields/unstructured_field.rb:83
   def wrapped_value; end
 end
 
@@ -8528,7 +8505,7 @@ module Mail::Utilities
   #
   # @return [Boolean]
   #
-  # pkg:gem/mail#lib/mail/utilities.rb:283
+  # pkg:gem/mail#lib/mail/utilities.rb:287
   def blank?(value); end
 
   # Wraps a string in angle brackets and escapes any that are in the string itself
@@ -8547,7 +8524,7 @@ module Mail::Utilities
   #  string = 'resent-from-field'
   #  capitalize_field( string ) #=> 'Resent-From-Field'
   #
-  # pkg:gem/mail#lib/mail/utilities.rb:188
+  # pkg:gem/mail#lib/mail/utilities.rb:192
   def capitalize_field(str); end
 
   # Takes an underscored word and turns it into a class name
@@ -8558,7 +8535,7 @@ module Mail::Utilities
   #  constantize("hello-there") #=> "HelloThere"
   #  constantize("hello-there-mate") #=> "HelloThereMate"
   #
-  # pkg:gem/mail#lib/mail/utilities.rb:199
+  # pkg:gem/mail#lib/mail/utilities.rb:203
   def constantize(str); end
 
   # Swaps out all underscores (_) for hyphens (-) good for stringing from symbols
@@ -8569,7 +8546,7 @@ module Mail::Utilities
   #  string = :resent_from_field
   #  dasherize( string ) #=> 'resent-from-field'
   #
-  # pkg:gem/mail#lib/mail/utilities.rb:210
+  # pkg:gem/mail#lib/mail/utilities.rb:214
   def dasherize(str); end
 
   # Wraps supplied string in double quotes and applies \-escaping as necessary,
@@ -8596,13 +8573,13 @@ module Mail::Utilities
   # pkg:gem/mail#lib/mail/utilities.rb:155
   def escape_paren(str); end
 
-  # pkg:gem/mail#lib/mail/utilities.rb:293
+  # pkg:gem/mail#lib/mail/utilities.rb:297
   def generate_message_id; end
 
-  # pkg:gem/mail#lib/mail/utilities.rb:225
+  # pkg:gem/mail#lib/mail/utilities.rb:229
   def map_lines(str, &block); end
 
-  # pkg:gem/mail#lib/mail/utilities.rb:229
+  # pkg:gem/mail#lib/mail/utilities.rb:233
   def map_with_index(enum, &block); end
 
   # Matches two objects with their to_s values case insensitively
@@ -8613,7 +8590,7 @@ module Mail::Utilities
   #  obj1 = :this_IS_an_object
   #  match_to_s( obj1, obj2 ) #=> true
   #
-  # pkg:gem/mail#lib/mail/utilities.rb:178
+  # pkg:gem/mail#lib/mail/utilities.rb:182
   def match_to_s(obj1, obj2); end
 
   # Wraps a string in parenthesis and escapes any that are in the string itself.
@@ -8668,7 +8645,7 @@ module Mail::Utilities
   #  string = :resent_from_field
   #  underscoreize ( string ) #=> 'resent_from_field'
   #
-  # pkg:gem/mail#lib/mail/utilities.rb:221
+  # pkg:gem/mail#lib/mail/utilities.rb:225
   def underscoreize(str); end
 
   # Removes any \-escaping.
@@ -8718,71 +8695,71 @@ module Mail::Utilities
   def uri_unescape(str); end
 
   class << self
-    # pkg:gem/mail#lib/mail/utilities.rb:414
+    # pkg:gem/mail#lib/mail/utilities.rb:418
     def b_value_decode(str); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:409
+    # pkg:gem/mail#lib/mail/utilities.rb:413
     def b_value_encode(str, encoding = T.unsafe(nil)); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:243
+    # pkg:gem/mail#lib/mail/utilities.rb:247
     def binary_unsafe_to_crlf(string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:233
+    # pkg:gem/mail#lib/mail/utilities.rb:237
     def binary_unsafe_to_lf(string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:356
+    # pkg:gem/mail#lib/mail/utilities.rb:360
     def bracket(str); end
 
     # Returns the value of attribute charset_encoder.
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:334
+    # pkg:gem/mail#lib/mail/utilities.rb:338
     def charset_encoder; end
 
     # Sets the attribute charset_encoder
     #
     # @param value the value to set the attribute charset_encoder to.
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:334
+    # pkg:gem/mail#lib/mail/utilities.rb:338
     def charset_encoder=(_arg0); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:362
+    # pkg:gem/mail#lib/mail/utilities.rb:366
     def decode_base64(str); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:399
+    # pkg:gem/mail#lib/mail/utilities.rb:403
     def decode_utf7(utf7); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:369
+    # pkg:gem/mail#lib/mail/utilities.rb:373
     def encode_base64(str); end
 
     # From Ruby stdlib Net::IMAP
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:388
+    # pkg:gem/mail#lib/mail/utilities.rb:392
     def encode_utf7(string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:351
+    # pkg:gem/mail#lib/mail/utilities.rb:355
     def escape_bracket(str); end
 
     # Escapes any parenthesis in a string that are unescaped this uses
     # a Ruby 1.9.1 regexp feature of negative look behind
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:340
+    # pkg:gem/mail#lib/mail/utilities.rb:344
     def escape_paren(str); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:377
+    # pkg:gem/mail#lib/mail/utilities.rb:381
     def get_constant(klass, string); end
 
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:373
+    # pkg:gem/mail#lib/mail/utilities.rb:377
     def has_constant?(klass, string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:451
+    # pkg:gem/mail#lib/mail/utilities.rb:455
     def param_decode(str, encoding); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:460
+    # pkg:gem/mail#lib/mail/utilities.rb:464
     def param_encode(str); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:345
+    # pkg:gem/mail#lib/mail/utilities.rb:349
     def paren(str); end
 
     # Pick a Ruby encoding corresponding to the message charset. Most
@@ -8792,70 +8769,70 @@ module Mail::Utilities
     #   Encoding.list.map { |e| [e.to_s.upcase == pick_encoding(e.to_s.downcase.gsub("-", "")), e.to_s] }.select {|a,b| !b}
     #   Encoding.list.map { |e| [e.to_s == pick_encoding(e.to_s), e.to_s] }.select {|a,b| !b}
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:476
+    # pkg:gem/mail#lib/mail/utilities.rb:480
     def pick_encoding(charset); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:432
+    # pkg:gem/mail#lib/mail/utilities.rb:436
     def q_value_decode(str); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:427
+    # pkg:gem/mail#lib/mail/utilities.rb:431
     def q_value_encode(str, encoding = T.unsafe(nil)); end
 
     # @return [Boolean]
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:247
+    # pkg:gem/mail#lib/mail/utilities.rb:251
     def safe_for_line_ending_conversion?(string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:536
+    # pkg:gem/mail#lib/mail/utilities.rb:540
     def string_byteslice(str, *args); end
 
     # Convert line endings to \r\n unless the string is binary. Used for
     # encoding 8bit and base64 Content-Transfer-Encoding and for convenience
     # when parsing emails with \n line endings instead of the required \r\n.
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:269
+    # pkg:gem/mail#lib/mail/utilities.rb:273
     def to_crlf(string); end
 
     # Convert line endings to \n unless the string is binary. Used for
     # sendmail delivery and for decoding 8bit Content-Transfer-Encoding.
     #
-    # pkg:gem/mail#lib/mail/utilities.rb:257
+    # pkg:gem/mail#lib/mail/utilities.rb:261
     def to_lf(string); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:381
+    # pkg:gem/mail#lib/mail/utilities.rb:385
     def transcode_charset(str, from_encoding, to_encoding = T.unsafe(nil)); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:466
+    # pkg:gem/mail#lib/mail/utilities.rb:470
     def uri_parser; end
 
     private
 
-    # pkg:gem/mail#lib/mail/utilities.rb:543
+    # pkg:gem/mail#lib/mail/utilities.rb:547
     def convert_to_encoding(encoding); end
 
-    # pkg:gem/mail#lib/mail/utilities.rb:556
+    # pkg:gem/mail#lib/mail/utilities.rb:560
     def transcode_to_scrubbed_utf8(str); end
   end
 end
 
-# pkg:gem/mail#lib/mail/utilities.rb:308
+# pkg:gem/mail#lib/mail/utilities.rb:312
 class Mail::Utilities::BestEffortCharsetEncoder
-  # pkg:gem/mail#lib/mail/utilities.rb:309
+  # pkg:gem/mail#lib/mail/utilities.rb:313
   def encode(string, charset); end
 
   private
 
-  # pkg:gem/mail#lib/mail/utilities.rb:320
+  # pkg:gem/mail#lib/mail/utilities.rb:324
   def pick_encoding(charset); end
 end
 
-# pkg:gem/mail#lib/mail/utilities.rb:297
+# pkg:gem/mail#lib/mail/utilities.rb:301
 class Mail::Utilities::StrictCharsetEncoder
-  # pkg:gem/mail#lib/mail/utilities.rb:298
+  # pkg:gem/mail#lib/mail/utilities.rb:302
   def encode(string, charset); end
 end
 
-# pkg:gem/mail#lib/mail/utilities.rb:237
+# pkg:gem/mail#lib/mail/utilities.rb:241
 Mail::Utilities::TO_CRLF_REGEX = T.let(T.unsafe(nil), Regexp)
 
 # pkg:gem/mail#lib/mail/version.rb:3

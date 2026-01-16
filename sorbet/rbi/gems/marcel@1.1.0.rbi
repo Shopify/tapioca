@@ -18,7 +18,7 @@ Marcel::EXTENSIONS = T.let(T.unsafe(nil), Hash)
 
 # @private
 #
-# pkg:gem/marcel#lib/marcel/tables.rb:2394
+# pkg:gem/marcel#lib/marcel/tables.rb:2513
 Marcel::MAGIC = T.let(T.unsafe(nil), Array)
 
 # Mime type detection
@@ -227,12 +227,12 @@ Marcel::MimeType::BINARY = T.let(T.unsafe(nil), String)
 
 # @private
 #
-# pkg:gem/marcel#lib/marcel/tables.rb:1260
+# pkg:gem/marcel#lib/marcel/tables.rb:1310
 Marcel::TYPE_EXTS = T.let(T.unsafe(nil), Hash)
 
 # Cooltalk Audio
 #
-# pkg:gem/marcel#lib/marcel/tables.rb:2151
+# pkg:gem/marcel#lib/marcel/tables.rb:2239
 Marcel::TYPE_PARENTS = T.let(T.unsafe(nil), Hash)
 
 # pkg:gem/marcel#lib/marcel/version.rb:4

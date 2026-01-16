@@ -74,48 +74,45 @@ module ActiveJob::Arguments
 
   private
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:193
+  # pkg:gem/activejob#lib/active_job/arguments.rb:191
   def convert_to_global_id_hash(argument); end
 
   # @return [Boolean]
   #
-  # pkg:gem/activejob#lib/active_job/arguments.rb:138
+  # pkg:gem/activejob#lib/active_job/arguments.rb:136
   def custom_serialized?(hash); end
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:111
+  # pkg:gem/activejob#lib/active_job/arguments.rb:109
   def deserialize_argument(argument); end
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:134
+  # pkg:gem/activejob#lib/active_job/arguments.rb:132
   def deserialize_global_id(hash); end
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:148
+  # pkg:gem/activejob#lib/active_job/arguments.rb:146
   def deserialize_hash(serialized_hash); end
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:142
+  # pkg:gem/activejob#lib/active_job/arguments.rb:140
   def serialize_hash(argument); end
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:161
+  # pkg:gem/activejob#lib/active_job/arguments.rb:159
   def serialize_hash_key(key); end
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:174
+  # pkg:gem/activejob#lib/active_job/arguments.rb:172
   def serialize_indifferent_hash(indifferent_hash); end
 
   # @return [Boolean]
   #
-  # pkg:gem/activejob#lib/active_job/arguments.rb:130
+  # pkg:gem/activejob#lib/active_job/arguments.rb:128
   def serialized_global_id?(hash); end
 
-  # pkg:gem/activejob#lib/active_job/arguments.rb:180
+  # pkg:gem/activejob#lib/active_job/arguments.rb:178
   def transform_symbol_keys(hash, symbol_keys); end
 end
 
 # pkg:gem/activejob#lib/active_job/arguments.rb:90
 ActiveJob::Arguments::GLOBALID_KEY = T.let(T.unsafe(nil), String)
 
-# pkg:gem/activejob#lib/active_job/arguments.rb:98
-ActiveJob::Arguments::OBJECT_SERIALIZER_KEY = T.let(T.unsafe(nil), String)
-
-# pkg:gem/activejob#lib/active_job/arguments.rb:101
+# pkg:gem/activejob#lib/active_job/arguments.rb:99
 ActiveJob::Arguments::RESERVED_KEYS = T.let(T.unsafe(nil), Set)
 
 # pkg:gem/activejob#lib/active_job/arguments.rb:94
@@ -1464,8 +1461,25 @@ end
 module ActiveJob::EnqueueAfterTransactionCommit
   private
 
-  # pkg:gem/activejob#lib/active_job/enqueue_after_transaction_commit.rb:6
+  # pkg:gem/activejob#lib/active_job/enqueue_after_transaction_commit.rb:25
   def raw_enqueue; end
+
+  class << self
+    # @private
+    #
+    # pkg:gem/activejob#lib/active_job/enqueue_after_transaction_commit.rb:6
+    def included(base); end
+  end
+end
+
+# pkg:gem/activejob#lib/active_job/enqueue_after_transaction_commit.rb:11
+module ActiveJob::EnqueueAfterTransactionCommit::ActiveJobMethods
+  # Ensures perform_all_later respects each job's enqueue_after_transaction_commit configuration.
+  # Jobs with enqueue_after_transaction_commit set to true are deferred and enqueued only after the transaction commits;
+  # other jobs are enqueued immediately. This ensures enqueuing timing matches the per-job setting.
+  #
+  # pkg:gem/activejob#lib/active_job/enqueue_after_transaction_commit.rb:15
+  def perform_all_later(*jobs); end
 end
 
 # Can be raised by adapters if they wish to communicate to the caller a reason
@@ -2132,12 +2146,12 @@ module ActiveJob::QueueAdapters
     #   ActiveJob::QueueAdapters.lookup(:sidekiq)
     #   # => ActiveJob::QueueAdapters::SidekiqAdapter
     #
-    # pkg:gem/activejob#lib/active_job/queue_adapters.rb:135
+    # pkg:gem/activejob#lib/active_job/queue_adapters.rb:134
     def lookup(name); end
   end
 end
 
-# pkg:gem/activejob#lib/active_job/queue_adapters.rb:127
+# pkg:gem/activejob#lib/active_job/queue_adapters.rb:126
 ActiveJob::QueueAdapters::ADAPTER = T.let(T.unsafe(nil), String)
 
 # = Active Job Abstract Adapter
@@ -2766,6 +2780,9 @@ class ActiveJob::Serializers::ModuleSerializer < ::ActiveJob::Serializers::Objec
   # pkg:gem/activejob#lib/active_job/serializers/module_serializer.rb:6
   def serialize(constant); end
 end
+
+# pkg:gem/activejob#lib/active_job/serializers.rb:104
+ActiveJob::Serializers::OBJECT_SERIALIZER_KEY = T.let(T.unsafe(nil), String)
 
 # Base class for serializing and deserializing custom objects.
 #
