@@ -150,7 +150,7 @@ module Tapioca
 
       #: (String gemfile_dir) -> bool
       def ignore?(gemfile_dir)
-        gem_ignored? || gem_in_app_dir?(gemfile_dir, full_gem_path)
+        gem_ignored?
       end
 
       #: -> String
