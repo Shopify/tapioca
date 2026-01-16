@@ -7,7 +7,15 @@ gemspec
 CURRENT_RAILS_VERSION = "8.1"
 rails_version = ENV.fetch("RAILS_VERSION", CURRENT_RAILS_VERSION)
 
-gem "minitest", "< 6.0" # Rails 8.1.1 doesn't support minitest 6.0 which causes errors
+# Rails main and 8.1.2 onward support Minitest 6.
+# Rails 8.0.x lacks support for Minitest 6 in released versions.
+# TODO: Remove conditional once a Rails 8.0.x release with Minitest 6 support is cut.
+# See: https://github.com/rails/rails/commit/ec62932ee7d31e0ef870e61c2d7de2c3efe3faa6
+if rails_version == "8.0"
+  gem "minitest", "< 6"
+else
+  gem "minitest"
+end
 gem "minitest-hooks"
 gem "minitest-reporters"
 gem "debug"
