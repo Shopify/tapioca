@@ -137,6 +137,14 @@ module Tapioca
       RbConfig::CONFIG["rubylibprefix"] = original_rubylibprefix
     end
 
+    it "ignore? returns false for vendored gems in the app directory" do
+      # Create a vendored gem within the project directory
+      foo_gem = mock_gem("foo", "0.0.1", path: "#{@project.absolute_path}/vendor/gems")
+      foo_spec = make_spec(foo_gem)
+
+      refute(foo_spec.ignore?(@project.absolute_path))
+    end
+
     private
 
     #: (MockGem gem) -> Gemfile::GemSpec
