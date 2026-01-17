@@ -58,7 +58,7 @@ module Tapioca
           @column_type_option = column_type_option
         end
 
-        #: (String attribute_name, ?String column_name) -> [String, String]
+        #: (String attribute_name, ?String column_name) -> [RBI::Type, RBI::Type]
         def type_for(attribute_name, column_name = attribute_name)
           return id_type if attribute_name == "id"
 
@@ -67,7 +67,7 @@ module Tapioca
 
         private
 
-        #: -> [String, String]
+        #: -> [RBI::Type, RBI::Type]
         def id_type
           if @constant.respond_to?(:composite_primary_key?) && T.unsafe(@constant).composite_primary_key?
             primary_key_columns = @constant.primary_key
@@ -81,15 +81,15 @@ module Tapioca
               setters << setter
             end
 
-            ["[#{getters.join(", ")}]", "[#{setters.join(", ")}]"]
+            [RBI::Type.tuple(*getters), RBI::Type.tuple(*setters)]
           else
             column_type_for(@constant.primary_key)
           end
         end
 
-        #: (String? column_name) -> [String, String]
+        #: (String? column_name) -> [RBI::Type, RBI::Type]
         def column_type_for(column_name)
-          return ["T.untyped", "T.untyped"] if @column_type_option.untyped?
+          return [RBI::Type.untyped, RBI::Type.untyped] if @column_type_option.untyped?
 
           column = @constant.columns_hash[column_name]
           column_type = @constant.attribute_types[column_name]
@@ -105,47 +105,47 @@ module Tapioca
           if @column_type_option.persisted? && !column&.null
             [getter_type, setter_type]
           else
-            getter_type = as_nilable_type(getter_type) unless not_nilable_serialized_column?(column_type)
-            [getter_type, as_nilable_type(setter_type)]
+            getter_type = getter_type.nilable unless not_nilable_serialized_column?(column_type)
+            [getter_type, setter_type.nilable]
           end
         end
 
-        #: (untyped column_type, column_nullability: bool) -> String
+        #: (untyped column_type, column_nullability: bool) -> RBI::Type
         def type_for_activerecord_value(column_type, column_nullability:)
           case column_type
           when ->(type) { defined?(MoneyColumn) && MoneyColumn::ActiveRecordType === type }
-            "::Money"
+            RBI::Type.simple("::Money")
           when ActiveRecord::Type::Integer
-            "::Integer"
+            RBI::Type.simple("::Integer")
           when ->(type) {
                  defined?(ActiveRecord::Encryption) && ActiveRecord::Encryption::EncryptedAttributeType === type
                }
             # Reflect to see if `ActiveModel::Type::Value` is being used first.
-            getter_type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(column_type)
+            getter_type = RBI::Type.parse_string(Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(column_type))
 
             # Fallback to String as `ActiveRecord::Encryption::EncryptedAttributeType` inherits from
             # `ActiveRecord::Type::Text` which inherits from `ActiveModel::Type::String`.
-            return "::String" if getter_type == "T.untyped"
+            return RBI::Type.simple("::String") if getter_type == RBI::Type.untyped
 
             as_non_nilable_if_persisted_and_not_nullable(getter_type, column_nullability:)
           when ActiveRecord::Type::String
-            "::String"
+            RBI::Type.simple("::String")
           when ActiveRecord::Type::Date
-            "::Date"
+            RBI::Type.simple("::Date")
           when ActiveRecord::Type::Decimal
-            "::BigDecimal"
+            RBI::Type.simple("::BigDecimal")
           when ActiveRecord::Type::Float
-            "::Float"
+            RBI::Type.simple("::Float")
           when ActiveRecord::Type::Boolean
-            "T::Boolean"
+            RBI::Type.boolean
           when ActiveRecord::Type::DateTime, ActiveRecord::Type::Time
-            "::Time"
+            RBI::Type.simple("::Time")
           when ActiveRecord::AttributeMethods::TimeZoneConversion::TimeZoneConverter
-            "::ActiveSupport::TimeWithZone"
+            RBI::Type.simple("::ActiveSupport::TimeWithZone")
           when ActiveRecord::Enum::EnumType
-            "::String"
+            RBI::Type.simple("::String")
           when ActiveRecord::Type::Binary
-            "::String"
+            RBI::Type.simple("::String")
           when ActiveRecord::Type::Serialized
             serialized_column_type(column_type)
           when ->(type) {
@@ -159,61 +159,61 @@ module Tapioca
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Uuid === type
                }
-            "::String"
+            RBI::Type.simple("::String")
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Cidr === type
                }
-            "::IPAddr"
+            RBI::Type.simple("::IPAddr")
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Hstore === type
                }
-            "T::Hash[::String, ::String]"
+            RBI::Type.generic("T::Hash", RBI::Type.simple("::String"), RBI::Type.simple("::String"))
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Interval === type
                }
-            "::ActiveSupport::Duration"
+            RBI::Type.simple("::ActiveSupport::Duration")
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Array === type
                }
-            "T::Array[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
+            RBI::Type.generic("T::Array", type_for_activerecord_value(column_type.subtype, column_nullability:))
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Bit === type
                }
-            "::String"
+            RBI::Type.simple("::String")
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::BitVarying) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::BitVarying === type
                }
-            "::String"
+            RBI::Type.simple("::String")
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Range === type
                }
-            "T::Range[#{type_for_activerecord_value(column_type.subtype, column_nullability:)}]"
+            RBI::Type.generic("T::Range", type_for_activerecord_value(column_type.subtype, column_nullability:))
           when ->(type) {
                  defined?(ActiveRecord::Locking::LockingType) &&
                    ActiveRecord::Locking::LockingType === type
                }
-            as_non_nilable_if_persisted_and_not_nullable("::Integer", column_nullability:)
+            as_non_nilable_if_persisted_and_not_nullable(RBI::Type.simple("::Integer"), column_nullability:)
           when ->(type) {
                  defined?(ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Enum) &&
                    ActiveRecord::ConnectionAdapters::PostgreSQL::OID::Enum === type
                }
-            "::String"
+            RBI::Type.simple("::String")
           else
             as_non_nilable_if_persisted_and_not_nullable(
-              ActiveModelTypeHelper.type_for(column_type),
+              RBI::Type.parse_string(ActiveModelTypeHelper.type_for(column_type)),
               column_nullability: column_nullability,
             )
           end
         end
 
-        #: (String base_type, column_nullability: bool) -> String
+        #: (RBI::Type base_type, column_nullability: bool) -> RBI::Type
         def as_non_nilable_if_persisted_and_not_nullable(base_type, column_nullability:)
           # It's possible that when ActiveModel::Type::Value is used, the signature being reflected on in
           # ActiveModelTypeHelper.type_for(type_value) may say the type can be nilable. However, if the type is
@@ -223,31 +223,31 @@ module Tapioca
           base_type
         end
 
-        #: (ActiveRecord::Enum::EnumType column_type) -> String
+        #: (ActiveRecord::Enum::EnumType column_type) -> RBI::Type
         def enum_setter_type(column_type)
           # In Rails < 7 this method is private. When support for that is dropped we can call the method directly
           case column_type.send(:subtype)
           when ActiveRecord::Type::Integer
-            "T.any(::String, ::Symbol, ::Integer)"
+            RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol"), RBI::Type.simple("::Integer"))
           else
-            "T.any(::String, ::Symbol)"
+            RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol"))
           end
         end
 
-        #: (ActiveRecord::Type::Serialized column_type) -> String
+        #: (ActiveRecord::Type::Serialized column_type) -> RBI::Type
         def serialized_column_type(column_type)
           case column_type.coder
           when ActiveRecord::Coders::YAMLColumn
             case column_type.coder.object_class
             when Array.singleton_class
-              "T::Array[T.untyped]"
+              RBI::Type.generic("T::Array", RBI::Type.untyped)
             when Hash.singleton_class
-              "T::Hash[T.untyped, T.untyped]"
+              RBI::Type.generic("T::Hash", RBI::Type.untyped, RBI::Type.untyped)
             else
-              "T.untyped"
+              RBI::Type.untyped
             end
           else
-            "T.untyped"
+            RBI::Type.untyped
           end
         end
 

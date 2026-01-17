@@ -69,7 +69,7 @@ module Tapioca
 
         HANDLED_METHOD_TARGETS = ["attribute", "attribute="] #: Array[String]
 
-        #: -> Array[[::String, ::String]]
+        #: -> Array[[::String, ::RBI::Type]]
         def attribute_methods_for_constant
           patterns = if constant.respond_to?(:attribute_method_patterns)
             # https://github.com/rails/rails/pull/44367
@@ -102,31 +102,31 @@ module Tapioca
           HANDLED_METHOD_TARGETS.include?(target.to_s)
         end
 
-        #: (untyped attribute_type_value) -> ::String
+        #: (untyped attribute_type_value) -> ::RBI::Type
         def type_for(attribute_type_value)
           case attribute_type_value
           when ActiveModel::Type::Boolean
-            as_nilable_type("T::Boolean")
+            RBI::Type.boolean.nilable
           when ActiveModel::Type::Date
-            as_nilable_type("::Date")
+            RBI::Type.simple("::Date").nilable
           when ActiveModel::Type::DateTime, ActiveModel::Type::Time
-            as_nilable_type("::Time")
+            RBI::Type.simple("::Time").nilable
           when ActiveModel::Type::Decimal
-            as_nilable_type("::BigDecimal")
+            RBI::Type.simple("::BigDecimal").nilable
           when ActiveModel::Type::Float
-            as_nilable_type("::Float")
+            RBI::Type.simple("::Float").nilable
           when ActiveModel::Type::Integer
-            as_nilable_type("::Integer")
+            RBI::Type.simple("::Integer").nilable
           when ActiveModel::Type::String
-            as_nilable_type("::String")
+            RBI::Type.simple("::String").nilable
           else
-            type = Helpers::ActiveModelTypeHelper.type_for(attribute_type_value)
-            type = as_nilable_type(type) if Helpers::ActiveModelTypeHelper.assume_nilable?(attribute_type_value)
+            type = RBI::Type.parse_string(Helpers::ActiveModelTypeHelper.type_for(attribute_type_value))
+            type = type.nilable if Helpers::ActiveModelTypeHelper.assume_nilable?(attribute_type_value)
             type
           end
         end
 
-        #: (RBI::Scope klass, String method, String type) -> void
+        #: (RBI::Scope klass, String method, RBI::Type type) -> void
         def generate_method(klass, method, type)
           if method.end_with?("=")
             parameter = create_param("value", type: type)

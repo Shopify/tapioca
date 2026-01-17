@@ -156,19 +156,19 @@ module Tapioca
 
         # From ActiveRecord::ConnectionAdapter::Quoting#quote, minus nil
         ID_TYPES = [
-          "String",
-          "Symbol",
-          "::ActiveSupport::Multibyte::Chars",
-          "T::Boolean",
-          "BigDecimal",
-          "Numeric",
-          "::ActiveRecord::Type::Binary::Data",
-          "::ActiveRecord::Type::Time::Value",
-          "Date",
-          "Time",
-          "::ActiveSupport::Duration",
-          "T::Class[T.anything]",
-        ].to_set.freeze #: Set[String]
+          RBI::Type.simple("::String"),
+          RBI::Type.simple("::Symbol"),
+          RBI::Type.simple("::ActiveSupport::Multibyte::Chars"),
+          RBI::Type.boolean,
+          RBI::Type.simple("::BigDecimal"),
+          RBI::Type.simple("::Numeric"),
+          RBI::Type.simple("::ActiveRecord::Type::Binary::Data"),
+          RBI::Type.simple("::ActiveRecord::Type::Time::Value"),
+          RBI::Type.simple("::Date"),
+          RBI::Type.simple("::Time")  ,
+          RBI::Type.simple("::ActiveSupport::Duration"),
+          RBI::Type.t_class(RBI::Type.anything),
+        ].to_set.freeze #: Set[RBI::Type]
 
         # @override
         #: -> void
@@ -215,16 +215,16 @@ module Tapioca
         end #: Array[Symbol]
         BATCHES_METHODS = ActiveRecord::Batches.instance_methods(false) #: Array[Symbol]
         BATCHES_METHODS_PARAMETERS = {
-          start: ["T.untyped", "nil"],
-          finish: ["T.untyped", "nil"],
-          load: ["T.untyped", "false"],
-          batch_size: ["Integer", "1000"],
-          of: ["Integer", "1000"],
-          error_on_ignore: ["T.untyped", "nil"],
-          order: ["T.any(Symbol, T::Array[Symbol])", ":asc"],
-          cursor: ["T.untyped", "primary_key"],
-          use_ranges: ["T.untyped", "nil"],
-        } #: Hash[Symbol, [String, String]]
+          start: [RBI::Type.untyped, "nil"],
+          finish: [RBI::Type.untyped, "nil"],
+          load: [RBI::Type.untyped, "false"],
+          batch_size: [RBI::Type.simple("::Integer"), "1000"],
+          of: [RBI::Type.simple("::Integer"), "1000"],
+          error_on_ignore: [RBI::Type.untyped, "nil"],
+          order: [RBI::Type.any(RBI::Type.simple("::Symbol"), RBI::Type.generic("T::Array", RBI::Type.simple("::Symbol"))), ":asc"],
+          cursor: [RBI::Type.untyped, "primary_key"],
+          use_ranges: [RBI::Type.untyped, "nil"],
+        } #: Hash[Symbol, [RBI::Type, String]]
         CALCULATION_METHODS = ActiveRecord::Calculations.instance_methods(false) #: Array[Symbol]
         RELATION_METHODS = ActiveRecord::Relation.instance_methods(false) #: Array[Symbol]
         TO_ARRAY_METHODS = [:to_ary, :to_a] #: Array[Symbol]
@@ -270,7 +270,7 @@ module Tapioca
 
           # Type the `to_ary` method as returning `NilClass` so that flatten stops recursing
           # See https://github.com/sorbet/sorbet/pull/4706 for details
-          model.create_method("to_ary", return_type: "NilClass", visibility: RBI::Private.new)
+          model.create_method("to_ary", return_type: RBI::Type.simple("NilClass"), visibility: RBI::Private.new)
 
           create_relation_class
           create_association_relation_class
@@ -285,10 +285,10 @@ module Tapioca
           model.create_class(RelationClassName, superclass_name: superclass) do |klass|
             klass.create_include(CommonRelationMethodsModuleName)
             klass.create_include(RelationMethodsModuleName)
-            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+            klass.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.simple(constant_name))
 
             TO_ARRAY_METHODS.each do |method_name|
-              klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
+              klass.create_method(method_name.to_s, return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)))
             end
           end
 
@@ -304,10 +304,10 @@ module Tapioca
           model.create_class(AssociationRelationClassName, superclass_name: superclass) do |klass|
             klass.create_include(CommonRelationMethodsModuleName)
             klass.create_include(AssociationRelationMethodsModuleName)
-            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+            klass.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.simple(constant_name))
 
             TO_ARRAY_METHODS.each do |method_name|
-              klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
+              klass.create_method(method_name.to_s, return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)))
             end
           end
 
@@ -319,7 +319,7 @@ module Tapioca
         def create_relation_group_chain_class
           model.create_class(RelationGroupChainClassName, superclass_name: RelationClassName) do |klass|
             create_group_chain_methods(klass)
-            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+            klass.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.simple(constant_name))
           end
         end
 
@@ -330,7 +330,7 @@ module Tapioca
             superclass_name: AssociationRelationClassName,
           ) do |klass|
             create_group_chain_methods(klass)
-            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+            klass.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.simple(constant_name))
           end
         end
 
@@ -346,15 +346,15 @@ module Tapioca
           klass.create_method(
             "having",
             parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
+              create_rest_param("args", type: RBI::Type.untyped),
+              create_block_param("blk", type: RBI::Type.untyped),
             ],
-            return_type: "T.self_type",
+            return_type: RBI::Type.self_type,
           )
 
           klass.create_method(
             "size",
-            return_type: "T::Hash[T.untyped, Integer]",
+            return_type: RBI::Type.generic("T::Hash", RBI::Type.untyped, RBI::Type.simple("::Integer")),
           )
 
           CALCULATION_METHODS.each do |method_name|
@@ -363,36 +363,43 @@ module Tapioca
               klass.create_method(
                 method_name.to_s,
                 parameters: [
-                  create_param("column_name", type: "T.any(String, Symbol)"),
+                  create_param("column_name", type: RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol"))),
                 ],
-                return_type: "T::Hash[T.untyped, " \
-                  "#{method_name == :average ? "T.any(Integer, Float, BigDecimal)" : "T.untyped"}]",
+                return_type: RBI::Type.generic(
+                  "T::Hash",
+                  RBI::Type.untyped,
+                  if method_name == :average
+                    RBI::Type.any(RBI::Type.simple("::Integer"), RBI::Type.simple("::Float"), RBI::Type.simple("::BigDecimal"))
+                  else
+                    RBI::Type.untyped
+                  end
+                )
               )
             when :calculate
               klass.create_method(
                 "calculate",
                 parameters: [
-                  create_param("operation", type: "Symbol"),
-                  create_param("column_name", type: "T.any(String, Symbol)"),
+                  create_param("operation", type: RBI::Type.simple("::Symbol")),
+                  create_param("column_name", type: RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol"))),
                 ],
-                return_type: "T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]",
+                return_type: RBI::Type.generic("T::Hash", RBI::Type.untyped, RBI::Type.any(RBI::Type.simple("::Integer"), RBI::Type.simple("::Float"), RBI::Type.simple("::BigDecimal"))),
               )
             when :count
               klass.create_method(
                 "count",
                 parameters: [
-                  create_opt_param("column_name", type: "T.untyped", default: "nil"),
+                  create_opt_param("column_name", type: RBI::Type.untyped, default: "nil"),
                 ],
-                return_type: "T::Hash[T.untyped, Integer]",
+                return_type: RBI::Type.generic("T::Hash", RBI::Type.untyped, RBI::Type.simple("::Integer")),
               )
             when :sum
               klass.create_method(
                 "sum",
                 parameters: [
-                  create_opt_param("column_name", type: "T.nilable(T.any(String, Symbol))", default: "nil"),
-                  create_block_param("block", type: "T.nilable(T.proc.params(record: T.untyped).returns(T.untyped))"),
+                  create_opt_param("column_name", type: RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol")).nilable, default: "nil"),
+                  create_block_param("block", type: RBI::Type.proc.params(record: RBI::Type.untyped).returns(RBI::Type.untyped).nilable),
                 ],
-                return_type: "T::Hash[T.untyped, T.any(Integer, Float, BigDecimal)]",
+                return_type: RBI::Type.generic("T::Hash", RBI::Type.untyped, RBI::Type.any(RBI::Type.simple("::Integer"), RBI::Type.simple("::Float"), RBI::Type.simple("::BigDecimal"))),
               )
             end
           end
@@ -401,20 +408,20 @@ module Tapioca
         #: -> void
         def create_relation_where_chain_class
           model.create_class(RelationWhereChainClassName) do |klass|
-            create_where_chain_methods(klass, RelationClassName)
-            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+            create_where_chain_methods(klass, RBI::Type.simple(RelationClassName))
+            klass.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.simple(constant_name))
           end
         end
 
         #: -> void
         def create_association_relation_where_chain_class
           model.create_class(AssociationRelationWhereChainClassName) do |klass|
-            create_where_chain_methods(klass, AssociationRelationClassName)
-            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+            create_where_chain_methods(klass, RBI::Type.simple(AssociationRelationClassName))
+            klass.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.simple(constant_name))
           end
         end
 
-        #: (RBI::Scope klass, String return_type) -> void
+        #: (RBI::Scope klass, RBI::Type return_type) -> void
         def create_where_chain_methods(klass, return_type)
           WHERE_CHAIN_QUERY_METHODS.each do |method_name|
             case method_name
@@ -422,8 +429,8 @@ module Tapioca
               klass.create_method(
                 method_name.to_s,
                 parameters: [
-                  create_param("opts", type: "T.untyped"),
-                  create_rest_param("rest", type: "T.untyped"),
+                  create_param("opts", type: RBI::Type.untyped),
+                  create_rest_param("rest", type: RBI::Type.untyped),
                 ],
                 return_type: return_type,
               )
@@ -431,7 +438,7 @@ module Tapioca
               klass.create_method(
                 method_name.to_s,
                 parameters: [
-                  create_rest_param("args", type: "T.untyped"),
+                  create_rest_param("args", type: RBI::Type.untyped),
                 ],
                 return_type: return_type,
               )
@@ -447,10 +454,10 @@ module Tapioca
           model.create_class(AssociationsCollectionProxyClassName, superclass_name: superclass) do |klass|
             klass.create_include(CommonRelationMethodsModuleName)
             klass.create_include(AssociationRelationMethodsModuleName)
-            klass.create_type_variable("Elem", type: "type_member", fixed: constant_name)
+            klass.create_type_variable("Elem", type: "type_member", fixed: RBI::Type.simple(constant_name))
 
             TO_ARRAY_METHODS.each do |method_name|
-              klass.create_method(method_name.to_s, return_type: "T::Array[#{constant_name}]")
+              klass.create_method(method_name.to_s, return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)))
             end
             create_collection_proxy_methods(klass)
           end
@@ -468,8 +475,13 @@ module Tapioca
           #   - or, any mix of the above, thus `T::Enumerable[T.any(Model, T::Enumerable[Model])]`
           # which altogether gives us:
           #   `T.any(Model, T::Enumerable[T.any(Model, T::Enumerable[Model])])`
-          model_collection =
-            "T.any(#{constant_name}, T::Enumerable[T.any(#{constant_name}, T::Enumerable[#{constant_name}])])"
+          model_collection = RBI::Type.any(
+            RBI::Type.simple(constant_name),
+            RBI::Type.generic("T::Enumerable", RBI::Type.any(
+              RBI::Type.simple(constant_name),
+              RBI::Type.generic("T::Enumerable", RBI::Type.simple(constant_name)),
+            )),
+          )
 
           # For these cases, it is valid to pass the above kind of things, but also:
           # - a model identifier, which can be:
@@ -479,9 +491,17 @@ module Tapioca
           #   - a collection of identifiers, thus `T::Enumerable[T.any(Integer, String)]`
           # which, coupled with the above case, gives us:
           #   `T.any(Model, Integer, String, T::Enumerable[T.any(Model, Integer, String, T::Enumerable[Model])])`
-          model_or_id_collection =
-            "T.any(#{constant_name}, Integer, String" \
-              ", T::Enumerable[T.any(#{constant_name}, Integer, String, T::Enumerable[#{constant_name}])])"
+          model_or_id_collection = RBI::Type.any(
+            RBI::Type.simple(constant_name),
+            RBI::Type.simple("Integer"),
+            RBI::Type.simple("String"),
+            RBI::Type.generic("T::Enumerable", RBI::Type.any(
+              RBI::Type.simple(constant_name),
+              RBI::Type.simple("Integer"),
+              RBI::Type.simple("String"),
+              RBI::Type.generic("T::Enumerable", RBI::Type.simple(constant_name)),
+            )),
+          )
 
           COLLECTION_PROXY_METHODS.each do |method_name|
             case method_name
@@ -491,12 +511,12 @@ module Tapioca
                 parameters: [
                   create_rest_param("records", type: model_collection),
                 ],
-                return_type: AssociationsCollectionProxyClassName,
+                return_type: RBI::Type.simple(AssociationsCollectionProxyClassName),
               )
             when :clear
               klass.create_method(
                 method_name.to_s,
-                return_type: AssociationsCollectionProxyClassName,
+                return_type: RBI::Type.simple(AssociationsCollectionProxyClassName),
               )
             when :delete, :destroy
               klass.create_method(
@@ -504,12 +524,12 @@ module Tapioca
                 parameters: [
                   create_rest_param("records", type: model_or_id_collection),
                 ],
-                return_type: "T::Array[#{constant_name}]",
+                return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)),
               )
             when :load_target
               klass.create_method(
                 method_name.to_s,
-                return_type: "T::Array[#{constant_name}]",
+                return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)),
               )
             when :replace
               klass.create_method(
@@ -517,19 +537,19 @@ module Tapioca
                 parameters: [
                   create_param("other_array", type: model_collection),
                 ],
-                return_type: "T::Array[#{constant_name}]",
+                return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)),
               )
             when :reset_scope
               # skip
             when :scope
               klass.create_method(
                 method_name.to_s,
-                return_type: AssociationRelationClassName,
+                return_type: RBI::Type.simple(AssociationRelationClassName),
               )
             when :target
               klass.create_method(
                 method_name.to_s,
-                return_type: "T::Array[#{constant_name}]",
+                return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)),
               )
             end
           end
@@ -548,20 +568,20 @@ module Tapioca
               create_relation_method(
                 "group",
                 parameters: [
-                  create_rest_param("args", type: "T.untyped"),
-                  create_block_param("blk", type: "T.untyped"),
+                  create_rest_param("args", type: RBI::Type.untyped),
+                  create_block_param("blk", type: RBI::Type.untyped),
                 ],
-                relation_return_type: RelationGroupChainClassName,
-                association_return_type: AssociationRelationGroupChainClassName,
+                relation_return_type: RBI::Type.simple(RelationGroupChainClassName),
+                association_return_type: RBI::Type.simple(AssociationRelationGroupChainClassName),
               )
             when :distinct
               create_relation_method(
                 method_name.to_s,
-                parameters: [create_opt_param("value", type: "T::Boolean", default: "true")],
+                parameters: [create_opt_param("value", type: RBI::Type.boolean, default: "true")],
               )
             when :extract_associated
-              parameters = [create_param("association", type: "Symbol")]
-              return_type = "T::Array[T.untyped]"
+              parameters = [create_param("association", type: RBI::Type.simple("::Symbol"))]
+              return_type = RBI::Type.generic("T::Array", RBI::Type.untyped)
               relation_methods_module.create_method(
                 method_name.to_s,
                 parameters: parameters,
@@ -579,12 +599,16 @@ module Tapioca
                   method.add_block_param("blk")
 
                   method.add_sig do |sig|
-                    sig.add_param("args", "T.untyped")
-                    sig.return_type = mod == relation_methods_module ? RelationClassName : AssociationRelationClassName
+                    sig.add_param("args", RBI::Type.untyped)
+                    sig.return_type = if mod == relation_methods_module
+                      RBI::Type.simple(RelationClassName)
+                    else
+                      RBI::Type.simple(AssociationRelationClassName)
+                    end
                   end
                   method.add_sig do |sig|
-                    sig.add_param("blk", "T.proc.params(record: #{constant_name}).returns(BasicObject)")
-                    sig.return_type = "T::Array[#{constant_name}]"
+                    sig.add_param("blk", RBI::Type.proc.params(record: RBI::Type.simple(constant_name)).returns(RBI::Type.simple("::BasicObject")))
+                    sig.return_type = RBI::Type.generic("T::Array", RBI::Type.simple(constant_name))
                   end
                 end
               end
@@ -592,8 +616,8 @@ module Tapioca
               create_relation_method(
                 method_name,
                 parameters: [
-                  create_rest_param("args", type: "T.untyped"),
-                  create_block_param("blk", type: "T.untyped"),
+                  create_rest_param("args", type: RBI::Type.untyped),
+                  create_block_param("blk", type: RBI::Type.untyped),
                 ],
               )
             end
@@ -611,7 +635,7 @@ module Tapioca
         def create_common_methods
           create_common_method(
             "destroy_all",
-            return_type: "T::Array[#{constant_name}]",
+            return_type: RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)),
           )
 
           FINDER_METHODS.each do |method_name|
@@ -620,17 +644,17 @@ module Tapioca
               create_common_method(
                 "exists?",
                 parameters: [
-                  create_opt_param("conditions", type: "T.untyped", default: ":none"),
+                  create_opt_param("conditions", type: RBI::Type.untyped, default: ":none"),
                 ],
-                return_type: "T::Boolean",
+                return_type: RBI::Type.boolean,
               )
             when :include?, :member?
               create_common_method(
                 method_name,
                 parameters: [
-                  create_param("record", type: "T.untyped"),
+                  create_param("record", type: RBI::Type.untyped),
                 ],
-                return_type: "T::Boolean",
+                return_type: RBI::Type.boolean,
               )
             when :find
               id_types = ID_TYPES
@@ -638,17 +662,17 @@ module Tapioca
               if constant.table_exists?
                 primary_key_type = constant.type_for_attribute(constant.primary_key)
                 type = Tapioca::Dsl::Helpers::ActiveModelTypeHelper.type_for(primary_key_type)
-                type = RBIHelper.as_non_nilable_type(type)
+                type = RBI::Type.parse_string(type).non_nilable
 
-                id_types = ID_TYPES.union([type]) if type != "T.untyped"
+                id_types = ID_TYPES.union([type]) if type != RBI::Type.untyped
               end
 
-              id_types = "T.any(#{id_types.to_a.join(", ")})"
+              id_types = RBI::Type.any(*id_types)
               if constant.try(:composite_primary_key?)
-                id_types = "T::Array[#{id_types}]"
+                id_types = RBI::Type.generic("T::Array", id_types)
               end
 
-              array_type = "T::Array[#{id_types}]"
+              array_type = RBI::Type.generic("T::Array", id_types)
 
               common_relation_methods_module.create_method("find") do |method|
                 method.add_opt_param("args", "nil")
@@ -656,72 +680,69 @@ module Tapioca
 
                 method.add_sig do |sig|
                   sig.add_param("args", id_types)
-                  sig.return_type = constant_name
+                  sig.return_type = RBI::Type.simple(constant_name)
                 end
 
                 method.add_sig do |sig|
                   sig.add_param("args", array_type)
-                  sig.return_type = "T::Enumerable[#{constant_name}]"
+                  sig.return_type = RBI::Type.generic("T::Enumerable", RBI::Type.simple(constant_name))
                 end
 
                 method.add_sig do |sig|
-                  sig.add_param("args", "NilClass")
-                  sig.add_param("block", "T.proc.params(object: #{constant_name}).void")
-                  sig.return_type = as_nilable_type(constant_name)
+                  sig.add_param("args", RBI::Type.simple("NilClass"))
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void)
+                  sig.return_type = RBI::Type.simple(constant_name).nilable
                 end
               end
             when :find_by
               create_common_method(
                 "find_by",
                 parameters: [
-                  create_rest_param("args", type: "T.untyped"),
+                  create_rest_param("args", type: RBI::Type.untyped),
                 ],
-                return_type: as_nilable_type(constant_name),
+                return_type: RBI::Type.simple(constant_name).nilable,
               )
             when :find_by!
               create_common_method(
                 "find_by!",
                 parameters: [
-                  create_rest_param("args", type: "T.untyped"),
+                  create_rest_param("args", type: RBI::Type.untyped),
                 ],
-                return_type: constant_name,
+                return_type: RBI::Type.simple(constant_name),
               )
             when :find_sole_by
               create_common_method(
                 "find_sole_by",
                 parameters: [
-                  create_param("arg", type: "T.untyped"),
-                  create_rest_param("args", type: "T.untyped"),
+                  create_param("arg", type: RBI::Type.untyped),
+                  create_rest_param("args", type: RBI::Type.untyped),
                 ],
-                return_type: constant_name,
+                return_type: RBI::Type.simple(constant_name),
               )
             when :sole
               create_common_method(
                 "sole",
                 parameters: [],
-                return_type: constant_name,
+                return_type: RBI::Type.simple(constant_name),
               )
             when :first, :last, :take
               common_relation_methods_module.create_method(method_name.to_s) do |method|
                 method.add_opt_param("limit", "nil")
 
                 method.add_sig do |sig|
-                  sig.return_type = as_nilable_type(constant_name)
+                  sig.return_type = RBI::Type.simple(constant_name).nilable
                 end
 
                 method.add_sig do |sig|
-                  sig.add_param("limit", "Integer")
-                  sig.return_type = "T::Array[#{constant_name}]"
+                  sig.add_param("limit", RBI::Type.simple("::Integer"))
+                  sig.return_type = RBI::Type.generic("T::Array", RBI::Type.simple(constant_name))
                 end
               end
             when :raise_record_not_found_exception!
               # skip
             else
-              return_type = if bang_method?(method_name)
-                constant_name
-              else
-                as_nilable_type(constant_name)
-              end
+              return_type = RBI::Type.simple(constant_name)
+              return_type = return_type.nilable unless bang_method?(method_name)
 
               create_common_method(
                 method_name,
@@ -736,19 +757,19 @@ module Tapioca
               create_common_method(
                 "find_signed",
                 parameters: [
-                  create_param("signed_id", type: "T.untyped"),
-                  create_kw_opt_param("purpose", type: "T.untyped", default: "nil"),
+                  create_param("signed_id", type: RBI::Type.untyped),
+                  create_kw_opt_param("purpose", type: RBI::Type.untyped, default: "nil"),
                 ],
-                return_type: as_nilable_type(constant_name),
+                return_type: RBI::Type.simple(constant_name).nilable,
               )
             when :find_signed!
               create_common_method(
                 "find_signed!",
                 parameters: [
-                  create_param("signed_id", type: "T.untyped"),
-                  create_kw_opt_param("purpose", type: "T.untyped", default: "nil"),
+                  create_param("signed_id", type: RBI::Type.untyped),
+                  create_kw_opt_param("purpose", type: RBI::Type.untyped, default: "nil"),
                 ],
-                return_type: constant_name,
+                return_type: RBI::Type.simple(constant_name),
               )
             end
           end
@@ -759,18 +780,28 @@ module Tapioca
               create_common_method(
                 method_name,
                 parameters: [
-                  create_param("column_name", type: "T.any(String, Symbol)"),
+                  create_param(
+                    "column_name",
+                    type: RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol")),
+                  ),
                 ],
-                return_type: method_name == :average ? "T.any(Integer, Float, BigDecimal)" : "T.untyped",
+                return_type: if method_name == :average
+                  RBI::Type.any(RBI::Type.simple("::Integer"), RBI::Type.simple("::Float"), RBI::Type.simple("::BigDecimal"))
+                else
+                  RBI::Type.untyped
+                end,
               )
             when :calculate
               create_common_method(
                 "calculate",
                 parameters: [
-                  create_param("operation", type: "Symbol"),
-                  create_param("column_name", type: "T.any(String, Symbol)"),
+                  create_param("operation", type: RBI::Type.simple("::Symbol")),
+                  create_param(
+                    "column_name",
+                    type: RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol")),
+                  ),
                 ],
-                return_type: "T.any(Integer, Float, BigDecimal)",
+                return_type: RBI::Type.any(RBI::Type.simple("::Integer"), RBI::Type.simple("::Float"), RBI::Type.simple("::BigDecimal")),
               )
             when :count
               common_relation_methods_module.create_method(method_name.to_s) do |method|
@@ -778,14 +809,14 @@ module Tapioca
                 method.add_block_param("block")
 
                 method.add_sig do |sig|
-                  sig.add_param("column_name", "T.nilable(T.any(String, Symbol))")
-                  sig.return_type = "Integer"
+                  sig.add_param("column_name", RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol")).nilable)
+                  sig.return_type = RBI::Type.simple("::Integer")
                 end
 
                 method.add_sig do |sig|
-                  sig.add_param("column_name", "NilClass")
-                  sig.add_param("block", "T.proc.params(object: #{constant_name}).void")
-                  sig.return_type = "Integer"
+                  sig.add_param("column_name", RBI::Type.simple("NilClass"))
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void)
+                  sig.return_type = RBI::Type.simple("::Integer")
                 end
               end
             when :ids
@@ -797,18 +828,18 @@ module Tapioca
                 primary_key = constant.primary_key
                 getter_type, _setter_type = column_type_helper.type_for(primary_key)
                 type = getter_type
-                create_common_method("ids", return_type: "T::Array[#{type}]")
+                create_common_method("ids", return_type: RBI::Type.generic("T::Array", type))
               else
-                create_common_method("ids", return_type: "Array")
+                create_common_method("ids", return_type: RBI::Type.simple("Array"))
               end
 
             when :pick, :pluck
               create_common_method(
                 method_name,
                 parameters: [
-                  create_rest_param("column_names", type: "T.untyped"),
+                  create_rest_param("column_names", type: RBI::Type.untyped),
                 ],
-                return_type: "T.untyped",
+                return_type: RBI::Type.untyped,
               )
             when :sum
               common_relation_methods_module.create_method(method_name.to_s) do |method|
@@ -816,14 +847,14 @@ module Tapioca
                 method.add_block_param("block")
 
                 method.add_sig do |sig|
-                  sig.add_param("initial_value_or_column", "T.untyped")
-                  sig.return_type = "T.any(Integer, Float, BigDecimal)"
+                  sig.add_param("initial_value_or_column", RBI::Type.untyped)
+                  sig.return_type = RBI::Type.any(RBI::Type.simple("::Integer"), RBI::Type.simple("::Float"), RBI::Type.simple("::BigDecimal"))
                 end
 
                 method.add_sig(type_params: ["U"]) do |sig|
-                  sig.add_param("initial_value_or_column", "T.nilable(T.type_parameter(:U))")
-                  sig.add_param("block", "T.proc.params(object: #{constant_name}).returns(T.type_parameter(:U))")
-                  sig.return_type = "T.type_parameter(:U)"
+                  sig.add_param("initial_value_or_column", RBI::Type.type_parameter(:U).nilable)
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).returns(RBI::Type.type_parameter(:U)))
+                  sig.return_type = RBI::Type.type_parameter(:U)
                 end
               end
             end
@@ -846,7 +877,7 @@ module Tapioca
                 parameters.each do |name, (_style, type, _default)|
                   sig.add_param(name, type)
                 end
-                sig.add_param("block", "T.proc.params(object: #{block_param}).void")
+                sig.add_param("block", RBI::Type.proc.params(object: block_param).void)
                 sig.return_type = "void"
               end
 
@@ -862,13 +893,13 @@ module Tapioca
           RELATION_METHODS.each do |method_name|
             case method_name
             when :any?, :many?, :none?, :one? # enumerable query methods
-              block_type = "T.nilable(T.proc.params(record: #{constant_name}).returns(T.untyped))"
+              block_type = RBI::Type.proc.params(record: RBI::Type.simple(constant_name)).returns(RBI::Type.untyped).nilable
               create_common_method(
                 method_name,
                 parameters: [
                   create_block_param("block", type: block_type),
                 ],
-                return_type: "T::Boolean",
+                return_type: RBI::Type.boolean,
               )
             when :find_or_create_by, :find_or_create_by!, :find_or_initialize_by, :create_or_find_by, :create_or_find_by! # find or create methods
               common_relation_methods_module.create_method(method_name.to_s) do |method|
@@ -878,15 +909,15 @@ module Tapioca
                 # `T.untyped` matches `T::Array[T.untyped]` so the array signature
                 # must be defined first for Sorbet to pick it, if valid.
                 method.add_sig do |sig|
-                  sig.add_param("attributes", "T::Array[T.untyped]")
-                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                  sig.return_type = "T::Array[#{constant_name}]"
+                  sig.add_param("attributes", RBI::Type.generic("T::Array", RBI::Type.untyped))
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void.nilable)
+                  sig.return_type = RBI::Type.generic("T::Array", RBI::Type.simple(constant_name))
                 end
 
                 method.add_sig do |sig|
-                  sig.add_param("attributes", "T.untyped")
-                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                  sig.return_type = constant_name
+                  sig.add_param("attributes", RBI::Type.untyped)
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void.nilable)
+                  sig.return_type = RBI::Type.simple(constant_name)
                 end
               end
             when :new, :create, :create!, :build # builder methods
@@ -895,21 +926,21 @@ module Tapioca
                 method.add_block_param("block")
 
                 method.add_sig do |sig|
-                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void.nilable)
                   sig.return_type = constant_name
                 end
 
                 # `T.untyped` matches `T::Array[T.untyped]` so the array signature
                 # must be defined first for Sorbet to pick it, if valid.
                 method.add_sig do |sig|
-                  sig.add_param("attributes", "T::Array[T.untyped]")
-                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
-                  sig.return_type = "T::Array[#{constant_name}]"
+                  sig.add_param("attributes", RBI::Type.generic("T::Array", RBI::Type.untyped))
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void.nilable)
+                  sig.return_type = RBI::Type.generic("T::Array", RBI::Type.simple(constant_name))
                 end
 
                 method.add_sig do |sig|
-                  sig.add_param("attributes", "T.untyped")
-                  sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+                  sig.add_param("attributes", RBI::Type.untyped)
+                  sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void.nilable)
                   sig.return_type = constant_name
                 end
               end
@@ -930,24 +961,48 @@ module Tapioca
                 parameters: [
                   create_rest_param(
                     "records",
-                    type: "T.any(#{constant_name}, Integer, String" \
-                      ", T::Enumerable[T.any(#{constant_name}, Integer, String, T::Enumerable[#{constant_name}])])",
+                    type: RBI::Type.any(
+                      RBI::Type.simple(constant_name),
+                      RBI::Type.simple("::Integer"),
+                      RBI::Type.simple("::String"),
+                      RBI::Type.generic(
+                        "T::Enumerable",
+                        RBI::Type.any(
+                          RBI::Type.simple(constant_name),
+                          RBI::Type.simple("::Integer"),
+                          RBI::Type.simple("::String"),
+                          RBI::Type.generic("T::Enumerable", RBI::Type.simple(constant_name))
+                        )
+                      )
+                    )
                   ),
                 ],
-                return_type: method_name == :delete ? "Integer" : "T::Array[#{constant_name}]",
+                return_type: if method_name == :delete
+                  RBI::Type.simple("::Integer")
+                else
+                  RBI::Type.generic("T::Array", RBI::Type.simple(constant_name))
+                end,
               )
             when :delete_all, :destroy_all
               common_relation_methods_module.create_method(
                 method_name.to_s,
-                return_type: method_name == :delete_all ? "Integer" : "T::Array[#{constant_name}]",
+                return_type: if method_name == :delete_all
+                  RBI::Type.simple("::Integer")
+                else
+                  RBI::Type.generic("T::Array", RBI::Type.simple(constant_name))
+                end,
               )
             when :delete_by, :destroy_by
               common_relation_methods_module.create_method(
                 method_name.to_s,
                 parameters: [
-                  create_param("args", type: "T.untyped"),
+                  create_param("args", type: RBI::Type.untyped),
                 ],
-                return_type: method_name == :delete_by ? "Integer" : "T::Array[#{constant_name}]",
+                return_type: if method_name == :delete_by
+                  RBI::Type.simple("::Integer")
+                else
+                  RBI::Type.generic("T::Array", RBI::Type.simple(constant_name))
+                end,
               )
             end
           end
@@ -961,22 +1016,22 @@ module Tapioca
             method.add_block_param("block")
 
             method.add_sig do |sig|
-              sig.add_param("attributes", "T.untyped")
-              sig.add_param("block", "T.nilable(T.proc.params(object: #{constant_name}).void)")
+              sig.add_param("attributes", RBI::Type.untyped)
+              sig.add_param("block", RBI::Type.proc.params(object: RBI::Type.simple(constant_name)).void.nilable)
               sig.return_type = constant_name
             end
           end
         end
 
-        #: (Symbol) -> [String, String, Hash[String, [Symbol, String, String?]]]?
+        #: (Symbol) -> [RBI::Type, RBI::Type, Hash[String, [Symbol, RBI::Type, String?]]]?
         def batch_method_configs(method_name)
           block_param, return_type = case method_name
           when :find_each
-            [constant_name, "T::Enumerator[#{constant_name}]"]
+            [RBI::Type.simple(constant_name), RBI::Type.generic("T::Enumerator", RBI::Type.simple(constant_name))]
           when :find_in_batches
-            ["T::Array[#{constant_name}]", "T::Enumerator[T::Array[#{constant_name}]]"]
+            [RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)), RBI::Type.generic("T::Enumerator", RBI::Type.generic("T::Array", RBI::Type.simple(constant_name)))]
           when :in_batches
-            [RelationClassName, "::ActiveRecord::Batches::BatchEnumerator"]
+            [RBI::Type.simple(RelationClassName), RBI::Type.simple("::ActiveRecord::Batches::BatchEnumerator")]
           else
             return
           end
@@ -993,12 +1048,12 @@ module Tapioca
           [block_param, return_type, parameters]
         end
 
-        #: ((Symbol | String) name, ?parameters: Array[RBI::TypedParam], ?return_type: String?) -> void
+        #: ((Symbol | String) name, ?parameters: Array[RBI::TypedParam], ?return_type: RBI::Type?) -> void
         def create_common_method(name, parameters: [], return_type: nil)
           common_relation_methods_module.create_method(
             name.to_s,
             parameters: parameters,
-            return_type: return_type || "void",
+            return_type: return_type,
           )
         end
 
@@ -1008,12 +1063,12 @@ module Tapioca
             method.add_rest_param("args")
 
             method.add_sig do |sig|
-              sig.return_type = RelationWhereChainClassName
+              sig.return_type = RBI::Type.simple(RelationWhereChainClassName)
             end
 
             method.add_sig do |sig|
-              sig.add_param("args", "T.untyped")
-              sig.return_type = RelationClassName
+              sig.add_param("args", RBI::Type.untyped)
+              sig.return_type = RBI::Type.simple(RelationClassName)
             end
           end
 
@@ -1021,12 +1076,12 @@ module Tapioca
             method.add_rest_param("args")
 
             method.add_sig do |sig|
-              sig.return_type = AssociationRelationWhereChainClassName
+              sig.return_type = RBI::Type.simple(AssociationRelationWhereChainClassName)
             end
 
             method.add_sig do |sig|
-              sig.add_param("args", "T.untyped")
-              sig.return_type = AssociationRelationClassName
+              sig.add_param("args", RBI::Type.untyped)
+              sig.return_type = RBI::Type.simple(AssociationRelationClassName)
             end
           end
         end
@@ -1034,14 +1089,14 @@ module Tapioca
         #: (
         #|   (Symbol | String) name,
         #|   ?parameters: Array[RBI::TypedParam],
-        #|   ?relation_return_type: String,
-        #|   ?association_return_type: String
+        #|   ?relation_return_type: RBI::Type,
+        #|   ?association_return_type: RBI::Type
         #| ) -> void
         def create_relation_method(
           name,
           parameters: [],
-          relation_return_type: RelationClassName,
-          association_return_type: AssociationRelationClassName
+          relation_return_type: RBI::Type.simple(RelationClassName),
+          association_return_type: RBI::Type.simple(AssociationRelationClassName)
         )
           relation_methods_module.create_method(
             name.to_s,
@@ -1065,8 +1120,8 @@ module Tapioca
             end
 
             method.add_sig(type_params: ["U"]) do |sig|
-              sig.add_param("block", "T.proc.returns(T.type_parameter(:U))")
-              sig.return_type = "T.type_parameter(:U)"
+              sig.add_param("block", RBI::Type.proc.returns(RBI::Type.type_parameter(:U)))
+              sig.return_type = RBI::Type.type_parameter(:U)
             end
           end
 
@@ -1078,8 +1133,8 @@ module Tapioca
             end
 
             method.add_sig(type_params: ["U"]) do |sig|
-              sig.add_param("block", "T.proc.returns(T.type_parameter(:U))")
-              sig.return_type = "T.type_parameter(:U)"
+              sig.add_param("block", RBI::Type.proc.returns(RBI::Type.type_parameter(:U)))
+              sig.return_type = RBI::Type.type_parameter(:U)
             end
           end
         end

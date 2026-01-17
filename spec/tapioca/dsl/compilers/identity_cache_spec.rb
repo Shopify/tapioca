@@ -84,28 +84,28 @@ module Tapioca
 
                 class Post
                   class << self
-                    sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(blog_id: ::T.untyped, includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_by_blog_id(blog_id, includes: nil); end
 
-                    sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(title: ::T.untyped, includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_by_title(title, includes: nil); end
 
-                    sig { params(blog_id: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
+                    sig { params(blog_id: ::T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_blog_id(blog_id); end
 
-                    sig { params(title: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
+                    sig { params(title: ::T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_title(title); end
 
-                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(index_values: T::Enumerable[::T.untyped], includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_blog_id(index_values, includes: nil); end
 
-                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(index_values: T::Enumerable[::T.untyped], includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_blog_id(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_title(keys); end
                   end
                 end
@@ -139,31 +139,31 @@ module Tapioca
 
                 class Post
                   class << self
-                    sig { params(blog_id: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(blog_id: ::T.untyped, includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_by_blog_id(blog_id, includes: nil); end
 
-                    sig { params(title: T.untyped, includes: T.untyped).returns(T.nilable(::Post)) }
+                    sig { params(title: ::T.untyped, includes: ::T.untyped).returns(::T.nilable(::Post)) }
                     def fetch_by_title(title, includes: nil); end
 
-                    sig { params(title: T.untyped, includes: T.untyped).returns(::Post) }
+                    sig { params(title: ::T.untyped, includes: ::T.untyped).returns(::Post) }
                     def fetch_by_title!(title, includes: nil); end
 
-                    sig { params(blog_id: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
+                    sig { params(blog_id: ::T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_blog_id(blog_id); end
 
-                    sig { params(title: T.untyped).returns(T.nilable(::Integer)) }
+                    sig { params(title: ::T.untyped).returns(::T.nilable(::Integer)) }
                     def fetch_id_by_title(title); end
 
-                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(index_values: T::Enumerable[::T.untyped], includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_blog_id(index_values, includes: nil); end
 
-                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(index_values: T::Enumerable[::T.untyped], includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_blog_id(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_title(keys); end
                   end
                 end
@@ -196,16 +196,16 @@ module Tapioca
 
                 class Post
                   class << self
-                    sig { params(blog_id: T.untyped, title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(blog_id: ::T.untyped, title: ::T.untyped, includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_by_blog_id_and_title(blog_id, title, includes: nil); end
 
-                    sig { params(blog_id: T.untyped, title: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
+                    sig { params(blog_id: ::T.untyped, title: ::T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_blog_id_and_title(blog_id, title); end
 
-                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(index_values: T::Enumerable[::T.untyped], includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_blog_id_and_title(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_blog_id_and_title(keys); end
                   end
                 end
@@ -239,31 +239,31 @@ module Tapioca
 
                 class Post
                   class << self
-                    sig { params(title: T.untyped, includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(title: ::T.untyped, includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_by_title(title, includes: nil); end
 
-                    sig { params(title: T.untyped, review_date: T.untyped, includes: T.untyped).returns(T.nilable(::Post)) }
+                    sig { params(title: ::T.untyped, review_date: ::T.untyped, includes: ::T.untyped).returns(::T.nilable(::Post)) }
                     def fetch_by_title_and_review_date(title, review_date, includes: nil); end
 
-                    sig { params(title: T.untyped, review_date: T.untyped, includes: T.untyped).returns(::Post) }
+                    sig { params(title: ::T.untyped, review_date: ::T.untyped, includes: ::T.untyped).returns(::Post) }
                     def fetch_by_title_and_review_date!(title, review_date, includes: nil); end
 
-                    sig { params(title: T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
+                    sig { params(title: ::T.untyped).returns(T::Array[::T.nilable(::Integer)]) }
                     def fetch_id_by_title(title); end
 
-                    sig { params(title: T.untyped, review_date: T.untyped).returns(T.nilable(::Integer)) }
+                    sig { params(title: ::T.untyped, review_date: ::T.untyped).returns(::T.nilable(::Integer)) }
                     def fetch_id_by_title_and_review_date(title, review_date); end
 
-                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(index_values: T::Enumerable[::T.untyped], includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title(index_values, includes: nil); end
 
-                    sig { params(index_values: T::Enumerable[T.untyped], includes: T.untyped).returns(T::Array[::Post]) }
+                    sig { params(index_values: T::Enumerable[::T.untyped], includes: ::T.untyped).returns(T::Array[::Post]) }
                     def fetch_multi_by_title_and_review_date(index_values, includes: nil); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_title(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::Integer]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::Integer]) }
                     def fetch_multi_id_by_title_and_review_date(keys); end
                   end
                 end
@@ -303,7 +303,7 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(T::Array[T.untyped]) }
+                  sig { returns(T::Array[::T.untyped]) }
                   def fetch_user_ids; end
 
                   sig { returns(T::Array[::User]) }
@@ -345,10 +345,10 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(T.nilable(::User)) }
+                  sig { returns(::T.nilable(::User)) }
                   def fetch_user; end
 
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def fetch_user_id; end
                 end
               RBI
@@ -387,7 +387,7 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(T.untyped) }
+                  sig { returns(::T.untyped) }
                   def fetch_user; end
                 end
               RBI
@@ -420,16 +420,16 @@ module Tapioca
 
                 class Post
                   class << self
-                    sig { params(id: T.untyped).returns(T.nilable(::String)) }
+                    sig { params(id: ::T.untyped).returns(::T.nilable(::String)) }
                     def fetch_author_by_id(id); end
 
-                    sig { params(id: T.untyped, author: T.untyped).returns(T.nilable(::String)) }
+                    sig { params(id: ::T.untyped, author: ::T.untyped).returns(::T.nilable(::String)) }
                     def fetch_author_by_id_and_author(id, author); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::String]) }
                     def fetch_multi_author_by_id(keys); end
 
-                    sig { params(keys: T::Enumerable[T.untyped]).returns(T::Array[::String]) }
+                    sig { params(keys: T::Enumerable[::T.untyped]).returns(T::Array[::String]) }
                     def fetch_multi_author_by_id_and_author(keys); end
                   end
                 end
@@ -469,7 +469,7 @@ module Tapioca
                 # typed: strong
 
                 class Post
-                  sig { returns(T.nilable(::User)) }
+                  sig { returns(::T.nilable(::User)) }
                   def fetch_user; end
                 end
               RBI

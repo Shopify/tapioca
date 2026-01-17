@@ -115,13 +115,13 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def author; end
 
-                        sig { params(value: T.nilable(::User)).void }
+                        sig { params(value: ::T.nilable(::User)).void }
                         def author=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def author_attributes=(attributes); end
 
                         sig { returns(T::Boolean) }
@@ -130,19 +130,19 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def author_previously_changed?; end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def build_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Category) }
                         def build_category(*args, &blk); end
 
-                        sig { returns(T.nilable(::Category)) }
+                        sig { returns(::T.nilable(::Category)) }
                         def category; end
 
-                        sig { params(value: T.nilable(::Category)).void }
+                        sig { params(value: ::T.nilable(::Category)).void }
                         def category=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def category_attributes=(attributes); end
 
                         sig { returns(T::Boolean) }
@@ -151,22 +151,22 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def category_previously_changed?; end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author!(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Category) }
                         def create_category(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Category) }
                         def create_category!(*args, &blk); end
 
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def reload_author; end
 
-                        sig { returns(T.nilable(::Category)) }
+                        sig { returns(::T.nilable(::Category)) }
                         def reload_category; end
 
                         sig { void }
@@ -202,13 +202,13 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.untyped) }
+                        sig { returns(::T.untyped) }
                         def category; end
 
-                        sig { params(value: T.untyped).void }
+                        sig { params(value: ::T.untyped).void }
                         def category=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def category_attributes=(attributes); end
 
                         sig { returns(T::Boolean) }
@@ -217,7 +217,7 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def category_previously_changed?; end
 
-                        sig { returns(T.untyped) }
+                        sig { returns(::T.untyped) }
                         def reload_category; end
 
                         sig { void }
@@ -251,18 +251,18 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def picture_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def picture_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Employee` class because it declared `has_many :pictures`.
                         # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-                        sig { returns(ActiveRecord::Associations::CollectionProxy) }
+                        sig { returns(::ActiveRecord::Associations::CollectionProxy) }
                         def pictures; end
 
-                        sig { params(value: T::Enumerable[T.untyped]).void }
+                        sig { params(value: T::Enumerable[::T.untyped]).void }
                         def pictures=(value); end
                       end
                     end
@@ -301,25 +301,25 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def author; end
 
-                        sig { params(value: T.nilable(::User)).void }
+                        sig { params(value: ::T.nilable(::User)).void }
                         def author=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def author_attributes=(attributes); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def build_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author!(*args, &blk); end
 
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def reload_author; end
 
                         sig { void }
@@ -364,10 +364,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def comment_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def comment_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
@@ -378,7 +378,7 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Comment]).void }
                         def comments=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def comments_attributes=(attributes); end
                       end
                     end
@@ -427,16 +427,16 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def comment_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def comment_ids=(ids); end
 
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def commenter_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def commenter_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_many :commenters, through: :comments`.
@@ -447,7 +447,7 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Commenter]).void }
                         def commenters=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def commenters_attributes=(attributes); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
@@ -498,10 +498,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def commenter_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def commenter_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_and_belongs_to_many :commenters`.
@@ -512,7 +512,7 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Commenter]).void }
                         def commenters=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def commenters_attributes=(attributes); end
                       end
                     end
@@ -570,10 +570,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.nilable(::Blog::Author)) }
+                        sig { returns(::T.nilable(::Blog::Author)) }
                         def author; end
 
-                        sig { params(value: T.nilable(::Blog::Author)).void }
+                        sig { params(value: ::T.nilable(::Blog::Author)).void }
                         def author=(value); end
 
                         sig { returns(T::Boolean) }
@@ -582,16 +582,16 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def author_previously_changed?; end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Author) }
                         def build_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Author) }
                         def create_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Author) }
                         def create_author!(*args, &blk); end
 
-                        sig { returns(T.nilable(::Blog::Author)) }
+                        sig { returns(::T.nilable(::Blog::Author)) }
                         def reload_author; end
 
                         sig { void }
@@ -609,10 +609,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def comment_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def comment_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :comments`.
@@ -623,10 +623,10 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Comment]).void }
                         def comments=(value); end
 
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def draft_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def draft_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :drafts`.
@@ -649,19 +649,19 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Core::Post) }
                         def build_post(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Core::Post) }
                         def create_post(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Core::Post) }
                         def create_post!(*args, &blk); end
 
-                        sig { returns(T.nilable(::Blog::Core::Post)) }
+                        sig { returns(::T.nilable(::Blog::Core::Post)) }
                         def post; end
 
-                        sig { params(value: T.nilable(::Blog::Core::Post)).void }
+                        sig { params(value: ::T.nilable(::Blog::Core::Post)).void }
                         def post=(value); end
 
                         sig { returns(T::Boolean) }
@@ -670,7 +670,7 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def post_previously_changed?; end
 
-                        sig { returns(T.nilable(::Blog::Core::Post)) }
+                        sig { returns(::T.nilable(::Blog::Core::Post)) }
                         def reload_post; end
 
                         sig { void }
@@ -779,25 +779,25 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Shop) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Shop) }
                         def build_shop(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Shop) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Shop) }
                         def create_shop(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Shop) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Shop) }
                         def create_shop!(*args, &blk); end
 
-                        sig { returns(T.nilable(::Shop)) }
+                        sig { returns(::T.nilable(::Shop)) }
                         def reload_shop; end
 
                         sig { void }
                         def reset_shop; end
 
-                        sig { returns(T.nilable(::Shop)) }
+                        sig { returns(::T.nilable(::Shop)) }
                         def shop; end
 
-                        sig { params(value: T.nilable(::Shop)).void }
+                        sig { params(value: ::T.nilable(::Shop)).void }
                         def shop=(value); end
 
                         sig { returns(T::Boolean) }
@@ -872,13 +872,13 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def author; end
 
-                        sig { params(value: T.nilable(::User)).void }
+                        sig { params(value: ::T.nilable(::User)).void }
                         def author=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def author_attributes=(attributes); end
 
                         sig { returns(T::Boolean) }
@@ -887,19 +887,19 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def author_previously_changed?; end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def build_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Category) }
                         def build_category(*args, &blk); end
 
-                        sig { returns(T.nilable(::Category)) }
+                        sig { returns(::T.nilable(::Category)) }
                         def category; end
 
-                        sig { params(value: T.nilable(::Category)).void }
+                        sig { params(value: ::T.nilable(::Category)).void }
                         def category=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def category_attributes=(attributes); end
 
                         sig { returns(T::Boolean) }
@@ -908,22 +908,22 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def category_previously_changed?; end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author!(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Category) }
                         def create_category(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Category) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Category) }
                         def create_category!(*args, &blk); end
 
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def reload_author; end
 
-                        sig { returns(T.nilable(::Category)) }
+                        sig { returns(::T.nilable(::Category)) }
                         def reload_category; end
 
                         sig { void }
@@ -959,13 +959,13 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.untyped) }
+                        sig { returns(::T.untyped) }
                         def category; end
 
-                        sig { params(value: T.untyped).void }
+                        sig { params(value: ::T.untyped).void }
                         def category=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def category_attributes=(attributes); end
 
                         sig { returns(T::Boolean) }
@@ -974,7 +974,7 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def category_previously_changed?; end
 
-                        sig { returns(T.untyped) }
+                        sig { returns(::T.untyped) }
                         def reload_category; end
 
                         sig { void }
@@ -1008,18 +1008,18 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def picture_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def picture_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Employee` class because it declared `has_many :pictures`.
                         # 🔗 [Rails guide for `has_many` association](https://guides.rubyonrails.org/association_basics.html#the-has-many-association)
-                        sig { returns(ActiveRecord::Associations::CollectionProxy[T.untyped]) }
+                        sig { returns(::ActiveRecord::Associations::CollectionProxy[::T.untyped]) }
                         def pictures; end
 
-                        sig { params(value: T::Enumerable[T.untyped]).void }
+                        sig { params(value: T::Enumerable[::T.untyped]).void }
                         def pictures=(value); end
                       end
                     end
@@ -1058,25 +1058,25 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def author; end
 
-                        sig { params(value: T.nilable(::User)).void }
+                        sig { params(value: ::T.nilable(::User)).void }
                         def author=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def author_attributes=(attributes); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def build_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::User) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::User) }
                         def create_author!(*args, &blk); end
 
-                        sig { returns(T.nilable(::User)) }
+                        sig { returns(::T.nilable(::User)) }
                         def reload_author; end
 
                         sig { void }
@@ -1121,10 +1121,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def comment_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def comment_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
@@ -1135,7 +1135,7 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Comment]).void }
                         def comments=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def comments_attributes=(attributes); end
                       end
                     end
@@ -1184,16 +1184,16 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def comment_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def comment_ids=(ids); end
 
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def commenter_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def commenter_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_many :commenters, through: :comments`.
@@ -1204,7 +1204,7 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Commenter]).void }
                         def commenters=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def commenters_attributes=(attributes); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_many :comments`.
@@ -1255,10 +1255,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def commenter_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def commenter_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Post` class because it declared `has_and_belongs_to_many :commenters`.
@@ -1269,7 +1269,7 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Commenter]).void }
                         def commenters=(value); end
 
-                        sig { params(attributes: T.untyped).returns(T.untyped) }
+                        sig { params(attributes: ::T.untyped).returns(::T.untyped) }
                         def commenters_attributes=(attributes); end
                       end
                     end
@@ -1327,10 +1327,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T.nilable(::Blog::Author)) }
+                        sig { returns(::T.nilable(::Blog::Author)) }
                         def author; end
 
-                        sig { params(value: T.nilable(::Blog::Author)).void }
+                        sig { params(value: ::T.nilable(::Blog::Author)).void }
                         def author=(value); end
 
                         sig { returns(T::Boolean) }
@@ -1339,16 +1339,16 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def author_previously_changed?; end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Author) }
                         def build_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Author) }
                         def create_author(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Author) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Author) }
                         def create_author!(*args, &blk); end
 
-                        sig { returns(T.nilable(::Blog::Author)) }
+                        sig { returns(::T.nilable(::Blog::Author)) }
                         def reload_author; end
 
                         sig { void }
@@ -1366,10 +1366,10 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def comment_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def comment_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :comments`.
@@ -1380,10 +1380,10 @@ module Tapioca
                         sig { params(value: T::Enumerable[::Comment]).void }
                         def comments=(value); end
 
-                        sig { returns(T::Array[T.untyped]) }
+                        sig { returns(T::Array[::T.untyped]) }
                         def draft_ids; end
 
-                        sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                        sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                         def draft_ids=(ids); end
 
                         # This method is created by ActiveRecord on the `Blog::Author` class because it declared `has_many :drafts`.
@@ -1406,19 +1406,19 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Core::Post) }
                         def build_post(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Core::Post) }
                         def create_post(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Blog::Core::Post) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Blog::Core::Post) }
                         def create_post!(*args, &blk); end
 
-                        sig { returns(T.nilable(::Blog::Core::Post)) }
+                        sig { returns(::T.nilable(::Blog::Core::Post)) }
                         def post; end
 
-                        sig { params(value: T.nilable(::Blog::Core::Post)).void }
+                        sig { params(value: ::T.nilable(::Blog::Core::Post)).void }
                         def post=(value); end
 
                         sig { returns(T::Boolean) }
@@ -1427,7 +1427,7 @@ module Tapioca
                         sig { returns(T::Boolean) }
                         def post_previously_changed?; end
 
-                        sig { returns(T.nilable(::Blog::Core::Post)) }
+                        sig { returns(::T.nilable(::Blog::Core::Post)) }
                         def reload_post; end
 
                         sig { void }
@@ -1536,25 +1536,25 @@ module Tapioca
                       include GeneratedAssociationMethods
 
                       module GeneratedAssociationMethods
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Shop) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Shop) }
                         def build_shop(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Shop) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Shop) }
                         def create_shop(*args, &blk); end
 
-                        sig { params(args: T.untyped, blk: T.untyped).returns(::Shop) }
+                        sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::Shop) }
                         def create_shop!(*args, &blk); end
 
-                        sig { returns(T.nilable(::Shop)) }
+                        sig { returns(::T.nilable(::Shop)) }
                         def reload_shop; end
 
                         sig { void }
                         def reset_shop; end
 
-                        sig { returns(T.nilable(::Shop)) }
+                        sig { returns(::T.nilable(::Shop)) }
                         def shop; end
 
-                        sig { params(value: T.nilable(::Shop)).void }
+                        sig { params(value: ::T.nilable(::Shop)).void }
                         def shop=(value); end
 
                         sig { returns(T::Boolean) }
@@ -1599,40 +1599,40 @@ module Tapioca
                   include GeneratedAssociationMethods
 
                   module GeneratedAssociationMethods
-                    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def build_photo_attachment(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def build_photo_blob(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def create_photo_attachment(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def create_photo_attachment!(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def create_photo_blob(*args, &blk); end
 
-                    sig { params(args: T.untyped, blk: T.untyped).returns(T.untyped) }
+                    sig { params(args: ::T.untyped, blk: ::T.untyped).returns(::T.untyped) }
                     def create_photo_blob!(*args, &blk); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def photo_attachment; end
 
-                    sig { params(value: T.untyped).void }
+                    sig { params(value: ::T.untyped).void }
                     def photo_attachment=(value); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def photo_blob; end
 
-                    sig { params(value: T.untyped).void }
+                    sig { params(value: ::T.untyped).void }
                     def photo_blob=(value); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def reload_photo_attachment; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def reload_photo_blob; end
 
                     sig { void }
@@ -1670,10 +1670,10 @@ module Tapioca
                   include GeneratedAssociationMethods
 
                   module GeneratedAssociationMethods
-                    sig { returns(T::Array[T.untyped]) }
+                    sig { returns(T::Array[::T.untyped]) }
                     def photos_attachment_ids; end
 
-                    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                    sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                     def photos_attachment_ids=(ids); end
 
                     # This method is created by ActiveRecord on the `Post` class because it declared `has_many :photos_attachments`.
@@ -1684,10 +1684,10 @@ module Tapioca
                     sig { params(value: T::Enumerable[::ActiveStorage::Attachment]).void }
                     def photos_attachments=(value); end
 
-                    sig { returns(T::Array[T.untyped]) }
+                    sig { returns(T::Array[::T.untyped]) }
                     def photos_blob_ids; end
 
-                    sig { params(ids: T::Array[T.untyped]).returns(T::Array[T.untyped]) }
+                    sig { params(ids: T::Array[::T.untyped]).returns(T::Array[::T.untyped]) }
                     def photos_blob_ids=(ids); end
 
                     # This method is created by ActiveRecord on the `Post` class because it declared `has_many :photos_blobs, through: :photos_attachments`.

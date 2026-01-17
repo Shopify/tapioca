@@ -82,16 +82,20 @@ module Tapioca
 
         private
 
-        #: (Hash[untyped, untyped] enum_map) -> String
+        #: (Hash[untyped, untyped] enum_map) -> RBI::Type
         def type_for_enum(enum_map)
-          value_type = enum_map.values.map { |v| v.class.name }.uniq
-          value_type = if value_type.length == 1
-            value_type.first
+          value_type = enum_map.values.map { |v| RBI::Type.simple(T.must(qualified_name_of(v.class))) }
+          value_type = if value_type.size > 1
+            RBI::Type.any(*value_type)
           else
-            "T.any(#{value_type.join(", ")})"
+            value_type.first
           end
 
-          "T::Hash[T.any(String, Symbol), #{value_type}]"
+          RBI::Type.generic(
+            "T::Hash",
+            RBI::Type.any(RBI::Type.simple("::String"), RBI::Type.simple("::Symbol")),
+            value_type,
+          )
         end
 
         #: (RBI::Scope klass) -> void
@@ -100,7 +104,7 @@ module Tapioca
 
           methods.each do |method|
             method = method.to_s
-            return_type = method.end_with?("?") ? "T::Boolean" : "void"
+            return_type = method.end_with?("?") ? RBI::Type.boolean : RBI::Type.void
 
             klass.create_method(method, return_type: return_type)
           end

@@ -118,27 +118,27 @@ module Tapioca
         private
 
         TYPES = {
-          boolean: "T::Boolean",
-          integer: "Integer",
-          string: "String",
-          float: "Float",
-          date: "Date",
-          time: "Time",
-          datetime: "DateTime",
-          decimal: "BigDecimal",
-          any: "T.untyped",
-        }.freeze #: Hash[Symbol, String]
+          boolean: RBI::Type.boolean,
+          integer: RBI::Type.simple("::Integer"),
+          string: RBI::Type.simple("::String"),
+          float: RBI::Type.simple("::Float"),
+          date: RBI::Type.simple("::Date"),
+          time: RBI::Type.simple("::Time"),
+          datetime: RBI::Type.simple("::DateTime"),
+          decimal: RBI::Type.simple("::BigDecimal"),
+          any: RBI::Type.untyped,
+        }.freeze #: Hash[Symbol, RBI::Type]
 
-        #: (ActiveRecord::TypedStore::Field field) -> String
+        #: (ActiveRecord::TypedStore::Field field) -> RBI::Type
         def type_for(field)
-          type = TYPES.fetch(field.type_sym, "T.untyped")
+          type = TYPES.fetch(field.type_sym, RBI::Type.untyped)
 
           type = if field.array
             # `null: false` applies to the array itself, not the elements, which are always nilable.
             # https://github.com/byroot/activerecord-typedstore/blob/2f3fb98/spec/support/models.rb#L46C34-L46C45
             # https://github.com/byroot/activerecord-typedstore/blob/2f3fb98/spec/active_record/typed_store_spec.rb#L854-L857
             nilable_element_type = as_nilable_type(type)
-            "T::Array[#{nilable_element_type}]"
+            RBI::Type.generic("T::Array", nilable_element_type)
           else
             type
           end
@@ -148,7 +148,7 @@ module Tapioca
           type
         end
 
-        #: (RBI::Scope klass, String name, String type) -> void
+        #: (RBI::Scope klass, String name, RBI::Type type) -> void
         def generate_methods(klass, name, type)
           klass.create_method(
             "#{name}=",
@@ -156,13 +156,13 @@ module Tapioca
             return_type: type,
           )
           klass.create_method(name, return_type: type)
-          klass.create_method("#{name}?", return_type: "T::Boolean")
+          klass.create_method("#{name}?", return_type: RBI::Type.boolean)
           klass.create_method("#{name}_was", return_type: type)
-          klass.create_method("#{name}_changed?", return_type: "T::Boolean")
+          klass.create_method("#{name}_changed?", return_type: RBI::Type.boolean)
           klass.create_method("#{name}_before_last_save", return_type: type)
-          klass.create_method("saved_change_to_#{name}?", return_type: "T::Boolean")
-          klass.create_method("#{name}_change", return_type: "T.nilable([#{type}, #{type}])")
-          klass.create_method("saved_change_to_#{name}", return_type: "T.nilable([#{type}, #{type}])")
+          klass.create_method("saved_change_to_#{name}?", return_type: RBI::Type.boolean)
+          klass.create_method("#{name}_change", return_type: RBI::Type.tuple(type, type).nilable)
+          klass.create_method("saved_change_to_#{name}", return_type: RBI::Type.tuple(type, type).nilable)
         end
       end
     end

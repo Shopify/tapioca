@@ -40,7 +40,7 @@ module Tapioca
 
           root.create_path(::ActiveSupport::EnvironmentInquirer) do |mod|
             envs.each do |env|
-              mod.create_method("#{env}?", return_type: "T::Boolean")
+              mod.create_method("#{env}?", return_type: RBI::Type.boolean)
             end
           end
         end

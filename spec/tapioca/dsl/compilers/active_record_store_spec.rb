@@ -60,28 +60,28 @@ module Tapioca
                   include GeneratedStoredAttributesMethods
 
                   module GeneratedStoredAttributesMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def saved_change_to_theme; end
 
                     sig { returns(T::Boolean) }
                     def saved_change_to_theme?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def theme=(value); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme_before_last_save; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme_change; end
 
                     sig { returns(T::Boolean) }
                     def theme_changed?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme_was; end
                   end
                 end
@@ -104,28 +104,28 @@ module Tapioca
                   include GeneratedStoredAttributesMethods
 
                   module GeneratedStoredAttributesMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def saved_change_to_theme; end
 
                     sig { returns(T::Boolean) }
                     def saved_change_to_theme?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme; end
 
-                    sig { params(value: T.untyped).returns(T.untyped) }
+                    sig { params(value: ::T.untyped).returns(::T.untyped) }
                     def theme=(value); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme_before_last_save; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme_change; end
 
                     sig { returns(T::Boolean) }
                     def theme_changed?; end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def theme_was; end
                   end
                 end
@@ -145,25 +145,25 @@ module Tapioca
               output = rbi_for(:User)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def theme=(value); end
               RBI
               assert_includes(output, expected)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def language=(value); end
               RBI
               assert_includes(output, expected)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def power_source=(value); end
               RBI
               assert_includes(output, expected)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def expiry=(value); end
               RBI
               assert_includes(output, expected)
@@ -180,13 +180,13 @@ module Tapioca
               output = rbi_for(:User)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def settings_theme=(value); end
               RBI
               assert_includes(output, expected)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def prefs_power_source=(value); end
               RBI
               assert_includes(output, expected)
@@ -203,13 +203,13 @@ module Tapioca
               output = rbi_for(:User)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def theme_settings=(value); end
               RBI
               assert_includes(output, expected)
 
               expected = indented(<<~RBI, 4)
-                sig { params(value: T.untyped).returns(T.untyped) }
+                sig { params(value: ::T.untyped).returns(::T.untyped) }
                 def power_source_prefs=(value); end
               RBI
               assert_includes(output, expected)

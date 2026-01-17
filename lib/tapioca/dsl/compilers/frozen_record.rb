@@ -71,8 +71,8 @@ module Tapioca
 
             record.create_module(module_name) do |mod|
               attributes.each do |attribute|
-                mod.create_method("#{attribute}?", return_type: "T::Boolean")
-                mod.create_method(attribute.to_s, return_type: "T.untyped")
+                mod.create_method("#{attribute}?", return_type: RBI::Type.boolean)
+                mod.create_method(attribute.to_s, return_type: RBI::Type.untyped)
               end
             end
 
@@ -113,10 +113,10 @@ module Tapioca
           mod.create_method(
             scope_method,
             parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
+              create_rest_param("args", type: RBI::Type.untyped),
+              create_block_param("blk", type: RBI::Type.untyped),
             ],
-            return_type: "T.untyped",
+            return_type: RBI::Type.untyped,
           )
         end
       end

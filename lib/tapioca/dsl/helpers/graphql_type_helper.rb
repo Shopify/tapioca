@@ -10,7 +10,7 @@ module Tapioca
         #: (
         #|   GraphQL::Schema::Argument argument,
         #|   (singleton(GraphQL::Schema::Mutation) | singleton(GraphQL::Schema::InputObject)) constant
-        #| ) -> String
+        #| ) -> RBI::Type
         def type_for_argument(argument, constant)
           type = if argument.loads
             loads_type = ::GraphQL::Schema::Wrapper.new(argument.loads)
@@ -47,25 +47,25 @@ module Tapioca
         #|   ) type,
         #|   ?ignore_nilable_wrapper: bool,
         #|   ?prepare_method: Method?
-        #| ) -> String
+        #| ) -> RBI::Type
         def type_for(type, ignore_nilable_wrapper: false, prepare_method: nil)
           unwrapped_type = type.unwrap
 
           parsed_type = case unwrapped_type
           when GraphQL::Types::Boolean.singleton_class
-            "T::Boolean"
+            RBI::Type.boolean
           when GraphQL::Types::Float.singleton_class
-            type_for_constant(Float)
+            RBI::Type.simple("::Float")
           when GraphQL::Types::ID.singleton_class, GraphQL::Types::String.singleton_class
             type_for_constant(String)
           when GraphQL::Types::Int.singleton_class, GraphQL::Types::BigInt.singleton_class
             type_for_constant(Integer)
           when GraphQL::Types::ISO8601Date.singleton_class
-            type_for_constant(Date)
+            RBI::Type.simple("::Date")
           when GraphQL::Types::ISO8601DateTime.singleton_class
-            type_for_constant(Time)
+            RBI::Type.simple("::Time")
           when GraphQL::Types::JSON.singleton_class
-            "T::Hash[::String, T.untyped]"
+            RBI::Type.generic("T::Hash", RBI::Type.simple("::String"), RBI::Type.untyped)
           when GraphQL::Schema::Enum.singleton_class
             enum_values = T.cast(unwrapped_type.enum_values, T::Array[GraphQL::Schema::EnumValue])
             value_types = enum_values.map { |v| type_for_constant(v.value.class) }.uniq
@@ -73,36 +73,41 @@ module Tapioca
             if value_types.size == 1
               T.must(value_types.first)
             else
-              "T.any(#{value_types.join(", ")})"
+              RBI::Type.any(*value_types)
             end
           when GraphQL::Schema::Scalar.singleton_class
             method = Runtime::Reflection.method_of(unwrapped_type, :coerce_input)
             signature = Runtime::Reflection.signature_of(method)
             return_type = signature&.return_type
 
-            valid_return_type?(return_type) ? return_type.to_s : "T.untyped"
+            valid_return_type?(return_type) ? RBI::Type.parse_string(return_type.to_s) : RBI::Type.untyped
           when GraphQL::Schema::InputObject.singleton_class
             type_for_constant(unwrapped_type)
           when Module
-            Runtime::Reflection.qualified_name_of(unwrapped_type) || "T.untyped"
+            name = Runtime::Reflection.qualified_name_of(unwrapped_type)
+            if name
+              RBI::Type.simple(name)
+            else
+              RBI::Type.untyped
+            end
           else
-            "T.untyped"
+            RBI::Type.untyped
           end
 
           if prepare_method
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)
             prepare_return_type = prepare_signature&.return_type
             if valid_return_type?(prepare_return_type)
-              parsed_type = prepare_return_type&.to_s
+              parsed_type = RBI::Type.parse_string(prepare_return_type.to_s)
             end
           end
 
           if type.list?
-            parsed_type = "T::Array[#{parsed_type}]"
+            parsed_type = RBI::Type.generic("T::Array", parsed_type)
           end
 
           unless type.non_null? || ignore_nilable_wrapper
-            parsed_type = RBIHelper.as_nilable_type(parsed_type)
+            parsed_type = parsed_type.nilable
           end
 
           parsed_type
@@ -110,17 +115,25 @@ module Tapioca
 
         private
 
-        #: (T::Module[top] constant) -> String
+        #: (T::Module[top] constant) -> RBI::Type
         def type_for_constant(constant)
           if constant.instance_methods.include?(:prepare)
             prepare_method = constant.instance_method(:prepare)
 
             prepare_signature = Runtime::Reflection.signature_of(prepare_method)
+            prepare_return_type = prepare_signature&.return_type
 
-            return prepare_signature.return_type&.to_s if valid_return_type?(prepare_signature&.return_type)
+            if valid_return_type?(prepare_return_type)
+              return RBI::Type.parse_string(prepare_return_type.to_s)
+            end
           end
 
-          Runtime::Reflection.qualified_name_of(constant) || "T.untyped"
+          name = Runtime::Reflection.qualified_name_of(constant)
+          if name
+            RBI::Type.simple(name)
+          else
+            RBI::Type.untyped
+          end
         end
 
         #: (GraphQL::Schema::Argument argument) -> bool

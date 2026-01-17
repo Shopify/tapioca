@@ -63,11 +63,11 @@ module Tapioca
             # Create RBI definitions for all the attributes that use confirmation validation
             confirmation_validators.each do |validator|
               validator.attributes.each do |attr_name|
-                klass.create_method("#{attr_name}_confirmation", return_type: "T.untyped")
+                klass.create_method("#{attr_name}_confirmation", return_type: RBI::Type.untyped)
                 klass.create_method(
                   "#{attr_name}_confirmation=",
-                  parameters: [create_param("#{attr_name}_confirmation", type: "T.untyped")],
-                  return_type: "T.untyped",
+                  parameters: [create_param("#{attr_name}_confirmation", type: RBI::Type.untyped)],
+                  return_type: RBI::Type.untyped,
                 )
               end
             end

@@ -46,7 +46,7 @@ module Tapioca
               constant.__tapioca_secure_tokens.each do |attribute|
                 mod.create_method(
                   "regenerate_#{attribute}",
-                  return_type: "T::Boolean",
+                  return_type: RBI::Type.boolean,
                 )
               end
             end

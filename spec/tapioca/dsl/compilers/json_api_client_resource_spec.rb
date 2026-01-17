@@ -84,16 +84,16 @@ module Tapioca
                     sig { params(is_admin: T::Boolean).returns(T::Boolean) }
                     def is_admin=(is_admin); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def name; end
 
-                    sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(name: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def name=(name); end
 
-                    sig { returns(T.nilable(T::Array[Post])) }
+                    sig { returns(::T.nilable(T::Array[::Post])) }
                     def posts; end
 
-                    sig { params(posts: T.nilable(T::Array[Post])).returns(T.nilable(T::Array[Post])) }
+                    sig { params(posts: ::T.nilable(T::Array[::Post])).returns(::T.nilable(T::Array[::Post])) }
                     def posts=(posts); end
                   end
                 end
@@ -106,16 +106,16 @@ module Tapioca
                   include JsonApiClientResourceGeneratedMethods
 
                   module JsonApiClientResourceGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(title: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def title=(title); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def user_id; end
 
-                    sig { params(user_id: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(user_id: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def user_id=(user_id); end
                   end
                 end
@@ -150,16 +150,16 @@ module Tapioca
                   include JsonApiClientResourceGeneratedMethods
 
                   module JsonApiClientResourceGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def name; end
 
-                    sig { params(name: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(name: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def name=(name); end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def title; end
 
-                    sig { params(title: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(title: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def title=(title); end
                   end
                 end
@@ -206,10 +206,10 @@ module Tapioca
                   include JsonApiClientResourceGeneratedMethods
 
                   module JsonApiClientResourceGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def user_id; end
 
-                    sig { params(user_id: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(user_id: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def user_id=(user_id); end
                   end
                 end
@@ -222,16 +222,16 @@ module Tapioca
                   include JsonApiClientResourceGeneratedMethods
 
                   module JsonApiClientResourceGeneratedMethods
-                    sig { returns(T.nilable(Image)) }
+                    sig { returns(::T.nilable(::Image)) }
                     def image; end
 
-                    sig { params(image: T.nilable(Image)).returns(T.nilable(Image)) }
+                    sig { params(image: ::T.nilable(::Image)).returns(::T.nilable(::Image)) }
                     def image=(image); end
 
-                    sig { returns(T.nilable(T::Array[Post])) }
+                    sig { returns(::T.nilable(T::Array[::Post])) }
                     def posts; end
 
-                    sig { params(posts: T.nilable(T::Array[Post])).returns(T.nilable(T::Array[Post])) }
+                    sig { params(posts: ::T.nilable(T::Array[::Post])).returns(::T.nilable(T::Array[::Post])) }
                     def posts=(posts); end
                   end
                 end
@@ -244,10 +244,10 @@ module Tapioca
                   include JsonApiClientResourceGeneratedMethods
 
                   module JsonApiClientResourceGeneratedMethods
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def user_id; end
 
-                    sig { params(user_id: T.nilable(::String)).returns(T.nilable(::String)) }
+                    sig { params(user_id: ::T.nilable(::String)).returns(::T.nilable(::String)) }
                     def user_id=(user_id); end
                   end
                 end
@@ -269,16 +269,16 @@ module Tapioca
                   include JsonApiClientResourceGeneratedMethods
 
                   module JsonApiClientResourceGeneratedMethods
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def name; end
 
-                    sig { params(name: T.untyped).returns(T.untyped) }
+                    sig { params(name: ::T.untyped).returns(::T.untyped) }
                     def name=(name); end
 
-                    sig { returns(T.untyped) }
+                    sig { returns(::T.untyped) }
                     def title; end
 
-                    sig { params(title: T.untyped).returns(T.untyped) }
+                    sig { params(title: ::T.untyped).returns(::T.untyped) }
                     def title=(title); end
                   end
                 end
@@ -318,10 +318,10 @@ module Tapioca
                     include JsonApiClientResourceGeneratedMethods
 
                     module JsonApiClientResourceGeneratedMethods
-                      sig { returns(T.untyped) }
+                      sig { returns(::T.untyped) }
                       def name; end
 
-                      sig { params(name: T.untyped).returns(T.untyped) }
+                      sig { params(name: ::T.untyped).returns(::T.untyped) }
                       def name=(name); end
                     end
                   end
@@ -351,10 +351,10 @@ module Tapioca
                     include JsonApiClientResourceGeneratedMethods
 
                     module JsonApiClientResourceGeneratedMethods
-                      sig { returns(T.nilable(Integer)) }
+                      sig { returns(::T.nilable(Integer)) }
                       def comment_count; end
 
-                      sig { params(comment_count: T.nilable(Integer)).returns(T.nilable(Integer)) }
+                      sig { params(comment_count: ::T.nilable(Integer)).returns(::T.nilable(Integer)) }
                       def comment_count=(comment_count); end
 
                       sig { returns(Integer) }
@@ -390,10 +390,10 @@ module Tapioca
                     include JsonApiClientResourceGeneratedMethods
 
                     module JsonApiClientResourceGeneratedMethods
-                      sig { returns(T.nilable(Integer)) }
+                      sig { returns(::T.nilable(Integer)) }
                       def comment_count; end
 
-                      sig { params(comment_count: T.nilable(Integer)).returns(T.nilable(Integer)) }
+                      sig { params(comment_count: ::T.nilable(Integer)).returns(::T.nilable(Integer)) }
                       def comment_count=(comment_count); end
 
                       sig { returns(Integer) }

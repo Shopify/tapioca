@@ -104,31 +104,31 @@ module Tapioca
                   include GeneratedDelegatedTypeMethods
 
                   module GeneratedDelegatedTypeMethods
-                    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+                    sig { params(args: ::T.untyped).returns(::T.any(Message, Comment)) }
                     def build_entryable(*args); end
 
-                    sig { returns(T.nilable(Comment)) }
+                    sig { returns(::T.nilable(Comment)) }
                     def comment; end
 
                     sig { returns(T::Boolean) }
                     def comment?; end
 
-                    sig { returns(T.nilable(::Integer)) }
+                    sig { returns(::T.nilable(::Integer)) }
                     def comment_id; end
 
-                    sig { returns(T::Class[T.anything]) }
+                    sig { returns(T::Class[::T.anything]) }
                     def entryable_class; end
 
                     sig { returns(ActiveSupport::StringInquirer) }
                     def entryable_name; end
 
-                    sig { returns(T.nilable(Message)) }
+                    sig { returns(::T.nilable(Message)) }
                     def message; end
 
                     sig { returns(T::Boolean) }
                     def message?; end
 
-                    sig { returns(T.nilable(::Integer)) }
+                    sig { returns(::T.nilable(::Integer)) }
                     def message_id; end
                   end
                 end
@@ -172,31 +172,31 @@ module Tapioca
                   include GeneratedDelegatedTypeMethods
 
                   module GeneratedDelegatedTypeMethods
-                    sig { params(args: T.untyped).returns(T.any(Message, Comment)) }
+                    sig { params(args: ::T.untyped).returns(::T.any(Message, Comment)) }
                     def build_entryable(*args); end
 
-                    sig { returns(T.nilable(Comment)) }
+                    sig { returns(::T.nilable(Comment)) }
                     def comment; end
 
                     sig { returns(T::Boolean) }
                     def comment?; end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def comment_uuid; end
 
-                    sig { returns(T::Class[T.anything]) }
+                    sig { returns(T::Class[::T.anything]) }
                     def entryable_class; end
 
                     sig { returns(ActiveSupport::StringInquirer) }
                     def entryable_name; end
 
-                    sig { returns(T.nilable(Message)) }
+                    sig { returns(::T.nilable(Message)) }
                     def message; end
 
                     sig { returns(T::Boolean) }
                     def message?; end
 
-                    sig { returns(T.nilable(::String)) }
+                    sig { returns(::T.nilable(::String)) }
                     def message_uuid; end
                   end
                 end
@@ -235,22 +235,22 @@ module Tapioca
                   include GeneratedDelegatedTypeMethods
 
                   module GeneratedDelegatedTypeMethods
-                    sig { params(args: T.untyped).returns(Message) }
+                    sig { params(args: ::T.untyped).returns(Message) }
                     def build_entryable(*args); end
 
-                    sig { returns(T::Class[T.anything]) }
+                    sig { returns(T::Class[::T.anything]) }
                     def entryable_class; end
 
                     sig { returns(ActiveSupport::StringInquirer) }
                     def entryable_name; end
 
-                    sig { returns(T.nilable(Message)) }
+                    sig { returns(::T.nilable(Message)) }
                     def message; end
 
                     sig { returns(T::Boolean) }
                     def message?; end
 
-                    sig { returns(T.nilable(::Integer)) }
+                    sig { returns(::T.nilable(::Integer)) }
                     def message_id; end
                   end
                 end

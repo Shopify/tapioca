@@ -79,13 +79,13 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def may_run?; end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run!(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run_without_validation!(*opts); end
 
                   sig { returns(T::Boolean) }
@@ -95,85 +95,85 @@ module Tapioca
                   def sleeping?; end
 
                   class << self
-                    sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
+                    sig { params(args: ::T.untyped, block: ::T.nilable(::T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
                     def aasm(*args, &block); end
                   end
 
                   class PrivateAASMMachine < AASM::Base
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_transactions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_transitions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def before_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def before_all_transactions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def ensure_on_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def error_on_all_events(*callbacks, &block); end
 
-                    sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
+                    sig { params(name: ::T.untyped, options: ::T.untyped, block: ::T.proc.bind(PrivateAASMEvent).void).returns(::T.untyped) }
                     def event(name, options = nil, &block); end
 
                     class PrivateAASMEvent < AASM::Core::Event
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after_commit(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after_transaction(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before_success(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before_transaction(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def ensure(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def error(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def success(symbol = nil, &block); end
 
-                      sig { params(definitions: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMTransition).void)).returns(T.untyped) }
+                      sig { params(definitions: ::T.untyped, block: ::T.nilable(::T.proc.bind(PrivateAASMTransition).void)).returns(::T.untyped) }
                       def transitions(definitions = nil, &block); end
                     end
 
                     class PrivateAASMTransition < AASM::Core::Transition
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T::Boolean) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(T::Boolean) }
                       def guard(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def on_transition(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def success(&block); end
                     end
                   end
 
-                  STATE_CLEANING = T.let(T.unsafe(nil), Symbol)
-                  STATE_RUNNING = T.let(T.unsafe(nil), Symbol)
-                  STATE_SLEEPING = T.let(T.unsafe(nil), Symbol)
+                  STATE_CLEANING = T.let(T.unsafe(nil), ::Symbol)
+                  STATE_RUNNING = T.let(T.unsafe(nil), ::Symbol)
+                  STATE_SLEEPING = T.let(T.unsafe(nil), ::Symbol)
                 end
               RBI
 
@@ -220,13 +220,13 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def may_run?; end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run!(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run_without_validation!(*opts); end
 
                   sig { returns(T::Boolean) }
@@ -236,86 +236,86 @@ module Tapioca
                   def sleeping?; end
 
                   class << self
-                    sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
+                    sig { params(args: ::T.untyped, block: ::T.nilable(::T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
                     def aasm(*args, &block); end
                   end
 
                   class PrivateAASMMachine < AASM::Base
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_transactions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_transitions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def before_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def before_all_transactions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def ensure_on_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def error_on_all_events(*callbacks, &block); end
 
-                    sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
+                    sig { params(name: ::T.untyped, options: ::T.untyped, block: ::T.proc.bind(PrivateAASMEvent).void).returns(::T.untyped) }
                     def event(name, options = nil, &block); end
 
                     class PrivateAASMEvent < AASM::Core::Event
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after_commit(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after_transaction(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before_success(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before_transaction(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def ensure(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def error(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def success(symbol = nil, &block); end
 
-                      sig { params(definitions: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMTransition).void)).returns(T.untyped) }
+                      sig { params(definitions: ::T.untyped, block: ::T.nilable(::T.proc.bind(PrivateAASMTransition).void)).returns(::T.untyped) }
                       def transitions(definitions = nil, &block); end
                     end
 
                     class PrivateAASMTransition < AASM::Core::Transition
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T::Boolean) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(T::Boolean) }
                       def guard(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def on_transition(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def success(&block); end
                     end
                   end
 
-                  STATE_CLEANING = T.let(T.unsafe(nil), Symbol)
-                  STATE_EXISTING = T.let(T.unsafe(nil), Symbol)
-                  STATE_RUNNING = T.let(T.unsafe(nil), Symbol)
-                  STATE_SLEEPING = T.let(T.unsafe(nil), Symbol)
+                  STATE_CLEANING = T.let(T.unsafe(nil), ::Symbol)
+                  STATE_EXISTING = T.let(T.unsafe(nil), ::Symbol)
+                  STATE_RUNNING = T.let(T.unsafe(nil), ::Symbol)
+                  STATE_SLEEPING = T.let(T.unsafe(nil), ::Symbol)
                 end
               RBI
 
@@ -364,101 +364,101 @@ module Tapioca
                   sig { returns(T::Boolean) }
                   def may_run_foo?; end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run!(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run_foo(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run_foo!(*opts); end
 
-                  sig { params(opts: T.untyped).returns(T.untyped) }
+                  sig { params(opts: ::T.untyped).returns(::T.untyped) }
                   def run_without_validation!(*opts); end
 
                   class << self
-                    sig { params(args: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
+                    sig { params(args: ::T.untyped, block: ::T.nilable(::T.proc.bind(PrivateAASMMachine).void)).returns(PrivateAASMMachine) }
                     def aasm(*args, &block); end
                   end
 
                   class PrivateAASMMachine < AASM::Base
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_transactions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def after_all_transitions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def before_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def before_all_transactions(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def ensure_on_all_events(*callbacks, &block); end
 
-                    sig { params(callbacks: T.any(String, Symbol, T::Class[T.anything], Proc), block: T.nilable(T.proc.bind(StateMachine).void)).returns(T.untyped) }
+                    sig { params(callbacks: ::T.any(String, Symbol, T::Class[::T.anything], ::T.proc.void), block: ::T.nilable(::T.proc.bind(StateMachine).void)).returns(::T.untyped) }
                     def error_on_all_events(*callbacks, &block); end
 
-                    sig { params(name: T.untyped, options: T.untyped, block: T.proc.bind(PrivateAASMEvent).void).returns(T.untyped) }
+                    sig { params(name: ::T.untyped, options: ::T.untyped, block: ::T.proc.bind(PrivateAASMEvent).void).returns(::T.untyped) }
                     def event(name, options = nil, &block); end
 
                     class PrivateAASMEvent < AASM::Core::Event
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after_commit(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after_transaction(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before_success(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def before_transaction(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def ensure(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def error(symbol = nil, &block); end
 
-                      sig { params(symbol: T.nilable(Symbol), block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(symbol: ::T.nilable(::Symbol), block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def success(symbol = nil, &block); end
 
-                      sig { params(definitions: T.untyped, block: T.nilable(T.proc.bind(PrivateAASMTransition).void)).returns(T.untyped) }
+                      sig { params(definitions: ::T.untyped, block: ::T.nilable(::T.proc.bind(PrivateAASMTransition).void)).returns(::T.untyped) }
                       def transitions(definitions = nil, &block); end
                     end
 
                     class PrivateAASMTransition < AASM::Core::Transition
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def after(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T::Boolean) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(T::Boolean) }
                       def guard(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def on_transition(&block); end
 
-                      sig { params(block: T.nilable(T.proc.bind(StateMachine).params(opts: T.untyped).void)).returns(T.untyped) }
+                      sig { params(block: ::T.nilable(::T.proc.bind(StateMachine).params(opts: ::T.untyped).void)).returns(::T.untyped) }
                       def success(&block); end
                     end
                   end
 
-                  STATE_FOO_CLEANING = T.let(T.unsafe(nil), Symbol)
-                  STATE_FOO_RUNNING = T.let(T.unsafe(nil), Symbol)
-                  STATE_FOO_SLEEPING = T.let(T.unsafe(nil), Symbol)
+                  STATE_FOO_CLEANING = T.let(T.unsafe(nil), ::Symbol)
+                  STATE_FOO_RUNNING = T.let(T.unsafe(nil), ::Symbol)
+                  STATE_FOO_SLEEPING = T.let(T.unsafe(nil), ::Symbol)
                 end
               RBI
 

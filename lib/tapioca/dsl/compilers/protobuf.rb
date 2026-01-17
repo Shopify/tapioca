@@ -68,8 +68,8 @@ module Tapioca
       class Protobuf < Compiler
         class Field < T::Struct
           prop :name, String
-          prop :type, String
-          prop :init_type, String
+          prop :type, RBI::Type
+          prop :init_type, RBI::Type
           prop :default, String
         end
 
@@ -105,19 +105,19 @@ module Tapioca
 
                 klass.create_method(
                   "lookup",
-                  parameters: [create_param("number", type: "Integer")],
-                  return_type: "T.nilable(Symbol)",
+                  parameters: [create_param("number", type: RBI::Type.simple("::Integer"))],
+                  return_type: RBI::Type.simple("::Symbol").nilable,
                   class_method: true,
                 )
                 klass.create_method(
                   "resolve",
-                  parameters: [create_param("symbol", type: "Symbol")],
-                  return_type: "T.nilable(Integer)",
+                  parameters: [create_param("symbol", type: RBI::Type.simple("::Symbol"))],
+                  return_type: RBI::Type.simple("::Integer").nilable,
                   class_method: true,
                 )
                 klass.create_method(
                   "descriptor",
-                  return_type: "Google::Protobuf::EnumDescriptor",
+                  return_type: RBI::Type.simple("::Google::Protobuf::EnumDescriptor"),
                   class_method: true,
                 )
               when Google::Protobuf::Descriptor
@@ -133,13 +133,13 @@ module Tapioca
                 end
 
                 if fields.all? { |field| FIELD_RE.match?(field.name) }
-                  klass.create_method("initialize", parameters: parameters, return_type: "void")
+                  klass.create_method("initialize", parameters: parameters, return_type: RBI::Type.void)
                 else
                   # One of the fields has an incorrect name for a named parameter so creating the default initialize for
                   # it would create a RBI with a syntax error.
                   # The workaround is to create an initialize that takes a **kwargs instead.
-                  kwargs_parameter = create_kw_rest_param("fields", type: "T.untyped")
-                  klass.create_method("initialize", parameters: [kwargs_parameter], return_type: "void")
+                  kwargs_parameter = create_kw_rest_param("fields", type: RBI::Type.untyped)
+                  klass.create_method("initialize", parameters: [kwargs_parameter], return_type: RBI::Type.void)
                 end
               else
                 add_error(<<~MSG.strip)
@@ -196,7 +196,7 @@ module Tapioca
           end
         end
 
-        #: (Google::Protobuf::FieldDescriptor descriptor) -> String
+        #: (Google::Protobuf::FieldDescriptor descriptor) -> RBI::Type
         def type_of(descriptor)
           case descriptor.type
           when :enum
@@ -206,19 +206,24 @@ module Tapioca
             # > value is known, or a number if it is unknown. Since proto3 uses
             # > open enum semantics, any number may be assigned to an enum
             # > field, even if it was not defined in the enum.
-            "T.any(Symbol, Integer)"
+            RBI::Type.any(RBI::Type.simple("::Symbol"), RBI::Type.simple("::Integer"))
           when :message
-            descriptor.subtype.msgclass.name || "T.untyped"
+            name = qualified_name_of(descriptor.subtype.msgclass)
+            if name
+              RBI::Type.simple(name)
+            else
+              RBI::Type.untyped
+            end
           when :int32, :int64, :uint32, :uint64
-            "Integer"
+            RBI::Type.simple("::Integer")
           when :double, :float
-            "Float"
+            RBI::Type.simple("::Float")
           when :bool
-            "T::Boolean"
+            RBI::Type.boolean
           when :string, :bytes
-            "String"
+            RBI::Type.simple("::String")
           else
-            "T.untyped"
+            RBI::Type.untyped
           end
         end
 
@@ -250,17 +255,17 @@ module Tapioca
 
               key_type = type_of(key)
               value_type = type_of(value)
-              type = "Google::Protobuf::Map[#{key_type}, #{value_type}]"
+              type = RBI::Type.generic("Google::Protobuf::Map", key_type, value_type)
 
               Field.new(
                 name: descriptor.name,
                 type: type,
-                init_type: "T.nilable(T.any(#{type}, T::Hash[#{key_type}, #{value_type}]))",
+                init_type: RBI::Type.any(type, RBI::Type.generic("Hash", key_type, value_type)).nilable,
                 default: "T.unsafe(nil)",
               )
             else
               elem_type = type_of(descriptor)
-              type = "Google::Protobuf::RepeatedField[#{elem_type}]"
+              type = RBI::Type.generic("Google::Protobuf::RepeatedField", elem_type)
 
               Field.new(
                 name: descriptor.name,
@@ -269,13 +274,13 @@ module Tapioca
                 # https://github.com/protocolbuffers/protobuf/blob/fc0eda1fd4eff075f1fb2e9249fa4209f0227e33/ruby/lib/google/protobuf/ffi/repeated_field.rb#L361-L366
                 # However the C implementation of the initializer specifically checks for Arrays:
                 # https://github.com/protocolbuffers/protobuf/blob/fc0eda1fd4eff075f1fb2e9249fa4209f0227e33/ruby/ext/google/protobuf_c/message.c#L568-L573
-                init_type: "T.nilable(T::Array[#{elem_type}])",
+                init_type: RBI::Type.any(type, RBI::Type.generic("Array", elem_type)).nilable,
                 default: "T.unsafe(nil)",
               )
             end
           else
             type = type_of(descriptor)
-            nilable_type = as_nilable_type(type)
+            nilable_type = type.nilable
             type = nilable_type if nilable_descriptor?(descriptor)
 
             Field.new(
@@ -299,18 +304,18 @@ module Tapioca
           klass.create_method(
             "#{field.name}=",
             parameters: [create_param("value", type: field.type)],
-            return_type: "void",
+            return_type: RBI::Type.void,
           )
 
           klass.create_method(
             "clear_#{field.name}",
-            return_type: "void",
+            return_type: RBI::Type.void,
           )
 
           if has_presence?(desc)
             klass.create_method(
               "has_#{field.name}?",
-              return_type: "Object",
+              return_type: RBI::Type.simple("::Object"),
             )
           end
 
@@ -321,7 +326,7 @@ module Tapioca
         def create_oneof_method(klass, desc)
           klass.create_method(
             desc.name,
-            return_type: "T.nilable(Symbol)",
+            return_type: RBI::Type.simple("::Symbol").nilable,
           )
         end
       end

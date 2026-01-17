@@ -43,9 +43,9 @@ module Tapioca
 
           root.create_path(constant) do |mod|
             return_type = if ::Time.zone
-              "::ActiveSupport::TimeWithZone"
+              RBI::Type.simple("::ActiveSupport::TimeWithZone")
             else
-              "::Time"
+              RBI::Type.simple("::Time")
             end
 
             mod.create_method("current", return_type: return_type, class_method: true)

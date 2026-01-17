@@ -133,10 +133,10 @@ module Tapioca
           mod.create_method("#{name}=", parameters: [create_param(name, type: type)], return_type: type)
         end
 
-        #: (::JsonApiClient::Schema::Property property) -> String
+        #: (::JsonApiClient::Schema::Property property) -> RBI::Type
         def type_for(property)
           type = ::JsonApiClient::Schema::TypeFactory.type_for(property.type)
-          return "T.untyped" if type.nil?
+          return RBI::Type.untyped if type.nil?
 
           sorbet_type = if type.respond_to?(:sorbet_type)
             line, file = type.method(:sorbet_type).source_location
@@ -147,23 +147,23 @@ module Tapioca
               Defined on line #{line} of #{file}
             MESSAGE
 
-            type.sorbet_type
+            RBI::Type.parse_string(type.sorbet_type)
           elsif type.respond_to?(:__tapioca_type)
-            type.__tapioca_type
+            RBI::Type.parse_string(type.__tapioca_type)
           elsif type == ::JsonApiClient::Schema::Types::Integer
-            "::Integer"
+            RBI::Type.simple("::Integer")
           elsif type == ::JsonApiClient::Schema::Types::String
-            "::String"
+            RBI::Type.simple("::String")
           elsif type == ::JsonApiClient::Schema::Types::Float
-            "::Float"
+            RBI::Type.simple("::Float")
           elsif type == ::JsonApiClient::Schema::Types::Time
-            "::Time"
+            RBI::Type.simple("::Time")
           elsif type == ::JsonApiClient::Schema::Types::Decimal
-            "::BigDecimal"
+            RBI::Type.simple("::BigDecimal")
           elsif type == ::JsonApiClient::Schema::Types::Boolean
-            "T::Boolean"
+            RBI::Type.boolean
           else
-            "T.untyped"
+            RBI::Type.untyped
           end
 
           if property.default.nil?
@@ -181,11 +181,11 @@ module Tapioca
           name, type = case association
           when ::JsonApiClient::Associations::BelongsTo::Association
             # id must be a string: # https://jsonapi.org/format/#document-resource-object-identification
-            [association.param.to_s, "T.nilable(::String)"]
+            [association.param.to_s, RBI::Type.simple("::String").nilable]
           when ::JsonApiClient::Associations::HasOne::Association
-            [association.attr_name.to_s, "T.nilable(#{klass})"]
+            [association.attr_name.to_s, RBI::Type.simple(T.must(qualified_name_of(klass))).nilable]
           when ::JsonApiClient::Associations::HasMany::Association
-            [association.attr_name.to_s, "T.nilable(T::Array[#{klass}])"]
+            [association.attr_name.to_s, RBI::Type.generic("T::Array", RBI::Type.simple(T.must(qualified_name_of(klass)))).nilable]
           else
             return # Unsupported association type
           end

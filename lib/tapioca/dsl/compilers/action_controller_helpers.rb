@@ -74,7 +74,7 @@ module Tapioca
 
           # Define the helpers method
           root.create_path(constant) do |controller|
-            controller.create_method("helpers", return_type: helper_proxy_name)
+            controller.create_method("helpers", return_type: RBI::Type.simple(helper_proxy_name))
 
             # Create helper method module
             controller.create_module(helper_methods_name) do |helper_methods|
@@ -140,11 +140,11 @@ module Tapioca
           helper_methods.create_method(
             method_name.to_s,
             parameters: [
-              create_rest_param("args", type: "T.untyped"),
-              create_kw_rest_param("kwargs", type: "T.untyped"),
-              create_block_param("blk", type: "T.untyped"),
+              create_rest_param("args", type: RBI::Type.untyped),
+              create_kw_rest_param("kwargs", type: RBI::Type.untyped),
+              create_block_param("blk", type: RBI::Type.untyped),
             ],
-            return_type: "T.untyped",
+            return_type: RBI::Type.untyped,
           )
         end
 

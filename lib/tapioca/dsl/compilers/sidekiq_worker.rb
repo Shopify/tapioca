@@ -57,18 +57,19 @@ module Tapioca
             # accept a datetime, time, or numeric but we're typing them differently so they
             # semantically make sense.
             at_return_type = if defined?(ActiveSupport::TimeWithZone)
-              "T.any(DateTime, Time, ActiveSupport::TimeWithZone)"
+              RBI::Type.any(RBI::Type.simple("::DateTime"), RBI::Type.simple("::Time"), RBI::Type.simple("::ActiveSupport::TimeWithZone"))
             else
-              "T.any(DateTime, Time)"
+              RBI::Type.any(RBI::Type.simple("::DateTime"), RBI::Type.simple("::Time"))
             end
             at_params = [
               create_param("interval", type: at_return_type),
               *async_params,
             ]
+
             in_return_type = if defined?(ActiveSupport::Duration)
-              "T.any(Numeric, ActiveSupport::Duration)"
+              RBI::Type.any(RBI::Type.simple("::Numeric"), RBI::Type.simple("::ActiveSupport::Duration"))
             else
-              "Numeric"
+              RBI::Type.simple("::Numeric")
             end
             in_params = [
               create_param("interval", type: in_return_type),
@@ -94,7 +95,12 @@ module Tapioca
         #: (RBI::Scope worker, String method_name, Array[RBI::TypedParam] parameters) -> void
         def generate_perform_method(worker, method_name, parameters)
           if constant.method(method_name.to_sym).owner == Sidekiq::Worker::ClassMethods
-            worker.create_method(method_name, parameters: parameters, return_type: "String", class_method: true)
+            worker.create_method(
+              method_name,
+              parameters: parameters,
+              return_type: RBI::Type.simple("::String"),
+              class_method: true,
+            )
           end
         end
       end

@@ -58,12 +58,12 @@ module Tapioca
       #   end
       # end
       # ~~~
-      #: [ConstantType = singleton(::SmartProperties)]
+      #: [ConstantType = singleton(::SmartProperties) & ::SmartProperties::ClassMethods]
       class SmartProperties < Compiler
         # @override
         #: -> void
         def decorate
-          properties = T.unsafe(constant).properties #: ::SmartProperties::PropertyCollection
+          properties = constant.properties #: ::SmartProperties::PropertyCollection
           return if properties.keys.empty?
 
           root.create_path(constant) do |k|
@@ -101,7 +101,11 @@ module Tapioca
             name = property.name.to_s
             method_name = "#{name}="
 
-            mod.create_method(method_name, parameters: [create_param(name, type: type)], return_type: type)
+            mod.create_method(
+              method_name,
+              parameters: [create_param(name, type: type)],
+              return_type: type,
+            )
           end
 
           mod.create_method(property.reader.to_s, return_type: type)
@@ -112,7 +116,7 @@ module Tapioca
           [false, true],
         ].freeze #: Array[[bool, bool]]
 
-        #: (::SmartProperties::Property property) -> String
+        #: (::SmartProperties::Property property) -> RBI::Type
         def type_for(property)
           converter, accepter, required = property.to_h.fetch_values(
             :converter,
@@ -120,25 +124,27 @@ module Tapioca
             :required,
           )
 
-          return "T.untyped" if converter
+          return RBI::Type.untyped if converter
 
           type = if accepter.nil? || accepter.respond_to?(:to_proc)
-            "T.untyped"
+            RBI::Type.untyped
           elsif accepter == Array
-            "T::Array[T.untyped]"
+            RBI::Type.generic("T::Array", RBI::Type.untyped)
           elsif BOOLEANS.include?(accepter)
-            "T::Boolean"
+            RBI::Type.boolean
           elsif Array(accepter).all? { |a| a.is_a?(Module) }
-            accepters = Array(accepter)
-            types = accepters.map { |mod| T.must(qualified_name_of(mod)) }.join(", ")
-            types = "T.any(#{types})" if accepters.size > 1
-            types
+            accepters = Array(accepter).map { |mod| RBI::Type.simple(T.must(qualified_name_of(mod))) }
+            if accepters.size == 1
+              accepters.first
+            else
+              RBI::Type.any(*accepters)
+            end
           else
-            "T.untyped"
+            RBI::Type.untyped
           end
 
           might_be_optional = Proc === required || !required
-          type = as_nilable_type(type) if might_be_optional
+          type = type.nilable if might_be_optional
 
           type
         end

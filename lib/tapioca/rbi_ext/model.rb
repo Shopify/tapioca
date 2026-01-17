@@ -53,7 +53,7 @@ module RBI
       create_node(RBI::MixesInClassMethods.new(name))
     end
 
-    #: (String name, type: String, ?variance: Symbol, ?fixed: String?, ?upper: String?, ?lower: String?) -> void
+    #: (String name, type: String, ?variance: Symbol, ?fixed: RBI::Type?, ?upper: RBI::Type?, ?lower: RBI::Type?) -> void
     def create_type_variable(name, type:, variance: :invariant, fixed: nil, upper: nil, lower: nil)
       value = Tapioca::RBIHelper.serialize_type_variable(type, variance, fixed, upper, lower)
       create_node(RBI::TypeMember.new(name, value))
@@ -62,7 +62,7 @@ module RBI
     #: (
     #|   String name,
     #|   ?parameters: Array[TypedParam],
-    #|   ?return_type: String?,
+    #|   ?return_type: RBI::Type?,
     #|   ?class_method: bool,
     #|   ?visibility: RBI::Visibility,
     #|   ?comments: Array[RBI::Comment]
@@ -77,7 +77,7 @@ module RBI
         # If there is no block, and the params and return type have not been supplied, then
         # we create a single signature with the given parameters and return type
         params = parameters.map { |param| RBI::SigParam.new(param.param.name.to_s, param.type) }
-        sigs << RBI::Sig.new(params: params, return_type: return_type || "T.untyped")
+        sigs << RBI::Sig.new(params: params, return_type: return_type || RBI::Type.untyped)
       end
 
       method = RBI::Method.new(
@@ -112,6 +112,6 @@ module RBI
 
   class TypedParam < T::Struct
     const :param, RBI::Param
-    const :type, String
+    const :type, RBI::Type
   end
 end

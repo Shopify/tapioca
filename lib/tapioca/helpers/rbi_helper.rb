@@ -8,7 +8,7 @@ module Tapioca
     extend self
 
     class << self
-      #: (String type, Symbol variance, String? fixed, String? upper, String? lower) -> String
+      #: (String type, Symbol variance, RBI::Type? fixed, RBI::Type? upper, RBI::Type? lower) -> String
       def serialize_type_variable(type, variance, fixed, upper, lower)
         variance = nil if variance == :invariant
 
@@ -27,44 +27,44 @@ module Tapioca
       end
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String name, type: RBI::Type) -> RBI::TypedParam
     def create_param(name, type:)
       create_typed_param(RBI::ReqParam.new(name), type)
     end
 
-    #: (String name, type: String, default: String) -> RBI::TypedParam
+    #: (String name, type: RBI::Type, default: String) -> RBI::TypedParam
     def create_opt_param(name, type:, default:)
       create_typed_param(RBI::OptParam.new(name, default), type)
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String name, type: RBI::Type) -> RBI::TypedParam
     def create_rest_param(name, type:)
       create_typed_param(RBI::RestParam.new(name), type)
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String name, type: RBI::Type) -> RBI::TypedParam
     def create_kw_param(name, type:)
       create_typed_param(RBI::KwParam.new(name), type)
     end
 
-    #: (String name, type: String, default: String) -> RBI::TypedParam
+    #: (String name, type: RBI::Type, default: String) -> RBI::TypedParam
     def create_kw_opt_param(name, type:, default:)
       create_typed_param(RBI::KwOptParam.new(name, default), type)
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String name, type: RBI::Type) -> RBI::TypedParam
     def create_kw_rest_param(name, type:)
       create_typed_param(RBI::KwRestParam.new(name), type)
     end
 
-    #: (String name, type: String) -> RBI::TypedParam
+    #: (String name, type: RBI::Type) -> RBI::TypedParam
     def create_block_param(name, type:)
       create_typed_param(RBI::BlockParam.new(name), type)
     end
 
-    #: (RBI::Param param, String type) -> RBI::TypedParam
+    #: (RBI::Param param, RBI::Type type) -> RBI::TypedParam
     def create_typed_param(param, type)
-      RBI::TypedParam.new(param: param, type: sanitize_signature_types(type))
+      RBI::TypedParam.new(param: param, type: type)
     end
 
     #: (String sig_string) -> String
@@ -76,19 +76,15 @@ module Tapioca
         .gsub(".params()", "")
     end
 
-    #: (String type) -> String
+    #: (RBI::Type type) -> RBI::Type
     def as_nilable_type(type)
-      if type.start_with?("T.nilable(", "::T.nilable(") || type == "T.untyped" || type == "::T.untyped"
-        type
-      else
-        "T.nilable(#{type})"
-      end
+      type.nilable
     end
 
-    #: (String type) -> String
+    #: (RBI::Type type) -> RBI::Type
     def as_non_nilable_type(type)
-      if type.match(/\A(?:::)?T.nilable\((.+)\)\z/)
-        T.must(::Regexp.last_match(1))
+      if type.nilable?
+        type.non_nilable
       else
         type
       end
