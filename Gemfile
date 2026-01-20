@@ -18,6 +18,7 @@ else
 end
 gem "minitest-hooks"
 gem "minitest-reporters"
+gem "minitest-mock"
 gem "debug"
 gem "irb"
 gem "rubocop-shopify"
