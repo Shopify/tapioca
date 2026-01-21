@@ -139,7 +139,7 @@ module Tapioca
                     def delete_all; end
 
                     sig { params(args: T.untyped).returns(Integer) }
-                    def delete_by(args); end
+                    def delete_by(*args); end
 
                     sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
                     def destroy(*records); end
@@ -151,7 +151,7 @@ module Tapioca
                     def destroy_all; end
 
                     sig { params(args: T.untyped).returns(T::Array[::Post]) }
-                    def destroy_by(args); end
+                    def destroy_by(*args); end
 
                     sig { params(conditions: T.untyped).returns(T::Boolean) }
                     def exists?(conditions = :none); end
@@ -846,7 +846,7 @@ module Tapioca
                     def delete_all; end
 
                     sig { params(args: T.untyped).returns(Integer) }
-                    def delete_by(args); end
+                    def delete_by(*args); end
 
                     sig { params(records: T.any(::Post, Integer, String, T::Enumerable[T.any(::Post, Integer, String, T::Enumerable[::Post])])).returns(T::Array[::Post]) }
                     def destroy(*records); end
@@ -858,7 +858,7 @@ module Tapioca
                     def destroy_all; end
 
                     sig { params(args: T.untyped).returns(T::Array[::Post]) }
-                    def destroy_by(args); end
+                    def destroy_by(*args); end
 
                     sig { params(conditions: T.untyped).returns(T::Boolean) }
                     def exists?(conditions = :none); end
