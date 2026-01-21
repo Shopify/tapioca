@@ -194,8 +194,8 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.18.0)
-    kramdown (2.5.1)
-      rexml (>= 3.3.9)
+    kramdown (2.5.2)
+      rexml (>= 3.4.4)
     kredis (1.8.0)
       activemodel (>= 6.0.0)
       activesupport (>= 6.0.0)
@@ -321,7 +321,7 @@ GEM
     regexp_parser (2.11.3)
     reline (0.6.3)
       io-console (~> 0.5)
-    require-hooks (0.2.2)
+    require-hooks (0.2.3)
     rexml (3.4.4)
     rubocop (1.82.1)
       json (~> 2.3)
@@ -362,15 +362,15 @@ GEM
       rack (>= 3.2.0)
       redis-client (>= 0.26.0)
     smart_properties (1.17.0)
-    sorbet (0.6.12883)
-      sorbet-static (= 0.6.12883)
-    sorbet-runtime (0.6.12883)
-    sorbet-static (0.6.12883-aarch64-linux)
-    sorbet-static (0.6.12883-universal-darwin)
-    sorbet-static (0.6.12883-x86_64-linux)
-    sorbet-static-and-runtime (0.6.12883)
-      sorbet (= 0.6.12883)
-      sorbet-runtime (= 0.6.12883)
+    sorbet (0.6.12887)
+      sorbet-static (= 0.6.12887)
+    sorbet-runtime (0.6.12887)
+    sorbet-static (0.6.12887-aarch64-linux)
+    sorbet-static (0.6.12887-universal-darwin)
+    sorbet-static (0.6.12887-x86_64-linux)
+    sorbet-static-and-runtime (0.6.12887)
+      sorbet (= 0.6.12887)
+      sorbet-runtime (= 0.6.12887)
     spoom (1.7.11)
       erubi (>= 1.10.0)
       prism (>= 0.28.0)
@@ -461,6 +461,7 @@ DEPENDENCIES
   shopify-money
   sidekiq
   smart_properties
+  sorbet-static (< 0.6.12889)
   sprockets
   sqlite3
   state_machines
