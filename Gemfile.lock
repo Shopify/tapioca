@@ -137,6 +137,8 @@ GEM
       bigdecimal
       rexml
     crass (1.0.6)
+    dalli (4.0.0)
+      logger
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -436,6 +438,7 @@ DEPENDENCIES
   bcrypt
   cityhash
   config
+  dalli
   debug
   frozen_record
   google-protobuf
