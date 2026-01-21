@@ -1,10 +1,14 @@
 name: tapioca
 
+nix: true
 type: ruby
 
 up:
   - ruby
   - bundler
+  - packages:
+      - libyaml
+      - zlib
 
 env:
   SRB_SKIP_GEM_RBIS: 'true'
