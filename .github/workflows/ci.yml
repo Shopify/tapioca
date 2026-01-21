@@ -19,7 +19,7 @@ jobs:
         uses: ruby/setup-ruby@80740b3b13bf9857e28854481ca95a84e78a2bdf # v1.284.0
         with:
           bundler-cache: true
-          rubygems: 3.6.2
+          rubygems: 4.0.4
       - name: Run type check
         run: bin/typecheck
       - name: Run type check with Prism parser
