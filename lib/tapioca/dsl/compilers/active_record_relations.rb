@@ -945,7 +945,7 @@ module Tapioca
               common_relation_methods_module.create_method(
                 method_name.to_s,
                 parameters: [
-                  create_param("args", type: "T.untyped"),
+                  create_rest_param("args", type: "T.untyped"),
                 ],
                 return_type: method_name == :delete_by ? "Integer" : "T::Array[#{constant_name}]",
               )
