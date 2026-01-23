@@ -31,8 +31,10 @@ module Tapioca
         @events = [] #: Array[Gem::Event]
 
         @payload_symbols = Static::SymbolLoader.payload_symbols #: Set[String]
-        @bootstrap_symbols = load_bootstrap_symbols(@gem) #: Set[String]
-        gem_graph = Static::SymbolLoader.graph_from_paths(@gem.files) if include_doc
+        gem_graph = Static::SymbolLoader.graph_from_paths(@gem.files) #: Rubydex::Graph
+        gem_symbols = gem_graph.declarations.map(&:name).to_set
+        engine_symbols = Static::SymbolLoader.engine_symbols(@gem)
+        @bootstrap_symbols = gem_symbols.union(engine_symbols) #: Set[String]
 
         @bootstrap_symbols.each { |symbol| push_symbol(symbol) }
 
@@ -190,14 +192,6 @@ module Tapioca
       end
 
       private
-
-      #: (Gemfile::GemSpec gem) -> Set[String]
-      def load_bootstrap_symbols(gem)
-        engine_symbols = Static::SymbolLoader.engine_symbols(gem)
-        gem_symbols = Static::SymbolLoader.gem_symbols(gem)
-
-        gem_symbols.union(engine_symbols)
-      end
 
       # Events handling
 
