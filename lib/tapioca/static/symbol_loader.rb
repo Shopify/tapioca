@@ -27,11 +27,6 @@ module Tapioca
         end
 
         #: (Gemfile::GemSpec gem) -> Set[String]
-        def gem_symbols(gem)
-          symbols_from_paths(gem.files)
-        end
-
-        #: (Gemfile::GemSpec gem) -> Set[String]
         def engine_symbols(gem)
           gem_engine = engines.find do |engine|
             gem.full_gem_path == engine.config.root.to_s
@@ -51,7 +46,8 @@ module Tapioca
             Pathname.glob("#{load_path}/**/*.rb")
           end
 
-          symbols_from_paths(paths)
+          engine_graph = graph_from_paths(paths)
+          engine_graph.declarations.map(&:name).to_set
         rescue
           Set.new
         end
