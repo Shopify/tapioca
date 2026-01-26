@@ -4240,6 +4240,9 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           # Method bar
           #
           # This method does something really important
+          #
+          # @param a [String]
+          # @return [void]
           sig { params(a: ::String).void }
           def bar(a); end
 
@@ -4256,11 +4259,10 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
 
           def no_yard_docs_nor_sig; end
 
+          # @deprecated Do not use me!
           # Method only_docs
           #
           # This method only has documentation
-          #
-          # @deprecated Do not use me!
           def only_docs(a); end
 
           class << self
@@ -4268,18 +4270,22 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
             #
             # This is a singleton method
             #
-            # @deprecated Use something else instead of this method because
-            #   it uses a library that is no longer supported in Ruby 1.9.
-            #   The new method accepts the same parameters.
+            # @param t [Integer, String]
+            # @return [void]
             # @example My example
             #   a = "hello world"
             #   a.reverse
+            # @deprecated Use something else instead of this method because
+            #   it uses a library that is no longer supported in Ruby 1.9.
+            #   The new method accepts the same parameters.
             sig { params(t: ::Integer).void }
             def baz(t); end
 
             # Method something
             #
             # This is another singleton method
+            #
+            # @return [void]
             sig { void }
             def something; end
           end
@@ -4578,8 +4584,6 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
           def foo; end
         end
 
-        # @abstract It cannot be directly instantiated. Subclasses must implement the `abstract` methods below.
-        #
         # pkg:gem/#{DEFAULT_GEM_NAME}#lib/foo.rb:11
         class Baz
           abstract!
@@ -4803,7 +4807,7 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       assert_equal(output, compile)
     end
 
-    it "sorts YARD tags stably by tag_name and name" do
+    it "keeps YARD tags in the original order" do
       add_ruby_file("foo.rb", <<~RUBY)
         class Foo
           # Method with multiple parameters
@@ -4819,12 +4823,11 @@ class Tapioca::Gem::PipelineSpec < Minitest::HooksSpec
       output = template(<<~RBI)
         class Foo
           # Method with multiple parameters
-          #
-          # @param alpha [Integer] first parameter alphabetically
-          # @param beta [Boolean] middle parameter alphabetically
+          # @return [String] the result
           # @param zebra [String] last parameter alphabetically
           # @raise [ArgumentError] when params are invalid
-          # @return [String] the result
+          # @param alpha [Integer] first parameter alphabetically
+          # @param beta [Boolean] middle parameter alphabetically
           def multi_param_method(zebra, alpha, beta); end
         end
       RBI
