@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency("require-hooks", ">= 0.2.2")
   spec.add_dependency("sorbet-static-and-runtime", ">= 0.5.11087")
   spec.add_dependency("thor", ">= 1.2.0")
-  spec.add_dependency("yard-sorbet")
+  spec.add_dependency("yard", ">= 0.9.37")
 
   # Tapioca requires a specific minimum versions of RBI and Spoom
   # to ensure that the RBS comments are translated correctly.
